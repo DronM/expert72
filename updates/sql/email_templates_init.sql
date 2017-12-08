@@ -1,0 +1,4 @@
+INSERT INTO email_templates (email_type,template,mes_subject,comment_text,fields) VALUES ('reset_pwd','Пользователю [user] изменен пароль. Новый пароль [pwd]','Новый пароль','',array['user','pwd']);
+INSERT INTO email_templates (email_type,template,mes_subject,comment_text,fields) VALUES ('new_account','Создана новая учетная запись. Параметры учетной записи: логин: [user] пароль: [pwd]','Новая учетная запись','',array['user','pwd']);
+
+INSERT INTO email_templates (email_type,template,mes_subject,comment_text,fields) VALUES ('user_email_conf','Пользователю [user] необходимо подтвердить адрес электронной почты. Перейдите по ссылке: http://localhost/expert72/index.php?c=User_Controller&f=email_confirm&key=[key] Ссылка будет действовать в течении суток.','Подтверждение электр.почты.','',array['user','key']);
