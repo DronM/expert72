@@ -1,0 +1,62 @@
+<div id="{{id}}" class="panel panel-flat">
+	<div class="panel-heading">
+		<h3 class="panel-title">{{HEAD_TITLE}}<a class="heading-elements-toggle"><i class="icon-more"></i></a></h3>
+	</div>
+	
+	<div class="panel-body dialogForm">
+	
+		<div id="{{id}}:name"/>
+		
+		<div class="tabbable">
+			<!--  {{app.COLOR_CLASS}} -->
+			<ul class="nav nav-tabs nav-tabs-highlight">
+				<li class="active"><a href="#main" data-toggle="tab" aria-expanded="true">Основные данные</a></li>
+				<li class=""><a href="#address" data-toggle="tab" aria-expanded="false">Адреса</a></li>
+				<li class=""><a href="#responsable" data-toggle="tab" aria-expanded="false">Ответственные лица,телефоны</a></li>
+				<li class=""><a href="#bank_accounts" data-toggle="tab" aria-expanded="false">Расчетные счета</a></li>
+			</ul>
+			
+			<div class="tab-content">
+				<div class="tab-pane fade in active" id="main">
+				
+					<div id="{{id}}:name_full"/>
+					<div id="{{id}}:inn"/>
+					<div id="{{id}}:kpp"/>
+					<div id="{{id}}:okpo"/>
+					<div id="{{id}}:ogrn"/>
+					<div id="{{id}}:okved"/>
+				
+				</div>
+
+				<div class="tab-pane fade clientTab" id="address">
+				
+					<div id="{{id}}:legal_address"/>
+					<div id="{{id}}:post_address"/>
+				
+				</div>
+
+				<div class="tab-pane fade clientTab" id="responsable">
+					<div id="{{id}}:base_document_for_contract"/>
+					<div id="{{id}}:responsable_persons"/>
+				</div>
+
+				<div class="tab-pane fade clientTab" id="bank_accounts">
+					<div id="{{id}}:bank_accounts"/>
+				</div>
+
+			</div>
+			
+		</div>	
+	</div>
+	
+	<div class="panel-footer">
+		<div class="heading-elements">
+			<div class="heading-btn pull-left">
+				<div id="{{id}}:cmdOk"/>
+				<div id="{{id}}:cmdSave"/>
+				<div id="{{id}}:cmdCancel"/>
+			</div>
+		</div>
+	</div>			
+	
+</div>	

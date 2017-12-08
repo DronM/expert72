@@ -1,0 +1,13 @@
+<li id="{{id}}" {{#file_uploaded}}uploaded="true"{{/file_uploaded}} file_id="{{file_id}}" file_name="{{file_name}}">
+	{{#file_uploaded}}
+	<i class="glyphicon glyphicon-ok" title="Файл загружен на сервер"></i>	
+	{{/file_uploaded}}
+	{{#file_not_uploaded}}
+	<i class="file-pic glyphicon glyphicon-cloud-upload" title="Необходимо загрузить файл!"></i>
+	{{/file_not_uploaded}}
+	<a id="{{id}}_href" href="#" title="Скачать файл">
+		{{file_name}}({{file_size_formatted}})
+	</a>
+	{{#isNotSent}}<div id="{{id}}_del" class="btn btn-sm fileDeleteBtn" title="Удалить файл"></div>{{/isNotSent}}
+</li>
+

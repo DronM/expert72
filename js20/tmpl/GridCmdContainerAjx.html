@@ -1,0 +1,24 @@
+<div id="{{id}}">
+	{{#this.getCmdInsert()}}
+	<div id="{{id}}:insert"></div>	
+	{{/this.getCmdInsert()}}
+	
+	{{#this.getCmdSearch()}}
+	<div class="btn-group">
+		<div id="{{id}}:search:set"></div>
+		<div id="{{id}}:search:unset"></div>
+	</div>
+	{{/this.getCmdSearch()}}
+	
+	{{#this.getCmdFilter()}}
+	<div id="{{id}}:filter"></div>
+	{{/this.getCmdFilter()}}
+		
+	{{#this.getCmdPrintObj()}}
+	<div id="{{id}}:printObj"></div>
+	{{/this.getCmdPrintObj()}}
+		
+	{{#this.getCmdAllCommands()}}
+	<div id="{{id}}:allCommands"></div>
+	{{/this.getCmdAllCommands()}}
+</div>

@@ -1,0 +1,44 @@
+/**
+ * @author Andrey Mikhalevich <katrenplus@mail.ru>, 2017
+ 
+ * @extends ViewObjectAjx.js
+ * @requires core/extend.js  
+ * @requires controls/ViewObjectAjx.js 
+ 
+ * @class
+ * @classdesc
+	
+ * @param {string} id view identifier
+ * @param {object} options
+ * @param {object} options.models All data models
+ * @param {object} options.variantStorage {name,model}
+ */	
+function {{VIEW_ID}}_View(id,options){	
+
+	options = options || {};
+	
+	options.controller = new {{ID}}_Controller();
+	options.model = options.models.{{DIALOG_MODEL_ID}}_Model;
+	
+	{{VIEW_ID}}_View.superclass.constructor.call(this,id,options);
+	{{#COLUMNS}}
+	this.addElement({{dialog_field}});	
+	{{/COLUMNS}}
+	//****************************************************
+	//read
+	this.setReadPublicMethod((new {{ID}}_Controller()).getPublicMethod("get_object"));
+	this.setDataBindings([
+		{{#COLUMNS}}
+		{{#not_first}},{{/not_first}}new DataBinding({"control":this.getElement("{{id}}"),"model":this.m_model})
+		{{/COLUMNS}}
+	]);
+	
+	//write
+	this.setWriteBindings([
+		{{#COLUMNS}}
+		{{#not_first}},{{/not_first}}new CommandBinding({"control":this.getElement("{{id}}"),"fieldId":"{{write_field_id}}"}),
+		{{/COLUMNS}}
+	]);
+		
+}
+extend({{VIEW_ID}}_View,ViewObjectAjx);

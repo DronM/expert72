@@ -1,0 +1,20 @@
+ApplicationDialog_View.prototype.FIELD_CAP_office = "Место проведения экспертизы:";
+ApplicationDialog_View.prototype.FIELD_CAP_expertise_type = "Вид государственной экспертизы:";
+ApplicationDialog_View.prototype.FIELD_CAP_estim_cost_type = "Для целей:";
+ApplicationDialog_View.prototype.FIELD_CAP_fund_source = "Источник финансирования:";
+ApplicationDialog_View.prototype.COL_contractors_DESCR = "Наименование";
+ApplicationDialog_View.prototype.FIELD_CAP_constr_name = "Наименование объекта:";
+ApplicationDialog_View.prototype.TITLE_constr_name = "Наименование объекта капитального строительства";
+ApplicationDialog_View.prototype.FIELD_CAP_constr_address = "Почтовый (строительный) адрес объекта капстроительства:";
+ApplicationDialog_View.prototype.COL_constr_technical_features_NAME = "Наименование";
+ApplicationDialog_View.prototype.COL_constr_technical_features_VALUE = "Значение";
+ApplicationDialog_View.prototype.FIELD_CAP_constr_construction_type = "Вид объекта капитального строительства:"
+ApplicationDialog_View.prototype.FIELD_CAP_constr_total_est_cost = "Стоимость изгот. ПД и материалов инженерных изысканий в ценах 2001 года (тыс.руб.):";
+ApplicationDialog_View.prototype.FIELD_CAP_constr_land_area = "Площадь участка в границах землеотвода:";
+ApplicationDialog_View.prototype.FIELD_CAP_constr_total_area = "Площадь застройки:";
+ApplicationDialog_View.prototype.FIELD_CAP_area_unit = "Ед-ца измерения:";
+
+ApplicationDialog_View.prototype.ER_MAX_FILES = "Максимольно разрешенное количество файлов для загрузки: %";
+ApplicationDialog_View.prototype.ER_MIN_FILE_SIZE = "Файл % слишком маленький, минимальный размер для загрузки: %";
+ApplicationDialog_View.prototype.ER_MAX_FILE_SIZE = "Файл % слишком большой, максимальный размер для загрузки: %";
+ApplicationDialog_View.prototype.ER_FILE_TYPE = "Файл % имеет неверный тип, разрешенные типы файлов: %";

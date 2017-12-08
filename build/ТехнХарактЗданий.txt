@@ -1,0 +1,7 @@
+{"id": "TechnicalFeature_Model", "rows": [{"fields": {"name": "Площадь участка в границах землеотвода, м2", "value": ""}}, {"fields": {"name": "Площадь застройки, м2", "value": ""}}, {"fields": {"name": "Количество этажей", "value": ""}}, {"fields": {"name": "Общая площадь здания, м2", "value": ""}}, {"fields": {"name": "Производительность (при наличии)", "value": ""}}, {"fields": {"name": "Строительный объём, м3", "value": ""}}]}
+
+{"id": "TechnicalFeature_Model", "rows": [{"fields": {"name": "Вид объекта", "value": ""}}, {"fields": {"name": "Протяженность, м", "value": ""}}, {"fields": {"name": "Ширина, м", "value": ""}}, {"fields": {"name": "Вид сети 1", "value": ""}}, {"fields": {"name": "Протяженность сети 1, м", "value": ""}}, {"fields": {"name": "Диаметр (сечение) сети 1, мм", "value": ""}}]}
+
+
+{"id": "DownloadFileType_Model", "rows": [{"fields": {"ext":"pdf"}}, {"fields": {"ext":"odt"}}, {"fields": {"ext":"ods"}}, {"fields": {"ext":"xls"}}, {"fields": {"ext":"xlsx"}}, {"fields": {"ext":"doc"}}, {"fields": {"ext":"docx"}}]}
+{"pdf":"83886080","xls":"83886080","odt":"83886080","pdf":"83886080","doc":"83886080","docx":"83886080","xlsx":"83886080","ods":"83886080"}

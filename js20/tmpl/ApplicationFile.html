@@ -1,0 +1,26 @@
+<li id="{{id}}" {{#file_uploaded}}uploaded="true"{{/file_uploaded}} file_id="{{file_id}}" file_name="{{file_name}}">
+	{{#file_not_deleted}}
+		{{#file_uploaded}}
+		<i class="glyphicon glyphicon-ok" title="Файл загружен на сервер"></i>	
+		{{/file_uploaded}}
+		{{#file_not_uploaded}}
+		<i class="file-pic-{{docType}} glyphicon glyphicon-cloud-upload" title="Необходимо загрузить файл!"></i>
+		{{/file_not_uploaded}}
+	{{/file_not_deleted}}
+	{{#file_deleted}}
+		<i class="glyphicon glyphicon-remove" title="Файл удален"></i>	
+	{{/file_deleted}}
+	<a id="{{id}}_href" href="#" title="Скачать файл">
+		{{#file_not_deleted}}
+		{{file_name}}({{file_size_formatted}})
+		{{/file_not_deleted}}
+		
+		{{#file_deleted}}
+		<span class="text-thin" title="Удален {{file_deleted_dt}}">{{file_name}}({{file_size_formatted}})</span>
+		{{/file_deleted}}		
+	</a>
+	{{#file_not_deleted}}
+	{{#isClient}}<div id="{{id}}_del" class="btn btn-sm fileDeleteBtn" title="Удалить файл"></div>{{/isClient}}
+	{{/file_not_deleted}}
+</li>
+

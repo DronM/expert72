@@ -1,0 +1,24 @@
+-- VIEW: {{VIEW_ID}}
+
+--DROP VIEW {{DB_SCHEMA}}.{{VIEW_ID}};
+
+CREATE OR REPLACE VIEW {{DB_SCHEMA}}.{{VIEW_ID}} AS
+	SELECT
+		t.*
+		{{#JOIN}}
+		,{{DB_SCHEMA}}.{{table}}_ref({{table}}_join) AS {{table}}_ref
+		{{/JOIN}}
+	FROM {{DB_SCHEMA}}.{{DB_TABLE}} AS t
+	{{#JOIN}}
+	LEFT JOIN {{DB_SCHEMA}}.{{table}} AS {{table}}_join ON
+		{{#keys}}
+		{{operand}}t.{{main_key}}={{table}}_join.{{join_key}}
+		{{/keys}}
+	{{/JOIN}}
+	ORDER BY
+		{{#ORDER}}
+		{{#not_first}},{{/not_first}}t.{{field}}
+		{{/ORDER}}
+	;
+	
+ALTER VIEW {{VIEW_ID}} OWNER TO {{DB_USER}};

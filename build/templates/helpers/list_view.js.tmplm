@@ -1,0 +1,74 @@
+/**	
+ * @author Andrey Mikhalevich <katrenplus@mail.ru>, 2017
+
+ * @extends ViewAjx
+ * @requires core/extend.js
+ * @requires controls/ViewAjx.js    
+
+ * @class
+ * @classdesc
+ 
+ * @param {string} id - Object identifier
+ * @param {object} options
+ */
+function {{VIEW_ID}}_View(id,options){
+	options = options || {};	
+	
+	{{VIEW_ID}}_View.superclass.constructor.call(this,id,options);
+	
+	var model = options.models.{{LIST_MODEL_ID}}_Model;
+	var contr = new {{ID}}_Controller();
+	
+	var constants = {"doc_per_page_count":null};
+	window.getApp().getConstantManager().get(constants);
+	
+	var filters = {};
+	
+	var popup_menu = new PopUpMenu();
+	
+	this.addElement(new GridAjx(id+":grid",{
+		"model":model,
+		"keyIds":[{{#KEYS}}{{#not_first}},{{/not_first}}"{{field}}"{{/KEYS}}],
+		"controller":contr,
+		"editInline":{{EDIT_INLINE}},
+		"editWinClass":{{FORM_ID}},
+		"popUpMenu":popup_menu,
+		"commands":new GridCmdContainerAjx(id+":grid:cmd",{
+			"filters":filters
+		}),
+		"head":new GridHead(id+":grid:head",{
+			"elements":[
+				new GridRow(id+":grid:head:row0",{					
+					"elements":[
+						{{#COLUMNS}}
+						{{#not_first}},{{/not_first}}new GridCellHead(id+":grid:head:{{id}}",{
+							"value":this.COL_CAP_{{id}},
+							"columns":[
+								{{column}}
+							]
+						})
+						{{/COLUMNS}}
+				})
+			]
+		}),
+		"pagination":new GridPagination(id+":grid:page",
+			{"countPerPage":constants.doc_per_page_count.getValue()}),		
+		
+		"autoRefresh":false,
+		"refreshInterval":0,
+		"rowSelect":false,
+		"focus":true
+	}));		
+}
+extend({{VIEW_ID}}_View,ViewAjx);
+
+/* Constants */
+
+
+/* private members */
+
+/* protected*/
+
+
+/* public methods */
+

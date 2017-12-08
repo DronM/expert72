@@ -1,0 +1,4034 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<title>Документация </title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Sans:400,700&amp;subset=latin,cyrillic,latin-ext">
+<link href="style.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+<div class="header"><div class="docname">Документация </div></div>
+<div class="wrapper">
+<div class="left_sidebar">
+<div class="section-title">Controllers</div>
+<ul>
+<li><a href="#About_Controller">About_Controller</a></li>
+<li><a href="#Application_Controller">Application_Controller</a></li>
+<li><a href="#ApplicationClient_Controller">ApplicationClient_Controller</a></li>
+<li><a href="#ApplicationContractor_Controller">ApplicationContractor_Controller</a></li>
+<li><a href="#ApplicationDostTemplate_Controller">ApplicationDostTemplate_Controller</a></li>
+<li><a href="#ApplicationPdTemplate_Controller">ApplicationPdTemplate_Controller</a></li>
+<li><a href="#ApplicationTemplateContent_Controller">ApplicationTemplateContent_Controller</a></li>
+<li><a href="#Bank_Controller">Bank_Controller</a></li>
+<li><a href="#Captcha_Controller">Captcha_Controller</a></li>
+<li><a href="#ChatMessage_Controller">ChatMessage_Controller</a></li>
+<li><a href="#Client_Controller">Client_Controller</a></li>
+<li><a href="#ClientBankAccount_Controller">ClientBankAccount_Controller</a></li>
+<li><a href="#ClientResponsablePerson_Controller">ClientResponsablePerson_Controller</a></li>
+<li><a href="#ClientSearch_Controller">ClientSearch_Controller</a></li>
+<li><a href="#Constant_Controller">Constant_Controller</a></li>
+<li><a href="#ConstrTypeTechnicalFeature_Controller">ConstrTypeTechnicalFeature_Controller</a></li>
+<li><a href="#Department_Controller">Department_Controller</a></li>
+<li><a href="#DownloadFileType_Controller">DownloadFileType_Controller</a></li>
+<li><a href="#EmailTemplate_Controller">EmailTemplate_Controller</a></li>
+<li><a href="#Employee_Controller">Employee_Controller</a></li>
+<li><a href="#Enum_Controller">Enum_Controller</a></li>
+<li><a href="#Holiday_Controller">Holiday_Controller</a></li>
+<li><a href="#Kladr_Controller">Kladr_Controller</a></li>
+<li><a href="#MailForSending_Controller">MailForSending_Controller</a></li>
+<li><a href="#MainMenuConstructor_Controller">MainMenuConstructor_Controller</a></li>
+<li><a href="#MainMenuContent_Controller">MainMenuContent_Controller</a></li>
+<li><a href="#Office_Controller">Office_Controller</a></li>
+<li><a href="#OutMail_Controller">OutMail_Controller</a></li>
+<li><a href="#PersonIdPaper_Controller">PersonIdPaper_Controller</a></li>
+<li><a href="#TechnicalFeature_Controller">TechnicalFeature_Controller</a></li>
+<li><a href="#TimeZoneLocale_Controller">TimeZoneLocale_Controller</a></li>
+<li><a href="#User_Controller">User_Controller</a></li>
+<li><a href="#VariantStorage_Controller">VariantStorage_Controller</a></li>
+<li><a href="#View_Controller">View_Controller</a></li>
+</ul>
+<div class="section-title">Models</div>
+<ul>
+<li><a href="#ConstantList_Model">ConstantList_Model</a></li>
+<li><a href="#View_Model">View_Model</a></li>
+<li><a href="#ViewList_Model">ViewList_Model</a></li>
+<li><a href="#ViewSectionList_Model">ViewSectionList_Model</a></li>
+<li><a href="#MainMenuConstructor_Model">MainMenuConstructor_Model</a></li>
+<li><a href="#MainMenuConstructorList_Model">MainMenuConstructorList_Model</a></li>
+<li><a href="#MainMenuContent_Model">MainMenuContent_Model</a></li>
+<li><a href="#Bank_Model">Bank_Model</a></li>
+<li><a href="#BankList_Model">BankList_Model</a></li>
+<li><a href="#VariantStorage_Model">VariantStorage_Model</a></li>
+<li><a href="#VariantStorageList_Model">VariantStorageList_Model</a></li>
+<li><a href="#About_Model">About_Model</a></li>
+<li><a href="#TimeZoneLocale_Model">TimeZoneLocale_Model</a></li>
+<li><a href="#PersonIdPaper_Model">PersonIdPaper_Model</a></li>
+<li><a href="#User_Model">User_Model</a></li>
+<li><a href="#UserList_Model">UserList_Model</a></li>
+<li><a href="#UserDialog_Model">UserDialog_Model</a></li>
+<li><a href="#UserProfile_Model">UserProfile_Model</a></li>
+<li><a href="#UserEmailConfirmation_Model">UserEmailConfirmation_Model</a></li>
+<li><a href="#MailForSending_Model">MailForSending_Model</a></li>
+<li><a href="#MailForSendingList_Model">MailForSendingList_Model</a></li>
+<li><a href="#MailForSendingAttachment_Model">MailForSendingAttachment_Model</a></li>
+<li><a href="#EmailTemplate_Model">EmailTemplate_Model</a></li>
+<li><a href="#EmailTemplateList_Model">EmailTemplateList_Model</a></li>
+<li><a href="#Client_Model">Client_Model</a></li>
+<li><a href="#ClientList_Model">ClientList_Model</a></li>
+<li><a href="#ClientResponsablePerson_Model">ClientResponsablePerson_Model</a></li>
+<li><a href="#ClientPersonIdPaper_Model">ClientPersonIdPaper_Model</a></li>
+<li><a href="#ClientPersonRegistrPaper_Model">ClientPersonRegistrPaper_Model</a></li>
+<li><a href="#ClientBankAccount_Model">ClientBankAccount_Model</a></li>
+<li><a href="#TechnicalFeature_Model">TechnicalFeature_Model</a></li>
+<li><a href="#DownloadFileType_Model">DownloadFileType_Model</a></li>
+<li><a href="#Kladr_Model">Kladr_Model</a></li>
+<li><a href="#ApplicationPdTemplate_Model">ApplicationPdTemplate_Model</a></li>
+<li><a href="#ApplicationPdTemplateList_Model">ApplicationPdTemplateList_Model</a></li>
+<li><a href="#ApplicationDostTemplate_Model">ApplicationDostTemplate_Model</a></li>
+<li><a href="#ApplicationDostTemplateList_Model">ApplicationDostTemplateList_Model</a></li>
+<li><a href="#ApplicationTemplateContent_Model">ApplicationTemplateContent_Model</a></li>
+<li><a href="#Office_Model">Office_Model</a></li>
+<li><a href="#OfficeList_Model">OfficeList_Model</a></li>
+<li><a href="#Application_Model">Application_Model</a></li>
+<li><a href="#ApplicationDialog_Model">ApplicationDialog_Model</a></li>
+<li><a href="#ApplicationList_Model">ApplicationList_Model</a></li>
+<li><a href="#ApplicationClientList_Model">ApplicationClientList_Model</a></li>
+<li><a href="#ApplicationContractor_Model">ApplicationContractor_Model</a></li>
+<li><a href="#ApplicationStateHistory_Model">ApplicationStateHistory_Model</a></li>
+<li><a href="#ApplicationPdDocumentFile_Model">ApplicationPdDocumentFile_Model</a></li>
+<li><a href="#ApplicationDostDocumentFile_Model">ApplicationDostDocumentFile_Model</a></li>
+<li><a href="#ApplicationClient_Model">ApplicationClient_Model</a></li>
+<li><a href="#ConstrTypeTechnicalFeature_Model">ConstrTypeTechnicalFeature_Model</a></li>
+<li><a href="#ConstrTypeTechnicalFeatureList_Model">ConstrTypeTechnicalFeatureList_Model</a></li>
+<li><a href="#Morpher_Model">Morpher_Model</a></li>
+<li><a href="#Holiday_Model">Holiday_Model</a></li>
+<li><a href="#OutMail_Model">OutMail_Model</a></li>
+<li><a href="#OutMailAttachment_Model">OutMailAttachment_Model</a></li>
+<li><a href="#OutMailList_Model">OutMailList_Model</a></li>
+<li><a href="#OutMailDialog_Model">OutMailDialog_Model</a></li>
+<li><a href="#InMail_Model">InMail_Model</a></li>
+<li><a href="#InMailAttachment_Model">InMailAttachment_Model</a></li>
+<li><a href="#Department_Model">Department_Model</a></li>
+<li><a href="#DepartmentDialog_Model">DepartmentDialog_Model</a></li>
+<li><a href="#DepartmentList_Model">DepartmentList_Model</a></li>
+<li><a href="#Employee_Model">Employee_Model</a></li>
+<li><a href="#EmployeeDialog_Model">EmployeeDialog_Model</a></li>
+<li><a href="#EmployeeList_Model">EmployeeList_Model</a></li>
+<li><a href="#ChatMessage_Model">ChatMessage_Model</a></li>
+<li><a href="#ChatMessageAttachment_Model">ChatMessageAttachment_Model</a></li>
+</ul>
+<div class="section-title">Enumerations</div>
+<ul>
+<li><a href="#locales">locales</a></li>
+<li><a href="#role_types">role_types</a></li>
+<li><a href="#email_types">email_types</a></li>
+<li><a href="#client_types">client_types</a></li>
+<li><a href="#expertise_types">expertise_types</a></li>
+<li><a href="#estim_cost_types">estim_cost_types</a></li>
+<li><a href="#construction_types">construction_types</a></li>
+<li><a href="#fund_sources">fund_sources</a></li>
+<li><a href="#aria_units">aria_units</a></li>
+<li><a href="#application_states">application_states</a></li>
+<li><a href="#responsable_person_types">responsable_person_types</a></li>
+<li><a href="#out_mail_types">out_mail_types</a></li>
+</ul>
+</div>
+<div class="content">
+<div id="About_Controller" class="content_box">
+<h1>About_Controller</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Методы:</p>
+<h2>get_object</h2>
+<a href="#About_Model">Model: About_Model</a>
+</div>
+</div>
+<div id="Application_Controller" class="content_box">
+<h1>Application_Controller</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Методы:</p>
+<h2>insert</h2>
+<a href="#Application_Model">Model: Application_Model</a><h2>update</h2>
+<a href="#Application_Model">Model: Application_Model</a><h2>delete</h2>
+<a href="#Application_Model">Model: Application_Model</a><h2>get_object</h2>
+<a href="#ApplicationDialog_Model">Model: ApplicationDialog_Model</a><h2>get_print</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Да</p>
+</div>
+<h3>inline</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Да</p>
+</div>
+<h3>templ</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Да</p>
+<p>Length:100</p>
+</div>
+</div>
+<h2>get_list</h2>
+<a href="#ApplicationList_Model">Model: ApplicationList_Model</a><h2>complete</h2>
+<a href="#ApplicationList_Model">Model: ApplicationList_Model</a><h2>get_client_list</h2>
+<a href="#ApplicationClientList_Model">Model: ApplicationClientList_Model</a><h2>remove_file</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Да</p>
+<p>Length:36</p>
+</div>
+<h3>doc_type</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Да</p>
+<p>Length:5</p>
+</div>
+</div>
+<h2>get_file</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Да</p>
+<p>Length:36</p>
+</div>
+<h3>doc_type</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Да</p>
+<p>Length:5</p>
+</div>
+</div>
+<h2>zip_all</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>application_id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Да</p>
+</div>
+</div>
+</div>
+</div>
+<div id="ApplicationClient_Controller" class="content_box">
+<h1>ApplicationClient_Controller</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Методы:</p>
+<h2>insert</h2>
+<a href="#ApplicationClient_Model">Model: ApplicationClient_Model</a><h2>update</h2>
+<a href="#ApplicationClient_Model">Model: ApplicationClient_Model</a><h2>delete</h2>
+<a href="#ApplicationClient_Model">Model: ApplicationClient_Model</a><h2>get_list</h2>
+<a href="#ApplicationClient_Model">Model: ApplicationClient_Model</a><h2>get_object</h2>
+<a href="#ApplicationClient_Model">Model: ApplicationClient_Model</a>
+</div>
+</div>
+<div id="ApplicationContractor_Controller" class="content_box">
+<h1>ApplicationContractor_Controller</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Методы:</p>
+<h2>insert</h2>
+<a href="#ApplicationContractor_Model">Model: ApplicationContractor_Model</a><h2>update</h2>
+<a href="#ApplicationContractor_Model">Model: ApplicationContractor_Model</a><h2>delete</h2>
+<a href="#ApplicationContractor_Model">Model: ApplicationContractor_Model</a><h2>get_list</h2>
+<a href="#ApplicationContractor_Model">Model: ApplicationContractor_Model</a><h2>get_object</h2>
+<a href="#ApplicationContractor_Model">Model: ApplicationContractor_Model</a>
+</div>
+</div>
+<div id="ApplicationDostTemplate_Controller" class="content_box">
+<h1>ApplicationDostTemplate_Controller</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Методы:</p>
+<h2>insert</h2>
+<a href="#ApplicationDostTemplate_Model">Model: ApplicationDostTemplate_Model</a><h2>update</h2>
+<a href="#ApplicationDostTemplate_Model">Model: ApplicationDostTemplate_Model</a><h2>delete</h2>
+<a href="#ApplicationDostTemplate_Model">Model: ApplicationDostTemplate_Model</a><h2>get_list</h2>
+<a href="#ApplicationDostTemplateList_Model">Model: ApplicationDostTemplateList_Model</a><h2>get_object</h2>
+<a href="#ApplicationDostTemplate_Model">Model: ApplicationDostTemplate_Model</a>
+</div>
+</div>
+<div id="ApplicationPdTemplate_Controller" class="content_box">
+<h1>ApplicationPdTemplate_Controller</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Методы:</p>
+<h2>insert</h2>
+<a href="#ApplicationPdTemplate_Model">Model: ApplicationPdTemplate_Model</a><h2>update</h2>
+<a href="#ApplicationPdTemplate_Model">Model: ApplicationPdTemplate_Model</a><h2>delete</h2>
+<a href="#ApplicationPdTemplate_Model">Model: ApplicationPdTemplate_Model</a><h2>get_list</h2>
+<a href="#ApplicationPdTemplateList_Model">Model: ApplicationPdTemplateList_Model</a><h2>get_object</h2>
+<a href="#ApplicationPdTemplate_Model">Model: ApplicationPdTemplate_Model</a>
+</div>
+</div>
+<div id="ApplicationTemplateContent_Controller" class="content_box">
+<h1>ApplicationTemplateContent_Controller</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Методы:</p>
+<h2>insert</h2>
+<a href="#ApplicationTemplateContent_Model">Model: ApplicationTemplateContent_Model</a><h2>update</h2>
+<a href="#ApplicationTemplateContent_Model">Model: ApplicationTemplateContent_Model</a><h2>delete</h2>
+<a href="#ApplicationTemplateContent_Model">Model: ApplicationTemplateContent_Model</a><h2>get_list</h2>
+<a href="#ApplicationTemplateContent_Model">Model: ApplicationTemplateContent_Model</a><h2>get_object</h2>
+<a href="#ApplicationTemplateContent_Model">Model: ApplicationTemplateContent_Model</a>
+</div>
+</div>
+<div id="Bank_Controller" class="content_box">
+<h1>Bank_Controller</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Методы:</p>
+<h2>get_list</h2>
+<a href="#BankList_Model">Model: BankList_Model</a><h2>get_object</h2>
+<a href="#BankList_Model">Model: BankList_Model</a><h2>complete</h2>
+<a href="#BankList_Model">Model: BankList_Model</a>
+</div>
+</div>
+<div id="Captcha_Controller" class="content_box">
+<h1>Captcha_Controller</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Методы:</p>
+<h2>get</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2"></div>
+</div>
+</div>
+<div id="ChatMessage_Controller" class="content_box">
+<h1>ChatMessage_Controller</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Методы:</p>
+<h2>insert</h2>
+<a href="#ChatMessage_Model">Model: ChatMessage_Model</a><h2>update</h2>
+<a href="#ChatMessage_Model">Model: ChatMessage_Model</a><h2>get_list</h2>
+<a href="#ChatMessage_Model">Model: ChatMessage_Model</a><h2>get_object</h2>
+<a href="#ChatMessage_Model">Model: ChatMessage_Model</a>
+</div>
+</div>
+<div id="Client_Controller" class="content_box">
+<h1>Client_Controller</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Методы:</p>
+<h2>insert</h2>
+<a href="#Client_Model">Model: Client_Model</a><h2>update</h2>
+<a href="#Client_Model">Model: Client_Model</a><h2>delete</h2>
+<a href="#Client_Model">Model: Client_Model</a><h2>get_list</h2>
+<a href="#ClientList_Model">Model: ClientList_Model</a><h2>get_object</h2>
+<a href="#Client_Model">Model: Client_Model</a><h2>complete</h2>
+<a href="#ClientList_Model">Model: ClientList_Model</a>
+</div>
+</div>
+<div id="ClientBankAccount_Controller" class="content_box">
+<h1>ClientBankAccount_Controller</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Методы:</p>
+<h2>insert</h2>
+<a href="#ClientBankAccount_Model">Model: ClientBankAccount_Model</a><h2>update</h2>
+<a href="#ClientBankAccount_Model">Model: ClientBankAccount_Model</a><h2>delete</h2>
+<a href="#ClientBankAccount_Model">Model: ClientBankAccount_Model</a><h2>get_list</h2>
+<a href="#ClientBankAccount_Model">Model: ClientBankAccount_Model</a><h2>get_object</h2>
+<a href="#ClientBankAccount_Model">Model: ClientBankAccount_Model</a>
+</div>
+</div>
+<div id="ClientResponsablePerson_Controller" class="content_box">
+<h1>ClientResponsablePerson_Controller</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Методы:</p>
+<h2>insert</h2>
+<a href="#ClientResponsablePerson_Model">Model: ClientResponsablePerson_Model</a><h2>update</h2>
+<a href="#ClientResponsablePerson_Model">Model: ClientResponsablePerson_Model</a><h2>delete</h2>
+<a href="#ClientResponsablePerson_Model">Model: ClientResponsablePerson_Model</a><h2>get_list</h2>
+<a href="#ClientResponsablePerson_Model">Model: ClientResponsablePerson_Model</a><h2>get_object</h2>
+<a href="#ClientResponsablePerson_Model">Model: ClientResponsablePerson_Model</a>
+</div>
+</div>
+<div id="ClientSearch_Controller" class="content_box">
+<h1>ClientSearch_Controller</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Методы:</p>
+<h2>search</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>query</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Да</p>
+<p>Length:250</p>
+</div>
+</div>
+</div>
+</div>
+<div id="Constant_Controller" class="content_box">
+<h1>Constant_Controller</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Методы:</p>
+<h2>set_value</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Да</p>
+</div>
+<h3>val</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Нет</p>
+</div>
+</div>
+<h2>get_list</h2>
+<a href="#ConstantList_Model">Model: ConstantList_Model</a><h2>get_object</h2>
+<a href="#ConstantList_Model">Model: ConstantList_Model</a><h2>get_values</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>id_list</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Нет</p>
+</div>
+<h3>field_sep</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Нет</p>
+<p>Length:1</p>
+</div>
+</div>
+</div>
+</div>
+<div id="ConstrTypeTechnicalFeature_Controller" class="content_box">
+<h1>ConstrTypeTechnicalFeature_Controller</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Методы:</p>
+<h2>insert</h2>
+<a href="#ConstrTypeTechnicalFeature_Model">Model: ConstrTypeTechnicalFeature_Model</a><h2>update</h2>
+<a href="#ConstrTypeTechnicalFeature_Model">Model: ConstrTypeTechnicalFeature_Model</a><h2>get_list</h2>
+<a href="#ConstrTypeTechnicalFeatureList_Model">Model: ConstrTypeTechnicalFeatureList_Model</a><h2>get_object</h2>
+<a href="#ConstrTypeTechnicalFeature_Model">Model: ConstrTypeTechnicalFeature_Model</a>
+</div>
+</div>
+<div id="Department_Controller" class="content_box">
+<h1>Department_Controller</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Методы:</p>
+<h2>insert</h2>
+<a href="#Department_Model">Model: Department_Model</a><h2>update</h2>
+<a href="#Department_Model">Model: Department_Model</a><h2>delete</h2>
+<a href="#Department_Model">Model: Department_Model</a><h2>get_object</h2>
+<a href="#DepartmentDialog_Model">Model: DepartmentDialog_Model</a><h2>get_list</h2>
+<a href="#DepartmentList_Model">Model: DepartmentList_Model</a><h2>complete</h2>
+<a href="#DepartmentList_Model">Model: DepartmentList_Model</a>
+</div>
+</div>
+<div id="DownloadFileType_Controller" class="content_box">
+<h1>DownloadFileType_Controller</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Методы:</p>
+<h2>insert</h2>
+<a href="#DownloadFileType_Model">Model: DownloadFileType_Model</a><h2>update</h2>
+<a href="#DownloadFileType_Model">Model: DownloadFileType_Model</a><h2>delete</h2>
+<a href="#DownloadFileType_Model">Model: DownloadFileType_Model</a><h2>get_list</h2>
+<a href="#DownloadFileType_Model">Model: DownloadFileType_Model</a><h2>get_object</h2>
+<a href="#DownloadFileType_Model">Model: DownloadFileType_Model</a>
+</div>
+</div>
+<div id="EmailTemplate_Controller" class="content_box">
+<h1>EmailTemplate_Controller</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Методы:</p>
+<h2>update</h2>
+<a href="#EmailTemplate_Model">Model: EmailTemplate_Model</a><h2>get_list</h2>
+<a href="#EmailTemplateList_Model">Model: EmailTemplateList_Model</a><h2>get_object</h2>
+<a href="#EmailTemplateList_Model">Model: EmailTemplateList_Model</a>
+</div>
+</div>
+<div id="Employee_Controller" class="content_box">
+<h1>Employee_Controller</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Методы:</p>
+<h2>insert</h2>
+<a href="#Employee_Model">Model: Employee_Model</a><h2>update</h2>
+<a href="#Employee_Model">Model: Employee_Model</a><h2>delete</h2>
+<a href="#Employee_Model">Model: Employee_Model</a><h2>get_object</h2>
+<a href="#EmployeeDialog_Model">Model: EmployeeDialog_Model</a><h2>get_list</h2>
+<a href="#EmployeeList_Model">Model: EmployeeList_Model</a><h2>complete</h2>
+<a href="#EmployeeList_Model">Model: EmployeeList_Model</a>
+</div>
+</div>
+<div id="Enum_Controller" class="content_box">
+<h1>Enum_Controller</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Методы:</p>
+<h2>get_enum_list</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Нет</p>
+</div>
+</div>
+</div>
+</div>
+<div id="Holiday_Controller" class="content_box">
+<h1>Holiday_Controller</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Методы:</p>
+<h2>insert</h2>
+<a href="#Holiday_Model">Model: Holiday_Model</a><h2>update</h2>
+<a href="#Holiday_Model">Model: Holiday_Model</a><h2>delete</h2>
+<a href="#Holiday_Model">Model: Holiday_Model</a><h2>get_list</h2>
+<a href="#Holiday_Model">Model: Holiday_Model</a><h2>get_object</h2>
+<a href="#Holiday_Model">Model: Holiday_Model</a>
+</div>
+</div>
+<div id="Kladr_Controller" class="content_box">
+<h1>Kladr_Controller</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Методы:</p>
+<h2>get_region_list</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>pattern</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Да</p>
+</div>
+<h3>ic</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Нет</p>
+</div>
+<h3>mid</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Нет</p>
+</div>
+</div>
+<h2>get_raion_list</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>region_code</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Нет</p>
+</div>
+<h3>pattern</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Да</p>
+<p>Length:40</p>
+</div>
+<h3>ic</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Нет</p>
+</div>
+<h3>mid</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Нет</p>
+</div>
+</div>
+<h2>get_naspunkt_list</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>region_code</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Нет</p>
+</div>
+<h3>raion_code</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Нет</p>
+</div>
+<h3>pattern</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Да</p>
+<p>Length:40</p>
+</div>
+<h3>ic</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Нет</p>
+</div>
+<h3>mid</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Нет</p>
+</div>
+</div>
+<h2>get_gorod_list</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>region_code</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Нет</p>
+</div>
+<h3>raion_code</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Нет</p>
+</div>
+<h3>pattern</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Да</p>
+<p>Length:40</p>
+</div>
+<h3>ic</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Нет</p>
+</div>
+<h3>mid</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Нет</p>
+</div>
+</div>
+<h2>get_ulitsa_list</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>region_code</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Нет</p>
+</div>
+<h3>raion_code</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Нет</p>
+</div>
+<h3>naspunkt_code</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Нет</p>
+</div>
+<h3>gorod_code</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Нет</p>
+</div>
+<h3>pattern</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Да</p>
+<p>Length:40</p>
+</div>
+<h3>ic</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Нет</p>
+</div>
+<h3>mid</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Нет</p>
+</div>
+</div>
+<h2>get_from_naspunkt</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>region_code</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Нет</p>
+</div>
+<h3>pattern</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Да</p>
+<p>Length:40</p>
+</div>
+<h3>from</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Нет</p>
+</div>
+<h3>count</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Нет</p>
+</div>
+<h3>ic</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Нет</p>
+</div>
+<h3>mid</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Нет</p>
+</div>
+</div>
+</div>
+</div>
+<div id="MailForSending_Controller" class="content_box">
+<h1>MailForSending_Controller</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Методы:</p>
+<h2>get_list</h2>
+<a href="#MailForSendingList_Model">Model: MailForSendingList_Model</a>
+</div>
+</div>
+<div id="MainMenuConstructor_Controller" class="content_box">
+<h1>MainMenuConstructor_Controller</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Методы:</p>
+<h2>insert</h2>
+<a href="#MainMenuConstructor_Model">Model: MainMenuConstructor_Model</a><h2>update</h2>
+<a href="#MainMenuConstructor_Model">Model: MainMenuConstructor_Model</a><h2>delete</h2>
+<a href="#MainMenuConstructor_Model">Model: MainMenuConstructor_Model</a><h2>get_list</h2>
+<a href="#MainMenuConstructorList_Model">Model: MainMenuConstructorList_Model</a><h2>get_object</h2>
+<a href="#MainMenuConstructor_Model">Model: MainMenuConstructor_Model</a>
+</div>
+</div>
+<div id="MainMenuContent_Controller" class="content_box">
+<h1>MainMenuContent_Controller</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Методы:</p>
+<h2>insert</h2>
+<a href="#MainMenuContent_Model">Model: MainMenuContent_Model</a><h2>update</h2>
+<a href="#MainMenuContent_Model">Model: MainMenuContent_Model</a><h2>delete</h2>
+<a href="#MainMenuContent_Model">Model: MainMenuContent_Model</a><h2>get_list</h2>
+<a href="#MainMenuContent_Model">Model: MainMenuContent_Model</a><h2>get_object</h2>
+<a href="#MainMenuContent_Model">Model: MainMenuContent_Model</a>
+</div>
+</div>
+<div id="Office_Controller" class="content_box">
+<h1>Office_Controller</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Методы:</p>
+<h2>insert</h2>
+<a href="#Office_Model">Model: Office_Model</a><h2>update</h2>
+<a href="#Office_Model">Model: Office_Model</a><h2>delete</h2>
+<a href="#Office_Model">Model: Office_Model</a><h2>get_list</h2>
+<a href="#OfficeList_Model">Model: OfficeList_Model</a><h2>get_object</h2>
+<a href="#OfficeList_Model">Model: OfficeList_Model</a>
+</div>
+</div>
+<div id="OutMail_Controller" class="content_box">
+<h1>OutMail_Controller</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Методы:</p>
+<h2>insert</h2>
+<a href="#OutMail_Model">Model: OutMail_Model</a><h2>update</h2>
+<a href="#OutMail_Model">Model: OutMail_Model</a><h2>delete</h2>
+<a href="#OutMail_Model">Model: OutMail_Model</a><h2>get_list</h2>
+<a href="#OutMailList_Model">Model: OutMailList_Model</a><h2>get_object</h2>
+<a href="#OutMailDialog_Model">Model: OutMailDialog_Model</a>
+</div>
+</div>
+<div id="PersonIdPaper_Controller" class="content_box">
+<h1>PersonIdPaper_Controller</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Методы:</p>
+<h2>get_object</h2>
+<a href="#PersonIdPaper_Model">Model: PersonIdPaper_Model</a><h2>get_list</h2>
+<a href="#PersonIdPaper_Model">Model: PersonIdPaper_Model</a><h2>complete</h2>
+<a href="#PersonIdPaper_Model">Model: PersonIdPaper_Model</a>
+</div>
+</div>
+<div id="TechnicalFeature_Controller" class="content_box">
+<h1>TechnicalFeature_Controller</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Методы:</p>
+<h2>insert</h2>
+<a href="#TechnicalFeature_Model">Model: TechnicalFeature_Model</a><h2>update</h2>
+<a href="#TechnicalFeature_Model">Model: TechnicalFeature_Model</a><h2>delete</h2>
+<a href="#TechnicalFeature_Model">Model: TechnicalFeature_Model</a><h2>get_list</h2>
+<a href="#TechnicalFeature_Model">Model: TechnicalFeature_Model</a><h2>get_object</h2>
+<a href="#TechnicalFeature_Model">Model: TechnicalFeature_Model</a>
+</div>
+</div>
+<div id="TimeZoneLocale_Controller" class="content_box">
+<h1>TimeZoneLocale_Controller</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Методы:</p>
+<h2>get_list</h2>
+<a href="#TimeZoneLocale_Model">Model: TimeZoneLocale_Model</a><h2>get_object</h2>
+<a href="#TimeZoneLocale_Model">Model: TimeZoneLocale_Model</a>
+</div>
+</div>
+<div id="User_Controller" class="content_box">
+<h1>User_Controller</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Методы:</p>
+<h2>insert</h2>
+<a href="#User_Model">Model: User_Model</a><h2>update</h2>
+<a href="#User_Model">Model: User_Model</a><h2>delete</h2>
+<a href="#User_Model">Model: User_Model</a><h2>get_list</h2>
+<a href="#UserList_Model">Model: UserList_Model</a><h2>get_object</h2>
+<a href="#UserDialog_Model">Model: UserDialog_Model</a><h2>complete</h2>
+<a href="#UserList_Model">Model: UserList_Model</a><h2>get_profile</h2>
+<a href="#UserProfile_Model">Model: UserProfile_Model</a><h2>password_recover</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>email</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Да</p>
+<p>Length:100</p>
+</div>
+<h3>captcha_key</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Да</p>
+<p>Length:10</p>
+</div>
+</div>
+<h2>register</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>name</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Да</p>
+<p>Length:100</p>
+</div>
+<h3>pwd</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Да</p>
+<p>Length:100</p>
+</div>
+<h3>email</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Да</p>
+<p>Length:100</p>
+</div>
+<h3>pers_data_proc_agreement</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Bool</p>
+<p>Required:
+								Нет</p>
+</div>
+<h3>captcha_key</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Да</p>
+<p>Length:10</p>
+</div>
+</div>
+<h2>name_check</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>name</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Да</p>
+<p>Length:100</p>
+</div>
+</div>
+<h2>login</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>name</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Да</p>
+<p>Length:50</p>
+</div>
+<h3>pwd</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Password</p>
+<p>Required:
+								Да</p>
+<p>Length:20</p>
+</div>
+<h3>rememberMe</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Bool</p>
+<p>Required:
+								Нет</p>
+</div>
+</div>
+<h2>login_refresh</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>refresh_token</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Нет</p>
+<p>Length:50</p>
+</div>
+</div>
+<h2>logout</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2"></div>
+<h2>logout_html</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2"></div>
+<h2>email_confirm</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>key</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Да</p>
+<p>Length:36</p>
+</div>
+</div>
+</div>
+</div>
+<div id="VariantStorage_Controller" class="content_box">
+<h1>VariantStorage_Controller</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Методы:</p>
+<h2>insert</h2>
+<a href="#VariantStorage_Model">Model: VariantStorage_Model</a><h2>upsert_filter_data</h2>
+<a href="#VariantStorage_Model">Model: VariantStorage_Model</a><h2>upsert_col_visib_data</h2>
+<a href="#VariantStorage_Model">Model: VariantStorage_Model</a><h2>upsert_col_order_data</h2>
+<a href="#VariantStorage_Model">Model: VariantStorage_Model</a><h2>update</h2>
+<a href="#VariantStorage_Model">Model: VariantStorage_Model</a><h2>delete</h2>
+<a href="#VariantStorage_Model">Model: VariantStorage_Model</a><h2>get_list</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>storage_name</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Да</p>
+</div>
+<h3>variant_name</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Нет</p>
+</div>
+</div>
+<h2>get_object</h2>
+<a href="#VariantStorage_Model">Model: VariantStorage_Model</a><h2>get_filter_data</h2>
+<a href="#VariantStorage_Model">Model: VariantStorage_Model</a><h2>get_col_visib_data</h2>
+<a href="#VariantStorage_Model">Model: VariantStorage_Model</a><h2>get_col_order_data</h2>
+<a href="#VariantStorage_Model">Model: VariantStorage_Model</a>
+</div>
+</div>
+<div id="View_Controller" class="content_box">
+<h1>View_Controller</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Методы:</p>
+<h2>get_list</h2>
+<a href="#ViewList_Model">Model: ViewList_Model</a><h2>complete</h2>
+<a href="#ViewList_Model">Model: ViewList_Model</a><h2>get_section_list</h2>
+<a href="#ViewSectionList_Model">Model: ViewSectionList_Model</a>
+</div>
+</div>
+<div id="About_Model" class="content_box">
+<h1>About_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>author</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>tech_mail</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>app_name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>fw_version</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>app_version</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>db_name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="Application_Model" class="content_box">
+<h1>Application_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:FALSE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>user_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>create_dt</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>expertise_type</h2>
+<div>Type:Enum</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>estim_cost_type</h2>
+<div>Type:Enum</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>fund_source</h2>
+<div>Type:Enum</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>applicant</h2>
+<div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>customer</h2>
+<div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>contractors</h2>
+<div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>constr_name</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>constr_address</h2>
+<div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>constr_technical_features</h2>
+<div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>constr_construction_type</h2>
+<div>Type:Enum</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>constr_total_est_cost</h2>
+<div>Type:Float</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:15</div>
+<div>Precision:2</div>
+<h2>constr_land_area</h2>
+<div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>constr_total_area</h2>
+<div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>filled_percent</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>office_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="ApplicationClient_Model" class="content_box">
+<h1>ApplicationClient_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:100</div>
+<div>Precision:</div>
+<h2>name_full</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>inn</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:12</div>
+<div>Precision:</div>
+<h2>kpp</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:10</div>
+<div>Precision:</div>
+<h2>ogrn</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:15</div>
+<div>Precision:</div>
+<h2>post_address</h2>
+<div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>legal_address</h2>
+<div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>responsable_persons</h2>
+<div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>bank_accounts</h2>
+<div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>client_type</h2>
+<div>Type:Enum</div>
+<div>Primary key:</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>base_document_for_contract</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>ogrn</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:15</div>
+<div>Precision:</div>
+<h2>person_id_paper</h2>
+<div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>person_registr_paper</h2>
+<div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="ApplicationClientList_Model" class="content_box">
+<h1>ApplicationClientList_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>inn</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>kpp</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>ogrn</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>client_type</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>client_data</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="ApplicationContractor_Model" class="content_box">
+<h1>ApplicationContractor_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>descr</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="ApplicationDialog_Model" class="content_box">
+<h1>ApplicationDialog_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>create_dt</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>expertise_type</h2>
+<div>Type:Enum</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>estim_cost_type</h2>
+<div>Type:Enum</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>fund_source</h2>
+<div>Type:Enum</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>applicant</h2>
+<div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>customer</h2>
+<div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>contractors</h2>
+<div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>constr_name</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>constr_address</h2>
+<div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>constr_technical_features</h2>
+<div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>constr_construction_type</h2>
+<div>Type:Enum</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>constr_total_est_cost</h2>
+<div>Type:Float</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:15</div>
+<div>Precision:2</div>
+<h2>constr_land_area</h2>
+<div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>constr_total_area</h2>
+<div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>application_state</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>application_state_dt</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>application_state_end_date</h2>
+<div>Type:Date</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>documents_pd</h2>
+<div>Type:XML</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>documents_dost</h2>
+<div>Type:XML</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>office_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="ApplicationDostDocumentFile_Model" class="content_box">
+<h1>ApplicationDostDocumentFile_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>file_id</h2>
+<div>Type:String</div>
+<div>Primary key:TRUE</div>
+<div>Required:TRUE</div>
+<div>Length:36</div>
+<div>Precision:</div>
+<h2>application_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>document_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>date_time</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>file_name</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>file_path</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>file_size</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>deleted</h2>
+<div>Type:Bool</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>deleted_dt</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="ApplicationDostTemplate_Model" class="content_box">
+<h1>ApplicationDostTemplate_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:FALSE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>content</h2>
+<div>Type:XML</div>
+<div>Primary key:</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>comment_text</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>date_time</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="ApplicationDostTemplateList_Model" class="content_box">
+<h1>ApplicationDostTemplateList_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>date_time</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>comment_text</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="ApplicationList_Model" class="content_box">
+<h1>ApplicationList_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>users_ref</h2>
+<div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>create_dt</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>application_state</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>application_state_dt</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>application_state_end_date</h2>
+<div>Type:Date</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>constr_name</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>filled_percent</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>office_descr</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="ApplicationPdDocumentFile_Model" class="content_box">
+<h1>ApplicationPdDocumentFile_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>file_id</h2>
+<div>Type:String</div>
+<div>Primary key:TRUE</div>
+<div>Required:TRUE</div>
+<div>Length:36</div>
+<div>Precision:</div>
+<h2>application_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>document_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>date_time</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>file_name</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>file_path</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>file_size</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>deleted</h2>
+<div>Type:Bool</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>deleted_dt</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="ApplicationPdTemplate_Model" class="content_box">
+<h1>ApplicationPdTemplate_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:FALSE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>content</h2>
+<div>Type:XML</div>
+<div>Primary key:</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>comment_text</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>date_time</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="ApplicationPdTemplateList_Model" class="content_box">
+<h1>ApplicationPdTemplateList_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>date_time</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>comment_text</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="ApplicationStateHistory_Model" class="content_box">
+<h1>ApplicationStateHistory_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:FALSE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>application_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>date_time</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>state</h2>
+<div>Type:Enum</div>
+<div>Primary key:</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="ApplicationTemplateContent_Model" class="content_box">
+<h1>ApplicationTemplateContent_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>descr</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="Bank_Model" class="content_box">
+<h1>Bank_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>bik</h2>
+<div>Type:String</div>
+<div>Primary key:TRUE</div>
+<div>Required:</div>
+<div>Length:9</div>
+<div>Precision:</div>
+<h2>codegr</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:9</div>
+<div>Precision:</div>
+<h2>name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:50</div>
+<div>Precision:</div>
+<h2>korshet</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:20</div>
+<div>Precision:</div>
+<h2>adres</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:70</div>
+<div>Precision:</div>
+<h2>gor</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:31</div>
+<div>Precision:</div>
+<h2>tgroup</h2>
+<div>Type:Bool</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="BankList_Model" class="content_box">
+<h1>BankList_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>bik</h2>
+<div>Type:String</div>
+<div>Primary key:TRUE</div>
+<div>Required:</div>
+<div>Length:9</div>
+<div>Precision:</div>
+<h2>codegr</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:9</div>
+<div>Precision:</div>
+<h2>gr_descr</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:50</div>
+<div>Precision:</div>
+<h2>name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:50</div>
+<div>Precision:</div>
+<h2>korshet</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:20</div>
+<div>Precision:</div>
+<h2>adres</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:70</div>
+<div>Precision:</div>
+<h2>gor</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:31</div>
+<div>Precision:</div>
+<h2>tgoup</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:31</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="ChatMessage_Model" class="content_box">
+<h1>ChatMessage_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:FALSE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>date_time</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>employee_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>to_employee_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>out_mail_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>in_mail_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>subject</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>content</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>parent_chat_message_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="ChatMessageAttachment_Model" class="content_box">
+<h1>ChatMessageAttachment_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>chat_message_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>file_name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:255</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="Client_Model" class="content_box">
+<h1>Client_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:TRUE</div>
+<div>Length:100</div>
+<div>Precision:</div>
+<h2>name_full</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>inn</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:TRUE</div>
+<div>Length:12</div>
+<div>Precision:</div>
+<h2>kpp</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:10</div>
+<div>Precision:</div>
+<h2>ogrn</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:15</div>
+<div>Precision:</div>
+<h2>okpo</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:20</div>
+<div>Precision:</div>
+<h2>okved</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>ext_id</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:36</div>
+<div>Precision:</div>
+<h2>user_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>post_address</h2>
+<div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>legal_address</h2>
+<div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>responsable_persons</h2>
+<div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>bank_accounts</h2>
+<div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>client_type</h2>
+<div>Type:Enum</div>
+<div>Primary key:</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>base_document_for_contract</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>person_id_paper</h2>
+<div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>person_registr_paper</h2>
+<div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="ClientBankAccount_Model" class="content_box">
+<h1>ClientBankAccount_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>acc_number</h2>
+<div>Type:String</div>
+<div>Primary key:TRUE</div>
+<div>Required:</div>
+<div>Length:20</div>
+<div>Precision:</div>
+<h2>bank_bik</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>bank_descr</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="ClientList_Model" class="content_box">
+<h1>ClientList_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>inn</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>user_id</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="ClientPersonIdPaper_Model" class="content_box">
+<h1>ClientPersonIdPaper_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>paper</h2>
+<div>Type:String</div>
+<div>Primary key:TRUE</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>series</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>number</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>issue_body</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>issue_date</h2>
+<div>Type:Date</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="ClientPersonRegistrPaper_Model" class="content_box">
+<h1>ClientPersonRegistrPaper_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:String</div>
+<div>Primary key:TRUE</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>issue_date</h2>
+<div>Type:Date</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="ClientResponsablePerson_Model" class="content_box">
+<h1>ClientResponsablePerson_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>dep</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>post</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>tel</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>email</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>person_type</h2>
+<div>Type:Enum</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="ConstantList_Model" class="content_box">
+<h1>ConstantList_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:String</div>
+<div>Primary key:TRUE</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>descr</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>val</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>val_type</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>ctrl_class</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>ctrl_options</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>view_class</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>view_options</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="ConstrTypeTechnicalFeature_Model" class="content_box">
+<h1>ConstrTypeTechnicalFeature_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>construction_type</h2>
+<div>Type:Enum</div>
+<div>Primary key:TRUE</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>technical_features</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="ConstrTypeTechnicalFeatureList_Model" class="content_box">
+<h1>ConstrTypeTechnicalFeatureList_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>construction_type</h2>
+<div>Type:Enum</div>
+<div>Primary key:TRUE</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="Department_Model" class="content_box">
+<h1>Department_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:FALSE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:200</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="DepartmentDialog_Model" class="content_box">
+<h1>DepartmentDialog_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="DepartmentList_Model" class="content_box">
+<h1>DepartmentList_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="DownloadFileType_Model" class="content_box">
+<h1>DownloadFileType_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>ext</h2>
+<div>Type:String</div>
+<div>Primary key:TRUE</div>
+<div>Required:</div>
+<div>Length:5</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="EmailTemplate_Model" class="content_box">
+<h1>EmailTemplate_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:FALSE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>email_type</h2>
+<div>Type:Enum</div>
+<div>Primary key:FALSE</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>template</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>comment_text</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>mes_subject</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>fields</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="EmailTemplateList_Model" class="content_box">
+<h1>EmailTemplateList_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>email_type</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>mes_subject</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>template</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>comment_text</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>fields</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="Employee_Model" class="content_box">
+<h1>Employee_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:FALSE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:200</div>
+<div>Precision:</div>
+<h2>user_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>department_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="EmployeeDialog_Model" class="content_box">
+<h1>EmployeeDialog_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>users_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>departments_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="EmployeeList_Model" class="content_box">
+<h1>EmployeeList_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>departments_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="Holiday_Model" class="content_box">
+<h1>Holiday_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>date</h2>
+<div>Type:Date</div>
+<div>Primary key:TRUE</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:200</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="InMail_Model" class="content_box">
+<h1>InMail_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:FALSE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>date_time</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>from_addr</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:50</div>
+<div>Precision:</div>
+<h2>from_name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:255</div>
+<div>Precision:</div>
+<h2>reply_addr</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:50</div>
+<div>Precision:</div>
+<h2>reply_name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:255</div>
+<div>Precision:</div>
+<h2>subject</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>reg_number</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:15</div>
+<div>Precision:</div>
+<h2>content</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="InMailAttachment_Model" class="content_box">
+<h1>InMailAttachment_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>in_mail_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>file_name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:255</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="Kladr_Model" class="content_box">
+<h1>Kladr_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>region_code</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>raion_code</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>naspunkt_code</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>ulitsa_code</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>gorod_code</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>full_name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="MailForSending_Model" class="content_box">
+<h1>MailForSending_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>date_time</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>from_addr</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:50</div>
+<div>Precision:</div>
+<h2>from_name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:255</div>
+<div>Precision:</div>
+<h2>to_addr</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:50</div>
+<div>Precision:</div>
+<h2>to_name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:255</div>
+<div>Precision:</div>
+<h2>reply_addr</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:50</div>
+<div>Precision:</div>
+<h2>reply_name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:255</div>
+<div>Precision:</div>
+<h2>body</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>sender_addr</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:50</div>
+<div>Precision:</div>
+<h2>subject</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:255</div>
+<div>Precision:</div>
+<h2>sent</h2>
+<div>Type:Bool</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>sent_date_time</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>email_type</h2>
+<div>Type:Enum</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="MailForSendingAttachment_Model" class="content_box">
+<h1>MailForSendingAttachment_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>mail_for_sending_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>file_name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:255</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="MailForSendingList_Model" class="content_box">
+<h1>MailForSendingList_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>date_time</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>from_addr</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:50</div>
+<div>Precision:</div>
+<h2>from_name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:255</div>
+<div>Precision:</div>
+<h2>to_addr</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:50</div>
+<div>Precision:</div>
+<h2>to_name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:255</div>
+<div>Precision:</div>
+<h2>reply_addr</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:50</div>
+<div>Precision:</div>
+<h2>reply_name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:255</div>
+<div>Precision:</div>
+<h2>body</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>sender_addr</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:50</div>
+<div>Precision:</div>
+<h2>subject</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:255</div>
+<div>Precision:</div>
+<h2>sent</h2>
+<div>Type:Bool</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>sent_date_time</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>email_type</h2>
+<div>Type:Enum</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="MainMenuConstructor_Model" class="content_box">
+<h1>MainMenuConstructor_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:FALSE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>role_id</h2>
+<div>Type:Enum</div>
+<div>Primary key:</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>user_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>content</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="MainMenuConstructorList_Model" class="content_box">
+<h1>MainMenuConstructorList_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>role_id</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>role_descr</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>user_id</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>user_descr</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>content</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="MainMenuContent_Model" class="content_box">
+<h1>MainMenuContent_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>descr</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>viewid</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>viewdescr</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>default</h2>
+<div>Type:Bool</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>glyphclass</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="Morpher_Model" class="content_box">
+<h1>Morpher_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>src</h2>
+<div>Type:Text</div>
+<div>Primary key:TRUE</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>res</h2>
+<div>Type:XML</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="Office_Model" class="content_box">
+<h1>Office_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:FALSE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>client_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="OfficeList_Model" class="content_box">
+<h1>OfficeList_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>clients_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>client_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>address</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="OutMail_Model" class="content_box">
+<h1>OutMail_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:FALSE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>date_time</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>employee_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>to_user_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>to_addr</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:50</div>
+<div>Precision:</div>
+<h2>to_name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:255</div>
+<div>Precision:</div>
+<h2>application_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>subject</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>reg_number</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:15</div>
+<div>Precision:</div>
+<h2>content</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>sent</h2>
+<div>Type:Bool</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="OutMailAttachment_Model" class="content_box">
+<h1>OutMailAttachment_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>file_id</h2>
+<div>Type:String</div>
+<div>Primary key:TRUE</div>
+<div>Required:TRUE</div>
+<div>Length:36</div>
+<div>Precision:</div>
+<h2>out_mail_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>file_name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:255</div>
+<div>Precision:</div>
+<h2>file_size</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="OutMailDialog_Model" class="content_box">
+<h1>OutMailDialog_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:FALSE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>date_time</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>employees_ref</h2>
+<div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>to_users_ref</h2>
+<div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>to_addr</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>to_name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>applications_ref</h2>
+<div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>subject</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>content</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>files</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>sent</h2>
+<div>Type:Bool</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>reg_number</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:15</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="OutMailList_Model" class="content_box">
+<h1>OutMailList_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:FALSE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>date_time</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>employees_ref</h2>
+<div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>to_users_ref</h2>
+<div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>to_addr</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>to_name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>applications_ref</h2>
+<div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>subject</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>reg_number</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:15</div>
+<div>Precision:</div>
+<h2>sent</h2>
+<div>Type:Bool</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="PersonIdPaper_Model" class="content_box">
+<h1>PersonIdPaper_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:100</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="TechnicalFeature_Model" class="content_box">
+<h1>TechnicalFeature_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>name</h2>
+<div>Type:String</div>
+<div>Primary key:TRUE</div>
+<div>Required:</div>
+<div>Length:100</div>
+<div>Precision:</div>
+<h2>value</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:100</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="TimeZoneLocale_Model" class="content_box">
+<h1>TimeZoneLocale_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>descr</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:TRUE</div>
+<div>Length:100</div>
+<div>Precision:</div>
+<h2>name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:TRUE</div>
+<div>Length:50</div>
+<div>Precision:</div>
+<h2>hour_dif</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="User_Model" class="content_box">
+<h1>User_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:TRUE</div>
+<div>Length:50</div>
+<div>Precision:</div>
+<h2>role_id</h2>
+<div>Type:Enum</div>
+<div>Primary key:</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>pwd</h2>
+<div>Type:Password</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:32</div>
+<div>Precision:</div>
+<h2>phone_cel</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:10</div>
+<div>Precision:</div>
+<h2>time_zone_locale_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>email</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:50</div>
+<div>Precision:</div>
+<h2>locale_id</h2>
+<div>Type:Enum</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>pers_data_proc_agreement</h2>
+<div>Type:Bool</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>create_dt</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>email_confirmed</h2>
+<div>Type:Bool</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>comment_text</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="UserDialog_Model" class="content_box">
+<h1>UserDialog_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>email</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>role_descr</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>role_id</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>time_zone_locale_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>time_zone_locale_descr</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>phone_cel</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:11</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="UserEmailConfirmation_Model" class="content_box">
+<h1>UserEmailConfirmation_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>key</h2>
+<div>Type:String</div>
+<div>Primary key:TRUE</div>
+<div>Required:TRUE</div>
+<div>Length:36</div>
+<div>Precision:</div>
+<h2>user_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>dt</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>confirmed</h2>
+<div>Type:Bool</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="UserList_Model" class="content_box">
+<h1>UserList_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:TRUE</div>
+<div>Length:50</div>
+<div>Precision:</div>
+<h2>email</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:50</div>
+<div>Precision:</div>
+<h2>phone_cel</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:50</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="UserProfile_Model" class="content_box">
+<h1>UserProfile_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>email</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>phone_cel</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:11</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="VariantStorage_Model" class="content_box">
+<h1>VariantStorage_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>user_id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>storage_name</h2>
+<div>Type:Text</div>
+<div>Primary key:TRUE</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>variant_name</h2>
+<div>Type:Text</div>
+<div>Primary key:TRUE</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>default_variant</h2>
+<div>Type:Bool</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>filter_data</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>col_visib_data</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>col_order_data</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="VariantStorageList_Model" class="content_box">
+<h1>VariantStorageList_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>user_id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>storage_name</h2>
+<div>Type:Text</div>
+<div>Primary key:TRUE</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>default_variant</h2>
+<div>Type:Bool</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>variant_name</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="View_Model" class="content_box">
+<h1>View_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:FALSE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>c</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>f</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>t</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>section</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>descr</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>limited</h2>
+<div>Type:boolean</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="ViewList_Model" class="content_box">
+<h1>ViewList_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:FALSE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>c</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>f</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>t</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>href</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>user_descr</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>section</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="ViewSectionList_Model" class="content_box">
+<h1>ViewSectionList_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>section</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="application_states" class="content_box">
+<h1>application_states</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Values:</p>
+<h2>filling</h2>
+<div>Description:</div>
+<h2>sent</h2>
+<div>Description:</div>
+<h2>checking</h2>
+<div>Description:</div>
+<h2>returned</h2>
+<div>Description:</div>
+<h2>closed_no_expertise</h2>
+<div>Description:</div>
+<h2>waiting_for_contract</h2>
+<div>Description:</div>
+<h2>waiting_for_pay</h2>
+<div>Description:</div>
+</div>
+</div>
+<div id="aria_units" class="content_box">
+<h1>aria_units</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Values:</p>
+<h2>m</h2>
+<div>Description:</div>
+<h2>km</h2>
+<div>Description:</div>
+<h2>ga</h2>
+<div>Description:</div>
+<h2>akr</h2>
+<div>Description:</div>
+</div>
+</div>
+<div id="client_types" class="content_box">
+<h1>client_types</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Values:</p>
+<h2>enterprise</h2>
+<div>Description:</div>
+<h2>person</h2>
+<div>Description:</div>
+</div>
+</div>
+<div id="construction_types" class="content_box">
+<h1>construction_types</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Values:</p>
+<h2>buildings</h2>
+<div>Description:</div>
+<h2>extended_constructions</h2>
+<div>Description:</div>
+</div>
+</div>
+<div id="email_types" class="content_box">
+<h1>email_types</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Values:</p>
+<h2>new_account</h2>
+<div>Description:</div>
+<h2>reset_pwd</h2>
+<div>Description:</div>
+<h2>user_email_conf</h2>
+<div>Description:</div>
+<h2>out_mail</h2>
+<div>Description:</div>
+</div>
+</div>
+<div id="estim_cost_types" class="content_box">
+<h1>estim_cost_types</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Values:</p>
+<h2>construction</h2>
+<div>Description:</div>
+<h2>reconstruction</h2>
+<div>Description:</div>
+<h2>capital_repairs</h2>
+<div>Description:</div>
+</div>
+</div>
+<div id="expertise_types" class="content_box">
+<h1>expertise_types</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Values:</p>
+<h2>pd</h2>
+<div>Description:</div>
+<h2>eng_survey</h2>
+<div>Description:</div>
+<h2>pd_eng_survey</h2>
+<div>Description:</div>
+<h2>pd_eng_survey_estim_cost</h2>
+<div>Description:</div>
+</div>
+</div>
+<div id="fund_sources" class="content_box">
+<h1>fund_sources</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Values:</p>
+<h2>fed_budget</h2>
+<div>Description:</div>
+<h2>own</h2>
+<div>Description:</div>
+</div>
+</div>
+<div id="locales" class="content_box">
+<h1>locales</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Values:</p>
+<h2>ru</h2>
+<div>Description:</div>
+</div>
+</div>
+<div id="out_mail_types" class="content_box">
+<h1>out_mail_types</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Values:</p>
+<h2>to_client</h2>
+<div>Description:</div>
+<h2>email</h2>
+<div>Description:</div>
+<h2>ordinary</h2>
+<div>Description:</div>
+</div>
+</div>
+<div id="responsable_person_types" class="content_box">
+<h1>responsable_person_types</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Values:</p>
+<h2>boss</h2>
+<div>Description:</div>
+<h2>chef_accountant</h2>
+<div>Description:</div>
+<h2>other</h2>
+<div>Description:</div>
+</div>
+</div>
+<div id="role_types" class="content_box">
+<h1>role_types</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Values:</p>
+<h2>admin</h2>
+<div>Description:</div>
+<h2>client</h2>
+<div>Description:</div>
+<h2>lawyer</h2>
+<div>Description:</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

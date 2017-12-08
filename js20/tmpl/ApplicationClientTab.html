@@ -1,0 +1,69 @@
+<div id="{{id}}">	
+	<div class="dropdown">
+		<h3 class="app-client-header">
+		{{#isCustomer}}Заказчик{{/isCustomer}}
+		{{#isApplicant}}Заявитель{{/isApplicant}}  </h3>
+		{{#isClient}}
+		<button class="btn {{colorClass}} dropdown-toggle fillClientData" type="button" data-toggle="dropdown">Заполнить
+			<span class="caret"></span>
+		</button>
+		<ul class="dropdown-menu" title="Зполнить по другим данным">
+			{{#isCustomer}}
+			<li><a id="{{id}}:fillOnApplicant" href="#">По заявителю</a></li>
+			<li><a id="{{id}}:fillOnContractor" href="#">По исполнителю</a></li>			
+			{{/isCustomer}}
+			{{#isApplicant}}
+			<li><a id="{{id}}:fillOnCustomer" href="#">По заказчику</a></li>
+			<li><a id="{{id}}:fillOnContractor" href="#">По исполнителю</a></li>			
+			{{/isApplicant}}			
+			<li><a id="{{id}}:fillOnClientList" href="#">Выбрать из списка клиентов</a></li>
+		</ul>
+		{{/isClient}}
+	</div> 	
+	<div id="{{id}}:client_type">
+	</div>
+	<div id="{{id}}:name">
+	</div>
+	<div id="{{id}}:name_full">
+	</div>
+	
+	<div id="{{id}}:inn">
+	</div>
+	<div id="{{id}}:kpp">
+	</div>
+	
+	<div id="{{id}}:ogrn">
+	</div>
+	
+	<div id="{{id}}:person_id_paper">
+	</div>
+
+	<div id="{{id}}:person_registr_paper">
+	</div>
+
+	<div id="{{id}}:legal_address">
+	</div>
+
+	<div id="{{id}}:post_address">
+	</div>
+
+	<div id="{{id}}:responsable_person_head">
+	</div>
+
+	<div id="{{id}}:base_document_for_contract">
+	</div>
+
+	<div id="{{id}}:bank">
+	</div>
+
+	<div class="panel panel-flat">
+		<div class="panel-heading">
+			<h5 class="panel-title">Прочие контакты</h5>
+		</div>
+		<div class="panel-body">
+			<div id="{{id}}:responsable_persons">
+			</div>
+		</div>	
+	</div>
+	
+</div>

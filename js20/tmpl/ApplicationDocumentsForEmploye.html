@@ -1,0 +1,52 @@
+<div id="{{id}}">
+	<div class="panel-group panel-group-control content-group-lg">	
+		{{#items}}
+		<div class="panel">
+			<div class="panel-heading bg-info">
+				<h6 class="panel-title">
+					<a data-toggle="collapse" href="#collapsible-control-group{{item_id}}" aria-expanded="false" class="collapsed">
+					{{#no_items}}<span id="total_item_files_{{item_id}}" class="badge badge-danger">{{files.length}}</span>{{/no_items}} {{item_descr}}</a>
+				</h6>
+			</div>
+			<div id="collapsible-control-group{{item_id}}" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+				<div class="panel-body">				
+					{{#no_items}}
+					<div class="resumable-file-list" item_id="{{item_id}}">						
+						<ul id="file-list-{{docType}}_{{item_id}}">
+						{{#files}}
+							<li id="{{id}}:file_{{file_id}}">
+							</li>
+						{{/files}}
+						</ul>
+					</div>					
+					{{/no_items}}
+					{{#items}}
+					<div class="panel-group panel-group-control panel-group-control-right content-group-sm">
+						<div class="panel panel-white">
+							<div class="panel-heading">
+								<h6 class="panel-title">
+									<a class="collapsed" data-toggle="collapse" href="#collapsible-control-right-group{{item_id}}" aria-expanded="false">
+									<span id="total_item_files_{{item_id}}" class="badge badge-danger">{{files.length}}</span> {{item_descr}}</a>
+								</h6>
+							</div>
+							<div id="collapsible-control-right-group{{item_id}}" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+								<div class="panel-body">
+									<div class="resumable-file-list" item_id="{{item_id}}">
+										<ul id="file-list-{{docType}}_{{item_id}}">
+										{{#files}}
+											<li id="{{id}}:file_{{file_id}}">
+											</li>										
+										{{/files}}
+										</ul>
+									</div>					
+								</div>
+							</div>
+						</div>
+					</div>	
+					{{/items}}			
+				</div>
+			</div>
+		</div>
+		{{/items}}
+	</div>
+</div>	

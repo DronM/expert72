@@ -1,0 +1,1 @@
+/home/andrey/www/includes/fw_20/build/templates/build.proj-tmpl/templates.proj-tmpl/functions.proj-tmpl/role_permissions.xsl
