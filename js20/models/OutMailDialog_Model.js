@@ -46,7 +46,7 @@ function OutMailDialog_Model(options){
 	
 	filed_options.autoInc = false;	
 	
-	options.fields.employees_ref = new FieldJSONB("employees_ref",filed_options);
+	options.fields.employees_ref = new FieldJSON("employees_ref",filed_options);
 	
 				
 	
@@ -55,7 +55,7 @@ function OutMailDialog_Model(options){
 	
 	filed_options.autoInc = false;	
 	
-	options.fields.to_users_ref = new FieldJSONB("to_users_ref",filed_options);
+	options.fields.to_users_ref = new FieldJSON("to_users_ref",filed_options);
 	
 				
 	
@@ -64,8 +64,8 @@ function OutMailDialog_Model(options){
 	
 	filed_options.autoInc = false;	
 	
-	options.fields.to_addr = new FieldString("to_addr",filed_options);
-	options.fields.to_addr.getValidator().setMaxLength('50');
+	options.fields.to_addr_name = new FieldString("to_addr_name",filed_options);
+	options.fields.to_addr_name.getValidator().setMaxLength('250');
 	
 				
 	
@@ -74,17 +74,7 @@ function OutMailDialog_Model(options){
 	
 	filed_options.autoInc = false;	
 	
-	options.fields.to_name = new FieldString("to_name",filed_options);
-	options.fields.to_name.getValidator().setMaxLength('255');
-	
-				
-	
-	var filed_options = {};
-	filed_options.primaryKey = false;	
-	
-	filed_options.autoInc = false;	
-	
-	options.fields.applications_ref = new FieldJSONB("applications_ref",filed_options);
+	options.fields.applications_ref = new FieldJSON("applications_ref",filed_options);
 	
 				
 	

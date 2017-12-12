@@ -52,9 +52,9 @@ class ViewBase extends ViewHTMLXSLT {
 		parent::__construct($name);
 		<xsl:apply-templates select="metadata/cssScripts"/>		
 		
-		if (!DEBUG){
-			$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'lib.js'));
+		if (!DEBUG){			
 			<xsl:apply-templates select="metadata/jsScripts/jsScript[@standalone='TRUE']"/>
+			$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'lib.js'));
 			$script_id = VERSION;
 		}
 		else{		
@@ -77,7 +77,7 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->getVarModel()->insert();
 		$this->setVarValue('scriptId',$script_id);
 		$this->setVarValue('basePath','http://'.$_SERVER['HTTP_HOST'].'/'.APP_NAME.'/');//BASE_PATH
-		$this->setVarValue('version',VERSION);		
+		$this->setVarValue('version',trim(VERSION));
 		$this->setVarValue('debug',DEBUG);
 		if (isset($_SESSION['locale_id'])){
 			$this->setVarValue('locale_id',$_SESSION['locale_id']);

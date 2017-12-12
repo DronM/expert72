@@ -8,8 +8,8 @@ require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLFloat.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLEnum.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLDate.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLDateTimeTZ.php');
+require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLJSON.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLJSONB.php');
-require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLXML.php');
 
 class ApplicationDialog_Model extends ModelSQL{
 	
@@ -172,7 +172,7 @@ class ApplicationDialog_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['id']="documents_pd";
 		
-		$f_documents_pd=new FieldSQLXML($this->getDbLink(),$this->getDbName(),$this->getTableName(),"documents_pd",$f_opts);
+		$f_documents_pd=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"documents_pd",$f_opts);
 		$this->addField($f_documents_pd);
 		//********************
 	
@@ -180,7 +180,7 @@ class ApplicationDialog_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['id']="documents_dost";
 		
-		$f_documents_dost=new FieldSQLXML($this->getDbLink(),$this->getDbName(),$this->getTableName(),"documents_dost",$f_opts);
+		$f_documents_dost=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"documents_dost",$f_opts);
 		$this->addField($f_documents_dost);
 		//********************
 	

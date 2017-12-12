@@ -52,22 +52,13 @@ class OutMailList_Model extends ModelSQL{
 		$this->addField($f_to_users_ref);
 		//********************
 	
-		//*** Field to_addr ***
+		//*** Field to_addr_name ***
 		$f_opts = array();
-		$f_opts['length']=50;
-		$f_opts['id']="to_addr";
+		$f_opts['length']=250;
+		$f_opts['id']="to_addr_name";
 		
-		$f_to_addr=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"to_addr",$f_opts);
-		$this->addField($f_to_addr);
-		//********************
-	
-		//*** Field to_name ***
-		$f_opts = array();
-		$f_opts['length']=255;
-		$f_opts['id']="to_name";
-		
-		$f_to_name=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"to_name",$f_opts);
-		$this->addField($f_to_name);
+		$f_to_addr_name=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"to_addr_name",$f_opts);
+		$this->addField($f_to_addr_name);
 		//********************
 	
 		//*** Field applications_ref ***
@@ -101,6 +92,14 @@ class OutMailList_Model extends ModelSQL{
 		
 		$f_sent=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"sent",$f_opts);
 		$this->addField($f_sent);
+		//********************
+	
+		//*** Field attachments_exist ***
+		$f_opts = array();
+		$f_opts['id']="attachments_exist";
+		
+		$f_attachments_exist=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"attachments_exist",$f_opts);
+		$this->addField($f_attachments_exist);
 		//********************
 
 		$order = new ModelOrderSQL();		

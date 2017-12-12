@@ -25,7 +25,6 @@ function OutMailDialog_View(id,options){
 		"notToClient":true,
 		"isNotSent":true
 	};	
-	var files;
 	if (options.model && options.model.getNextRow()){
 		/*
 		if (!options.model.getField("applications_ref").isNull()){
@@ -34,7 +33,10 @@ function OutMailDialog_View(id,options){
 		}
 		*/
 		options.templateOptions.isNotSent = !options.model.getFieldValue("sent");
-		options.templateOptions.files = CommonHelper.unserialize(options.model.getFieldValue("files"));
+		options.templateOptions.files = options.model.getFieldValue("files") || [];
+	}
+	else{
+		options.templateOptions.files = [];
 	}
 	
 
@@ -57,23 +59,25 @@ function OutMailDialog_View(id,options){
 		var editContClassName = "input-group "+bs+"10";
 		var labelClassName = "control-label "+bs+"2";
 		var is_admin = (window.getApp().getServVar("role_id")=="admin");
+		
+		this.addElement(new HiddenKey(id+":id"));
+		
 		//EditDateTime
-		this.addElement(new EditDateTime(id+":date_time",{
-			//"value":DateHelper.time(),
-			//"className":"",
-			//"html":"<input/>",
+		this.addElement(new EditDate(id+":date_time",{//DateTime
+			"attrs":{"style":"width:250px;"},
+			"value":DateHelper.time(),
+			"inline":true,
 			"editMask":"99/99/9999 99:99",
 			"dateFormat":"d/m/Y H:i",
-			//"cmdClear":false,
-			//"cmdSelect":false,
+			"cmdClear":false,
 			"enabled":is_admin
 		}));	
 		this.addElement(new EditString(id+":reg_number",{
-			//"html":"<input/>",
-			//"className":"",
+			"attrs":{"autofocus":"autofocus","style":"width:150px;"},
+			"inline":true,
 			"cmdClear":false,
 			"maxLength":"15",
-			"placeholder":"Регистрационный номер"
+			"placeholder":"Регистрационный номер"			
 		}));	
 		/*
 		this.addElement(new Control(id+":applications_ref","A",{
@@ -85,21 +89,27 @@ function OutMailDialog_View(id,options){
 			}
 		}));	
 		*/
-		this.addElement(new EditEmail(id+":to_addr",{
+		var ac_m = new ModelXML("Addr_Model",{"fields":["to_addr_name"]});
+		this.addElement(new EditString(id+":to_addr_name",{
 			"editContClassName":editContClassName,
 			"labelClassName":labelClassName,
 			"labelCaption":"Кому:",
-			"placeholder":"Адрес электронной почты получателя"
+			"placeholder":"Адрес электронной почты и имя получателя",
+			"cmdAutoComplete":true,
+			"acMinLengthForQuery":1,
+			//"onSelect":options.onSelect,
+			"acModel":ac_m,
+			"acPublicMethod":options.controller.getPublicMethod("complete_addr_name"),
+			"acPatternFieldId":"to_addr_name",
+			"control":function(){
+				return self.getElement("to_addr_name");
+			},
+			"acKeyFields":[ac_m.getField("to_addr_name")],
+			"acDescrFields":[ac_m.getField("to_addr_name")],
+			"acICase":"1",
+			"acMid":"1"
 		}));	
 
-		this.addElement(new EditString(id+":to_name",{
-			"editContClassName":editContClassName,
-			"labelClassName":labelClassName,
-			"labelCaption":" ",
-			"placeholder":"Имя получателя",
-			"maxLength":"255"
-		}));	
-		
 		this.addElement(new EmployeeEditRef(id+":employees_ref",{
 			"editContClassName":editContClassName,
 			"labelClassName":labelClassName,
@@ -112,20 +122,20 @@ function OutMailDialog_View(id,options){
 			"editContClassName":editContClassName,
 			"labelClassName":labelClassName,
 			"labelCaption":"Тема:",
-			"placeholder":"Тема письма",
-			"required":true
+			"placeholder":"Тема письма"
 		}));	
 
 		this.addElement(new EditHTML(id+":content",{
 			"editContClassName":editContClassName,
 			"labelClassName":labelClassName,			
 			"labelCaption":"Содержание:",
-			"placeholder":"Содержание письма"
+			"placeholder":"Содержание письма"			
 		}));	
 	
 		var file_cont = new ControlContainer(id+":file-list","DIV");
-		for(var i=0;i<files;i++){
-			this.addFileToContainer(file_cont,files[i]);
+		for(var i=0;i<options.templateOptions.files.length;i++){
+			options.templateOptions.files[i].file_uploaded = true;
+			this.addFileToContainer(file_cont,options.templateOptions.files[i],options.templateOptions.isNotSent);
 		}
 		this.addElement(file_cont);
 
@@ -137,12 +147,12 @@ function OutMailDialog_View(id,options){
 	//read
 	this.setReadPublicMethod((new Employee_Controller()).getPublicMethod("get_object"));
 	this.setDataBindings([
-		new DataBinding({"control":this.getElement("date_time"),"model":this.m_model})
+		new DataBinding({"control":this.getElement("id"),"model":this.m_model})
+		,new DataBinding({"control":this.getElement("date_time"),"model":this.m_model})
 		,new DataBinding({"control":this.getElement("reg_number"),"model":this.m_model})	
 		,new DataBinding({"control":this.getElement("employees_ref"),"model":this.m_model})
 		,new DataBinding({"control":this.getElement("applications_ref"),"model":this.m_model})
-		,new DataBinding({"control":this.getElement("to_addr"),"model":this.m_model})
-		,new DataBinding({"control":this.getElement("to_name"),"model":this.m_model})
+		,new DataBinding({"control":this.getElement("to_addr_name"),"model":this.m_model})
 		,new DataBinding({"control":this.getElement("subject"),"model":this.m_model})
 		,new DataBinding({"control":this.getElement("content"),"model":this.m_model})		
 	]);
@@ -151,8 +161,7 @@ function OutMailDialog_View(id,options){
 	this.setWriteBindings([
 		new CommandBinding({"control":this.getElement("date_time"),"fieldId":"date_time"})
 		,new CommandBinding({"control":this.getElement("reg_number"),"fieldId":"reg_number"})
-		,new CommandBinding({"control":this.getElement("to_addr"),"fieldId":"to_addr"})
-		,new CommandBinding({"control":this.getElement("to_name"),"fieldId":"to_name"})
+		,new CommandBinding({"control":this.getElement("to_addr_name"),"fieldId":"to_addr_name"})
 		,new CommandBinding({"control":this.getElement("subject"),"fieldId":"subject"})
 		,new CommandBinding({"control":this.getElement("content"),"fieldId":"content"})		
 		,new CommandBinding({"control":this.getElement("employees_ref"),"fieldId":"employee_id"})
@@ -199,7 +208,8 @@ OutMailDialog_View.prototype.initDownload = function(){
 					"file_name":file.fileName,
 					"file_size":file.size,
 					"file_uploaded":false
-				}
+				},
+				true
 			);
 			file_cont.toDOM();
 			
@@ -222,6 +232,10 @@ OutMailDialog_View.prototype.initDownload = function(){
 			pic.setAttribute("title","Файл успешно загружен.");
 					
 			self.removeFileFromDownload(file.file_id);
+			
+			if (!self.m_resumable.files.length){
+				self.close({"updated":true,"newKeys":{"id":self.getElement("id").getValue()}});
+			}
 		}
 	});	
 	this.m_resumable.on("uploadStart",function(){
@@ -285,7 +299,7 @@ OutMailDialog_View.prototype.removeFile = function(fileId){
 	}
 }
 
-OutMailDialog_View.prototype.addFileToContainer = function(container,itemFile){
+OutMailDialog_View.prototype.addFileToContainer = function(container,itemFile,isNotSent){
 	var self = this;
 	container.addElement(new Control(this.getId()+":file_"+itemFile.file_id,"LI",{
 		"attrs":{"file_uploaded":itemFile.file_uploaded},
@@ -296,21 +310,23 @@ OutMailDialog_View.prototype.addFileToContainer = function(container,itemFile){
 			"file_not_uploaded":(itemFile.file_uploaded!=undefined)? !itemFile.file_uploaded:true,
 			"file_name":itemFile.file_name,
 			"file_size_formatted":CommonHelper.byteForamt(itemFile.file_size),
-			"isNotSent":!this.getModel().getFieldValue("sent")
+			"isNotSent":isNotSent
 		}
 	}));
-	container.addElement(new ButtonCtrl(this.getId()+":file_"+itemFile.file_id+"_del",{
-		"attrs":{"file_id":itemFile.file_id},
-		"glyph":"glyphicon-trash",
-		"onClick":function(){
-			self.removeFile(this.getAttr("file_id"));
-		}
-	}));
+	if (isNotSent){
+		container.addElement(new ButtonCtrl(this.getId()+":file_"+itemFile.file_id+"_del",{
+			"attrs":{"file_id":itemFile.file_id},
+			"glyph":"glyphicon-trash",
+			"onClick":function(){
+				self.removeFile(this.getAttr("file_id"));
+			}
+		}));
+	}
 	container.addElement(new Control(this.getId()+":file_"+itemFile.file_id+"_href","A",{
-		"attrs":{"file_id":itemFile.file_id},
+		"attrs":{"file_id":itemFile.file_id,"file_uploaded":itemFile.file_uploaded},
 		"events":{
 			"click":function(){
-				if (document.getElementById(self.getId()+":file_"+this.getAttr("file_id")).getAttribute("file_uploaded")=="true"){
+				if (this.getAttr("file_uploaded")=="true"){
 					var contr = new OutMail_Controller();
 					var pm = contr.getPublicMethod("get_file");
 					pm.setFieldValue("id",this.getAttr("file_id"));
@@ -328,22 +344,52 @@ OutMailDialog_View.prototype.onGetData = function(resp){
 	if (f.isNull() || !f.getValue("sent")){
 		this.initDownload();
 	}
+	else if (!f.isNull() && f.getValue("sent")){
+		this.setEnabled(false);
+		this.getControlOK().setEnabled(false);
+		this.getControlSave().setEnabled(false);
+		this.getControlCancel().setEnabled(true);
+	}
 }
-/*
-OutMailDialog_View.prototype.onOK = function(failFunc){
+
+OutMailDialog_View.prototype.setSent = function(v){
+	var form_cmd = this.getCmd();	
+	var contr = this.getController();
+	var meth;
+	if (form_cmd=="insert"||form_cmd=="copy"){
+		meth = contr.METH_INSERT;
+	}
+	else{
+		meth = contr.METH_UPDATE;
+	}
+	contr.getPublicMethod(meth).setFieldValue("sent",v);
+
+	this.getElement("reg_number").setRequired(v);
+	this.getElement("subject").setRequired(v);
+	this.getElement("to_addr_name").setRequired(v);
+}
+
+OutMailDialog_View.prototype.saveForm = function(){
 	var self = this;
 	this.execCommand(
 		this.CMD_OK,
 		function(resp){
-			self.onAfterUpsert(resp,false);
+			self.onAfterUpsert(resp,true);
 			self.m_resumable.upload();
-			self.close(self.m_editResult);
+			if (!self.m_resumable.files.length){
+				self.close(self.m_editResult);
+			}
 		},
-		failFunc
+		null
 	);
 }
-*/
-OutMailDialog_View.prototype.onSave = function(okFunc,failFunc){	
-	this.onOK(failFunc);
+
+OutMailDialog_View.prototype.onOK = function(failFunc){
+	this.setSent(true);
+	this.saveForm();
+}
+OutMailDialog_View.prototype.onSave = function(){	
+	this.setSent(false);
+	this.saveForm();
 }
 

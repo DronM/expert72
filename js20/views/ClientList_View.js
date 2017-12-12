@@ -44,7 +44,7 @@ function ClientList_View(id,options){
 					"elements":[
 						new GridCellHead(id+":grid:head:name",{
 							"columns":[
-								new GridColumn("name",{"field":model.getField("name")})
+								new GridColumn({"field":model.getField("name")})
 							],
 							"sortable":true,
 							"sort":"asc"

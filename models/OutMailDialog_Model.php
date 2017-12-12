@@ -8,7 +8,6 @@ require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLBool.php');
 require_once(FRAME_WORK_PATH.'basic_classes/ModelOrderSQL.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLDateTimeTZ.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLJSON.php');
-require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLJSONB.php');
 
 class OutMailDialog_Model extends ModelSQL{
 	
@@ -41,7 +40,7 @@ class OutMailDialog_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['id']="employees_ref";
 		
-		$f_employees_ref=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"employees_ref",$f_opts);
+		$f_employees_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"employees_ref",$f_opts);
 		$this->addField($f_employees_ref);
 		//********************
 	
@@ -49,33 +48,24 @@ class OutMailDialog_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['id']="to_users_ref";
 		
-		$f_to_users_ref=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"to_users_ref",$f_opts);
+		$f_to_users_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"to_users_ref",$f_opts);
 		$this->addField($f_to_users_ref);
 		//********************
 	
-		//*** Field to_addr ***
+		//*** Field to_addr_name ***
 		$f_opts = array();
-		$f_opts['length']=50;
-		$f_opts['id']="to_addr";
+		$f_opts['length']=250;
+		$f_opts['id']="to_addr_name";
 		
-		$f_to_addr=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"to_addr",$f_opts);
-		$this->addField($f_to_addr);
-		//********************
-	
-		//*** Field to_name ***
-		$f_opts = array();
-		$f_opts['length']=255;
-		$f_opts['id']="to_name";
-		
-		$f_to_name=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"to_name",$f_opts);
-		$this->addField($f_to_name);
+		$f_to_addr_name=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"to_addr_name",$f_opts);
+		$this->addField($f_to_addr_name);
 		//********************
 	
 		//*** Field applications_ref ***
 		$f_opts = array();
 		$f_opts['id']="applications_ref";
 		
-		$f_applications_ref=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"applications_ref",$f_opts);
+		$f_applications_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"applications_ref",$f_opts);
 		$this->addField($f_applications_ref);
 		//********************
 	

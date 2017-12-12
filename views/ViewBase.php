@@ -54,13 +54,14 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addCssModel(new ModelStyleSheet(USER_JS_PATH.'assets/css/components.min.css'));
 		$this->addCssModel(new ModelStyleSheet(USER_JS_PATH.'assets/css/colors.min.css'));
 		$this->addCssModel(new ModelStyleSheet(USER_JS_PATH.'assets/css/icons/fontawesome/styles.min.css'));
+		$this->addCssModel(new ModelStyleSheet(USER_JS_PATH.'ext/bootstrap-datepicker/bootstrap-datepicker.standalone.min.css'));
 		$this->addCssModel(new ModelStyleSheet(USER_JS_PATH.'custom-css/style.css'));
 		$this->addCssModel(new ModelStyleSheet(USER_JS_PATH.'custom-css/print.css'));
 			
 		
-		if (!DEBUG){
+		if (!DEBUG){			
+			$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/plugins/loaders/pace.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/core/libraries/jquery.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/core/libraries/bootstrap.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/core/libraries/bootstrap.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/core/app.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/bootstrap-datepicker/bootstrap-datepicker.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/bootstrap-datepicker/bootstrap-datepicker.ru.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/mustache/mustache.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/jshash-2.2/md5-min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/ckeditor5/ckeditor.js'));
 			$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'lib.js'));
-			$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/plugins/loaders/pace.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/core/libraries/jquery.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/core/libraries/bootstrap.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/plugins/loaders/blockui.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/plugins/forms/styling/uniform.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/plugins/visualization/d3/d3.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/plugins/visualization/d3/d3_tooltip.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/plugins/forms/styling/switchery.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/plugins/forms/selects/bootstrap_multiselect.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/plugins/ui/moment/moment.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/core/app.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/pages/dashboard.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/mustache/mustache.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/jshash-2.2/md5-min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/ckeditor5/ckeditor.js'));
 			$script_id = VERSION;
 		}
 		else{		
@@ -69,17 +70,12 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/plugins/loaders/pace.min.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/core/libraries/jquery.min.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/core/libraries/bootstrap.min.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/plugins/loaders/blockui.min.js'));
-		
-		
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/plugins/forms/styling/uniform.min.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/plugins/visualization/d3/d3.min.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/plugins/visualization/d3/d3_tooltip.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/plugins/forms/styling/switchery.min.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/plugins/forms/selects/bootstrap_multiselect.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/plugins/ui/moment/moment.min.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/core/libraries/bootstrap.min.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/core/app.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/pages/dashboard.js'));
+		
+		
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/bootstrap-datepicker/bootstrap-datepicker.min.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/bootstrap-datepicker/bootstrap-datepicker.ru.min.js'));
 		
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'jquery.maskedinput.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/resumablejs/resumable.js'));
@@ -1217,7 +1213,7 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->getVarModel()->insert();
 		$this->setVarValue('scriptId',$script_id);
 		$this->setVarValue('basePath','http://'.$_SERVER['HTTP_HOST'].'/'.APP_NAME.'/');//BASE_PATH
-		$this->setVarValue('version',VERSION);		
+		$this->setVarValue('version',trim(VERSION));
 		$this->setVarValue('debug',DEBUG);
 		if (isset($_SESSION['locale_id'])){
 			$this->setVarValue('locale_id',$_SESSION['locale_id']);

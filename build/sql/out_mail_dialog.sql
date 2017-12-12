@@ -1,6 +1,6 @@
 -- VIEW: out_mail_list
 
-DROP VIEW out_mail_dialog;
+--DROP VIEW out_mail_dialog;
 
 CREATE OR REPLACE VIEW out_mail_dialog AS
 	SELECT

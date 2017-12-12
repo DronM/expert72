@@ -29,6 +29,9 @@ function OutMail_Controller(options){
 	this.addDelete();
 	this.addGetList();
 	this.addGetObject();
+	this.add_remove_file();
+	this.add_get_file();
+	this.add_complete_addr_name();
 		
 }
 extend(OutMail_Controller,ControllerObjServer);
@@ -64,13 +67,7 @@ extend(OutMail_Controller,ControllerObjServer);
 	
 	var options = {};
 	
-	var field = new FieldString("to_addr",options);
-	
-	pm.addField(field);
-	
-	var options = {};
-	
-	var field = new FieldString("to_name",options);
+	var field = new FieldString("to_addr_name",options);
 	
 	pm.addField(field);
 	
@@ -142,13 +139,7 @@ extend(OutMail_Controller,ControllerObjServer);
 	
 	var options = {};
 	
-	var field = new FieldString("to_addr",options);
-	
-	pm.addField(field);
-	
-	var options = {};
-	
-	var field = new FieldString("to_name",options);
+	var field = new FieldString("to_addr_name",options);
 	
 	pm.addField(field);
 	
@@ -224,10 +215,7 @@ extend(OutMail_Controller,ControllerObjServer);
 	pm.addField(new FieldInt("to_user_id",f_opts));
 	var f_opts = {};
 	
-	pm.addField(new FieldString("to_addr",f_opts));
-	var f_opts = {};
-	
-	pm.addField(new FieldString("to_name",f_opts));
+	pm.addField(new FieldString("to_addr_name",f_opts));
 	var f_opts = {};
 	
 	pm.addField(new FieldInt("application_id",f_opts));
@@ -254,6 +242,75 @@ extend(OutMail_Controller,ControllerObjServer);
 	var f_opts = {};
 		
 	pm.addField(new FieldInt("id",f_opts));
+}
+
+			OutMail_Controller.prototype.add_remove_file = function(){
+	var opts = {"controller":this};
+	
+	var pm = new PublicMethodServer('remove_file',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		options.maxlength = "36";
+	
+		pm.addField(new FieldString("id",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			OutMail_Controller.prototype.add_get_file = function(){
+	var opts = {"controller":this};
+	
+	var pm = new PublicMethodServer('get_file',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		options.maxlength = "36";
+	
+		pm.addField(new FieldString("id",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			OutMail_Controller.prototype.add_complete_addr_name = function(){
+	var opts = {"controller":this};
+	
+	var pm = new PublicMethodServer('complete_addr_name',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		options.maxlength = "250";
+	
+		pm.addField(new FieldString("to_addr_name",options));
+	
+				
+	
+	var options = {};
+	
+		pm.addField(new FieldInt("ic",options));
+	
+				
+	
+	var options = {};
+	
+		pm.addField(new FieldInt("mid",options));
+	
+			
+	this.addPublicMethod(pm);
 }
 
 		

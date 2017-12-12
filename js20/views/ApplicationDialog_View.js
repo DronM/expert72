@@ -30,12 +30,13 @@ function ApplicationDialog_View(id,options){
 	
 	var constants = {"client_download_file_types":null,"client_download_file_max_size":null,"application_check_days":0};
 	window.getApp().getConstantManager().get(constants);
-	var t_model = CommonHelper.unserialize(constants.client_download_file_types.getValue());
+	var t_model = constants.client_download_file_types.getValue();
+	console.dir(t_model)
 	this.m_fileTypes = [];
 	this.max_file_size = constants.client_download_file_max_size.getValue();
 	var allowedFileExt = [];//Это для шаблона
 	if (!t_model.rows){
-		throw new Exception("Не определены расширения для загрузки! Заполните константу!");
+		throw new Error("Не определены расширения для загрузки! Заполните константу!");
 	}
 	for (var i=0;i<t_model.rows.length;i++){
 		this.m_fileTypes.push(t_model.rows[i].fields.ext);
@@ -203,8 +204,8 @@ function ApplicationDialog_View(id,options){
 		
 		var items_pd,items_dost;
 		if (options.model && options.model.getNextRow()){
-			items_pd = CommonHelper.unserialize(options.model.getFieldValue("documents_pd"));
-			items_dost = CommonHelper.unserialize(options.model.getFieldValue("documents_dost"));
+			items_pd = options.model.getFieldValue("documents_pd");//CommonHelper.unserialize(options.model.getFieldValue("documents_pd"));
+			items_dost = options.model.getFieldValue("documents_dost");//CommonHelper.unserialize(options.model.getFieldValue("documents_dost"));
 		}
 		
 		var mfz_formatted = CommonHelper.byteForamt(this.max_file_size);
@@ -692,8 +693,8 @@ ApplicationDialog_View.prototype.addFileControls = function(docType,items){
 ApplicationDialog_View.prototype.onOK = function(failFunc){
 	var frm_cmd = this.getCmd();
 	var pm = this.m_controller.getPublicMethod(
-		(frm_cmd=="insert"||frm_cmd=="copy")? this.m_controller.METH_INSERT:this.m_controller.METH_UPDATE
-	)
+		(frm_cmd=="insert" || frm_cmd=="copy")? this.m_controller.METH_INSERT:this.m_controller.METH_UPDATE
+	);
 	pm.setFieldValue("filled_percent",this.m_totalFilledPercent);
 	
 	ApplicationDialog_View.superclass.onOK.call(this,failFunc);

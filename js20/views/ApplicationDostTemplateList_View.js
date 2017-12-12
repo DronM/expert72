@@ -43,7 +43,7 @@ function ApplicationDostTemplateList_View(id,options){
 						new GridCellHead(id+":grid:head:date_time",{
 							"value":"Дата шаблона",
 							"columns":[
-								new GridColumnDate("date_time",{"field":model.getField("date_time")})
+								new GridColumnDate({"field":model.getField("date_time")})
 							],
 							"sortable":true,
 							"sort":"desc"
@@ -51,7 +51,7 @@ function ApplicationDostTemplateList_View(id,options){
 						new GridCellHead(id+":grid:head:comment_text",{
 							"value":"Комментарий",
 							"columns":[
-								new GridColumn("comment_text",{"field":model.getField("comment_text")})
+								new GridColumn({"field":model.getField("comment_text")})
 							]
 						})										
 					]

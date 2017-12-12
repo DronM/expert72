@@ -26,19 +26,19 @@ function UserList_View(id,options){
 					"elements":[
 						new GridCellHead(id+":grid:head:name",{
 							"columns":[
-								new GridColumn("name",{"field":model.getField("name")})
+								new GridColumn({"field":model.getField("name")})
 							],
 							"sortable":true,
 							"sort":"asc"							
 						}),
 						new GridCellHead(id+":grid:head:email",{
 							"columns":[
-								new GridColumn("email",{"field":model.getField("email")})
+								new GridColumn({"field":model.getField("email")})
 							]
 						}),											
 						new GridCellHead(id+":grid:head:phone_cel",{
 							"columns":[
-								new GridColumnPhone("phone_cel",{"field":model.getField("phone_cel")})
+								new GridColumnPhone({"field":model.getField("phone_cel")})
 							],
 							"sortable":true
 						})

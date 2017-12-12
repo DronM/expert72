@@ -7,10 +7,20 @@ CREATE OR REPLACE FUNCTION email_reg_out_mail(in_out_mail_id int)
 $BODY$
 	SELECT
 		'' AS mes_body,		
-		mail.to_addr::text AS email,
+		
+		CASE WHEN mail.to_addr_name LIKE '%<%>%' THEN
+			trim(substring(mail.to_addr_name FROM position('<' in mail.to_addr_name)+1 FOR position('>' in mail.to_addr_name)-position('<' in mail.to_addr_name)-1))
+		ELSE
+			mail.to_addr_name
+		END AS email,
 		mail.subject AS mes_subject,
 		''::text AS firm,
-		mail.to_name::text AS client
+		
+		CASE WHEN mail.to_addr_name LIKE '%<%>%' THEN
+			trim(substring(mail.to_addr_name FROM 1 FOR position('<' in mail.to_addr_name)-1))
+		ELSE
+			''
+		END AS client
 	FROM out_mail AS mail
 	WHERE mail.id=$1;
 $BODY$

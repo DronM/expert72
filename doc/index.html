@@ -836,7 +836,56 @@
 <a href="#OutMail_Model">Model: OutMail_Model</a><h2>delete</h2>
 <a href="#OutMail_Model">Model: OutMail_Model</a><h2>get_list</h2>
 <a href="#OutMailList_Model">Model: OutMailList_Model</a><h2>get_object</h2>
-<a href="#OutMailDialog_Model">Model: OutMailDialog_Model</a>
+<a href="#OutMailDialog_Model">Model: OutMailDialog_Model</a><h2>remove_file</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Да</p>
+<p>Length:36</p>
+</div>
+</div>
+<h2>get_file</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Да</p>
+<p>Length:36</p>
+</div>
+</div>
+<h2>complete_addr_name</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>to_addr_name</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Да</p>
+<p>Length:250</p>
+</div>
+<h3>ic</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Нет</p>
+</div>
+<h3>mid</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Нет</p>
+</div>
+</div>
 </div>
 </div>
 <div id="PersonIdPaper_Controller" class="content_box">
@@ -1485,13 +1534,13 @@
 <div>Length:</div>
 <div>Precision:</div>
 <h2>documents_pd</h2>
-<div>Type:XML</div>
+<div>Type:JSON</div>
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
 <h2>documents_dost</h2>
-<div>Type:XML</div>
+<div>Type:JSON</div>
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>
@@ -3176,17 +3225,11 @@
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
-<h2>to_addr</h2>
+<h2>to_addr_name</h2>
 <div>Type:String</div>
 <div>Primary key:</div>
 <div>Required:</div>
-<div>Length:50</div>
-<div>Precision:</div>
-<h2>to_name</h2>
-<div>Type:String</div>
-<div>Primary key:</div>
-<div>Required:</div>
-<div>Length:255</div>
+<div>Length:250</div>
 <div>Precision:</div>
 <h2>application_id</h2>
 <div>Type:Int</div>
@@ -3267,31 +3310,25 @@
 <div>Length:</div>
 <div>Precision:</div>
 <h2>employees_ref</h2>
-<div>Type:JSONB</div>
+<div>Type:JSON</div>
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
 <h2>to_users_ref</h2>
-<div>Type:JSONB</div>
+<div>Type:JSON</div>
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
-<h2>to_addr</h2>
-<div>Type:String</div>
-<div>Primary key:</div>
-<div>Required:</div>
-<div>Length:</div>
-<div>Precision:</div>
-<h2>to_name</h2>
+<h2>to_addr_name</h2>
 <div>Type:String</div>
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
 <h2>applications_ref</h2>
-<div>Type:JSONB</div>
+<div>Type:JSON</div>
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>
@@ -3356,13 +3393,7 @@
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
-<h2>to_addr</h2>
-<div>Type:String</div>
-<div>Primary key:</div>
-<div>Required:</div>
-<div>Length:</div>
-<div>Precision:</div>
-<h2>to_name</h2>
+<h2>to_addr_name</h2>
 <div>Type:String</div>
 <div>Primary key:</div>
 <div>Required:</div>
@@ -3387,6 +3418,12 @@
 <div>Length:15</div>
 <div>Precision:</div>
 <h2>sent</h2>
+<div>Type:Bool</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>attachments_exist</h2>
 <div>Type:Bool</div>
 <div>Primary key:</div>
 <div>Required:</div>

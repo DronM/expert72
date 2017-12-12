@@ -360,27 +360,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			throw new Exception(self::STORAGE_FILE_NOT_FOUND.' '.$fl);
 		}
 		
-		$MIME_TYPES = [
-			'xml' => 'application/xml',
-			'pdf' => 'application/pdf',
-			'zip' => 'application/zip',
-			'gzip' => 'application/gzip',
-			'gif' => 'image/gif',
-			'png' => 'image/png',
-			'jpeg' => 'image/jpeg',
-			'txt' => 'text/plain',
-			'html' => 'text/html',
-		];
-		$DEF_MIME = 'application/octet-stream';		
-		$ar_name_parts = explode('.',$ar['file_name']);		
-		if (count($ar_name_parts)){
-			$cl_mime = $ar_name_parts[count($ar_name_parts)-1];
-			$mime = (isset($MIME_TYPES[$cl_mime]))? $MIME_TYPES[$cl_mime]:$DEF_MIME;
-		}
-		else{
-			$mime =  $DEF_MIME;
-		}
-		
+		$mime = getMimeTypeOnExt($ar['file_name']);
 		ob_clean();
 		downloadFile($fl, $mime,'attachment;',$ar['file_name']);
 		return TRUE;

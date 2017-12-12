@@ -64,18 +64,8 @@ function OutMail_Model(options){
 	
 	filed_options.autoInc = false;	
 	
-	options.fields.to_addr = new FieldString("to_addr",filed_options);
-	options.fields.to_addr.getValidator().setMaxLength('50');
-	
-				
-	
-	var filed_options = {};
-	filed_options.primaryKey = false;	
-	
-	filed_options.autoInc = false;	
-	
-	options.fields.to_name = new FieldString("to_name",filed_options);
-	options.fields.to_name.getValidator().setMaxLength('255');
+	options.fields.to_addr_name = new FieldString("to_addr_name",filed_options);
+	options.fields.to_addr_name.getValidator().setMaxLength('250');
 	
 				
 	
@@ -123,6 +113,7 @@ function OutMail_Model(options){
 	
 	options.fields.sent = new FieldBool("sent",filed_options);
 	
+			
 			
 			
 			

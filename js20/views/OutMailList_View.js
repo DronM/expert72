@@ -81,6 +81,17 @@ function OutMailList_View(id,options){
 									})
 							]
 						}),										
+						new GridCellHead(id+":grid:head:attachments_exist",{
+							"value":"Вложения",
+							"columns":[
+								new GridColumn({
+									"field":model.getField("attachments_exist"),
+									"assocClassList":{
+										"true":"glyphicon glyphicon-paperclip"
+										}
+									})
+							]
+						}),																
 						new GridCellHead(id+":grid:head:reg_number",{
 							"value":"Рег.номер",
 							"columns":[
@@ -91,7 +102,10 @@ function OutMailList_View(id,options){
 						new GridCellHead(id+":grid:head:date_time",{
 							"value":"Дата",
 							"columns":[
-								new GridColumnDate({"field":model.getField("date_time")})
+								new GridColumnDate({
+									"field":model.getField("date_time"),
+									"dateFormat":"d/m/Y H:i"
+								})
 							],
 							"sortable":true,
 							"sort":"desc"
@@ -105,6 +119,27 @@ function OutMailList_View(id,options){
 							],
 							"sortable":true
 						}),
+						new GridCellHead(id+":grid:head:to_addr_name",{
+							"value":"Получатель",
+							"columns":[
+								new GridColumn({									
+									"field":model.getField("to_addr_name")
+									/*
+									,"formatFunction":function(fields){
+										var res = "";
+										if (fields.to_addr_name.isSet()){
+											//res = fields.to_addr.getValue()+" "+fields.to_name.getValue();
+										}
+										else if (fields.applications_ref.isSet()){
+											//res = fields.applications_ref.getDescr();
+										}
+										return res;
+									}
+									*/
+								})
+							]
+						}),
+						
 						new GridCellHead(id+":grid:head:employees_ref",{
 							"value":"Отправитель",
 							"columns":[

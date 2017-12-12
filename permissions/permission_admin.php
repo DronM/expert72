@@ -306,6 +306,12 @@ $permissions = array();
 				
 					$permissions['OutMail_Controller_get_object']=TRUE;
 				
+					$permissions['OutMail_Controller_remove_file']=TRUE;
+				
+					$permissions['OutMail_Controller_get_file']=TRUE;
+				
+					$permissions['OutMail_Controller_complete_addr_name']=TRUE;
+				
 					$permissions['Department_Controller_insert']=TRUE;
 				
 					$permissions['Department_Controller_update']=TRUE;

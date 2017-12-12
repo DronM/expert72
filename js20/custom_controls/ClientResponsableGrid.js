@@ -20,13 +20,13 @@ function ClientResponsableGrid(id,options){
 		new GridCellHead(id+":head:dep",{
 			"value":"Отдел",
 			"columns":[
-				new GridColumn("dep",{"field":model.getField("dep")})
+				new GridColumn({"field":model.getField("dep")})
 			]
 		}),					
 		new GridCellHead(id+":head:name",{
 			"value":"ФИО",
 			"columns":[
-				new GridColumn("name",{
+				new GridColumn({
 					"field":model.getField("name")
 				})
 			],
@@ -36,13 +36,13 @@ function ClientResponsableGrid(id,options){
 		new GridCellHead(id+":head:post",{
 			"value":"Должность",
 			"columns":[
-				new GridColumn("post",{"field":model.getField("post")})
+				new GridColumn({"field":model.getField("post")})
 			]
 		}),
 		new GridCellHead(id+":head:tel",{
 			"value":"Телефон",
 			"columns":[
-				new GridColumnPhone("tel",{
+				new GridColumnPhone({
 					"field":model.getField("tel"),
 					"ctrlClass":EditPhone
 				})
@@ -51,7 +51,7 @@ function ClientResponsableGrid(id,options){
 		new GridCellHead(id+":head:email",{
 			"value":"Эл.почта",
 			"columns":[
-				new GridColumnEmail("email",{
+				new GridColumnEmail({
 					"field":model.getField("email"),
 					"ctrlClass":EditEmail
 				})

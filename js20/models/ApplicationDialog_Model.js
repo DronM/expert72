@@ -193,7 +193,7 @@ function ApplicationDialog_Model(options){
 	
 	filed_options.autoInc = false;	
 	
-	options.fields.documents_pd = new FieldXML("documents_pd",filed_options);
+	options.fields.documents_pd = new FieldJSON("documents_pd",filed_options);
 	
 				
 	
@@ -202,7 +202,7 @@ function ApplicationDialog_Model(options){
 	
 	filed_options.autoInc = false;	
 	
-	options.fields.documents_dost = new FieldXML("documents_dost",filed_options);
+	options.fields.documents_dost = new FieldJSON("documents_dost",filed_options);
 	
 				
 	
