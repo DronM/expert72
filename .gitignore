@@ -7,6 +7,7 @@ build/build.log
 output
 client_files
 tmps
+uploads
 /js20/custom_controls/rs_common_ru.js
 /js20/custom_controls/DOCCommands.js
 /js20/custom_controls/DOCNumberEdit.js
