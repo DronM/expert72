@@ -51,6 +51,12 @@ extend(Department_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	
+	var field = new FieldInt("boss_employee_id",options);
+	
+	pm.addField(field);
+	
 	pm.addField(new FieldInt("ret_id",{}));
 	
 	
@@ -72,6 +78,12 @@ extend(Department_Controller,ControllerObjServer);
 	var options = {};
 	
 	var field = new FieldString("name",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldInt("boss_employee_id",options);
 	
 	pm.addField(field);
 	
@@ -118,6 +130,9 @@ extend(Department_Controller,ControllerObjServer);
 	var f_opts = {};
 	
 	pm.addField(new FieldString("name",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldInt("boss_employee_id",f_opts));
 	pm.getField(this.PARAM_ORD_FIELDS).setValue("name");
 	
 }

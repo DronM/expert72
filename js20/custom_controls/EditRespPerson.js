@@ -18,7 +18,9 @@ function EditRespPerson(id,options){
 	options.viewTemplate = "EditRespPerson";
 	options.headTitle = "Редактирование данных физического лица";
 	
+	this.m_minInf = options.minInf;
 	this.m_mainView = options.mainView;		
+			
 	EditRespPerson.superclass.constructor.call(this,id,options);
 }
 extend(EditRespPerson,EditModalDialog);
@@ -53,10 +55,13 @@ EditRespPerson.prototype.formatValue = function(val){
 }
 EditRespPerson.prototype.getFillPercent = function(){
 	return (
-		((this.m_valueJSON && this.m_valueJSON["name"])? 34:0)
-		+((this.m_valueJSON && this.m_valueJSON.post)? 33:0)
-		+((this.m_valueJSON && this.m_valueJSON.tel)? 33:0)
-	)
+		this.m_minInf? 100 :
+		(
+			((this.m_valueJSON && this.m_valueJSON["name"])? 34:0)
+			+((this.m_valueJSON && this.m_valueJSON.post)? 33:0)
+			+((this.m_valueJSON && this.m_valueJSON.tel)? 33:0)
+		)
+	);
 }
 
 EditRespPerson.prototype.closeSelect = function(){

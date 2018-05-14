@@ -36,11 +36,11 @@ extend(EditAddress,EditModalDialog);
 EditAddress.prototype.formatValue = function(val){
 	var descr = "";
 	if (val){
-		if (val.region && !val.region.isNull()) descr+= ((descr=="")? "":", ") + val.region.getDescr();
-		if (val.raion && !val.raion.isNull()) descr+= ((descr=="")? "":", ") + val.raion.getDescr();
-		if (val.naspunkt && !val.naspunkt.isNull()) descr+= ((descr=="")? "":", ") + val.naspunkt.getDescr();
-		if (val.gorod && !val.gorod.isNull()) descr+= ((descr=="")? "":", ") + val.gorod.getDescr();
-		if (val.ulitsa && !val.ulitsa.isNull()) descr+= ((descr=="")? "":", ") + val.ulitsa.getDescr();
+		if (val.region && val.region.getDescr()) descr+= ((descr=="")? "":", ") + val.region.getDescr();
+		if (val.raion && val.raion.getDescr()) descr+= ((descr=="")? "":", ") + val.raion.getDescr();
+		if (val.naspunkt && val.naspunkt.getDescr()) descr+= ((descr=="")? "":", ") + val.naspunkt.getDescr();
+		if (val.gorod && val.gorod.getDescr()) descr+= ((descr=="")? "":", ") + val.gorod.getDescr();
+		if (val.ulitsa && val.ulitsa.getDescr()) descr+= ((descr=="")? "":", ") + val.ulitsa.getDescr();
 		if (val.dom) descr+= ((descr=="")? "":", ") + "д."+val.dom;
 		if (val.korpus) descr+= ((descr=="")? "":", ") + "корп."+val.korpus;
 		if (val.kvartira) descr+= ((descr=="")? "":", ") + "кв/оф."+val.kvartira;
@@ -56,6 +56,6 @@ EditAddress.prototype.getFillPercent = function(){
 }
 
 EditAddress.prototype.closeSelect = function(){
-	this.m_mainView.calcFillPercent();
+	if(this.m_mainView && this.m_mainView.calcFillPercent)this.m_mainView.calcFillPercent();
 	EditAddress.superclass.closeSelect.call(this);
 }

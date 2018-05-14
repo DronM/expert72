@@ -1,4 +1,10 @@
 <?php
+/**
+ *
+ * THIS FILE IS GENERATED FROM TEMPLATE build/templates/models/Model_php.xsl
+ * ALL DIRECT MODIFICATIONS WILL BE LOST WITH THE NEXT BUILD PROCESS!!!
+ *
+ */
 
 require_once(FRAME_WORK_PATH.'basic_classes/ModelSQL.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLInt.php');
@@ -6,7 +12,7 @@ require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLText.php');
 require_once(FRAME_WORK_PATH.'basic_classes/ModelOrderSQL.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLDateTimeTZ.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLXML.php');
-
+ 
 class ApplicationDostTemplate_Model extends ModelSQL{
 	
 	public function __construct($dbLink){
@@ -25,7 +31,7 @@ class ApplicationDostTemplate_Model extends ModelSQL{
 		$f_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"id",$f_opts);
 		$this->addField($f_id);
 		//********************
-	
+		
 		//*** Field content ***
 		$f_opts = array();
 		$f_opts['id']="content";
@@ -33,7 +39,7 @@ class ApplicationDostTemplate_Model extends ModelSQL{
 		$f_content=new FieldSQLXML($this->getDbLink(),$this->getDbName(),$this->getTableName(),"content",$f_opts);
 		$this->addField($f_content);
 		//********************
-	
+		
 		//*** Field comment_text ***
 		$f_opts = array();
 		$f_opts['id']="comment_text";
@@ -41,7 +47,7 @@ class ApplicationDostTemplate_Model extends ModelSQL{
 		$f_comment_text=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"comment_text",$f_opts);
 		$this->addField($f_comment_text);
 		//********************
-	
+		
 		//*** Field date_time ***
 		$f_opts = array();
 		$f_opts['defaultValue']='now()';
@@ -50,7 +56,7 @@ class ApplicationDostTemplate_Model extends ModelSQL{
 		$f_date_time=new FieldSQLDateTimeTZ($this->getDbLink(),$this->getDbName(),$this->getTableName(),"date_time",$f_opts);
 		$this->addField($f_date_time);
 		//********************
-
+	
 		$order = new ModelOrderSQL();		
 		$this->setDefaultModelOrder($order);		
 		$direct = 'DESC';

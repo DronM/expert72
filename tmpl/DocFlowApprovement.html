@@ -1,0 +1,123 @@
+<div id="{{id}}" class="panel panel-flat">	
+	{{#approve}}
+	<div id="{{id}}:cmd-cont">
+		<div id="{{id}}:cmdApprove" />				
+		<div id="{{id}}:cmdApproveWithRemarks" />
+		<div id="{{id}}:cmdDisapprove" />
+		<div id="{{id}}:cmdCancel"/>
+	</div>
+	{{/approve}}
+
+	{{#notification}}
+	<div id="{{id}}:cmd-cont">
+		<div id="{{id}}:cmdSetClosed" />
+		<div id="{{id}}:cmdCancel"/>
+	</div>
+	{{/notification}}
+
+	{{#setTask}}
+	<div id="{{id}}:cmd-cont">
+		<div id="{{id}}:cmdOk" options="{'caption':'Запустить процесс ','glyph':'glyphicon-send'}" title="Запустить процесс согласования для выбранных сотрудников" />
+		<div id="{{id}}:cmdCancel"/>
+	</div>
+	{{/setTask}}
+
+	<div class="panel-heading">
+		{{#setTask}}
+		<h2 class="panel-title">Соглсование №<span id="{{id}}:id"/> от <span id="{{id}}:date_time"/></h2>		
+		{{/setTask}}
+		
+		{{#approve}}
+		<h2 class="panel-title">{{title}}</h2>		
+		{{/approve}}
+
+		{{#notification}}
+		<h2 class="panel-title">{{title}}</h2>		
+		{{/notification}}
+		
+	</div>
+
+	{{#setTask}}
+	<div id="{{id}}:state_descr" class="text-info hidden"/>
+	{{/setTask}}
+	
+	<div class="steps-basic wizard clearfix">
+		<div class="steps clearfix">
+			<ul role="tablist">
+				{{#chain}}
+				<li role="tab" class="{{tab-class}}" aria-disabled="false" aria-selected="{{aria-selected}}">
+					<a id="{{id}}:step{{step}}" href="#">
+						<span class="number">{{step}}</span> {{doc_descr}} {{state_descr}}
+					</a>
+				</li>
+				{{/chain}}
+			</ul>
+		</div>
+	</div>			
+	
+	{{#setTask}}	
+	<div id="{{id}}:subject"/>
+	{{/setTask}}
+	
+	<div id="{{id}}:description"/>					
+	
+	<div id="{{id}}:subject_docs_ref">	
+		<a href="#" id="{{id}}:state_descr" class="hidden" title="История статусов"/>
+	</div>
+	
+	<div class="row">
+		<div class="col-lg-3">
+			<div id="{{id}}:end_date_time"/>
+		</div>
+
+		<div class="col-lg-3">
+			<div id="{{id}}:doc_flow_importance_types_ref"/>
+		</div>
+	</div>				
+	
+	{{#setTask}}
+	<div id="{{id}}:doc_flow_approvement_type"/>
+	
+	<div id="{{id}}:recipient_list_ref" class="panel"/>
+	
+	<div class="row">
+		<div class="col-lg-8">	
+			<div id="{{id}}:employees_ref"/>
+		</div>
+		
+		<div class="col-lg-4">
+			<div id="{{id}}:close_date_time"/>
+		</div>
+	</div>
+	
+	<div class="panel-footer">
+		<div class="heading-elements">
+			<div class="heading-btn pull-left">
+				<div id="{{id}}:cmdOk" options="{'caption':'Запустить процесс ','glyph':'glyphicon-send'}" title="Запустить процесс согласования для выбранных сотрудников" />
+				<div id="{{id}}:cmdCancel"/>
+			</div>
+		</div>
+	</div>	
+	{{/setTask}}
+	
+	{{#approve}}
+	<div class="row">
+		<div class="col-lg-8">	
+			<div id="{{id}}:employees_ref"/>
+		</div>
+	</div>
+
+	<div class="row">
+		<div id="{{id}}:employee_comment"/>
+	</div>	
+	
+	{{/approve}}
+	
+	{{#notification}}
+	<div id="{{id}}:doc_flow_approvement_type"/>
+	
+	<div id="{{id}}:recipient_list_ref" class="panel"/>
+	
+	{{/notification}}
+	
+</div>

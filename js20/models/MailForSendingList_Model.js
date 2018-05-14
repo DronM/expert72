@@ -1,4 +1,8 @@
 /**	
+ *
+ * THIS FILE IS GENERATED FROM TEMPLATE build/templates/models/Model_js.xsl
+ * ALL DIRECT MODIFICATIONS WILL BE LOST WITH THE NEXT BUILD PROCESS!!!
+ *
  * @author Andrey Mikhalevich <katrenplus@mail.ru>, 2017
  * @class
  * @classdesc Model class. Created from template build/templates/models/Model_js.xsl. !!!DO NOT MODEFY!!!
@@ -152,7 +156,7 @@ function MailForSendingList_Model(options){
 	filed_options.autoInc = false;	
 	
 	options.fields.email_type = new FieldEnum("email_type",filed_options);
-	filed_options.enumValues = 'new_account,reset_pwd,user_email_conf,out_mail';
+	filed_options.enumValues = 'new_account,reset_pwd,user_email_conf,out_mail,new_app,app_change,new_remind,out_mail_to_app';
 	
 		MailForSendingList_Model.superclass.constructor.call(this,id,options);
 }

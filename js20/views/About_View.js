@@ -12,15 +12,25 @@
 function About_View(id,options){
 	options = options || {};	
 	
-	this.m_model = options.models.About_Model;
-	this.m_model.getRow(0);
+	options.tagName = "template";
 
-	this.APP_NAME = this.m_model.getFieldValue("app_name");
-	this.APP_VERSION = this.m_model.getFieldValue("app_version");
-	this.APP_AUTHOR = this.m_model.getFieldValue("author");
-	this.TECH_MAIL = this.m_model.getFieldValue("tech_mail");
-	this.DB_NAME = this.m_model.getFieldValue("db_name");
-	this.FW_VERSION = this.m_model.getFieldValue("fw_version");				
+	this.model = options.models.About_Model;
+	this.model.getRow(0);
+	
+	options.templateOptions = {
+		"LB_APP_NAME":this.LB_APP_NAME,
+		"LB_VERSION":this.LB_VERSION,
+		"LB_AUTHOR":this.LB_AUTHOR,
+		"LB_TECH_MAIL":this.LB_TECH_MAIL,
+		"LB_DB_NAME":this.LB_DB_NAME,
+		"LB_FW_SERVER_VERSION":this.LB_FW_SERVER_VERSION,
+		"LB_FW_CLIENT_VERSION":this.LB_FW_CLIENT_VERSION,
+		"VERSION":window.getApp().VERSION
+	};
+	var fields = this.model.getFields();
+	for(var fid in fields){
+		options.templateOptions[fid] = fields[fid].getValue();
+	}
 
 	About_View.superclass.constructor.call(this,id,options);
 }
@@ -30,9 +40,9 @@ extend(About_View,ViewAjx);
 
 
 /* private members */
-About_View.prototype.m_model;
 
 /* protected*/
 
 
 /* public methods */
+

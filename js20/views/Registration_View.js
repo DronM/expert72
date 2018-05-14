@@ -11,61 +11,74 @@
  */	
 function Registration_View(id,options){	
 
+	options = options || {};
+	
+	options.cmdOk = false;
+	options.cmdCancel = false;
+	options.cmdSave = false;
+
 	Registration_View.superclass.constructor.call(this,id,options);
 	
 	var self = this;
 	
 	this.addElement(new ErrorControl(id+":error"));
 	
-	this.addElement(new EditString(id+":name",{				
+	var check_for_enter = function(e){
+		e = EventHelper.fixKeyEvent(e);		
+		if (e.keyCode==13){
+			e.preventDefault();
+			e.stopPropagation();
+			self.submit();			
+			return false;
+		}
+	};
+	
+	//
+	this.addElement(new UserNameEdit(id+":name",{				
 		"html":"<input/>",
 		"focus":true,
-		"maxLength":"100",
-		"minLength":this.NAME_MIN_LEN,
-		"cmdClear":false,
-		"required":true,
+		"labelCaption":"",
 		"errorControl":new ErrorControl(id+":name:error"),
 		"events":{
 			"keyup":function(){
-				self.checkName();	
-			}
+				self.getElement("name").checkName();
+			},
+			"keydown":check_for_enter
 		}				
 	}));	
-
-	this.addElement(new EditPassword(id+":pwd",{				
+	this.addElement(new EditString(id+":name_full",{				
 		"html":"<input/>",
-		"maxLength":"100",
-		"minLength":this.PWD_MIN_LEN,
+		"labelCaption":"",
+		"errorControl":new ErrorControl(id+":name_full:error"),
 		"cmdClear":false,
+		"maxLength":250,
+		"required":true,
+		"events":{"keydown":check_for_enter}
+	}));	
+	
+	this.addElement(new UserPwdEdit(id+":pwd",{				
+		"view":this,
+		"html":"<input/>",
 		"required":true,
 		"errorControl":new ErrorControl(id+":pwd:error"),
-		"events":{
-			"keyup":function(){
-				self.checkPassDelay();	
-			}
-		}		
+		"events":{"keydown":check_for_enter}
 	}));	
 
-	this.addElement(new EditPassword(id+":pwd_confirm",{				
+	this.addElement(new UserPwdEdit(id+":pwd_confirm",{				
+		"view":this,
 		"html":"<input/>",
-		"maxLength":"100",
-		"minLength":this.PWD_MIN_LEN,
-		"cmdClear":false,
 		"required":true,
 		"errorControl":new ErrorControl(id+":pwd_confirm:error"),
-		"events":{
-			"keyup":function(){
-				self.checkPassDelay();	
-			}
-		}		
+		"events":{"keydown":check_for_enter}
 	}));	
-					
+	
 	this.addElement(new EditEmail(id+":email",{				
 		"html":"<input/>",
 		"maxLength":"100",
 		"cmdClear":false,
 		"required":true,
-		"errorControl":new ErrorControl(id+":email:error")
+		"errorControl":new ErrorControl(id+":email:error"),
+		"events":{"keydown":check_for_enter}
 	}));	
 
 	this.addElement(new EditCheckBox(id+":pers_data_proc_agreement",{
@@ -80,7 +93,8 @@ function Registration_View(id,options){
 	}));	
 	
 	this.addElement(new Captcha(id+":captcha",{
-		"errorControl":new ErrorControl(id+":captcha:error")
+		"errorControl":new ErrorControl(id+":captcha:error"),
+		"events":{"keydown":check_for_enter}
 	}));	
 	
 	this.addElement(new Button(id+":submit",{
@@ -100,68 +114,18 @@ function Registration_View(id,options){
 		"async":false,
 		"bindings":[
 			new DataBinding({"field":pm.getField("name"),"control":this.getElement("name")}),
+			new DataBinding({"field":pm.getField("name_full"),"control":this.getElement("name_full")}),
 			new DataBinding({"field":pm.getField("email"),"control":this.getElement("email")}),
 			new DataBinding({"field":pm.getField("pwd"),"control":this.getElement("pwd")}),
 			new DataBinding({"field":pm.getField("pers_data_proc_agreement"),"control":this.getElement("pers_data_proc_agreement")}),
 			new DataBinding({"field":pm.getField("captcha_key"),"control":this.getElement("captcha")})
 		]		
 	}));
-
-	this.addCommand(new Command("name_check",{
-		"publicMethod":contr.getPublicMethod("name_check"),
-		"control":null,
-		"async":true,
-		"bindings":[
-			new DataBinding({"field":contr.getPublicMethod("name_check").getField("name"),"control":this.getElement("name")})
-		]		
-	}));
-
-	this.m_takenNames = [];
 }
-extend(Registration_View,Pwd_View);
-
-Registration_View.prototype.m_nameCheckTimeout;
-Registration_View.prototype.m_takenNames;
-Registration_View.prototype.m_takenError;
-
-Registration_View.prototype.NAME_MIN_LEN = 3;
-Registration_View.prototype.NAME_CHECK_DELAY = 1000;
+extend(Registration_View,ViewAjx);//Pwd_View
 
 Registration_View.prototype.setError = function(s){
 	this.getElement("error").setValue(s);
-}
-
-Registration_View.prototype.checkName = function(){
-	if (this.m_nameCheckTimeout){
-		window.clearTimeout(this.m_nameCheckTimeout);
-	}
-	
-	var self = this;
-	var v = this.getElement("name").getValue();
-	
-	if (!v || v.length<=this.NAME_MIN_LEN){
-		this.getElement("name").getErrorControl().setValue("");
-		return;
-	}
-	
-	if (CommonHelper.inArray(v,this.m_takenNames)>=0){
-		this.getElement("name").getErrorControl().setValue(this.m_takenError);
-		return;
-	}
-	
-	this.m_nameCheckTimeout = window.setTimeout(function(){		
-		self.execCommand("name_check",
-			function(){
-				self.getElement("name").getErrorControl().setValue("");
-			},
-			function(resp,errCode,errStr){
-				//Other errors!
-				self.m_takenError = errStr;
-				self.getElement("name").getErrorControl().setValue(errStr);
-				self.m_takenNames.push(v);
-			}
-		);
-	},this.NAME_CHECK_DELAY);
 }
 
 Registration_View.prototype.submit = function(){
@@ -173,10 +137,15 @@ Registration_View.prototype.submit = function(){
 	var self = this;
 	this.execCommand("register",
 		function(){
-			//document.location.href = window.getApp().getHost();	
+			document.location.href = window.getApp().getHost();	
 		},
 		function(resp,errCode,errStr){
+		console.dir(resp);
 			self.setError(errStr);
+			if (resp.modelExists("Captcha_Model")){
+				self.getElement("captcha").setFromResp(resp);
+			}
+			
 		}
 	);
 }

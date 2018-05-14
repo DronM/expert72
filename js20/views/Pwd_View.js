@@ -14,7 +14,7 @@ function Pwd_View(id,options){
 	Pwd_View.superclass.constructor.call(this,id,options);
 	
 }
-extend(Pwd_View,ViewAjx);//ViewObjectAjx
+extend(Pwd_View,ViewObjectAjx);//ViewAjx Registration_View,UserProfile_View
 
 Pwd_View.prototype.PWD_CHECK_DELAY = 500;
 Pwd_View.prototype.PWD_MIN_LEN = "6";

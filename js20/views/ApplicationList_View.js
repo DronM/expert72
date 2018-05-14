@@ -19,8 +19,10 @@ function ApplicationList_View(id,options){
 	var model = options.models.ApplicationList_Model;
 	var contr = new Application_Controller();
 	
-	var constants = {"doc_per_page_count":null,"application_check_days":0};
+	var constants = {"doc_per_page_count":null,"grid_refresh_interval":null};
 	window.getApp().getConstantManager().get(constants);
+	
+	var role_id = window.getApp().getServVar("role_id");
 	
 	var pagClass = window.getApp().getPaginationClass();
 	
@@ -70,6 +72,109 @@ function ApplicationList_View(id,options){
 		
 	};
 	
+	var fields = [
+		new GridCellHead(id+":grid:head:id",{
+			"value":this.COL_CAP_id,
+			"columns":[
+				new GridColumn({"field":model.getField("id")})
+			],
+			"sortable":true							
+		}),					
+		new GridCellHead(id+":grid:head:create_dt",{
+			"value":this.COL_CAP_create_dt,
+			"columns":[
+				new GridColumnDate({"field":model.getField("create_dt")})
+			],
+			"sortable":true,
+			"sort":"desc"
+		}),
+		new GridCellHead(id+":grid:head:service_list",{
+			"value":"Услуги",
+			"columns":[
+				new GridColumn({
+					"field":model.getField("service_list")
+				})
+			]
+		}),
+		
+		new GridCellHead(id+":grid:head:constr_name",{
+			"value":this.COL_CAP_constr_name,
+			"columns":[
+				new GridColumn({
+					"field":model.getField("constr_name")
+				})
+			],
+			"sortable":true
+		}),
+		new GridCellHead(id+":grid:head:application_state",{
+			"value":this.COL_CAP_application_state,
+			"colAttrs":{
+				"state":function(fields){
+					return fields.application_state.getValue();
+				}
+			},
+			"columns":[
+				new EnumGridColumn_application_states({									
+					"field":model.getField("application_state"),
+					"formatFunction":function(fields){
+						var val = fields.application_state.getValue();
+						var res = this.getAssocValueList()[val];
+						if (val=="filling"){
+							res+=" ";
+							res+= ((!fields.filled_percent.getValue())? 0:fields.filled_percent.getValue())+"%";
+						}
+						else if (val=="checking"){
+							res+=" до ";
+							res+= DateHelper.format(fields.application_state_end_date.getValue(),"d/m/Y H:i");
+						
+						}
+						return res;
+					}
+				})
+			]
+		}),										
+		new GridCellHead(id+":grid:head:applicant_name",{
+				"value":"Заявитель",
+				"columns":[
+					new GridColumn({
+						"field":model.getField("applicant_name")
+					})
+				],
+				"sortable":true
+		}),
+		new GridCellHead(id+":grid:head:office",{
+			"value":this.COL_CAP_office,
+			"columns":[
+				new GridColumn({
+					"field":model.getField("office_descr")
+				})
+			],
+			"sortable":true
+		})
+	];
+	
+	if (role_id!="client"){
+		fields.push(new GridCellHead(id+":grid:head:customer_name",{
+				"value":"Заказчик",
+				"columns":[
+					new GridColumn({
+						"field":model.getField("customer_name")
+					})
+				],
+				"sortable":true
+			})
+		);
+	}
+	fields.push(new GridCellHead(id+":grid:head:unviewed_in_docs",{
+			"value":"Новые письма",
+			"columns":[
+				new GridColumnRef({
+					"field":model.getField("unviewed_in_docs")
+				})
+			]
+		})
+	);
+
 	this.addElement(new GridAjx(id+":grid",{
 		"model":model,
 		"keyIds":["id"],
@@ -85,65 +190,7 @@ function ApplicationList_View(id,options){
 		"head":new GridHead(id+"-grid:head",{
 			"elements":[
 				new GridRow(id+":grid:head:row0",{
-					"elements":[
-						new GridCellHead(id+":grid:head:id",{
-							"value":this.COL_CAP_id,
-							"columns":[
-								new GridColumn({"field":model.getField("id")})
-							],
-							"sortable":true							
-						}),					
-						new GridCellHead(id+":grid:head:create_dt",{
-							"value":this.COL_CAP_create_dt,
-							"columns":[
-								new GridColumnDate({"field":model.getField("create_dt")})
-							],
-							"sortable":true,
-							"sort":"desc"
-						}),
-						new GridCellHead(id+":grid:head:constr_name",{
-							"value":this.COL_CAP_constr_name,
-							"columns":[
-								new GridColumn({
-									"field":model.getField("constr_name")
-								})
-							],
-							"sortable":true
-						}),
-						new GridCellHead(id+":grid:head:application_state",{
-							"value":this.COL_CAP_application_state,
-							"columns":[
-								new EnumGridColumn_application_states({									
-									"field":model.getField("application_state"),
-									"formatFunction":function(fields){
-										var val = fields.application_state.getValue();
-										var res = this.getAssocValueList()[val];
-										if (val=="filling"){
-											res+=" ";
-											res+= ((!fields.filled_percent.getValue())? 0:fields.filled_percent.getValue())+"%";
-										}
-										else if (val=="sent"){
-											res+=", срок до ";
-											//var d = DateHelper.addBusinessDays(fields.application_state_dt.getValue(),constants.application_check_days.getValue());
-											res+= DateHelper.format(fields.application_state_end_date.getValue(),"d/m/Y");
-										
-										}
-										return res;
-									}
-								})
-							]
-						}),										
-						new GridCellHead(id+":grid:head:office",{
-							"value":this.COL_CAP_office,
-							"columns":[
-								new GridColumn({
-									"field":model.getField("office_descr")
-								})
-							]
-						})
-						
-						
-					]
+					"elements":fields
 				})
 			]
 		}),
@@ -151,12 +198,12 @@ function ApplicationList_View(id,options){
 			{"countPerPage":constants.doc_per_page_count.getValue()}),		
 		
 		"autoRefresh":false,
-		"refreshInterval":0,
+		"refreshInterval":(role_id=="admin")? constants.grid_refresh_interval.getValue()*1000:0,
 		"rowSelect":false,
 		"focus":true
 	}));		
 }
-extend(ApplicationList_View,ViewAjx);
+extend(ApplicationList_View,ViewAjxList);
 
 /* Constants */
 

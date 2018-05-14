@@ -50,6 +50,12 @@ extend(Office_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	
+	var field = new FieldJSONB("work_hours",options);
+	
+	pm.addField(field);
+	
 	pm.addField(new FieldInt("ret_id",{}));
 	
 	
@@ -71,6 +77,12 @@ extend(Office_Controller,ControllerObjServer);
 	var options = {};
 	
 	var field = new FieldInt("client_id",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldJSONB("work_hours",options);
 	
 	pm.addField(field);
 	
@@ -114,6 +126,9 @@ extend(Office_Controller,ControllerObjServer);
 	var f_opts = {};
 	
 	pm.addField(new FieldText("address",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldJSONB("work_hours",f_opts));
 }
 
 			Office_Controller.prototype.addGetObject = function(){

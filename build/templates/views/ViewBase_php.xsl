@@ -12,6 +12,8 @@ require_once(FRAME_WORK_PATH.'basic_classes/ModelJavaScript.php');
 
 require_once(FRAME_WORK_PATH.'basic_classes/ModelTemplate.php');
 require_once(USER_CONTROLLERS_PATH.'Constant_Controller.php');
+require_once(USER_CONTROLLERS_PATH.'DocFlowTask_Controller.php');
+require_once(USER_CONTROLLERS_PATH.'DocFlowInClient_Controller.php');
 
 <xsl:apply-templates select="metadata/enums/enum[@id='role_types']"/>
 class ViewBase extends ViewHTMLXSLT {	
@@ -20,7 +22,16 @@ class ViewBase extends ViewHTMLXSLT {
 
 	protected function addMenu(&amp;$models){
 		if (isset($_SESSION['role_id'])){
-			$menu_class = 'MainMenu_Model_'.$_SESSION['role_id'];
+			if (file_exists(USER_MODELS_PATH.'MainMenu_Model_'.$_SESSION['user_id'].'.php')){
+				$menu_class = 'MainMenu_Model_'.$_SESSION['user_id'];
+			}
+			else if (file_exists(USER_MODELS_PATH.'MainMenu_Model_'.$_SESSION['role_id'].'_'.$_SESSION['user_id'].'.php')){
+				$menu_class = 'MainMenu_Model_'.$_SESSION['role_id'].'_'.$_SESSION['user_id'];
+			}
+			else{
+				$menu_class = 'MainMenu_Model_'.$_SESSION['role_id'];
+			}
+			
 			$models['mainMenu'] = new $menu_class();
 		}	
 	}
@@ -70,13 +81,26 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->getVarModel()->addField(new Field('role_id',DT_STRING));
 		$this->getVarModel()->addField(new Field('user_name',DT_STRING));
 		if (isset($_SESSION['role_id']) &amp;&amp; $_SESSION['role_id']!='client'){
-			$this->getVarModel()->addField(new Field('employees_ref',DT_STRING));
+			$this->getVarModel()->addField(new Field('employees_ref',DT_STRING));			
+		}
+		if (isset($_SESSION['role_id'])){
+			$this->getVarModel()->addField(new Field('user_name_full',DT_STRING));
+			$this->getVarModel()->addField(new Field('temp_doc_storage',DT_STRING));
+			$this->getVarModel()->addField(new Field('temp_doc_storage_hours',DT_INT));
+			$this->getVarModel()->addField(new Field('color_palette',DT_STRING));				
 		}
 		
 		<!-- custom vars-->
 		$this->getVarModel()->insert();
 		$this->setVarValue('scriptId',$script_id);
-		$this->setVarValue('basePath','http://'.$_SERVER['HTTP_HOST'].'/'.APP_NAME.'/');//BASE_PATH
+		
+		//'http://'.$_SERVER['HTTP_HOST'].'/'.APP_NAME.'/'		
+		$currentPath = $_SERVER['PHP_SELF'];
+		$pathInfo = pathinfo($currentPath);
+		$hostName = $_SERVER['HTTP_HOST'];
+		$protocol = strtolower(substr($_SERVER["SERVER_PROTOCOL"],0,5))=='https://'?'https://':'http://';
+		$this->setVarValue('basePath', $protocol.$hostName.$pathInfo['dirname']."/");
+		
 		$this->setVarValue('version',trim(VERSION));
 		$this->setVarValue('debug',DEBUG);
 		if (isset($_SESSION['locale_id'])){
@@ -87,8 +111,13 @@ class ViewBase extends ViewHTMLXSLT {
 		}		
 		
 		if (isset($_SESSION['role_id'])){
+			$this->setVarValue('temp_doc_storage',TEMP_DOC_STORAGE);
+			$this->setVarValue('temp_doc_storage_hours',TEMP_DOC_STORAGE_HOURS);
+			$this->setVarValue('color_palette',$_SESSION['color_palette']);
+		
 			$this->setVarValue('role_id',$_SESSION['role_id']);
 			$this->setVarValue('user_name',$_SESSION['user_name']);
+			$this->setVarValue('user_name_full',$_SESSION['user_name_full']);
 			$this->setVarValue('locale_id',$_SESSION['locale_id']);
 			$this->setVarValue('curDate',round(microtime(true) * 1000));
 			//$this->setVarValue('token',$_SESSION['token']);
@@ -96,7 +125,7 @@ class ViewBase extends ViewHTMLXSLT {
 			
 			if ($_SESSION['role_id']!='client'){
 				$this->setVarValue('employees_ref',$_SESSION['employees_ref']);
-			}			
+			}
 		}
 		
 		//Global Filters
@@ -116,6 +145,27 @@ class ViewBase extends ViewHTMLXSLT {
 		
 		<!-- constant autoload -->
 		$this->addConstants($models);
+		
+		//titles form Config
+		$models->append(new ModelVars(
+			array('name'=>'Page_Model',
+				'sysModel'=>TRUE,
+				'id'=>'Page_Model',
+				'values'=>array(
+					new Field('PAGE_TITLE',DT_STRING,array('value'=>PAGE_TITLE)),
+					new Field('PAGE_HEAD_TITLE_GUEST',DT_STRING,array('value'=>PAGE_HEAD_TITLE_GUEST)),
+					new Field('PAGE_HEAD_TITLE_USER',DT_STRING,array('value'=>PAGE_HEAD_TITLE_USER)),
+					new Field('DEFAULT_COLOR_PALETTE',DT_STRING,array('value'=>DEFAULT_COLOR_PALETTE))					
+				)
+			)
+		));
+		
+		if (isset($_SESSION['role_id']) &amp;&amp; $_SESSION['role_id']!='client'){
+			$models->append(DocFlowTask_Controller::get_short_list_model($this->dbLink));
+		}
+		else if (isset($_SESSION['role_id']) &amp;&amp; $_SESSION['role_id']=='client'){
+			$models->append(DocFlowInClient_Controller::get_unviwed_count_model($this->dbLink));
+		}
 		
 		parent::write($models,$errorCode);
 	}	

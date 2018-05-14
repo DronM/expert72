@@ -23,12 +23,18 @@
 			<!-- Page Content -->
 			<div id="page-wrapper">
 			    <div class="container-fluid">
-			    	<h1>Фатальная ошибка</h1>
-			    	<h3>
-			    	<xsl:value-of select="/document/model[@id='ModelServResponse']/row[1]/result"/>:
-			    	<xsl:value-of select="/document/model[@id='ModelServResponse']/row[1]/descr"/>
-			    	</h3>
-			    	Необходима <a href="{/document/model[@id='ModelVars']/row[1]/basePath}">авторизация</a>.
+				<div class="panel panel-flat">			    
+					<div class="panel-heading">
+						<h1>Фатальная ошибка</h1>
+					</div>
+					<div class="panel-body">
+					    	<h3>
+					    	<xsl:value-of select="/document/model[@id='ModelServResponse']/row[1]/result"/>:
+					    	<xsl:value-of select="/document/model[@id='ModelServResponse']/row[1]/descr"/>
+					    	</h3>
+					    	<div>Необходима <a href="{/document/model[@id='ModelVars']/row[1]/basePath}">авторизация</a>.</div>
+					</div>
+				</div>
 			    </div>
 			    <!-- /.container-fluid -->
 			</div>

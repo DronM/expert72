@@ -19,7 +19,7 @@ function EmployeeList_View(id,options){
 	var model = options.models.EmployeeList_Model;
 	var contr = new Employee_Controller();
 	
-	var constants = {"doc_per_page_count":null};
+	var constants = {"doc_per_page_count":null,"grid_refresh_interval":null};
 	window.getApp().getConstantManager().get(constants);
 	
 	var pagClass = window.getApp().getPaginationClass();
@@ -77,7 +77,7 @@ function EmployeeList_View(id,options){
 			{"countPerPage":constants.doc_per_page_count.getValue()}),		
 		
 		"autoRefresh":false,
-		"refreshInterval":0,
+		"refreshInterval":constants.grid_refresh_interval.getValue()*1000,
 		"rowSelect":false,
 		"focus":true
 	}));		

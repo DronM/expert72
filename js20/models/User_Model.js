@@ -1,4 +1,8 @@
 /**	
+ *
+ * THIS FILE IS GENERATED FROM TEMPLATE build/templates/models/Model_js.xsl
+ * ALL DIRECT MODIFICATIONS WILL BE LOST WITH THE NEXT BUILD PROCESS!!!
+ *
  * @author Andrey Mikhalevich <katrenplus@mail.ru>, 2017
  * @class
  * @classdesc Model class. Created from template build/templates/models/Model_js.xsl. !!!DO NOT MODEFY!!!
@@ -49,8 +53,28 @@ function User_Model(options){
 	
 	filed_options.autoInc = false;	
 	
+	options.fields.name_full = new FieldString("name_full",filed_options);
+	options.fields.name_full.getValidator().setRequired(true);
+	options.fields.name_full.getValidator().setMaxLength('250');
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.banned = new FieldBool("banned",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
 	options.fields.role_id = new FieldEnum("role_id",filed_options);
-	filed_options.enumValues = 'admin,client,lawyer';
+	filed_options.enumValues = 'admin,client,lawyer,expert,boss';
 	options.fields.role_id.getValidator().setRequired(true);
 	
 				
@@ -140,6 +164,26 @@ function User_Model(options){
 	
 	options.fields.comment_text = new FieldText("comment_text",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	filed_options.alias = 'Цветовая схема';
+	filed_options.autoInc = false;	
+	
+	options.fields.color_palette = new FieldText("color_palette",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	filed_options.defValue = true;
+	filed_options.alias = 'Дублировать напоминания на электронную почту';
+	filed_options.autoInc = false;	
+	
+	options.fields.reminders_to_email = new FieldBool("reminders_to_email",filed_options);
+	
+			
 			
 			
 		User_Model.superclass.constructor.call(this,id,options);

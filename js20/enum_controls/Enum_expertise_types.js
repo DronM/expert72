@@ -18,7 +18,6 @@ function Enum_expertise_types(id,options){
 	var multy_lang_values = {"ru_pd":"Государственная экспертиза проектной документации"
 ,"ru_eng_survey":"Государственная экспертиза результатов инженерных изысканий"
 ,"ru_pd_eng_survey":"Государственная экспертиза проектной документации и Государственная экспертиза результатов инженерных изысканий"
-,"ru_pd_eng_survey_estim_cost":"Государственная экспертиза проектной документации и результатов инженерных изысканий с одновременной проверкой достоверности определения сметной стоимости"
 };
 	options.options = [{"value":"pd",
 "descr":multy_lang_values[window.getApp().getLocale()+"_"+"pd"],
@@ -29,9 +28,6 @@ checked:(options.defaultValue&&options.defaultValue=="eng_survey")}
 ,{"value":"pd_eng_survey",
 "descr":multy_lang_values[window.getApp().getLocale()+"_"+"pd_eng_survey"],
 checked:(options.defaultValue&&options.defaultValue=="pd_eng_survey")}
-,{"value":"pd_eng_survey_estim_cost",
-"descr":multy_lang_values[window.getApp().getLocale()+"_"+"pd_eng_survey_estim_cost"],
-checked:(options.defaultValue&&options.defaultValue=="pd_eng_survey_estim_cost")}
 ];
 	
 	Enum_expertise_types.superclass.constructor.call(this,id,options);

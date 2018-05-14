@@ -16,6 +16,7 @@ function EditPersonRegistrPaper(id,options){
 
 	options.viewClass = ViewPersonRegistrPaper;
 	options.viewTemplate = "EditPersonRegistrPaper";
+	options.labelCaption = "Свидетельство ИП:",
 	options.headTitle = "Свидетельство индивидуального предпринимателя";
 	
 	this.m_mainView = options.mainView;		
@@ -50,7 +51,9 @@ EditPersonRegistrPaper.prototype.formatValue = function(val){
 }
 
 EditPersonRegistrPaper.prototype.closeSelect = function(){
-	this.m_mainView.calcFillPercent();
+	if (this.m_mainView && this.m_mainView.calcFillPercent){
+		this.m_mainView.calcFillPercent();
+	}
 	
 	EditPersonRegistrPaper.superclass.closeSelect.call(this);
 }

@@ -20,7 +20,7 @@
 function MainMenuConstructor_Controller(options){
 	options = options || {};
 	options.listModelClass = MainMenuConstructorList_Model;
-	options.objModelClass = MainMenuConstructor_Model;
+	options.objModelClass = MainMenuConstructorDialog_Model;
 	MainMenuConstructor_Controller.superclass.constructor.call(this,options);	
 	
 	//methods
@@ -46,7 +46,7 @@ extend(MainMenuConstructor_Controller,ControllerObjServer);
 	
 	var options = {};
 	options.required = true;	
-	options.enumValues = 'admin,client,lawyer';
+	options.enumValues = 'admin,client,lawyer,expert,boss';
 	var field = new FieldEnum("role_id",options);
 	
 	pm.addField(field);
@@ -83,7 +83,7 @@ extend(MainMenuConstructor_Controller,ControllerObjServer);
 	
 	var options = {};
 		
-	options.enumValues = 'admin,client,lawyer';
+	options.enumValues = 'admin,client,lawyer,expert,boss';
 	options.enumValues+= (options.enumValues=='')? '':',';
 	options.enumValues+= 'null';
 	
@@ -156,7 +156,7 @@ extend(MainMenuConstructor_Controller,ControllerObjServer);
 	
 	var pm = this.getGetObject();
 	var f_opts = {};
-	f_opts.alias = "Код";	
+		
 	pm.addField(new FieldInt("id",f_opts));
 }
 

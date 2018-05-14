@@ -5,11 +5,15 @@ require_once(FRAME_WORK_PATH.'basic_classes/ModelJavaScript.php');
 
 require_once(FRAME_WORK_PATH.'basic_classes/ModelTemplate.php');
 require_once(USER_CONTROLLERS_PATH.'Constant_Controller.php');
+require_once(USER_CONTROLLERS_PATH.'DocFlowTask_Controller.php');
+require_once(USER_CONTROLLERS_PATH.'DocFlowInClient_Controller.php');
 
 
 			require_once('models/MainMenu_Model_admin.php');
 			require_once('models/MainMenu_Model_client.php');
 			require_once('models/MainMenu_Model_lawyer.php');
+			require_once('models/MainMenu_Model_expert.php');
+			require_once('models/MainMenu_Model_boss.php');
 		
 class ViewBase extends ViewHTMLXSLT {	
 
@@ -17,7 +21,16 @@ class ViewBase extends ViewHTMLXSLT {
 
 	protected function addMenu(&$models){
 		if (isset($_SESSION['role_id'])){
-			$menu_class = 'MainMenu_Model_'.$_SESSION['role_id'];
+			if (file_exists(USER_MODELS_PATH.'MainMenu_Model_'.$_SESSION['user_id'].'.php')){
+				$menu_class = 'MainMenu_Model_'.$_SESSION['user_id'];
+			}
+			else if (file_exists(USER_MODELS_PATH.'MainMenu_Model_'.$_SESSION['role_id'].'_'.$_SESSION['user_id'].'.php')){
+				$menu_class = 'MainMenu_Model_'.$_SESSION['role_id'].'_'.$_SESSION['user_id'];
+			}
+			else{
+				$menu_class = 'MainMenu_Model_'.$_SESSION['role_id'];
+			}
+			
 			$models['mainMenu'] = new $menu_class();
 		}	
 	}
@@ -39,7 +52,7 @@ class ViewBase extends ViewHTMLXSLT {
 			$this->initDbLink();
 		
 			$contr = new Constant_Controller($this->dbLink);
-			$list = array('doc_per_page_count','grid_refresh_interval','application_check_days');
+			$list = array('doc_per_page_count','grid_refresh_interval','application_check_days','reminder_refresh_interval');
 			$models['ConstantValueList_Model'] = $contr->getConstantValueModel($list);						
 			
 		}	
@@ -54,13 +67,15 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addCssModel(new ModelStyleSheet(USER_JS_PATH.'assets/css/components.min.css'));
 		$this->addCssModel(new ModelStyleSheet(USER_JS_PATH.'assets/css/colors.min.css'));
 		$this->addCssModel(new ModelStyleSheet(USER_JS_PATH.'assets/css/icons/fontawesome/styles.min.css'));
+		
+		$this->addCssModel(new ModelStyleSheet(USER_JS_PATH.'custom-css/easyTree.css'));
 		$this->addCssModel(new ModelStyleSheet(USER_JS_PATH.'ext/bootstrap-datepicker/bootstrap-datepicker.standalone.min.css'));
 		$this->addCssModel(new ModelStyleSheet(USER_JS_PATH.'custom-css/style.css'));
 		$this->addCssModel(new ModelStyleSheet(USER_JS_PATH.'custom-css/print.css'));
 			
 		
 		if (!DEBUG){			
-			$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/plugins/loaders/pace.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/core/libraries/jquery.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/core/libraries/bootstrap.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/core/libraries/bootstrap.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/core/app.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/bootstrap-datepicker/bootstrap-datepicker.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/bootstrap-datepicker/bootstrap-datepicker.ru.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/mustache/mustache.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/jshash-2.2/md5-min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/ckeditor5/ckeditor.js'));
+			$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/plugins/loaders/pace.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/core/libraries/jquery.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/core/libraries/bootstrap.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/plugins/loaders/blockui.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/core/app.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/bootstrap-datepicker/bootstrap-datepicker.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/bootstrap-datepicker/bootstrap-datepicker.ru.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/mustache/mustache.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/jshash-2.2/md5-min.js'));
 			$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'lib.js'));
 			$script_id = VERSION;
 		}
@@ -70,19 +85,20 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/plugins/loaders/pace.min.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/core/libraries/jquery.min.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/core/libraries/bootstrap.min.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/core/libraries/bootstrap.min.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/plugins/loaders/blockui.min.js'));
+		
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/core/app.js'));
 		
 		
+		
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/easyTree.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/bootstrap-datepicker/bootstrap-datepicker.min.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/bootstrap-datepicker/bootstrap-datepicker.ru.min.js'));
 		
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'jquery.maskedinput.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/resumablejs/resumable.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/mustache/mustache.min.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/jshash-2.2/md5-min.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/resumablejs/resumable.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/ckeditor5/ckeditor.js'));
 		
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/DragnDrop/DragMaster.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/DragnDrop/DragObject.js'));
@@ -114,6 +130,7 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'core/ModelObjectJSON.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'core/ModelServRespJSON.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'core/ModelXMLTree.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'core/ModelJSONTree.js'));
 		
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'core/Validator.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'core/ValidatorString.js'));
@@ -121,6 +138,7 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'core/ValidatorDate.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'core/ValidatorDateTime.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'core/ValidatorTime.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'core/ValidatorInterval.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'core/ValidatorInt.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'core/ValidatorFloat.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'core/ValidatorEnum.js'));
@@ -147,6 +165,7 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'core/FieldJSONB.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'core/FieldArray.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'core/FieldXML.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'core/FieldBytea.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'core/ModelFilter.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'core/RefType.js'));
 		
@@ -193,6 +212,7 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/rs/ViewAjx.rs_ru.js'));
 	}
 
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/ViewAjxList.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/Calculator.js'));
 		
 	if (
@@ -317,6 +337,26 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/rs/ButtonSelectRef.rs_ru.js'));
 	}
 
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/ButtonSelectDataType.js'));
+		
+	if (
+	(isset($_SESSION['locale_id']) && $_SESSION['locale_id']=='ru')
+	||
+	(!isset($_SESSION['locale_id']) && DEF_LOCALE=='ru')
+	){
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/rs/ButtonSelectDataType.rs_ru.js'));
+	}
+
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/ButtonMakeSelection.js'));
+		
+	if (
+	(isset($_SESSION['locale_id']) && $_SESSION['locale_id']=='ru')
+	||
+	(!isset($_SESSION['locale_id']) && DEF_LOCALE=='ru')
+	){
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/rs/ButtonMakeSelection.rs_ru.js'));
+	}
+
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/ButtonToggle.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/Label.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/Edit.js'));
@@ -330,6 +370,16 @@ class ViewBase extends ViewHTMLXSLT {
 	}
 
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/EditRef.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/EditRefMultyType.js'));
+		
+	if (
+	(isset($_SESSION['locale_id']) && $_SESSION['locale_id']=='ru')
+	||
+	(!isset($_SESSION['locale_id']) && DEF_LOCALE=='ru')
+	){
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/rs/EditRefMultyType.rs_ru.js'));
+	}
+
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/EditString.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/EditText.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/EditInt.js'));
@@ -341,6 +391,7 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/EditDate.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/EditDateTime.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/EditTime.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/EditInterval.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/EditPassword.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/EditCheckBox.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/EditContainer.js'));
@@ -393,7 +444,27 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/ControlForm.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/HiddenKey.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/EditJSON.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/EditHTML.js'));
+		
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/EditFile.js'));
+		
+	if (
+	(isset($_SESSION['locale_id']) && $_SESSION['locale_id']=='ru')
+	||
+	(!isset($_SESSION['locale_id']) && DEF_LOCALE=='ru')
+	){
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/rs/EditFile.rs_ru.js'));
+	}
+
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/EditCompound.js'));
+		
+	if (
+	(isset($_SESSION['locale_id']) && $_SESSION['locale_id']=='ru')
+	||
+	(!isset($_SESSION['locale_id']) && DEF_LOCALE=='ru')
+	){
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/rs/EditCompound.rs_ru.js'));
+	}
+
 		
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/ControlDate.js'));
 		
@@ -437,7 +508,7 @@ class ViewBase extends ViewHTMLXSLT {
 	}
 
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/GridCmdContainerAjx.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/GridCmdContainerDOC.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/GridCmdContainerObj.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/GridCmdInsert.js'));
 		
 	if (
@@ -929,16 +1000,6 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/rs/MainMenuTree.rs_ru.js'));
 	}
 
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/BigFileUploader.js'));
-		
-	if (
-	(isset($_SESSION['locale_id']) && $_SESSION['locale_id']=='ru')
-	||
-	(!isset($_SESSION['locale_id']) && DEF_LOCALE=='ru')
-	){
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/rs/BigFileUploader.rs_ru.js'));
-	}
-
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/ButtonOrgSearch.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/ConstantGrid.js'));
 		
@@ -962,20 +1023,51 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/MailForSending_Form.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/Client_Form.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/ClientList_Form.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/ApplicationPdTemplate_Form.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/ApplicationDostTemplate_Form.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/DocumentTemplateDialog_Form.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/ApplicationDialog_Form.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/ApplicationList_Form.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/ApplicationClientList_Form.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/ConstrTypeTechnicalFeatureDialog_Form.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/OutMailDialog_Form.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/ContractList_Form.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/ConstructionTypeDialog_Form.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/DocFlowOutDialog_Form.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/DocFlowOutList_Form.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/DocFlowInList_Form.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/DepartmentDialog_Form.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/EmployeeDialog_Form.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/EmployeeList_Form.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/DepartmentList_Form.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/PostList_Form.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/DocFlowTypeDialog_Form.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/DocFlowInDialog_Form.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/DocFlowImportanceTypeDialog_Form.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/ReportTemplate_Form.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/ReportTemplateList_Form.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/ReportTemplateFile_Form.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/EmailTemplate_Form.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/DocFlowExamination_Form.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/DocFlowApprovement_Form.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/DocFlowRegistration_Form.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/DocFlowOutClientDialog_Form.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/DocFlowInClientDialog_Form.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/ContractDialog_Form.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/OfficeDialog_Form.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/ReportTemplateFileApplyCmd_Form.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/ReportTemplateFileList_Form.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/DocFlowApprovementTemplate_Form.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/DocFlowApprovementTemplateList_Form.js'));
 		
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/UserDialog_Form.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/Pwd_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/Login_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/FileUploader_View.js'));
+		
+	if (
+	(isset($_SESSION['locale_id']) && $_SESSION['locale_id']=='ru')
+	||
+	(!isset($_SESSION['locale_id']) && DEF_LOCALE=='ru')
+	){
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/rs/FileUploader_View.rs_ru.js'));
+	}
+
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/PasswordRecovery_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/Registration_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/MainMenuConstructorList_View.js'));
@@ -992,14 +1084,40 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/MailForSendingList_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/MailForSending_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/EmailTemplateList_View.js'));
+		
+	if (
+	(isset($_SESSION['locale_id']) && $_SESSION['locale_id']=='ru')
+	||
+	(!isset($_SESSION['locale_id']) && DEF_LOCALE=='ru')
+	){
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/rs/EmailTemplateList_View.rs_ru.js'));
+	}
+
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/EmailTemplate_View.js'));
+		
+	if (
+	(isset($_SESSION['locale_id']) && $_SESSION['locale_id']=='ru')
+	||
+	(!isset($_SESSION['locale_id']) && DEF_LOCALE=='ru')
+	){
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/rs/EmailTemplate_View.rs_ru.js'));
+	}
+
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ClientList_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/Client_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ClientSearch_View.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ApplicationPdTemplateList_View.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ApplicationPdTemplate_View.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ApplicationDostTemplateList_View.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ApplicationDostTemplate_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/DocumentTemplateList_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/DocumentTemplateDialog_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/OfficeDialog_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/OfficeList_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/FileUploaderApplication_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/FileUploaderDocFlowOut_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/FileUploaderDocFlowIn_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/FileUploaderDocFlowOutClient_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/FileUploaderDocFlowInClient_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/FileUploaderContract_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/DocumentDialog_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/DocFlowBaseDialog_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ApplicationList_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/rs/ApplicationList_View.rs_ru.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ApplicationDialog_View.js'));
@@ -1020,12 +1138,14 @@ class ViewBase extends ViewHTMLXSLT {
 
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ApplicationClientList_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/rs/ApplicationClientList_View.rs_ru.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ConstrTypeTechnicalFeatureList_View.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ConstrTypeTechnicalFeatureDialog_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ConstructionTypeList_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ConstructionTypeDialog_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/HolidayList_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ApplicationInMailList_View.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/OutMailList_View.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/OutMailDialog_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/DocFlowOutList_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/DocFlowOutDialog_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/DocFlowInList_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/DocFlowInDialog_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/DepartmentList_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/rs/DepartmentList_View.rs_ru.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/DepartmentDialog_View.js'));
@@ -1034,21 +1154,66 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/rs/EmployeeList_View.rs_ru.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/EmployeeDialog_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/rs/EmployeeDialog_View.rs_ru.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/DocFlowTypeList_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/DocFlowTypeDialog_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/rs/DocFlowTypeDialog_View.rs_ru.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/PostList_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/FundSourceList_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/DocFlowImportanceTypeList_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/DocFlowImportanceTypeDialog_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ReportTemplateList_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ReportTemplateFileList_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ReportTemplate_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ReportTemplateFile_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ReportTemplateApply_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/DocFlowExaminationList_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/DocFlowExamination_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/DocFlowApprovementList_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/DocFlowApprovement_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/DocFlowRegistrationList_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/DocFlowRegistration_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/BuildTypeList_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/DocFlowOutClientList_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/DocFlowOutClientDialog_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/DocFlowInClientList_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/DocFlowInClientDialog_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/DocFlowTaskList_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ViewContact.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ReminderList_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/DocFlowTaskShortList_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ContractList_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ContractPdList_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ContractCostEvalValidityList_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ContractModificationList_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ContractAuditList_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ContractDialog_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ContactList_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ExpertiseRejectTypeList_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/OfficeDayScheduleList_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/Reminder_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/DocFlowApprovementTemplate_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/DocFlowApprovementTemplateList_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ClientPaymentList_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/NewOrder_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'tmpl/App.templates.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/App.enums.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/App.predefinedItems.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ErrorControl.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/AppExpert.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/EditAddress.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ClientResponsableGrid.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ConstrTechnicalFeatureGrid.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ViewSectionSelect.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ViewEditRef.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/UserEdit.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/UserEditRef.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/UserNameEdit.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/UserPwdEdit.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/rs/UserPwdEdit.rs_ru.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Pagination.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/BankEditRef.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/EditUserClientBankAcc.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ClientEditRef.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/EditArea.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/EditRespPerson.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ApplicationClientEdit.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ApplicationClientContainer.js'));
@@ -1060,8 +1225,51 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/PersonIdPaperSelect.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/EditPersonRegistrPaper.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/OfficeSelect.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/DepartmentSelect.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/DocFlowTypeSelect.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/EmployeeEditRef.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/DepartmentSelect.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/DepartmentEditRef.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ConstructionTypeSelect.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/FundSourceSelect.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/BuildTypeSelect.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ExpertiseRejectTypeSelect.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/DocFlowImportanceTypeSelect.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/PostEditRef.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ApplicationEditRef.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ContractEditRef.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ClientNameEdit.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ClientNameFullEdit.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ClientAttrs.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ClientAddress.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ApplicationPrimaryCont.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ApplicationServiceCont.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ApplicationRegNumber.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ReportTemplateFileApplyCmd.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/DocFlowOutEditRef.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/DocFlowInEditRef.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/DocFlowRecipientRef.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/EditContactList.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/EditContact.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Reminder.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/EditColorPalette.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/BtnNextNum.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ReportTemplateFieldGrid.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ReportTemplateEditRef.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ReportTemplateFileApplyCmd.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/DocFlowApprovementRecipientGrid.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/DocFlowApprovementRecipientEdit.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ApplicationTemplateContentTree.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/AccessPermissionGrid.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/PermissionEditRef.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ExpertWorkGrid.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/WorkHoursEdit.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/WorkHourEdit.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ViewLocalGrid.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/DocFlowApprovementTypeEdit.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/DocFlowApprovementSelectRecipientTmplCmd.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Doc1c.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Doc1cOrder.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Doc1cAkt.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/Enum_role_types.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/rs_ru.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/rs_common_ru.js'));
@@ -1124,12 +1332,9 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/Kladr_Model.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/ClientResponsablePerson_Controller.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ClientResponsablePerson_Model.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ApplicationPdTemplate_Model.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/ApplicationPdTemplate_Controller.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ApplicationPdTemplateList_Model.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ApplicationDostTemplate_Model.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/ApplicationDostTemplate_Controller.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ApplicationDostTemplateList_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocumentTemplate_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/DocumentTemplate_Controller.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocumentTemplateList_Model.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/ApplicationTemplateContent_Controller.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ApplicationTemplateContent_Model.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/ClientBankAccount_Controller.js'));
@@ -1142,19 +1347,11 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/EnumGridColumn_client_types.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/Application_Model.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/Enum_expertise_types.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/Enum_estim_cost_types.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/Enum_construction_types.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/EnumGridColumn_expertise_types.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/EnumGridColumn_estim_cost_types.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/EnumGridColumn_construction_types.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/ApplicationContractor_Controller.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/TechnicalFeature_Controller.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/TechnicalFeature_Model.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ApplicationContractor_Model.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/Enum_fund_sources.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/Enum_aria_units.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/EnumGridColumn_fund_sources.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/EnumGridColumn_aria_units.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ApplicationStateHistory_Model.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/Enum_application_states.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/EnumGridColumn_application_states.js'));
@@ -1167,33 +1364,152 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ApplicationClientList_Model.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ApplicationDocumentFile_Model.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ApplicationPrint_Model.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/ChatMessage_Controller.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ChatMessage_Model.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ApplicationPdDocumentFile_Model.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ApplicationDostDocumentFile_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ApplicationDocumentFile_Model.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/DownloadFileType_Controller.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DownloadFileType_Model.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ConstrTypeTechnicalFeature_Model.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/ConstrTypeTechnicalFeature_Controller.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ConstrTypeTechnicalFeatureList_Model.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/Enum_responsable_person_types.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/EnumGridColumn_responsable_person_types.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/Morpher_Model.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/Holiday_Controller.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/Holiday_Model.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/OutMail_Model.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/Enum_out_mail_types.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/EnumGridColumn_out_mail_types.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/OutMailAttachment_Model.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/OutMail_Controller.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/OutMailList_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowOut_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/DocFlowOut_Controller.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowOutList_Model.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/Department_Model.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/Employe_Model.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/Employee_Model.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/InMail_Model.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/InMailAttachment_Model.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ChatMessageAttachment_Model.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/OutMailDialog_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowIn_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowInList_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/DocFlow_Controller.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/DocFlowIn_Controller.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowInDialog_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/DocFlowType_Controller.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowType_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ApplicationRespPerson_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ApplicationContact_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/Contact_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/Post_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/Post_Controller.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ClientDialog_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/Contact_Controller.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ContactList_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowType_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowImportanceType_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowOut_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowAttachment_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowOutList_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowOutProcess_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/Enum_doc_flow_out_states.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/Enum_data_types.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/EnumGridColumn_doc_flow_out_states.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/EnumGridColumn_data_types.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ApplicationProcess_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowApprovement_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowIn_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/DocFlowIn_Controller.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowInProcess_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowAcqaintance_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowFilfilment_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowExamination_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/Enum_doc_flow_in_states.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/EnumGridColumn_doc_flow_in_states.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowTypeList_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowTypeDialog_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/DocFlowImportanceType_Controller.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowImportanceTypeList_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowImportanceTypeDialog_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowOutDialog_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/FundSource_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ConstructionType_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/ConstructionType_Controller.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/FundSource_Controller.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/Enum_document_types.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/EnumGridColumn_document_types.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocumentTemplate_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocumentTemplateAllList_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/ReportTemplate_Controller.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ReportTemplate_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ReportTemplateList_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/ReportTemplateField_Controller.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ReportTemplateField_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ReportTemplateDialog_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/ReportTemplateInParam_Controller.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ReportTemplateInParam_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowOutClientList_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowInClientList_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowExaminationList_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/DocFlowExamination_Controller.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/BuildType_Controller.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/BuildType_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowOutClient_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowInClient_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/DocFlowOutClient_Controller.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowOutClientDialog_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/DocFlowInClient_Controller.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowInClientDialog_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowOutClientDocumentFile_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowExaminationDialog_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowTask_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/DocFlowTask_Controller.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowTaskList_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/Enum_doc_flow_type_types.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/EnumGridColumn_doc_flow_type_types.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/ContactName_Controller.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ContactName_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowRegistration_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowRegistrationList_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowRegistrationDialog_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/DocFlowRegistration_Controller.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/Reminder_Controller.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/Reminder_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ReminderUnviewedList_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ShortMessage_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowTaskShortList_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/MainMenuConstructorDialog_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/Contract_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/Contract_Controller.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ContractList_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ContractDialog_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ReportTemplateFile_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ReportTemplateFileDialog_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ReportTemplateFileList_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/ReportTemplateFile_Controller.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowApprovementList_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowApprovementDialog_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/Enum_doc_flow_approvement_types.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/Enum_doc_flow_approvement_orders.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/EnumGridColumn_doc_flow_approvement_types.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/EnumGridColumn_doc_flow_approvement_orders.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/DocFlowApprovement_Controller.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/DocFlowApprovementRecipientList_Controller.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowApprovementRecipientList_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/Enum_doc_flow_approvement_results.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/EnumGridColumn_doc_flow_approvement_results.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/ExpertiseRejectType_Controller.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ExpertiseRejectType_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ExpertWork_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/ExpertWork_Controller.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/AccessPermission_Controller.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/AccessPermission_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ExpertSection_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/ContractSection_Controller.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ContractSection_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ExpertWorkList_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/OfficeDaySchedule_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/OfficeDaySchedule_Controller.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/Enum_expertise_results.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/EnumGridColumn_expertise_results.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/ViewLocal_Controller.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ViewLocal_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowApprovementTemplate_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/DocFlowApprovementTemplate_Controller.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowApprovementTemplateList_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowApprovementTemplateDialog_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ClientPayment_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/ClientPayment_Controller.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ClientPaymentList_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/Order1CList_Controller.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/Order1CList_Model.js'));
 	
 			if (isset($_SESSION['scriptId'])){
 				$script_id = $_SESSION['scriptId'];
@@ -1206,13 +1522,26 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->getVarModel()->addField(new Field('role_id',DT_STRING));
 		$this->getVarModel()->addField(new Field('user_name',DT_STRING));
 		if (isset($_SESSION['role_id']) && $_SESSION['role_id']!='client'){
-			$this->getVarModel()->addField(new Field('employees_ref',DT_STRING));
+			$this->getVarModel()->addField(new Field('employees_ref',DT_STRING));			
+		}
+		if (isset($_SESSION['role_id'])){
+			$this->getVarModel()->addField(new Field('user_name_full',DT_STRING));
+			$this->getVarModel()->addField(new Field('temp_doc_storage',DT_STRING));
+			$this->getVarModel()->addField(new Field('temp_doc_storage_hours',DT_INT));
+			$this->getVarModel()->addField(new Field('color_palette',DT_STRING));				
 		}
 		
 		
 		$this->getVarModel()->insert();
 		$this->setVarValue('scriptId',$script_id);
-		$this->setVarValue('basePath','http://'.$_SERVER['HTTP_HOST'].'/'.APP_NAME.'/');//BASE_PATH
+		
+		//'http://'.$_SERVER['HTTP_HOST'].'/'.APP_NAME.'/'		
+		$currentPath = $_SERVER['PHP_SELF'];
+		$pathInfo = pathinfo($currentPath);
+		$hostName = $_SERVER['HTTP_HOST'];
+		$protocol = strtolower(substr($_SERVER["SERVER_PROTOCOL"],0,5))=='https://'?'https://':'http://';
+		$this->setVarValue('basePath', $protocol.$hostName.$pathInfo['dirname']."/");
+		
 		$this->setVarValue('version',trim(VERSION));
 		$this->setVarValue('debug',DEBUG);
 		if (isset($_SESSION['locale_id'])){
@@ -1223,8 +1552,13 @@ class ViewBase extends ViewHTMLXSLT {
 		}		
 		
 		if (isset($_SESSION['role_id'])){
+			$this->setVarValue('temp_doc_storage',TEMP_DOC_STORAGE);
+			$this->setVarValue('temp_doc_storage_hours',TEMP_DOC_STORAGE_HOURS);
+			$this->setVarValue('color_palette',$_SESSION['color_palette']);
+		
 			$this->setVarValue('role_id',$_SESSION['role_id']);
 			$this->setVarValue('user_name',$_SESSION['user_name']);
+			$this->setVarValue('user_name_full',$_SESSION['user_name_full']);
 			$this->setVarValue('locale_id',$_SESSION['locale_id']);
 			$this->setVarValue('curDate',round(microtime(true) * 1000));
 			//$this->setVarValue('token',$_SESSION['token']);
@@ -1232,7 +1566,7 @@ class ViewBase extends ViewHTMLXSLT {
 			
 			if ($_SESSION['role_id']!='client'){
 				$this->setVarValue('employees_ref',$_SESSION['employees_ref']);
-			}			
+			}
 		}
 		
 		//Global Filters
@@ -1245,6 +1579,27 @@ class ViewBase extends ViewHTMLXSLT {
 		
 		
 		$this->addConstants($models);
+		
+		//titles form Config
+		$models->append(new ModelVars(
+			array('name'=>'Page_Model',
+				'sysModel'=>TRUE,
+				'id'=>'Page_Model',
+				'values'=>array(
+					new Field('PAGE_TITLE',DT_STRING,array('value'=>PAGE_TITLE)),
+					new Field('PAGE_HEAD_TITLE_GUEST',DT_STRING,array('value'=>PAGE_HEAD_TITLE_GUEST)),
+					new Field('PAGE_HEAD_TITLE_USER',DT_STRING,array('value'=>PAGE_HEAD_TITLE_USER)),
+					new Field('DEFAULT_COLOR_PALETTE',DT_STRING,array('value'=>DEFAULT_COLOR_PALETTE))					
+				)
+			)
+		));
+		
+		if (isset($_SESSION['role_id']) && $_SESSION['role_id']!='client'){
+			$models->append(DocFlowTask_Controller::get_short_list_model($this->dbLink));
+		}
+		else if (isset($_SESSION['role_id']) && $_SESSION['role_id']=='client'){
+			$models->append(DocFlowInClient_Controller::get_unviwed_count_model($this->dbLink));
+		}
 		
 		parent::write($models,$errorCode);
 	}	

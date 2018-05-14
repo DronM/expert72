@@ -1,4 +1,12 @@
 <div id="{{id}}" class="panel panel-flat">
+	<div id="{{id}}:cmd-cont">
+
+		<div id="{{id}}:cmdOk"/>
+		<div id="{{id}}:cmdSave"/>
+		<div id="{{id}}:cmdHide" title="Закрыть пользователю возможность заходить в программу" options="{'caption':'Скрыть пользователя'}"/>
+		<div id="{{id}}:cmdCancel"/>
+	</div>
+
 	<div class="panel-heading">
 		<h3 class="panel-title">{{HEAD_TITLE}}</h3>
 	</div>
@@ -12,26 +20,24 @@
 		<div role="tabpanel" class="tab-pane active" id="profile">
 			<div class="panel panel-body userDialogTab">
 				<div id="{{id}}:name"/>
+				<div id="{{id}}:name_full"/>
 				<div id="{{id}}:role"/>	
+
+				<div id="{{id}}:color_palette"/>
 
 				<div id="{{id}}:email"/>
 				<div id="{{id}}:email_confirmed"/>					
 				
 				<div id="{{id}}:phone_cel"/>
 				<div id="{{id}}:comment_text"/>
+				
+				<div id="{{id}}:banned"/>
+				
+				<div id="{{id}}:reminders_to_email">
+				</div>
+				
 			</div>
 		</div>
 		
-	</div>
-	
-	<div class="panel-footer">
-		<div class="heading-elements">
-			<div class="heading-btn pull-left">
-	
-				<div id="{{id}}:cmdOk"/>
-				<div id="{{id}}:cmdSave"/>
-				<div id="{{id}}:cmdCancel"/>
-			</div>
-		</div>
 	</div>	
 </div>	

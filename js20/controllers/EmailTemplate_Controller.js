@@ -20,7 +20,7 @@
 function EmailTemplate_Controller(options){
 	options = options || {};
 	options.listModelClass = EmailTemplateList_Model;
-	options.objModelClass = EmailTemplateList_Model;
+	options.objModelClass = EmailTemplate_Model;
 	EmailTemplate_Controller.superclass.constructor.call(this,options);	
 	
 	//methods
@@ -46,7 +46,7 @@ extend(EmailTemplate_Controller,ControllerObjServer);
 	
 	var options = {};
 	options.alias = "Тип email";	
-	options.enumValues = 'new_account,reset_pwd,user_email_conf,out_mail';
+	options.enumValues = 'new_account,reset_pwd,user_email_conf,out_mail,new_app,app_change,new_remind,out_mail_to_app';
 	options.enumValues+= (options.enumValues=='')? '':',';
 	options.enumValues+= 'null';
 	
@@ -74,7 +74,7 @@ extend(EmailTemplate_Controller,ControllerObjServer);
 	
 	var options = {};
 	options.alias = "Поля";
-	var field = new FieldText("fields",options);
+	var field = new FieldJSON("fields",options);
 	
 	pm.addField(field);
 	
@@ -106,16 +106,7 @@ extend(EmailTemplate_Controller,ControllerObjServer);
 	pm.addField(new FieldString("email_type",f_opts));
 	var f_opts = {};
 	
-	pm.addField(new FieldString("mes_subject",f_opts));
-	var f_opts = {};
-	
 	pm.addField(new FieldText("template",f_opts));
-	var f_opts = {};
-	
-	pm.addField(new FieldText("comment_text",f_opts));
-	var f_opts = {};
-	
-	pm.addField(new FieldText("fields",f_opts));
 }
 
 			EmailTemplate_Controller.prototype.addGetObject = function(){

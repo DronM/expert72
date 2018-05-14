@@ -1,8 +1,14 @@
 <?php
+/**
+ *
+ * THIS FILE IS GENERATED FROM TEMPLATE build/templates/models/Model_php.xsl
+ * ALL DIRECT MODIFICATIONS WILL BE LOST WITH THE NEXT BUILD PROCESS!!!
+ *
+ */
 
 require_once(FRAME_WORK_PATH.'basic_classes/.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLString.php');
-
+ 
 class DownloadFileType_Model extends {
 	
 	public function __construct($dbLink){
@@ -17,11 +23,11 @@ class DownloadFileType_Model extends {
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['length']=5;
 		$f_opts['id']="ext";
-		
+				
 		$f_ext=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"ext",$f_opts);
 		$this->addField($f_ext);
 		//********************
-$this->setLimitConstant('doc_per_page_count');
+	$this->setLimitConstant('doc_per_page_count');
 	}
 
 }

@@ -41,7 +41,7 @@
 						<div class="panel panel-body login-form">
 							<div class="text-center">
 							<!-- slate-300-->
-								<div class="icon-object border-teal text-teal"><i class="icon-reading"></i></div>
+								<div class="icon-object border-{$COLOR_PALETTE} text-{$COLOR_PALETTE}"><i class="icon-reading"></i></div>
 								<h5 class="content-group">Личный кабинет <small class="display-block">Ваши данные</small></h5>
 								<div id="Login:error"></div>
 							</div>
@@ -64,12 +64,13 @@
 
 							<div class="form-group login-options">
 								<div class="row">
+									<!--
 									<div class="col-sm-6">
 										<label class="checkbox-inline">
 										<input id="Login:rememberMe" type="checkbox" class="styled" checked="checked"/>
-										Зпомнить</label>
+										Запомнить</label>
 									</div>
-
+									-->
 									<div class="col-sm-6 text-right">
 										<a href="index.php?v=PasswordRecovery">Забыли пароль?</a>
 									</div>
@@ -77,7 +78,7 @@
 							</div>
 
 							<div class="form-group">
-								<div id="Login:submit_login" class="btn bg-teal btn-block">Войти <i class="icon-arrow-right14 position-right"></i></div>
+								<div id="Login:submit_login" class="btn bg-{$COLOR_PALETTE} btn-block">Войти <i class="icon-arrow-right14 position-right"></i></div>
 							</div>
 
 							<div class="content-divider text-muted form-group"><span>или авторизуйтесь через</span></div>

@@ -106,6 +106,8 @@ extend(Holiday_Controller,ControllerObjServer);
 	var f_opts = {};
 	
 	pm.addField(new FieldString("name",f_opts));
+	pm.getField(this.PARAM_ORD_FIELDS).setValue("date");
+	
 }
 
 			Holiday_Controller.prototype.addGetObject = function(){

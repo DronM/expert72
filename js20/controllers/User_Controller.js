@@ -35,10 +35,10 @@ function User_Controller(options){
 	this.add_register();
 	this.add_name_check();
 	this.add_login();
-	this.add_login_refresh();
 	this.add_logout();
 	this.add_logout_html();
 	this.add_email_confirm();
+	this.add_hide();
 		
 }
 extend(User_Controller,ControllerObjServer);
@@ -61,8 +61,20 @@ extend(User_Controller,ControllerObjServer);
 	pm.addField(field);
 	
 	var options = {};
+	options.required = true;
+	var field = new FieldString("name_full",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldBool("banned",options);
+	
+	pm.addField(field);
+	
+	var options = {};
 	options.required = true;	
-	options.enumValues = 'admin,client,lawyer';
+	options.enumValues = 'admin,client,lawyer,expert,boss';
 	var field = new FieldEnum("role_id",options);
 	
 	pm.addField(field);
@@ -122,6 +134,18 @@ extend(User_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	options.alias = "Цветовая схема";
+	var field = new FieldText("color_palette",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	options.alias = "Дублировать напоминания на электронную почту";
+	var field = new FieldBool("reminders_to_email",options);
+	
+	pm.addField(field);
+	
 	pm.addField(new FieldInt("ret_id",{}));
 	
 	
@@ -147,8 +171,20 @@ extend(User_Controller,ControllerObjServer);
 	pm.addField(field);
 	
 	var options = {};
+	
+	var field = new FieldString("name_full",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldBool("banned",options);
+	
+	pm.addField(field);
+	
+	var options = {};
 		
-	options.enumValues = 'admin,client,lawyer';
+	options.enumValues = 'admin,client,lawyer,expert,boss';
 	options.enumValues+= (options.enumValues=='')? '':',';
 	options.enumValues+= 'null';
 	
@@ -212,6 +248,18 @@ extend(User_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	options.alias = "Цветовая схема";
+	var field = new FieldText("color_palette",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	options.alias = "Дублировать напоминания на электронную почту";
+	var field = new FieldBool("reminders_to_email",options);
+	
+	pm.addField(field);
+	
 	
 }
 
@@ -244,8 +292,11 @@ extend(User_Controller,ControllerObjServer);
 	f_opts.alias = "Код";
 	pm.addField(new FieldInt("id",f_opts));
 	var f_opts = {};
-	f_opts.alias = "Наименование";
+	f_opts.alias = "Логин";
 	pm.addField(new FieldString("name",f_opts));
+	var f_opts = {};
+	f_opts.alias = "ФИО";
+	pm.addField(new FieldString("name_full",f_opts));
 	var f_opts = {};
 	f_opts.alias = "Email";
 	pm.addField(new FieldString("email",f_opts));
@@ -333,6 +384,16 @@ extend(User_Controller,ControllerObjServer);
 	
 		options.required = true;
 	
+		options.maxlength = "250";
+	
+		pm.addField(new FieldString("name_full",options));
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
 		options.maxlength = "100";
 	
 		pm.addField(new FieldString("pwd",options));
@@ -350,6 +411,8 @@ extend(User_Controller,ControllerObjServer);
 				
 	
 	var options = {};
+	
+		options.required = true;
 	
 		pm.addField(new FieldBool("pers_data_proc_agreement",options));
 	
@@ -416,36 +479,11 @@ extend(User_Controller,ControllerObjServer);
 		pm.addField(new FieldPassword("pwd",options));
 	
 				
-	
-	var options = {};
-	
-		options.alias = "Запомнить меня";
-	
-		pm.addField(new FieldBool("rememberMe",options));
-	
 			
 	this.addPublicMethod(pm);
 }
 
-			User_Controller.prototype.add_login_refresh = function(){
-	var opts = {"controller":this};
-	
-	var pm = new PublicMethodServer('login_refresh',opts);
-	
-				
-	
-	var options = {};
-	
-		options.required = true;
-	
-		options.maxlength = "50";
-	
-		pm.addField(new FieldString("refresh_token",options));
-	
 			
-	this.addPublicMethod(pm);
-}
-
 			User_Controller.prototype.add_logout = function(){
 	var opts = {"controller":this};
 	
@@ -476,6 +514,23 @@ extend(User_Controller,ControllerObjServer);
 		options.maxlength = "36";
 	
 		pm.addField(new FieldString("key",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			User_Controller.prototype.add_hide = function(){
+	var opts = {"controller":this};
+	
+	var pm = new PublicMethodServer('hide',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("id",options));
 	
 			
 	this.addPublicMethod(pm);

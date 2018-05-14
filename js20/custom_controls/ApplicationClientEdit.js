@@ -9,23 +9,26 @@
  
  * @param {string} id - Object identifier
  * @param {object} options
+ * @param {bool} options.minInf true- урезанныя информация, обазательны не все поля
+ * @param {View} options.mainView ссылка на главную форму
  */
 function ApplicationClientEdit(id,options){
 	options = options || {};	
 	
 	options.template = options.template || window.getApp().getTemplate("ApplicationClientTab");
 	options.templateOptions = options.templateOptions || {};
-	options.templateOptions.colorClass = window.getApp().COLOR_CLASS;
+	options.templateOptions.colorClass = window.getApp().getColorClass();
 	options.templateOptions.isCustomer = (id=="ApplicationDialog:customer");
-	options.templateOptions.isApplicant = (id=="ApplicationDialog:applicant");	
-	options.templateOptions.isClient = ((window.getApp().getServVar('role_id')=="client"));
+	options.templateOptions.isApplicant = (id=="ApplicationDialog:applicant");
+	options.templateOptions.isDeveloper = (id=="ApplicationDialog:developer");		
+	options.templateOptions.isClient = true;//(window.getApp().getServVar('role_id')=="client");
 	
+	this.m_minInf = options.minInf;
 	this.m_mainView = options.mainView;
 	
 	var self = this;
 	options.addElement = function(){
 		//var id = this.getId();
-		
 		this.addElement(new Control(id+":fillOnApplicant","A",{
 			"events":{
 				"click":function(){
@@ -51,6 +54,14 @@ function ApplicationClientEdit(id,options){
 				}
 			}
 		}));	
+		this.addElement(new Control(id+":fillOnDeveloper","A",{
+			"events":{
+				"click":function(){
+					self.fillOnDeveloper();
+				}
+			}
+		}));	
+		
 		this.addElement(new Control(id+":fillOnClientList","A",{
 			"events":{
 				"click":function(){
@@ -59,55 +70,19 @@ function ApplicationClientEdit(id,options){
 			}
 		}));	
 
-		this.addElement(new EditRadioGroup(id+":client_type",{
-			"labelCaption":"Тип контрагента:",
-			"elements":[
-				new EditRadio(id+":client_type:enterprise",{
-					"name":id+":client_type",
-					"value":"enterprise",
-					"labelCaption":"Юридическое лицо",
-					"contClassName":window.getBsCol(6),
-					"labelClassName":"control-label "+window.getBsCol(6),
-					"checked":true,
-					"events":{
-						"change":function(){
-							self.setClientType();
-							self.m_mainView.calcFillPercent();
-						}
-					}
-				}),
-				new EditRadio(id+":client_type:person",{
-					"name":id+":client_type",
-					"value":"person",
-					"labelCaption":"Физическое лицо",
-					"contClassName":window.getBsCol(6),
-					"labelClassName":"control-label "+window.getBsCol(5),
-					"events":{
-						"change":function(){
-							self.setClientType();
-							self.m_mainView.calcFillPercent();
-						}
-					}					
-				})				
-			]
-		}));	
-		
-		this.addElement(new EditString(id+":name",{
-			"labelCaption":"Наименование:",
-			"placeholder":"Краткое наименование контрагента",
-			"maxlength":100,
-			"events":{
-				"blur":function(){
-					self.fillFullname.call(self);
-					self.m_mainView.calcFillPercent();
-				}
-			}
+		this.addElement(new ClientType(id+":client_type",{
+			"mainView":this.m_mainView,
+			"view":this
 		}));	
 
-		this.addElement(new EditString(id+":name_full",{
-			"labelCaption":"Официальное наименование:",
-			"placeholder":"Наименование в точном соответствии с учредительными документами",
-			"maxlength":500,
+		/* если minInf=true то только name && name_full - обязательны для расчета процента!
+		 * надо как то выделять это визуально
+		 */
+		var bs = window.getBsCol(4);
+		this.addElement(new ClientNameEdit(id+":name",{
+			"attrs":{"percentCalc":"true"},
+			"labelClassName":"control-label percentcalc "+bs,
+			"view":this,
 			"events":{
 				"blur":function(){
 					self.m_mainView.calcFillPercent();
@@ -115,15 +90,20 @@ function ApplicationClientEdit(id,options){
 			}			
 		}));	
 
-		this.addElement(new EditINN(id+":inn",{
-			"labelCaption":"ИНН:",
-			"isEnterprise":true,
-			"buttonSelect":new ButtonOrgSearch(id+":inn:btnOrgSearch",{
-				"viewContext":this,
-				"onGetData":function(model){
-					self.onGetNalogData(model);
+		this.addElement(new ClientNameFullEdit(id+":name_full",{
+			"attrs":{"percentCalc":"true"},
+			"labelClassName":"control-label percentcalc "+bs,
+			"events":{
+				"blur":function(){
+					self.m_mainView.calcFillPercent();
 				}
-			}),
+			}			
+		}));	
+
+		this.addElement(new ClientINN(id+":inn",{			
+			"attrs":{"percentCalc":!options.minInf},
+			"labelClassName": !options.minInf? ("control-label percentcalc "+bs) : undefined,
+			"mainView":this,
 			"events":{
 				"blur":function(){
 					self.m_mainView.calcFillPercent();
@@ -131,18 +111,18 @@ function ApplicationClientEdit(id,options){
 			}						
 		}));
 		
-		this.addElement(new EditKPP(id+":kpp",{
-			"labelCaption":"КПП:",
-			"placeholder":"КПП организации",
+		this.addElement(new ClientKPP(id+":kpp",{
+			"attrs":{"percentCalc":!options.minInf},
+			"labelClassName": !options.minInf? ("control-label percentcalc "+bs) : undefined,
 			"events":{
 				"blur":function(){
 					self.m_mainView.calcFillPercent();
 				}
 			}									
 		}));	
-		this.addElement(new EditOGRN(id+":ogrn",{
-			"isEnterprise":true,
-			"labelCaption":"ОГРН:",
+		this.addElement(new ClientOGRN(id+":ogrn",{
+			"attrs":{"percentCalc":!options.minInf},
+			"labelClassName": !options.minInf? ("control-label percentcalc "+bs) : undefined,
 			"events":{
 				"blur":function(){
 					self.m_mainView.calcFillPercent();
@@ -151,48 +131,50 @@ function ApplicationClientEdit(id,options){
 		}));	
 		
 
-		this.addElement(new EditAddress(id+":post_address",{
-			"buttonOpen":new ButtonCtrl(id+":legal_address:copy-from-post",{
-				"glyph":"glyphicon-arrow-left",
-				"title":"заполнить как юридический",
-				"onClick":function(){
-					self.copyFromLegal();
-				}
-			}),		
-			"labelCaption":"Почтовый адрес:",
-			"mainView":this.m_mainView
+		this.addElement(new ClientPostAddressEdit(id+":post_address",{
+			"attrs":{"percentCalc":!options.minInf},
+			"labelClassName": !options.minInf? ("control-label percentcalc "+bs) : undefined,
+			"mainView":this.m_mainView,
+			"view":this
 		}));	
 
-		this.addElement(new EditAddress(id+":legal_address",{
-			"labelCaption":"Юридический адрес:",
+		this.addElement(new ClientLegalAddressEdit(id+":legal_address",{
+			"attrs":{"percentCalc":!options.minInf},
+			"labelClassName": !options.minInf? ("control-label percentcalc "+bs) : undefined,
 			"mainView":this.m_mainView
 		}));	
 		
 
 		this.addElement(new EditRespPerson(id+":responsable_person_head",{
-			"labelCaption":"Руководитель:",
+			"attrs":{"percentCalc":!options.minInf},
+			"labelClassName": !options.minInf? ("control-label percentcalc "+bs) : undefined,
+			"labelCaption":"Руководитель:",			
+			"mainView":this.m_mainView,
+			"minInf":options.minInf
+		}));	
+
+		this.addElement(new EditUserClientBankAcc(id+":bank",{			
+			"attrs":{"percentCalc":!options.minInf},
+			"labelClassName": !options.minInf? ("control-label percentcalc "+bs) : undefined,
+			"mainView":this.m_mainView,
+			"minInf":options.minInf
+		}));	
+
+		this.addElement(new EditPersonIdPaper(id+":person_id_paper",{			
+			"attrs":{"percentCalc":!options.minInf},
+			"labelClassName": !options.minInf? ("control-label percentcalc "+bs) : undefined,
 			"mainView":this.m_mainView
 		}));	
 
-		this.addElement(new EditUserClientBankAcc(id+":bank",{
-			"labelCaption":"Банк:",
-			"mainView":this.m_mainView
-		}));	
-
-		this.addElement(new EditPersonIdPaper(id+":person_id_paper",{
-			"labelCaption":"Документ, удостоверяющий личность:",
-			"mainView":this.m_mainView
-		}));	
-
-		this.addElement(new EditPersonRegistrPaper(id+":person_registr_paper",{
-			"labelCaption":"Свидетельство ИП:",
+		this.addElement(new EditPersonRegistrPaper(id+":person_registr_paper",{			
+			"attrs":{"percentCalc":!options.minInf},
+			"labelClassName": !options.minInf? ("control-label percentcalc "+bs) : undefined,
 			"mainView":this.m_mainView
 		}));	
 		
-		this.addElement(new EditString(id+":base_document_for_contract",{
-			"maxlength":"200",
-			"placeholder":"Устав, доверенность и т.д.",
-			"labelCaption":"Документ, на основании которого действует руководитель при подписании договора:",
+		this.addElement(new ClientDocForContract(id+":base_document_for_contract",{
+			"attrs":{"percentCalc":!options.minInf},
+			"labelClassName": !options.minInf? ("control-label percentcalc "+bs) : undefined,
 			"events":{
 				"blur":function(){
 					self.m_mainView.calcFillPercent();
@@ -201,7 +183,11 @@ function ApplicationClientEdit(id,options){
 		}));	
 			
 		//********* responsable grid ***********************
-		this.addElement(new ClientResponsableGrid(id+":responsable_persons"));
+		this.addElement(new ClientResponsableGrid(id+":responsable_persons",{
+			"mainView":this.m_mainView,
+			"attrs":{"percentCalc":!options.minInf},
+			"minInf":options.minInf
+		}));
 		
 		if (options.cmdClose){
 			this.addElement(new Control(id+":cmdClose","A",{
@@ -217,82 +203,38 @@ function ApplicationClientEdit(id,options){
 	
 	ApplicationClientEdit.superclass.constructor.call(this,id,options);
 	
-	this.m_clientTypeLabels = {
-		"name":{
-			"labelCaption":{
-				"enterprise":"Наименование:",
-				"person":"Наименование:"			
-			},
-			"placeholder":{
-				"enterprise":"Краткое наименование контрагента",
-				"person":"Наименование ИП"			
-			}			
-		},
-		"name_full":{
-			"labelCaption":{
-				"enterprise":"Официальное наименование:",
-				"person":"ФИО:"			
-			},
-			"placeholder":{
-				"enterprise":"Наименование в точном соответствии с учредительными документами",
-				"person":"Фамилия имя отчество физического лица"			
-			}			
-		},
-		"person_id_paper":{
-			"visible":{"enterprise":false,"person":true}
-		},
-		"person_registr_paper":{
-			"visible":{"enterprise":false,"person":true}
-		},		
-		"inn":{
-			"labelCaption":{
-				"enterprise":"ИНН:",
-				"person":"ИНН:"			
-			},
-			"placeholder":{
-				"enterprise":"ИНН организации",
-				"person":"ИНН предпринимателя"			
-			}			
-		},
-		"ogrn":{
-			"labelCaption":{
-				"enterprise":"ОГРН:",
-				"person":"ОГРНИП:"			
-			},
-			"placeholder":{
-				"enterprise":"ОГРН организации",
-				"person":"ОГРН предпринимателя"			
-			}			
-		},
-		"kpp":{
-			"visible":{"enterprise":true,"person":false}
-		}				
-	};
-	
 	var f_getFillPercent= function(){
+		return (!self.m_minInf && this.isNull())? 0:100;
+	};
+	var f_getFillPercent_strict= function(){
 		return (this.isNull())? 0:100;
 	};
-	
+
 	this.getElement("name").getFillPercent = f_getFillPercent;
-	this.getElement("name_full").getFillPercent = f_getFillPercent;
-	this.getElement("inn").getFillPercent = f_getFillPercent;
+	this.getElement("name_full").getFillPercent =  f_getFillPercent_strict;//(this.getElement("name_full").getVisible())? f_getFillPercent_strict:f_getFillPercent;
+	
+	this.getElement("inn").getFillPercent = function(){
+		return (self.getElement("client_type").getValue()=="person")?
+			100 : ( (!self.m_minInf && self.getElement("inn").isNull())? 0:100 );
+	}
 	this.getElement("kpp").getFillPercent = function(){
-		return (self.getElement("client_type").getValue()!="person")? ( (self.getElement("kpp").isNull())? 0:100 ):100;
+		return (self.getElement("client_type").getValue()=="enterprise")? ( (!self.m_minInf && self.getElement("kpp").isNull())? 0:100 ):100;
 	}
 	this.getElement("person_id_paper").getFillPercent = function(){	
-		return (self.getElement("client_type").getValue()=="person")? ( (self.getElement("person_id_paper").isNull())? 0:100 ):100;
+		return (self.getElement("client_type").getValue()!="enterprise")? ( (!self.m_minInf && self.getElement("person_id_paper").isNull())? 0:100 ):100;
 	}
 	this.getElement("person_registr_paper").getFillPercent = function(){
-		return (self.getElement("client_type").getValue()=="person")? ( (self.getElement("person_registr_paper").isNull())? 0:100 ):100;
+		return (self.getElement("client_type").getValue()=="pboul")? ( (!self.m_minInf && self.getElement("person_registr_paper").isNull())? 0:100 ):100;
 	}
-	
+
 	this.getElement("ogrn").getFillPercent = f_getFillPercent;
 	this.getElement("post_address").getFillPercent = f_getFillPercent;
 	this.getElement("legal_address").getFillPercent = f_getFillPercent;
 	this.getElement("post_address").getFillPercent = f_getFillPercent;
 	this.getElement("base_document_for_contract").getFillPercent = f_getFillPercent;	
+		
+	this.getElement("client_type").setClientType("enterprise");
 	
-	this.setClientType();
 }
 extend(ApplicationClientEdit,EditJSON);
 
@@ -300,72 +242,24 @@ extend(ApplicationClientEdit,EditJSON);
 
 
 /* private members */
-ApplicationClientEdit.prototype.m_clientTypeLabels;
 
 /* protected*/
 
 
 /* public methods */
-ApplicationClientEdit.prototype.setClientType = function(){
-	var ctp = this.getElement("client_type").getValue();
-	this.getElement("ogrn").setIsEnterprise((ctp=="enterprise"));
-	for(var id in this.m_clientTypeLabels){
-		if (this.m_clientTypeLabels[id].visible && !this.m_clientTypeLabels[id].visible[ctp]){
-			this.getElement(id).setVisible(false);
-		}
-		else{
-			var ctrl = this.getElement(id);
-			if (this.m_clientTypeLabels[id].labelCaption){
-				ctrl.getLabel().setValue(this.m_clientTypeLabels[id].labelCaption[ctp]);
-			}
-			if (this.m_clientTypeLabels[id].placeholder){
-				ctrl.setAttr("placeholder",this.m_clientTypeLabels[id].placeholder[ctp]);
-			}
-			
-			if (!ctrl.getVisible()){
-				ctrl.setVisible(true);
-			}
-		}
-	}
-	//this.m_mainView.calcFillPercent();
-}
 
-ApplicationClientEdit.prototype.fillFullname = function(){
-	if (this.getElement("name_full").isNull() && !this.getElement("name").isNull()){
-		var full_names = [
-			{"short":"ООО","full":"Общество с ограниченной ответственностью"},
-			{"short":"ЗАО","full":"Закрытое акционерное общество"},
-			{"short":"ОАО","full":"Открытое акционерное общество"},
-			{"short":"ПАО","full":"Публичное акционерное общество"},
-			{"short":"АО","full":"Акционерное общество"},
-			{"short":"ИП","full":""}
-		];
-		var short = this.getElement("name").getValue();
-		for (var i=0;i<full_names.length;i++){
-			if (short.substr(0,full_names[i].short.length+1)==(full_names[i].short+" ")){
-				var s = ((full_names[i].full.length)? full_names[i].full+" ":"") +short.substr(full_names[i].short.length);
-				this.getElement("name_full").setValue(s);
-				if (this.getElement("client_type")=="person" && this.getElement("responsable_person_head").isNull()){
-					this.getElement("responsable_person_head").getValueJSON()["name"] = s;
-					
-				}
-				break;
-			}			
-		}
-	}
-}
-
-ApplicationClientEdit.prototype.onGetData = function(resp){
-	ApplicationClientEdit.superclass.onGetData.call(this,resp);
+ApplicationClientEdit.prototype.setInitValue = function(v){
+	ApplicationClientEdit.superclass.setInitValue.call(this,v);		
 	
-	this.setClientType();
+	this.getElement("client_type").setClientType(v.client_type);
 }
+
 
 ApplicationClientEdit.prototype.getFillPercent = function(){
 	var tot=0,cnt=0;
 	for (var id in this.m_elements){
-		if (this.m_elements[id].getFillPercent){
-			tot+=this.m_elements[id].getFillPercent();
+		if (this.m_elements[id].getFillPercent && this.m_elements[id].getVisible()){
+			tot+= this.m_elements[id].getFillPercent();
 			cnt++;
 		}
 	}
@@ -374,16 +268,8 @@ ApplicationClientEdit.prototype.getFillPercent = function(){
 
 ApplicationClientEdit.prototype.fillOnApplicant = function(){
 	var data = this.m_mainView.getElement("applicant").getValueJSON();
-	/*
-	if (this.getId()=="ApplicationDialog:customer"){
-		this.m_mainView.getElement("customer").setValue(data);
-	}
-	else{
-		//contractor
-		this.setValue(data);
-	}
-	*/
-	this.setValue(data);
+	this.getElement("client_type").setClientType(data.client_type);
+	this.setValue(data);	
 	this.m_mainView.calcFillPercent();
 }
 ApplicationClientEdit.prototype.fillOnContractor = function(){
@@ -391,19 +277,21 @@ ApplicationClientEdit.prototype.fillOnContractor = function(){
 	if (!contractors.length){
 		throw new Error("Нет ни одного заявителя!"); 
 	}
+	this.getElement("client_type").setClientType(contractors[0].client_type);
 	this.setValue(contractors[0]);
+	this.m_mainView.calcFillPercent();
 }
 
 ApplicationClientEdit.prototype.fillOnCustomer = function(){
 	var data = this.m_mainView.getElement("customer").getValueJSON();
-	/*
-	if (this.getId()=="ApplicationDialog:applicant"){
-		this.m_mainView.getElement("applicant").setValue(data);
-	}
-	else{
-		//contractor
-	}
-	*/
+	this.getElement("client_type").setClientType(data.client_type);
+	this.setValue(data);
+	this.m_mainView.calcFillPercent();
+}
+
+ApplicationClientEdit.prototype.fillOnDeveloper = function(){
+	var data = this.m_mainView.getElement("developer").getValueJSON();
+	this.getElement("client_type").setClientType(data.client_type);
 	this.setValue(data);
 	this.m_mainView.calcFillPercent();
 }
@@ -421,27 +309,18 @@ ApplicationClientEdit.prototype.fillOnClientList = function(){
 	
 	win.onSelect = function(fields){
 		var data = fields.client_data.getValue();
+		self.getElement("client_type").setClientType(data.client_type);
 		self.setValue(data);
-		/*
-		if (self.getId()=="ApplicationDialog:applicant"){
-			self.m_mainView.getElement("applicant").setValue(data);
-		}
-		else if (self.getId()=="ApplicationDialog:customer"){
-			self.m_mainView.getElement("customer").setValue(data);
-		}
-		else{
-			//contructor
-		}
-		*/
-		self.m_winObj.close();
-		
+		self.m_winObj.close();		
 		self.m_mainView.calcFillPercent();
 	}	
 	
 }
 
-ApplicationClientEdit.prototype.copyFromLegal = function(){
-	this.getElement("post_address").setValue(this.getElement("legal_address").getValue());	
-	
-	this.m_mainView.calcFillPercent();
+ApplicationClientEdit.prototype.getValueJSON = function(){	
+	var o = ApplicationClientEdit.superclass.getValueJSON.call(this);
+	if (o["name"] && o["name_full"] && !o["name"].length && o["name_full"].length){
+		o["name"] = o["name_full"];
+	}
+	return o;
 }

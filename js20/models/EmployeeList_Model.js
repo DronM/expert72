@@ -1,4 +1,8 @@
 /**	
+ *
+ * THIS FILE IS GENERATED FROM TEMPLATE build/templates/models/Model_js.xsl
+ * ALL DIRECT MODIFICATIONS WILL BE LOST WITH THE NEXT BUILD PROCESS!!!
+ *
  * @author Andrey Mikhalevich <katrenplus@mail.ru>, 2017
  * @class
  * @classdesc Model class. Created from template build/templates/models/Model_js.xsl. !!!DO NOT MODEFY!!!
@@ -17,11 +21,7 @@ function EmployeeList_Model(options){
 	options = options || {};
 	
 	options.fields = {};
-	
-			
-				
-			
-				
+		
 	
 	var filed_options = {};
 	filed_options.primaryKey = true;	
@@ -29,8 +29,7 @@ function EmployeeList_Model(options){
 	filed_options.autoInc = true;	
 	
 	options.fields.id = new FieldInt("id",filed_options);
-	
-				
+		
 	
 	var filed_options = {};
 	filed_options.primaryKey = false;	
@@ -39,7 +38,36 @@ function EmployeeList_Model(options){
 	
 	options.fields.name = new FieldString("name",filed_options);
 	options.fields.name.getValidator().setMaxLength('200');
+		
 	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.user_id = new FieldInt("user_id",filed_options);
+		
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.department_id = new FieldInt("department_id",filed_options);
+		
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.post_id = new FieldInt("post_id",filed_options);
+	
+			
+				
+			
+			
+			
 				
 	
 	var filed_options = {};

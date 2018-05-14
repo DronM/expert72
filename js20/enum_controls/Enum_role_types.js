@@ -18,6 +18,8 @@ function Enum_role_types(id,options){
 	var multy_lang_values = {"ru_admin":"Администратор"
 ,"ru_client":"Клиент"
 ,"ru_lawyer":"Юрист отдела приема"
+,"ru_expert":"Эксперт"
+,"ru_boss":"Руководитель"
 };
 	options.options = [{"value":"admin",
 "descr":multy_lang_values[window.getApp().getLocale()+"_"+"admin"],
@@ -28,6 +30,12 @@ checked:(options.defaultValue&&options.defaultValue=="client")}
 ,{"value":"lawyer",
 "descr":multy_lang_values[window.getApp().getLocale()+"_"+"lawyer"],
 checked:(options.defaultValue&&options.defaultValue=="lawyer")}
+,{"value":"expert",
+"descr":multy_lang_values[window.getApp().getLocale()+"_"+"expert"],
+checked:(options.defaultValue&&options.defaultValue=="expert")}
+,{"value":"boss",
+"descr":multy_lang_values[window.getApp().getLocale()+"_"+"boss"],
+checked:(options.defaultValue&&options.defaultValue=="boss")}
 ];
 	
 	Enum_role_types.superclass.constructor.call(this,id,options);

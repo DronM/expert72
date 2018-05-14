@@ -1,0 +1,72 @@
+<div id="{{id}}" class="panel panel-flat">
+	<div id="{{id}}:cmd-cont">
+		<div id="{{id}}:cmdOk" options="{'glyph':'glyphicon-send','caption':'На рассмотрение '}" title="Отправить письмо на рассмотрение"/>
+		<div id="{{id}}:cmdCancel"/>
+	</div>
+
+	<div class="panel-heading">
+		<h2 class="panel-title">Рассмотрение №<span id="{{id}}:id"/> от <span id="{{id}}:date_time"/></h2>		
+	</div>
+	
+	<div id="{{id}}:state_descr" class="text-info hidden"/>
+	
+	<div class="steps-basic wizard clearfix">
+		<div class="steps clearfix">
+			<ul role="tablist">
+				{{#chain}}
+				<li role="tab" class="{{tab-class}}" aria-disabled="false" aria-selected="{{aria-selected}}">
+					<a id="{{id}}:step{{step}}" href="#">
+						<span class="number">{{step}}</span> {{doc_descr}} {{state_descr}}
+					</a>
+				</li>
+				{{/chain}}
+			</ul>
+		</div>
+	</div>			
+	
+	<div class="col-lg-6">		
+		<div id="{{id}}:doc_flow_importance_types_ref"/>
+		<div id="{{id}}:end_date_time"/>
+	</div>	
+	<div class="col-lg-6">		
+		<div id="{{id}}:recipients_ref"/>
+		<div id="{{id}}:employees_ref"/>	
+	</div>
+	
+	<div class="tabbable">
+		<ul class="nav nav-tabs nav-tabs-highlight">				
+			<li class="active"><a href="#subject" data-toggle="tab" aria-expanded="true">Предмет рассмотрения</a></li>
+			<li id="{{id}}:result-toggle"><a href="#result" data-toggle="tab" aria-expanded="false">Результат рассмотрения</a></li>
+		</ul>
+	</div>
+	
+	<div class="tab-content dialogForm">
+		<div class="tab-pane fade in active" id="subject">
+			<div id="{{id}}:subject_docs_ref"/>	
+			<div id="{{id}}:subject"/>
+			<div id="{{id}}:description"/>					
+			
+		</div>
+		
+		<div class="tab-pane fade" id="result">
+			<div id="{{id}}:resolution"/>
+			<div id="{{id}}:application_resolution_state"/>
+			<div id="{{id}}:close_date_time"/>
+			<div id="{{id}}:close_employees_ref"/>
+			
+			{{#docFlowOutExists}}
+			<div>Подготовлен исходящий документ 
+				<a id="{{id}}:docFlowOut" href="#">{{docFlowOut}}
+				</a>
+			</div>
+			{{/docFlowOutExists}}
+			
+			<div class="heading-btn pull-left">
+				<div id="{{id}}:cmdDocFlowOut" />
+				<div id="{{id}}:cmdResolve" />
+				<div id="{{id}}:cmdUnresolve" />
+			</div>	
+		</div>
+	</div>
+	
+</div>

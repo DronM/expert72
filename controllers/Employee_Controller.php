@@ -1,17 +1,19 @@
 <?php
 require_once(FRAME_WORK_PATH.'basic_classes/ControllerSQL.php');
-
 require_once(FRAME_WORK_PATH.'basic_classes/FieldExtInt.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldExtString.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldExtFloat.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldExtEnum.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldExtText.php');
+require_once(FRAME_WORK_PATH.'basic_classes/FieldExtDateTime.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldExtDate.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldExtPassword.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldExtBool.php');
+require_once(FRAME_WORK_PATH.'basic_classes/FieldExtInterval.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldExtDateTimeTZ.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldExtJSON.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldExtJSONB.php');
+require_once(FRAME_WORK_PATH.'basic_classes/FieldExtArray.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldExtXML.php');
 
 /**
@@ -34,6 +36,9 @@ class Employee_Controller extends ControllerSQL{
 				,array());
 		$pm->addParam($param);
 		$param = new FieldExtInt('department_id'
+				,array());
+		$pm->addParam($param);
+		$param = new FieldExtInt('post_id'
 				,array());
 		$pm->addParam($param);
 		
@@ -66,6 +71,10 @@ class Employee_Controller extends ControllerSQL{
 				,array(
 			));
 			$pm->addParam($param);
+		$param = new FieldExtInt('post_id'
+				,array(
+			));
+			$pm->addParam($param);
 		
 			$param = new FieldExtInt('id',array(
 			));
@@ -90,7 +99,7 @@ class Employee_Controller extends ControllerSQL{
 			
 		/* get_object */
 		$pm = new PublicMethod('get_object');
-		$pm->addParam(new FieldExtInt('browse_mode'));
+		$pm->addParam(new FieldExtString('mode'));
 		
 		$pm->addParam(new FieldExtInt('id'
 		));
@@ -123,7 +132,7 @@ class Employee_Controller extends ControllerSQL{
 		$pm->addParam(new FieldExtInt('count'));
 		$pm->addParam(new FieldExtInt('ic'));
 		$pm->addParam(new FieldExtInt('mid'));
-		$pm->addParam(new FieldExtString('id'));		
+		$pm->addParam(new FieldExtString('name'));		
 		$this->addPublicMethod($pm);					
 		$this->setCompleteModelId('EmployeeList_Model');
 

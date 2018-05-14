@@ -1,0 +1,65 @@
+#New user
+sudo adduser --home /home/andrey andrey
+
+#Add to sudoers list
+sudo adduser andrey sudo
+
+#Mignight commander
+sudo apt-get install mc
+
+#********* Nginx installation ***********************
+Создаем файл в /etc/apt/sources.list.d/nginx.list
+eb http://nginx.org/packages/ubuntu/ <codename> nginx
+deb-src http://nginx.org/packages/ubuntu/ <codename> nginx
+
+CodeName=
+16.04 xenial
+
+sudo apt-get update
+при ошибке
+NO_PUBKEY
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys ВСТАВИТЬ_КЛЮЧ
+Повторить sudo apt-get update
+
+sudo apt-get install nginx
+
+Создать 2 папки
+/etc/nginx/sites-available
+/etc/nginx/sites-enabled
+
+Настраиваемые параметры
+
+sudo service nginx start/stop/reload/restart
+#********* Nginx installation ***********************
+
+
+#********** PHP 7 ********************
+sudo apt-get install php7.0 php7.0-fpm php7.0-pgsql php7.0-gd php7.0-xsl php7.0-mcrypt php7.0-cli php7.0-imap php7.0-zip
+
+/etc/php7/fpm/php.ini
+short_open_tag=Off
+max_execution_time=30
+upload_max_filesize=20M
+post_max_size
+
+/etc/php5/fpm/pool.d/www.conf
+listen=/tmp/php5-fpm.sock
+listen.mode=0777
+
+sudo service php7.0-fpm restart
+#********** PHP 7 ********************
+
+
+#********** POSTGRESQL ***************************
+Create the file /etc/apt/sources.list.d/postgres.list
+deb http://apt.postgresql.org/pub/repos/apt/ YOUR_UBUNTU_VERSION_HERE-pgdg main
+
+16.04=xenial
+
+sudo apt-get update
+при ошибке
+NO_PUBKEY
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys ВСТАВИТЬ_КЛЮЧ
+Повторить sudo apt-get update
+
+#*************************************************

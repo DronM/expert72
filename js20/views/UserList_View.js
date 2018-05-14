@@ -31,6 +31,12 @@ function UserList_View(id,options){
 							"sortable":true,
 							"sort":"asc"							
 						}),
+						new GridCellHead(id+":grid:head:name_full",{
+							"columns":[
+								new GridColumn({"field":model.getField("name_full")})
+							],
+							"sortable":true
+						}),						
 						new GridCellHead(id+":grid:head:email",{
 							"columns":[
 								new GridColumn({"field":model.getField("email")})

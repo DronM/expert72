@@ -83,6 +83,14 @@
 
 							<div class="content-divider text-muted form-group"><span>Дополнительные данные</span></div>
 
+							<div class="form-group has-feedback has-feedback-left">
+								<input id="Registration:name_full" type="text" class="form-control" placeholder="ФИО пользователя"/>
+								<div class="form-control-feedback">
+									<i class="icon-user-check text-muted"></i>
+								</div>
+								<span id="Registration:name_full:error"/>
+							</div>
+
 							<div class="form-group">
 
 								<div class="checkbox">

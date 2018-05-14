@@ -1,5 +1,6 @@
 -- VIEW: offices_list
 
+--DROP VIEW applications_list;
 --DROP VIEW offices_list;
 
 CREATE OR REPLACE VIEW offices_list AS

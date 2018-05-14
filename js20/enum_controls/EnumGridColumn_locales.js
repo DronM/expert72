@@ -16,9 +16,9 @@ function EnumGridColumn_locales(options){
 	
 	options.multyLangValues = {};
 	
-	options.multyLangValues.ru = {};
+	options.multyLangValues["ru"] = {};
 
-	options.multyLangValues.ru.ru = "Русский";
+	options.multyLangValues["ru"]["ru"] = "Русский";
 EnumGridColumn_locales.superclass.constructor.call(this,options);
 	
 }

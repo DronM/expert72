@@ -1,20 +1,29 @@
 <div id="{{id}}">	
 	<div class="dropdown">
 		<h3 class="app-client-header">
-		{{#isCustomer}}Заказчик{{/isCustomer}}
-		{{#isApplicant}}Заявитель{{/isApplicant}}  </h3>
+		{{#isCustomer}}Сведения о техническом заказчике{{/isCustomer}}
+		{{#isApplicant}}Сведения о заявителе{{/isApplicant}}
+		{{#isDeveloper}}Сведения о застройщике{{/isDeveloper}}  
+		</h3>
 		{{#isClient}}
-		<button class="btn {{colorClass}} dropdown-toggle fillClientData" type="button" data-toggle="dropdown">Заполнить
+		<button class="btn bg-{{colorClass}} dropdown-toggle fillClientData" type="button" data-toggle="dropdown">Заполнить
 			<span class="caret"></span>
 		</button>
 		<ul class="dropdown-menu" title="Зполнить по другим данным">
+			{{#isDeveloper}}
+			<li><a id="{{id}}:fillOnApplicant" href="#">По заявителю</a></li>
+			<li><a id="{{id}}:fillOnCustomer" href="#">По техн.заказчику</a></li>
+			<li><a id="{{id}}:fillOnContractor" href="#">По исполнителю</a></li>			
+			{{/isDeveloper}}		
 			{{#isCustomer}}
 			<li><a id="{{id}}:fillOnApplicant" href="#">По заявителю</a></li>
 			<li><a id="{{id}}:fillOnContractor" href="#">По исполнителю</a></li>			
+			<li><a id="{{id}}:fillOnDeveloper" href="#">По застройщику</a></li>						
 			{{/isCustomer}}
 			{{#isApplicant}}
-			<li><a id="{{id}}:fillOnCustomer" href="#">По заказчику</a></li>
-			<li><a id="{{id}}:fillOnContractor" href="#">По исполнителю</a></li>			
+			<li><a id="{{id}}:fillOnCustomer" href="#">По техн.заказчику</a></li>
+			<li><a id="{{id}}:fillOnContractor" href="#">По исполнителю</a></li>
+			<li><a id="{{id}}:fillOnDeveloper" href="#">По застройщику</a></li>						
 			{{/isApplicant}}			
 			<li><a id="{{id}}:fillOnClientList" href="#">Выбрать из списка клиентов</a></li>
 		</ul>
@@ -58,7 +67,7 @@
 
 	<div class="panel panel-flat">
 		<div class="panel-heading">
-			<h5 class="panel-title">Прочие контакты</h5>
+			<h5 class="panel-title">Контакты</h5>
 		</div>
 		<div class="panel-body">
 			<div id="{{id}}:responsable_persons">

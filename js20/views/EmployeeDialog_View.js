@@ -28,6 +28,10 @@ function EmployeeDialog_View(id,options){
 		this.addElement(new DepartmentSelect(id+":departments_ref",{
 							"labelCaption":this.FIELD_CAP_departments_ref
 						}));	
+
+		this.addElement(new PostEditRef(id+":posts_ref",{
+							"labelCaption":this.FIELD_CAP_posts_ref
+						}));	
 						
 		this.addElement(new UserEditRef(id+":users_ref",{
 							"labelCaption":this.FIELD_CAP_users_ref
@@ -42,7 +46,9 @@ function EmployeeDialog_View(id,options){
 	this.setDataBindings([
 		new DataBinding({"control":this.getElement("name"),"model":this.m_model})
 		,new DataBinding({"control":this.getElement("users_ref"),"model":this.m_model})
-		,new DataBinding({"control":this.getElement("departments_ref"),"model":this.m_model})
+		,new DataBinding({"control":this.getElement("departments_ref")})
+		,new DataBinding({"control":this.getElement("posts_ref")})
+		//,"field":this.m_model.getField("department_id")
 	]);
 	
 	//write
@@ -50,6 +56,7 @@ function EmployeeDialog_View(id,options){
 		new CommandBinding({"control":this.getElement("name"),"fieldId":"name"})
 		,new CommandBinding({"control":this.getElement("users_ref"),"fieldId":"user_id"})
 		,new CommandBinding({"control":this.getElement("departments_ref"),"fieldId":"department_id"})
+		,new CommandBinding({"control":this.getElement("posts_ref"),"fieldId":"post_id"})
 	]);
 		
 }

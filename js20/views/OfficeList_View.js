@@ -30,8 +30,8 @@ function OfficeList_View(id,options){
 		"model":model,
 		"keyIds":["id"],
 		"controller":contr,
-		"editInline":true,
-		"editWinClass":null,
+		"editInline":false,
+		"editWinClass":OfficeDialog_Form,
 		"popUpMenu":popup_menu,
 		"commands":new GridCmdContainerAjx(id+":grid:cmd",{}),
 		"head":new GridHead(id+"-grid:head",{

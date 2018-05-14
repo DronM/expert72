@@ -1,4 +1,14 @@
+<!--
+This file is generated from the template build/templates/tmpl/html.xsl
+All direct modification will be lost with the next build.
+Edit template instead.
+-->
 <div id="{{id}}" class="panel panel-flat">
+  <div id="{{id}}:cmd-cont"><div id="{{id}}:cmdOk" options="{'caption':'&#x417;&#x430;&#x43F;&#x438;&#x441;&#x430;&#x442;&#x44C; ','glyph':'glyphicon-ok'}" title="&#x417;&#x430;&#x43F;&#x438;&#x441;&#x430;&#x442;&#x44C; &#x438;&#x437;&#x43C;&#x435;&#x43D;&#x435;&#x43D;&#x438;&#x44F; &#x438; &#x437;&#x430;&#x43A;&#x440;&#x44B;&#x442;&#x44C; &#x444;&#x43E;&#x440;&#x43C;&#x443; &#x437;&#x430;&#x44F;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x44F;"/><div id="{{id}}:cmdCancel" title="&#x417;&#x430;&#x43A;&#x440;&#x44B;&#x442;&#x44C; &#x444;&#x43E;&#x440;&#x43C;&#x443; &#x437;&#x430;&#x44F;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x44F;"/><div id="{{id}}:cmdZipAll" options="{'caption':'&#x421;&#x43A;&#x430;&#x447;&#x430;&#x442;&#x44C; &#x434;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x430;&#x446;&#x438;&#x44E; ','glyph':'glyphicon-compressed'}" title="&#x421;&#x43A;&#x430;&#x447;&#x430;&#x442;&#x44C; &#x432;&#x441;&#x435; &#x434;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B; &#x43E;&#x434;&#x43D;&#x438;&#x43C; &#x430;&#x440;&#x445;&#x438;&#x432;&#x43E;&#x43C;"/><div id="{{id}}:cmdSend" options="{'caption':'&#x41E;&#x442;&#x43F;&#x440;&#x430;&#x432;&#x438;&#x442;&#x44C; &#x43D;&#x430; &#x43F;&#x440;&#x43E;&#x432;&#x435;&#x440;&#x43A;&#x443; ','glyph':'glyphicon-send'}" title="&#x41E;&#x442;&#x43F;&#x440;&#x430;&#x432;&#x438;&#x442;&#x44C; &#x437;&#x430;&#x44F;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x435; &#x441; &#x434;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x430;&#x446;&#x438;&#x435;&#x439; &#x43D;&#x430; &#x43F;&#x440;&#x43E;&#x432;&#x435;&#x440;&#x43A;&#x443;"/>
+	{{#linkedAppExists}}
+	<div class="pull-right">Данное заявление подавалось вместе с <a id="{{id}}:linkedApp" href="#">{{linkedApp}}</a></div>
+	{{/linkedAppExists}}
+</div>
   <div class="panel-body dialogForm">
     <div class="tabbable">
       <ul class="nav nav-tabs nav-tabs-highlight">
@@ -9,21 +19,34 @@
         <li id="{{id}}:tab-pd" class="">
           <a href="#documents_pd" data-toggle="tab" aria-expanded="false">ПД</a>
         </li>
-        <li id="{{id}}:tab-dost" class="">
-          <a href="#documents_dost" data-toggle="tab" aria-expanded="false">Достоверность</a>
+        <li id="{{id}}:tab-eng_survey" class="">
+          <a href="#documents_eng_survey" data-toggle="tab" aria-expanded="false">РИИ</a>
         </li>
-        <li id="{{id}}:tab-in_mail" class="">
-          <a href="#in_mail" data-toggle="tab" aria-expanded="false">Входящие письма</a>
+        <li id="{{id}}:tab-cost_eval_validity" class="">
+          <a href="#documents_cost_eval_validity" data-toggle="tab" aria-expanded="false">Достоверность</a>
         </li>
-        <li id="{{id}}:tab-out_mail" class="">
-          <a href="#in_mail" data-toggle="tab" aria-expanded="false">Исходящие письма</a>
+        <li id="{{id}}:tab-modification" class="">
+          <a href="#documents_modification" data-toggle="tab" aria-expanded="false">Модификация</a>
+        </li>
+        <li id="{{id}}:tab-audit" class="">
+          <a href="#documents_audit" data-toggle="tab" aria-expanded="false">Аудит</a>
+        </li>
+        <li id="{{id}}:tab-doc_flow_in" class="">
+          <a href="#doc_flow_in" data-toggle="tab" aria-expanded="false">Входящие письма</a>
+        </li>
+        <li id="{{id}}:tab-doc_flow_out" class="">
+          <a href="#doc_flow_out" data-toggle="tab" aria-expanded="false">Исходящие письма</a>
         </li>
       </ul>
       <div class="tab-content">
         <div class="tab-pane fade in active" id="aplication">
           <div id="{{id}}:inf_sent" class="hidden">
-            <h5 class="no-margin text-semibold">Заявление отправлено на проверку до <span id="{{id}}:application_state_end_date" class="label label-primary label-rounded"/>.</h5>
-            <h5 class="no-margin text-semibold">Редактирование запрещено.</h5>
+            <h5 class="no-margin text-semibold text-danger">Заявление отправлено на проверку.</h5>
+            <h5 class="no-margin text-semibold text-danger">Редактирование запрещено.</h5>
+          </div>
+          <div id="{{id}}:inf_checking" class="hidden">
+            <h5 class="no-margin text-semibold text-danger">Заявление на рассмотрении до <span id="{{id}}:application_state_end_date" class="label label-primary label-rounded"/>.</h5>
+            <h5 class="no-margin text-semibold text-danger">Редактирование запрещено.</h5>
           </div>
           <div id="{{id}}:inf_filling" class="hidden">
             <h5 class="no-margin text-semibold">Для подачи необходимо заполнить заявление на 100%.</h5>
@@ -42,7 +65,12 @@
             <h5 class="no-margin text-semibold">Ожидание оплаты.</h5>
           </div>
           <div id="{{id}}:inf_waiting_for_contract" class="hidden">
-            <h5 class="no-margin text-semibold">Ожидание подписания контраета.</h5>
+            <h5 class="no-margin text-semibold">Ожидание подписания контракта.</h5>
+          </div>
+          <div id="{{id}}:inf_returned" class="hidden">
+            <h5 class="no-margin text-semibold">Заявление возвращено на доработку.</h5>
+            <h5 class="no-margin text-semibold">Создайте новое заявление, исправив ошибки.</h5>
+            <h5 class="no-margin text-semibold">Загруженные файлы по данному заявлению будут храниться три месяца.</h5>
           </div>
           <h2>Заявление № <u id="{{id}}:id"/> от <u id="{{id}}:create_dt"/></h2>
           <div class="tabbable nav-tabs-vertical nav-tabs-left">
@@ -53,48 +81,52 @@
 								</a>
               </li>
               <li>
+                <a href="#construction-tab" data-toggle="tab" class="legitRipple"><span id="{{id}}:construction-tab-fill_percent" class="badge badge-danger pull-right" title="&#x41F;&#x440;&#x43E;&#x446;&#x435;&#x43D;&#x442; &#x437;&#x430;&#x43F;&#x43E;&#x43B;&#x43D;&#x435;&#x43D;&#x438;&#x44F;">0%</span>
+									Объект строительства
+								</a>
+              </li>
+              <li>
                 <a href="#applicant-tab" data-toggle="tab" class="legitRipple"><span id="{{id}}:applicant-tab-fill_percent" class="badge badge-danger pull-right" title="&#x41F;&#x440;&#x43E;&#x446;&#x435;&#x43D;&#x442; &#x437;&#x430;&#x43F;&#x43E;&#x43B;&#x43D;&#x435;&#x43D;&#x438;&#x44F;">0%</span>
-									Сведения о заявителе
+									Заявитель
 								</a>
               </li>
               <li>
                 <a href="#contractors-tab" data-toggle="tab" class="legitRipple"><span id="{{id}}:contractors-tab-fill_percent" class="badge badge-danger pull-right" title="&#x41F;&#x440;&#x43E;&#x446;&#x435;&#x43D;&#x442; &#x437;&#x430;&#x43F;&#x43E;&#x43B;&#x43D;&#x435;&#x43D;&#x438;&#x44F;">0%</span>
-									Сведения об исполнителях работ
-								</a>
-              </li>
-              <li>
-                <a href="#construction-tab" data-toggle="tab" class="legitRipple"><span id="{{id}}:construction-tab-fill_percent" class="badge badge-danger pull-right" title="&#x41F;&#x440;&#x43E;&#x446;&#x435;&#x43D;&#x442; &#x437;&#x430;&#x43F;&#x43E;&#x43B;&#x43D;&#x435;&#x43D;&#x438;&#x44F;">0%</span>
-									Сведения об объекте капитального строительства
+									Исполнители работ
 								</a>
               </li>
               <li>
                 <a href="#customer-tab" data-toggle="tab" class="legitRipple"><span id="{{id}}:customer-tab-fill_percent" class="badge badge-danger pull-right" title="&#x41F;&#x440;&#x43E;&#x446;&#x435;&#x43D;&#x442; &#x437;&#x430;&#x43F;&#x43E;&#x43B;&#x43D;&#x435;&#x43D;&#x438;&#x44F;">0%</span>
-									Сведения о заказчике
+									Технический заказчик
+								</a>
+              </li>
+              <li>
+                <a href="#developer-tab" data-toggle="tab" class="legitRipple"><span id="{{id}}:developer-tab-fill_percent" class="badge badge-danger pull-right" title="&#x41F;&#x440;&#x43E;&#x446;&#x435;&#x43D;&#x442; &#x437;&#x430;&#x43F;&#x43E;&#x43B;&#x43D;&#x435;&#x43D;&#x438;&#x44F;">0%</span>
+									Застройщик
+								</a>
+              </li>
+              <li>
+                <a href="#application_prints-tab" data-toggle="tab" class="legitRipple"><span id="{{id}}:application_prints-tab-fill_percent" class="badge badge-danger pull-right" title="&#x41F;&#x440;&#x43E;&#x446;&#x435;&#x43D;&#x442; &#x437;&#x430;&#x43F;&#x43E;&#x43B;&#x43D;&#x435;&#x43D;&#x438;&#x44F;">0%</span>
+									Файлы заявлений
 								</a>
               </li>
             </ul>
             <div class="tab-content">
               <div class="tab-pane active has-padding" id="common_inf-tab">
                 <h3>Общая информация о проекте</h3>
-                <div id="{{id}}:office"/>
-                <div id="{{id}}:expertise_type"/>
-                <div id="{{id}}:estim_cost_type"/>
-                <div id="{{id}}:fund_source"/>
-              </div>
-              <div class="tab-pane has-padding" id="applicant-tab">
-                <div id="{{id}}:applicant"/>
-              </div>
-              <div class="tab-pane has-padding" id="contractors-tab">
-                <h3>Сведения об исполнителях</h3>
-                <div class="bg-">Вы можите добавить несколько исполнителей.</div>
-                <div id="{{id}}:contractors"/>
+                <div id="{{id}}:offices_ref"/>
+                <div id="{{id}}:service_cont"/>
+                <div id="{{id}}:primary_application"/>
+                <div id="{{id}}:fund_sources_ref"/>
               </div>
               <div class="tab-pane has-padding" id="construction-tab">
                 <h3>Сведения об объекте</h3>
                 <div id="{{id}}:constr_name"/>
                 <div id="{{id}}:constr_address"/>
-                <div id="{{id}}:constr_construction_type"/>
-                <div id="{{id}}:constr_total_est_cost"/>
+                <div id="{{id}}:construction_types_ref"/>
+                <div id="{{id}}:build_types_ref"/>
+                <div id="{{id}}:total_cost_eval"/>
+                <div id="{{id}}:limit_cost_eval"/>
                 <div class="panel panel-flat">
                   <div class="panel-heading">
                     <h5 class="panel-title">Технические характеристики объекта</h5>
@@ -104,8 +136,27 @@
                   </div>
                 </div>
               </div>
+              <div class="tab-pane has-padding" id="applicant-tab">
+                <div id="{{id}}:applicant"/>
+              </div>
+              <div class="tab-pane has-padding" id="contractors-tab">
+                <h3>Сведения об исполнителях</h3>
+                <div class="bg-">Вы можите добавить несколько исполнителей.</div>
+                <div id="{{id}}:contractors"/>
+              </div>
               <div class="tab-pane has-padding" id="customer-tab">
                 <div id="{{id}}:customer"/>
+              </div>
+              <div class="tab-pane has-padding" id="developer-tab">
+                <div id="{{id}}:developer"/>
+              </div>
+              <div class="tab-pane has-padding" id="application_prints-tab">
+                <h3>Файлы заявлений</h3>
+                <h4>Рапечатайте заполненный бланк заявления, подпишите ЭЦП, загрузите бланк заявления (pdf) и подписанный бланк (sig)</h4>
+                <div id="{{id}}:app_print_expertise"/>
+                <div id="{{id}}:app_print_cost_eval"/>
+                <div id="{{id}}:app_print_modification"/>
+                <div id="{{id}}:app_print_audit"/>
               </div>
             </div>
           </div>
@@ -113,24 +164,25 @@
         <div class="tab-pane fade" id="documents_pd">
           <div id="{{id}}:documents_pd"/>
         </div>
-        <div class="tab-pane fade" id="documents_dost">
-          <div id="{{id}}:documents_dost"/>
+        <div class="tab-pane fade" id="documents_eng_survey">
+          <div id="{{id}}:documents_eng_survey"/>
         </div>
-        <div class="tab-pane fade" id="in_mail">
-          <div id="{{id}}:in_mail"/>
+        <div class="tab-pane fade" id="documents_cost_eval_validity">
+          <div id="{{id}}:documents_cost_eval_validity"/>
         </div>
-        <div class="tab-pane fade" id="out_mail">
-          <div id="{{id}}:out_mail"/>
+        <div class="tab-pane fade" id="documents_modification">
+          <div id="{{id}}:documents_modification"/>
+        </div>
+        <div class="tab-pane fade" id="documents_audit">
+          <div id="{{id}}:documents_audit"/>
+        </div>
+        <div class="tab-pane fade" id="doc_flow_in">
+          <div id="{{id}}:doc_flow_in"/>
+        </div>
+        <div class="tab-pane fade" id="doc_flow_out">
+          <div id="{{id}}:doc_flow_out"/>
         </div>
       </div>
     </div>
-  </div>
-  <div id="{{id}}:cmd-cont">
-    <div id="{{id}}:cmdOk"/>
-    <div id="{{id}}:cmdCancel"/>
-    <div id="{{id}}:cmdPrintApp"/>
-    <div id="{{id}}:cmdPrintDost"/>
-    <div id="{{id}}:cmdZipAll"/>
-    <div id="{{id}}:cmdSend"/>
   </div>
 </div>

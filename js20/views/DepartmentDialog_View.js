@@ -20,21 +20,31 @@ function DepartmentDialog_View(id,options){
 	options.controller = new Department_Controller();
 	options.model = options.models.DepartmentDialog_Model;
 	
+	options.addElement = function(){
+		this.addElement(new EditString(id+":name",{
+								"labelCaption":this.FIELD_CAP_name
+							}));	
+						
+		this.addElement(new EmployeeEditRef(id+":boss_employees_ref",{
+								"labelCaption":this.FIELD_CAP_boss,
+								"keyIds":["boss_employee_id"]
+							}));								
+							
+	}
+	
 	DepartmentDialog_View.superclass.constructor.call(this,id,options);
 	
-	this.addElement(new EditString(id+":name",{
-							"labelCaption":this.FIELD_CAP_name
-						}));	
 	//****************************************************
 	//read
-	this.setReadPublicMethod((new Department_Controller()).getPublicMethod("get_object"));
 	this.setDataBindings([
-		new DataBinding({"control":this.getElement("name"),"model":this.m_model})
+		new DataBinding({"control":this.getElement("name")})
+		,new DataBinding({"control":this.getElement("boss_employees_ref"),"fieldId":"boss_employees_ref"})
 	]);
 	
 	//write
 	this.setWriteBindings([
-		new CommandBinding({"control":this.getElement("name"),"fieldId":"name"}),
+		new CommandBinding({"control":this.getElement("name"),"fieldId":"name"})
+		,new CommandBinding({"control":this.getElement("boss_employees_ref"),"fieldId":"boss_employee_id"})
 	]);
 		
 }

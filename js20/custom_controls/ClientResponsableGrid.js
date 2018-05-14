@@ -12,6 +12,11 @@
  * @param {string} options.className
  */
 function ClientResponsableGrid(id,options){
+	options = options || {};
+	
+	this.m_mainView = options.mainView;
+	this.m_minInf = options.minInf;
+
 	var model = new ClientResponsablePerson_Model({
 		"sequences":{"id":0}
 	});
@@ -96,7 +101,23 @@ function ClientResponsableGrid(id,options){
 		"autoRefresh":false,
 		"refreshInterval":0,
 		"rowSelect":true
-	};	
+	};
+	
+	this.m_orig_afterServerDelRow = this.afterServerDelRow;
+	this.afterServerDelRow = function(){
+		if (this.m_mainView){
+			this.m_mainView.calcFillPercent();
+		}
+		this.m_orig_afterServerDelRow();
+	}
+	this.m_orig_refreshAfterEdit = this.refreshAfterEdit;
+	this.refreshAfterEdit = function(res){
+		if (this.m_mainView && res && res.updated){
+			this.m_mainView.calcFillPercent();
+		}
+		this.m_orig_refreshAfterEdit(res);
+	}
+		
 	ClientResponsableGrid.superclass.constructor.call(this,id,options);
 }
 extend(ClientResponsableGrid,GridAjx);
@@ -110,4 +131,14 @@ extend(ClientResponsableGrid,GridAjx);
 
 
 /* public methods */
+/**
+ * В зависимости от типа контрагента отключает некоторые колнки
+ */
+ClientResponsableGrid.prototype.setClientType = function(ctp){
+//console.log("ClientResponsableGrid.prototype.setClientType "+ctp)
+	this.setColumnVisible(["dep","name","post","person_type"],(ctp!="person"));
+}
 
+ClientResponsableGrid.prototype.getFillPercent = function(){
+	return ( (this.getModel().getRowCount()||this.m_minInf)? 100:0);
+}

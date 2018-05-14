@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:import href="Controller_php.xsl"/>
+
+<!-- -->
+<xsl:variable name="CONTROLLER_ID" select="'Contract'"/>
+<!-- -->
+
+<xsl:output method="text" indent="yes"
+			doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN" 
+			doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"/>
+			
+<xsl:template match="/">
+	<xsl:apply-templates select="metadata/controllers/controller[@id=$CONTROLLER_ID]"/>
+</xsl:template>
+
+<xsl:template match="controller"><![CDATA[<?php]]>
+<xsl:call-template name="add_requirements"/>
+
+require_once(FRAME_WORK_PATH.'basic_classes/ModelWhereSQL.php');
+require_once(USER_CONTROLLERS_PATH.'DocFlowTask_Controller.php');
+require_once(USER_CONTROLLERS_PATH.'Application_Controller.php');
+require_once('functions/ExtProg.php');
+require_once(FRAME_WORK_PATH.'basic_classes/ModelVars.php');
+
+class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@parentId"/>{
+	public function __construct($dbLinkMaster=NULL){
+		parent::__construct($dbLinkMaster);<xsl:apply-templates/>
+	}	
+	<xsl:call-template name="extra_methods"/>
+}
+<![CDATA[?>]]>
+</xsl:template>
+
+<xsl:template name="extra_methods">
+
+	public function get_object($pm){
+	
+		$ar_obj = $this->getDbLink()->query_first(sprintf(
+		"SELECT * FROM contracts_dialog WHERE id=%d",
+		$this->getExtDbVal($pm,'id')
+		));
+	
+		if (!is_array($ar_obj) || !count($ar_obj)){
+			throw new Exception("No contract found!");
+		
+		}
+		
+		//$deleted_cond = ($_SESSION['role_id']=='client')? "AND deleted=FALSE":"";
+		
+		$files_q_id = $this->getDbLink()->query(sprintf(
+			"SELECT *
+			FROM application_document_files
+			WHERE application_id=%d
+			ORDER BY document_type,document_id,file_name,deleted_dt ASC NULLS LAST",
+		$ar_obj['application_id']
+		));			
+			
+		$documents = NULL;
+		if ($ar_obj['documents']){
+			$documents_json = json_decode($ar_obj['documents']);
+			foreach($documents_json as $doc){
+				Application_Controller::addDocumentFiles($doc->document,$this->getDbLink(),$doc->document_type,$files_q_id);
+			}
+			$ar_obj['documents'] = json_encode($documents_json);
+		}
+		$values = [];
+		foreach($ar_obj as $k=>$v){
+			array_push($values,new Field($k,DT_STRING,array('value'=>$v)));
+		}
+		$this->addModel(new ModelVars(
+			array('name'=>'Vars',
+				'id'=>'ContractDialog_Model',
+				'values'=>$values
+				)
+			)
+		);		
+			
+	}
+	
+	public function get_list($pm){
+		if ($_SESSION['role_id']=='admin' || $_SESSION['role_id']=='lawyer'){
+			parent::get_list($pm);
+		}
+		else{
+			//permissions
+			$list_model = $this->getListModelId();
+			$model = new $list_model($this->getDbLink());
+			
+			$where = new ModelWhereSQL();
+			DocFlowTask_Controller::set_employee_id($this->getDbLink());
+			$where->addExpression('permission_ar',
+				sprintf(
+				"main_expert_id=%d OR 'employees%s' =ANY (permission_ar) OR 'departments%s' =ANY (permission_ar)
+				",
+				$_SESSION['employee_id'],
+				$_SESSION['employee_id'],
+				$_SESSION['department_id']
+				)
+			);
+			$model->select(FALSE,$where,NULL,
+				NULL,NULL,NULL,NULL,
+				NULL,TRUE
+			);
+			$this->addModel($model);
+		}
+	}
+
+	private function get_list_on_type($pm,$documentType){
+		$cond_fields = $pm->getParamValue('cond_fields');
+		$cond_sgns = $pm->getParamValue('cond_sgns');
+		$cond_vals = $pm->getParamValue('cond_vals');
+		$cond_ic = $pm->getParamValue('cond_ic');
+		$field_sep = $pm->getParamValue('field_sep');
+		$field_sep = !is_null($field_sep)? $field_sep:',';
+		
+		$cond_fields = $cond_fields? $cond_fields.$field_sep : '';
+		$cond_sgns = $cond_sgns? $cond_sgns.$field_sep : '';
+		$cond_vals = $cond_vals? $cond_vals.$field_sep : '';
+		$cond_ic = $cond_ic? $cond_ic.$field_sep : '';
+		
+		$pm->setParamValue('cond_fields',$cond_fields.'document_type');
+		$pm->setParamValue('cond_sgns',$cond_sgns.'e');
+		$pm->setParamValue('cond_vals',$cond_vals.$documentType);
+		$pm->setParamValue('cond_ic',$cond_ic.'0');
+		
+		$this->get_list($pm);
+	}
+	
+	public function get_pd_list($pm){
+		$this->get_list_on_type($pm,'pd');
+	}
+
+	public function get_eng_survey_list($pm){
+		$this->get_list_on_type($pm,'eng_survey');
+	}
+	public function get_cost_eval_validity_list($pm){
+		$this->get_list_on_type($pm,'cost_eval_validity');
+	}
+	public function get_modification_list($pm){
+		$this->get_list_on_type($pm,'modification');
+	}
+	public function get_audit_list($pm){
+		$this->get_list_on_type($pm,'audit');
+	}
+
+	private function get_data_for_1c($contractId){
+		return $this->getDbLink()->query_first(sprintf(
+		"SELECT
+			contracts_descr1c(contr) AS contract_name,
+			contr.contract_ext_id,
+			contr.contract_number,
+			contr.contract_date,
+			cl.ext_id AS client_ext_id,
+			cl.name AS client_name,
+			cl.name_full AS client_name_full,
+			cl.inn AS client_inn,
+			cl.kpp AS client_kpp,
+			cl.ogrn AS client_ogrn,
+			cl.okpo AS client_okpo,
+			cl.client_type AS client_type,
+			kladr_parse_addr(cl.legal_address) AS client_legal_address,
+			kladr_parse_addr(cl.post_address) AS client_post_address,
+			bank_accounts->'rows' AS client_bank_accounts,
+			CASE WHEN contr.expertise_type IS NOT NULL THEN contr.expertise_type::text ELSE contr.document_type::text END AS service_descr
+		FROM contracts AS contr
+		LEFT JOIN clients AS cl ON cl.id=contr.client_id
+		WHERE contr.id=%d",
+		$contractId
+		));
+	}
+
+	private function set_contract_ext_id($contractId,$contractExtId){
+		$this->getDbLinkMaster()->query_first(sprintf(
+		"UPDATE contracts
+		SET
+			contract_ext_id='%s'
+		WHERE id=%d",
+		$contractExtId,
+		$contractId
+		));
+	}
+	private function set_client_ext_id($contractId,$clientExtId){
+		$this->getDbLinkMaster()->query_first(sprintf(
+		"UPDATE clients
+		SET
+			ext_id='%s'
+		WHERE id=(SELECT t.client_id FROM contracts t WHERE t.id=%d)",
+		$clientExtId,
+		$contractId
+		));
+	}
+
+	public function make_order($pm){
+		$params = $this->get_data_for_1c($this->getExtDbVal($pm,'id'));
+		$params['total'] = $this->getExtDbVal($pm,'total');
+		
+		$res = [];
+		ExtProg::make_order($params,$res);
+		
+		if (!$params['contract_ext_id'] &amp;&amp; $res['contract_ext_id']){
+			$this->set_contract_ext_id($this->getExtDbVal($pm,'id'), $res['contract_ext_id']);
+		}
+
+		if (!$params['client_ext_id'] &amp;&amp; $res['client_ext_id']){
+			$this->set_client_ext_id($this->getExtDbVal($pm,'id'), $res['client_ext_id']);
+		}
+		
+		$this->addModel(new ModelVars(
+			array('name'=>'Vars',
+				'id'=>'ExtDoc_Model',
+				'values'=>array(
+					new Field('doc_ext_id',DT_STRING,array('value'=>$res['doc_ext_id'])),
+					new Field('doc_number',DT_STRING,array('value'=>$res['doc_number'])),
+					new Field('doc_date',DT_DATETIME,array('value'=>$res['doc_date'])),
+					new Field('doc_total',DT_FLOAT,array('value'=>$this->getExtVal($pm,'total')))
+				)
+			)
+		));
+		//ExtProg::print_order($res['doc_ext_id'],FALSE,array('name'=>'Счет№'.$res['doc_number'],'disposition'=>'inline'));
+	}
+	public function make_akt($pm){
+		$params = $this->get_data_for_1c($this->getExtDbVal($pm,'id'));
+		$res = [];
+		ExtProg::make_akt($params,$res);
+		
+		$ar = $this->getDbLinkMaster()->query_first(sprintf(
+		"UPDATE contracts
+		SET
+			contract_ext_id='%s',
+			akt_ext_id='%s',
+			akt_date='%s',
+			akt_number='%s',
+			akt_total=%f,
+			invoice_ext_id='%s',
+			invoice_number='%s',
+			invoice_date='%s'
+		WHERE id=%d
+		RETURNING client_id",
+		$res['contract_ext_id'],
+		$res['doc_ext_id'],
+		$res['doc_date'],
+		$res['doc_number'],
+		$res['doc_total'],
+		$res['invoice_ext_id'],
+		$res['invoice_number'],
+		$res['invoice_date'],
+		$this->getExtDbVal($pm,'id')
+		));
+
+		if (!$params['client_ext_id'] &amp;&amp; $res['client_ext_id']){
+			$this->getDbLinkMaster()->query(sprintf(
+			"UPDATE clients
+			SET
+				ext_id='%s'
+			WHERE id=%d",
+			$res['client_ext_id'],
+			$ar['client_id']
+			));
+		}
+		
+		$this->addModel(new ModelVars(
+			array('name'=>'Vars',
+				'id'=>'ExtDoc_Model',
+				'values'=>array(
+					new Field('akt_ext_id',DT_STRING,array('value'=>$res['doc_ext_id'])),
+					new Field('akt_number',DT_STRING,array('value'=>$res['doc_number'])),
+					new Field('akt_date',DT_DATETIME,array('value'=>$res['doc_date'])),
+					new Field('akt_total',DT_FLOAT,array('value'=>$res['doc_total'])),
+					new Field('invoice_ext_id',DT_STRING,array('value'=>$res['invoice_ext_id'])),
+					new Field('invoice_number',DT_STRING,array('value'=>$res['invoice_number'])),
+					new Field('invoice_date',DT_DATETIME,array('value'=>$res['invoice_date']))
+				)
+			)
+		));
+		//ExtProg::print_akt($res['doc_ext_id'],FALSE,array('name'=>'Акт№'.$res['doc_number'],'disposition'=>'inline'));
+	}
+	
+	public function print_akt($pm){
+		$ar = $this->getDbLinkMaster()->query_first(sprintf(
+		"SELECT
+			akt_number,
+			akt_ext_id
+		FROM contracts
+		WHERE id=%d",
+		$this->getExtDbVal($pm,'id')
+		));
+		if (!count($ar)){
+			header(HEADER_404);
+			
+		}
+		ExtProg::print_akt($ar['akt_ext_id'],FALSE,array('name'=>'Акт№'.$ar['akt_number'],'disposition'=>'inline'));
+	}
+	public function print_invoice($pm){
+		$ar = $this->getDbLinkMaster()->query_first(sprintf(
+		"SELECT
+			invoice_number,
+			invoice_ext_id
+		FROM contracts
+		WHERE id=%d",
+		$this->getExtDbVal($pm,'id')
+		));
+		if (!count($ar)){
+			header(HEADER_404);
+			
+		}
+		ExtProg::print_akt($ar['invoice_ext_id'],FALSE,array('name'=>'СчетФактура№'.$ar['invoice_number'],'disposition'=>'inline'));
+	}
+	
+	public function print_order($pm){
+		ExtProg::print_order($this->getExtVal($pm,'order_ext_id'),FALSE,array('name'=>'Счет№'.$this->getExtVal($pm,'order_number'),'disposition'=>'inline'));
+	}
+	
+	public function get_order_list($pm){
+		$params = $this->get_data_for_1c($this->getExtDbVal($pm,'id'));
+		$res = [];
+		ExtProg::get_order_list($params,$res);
+		
+		if (!$params['contract_ext_id'] &amp;&amp; $res['contract_ext_id']){
+			$this->set_contract_ext_id($this->getExtDbVal($pm,'id'), $res['contract_ext_id']);
+		}
+
+		if (!$params['client_ext_id'] &amp;&amp; $res['client_ext_id']){
+			$this->set_client_ext_id($this->getExtDbVal($pm,'id'), $res['client_ext_id']);
+		}
+		
+		$this->addModel(new ModelVars(
+			array('name'=>'Vars',
+				'id'=>'OrderList_Model',
+				'values'=>array(
+					new Field('list',DT_STRING,array('value'=>json_encode($res['orders'])))
+				)
+			)
+		));		
+	}
+	
+	
+</xsl:template>
+
+</xsl:stylesheet>

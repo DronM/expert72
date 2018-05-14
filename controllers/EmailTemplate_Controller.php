@@ -1,17 +1,19 @@
 <?php
 require_once(FRAME_WORK_PATH.'basic_classes/ControllerSQL.php');
-
 require_once(FRAME_WORK_PATH.'basic_classes/FieldExtInt.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldExtString.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldExtFloat.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldExtEnum.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldExtText.php');
+require_once(FRAME_WORK_PATH.'basic_classes/FieldExtDateTime.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldExtDate.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldExtPassword.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldExtBool.php');
+require_once(FRAME_WORK_PATH.'basic_classes/FieldExtInterval.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldExtDateTimeTZ.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldExtJSON.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldExtJSONB.php');
+require_once(FRAME_WORK_PATH.'basic_classes/FieldExtArray.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldExtXML.php');
 
 /**
@@ -35,7 +37,7 @@ class EmailTemplate_Controller extends ControllerSQL{
 			));
 			$pm->addParam($param);
 		
-				$param = new FieldExtEnum('email_type',',','new_account,reset_pwd,user_email_conf,out_mail'
+				$param = new FieldExtEnum('email_type',',','new_account,reset_pwd,user_email_conf,out_mail,new_app,app_change,new_remind,out_mail_to_app'
 				,array(
 			
 				'alias'=>'Тип email'
@@ -59,7 +61,7 @@ class EmailTemplate_Controller extends ControllerSQL{
 				'alias'=>'Тема'
 			));
 			$pm->addParam($param);
-		$param = new FieldExtText('fields'
+		$param = new FieldExtJSON('fields'
 				,array(
 			
 				'alias'=>'Поля'
@@ -95,13 +97,13 @@ class EmailTemplate_Controller extends ControllerSQL{
 			
 		/* get_object */
 		$pm = new PublicMethod('get_object');
-		$pm->addParam(new FieldExtInt('browse_mode'));
+		$pm->addParam(new FieldExtString('mode'));
 		
 		$pm->addParam(new FieldExtInt('id'
 		));
 		
 		$this->addPublicMethod($pm);
-		$this->setObjectModelId('EmailTemplateList_Model');		
+		$this->setObjectModelId('EmailTemplate_Model');		
 
 		
 	}	

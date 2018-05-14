@@ -49,7 +49,17 @@ function DepartmentList_View(id,options){
 							],
 							"sortable":true,
 							"sort":"asc"
+						}),
+						new GridCellHead(id+":grid:head:boss_employees_ref",{
+							"value":this.COL_CAP_boss,
+							"columns":[
+								new GridColumnRef({
+									"field":model.getField("boss_employees_ref"),
+									"form":EmployeeDialog_Form
+								})
+							]
 						})
+						
 					]
 				})
 			]

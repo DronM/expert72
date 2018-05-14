@@ -1,0 +1,51 @@
+<div id="{{id}}" class="panel panel-flat">
+
+	<div id="{{id}}:cmd-cont">
+		<div id="{{id}}:cmdOk" options="{'caption':'Отправить ','glyph':'glyphicon-send'}" title="Записать изменения и отправить письмо"/>
+		<div id="{{id}}:cmdSave" options="{'caption':'Записать ','glyph':'glyphicon-pencil'}" title="Записать изменения без отправки документа"/>
+		<div id="{{id}}:cmdCancel" options="{'caption':'Закрыть ','glyph':'glyphicon-close'}" title="Закрыть форму"/>
+	</div>
+
+	<div class="panel-heading">
+		<h2 class="panel-title">Исходящее письмо от <span id="{{id}}:date_time"/></h2>
+		
+		<div id="{{id}}:applications_ref"/>
+
+		<div id="{{id}}:subject"/>
+
+		<div id="{{id}}:content"/>
+
+	</div>
+	
+	
+	<div id="{{id}}:documentFiles" class="panel-body">
+		<h3>Добавьте новые файлы документации:</h3>
+		<div class="tabbable">
+			<ul class="nav nav-tabs nav-tabs-highlight">				
+				<li id="{{id}}:tab-pd" class=""><a href="#documents_pd" data-toggle="tab" aria-expanded="false">ПД</a></li>
+				<li id="{{id}}:tab-eng_survey" class=""><a href="#documents_eng_survey" data-toggle="tab" aria-expanded="false">РИИ</a></li>
+				<li id="{{id}}:tab-cost_eval_validity" class=""><a href="#documents_cost_eval_validity" data-toggle="tab" aria-expanded="false">Достоверность</a></li>
+				<li id="{{id}}:tab-modification" class=""><a href="#documents_modification" data-toggle="tab" aria-expanded="false">Модификация</a></li>
+				<li id="{{id}}:tab-audit" class=""><a href="#documents_audit" data-toggle="tab" aria-expanded="false">Аудит</a></li>
+			</ul>
+
+			<div class="tab-content">
+				<div class="tab-pane fade" id="documents_pd">
+					<div id="{{id}}:documents_pd"/>
+				</div>
+				<div class="tab-pane fade" id="documents_eng_survey">
+					<div id="{{id}}:documents_eng_survey"/>
+				</div>
+				<div class="tab-pane fade" id="documents_cost_eval_validity">
+					<div id="{{id}}:documents_cost_eval_validity"/>
+				</div>
+				<div class="tab-pane fade" id="documents_modification">
+					<div id="{{id}}:documents_modification"/>
+				</div>
+				<div class="tab-pane fade" id="documents_audit">
+					<div id="{{id}}:documents_audit"/>
+				</div>
+			</div>
+		</div>
+	</div>				
+</div>

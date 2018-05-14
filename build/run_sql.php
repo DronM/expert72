@@ -16,6 +16,13 @@ else{
 	$sql_f = $argv[1];
 }
 
+//add update log
+file_put_contents(
+	dirname(__FILE__).'/update.sql',
+	PHP_EOL.sprintf('-- ******************* update %s ******************',date('d/m/Y H:i:s')).PHP_EOL.$sql,
+	FILE_APPEND
+);
+
 $cmd = sprintf('export PGPASSWORD=%s ; psql -h %s -d %s -U %s -f '.$sql_f,
 		DB_PASSWORD,
 		DB_SERVER_MASTER,

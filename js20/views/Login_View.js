@@ -41,11 +41,11 @@ function Login_View(id,options){
 		"errorControl":new ErrorControl(id+":pwd:error"),
 		"events":{"keydown":check_for_enter}
 	}));	
-
+/*
 	this.addElement(new EditCheckBox(id+":rememberMe",{
 		"html":"<input/>"
 	}));	
-
+*/
 	this.addElement(new Button(id+":submit_login",{
 		"onClick":function(){
 			self.login();
@@ -61,9 +61,9 @@ function Login_View(id,options){
 		"control":this.getElement("submit_login"),
 		"async":false,
 		"bindings":[
-			new DataBinding({"field":pm.getField("name"),"control":this.getElement("user")}),
-			new DataBinding({"field":pm.getField("pwd"),"control":this.getElement("pwd")}),
-			new DataBinding({"field":pm.getField("rememberMe"),"control":this.getElement("rememberMe")})
+			new DataBinding({"field":pm.getField("name"),"control":this.getElement("user")})
+			,new DataBinding({"field":pm.getField("pwd"),"control":this.getElement("pwd")})
+			//new DataBinding({"field":pm.getField("rememberMe"),"control":this.getElement("rememberMe")})
 		]		
 	}));
 

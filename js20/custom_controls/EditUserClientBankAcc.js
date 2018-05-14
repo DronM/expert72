@@ -16,9 +16,11 @@ function EditUserClientBankAcc(id,options){
 	
 	options.viewClass = ViewBankAcc;
 	options.viewTemplate = "ViewBankAcc";
+	options.labelCaption = "Банк:";
 	options.headTitle = "Редактирование банковского счета";
 	
 	this.m_mainView = options.mainView;
+	this.m_minInf = options.minInf;
 	
 	EditUserClientBankAcc.superclass.constructor.call(this,id,options);
 }
@@ -38,19 +40,26 @@ EditUserClientBankAcc.prototype.formatValue = function(val){
 	var descr = "";
 	if (val){
 		if (val.acc_number && val.acc_number.length) descr+= ((descr=="")? "":", ") + val.acc_number;
-		if (val.bank && !val.bank.isNull()) descr+= ((descr=="")? "":", ") + val.bank.getDescr();
+		//console.log("EditUserClientBankAcc.prototype.formatValue")
+		//console.dir(val.bank)
+		if (val.bank && val.bank.isNull && !val.bank.isNull()) descr+= ((descr=="")? "":", ") + val.bank.getDescr();
 	}	
 	return descr;
 }
 
 EditUserClientBankAcc.prototype.getFillPercent = function(){
 	return (
-		((this.m_valueJSON && this.m_valueJSON.bank && this.m_valueJSON.bank.getDescr()!="")? 50:0)
-		+((this.m_valueJSON && this.m_valueJSON.acc_number && this.m_valueJSON.acc_number!="")? 50:0)
-	)
+		this.m_minInf? 100 :
+		(
+			((this.m_valueJSON && this.m_valueJSON.bank && this.m_valueJSON.bank.getDescr()!="")? 50:0)
+			+((this.m_valueJSON && this.m_valueJSON.acc_number && this.m_valueJSON.acc_number!="")? 50:0)
+		)
+	);
 }
 
 EditUserClientBankAcc.prototype.closeSelect = function(){
-	this.m_mainView.calcFillPercent();
+	if (this.m_mainView && this.m_mainView.calcFillPercent){
+		this.m_mainView.calcFillPercent();
+	}
 	EditUserClientBankAcc.superclass.closeSelect.call(this);
 }

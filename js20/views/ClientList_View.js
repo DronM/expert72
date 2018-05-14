@@ -43,12 +43,26 @@ function ClientList_View(id,options){
 				new GridRow(id+":grid:head:row0",{
 					"elements":[
 						new GridCellHead(id+":grid:head:name",{
+							"value":"Наименование",
 							"columns":[
 								new GridColumn({"field":model.getField("name")})
 							],
 							"sortable":true,
 							"sort":"asc"
+						})
+						,new GridCellHead(id+":grid:head:inn",{
+							"value":"ИНН",
+							"columns":[
+								new GridColumn({"field":model.getField("inn")})
+							]
+						})
+						,new GridCellHead(id+":grid:head:kpp",{
+							"value":"КПП",
+							"columns":[
+								new GridColumn({"field":model.getField("kpp")})
+							]
 						})					
+						
 					]
 				})
 			]

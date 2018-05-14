@@ -1,4 +1,8 @@
 /**	
+ *
+ * THIS FILE IS GENERATED FROM TEMPLATE build/templates/models/Model_js.xsl
+ * ALL DIRECT MODIFICATIONS WILL BE LOST WITH THE NEXT BUILD PROCESS!!!
+ *
  * @author Andrey Mikhalevich <katrenplus@mail.ru>, 2017
  * @class
  * @classdesc Model class. Created from template build/templates/models/Model_js.xsl. !!!DO NOT MODEFY!!!
@@ -32,12 +36,23 @@ function UserList_Model(options){
 	
 	var filed_options = {};
 	filed_options.primaryKey = false;	
-	filed_options.alias = 'Наименование';
+	filed_options.alias = 'Логин';
 	filed_options.autoInc = false;	
 	
 	options.fields.name = new FieldString("name",filed_options);
 	options.fields.name.getValidator().setRequired(true);
 	options.fields.name.getValidator().setMaxLength('50');
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	filed_options.alias = 'ФИО';
+	filed_options.autoInc = false;	
+	
+	options.fields.name_full = new FieldString("name_full",filed_options);
+	options.fields.name_full.getValidator().setRequired(true);
+	options.fields.name_full.getValidator().setMaxLength('250');
 	
 				
 	

@@ -28,13 +28,13 @@ $permissions = array();
 			
 				$permissions['User_Controller_login']=TRUE;
 			
-				$permissions['User_Controller_login_refresh']=TRUE;
-			
 				$permissions['User_Controller_logout']=TRUE;
 			
 				$permissions['User_Controller_logout_html']=TRUE;
 			
 				$permissions['User_Controller_email_confirm']=TRUE;
+			
+				$permissions['User_Controller_hide']=TRUE;
 			
 			$permissions['Captcha_Controller_get']=TRUE;
 		
@@ -58,7 +58,37 @@ $permissions = array();
 			
 				$permissions['Application_Controller_get_file']=TRUE;
 			
+				$permissions['Application_Controller_get_file_sig']=TRUE;
+			
 				$permissions['Application_Controller_zip_all']=TRUE;
+			
+				$permissions['Application_Controller_get_document_templates']=TRUE;
+			
+				$permissions['Application_Controller_remove_document_types']=TRUE;
+			
+				$permissions['Application_Controller_download_app_print_expertise']=TRUE;
+			
+				$permissions['Application_Controller_download_app_print_expertise_sig']=TRUE;
+			
+				$permissions['Application_Controller_delete_app_print_expertise']=TRUE;
+			
+				$permissions['Application_Controller_download_app_print_modification']=TRUE;
+			
+				$permissions['Application_Controller_download_app_print_modification_sig']=TRUE;
+			
+				$permissions['Application_Controller_delete_app_print_modification']=TRUE;
+			
+				$permissions['Application_Controller_download_app_print_audit']=TRUE;
+			
+				$permissions['Application_Controller_download_app_print_audit_sig']=TRUE;
+			
+				$permissions['Application_Controller_delete_app_print_audit']=TRUE;
+			
+				$permissions['Application_Controller_download_app_print_cost_eval']=TRUE;
+			
+				$permissions['Application_Controller_download_app_print_cost_eval_sig']=TRUE;
+			
+				$permissions['Application_Controller_delete_app_print_cost_eval']=TRUE;
 			
 				$permissions['Constant_Controller_set_value']=TRUE;
 			
@@ -112,10 +142,62 @@ $permissions = array();
 			
 			$permissions['Office_Controller_get_list']=TRUE;
 		
-			$permissions['ConstrTypeTechnicalFeature_Controller_get_list']=TRUE;
+			$permissions['ConstructionType_Controller_get_list']=TRUE;
 		
-			$permissions['ConstrTypeTechnicalFeature_Controller_get_object']=TRUE;
+			$permissions['ConstructionType_Controller_get_object']=TRUE;
 		
+			$permissions['FundSource_Controller_get_list']=TRUE;
+		
+			$permissions['DocFlowIn_Controller_get_object']=TRUE;
+		
+			$permissions['DocFlowIn_Controller_get_object']=TRUE;
+		
+			$permissions['DocFlowIn_Controller_insert']=TRUE;
+		
+			$permissions['DocFlowIn_Controller_delete']=TRUE;
+		
+			$permissions['DocFlowIn_Controller_update']=TRUE;
+		
+			$permissions['DocFlowType_Controller_get_list']=TRUE;
+		
+			$permissions['BuildType_Controller_get_list']=TRUE;
+		
+				$permissions['DocFlowOutClient_Controller_insert']=TRUE;
+			
+				$permissions['DocFlowOutClient_Controller_update']=TRUE;
+			
+				$permissions['DocFlowOutClient_Controller_delete']=TRUE;
+			
+				$permissions['DocFlowOutClient_Controller_get_object']=TRUE;
+			
+				$permissions['DocFlowOutClient_Controller_get_list']=TRUE;
+			
+				$permissions['DocFlowOutClient_Controller_get_application_dialog']=TRUE;
+			
+				$permissions['DocFlowOutClient_Controller_remove_file']=TRUE;
+			
+				$permissions['DocFlowInClient_Controller_insert']=TRUE;
+			
+				$permissions['DocFlowInClient_Controller_update']=TRUE;
+			
+				$permissions['DocFlowInClient_Controller_delete']=TRUE;
+			
+				$permissions['DocFlowInClient_Controller_get_object']=TRUE;
+			
+				$permissions['DocFlowInClient_Controller_get_list']=TRUE;
+			
+				$permissions['DocFlowInClient_Controller_get_file']=TRUE;
+			
+				$permissions['DocFlowInClient_Controller_set_viewed']=TRUE;
+			
+				$permissions['ClientSearch_Controller_search']=TRUE;
+			
+				$permissions['PersonIdPaper_Controller_get_object']=TRUE;
+			
+				$permissions['PersonIdPaper_Controller_get_list']=TRUE;
+			
+				$permissions['PersonIdPaper_Controller_complete']=TRUE;
+			
 return array_key_exists($contrId.'_'.$methId,$permissions);
 }
 ?>

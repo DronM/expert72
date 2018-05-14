@@ -159,7 +159,7 @@ tr.grid_foot{
 
 /** CUSTOM */
 .dialogForm{
-	min-height: 500px;
+	min-height: 450px;
 }
 
 #upload-container{
@@ -174,4 +174,115 @@ tr.grid_foot{
 }
 .app-client-header{
 	display: inline;
+}
+
+.fillClientData{
+	margin-left:20px;
+}
+
+.service-type-out{	
+	min-height: 220px;
+}
+.service-type{
+	border:1px solid black;
+	margin:6px 3px;
+	min-height: 220px;
+	font-size:70%;
+}
+.service-type-selected{
+	border:2px solid black;
+	font-size:120%;
+}
+
+.custom-edit-cont{
+}
+/*
+[percentcalc="true"]{
+	border:1px solid red;
+}
+*/
+label.percentcalc:before {
+	content: "*";
+	/*font-weight:bolder;
+	*/
+	font-size:120%;
+	color:red;
+}
+.demo-color:hover{
+	cursor:pointer;
+	border:2px solid black;
+}
+.task-short-descr{
+	cursor:pointer;
+}
+.file-input {
+   opacity: 0;
+   position: absolute;
+   z-index: -1;
+}
+
+h2 div.btn{
+	height:40px;
+}
+
+#DocFlowApprovementList\:grid td[close_result="approved"]{
+	background:#33ffc7;
+}
+#DocFlowApprovementList\:grid td[close_result="not_approved"]{
+	background:#ff5e33;
+}
+#DocFlowApprovementList\:grid td[close_result="approved_with_notes"]{
+	background:#ffff33;
+}
+
+#DocFlowExaminationList\:grid td[application_resolution_state="filling"]{
+	background:#33e3ff;
+}
+#DocFlowExaminationList\:grid td[application_resolution_state="sent"]{
+	background:#33ffdd;
+}
+#DocFlowExaminationList\:grid td[application_resolution_state="checking"]{
+	background:#33ff80;
+}
+#DocFlowExaminationList\:grid td[application_resolution_state="returned"]{
+	background:#ff4f33;
+}
+#DocFlowExaminationList\:grid td[application_resolution_state="waiting_for_pay"]{
+	background:#fffc33;
+}
+#DocFlowExaminationList\:grid td[application_resolution_state="waiting_for_contract"]{
+	background:#ffd133;
+}
+
+#ApplicationList\:grid td[state="sent"]{
+	background:#41f4eb;
+}
+#ApplicationList\:grid td[state="waiting_for_contract"]{
+	background:#f4e541;
+}
+#ApplicationList\:grid td[state="waiting_for_pay"]{
+	background:#f4e541;
+}
+#ApplicationList\:grid td[state="returned"]{
+	background:#f4415e;
+}
+#ApplicationList\:grid td[state="expertise"]{
+	background:#41d9f4;
+}
+#ApplicationList\:grid td[state="closed"]{
+	background:#42f4aa;
+}
+#ApplicationList\:grid td[state="closed_no_expertise"]{
+	background:#42f4aa;
+}
+
+.sectionGrid{
+	margin:15px,0px,15px,15px !important;
+}
+
+.workHoursEdit-daysoff{
+	background:#ff5e33;
+}
+.workHoursEdit-day{
+	width:100px;
 }

@@ -16,7 +16,7 @@
 */
 function ButtonCmd(id,options){
 	options = options || {};
-	options.className = "btn "+window.getApp().COLOR_CLASS+" btn-cmd";
+	options.className = "btn bg-"+window.getApp().getColorClass()+" btn-cmd";
 	
 	options.caption = options.caption || this.DEF_CAPTION;	
 

@@ -29,8 +29,78 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 <xsl:template name="extra_methods">
 	public function insert($pm){
 		$pm->setParamValue('user_id',$_SESSION['user_id']);
-		parent::insert($pm);
+		$this->getDbLinkMaster()->query("BEGIN");
+		try{
+			$inserted_ar = parent::insert($pm);
+			
+			if ($this->getExtVal($pm,'responsable_persons')){
+				$this->getDbLinkMaster()->query(sprintf("SELECT contacts_add_persons(
+						%d,'clients'::data_types,1,
+						json_build_object(
+							'responsable_persons',%s::json,
+							'name',%s
+						)
+					)",
+					$inserted_ar['id'],
+					$this->getExtDbVal($pm,'responsable_persons'),
+					$this->getExtDbVal($pm,'name')
+				));
+			}			
+			$this->getDbLinkMaster()->query("COMMIT");
+		}
+		catch(Exception $e){
+			$this->getDbLinkMaster()->query("ROLLBACK");
+			throw $e;
+		}
+		
+		return $inserted_ar;
 	}
+	
+	public function update($pm){
+		//throw new Exception("responsable_persons=".$this->getExtDbVal($pm,'responsable_persons'));
+		$this->getDbLinkMaster()->query("BEGIN");		
+		try{		
+			parent::update($pm);
+
+			if ($this->getExtVal($pm,'responsable_persons')){
+				$resp = json_decode($this->getExtVal($pm,'responsable_persons'));
+				
+				if ($this->getExtVal($pm,'name')){
+					$firm_name = $this->getExtDbVal($pm,'name');
+				}
+				else{
+					//no name
+					$ar = $this->getDbLink()->query_first(sprintf(
+						"SELECT name FROM clients WHERE id=%d",
+						$this->getExtDbVal($pm,'old_id')
+					));
+					$firm_name = "'".$ar['name']."'";
+				}				
+				
+				$this->getDbLinkMaster()->query(sprintf("DELETE FROM contacts WHERE parent_id=%d AND parent_type = 'clients'",
+					$this->getExtDbVal($pm,'old_id')
+				));
+			
+				$this->getDbLinkMaster()->query(sprintf("SELECT contacts_add_persons(
+						%d,'clients'::data_types,1,
+						json_build_object(
+							'responsable_persons',%s::json,
+							'name',%s
+						)
+					)",
+					$this->getExtDbVal($pm,'old_id'),
+					$this->getExtDbVal($pm,'responsable_persons'),
+					$firm_name
+				));
+			}			
+			$this->getDbLinkMaster()->query("COMMIT");
+		}
+		catch(Exception $e){
+			$this->getDbLinkMaster()->query("ROLLBACK");
+			throw $e;
+		}
+	}
+	
 </xsl:template>
 
 </xsl:stylesheet>

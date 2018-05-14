@@ -12,12 +12,48 @@ function AppExpert(options){
 	options.lang = "rus";	
 	options.paginationClass = Pagination;
 	
-	AppExpert.superclass.constructor.call(this,"CRM",options);
+	this.setColorClass(options.servVars.color_palette || this.COLOR_CLASS);
+	
+	this.setDataTypes({
+		"doc_flow_registrations":{"dialogClass":DocFlowRegistration_Form}
+		,"doc_flow_examinations":{"dialogClass":DocFlowExamination_Form}
+		,"doc_flow_approvements":{"dialogClass":DocFlowApprovement_Form}		
+		,"departments":{
+			"dataTypeDescrLoc":"Отдел",
+			"ctrlClass":DepartmentSelect,
+			"ctrlOptions":{"keyIds":["id"]}
+		}
+		,"employees":{
+			"dataTypeDescrLoc":"Сотрудник",
+			"ctrlClass":EmployeeEditRef,
+			"ctrlOptions":{"keyIds":["id"]}
+		}
+		,"doc_flow_out":{
+			"dataTypeDescrLoc":"Исходящий документ",
+			"ctrlClass":DocFlowOutEditRef,
+			"ctrlOptions":{"keyIds":["id"]},
+			"dialogClass":DocFlowOutDialog_Form
+		}
+		,"doc_flow_in":{
+			"dataTypeDescrLoc":"Входяший документ",
+			"ctrlClass":DocFlowInEditRef,
+			"ctrlOptions":{"keyIds":["id"]},
+			"dialogClass":DocFlowInDialog_Form
+		}
+		,"applications":{
+			"dataTypeDescrLoc":"Заявление",
+			"ctrlClass":ApplicationEditRef,
+			"ctrlOptions":{"keyIds":["id"]},
+			"dialogClass":ApplicationDialog_Form
+		}
+		
+	});
+	
+	AppExpert.superclass.constructor.call(this,"Expert72",options);
 }
 extend(AppExpert,App);
 
 /* Constants */
-AppExpert.prototype.COLOR_CLASS = "bg-teal-400";
 
 /* private members */
 AppExpert.prototype.m_colorClass;

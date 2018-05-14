@@ -1,10 +1,16 @@
 <?php
+/**
+ *
+ * THIS FILE IS GENERATED FROM TEMPLATE build/templates/models/Model_php.xsl
+ * ALL DIRECT MODIFICATIONS WILL BE LOST WITH THE NEXT BUILD PROCESS!!!
+ *
+ */
 
 require_once(FRAME_WORK_PATH.'basic_classes/ModelSQL.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLInt.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLText.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLDateTimeTZ.php');
-
+ 
 class ApplicationDostTemplateList_Model extends ModelSQL{
 	
 	public function __construct($dbLink){
@@ -22,7 +28,7 @@ class ApplicationDostTemplateList_Model extends ModelSQL{
 		$f_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"id",$f_opts);
 		$this->addField($f_id);
 		//********************
-	
+		
 		//*** Field date_time ***
 		$f_opts = array();
 		$f_opts['id']="date_time";
@@ -30,7 +36,7 @@ class ApplicationDostTemplateList_Model extends ModelSQL{
 		$f_date_time=new FieldSQLDateTimeTZ($this->getDbLink(),$this->getDbName(),$this->getTableName(),"date_time",$f_opts);
 		$this->addField($f_date_time);
 		//********************
-	
+		
 		//*** Field comment_text ***
 		$f_opts = array();
 		$f_opts['id']="comment_text";
@@ -38,7 +44,7 @@ class ApplicationDostTemplateList_Model extends ModelSQL{
 		$f_comment_text=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"comment_text",$f_opts);
 		$this->addField($f_comment_text);
 		//********************
-$this->setLimitConstant('doc_per_page_count');
+	$this->setLimitConstant('doc_per_page_count');
 	}
 
 }

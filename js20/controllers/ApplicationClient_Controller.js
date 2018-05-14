@@ -94,7 +94,7 @@ extend(ApplicationClient_Controller,ControllerObjClient);
 	
 	var options = {};
 	options.required = true;	
-	options.enumValues = 'enterprise,person';
+	options.enumValues = 'enterprise,person,pboul';
 	var field = new FieldEnum("client_type",options);
 	
 	pm.addField(field);
@@ -102,12 +102,6 @@ extend(ApplicationClient_Controller,ControllerObjClient);
 	var options = {};
 	
 	var field = new FieldText("base_document_for_contract",options);
-	
-	pm.addField(field);
-	
-	var options = {};
-	
-	var field = new FieldString("ogrn",options);
 	
 	pm.addField(field);
 	
@@ -186,7 +180,7 @@ extend(ApplicationClient_Controller,ControllerObjClient);
 	
 	var options = {};
 		
-	options.enumValues = 'enterprise,person';
+	options.enumValues = 'enterprise,person,pboul';
 	options.enumValues+= (options.enumValues=='')? '':',';
 	options.enumValues+= 'null';
 	
@@ -197,12 +191,6 @@ extend(ApplicationClient_Controller,ControllerObjClient);
 	var options = {};
 	
 	var field = new FieldText("base_document_for_contract",options);
-	
-	pm.addField(field);
-	
-	var options = {};
-	
-	var field = new FieldString("ogrn",options);
 	
 	pm.addField(field);
 	
@@ -276,9 +264,6 @@ extend(ApplicationClient_Controller,ControllerObjClient);
 	var f_opts = {};
 	
 	pm.addField(new FieldText("base_document_for_contract",f_opts));
-	var f_opts = {};
-	
-	pm.addField(new FieldString("ogrn",f_opts));
 	var f_opts = {};
 	
 	pm.addField(new FieldJSONB("person_id_paper",f_opts));

@@ -13,7 +13,7 @@ $$
 		banks.adres AS bank_adres,
 		banks.gor AS bank_gor
 	FROM banks
-	WHERE banks.bik=$1->'bank'->'RefType'->'keys'->>'bik'
+	WHERE banks.bik=$1->'bank'->'keys'->>'bik'
 	--WHERE banks.bik=((($1->>'bank')::jsonb->>'RefType')::jsonb->>'keys')::jsonb->>'bik'
 	;
 $$

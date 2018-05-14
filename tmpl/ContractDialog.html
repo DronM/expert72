@@ -1,0 +1,188 @@
+<div id="{{id}}" class="panel panel-flat">
+	<div id="{{id}}:cmd-cont">
+		<div id="{{id}}:cmdOk" />
+		<div id="{{id}}:cmdSave" />
+		<div id="{{id}}:cmdCancel"/>
+	</div>
+
+	<div class="panel-heading">
+		<h2 class="panel-title">Экспертное заключение №<span id="{{id}}:expertise_result_number"/> от <span id="{{id}}:date_time"/></h2>		
+	</div>
+	
+	<div class="tabbable">
+		<ul class="nav nav-tabs nav-tabs-highlight">				
+			<li class="active">
+				<a href="#common" data-toggle="tab" aria-expanded="true">
+					Общая</a>
+			</li>
+			<li id="{{id}}:tab-construction" class=""><a href="#construction" data-toggle="tab" aria-expanded="false">Объект строительства</a></li>
+			{{#notExpert}}
+			<li id="{{id}}:tab-contract-data" class=""><a href="#contract-data" data-toggle="tab" aria-expanded="false">Контракт</a></li>				
+			{{/notExpert}}
+			<li id="{{id}}:tab-result" class=""><a href="#result" data-toggle="tab" aria-expanded="false">Заключение</a></li>				
+			{{#setAccess}}
+			<li id="{{id}}:tab-access" class=""><a href="#access" data-toggle="tab" aria-expanded="false">Права доступа</a></li>
+			{{/setAccess}}
+			<li id="{{id}}:tab-documents" class=""><a href="#documents" data-toggle="tab" aria-expanded="false">Документация</a></li>
+			<li id="{{id}}:tab-expertise" class=""><a href="#expertise" data-toggle="tab" aria-expanded="false">Экспертиза</a></li>
+			<li id="{{id}}:tab-doc_flow_in" class=""><a href="#doc_flow_in" data-toggle="tab" aria-expanded="false">Входящие</a></li>
+			<li id="{{id}}:tab-doc_flow_out" class=""><a href="#doc_flow_out" data-toggle="tab" aria-expanded="false">Исходящие</a></li>
+		</ul>
+	</div>
+	
+	<div class="tab-content dialogForm">
+		<div class="tab-pane fade in active" id="common">
+			<div id="{{id}}:applications_ref"/>
+			<div id="{{id}}:applicant_descr"/>
+			<div id="{{id}}:customer_descr"/>
+			<div id="{{id}}:developer_descr"/>
+			<div id="{{id}}:document_type"/>
+			<div id="{{id}}:expertise_type"/>					
+			<div id="{{id}}:cost_eval_validity_simult"/>
+			
+			{{#primaryContractExists}}
+			<div id="{{id}}:primary_contracts_ref"/>
+			{{/primaryContractExists}}
+			{{#modifPrimaryContractExists}}
+			<div id="{{id}}:modif_primary_contracts_ref"/>
+			{{/modifPrimaryContractExists}}
+			<div class="row">
+				<div class="{{bsCol}}3">
+					<div id="{{id}}:expertise_day_count"/>
+				</div>
+				<div class="{{bsCol}}3">
+					<div id="{{id}}:work_start_date"/>
+				</div>
+				<div class="{{bsCol}}3">
+					<div id="{{id}}:work_end_date"/>
+				</div>				
+			</div>									
+		</div>
+		{{#notExpert}}
+		<div class="tab-pane fade in" id="contract-data">
+			<div id="{{id}}:fund_sources_ref"/>
+			<div class="row">
+				<div class="{{bsCol}}4">
+					<div id="{{id}}:expertise_cost_budget"/>
+				</div>
+				<div class="{{bsCol}}4">
+					<div id="{{id}}:expertise_cost_self_fund"/>
+				</div>
+			</div>		
+			<div class="row">
+				<div class="{{bsCol}}6">
+					<div id="{{id}}:total_cost_eval"/>
+				</div>				
+				<div class="{{bsCol}}6">
+					<div id="{{id}}:limit_cost_eval"/>
+				</div>				
+			</div>									
+			
+			<div id="{{id}}:contract_number"/>
+			<div id="{{id}}:contract_date"/>
+			<div id="{{id}}:contract_return_date"/>
+			<div class="row">
+				<div class="{{bsCol}}3">
+					<div id="{{id}}:akt_number"/>
+				</div>
+				<div class="{{bsCol}}3">
+					<div id="{{id}}:akt_date"/>
+				</div>
+			</div>
+			
+			<div class="panel">
+				<div class="panel-heading">
+					<h6 class="panel-title">Оплаты</h6>		
+				</div>
+			
+				<div id="{{id}}:client_payment_list"/>
+			</div>
+		</div>
+		{{/notExpert}}
+		<div class="tab-pane fade" id="construction">
+			<div id="{{id}}:constr_name"/>
+			<div id="{{id}}:constr_address"/>
+			<div id="{{id}}:construction_types_ref"/>
+			<div id="{{id}}:build_types_ref"/>
+			<div id="{{id}}:kadastr_number"/>
+			<div id="{{id}}:grad_plan_number"/>
+			<div id="{{id}}:area_document"/>
+			
+			<h4>Технико-экономические показатели</h4>
+			<div id="{{id}}:constr_technical_features"/>
+		</div>
+		
+		<div class="tab-pane fade" id="result">
+			<div id="{{id}}:reg_number"/>
+			<div id="{{id}}:expertise_result"/>
+			<div id="{{id}}:expertise_result_date"/>
+			<div id="{{id}}:expertise_reject_types_ref"/>
+		</div>
+		{{#setAccess}}
+		<div class="tab-pane fade" id="access">
+			<div id="{{id}}:main_departments_ref"/>
+			<div id="{{id}}:main_experts_ref"/>
+			
+			<h4>Доступность контракта для сотрудников</h4>
+			<div id="{{id}}:permissions"/>
+		</div>
+		{{/setAccess}}
+		<div class="tab-pane fade" id="documents">
+			<div class="tabbable">
+				<ul class="nav nav-tabs nav-tabs-highlight">				
+					<li id="{{id}}:tab-pd" class=""><a href="#documents_pd" data-toggle="tab" aria-expanded="false">ПД</a></li>
+					<li id="{{id}}:tab-eng_survey" class=""><a href="#documents_eng_survey" data-toggle="tab" aria-expanded="false">РИИ</a></li>
+					<li id="{{id}}:tab-cost_eval_validity" class=""><a href="#documents_cost_eval_validity" data-toggle="tab" aria-expanded="false">Достоверность</a></li>
+					<li id="{{id}}:tab-modification" class=""><a href="#documents_modification" data-toggle="tab" aria-expanded="false">Модификация</a></li>
+					<li id="{{id}}:tab-audit" class=""><a href="#documents_audit" data-toggle="tab" aria-expanded="false">Аудит</a></li>
+				</ul>
+			</div>
+			<div class="tab-content">
+				<div class="tab-pane fade" id="documents_pd">
+					<div id="{{id}}:documents_pd"/>
+				</div>
+				<div class="tab-pane fade" id="documents_eng_survey">
+					<div id="{{id}}:documents_eng_survey"/>
+				</div>
+				<div class="tab-pane fade" id="documents_cost_eval_validity">
+					<div id="{{id}}:documents_cost_eval_validity"/>
+				</div>
+				<div class="tab-pane fade" id="documents_modification">
+					<div id="{{id}}:documents_modification"/>
+				</div>
+				<div class="tab-pane fade" id="documents_audit">
+					<div id="{{id}}:documents_audit"/>
+				</div>
+			</div>
+		</div>
+
+		<div class="tab-pane fade" id="expertise">
+			<div id="{{id}}-expertise_sections" class="easy-tree">
+				<ul>
+				{{#expertise_sections}}
+				<li section_id="{{section_id}}">{{section_name}} {{experts_list}}
+					<ul>
+						<li id="{{id}}:cont-{{section_id}}">Работы по разделу</li>
+					</ul>
+				</li>
+				{{/expertise_sections}}
+				</ul>
+			</div>	
+		</div>
+		
+		<div class="tab-pane fade" id="doc_flow_in">
+			<div id="{{id}}:doc_flow_in_list"/>
+		</div>
+		<div class="tab-pane fade" id="doc_flow_out">
+			<div id="{{id}}:doc_flow_out_list"/>
+		</div>
+		
+	</div>
+	
+	<div class="panel-footer">
+		<div id="{{id}}:employees_ref"/>
+		<div id="{{id}}:comment_text"/>		
+	</div>	
+	
+</div>	
+

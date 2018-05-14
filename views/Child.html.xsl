@@ -13,7 +13,7 @@
 		<title>CRM</title>
 		
 		<script>		
-			function beforeUnload(){
+			function beforeUnload(e){
 				if (window.m_childForms){
 					for(var fid in window.m_childForms){
 						if (window.m_childForms[fid]){
@@ -21,36 +21,43 @@
 						}
 					}
 				}
+				
 				if (window.onClose){
 					window.onClose();
 				}
+				/*
+				if (window.getApp){
+					var view = window.getApp().m_view;
+					if (view &amp;&amp; view.getModified &amp;&amp; view.getModified()){
+					
+						var mes = "Вы уверены что хотите закрыть окно и отказаться от записи?";
+						if(e)e.returnValue = mes;						
+						return mes;						
+					}
+				}
+				*/
+				return;
+				
 			}
-			function pageLoad(){				
+			function pageLoad(){
 				var application;
 				if (window.getApp){
 					application = window.getApp();
 					<xsl:call-template name="initAppWin"/>
-					<xsl:if test="/document/model[@id='ModelServResponse']/row/result='1'">
-					throw Error(CommonHelper.longString(function () {/*
-					<xsl:value-of select="/document/model[@id='ModelServResponse']/row/descr"/>
-					*/}));
-					</xsl:if>	
 					
 				}
 				else{
-				<xsl:call-template name="initApp"/>
+					<xsl:call-template name="initApp"/>
 				}
 				
-				<xsl:call-template name="modelFromTemplate"/>
-			<xsl:if test="/document/model[@id='ModelServResponse']/row/result='1'">
-				throw Error("<xsl:value-of select="/document/model[@id='ModelServResponse']/row/descr"/>");
-			</xsl:if>	
-				
+				<xsl:call-template name="checkForError"/>
+
+				<xsl:call-template name="modelFromTemplate"/>				
 			}
 		</script>
 	</head>
 	
-	<body onload="pageLoad();" onbeforeunload="beforeUnload()">
+	<body onload="pageLoad();" onbeforeunload="return beforeUnload();">
 	
 		<!-- Page container -->
 		<div class="page-container">

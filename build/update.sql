@@ -1,22 +1,52 @@
-UPDATE public.const_client_download_file_types SET val_type='JSON'
+-- ******************* update 12/05/2018 06:23:06 ******************
+ALTER TABLE contracts ADD COLUMN invoice_number text,ADD COLUMN invoice_date date;
 
-DROP VIEW out_mail_list;
-DROP VIEW out_mail_dialog;
-ALTER TABLE out_mail DROP COLUMN to_addr;
-ALTER TABLE out_mail DROP COLUMN to_name;
-ALTER TABLE out_mail ADD COLUMN to_addr_name  varchar(250);
-	DROP INDEX IF EXISTS out_mail_to_addr_name_idx;
-	CREATE INDEX out_mail_to_addr_name_idx
-	ON out_mail
-	(lower(to_addr_name));
+-- ******************* update 12/05/2018 07:21:36 ******************
+	DROP INDEX IF EXISTS contracts_contract_ext_id_idx;
+	CREATE INDEX contracts_contract_ext_id_idx ON contracts(contract_ext_id);
 
 
 
--- ******************* update 11/12/2017 18:04:45 ******************
-DELETE FROM out_mail_attachments;
-DELETE FROM out_mail;
-DROP INDEX IF EXISTS out_mail_reg_number_idx;
-	CREATE UNIQUE INDEX out_mail_reg_number_idx
-	ON out_mail
-	(reg_number);
+
+-- ******************* update 14/05/2018 10:55:02 ******************
+ALTER TABLE contracts ADD COLUMN akt_total  numeric(15,2) DEFAULT 0;
+
+-- ******************* update 14/05/2018 16:08:50 ******************
+-- Function: bank_day_diff(date, date)
+
+-- DROP FUNCTION bank_day_diff(date, date);
+
+CREATE OR REPLACE FUNCTION bank_day_diff(date,date)
+  RETURNS interval AS
+$BODY$
+	SELECT (count(*)::int||' days')::interval
+	FROM generate_series($1,$2,'1 day'::interval) AS d
+	WHERE
+		extract(dow from d::date)>0 AND extract(dow from d::date)<6
+		AND d::date NOT IN (SELECT h.date FROM holidays h)
+	;
+$BODY$
+  LANGUAGE sql IMMUTABLE
+  COST 100;
+ALTER FUNCTION bank_day_diff(date, date) OWNER TO expert72;
+
+
+-- ******************* update 14/05/2018 16:09:32 ******************
+-- Function: bank_day_diff(date, date)
+
+-- DROP FUNCTION bank_day_diff(date, date);
+
+CREATE OR REPLACE FUNCTION bank_day_diff(date,date)
+  RETURNS interval AS
+$BODY$
+	SELECT (count(*)::int||' days')::interval
+	FROM generate_series($1,$2,'1 day'::interval) AS d
+	WHERE
+		extract(dow from d::date)>0 AND extract(dow from d::date)<6
+		AND d::date NOT IN (SELECT h.date FROM holidays h)
+	;
+$BODY$
+  LANGUAGE sql IMMUTABLE
+  COST 100;
+ALTER FUNCTION bank_day_diff(date, date) OWNER TO expert72;
 

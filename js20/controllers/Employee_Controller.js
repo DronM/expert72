@@ -63,6 +63,12 @@ extend(Employee_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	
+	var field = new FieldInt("post_id",options);
+	
+	pm.addField(field);
+	
 	pm.addField(new FieldInt("ret_id",{}));
 	
 	
@@ -96,6 +102,12 @@ extend(Employee_Controller,ControllerObjServer);
 	var options = {};
 	
 	var field = new FieldInt("department_id",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldInt("post_id",options);
 	
 	pm.addField(field);
 	
@@ -148,6 +160,9 @@ extend(Employee_Controller,ControllerObjServer);
 	var f_opts = {};
 	
 	pm.addField(new FieldInt("department_id",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldInt("post_id",f_opts));
 	pm.getField(this.PARAM_ORD_FIELDS).setValue("name");
 	
 }
@@ -158,8 +173,8 @@ extend(Employee_Controller,ControllerObjServer);
 	var f_opts = {};
 	
 	var pm = this.getComplete();
-	pm.addField(new FieldInt("id",f_opts));
-	pm.getField(this.PARAM_ORD_FIELDS).setValue("id");	
+	pm.addField(new FieldString("name",f_opts));
+	pm.getField(this.PARAM_ORD_FIELDS).setValue("name");	
 }
 
 		

@@ -15,33 +15,38 @@ function UserProfile_View(id,options){
 	this.addElement(new HiddenKey(id+":id"));	
 	
 	this.addElement(new UserNameEdit(id+":name",{
+		"focus":true,
 		"events":{
 			"keyup":function(){
 				self.getControlSave().setEnabled(true);
+				self.getElement("name").checkName();
 			}
 		}
 		
 	}));	
 
-	this.addElement(new EditPassword(id+":pwd",{
-		"labelCaption":"Пароль:",
-		"events":{
-			"keyup":function(){
-				self.checkPassDelay();	
-			}
-		}		
+	this.addElement(new EditString(id+":name_full",{				
+		"labelCaption":"ФИО пользователя:"
 	}));	
-	this.addElement(new EditPassword(id+":pwd_confirm",{
-		"labelCaption":"Подтверждение пароля:",
+
+	this.addElement(new UserPwdEdit(id+":pwd",{
+		"labelCaption":"Пароль:",
+		"view":this,
 		"events":{
 			"keyup":function(){
-				self.checkPassDelay();	
+				self.getControlSave().setEnabled(true);
 			}
-		}		
+		}				
+	}));	
+	this.addElement(new UserPwdEdit(id+":pwd_confirm",{
+		"required":false,
+		"labelCaption":"Подтверждение пароля:",
+		"view":this
 	}));	
 
 	this.addElement(new EditEmail(id+":email",{
 		"labelCaption":"Эл.почта:",
+		"required":false,
 		"events":{
 			"keyup":function(){
 				self.getControlSave().setEnabled(true);
@@ -58,6 +63,19 @@ function UserProfile_View(id,options){
 		}		
 	}));	
 
+	this.addElement(new EditColorPalette(id+":color_palette",{
+		"labelCaption":"Цветовая схема:",
+		"events":{
+			"change":function(){
+				self.getControlSave().setEnabled(true);
+			}
+		}				
+	}));	
+
+	this.addElement(new EditCheckBox(id+":reminders_to_email",{
+		"labelCaption":"Дублировать напоминания на электронную почту"
+	}));								
+
 	//****************************************************
 	var contr = new User_Controller();
 	
@@ -68,8 +86,11 @@ function UserProfile_View(id,options){
 	this.setDataBindings([
 		new DataBinding({"control":this.getElement("id"),"model":this.m_model}),
 		new DataBinding({"control":this.getElement("name"),"model":this.m_model}),
+		new DataBinding({"control":this.getElement("name_full"),"model":this.m_model}),
 		new DataBinding({"control":this.getElement("email"),"model":this.m_model}),
-		new DataBinding({"control":this.getElement("phone_cel"),"model":this.m_model})
+		new DataBinding({"control":this.getElement("phone_cel"),"model":this.m_model}),
+		new DataBinding({"control":this.getElement("color_palette")}),
+		new DataBinding({"control":this.getElement("reminders_to_email")})
 	]);
 	
 	//write
@@ -77,54 +98,15 @@ function UserProfile_View(id,options){
 	this.getCommand(this.CMD_OK).setBindings([
 		new CommandBinding({"control":this.getElement("id")}),
 		new CommandBinding({"control":this.getElement("name")}),
+		new CommandBinding({"control":this.getElement("name_full")}),
 		new CommandBinding({"control":this.getElement("email")}),
 		new CommandBinding({"control":this.getElement("phone_cel")}),
-		new CommandBinding({"control":this.getElement("pwd")})
+		new CommandBinding({"control":this.getElement("pwd")}),
+		new CommandBinding({"control":this.getElement("color_palette")}),
+		new CommandBinding({"control":this.getElement("reminders_to_email")})
 	]);
 	
 	this.getControlSave().setEnabled(false);
 }
-extend(UserProfile_View,Pwd_View);
+extend(UserProfile_View,ViewObjectAjx);
 
-/*
-UserProfile_View.prototype.checkPass = function(){
-	var pwd = this.getElement("pwd").getValue();
-	if (pwd && pwd.length){
-		var pwd_conf = this.getElement("pwd_confirm").getValue();
-		if (pwd_conf && pwd_conf.length && pwd!=pwd_conf){
-			this.getElement("pwd_confirm").setNotValid(this.TXT_PWD_ER);
-			this.getControlSave().setEnabled(false);
-		}
-		else if (pwd_conf && pwd_conf.length){
-			this.getElement("pwd_confirm").setValid();
-			if (!this.getControlSave().getEnabled()){
-				this.getControlSave().setEnabled(true);
-			}
-		}
-		else if ((!pwd_conf || !pwd_conf.length) && this.getControlSave().getEnabled()){
-			this.getControlSave().setEnabled(false);
-		}
-	}
-}
-*/
-
-UserProfile_View.prototype.checkPass = function(){
-	UserProfile_View.superclass.checkPass.call(this);
-	
-	var pwd = this.getElement("pwd").getValue();
-	if (pwd && pwd.length){
-		var pwd_conf = this.getElement("pwd_confirm").getValue();
-		if (pwd_conf && pwd_conf.length && pwd!=pwd_conf){
-			this.getControlSave().setEnabled(false);
-		}
-		else if (pwd_conf && pwd_conf.length){
-			if (!this.getControlSave().getEnabled()){
-				this.getControlSave().setEnabled(true);
-			}
-		}
-		else if ((!pwd_conf || !pwd_conf.length) && this.getControlSave().getEnabled()){
-			this.getControlSave().setEnabled(false);
-		}
-	}
-	
-}

@@ -63,8 +63,9 @@ EditOGRN.prototype.validate = function(){
 EditOGRN.prototype.setIsEnterprise = function(v){
 	var len = (v)? this.ENT_LEN:this.PERS_LEN;
 	this.setAttr("maxlength",len);
-	this.setEditMask("99999999999999999999".substr(0,len-1));
+	this.setEditMask("99999999999999999999".substr(0,len));
 }
+
 EditOGRN.prototype.getIsEnterprise = function(){
 	return this.m_isEnterprise;
 }

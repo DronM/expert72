@@ -16,15 +16,23 @@ function EnumGridColumn_email_types(options){
 	
 	options.multyLangValues = {};
 	
-	options.multyLangValues.ru = {};
+	options.multyLangValues["ru"] = {};
 
-	options.multyLangValues.ru.new_account = "Новый акаунт";
+	options.multyLangValues["ru"]["new_account"] = "Новый акаунт";
 
-	options.multyLangValues.ru.reset_pwd = "Установка пароля";
+	options.multyLangValues["ru"]["reset_pwd"] = "Установка пароля";
 
-	options.multyLangValues.ru.user_email_conf = "Подтверждение пароля";
+	options.multyLangValues["ru"]["user_email_conf"] = "Подтверждение пароля";
 
-	options.multyLangValues.ru.out_mail = "Исходящее письмо";
+	options.multyLangValues["ru"]["out_mail"] = "Исходящее письмо";
+
+	options.multyLangValues["ru"]["new_app"] = "Новое заявление";
+
+	options.multyLangValues["ru"]["app_change"] = "Ответы на замечания";
+
+	options.multyLangValues["ru"]["new_remind"] = "Новая задача";
+
+	options.multyLangValues["ru"]["out_mail_to_app"] = "Исходящее письмо по заявлению/контракту";
 EnumGridColumn_email_types.superclass.constructor.call(this,options);
 	
 }

@@ -133,7 +133,7 @@ function ViewKladr(id,options){
 	this.m_controller = new Kladr_Controller();
 	this.m_model = new Kladr_Model();
 	
-	self = this;
+	var self = this;
 	options.addElement = function(){
 		var id = this.getId();
 		this.addElement(new RegionEditRef(id+":region",{

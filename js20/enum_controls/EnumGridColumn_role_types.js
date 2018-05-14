@@ -16,13 +16,17 @@ function EnumGridColumn_role_types(options){
 	
 	options.multyLangValues = {};
 	
-	options.multyLangValues.ru = {};
+	options.multyLangValues["ru"] = {};
 
-	options.multyLangValues.ru.admin = "Администратор";
+	options.multyLangValues["ru"]["admin"] = "Администратор";
 
-	options.multyLangValues.ru.client = "Клиент";
+	options.multyLangValues["ru"]["client"] = "Клиент";
 
-	options.multyLangValues.ru.lawyer = "Юрист отдела приема";
+	options.multyLangValues["ru"]["lawyer"] = "Юрист отдела приема";
+
+	options.multyLangValues["ru"]["expert"] = "Эксперт";
+
+	options.multyLangValues["ru"]["boss"] = "Руководитель";
 EnumGridColumn_role_types.superclass.constructor.call(this,options);
 	
 }

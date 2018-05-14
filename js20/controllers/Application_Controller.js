@@ -34,7 +34,22 @@ function Application_Controller(options){
 	this.add_get_client_list();
 	this.add_remove_file();
 	this.add_get_file();
+	this.add_get_file_sig();
 	this.add_zip_all();
+	this.add_get_document_templates();
+	this.add_remove_document_types();
+	this.add_download_app_print_expertise();
+	this.add_download_app_print_expertise_sig();
+	this.add_delete_app_print_expertise();
+	this.add_download_app_print_modification();
+	this.add_download_app_print_modification_sig();
+	this.add_delete_app_print_modification();
+	this.add_download_app_print_audit();
+	this.add_download_app_print_audit_sig();
+	this.add_delete_app_print_audit();
+	this.add_download_app_print_cost_eval();
+	this.add_download_app_print_cost_eval_sig();
+	this.add_delete_app_print_cost_eval();
 		
 }
 extend(Application_Controller,ControllerObjServer);
@@ -43,6 +58,10 @@ extend(Application_Controller,ControllerObjServer);
 	Application_Controller.superclass.addInsert.call(this);
 	
 	var pm = this.getInsert();
+	
+	pm.setRequestType('post');
+	
+	pm.setEncType(ServConnector.prototype.ENCTYPES.MULTIPART);
 	
 	var options = {};
 	options.primaryKey = true;options.autoInc = true;
@@ -64,22 +83,44 @@ extend(Application_Controller,ControllerObjServer);
 	
 	var options = {};
 		
-	options.enumValues = 'pd,eng_survey,pd_eng_survey,pd_eng_survey_estim_cost';
+	options.enumValues = 'pd,eng_survey,pd_eng_survey';
 	var field = new FieldEnum("expertise_type",options);
 	
 	pm.addField(field);
 	
 	var options = {};
-		
-	options.enumValues = 'construction,reconstruction,capital_repairs';
-	var field = new FieldEnum("estim_cost_type",options);
+	
+	var field = new FieldBool("cost_eval_validity",options);
 	
 	pm.addField(field);
 	
 	var options = {};
-		
-	options.enumValues = 'fed_budget,own';
-	var field = new FieldEnum("fund_source",options);
+	
+	var field = new FieldBool("cost_eval_validity_simult",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldBool("modification",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldBool("audit",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldInt("fund_source_id",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldInt("construction_type_id",options);
 	
 	pm.addField(field);
 	
@@ -103,6 +144,12 @@ extend(Application_Controller,ControllerObjServer);
 	
 	var options = {};
 	
+	var field = new FieldJSONB("developer",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
 	var field = new FieldText("constr_name",options);
 	
 	pm.addField(field);
@@ -120,27 +167,14 @@ extend(Application_Controller,ControllerObjServer);
 	pm.addField(field);
 	
 	var options = {};
-		
-	options.enumValues = 'buildings,extended_constructions';
-	var field = new FieldEnum("constr_construction_type",options);
+	
+	var field = new FieldFloat("total_cost_eval",options);
 	
 	pm.addField(field);
 	
 	var options = {};
 	
-	var field = new FieldFloat("constr_total_est_cost",options);
-	
-	pm.addField(field);
-	
-	var options = {};
-	
-	var field = new FieldJSONB("constr_land_area",options);
-	
-	pm.addField(field);
-	
-	var options = {};
-	
-	var field = new FieldJSONB("constr_total_area",options);
+	var field = new FieldFloat("limit_cost_eval",options);
 	
 	pm.addField(field);
 	
@@ -156,11 +190,93 @@ extend(Application_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	
+	var field = new FieldInt("primary_application_id",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldString("primary_application_reg_number",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldInt("modif_primary_application_id",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldString("modif_primary_application_reg_number",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldInt("build_type_id",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldJSONB("app_print_expertise",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldJSONB("app_print_cost_eval",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldJSONB("app_print_modification",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldJSONB("app_print_audit",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldInt("base_application_id",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldInt("derived_application_id",options);
+	
+	pm.addField(field);
+	
 	pm.addField(new FieldInt("ret_id",{}));
 	
 		var options = {};
 				
 		pm.addField(new FieldBool("set_sent",options));
+	
+		var options = {};
+				
+		pm.addField(new FieldText("app_print_expertise_files",options));
+	
+		var options = {};
+				
+		pm.addField(new FieldText("app_print_cost_eval_files",options));
+	
+		var options = {};
+				
+		pm.addField(new FieldText("app_print_modification_files",options));
+	
+		var options = {};
+				
+		pm.addField(new FieldText("app_print_audit_files",options));
 	
 	
 }
@@ -168,6 +284,10 @@ extend(Application_Controller,ControllerObjServer);
 			Application_Controller.prototype.addUpdate = function(){
 	Application_Controller.superclass.addUpdate.call(this);
 	var pm = this.getUpdate();
+	
+	pm.setRequestType('post');
+	
+	pm.setEncType(ServConnector.prototype.ENCTYPES.MULTIPART);
 	
 	var options = {};
 	options.primaryKey = true;options.autoInc = true;
@@ -192,25 +312,45 @@ extend(Application_Controller,ControllerObjServer);
 	
 	var options = {};
 		
-	options.enumValues = 'pd,eng_survey,pd_eng_survey,pd_eng_survey_estim_cost';
+	options.enumValues = 'pd,eng_survey,pd_eng_survey';
 	
 	var field = new FieldEnum("expertise_type",options);
 	
 	pm.addField(field);
 	
 	var options = {};
-		
-	options.enumValues = 'construction,reconstruction,capital_repairs';
 	
-	var field = new FieldEnum("estim_cost_type",options);
+	var field = new FieldBool("cost_eval_validity",options);
 	
 	pm.addField(field);
 	
 	var options = {};
-		
-	options.enumValues = 'fed_budget,own';
 	
-	var field = new FieldEnum("fund_source",options);
+	var field = new FieldBool("cost_eval_validity_simult",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldBool("modification",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldBool("audit",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldInt("fund_source_id",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldInt("construction_type_id",options);
 	
 	pm.addField(field);
 	
@@ -234,6 +374,12 @@ extend(Application_Controller,ControllerObjServer);
 	
 	var options = {};
 	
+	var field = new FieldJSONB("developer",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
 	var field = new FieldText("constr_name",options);
 	
 	pm.addField(field);
@@ -251,28 +397,14 @@ extend(Application_Controller,ControllerObjServer);
 	pm.addField(field);
 	
 	var options = {};
-		
-	options.enumValues = 'buildings,extended_constructions';
 	
-	var field = new FieldEnum("constr_construction_type",options);
+	var field = new FieldFloat("total_cost_eval",options);
 	
 	pm.addField(field);
 	
 	var options = {};
 	
-	var field = new FieldFloat("constr_total_est_cost",options);
-	
-	pm.addField(field);
-	
-	var options = {};
-	
-	var field = new FieldJSONB("constr_land_area",options);
-	
-	pm.addField(field);
-	
-	var options = {};
-	
-	var field = new FieldJSONB("constr_total_area",options);
+	var field = new FieldFloat("limit_cost_eval",options);
 	
 	pm.addField(field);
 	
@@ -288,9 +420,91 @@ extend(Application_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	
+	var field = new FieldInt("primary_application_id",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldString("primary_application_reg_number",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldInt("modif_primary_application_id",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldString("modif_primary_application_reg_number",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldInt("build_type_id",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldJSONB("app_print_expertise",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldJSONB("app_print_cost_eval",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldJSONB("app_print_modification",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldJSONB("app_print_audit",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldInt("base_application_id",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldInt("derived_application_id",options);
+	
+	pm.addField(field);
+	
 		var options = {};
 				
 		pm.addField(new FieldBool("set_sent",options));
+	
+		var options = {};
+				
+		pm.addField(new FieldText("app_print_expertise_files",options));
+	
+		var options = {};
+				
+		pm.addField(new FieldText("app_print_cost_eval_files",options));
+	
+		var options = {};
+				
+		pm.addField(new FieldText("app_print_modification_files",options));
+	
+		var options = {};
+				
+		pm.addField(new FieldText("app_print_audit_files",options));
 	
 	
 }
@@ -378,10 +592,22 @@ extend(Application_Controller,ControllerObjServer);
 	pm.addField(new FieldEnum("expertise_type",f_opts));
 	var f_opts = {};
 	
-	pm.addField(new FieldEnum("estim_cost_type",f_opts));
+	pm.addField(new FieldBool("cost_eval_validity",f_opts));
 	var f_opts = {};
 	
-	pm.addField(new FieldEnum("fund_source",f_opts));
+	pm.addField(new FieldBool("cost_eval_validity_simult",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldBool("modification",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldBool("audit",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldInt("fund_source_id",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldInt("construction_type_id",f_opts));
 	var f_opts = {};
 	
 	pm.addField(new FieldJSONB("applicant",f_opts));
@@ -393,6 +619,9 @@ extend(Application_Controller,ControllerObjServer);
 	pm.addField(new FieldJSONB("contractors",f_opts));
 	var f_opts = {};
 	
+	pm.addField(new FieldJSONB("developer",f_opts));
+	var f_opts = {};
+	
 	pm.addField(new FieldText("constr_name",f_opts));
 	var f_opts = {};
 	
@@ -402,22 +631,49 @@ extend(Application_Controller,ControllerObjServer);
 	pm.addField(new FieldJSONB("constr_technical_features",f_opts));
 	var f_opts = {};
 	
-	pm.addField(new FieldEnum("constr_construction_type",f_opts));
+	pm.addField(new FieldFloat("total_cost_eval",f_opts));
 	var f_opts = {};
 	
-	pm.addField(new FieldFloat("constr_total_est_cost",f_opts));
-	var f_opts = {};
-	
-	pm.addField(new FieldJSONB("constr_land_area",f_opts));
-	var f_opts = {};
-	
-	pm.addField(new FieldJSONB("constr_total_area",f_opts));
+	pm.addField(new FieldFloat("limit_cost_eval",f_opts));
 	var f_opts = {};
 	
 	pm.addField(new FieldInt("filled_percent",f_opts));
 	var f_opts = {};
 	
 	pm.addField(new FieldInt("office_id",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldInt("primary_application_id",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldString("primary_application_reg_number",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldInt("modif_primary_application_id",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldString("modif_primary_application_reg_number",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldInt("build_type_id",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldJSONB("app_print_expertise",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldJSONB("app_print_cost_eval",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldJSONB("app_print_modification",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldJSONB("app_print_audit",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldInt("base_application_id",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldInt("derived_application_id",f_opts));
 	pm.getField(this.PARAM_ORD_FIELDS).setValue("create_dt");
 	
 }
@@ -453,17 +709,7 @@ extend(Application_Controller,ControllerObjServer);
 	
 		options.maxlength = "36";
 	
-		pm.addField(new FieldString("id",options));
-	
-				
-	
-	var options = {};
-	
-		options.required = true;
-	
-		options.maxlength = "5";
-	
-		pm.addField(new FieldString("doc_type",options));
+		pm.addField(new FieldString("file_id",options));
 	
 			
 	this.addPublicMethod(pm);
@@ -484,15 +730,24 @@ extend(Application_Controller,ControllerObjServer);
 	
 		pm.addField(new FieldString("id",options));
 	
+			
+	this.addPublicMethod(pm);
+}
+
+			Application_Controller.prototype.add_get_file_sig = function(){
+	var opts = {"controller":this};
+	
+	var pm = new PublicMethodServer('get_file_sig',opts);
+	
 				
 	
 	var options = {};
 	
 		options.required = true;
 	
-		options.maxlength = "5";
+		options.maxlength = "36";
 	
-		pm.addField(new FieldString("doc_type",options));
+		pm.addField(new FieldString("id",options));
 	
 			
 	this.addPublicMethod(pm);
@@ -510,6 +765,243 @@ extend(Application_Controller,ControllerObjServer);
 		options.required = true;
 	
 		pm.addField(new FieldInt("application_id",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			Application_Controller.prototype.add_get_document_templates = function(){
+	var opts = {"controller":this};
+	
+	var pm = new PublicMethodServer('get_document_templates',opts);
+	
+	this.addPublicMethod(pm);
+}
+
+			Application_Controller.prototype.add_remove_document_types = function(){
+	var opts = {"controller":this};
+	
+	var pm = new PublicMethodServer('remove_document_types',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("application_id",options));
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldJSON("document_types",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			Application_Controller.prototype.add_download_app_print_expertise = function(){
+	var opts = {"controller":this};
+	
+	var pm = new PublicMethodServer('download_app_print_expertise',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("id",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			Application_Controller.prototype.add_download_app_print_expertise_sig = function(){
+	var opts = {"controller":this};
+	
+	var pm = new PublicMethodServer('download_app_print_expertise_sig',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("id",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			Application_Controller.prototype.add_delete_app_print_expertise = function(){
+	var opts = {"controller":this};
+	
+	var pm = new PublicMethodServer('delete_app_print_expertise',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("id",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			Application_Controller.prototype.add_download_app_print_modification = function(){
+	var opts = {"controller":this};
+	
+	var pm = new PublicMethodServer('download_app_print_modification',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("id",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			Application_Controller.prototype.add_download_app_print_modification_sig = function(){
+	var opts = {"controller":this};
+	
+	var pm = new PublicMethodServer('download_app_print_modification_sig',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("id",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			Application_Controller.prototype.add_delete_app_print_modification = function(){
+	var opts = {"controller":this};
+	
+	var pm = new PublicMethodServer('delete_app_print_modification',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("id",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			Application_Controller.prototype.add_download_app_print_audit = function(){
+	var opts = {"controller":this};
+	
+	var pm = new PublicMethodServer('download_app_print_audit',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("id",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			Application_Controller.prototype.add_download_app_print_audit_sig = function(){
+	var opts = {"controller":this};
+	
+	var pm = new PublicMethodServer('download_app_print_audit_sig',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("id",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			Application_Controller.prototype.add_delete_app_print_audit = function(){
+	var opts = {"controller":this};
+	
+	var pm = new PublicMethodServer('delete_app_print_audit',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("id",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			Application_Controller.prototype.add_download_app_print_cost_eval = function(){
+	var opts = {"controller":this};
+	
+	var pm = new PublicMethodServer('download_app_print_cost_eval',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("id",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			Application_Controller.prototype.add_download_app_print_cost_eval_sig = function(){
+	var opts = {"controller":this};
+	
+	var pm = new PublicMethodServer('download_app_print_cost_eval_sig',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("id",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			Application_Controller.prototype.add_delete_app_print_cost_eval = function(){
+	var opts = {"controller":this};
+	
+	var pm = new PublicMethodServer('delete_app_print_cost_eval',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("id",options));
 	
 			
 	this.addPublicMethod(pm);

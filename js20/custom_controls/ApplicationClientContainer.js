@@ -75,7 +75,7 @@ ApplicationClientContainer.prototype.createNewElement = function(){
 	var ind = this.m_container.getCount();
 	var id = this.getId()+":container:"+ind;
 	opts.cmdClose = true;
-	self = this;
+	self = this;	
 	opts.onCloseContractor = function(){
 		self.m_container.delElement(this.getName());
 		this.delDOM();

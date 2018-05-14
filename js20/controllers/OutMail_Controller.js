@@ -29,9 +29,9 @@ function OutMail_Controller(options){
 	this.addDelete();
 	this.addGetList();
 	this.addGetObject();
+	this.add_complete_addr_name();
 	this.add_remove_file();
 	this.add_get_file();
-	this.add_complete_addr_name();
 		
 }
 extend(OutMail_Controller,ControllerObjServer);
@@ -41,67 +41,13 @@ extend(OutMail_Controller,ControllerObjServer);
 	
 	var pm = this.getInsert();
 	
-	var options = {};
-	options.primaryKey = true;options.autoInc = true;
-	var field = new FieldInt("id",options);
+		var options = {};
+				
+		pm.addField(new FieldEnum("state",options));
 	
-	pm.addField(field);
-	
-	var options = {};
-	
-	var field = new FieldDateTimeTZ("date_time",options);
-	
-	pm.addField(field);
-	
-	var options = {};
-	
-	var field = new FieldInt("employee_id",options);
-	
-	pm.addField(field);
-	
-	var options = {};
-	
-	var field = new FieldInt("to_user_id",options);
-	
-	pm.addField(field);
-	
-	var options = {};
-	
-	var field = new FieldString("to_addr_name",options);
-	
-	pm.addField(field);
-	
-	var options = {};
-	
-	var field = new FieldInt("application_id",options);
-	
-	pm.addField(field);
-	
-	var options = {};
-	
-	var field = new FieldText("subject",options);
-	
-	pm.addField(field);
-	
-	var options = {};
-	
-	var field = new FieldString("reg_number",options);
-	
-	pm.addField(field);
-	
-	var options = {};
-	
-	var field = new FieldText("content",options);
-	
-	pm.addField(field);
-	
-	var options = {};
-	
-	var field = new FieldBool("sent",options);
-	
-	pm.addField(field);
-	
-	pm.addField(new FieldInt("ret_id",{}));
+		var options = {};
+				
+		pm.addField(new FieldDateTimeTZ("state_end_date_time",options));
 	
 	
 }
@@ -110,68 +56,13 @@ extend(OutMail_Controller,ControllerObjServer);
 	OutMail_Controller.superclass.addUpdate.call(this);
 	var pm = this.getUpdate();
 	
-	var options = {};
-	options.primaryKey = true;options.autoInc = true;
-	var field = new FieldInt("id",options);
+		var options = {};
+				
+		pm.addField(new FieldEnum("state",options));
 	
-	pm.addField(field);
-	
-	field = new FieldInt("old_id",{});
-	pm.addField(field);
-	
-	var options = {};
-	
-	var field = new FieldDateTimeTZ("date_time",options);
-	
-	pm.addField(field);
-	
-	var options = {};
-	
-	var field = new FieldInt("employee_id",options);
-	
-	pm.addField(field);
-	
-	var options = {};
-	
-	var field = new FieldInt("to_user_id",options);
-	
-	pm.addField(field);
-	
-	var options = {};
-	
-	var field = new FieldString("to_addr_name",options);
-	
-	pm.addField(field);
-	
-	var options = {};
-	
-	var field = new FieldInt("application_id",options);
-	
-	pm.addField(field);
-	
-	var options = {};
-	
-	var field = new FieldText("subject",options);
-	
-	pm.addField(field);
-	
-	var options = {};
-	
-	var field = new FieldString("reg_number",options);
-	
-	pm.addField(field);
-	
-	var options = {};
-	
-	var field = new FieldText("content",options);
-	
-	pm.addField(field);
-	
-	var options = {};
-	
-	var field = new FieldBool("sent",options);
-	
-	pm.addField(field);
+		var options = {};
+				
+		pm.addField(new FieldDateTimeTZ("state_end_date_time",options));
 	
 	
 }
@@ -179,9 +70,6 @@ extend(OutMail_Controller,ControllerObjServer);
 			OutMail_Controller.prototype.addDelete = function(){
 	OutMail_Controller.superclass.addDelete.call(this);
 	var pm = this.getDelete();
-	var options = {"required":true};
-		
-	pm.addField(new FieldInt("id",options));
 }
 
 			OutMail_Controller.prototype.addGetList = function(){
@@ -201,38 +89,6 @@ extend(OutMail_Controller,ControllerObjServer);
 	pm.addField(new FieldString(this.PARAM_ORD_DIRECTS));
 	pm.addField(new FieldString(this.PARAM_FIELD_SEP));
 
-	var f_opts = {};
-	
-	pm.addField(new FieldInt("id",f_opts));
-	var f_opts = {};
-	
-	pm.addField(new FieldDateTimeTZ("date_time",f_opts));
-	var f_opts = {};
-	
-	pm.addField(new FieldInt("employee_id",f_opts));
-	var f_opts = {};
-	
-	pm.addField(new FieldInt("to_user_id",f_opts));
-	var f_opts = {};
-	
-	pm.addField(new FieldString("to_addr_name",f_opts));
-	var f_opts = {};
-	
-	pm.addField(new FieldInt("application_id",f_opts));
-	var f_opts = {};
-	
-	pm.addField(new FieldText("subject",f_opts));
-	var f_opts = {};
-	
-	pm.addField(new FieldString("reg_number",f_opts));
-	var f_opts = {};
-	
-	pm.addField(new FieldText("content",f_opts));
-	var f_opts = {};
-	
-	pm.addField(new FieldBool("sent",f_opts));
-	pm.getField(this.PARAM_ORD_FIELDS).setValue("date_time");
-	
 }
 
 			OutMail_Controller.prototype.addGetObject = function(){
@@ -242,6 +98,37 @@ extend(OutMail_Controller,ControllerObjServer);
 	var f_opts = {};
 		
 	pm.addField(new FieldInt("id",f_opts));
+}
+
+			OutMail_Controller.prototype.add_complete_addr_name = function(){
+	var opts = {"controller":this};
+	
+	var pm = new PublicMethodServer('complete_addr_name',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		options.maxlength = "250";
+	
+		pm.addField(new FieldString("addr_name",options));
+	
+				
+	
+	var options = {};
+	
+		pm.addField(new FieldInt("ic",options));
+	
+				
+	
+	var options = {};
+	
+		pm.addField(new FieldInt("mid",options));
+	
+			
+	this.addPublicMethod(pm);
 }
 
 			OutMail_Controller.prototype.add_remove_file = function(){
@@ -277,37 +164,6 @@ extend(OutMail_Controller,ControllerObjServer);
 		options.maxlength = "36";
 	
 		pm.addField(new FieldString("id",options));
-	
-			
-	this.addPublicMethod(pm);
-}
-
-			OutMail_Controller.prototype.add_complete_addr_name = function(){
-	var opts = {"controller":this};
-	
-	var pm = new PublicMethodServer('complete_addr_name',opts);
-	
-				
-	
-	var options = {};
-	
-		options.required = true;
-	
-		options.maxlength = "250";
-	
-		pm.addField(new FieldString("to_addr_name",options));
-	
-				
-	
-	var options = {};
-	
-		pm.addField(new FieldInt("ic",options));
-	
-				
-	
-	var options = {};
-	
-		pm.addField(new FieldInt("mid",options));
 	
 			
 	this.addPublicMethod(pm);

@@ -1,6 +1,6 @@
 -- VIEW: user_dialog
 
---DROP VIEW user_dialog;
+DROP VIEW user_dialog;
 
 CREATE OR REPLACE VIEW user_dialog AS
 	SELECT

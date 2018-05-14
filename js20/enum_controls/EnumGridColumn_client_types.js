@@ -16,11 +16,13 @@ function EnumGridColumn_client_types(options){
 	
 	options.multyLangValues = {};
 	
-	options.multyLangValues.ru = {};
+	options.multyLangValues["ru"] = {};
 
-	options.multyLangValues.ru.enterprise = "Юридическое лицо";
+	options.multyLangValues["ru"]["enterprise"] = "Юридическое лицо";
 
-	options.multyLangValues.ru.person = "Индивидуальный предприниматель";
+	options.multyLangValues["ru"]["person"] = "Физическое лицо";
+
+	options.multyLangValues["ru"]["pboul"] = "Индивидуальный предприниматель";
 EnumGridColumn_client_types.superclass.constructor.call(this,options);
 	
 }

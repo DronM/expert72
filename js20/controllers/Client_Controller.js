@@ -20,7 +20,7 @@
 function Client_Controller(options){
 	options = options || {};
 	options.listModelClass = ClientList_Model;
-	options.objModelClass = Client_Model;
+	options.objModelClass = ClientDialog_Model;
 	Client_Controller.superclass.constructor.call(this,options);	
 	
 	//methods
@@ -113,19 +113,13 @@ extend(Client_Controller,ControllerObjServer);
 	
 	var options = {};
 	
-	var field = new FieldJSONB("responsable_persons",options);
-	
-	pm.addField(field);
-	
-	var options = {};
-	
 	var field = new FieldJSONB("bank_accounts",options);
 	
 	pm.addField(field);
 	
 	var options = {};
 	options.required = true;	
-	options.enumValues = 'enterprise,person';
+	options.enumValues = 'enterprise,person,pboul';
 	var field = new FieldEnum("client_type",options);
 	
 	pm.addField(field);
@@ -149,6 +143,10 @@ extend(Client_Controller,ControllerObjServer);
 	pm.addField(field);
 	
 	pm.addField(new FieldInt("ret_id",{}));
+	
+		var options = {};
+				
+		pm.addField(new FieldJSON("responsable_persons",options));
 	
 	
 }
@@ -234,19 +232,13 @@ extend(Client_Controller,ControllerObjServer);
 	
 	var options = {};
 	
-	var field = new FieldJSONB("responsable_persons",options);
-	
-	pm.addField(field);
-	
-	var options = {};
-	
 	var field = new FieldJSONB("bank_accounts",options);
 	
 	pm.addField(field);
 	
 	var options = {};
 		
-	options.enumValues = 'enterprise,person';
+	options.enumValues = 'enterprise,person,pboul';
 	options.enumValues+= (options.enumValues=='')? '':',';
 	options.enumValues+= 'null';
 	
@@ -271,6 +263,10 @@ extend(Client_Controller,ControllerObjServer);
 	var field = new FieldJSONB("person_registr_paper",options);
 	
 	pm.addField(field);
+	
+		var options = {};
+				
+		pm.addField(new FieldJSON("responsable_persons",options));
 	
 	
 }
@@ -309,6 +305,9 @@ extend(Client_Controller,ControllerObjServer);
 	var f_opts = {};
 	
 	pm.addField(new FieldString("inn",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldString("kpp",f_opts));
 	var f_opts = {};
 	
 	pm.addField(new FieldString("user_id",f_opts));

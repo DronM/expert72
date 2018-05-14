@@ -22,6 +22,8 @@ function Enum_application_states(id,options){
 ,"ru_closed_no_expertise":"Возврат без рассмотрения"
 ,"ru_waiting_for_contract":"Подписание контракта"
 ,"ru_waiting_for_pay":"Ожидание оплаты"
+,"ru_expertise":"Экспертиза проекта"
+,"ru_closed":"Заключение"
 };
 	options.options = [{"value":"filling",
 "descr":multy_lang_values[window.getApp().getLocale()+"_"+"filling"],
@@ -44,6 +46,12 @@ checked:(options.defaultValue&&options.defaultValue=="waiting_for_contract")}
 ,{"value":"waiting_for_pay",
 "descr":multy_lang_values[window.getApp().getLocale()+"_"+"waiting_for_pay"],
 checked:(options.defaultValue&&options.defaultValue=="waiting_for_pay")}
+,{"value":"expertise",
+"descr":multy_lang_values[window.getApp().getLocale()+"_"+"expertise"],
+checked:(options.defaultValue&&options.defaultValue=="expertise")}
+,{"value":"closed",
+"descr":multy_lang_values[window.getApp().getLocale()+"_"+"closed"],
+checked:(options.defaultValue&&options.defaultValue=="closed")}
 ];
 	
 	Enum_application_states.superclass.constructor.call(this,id,options);

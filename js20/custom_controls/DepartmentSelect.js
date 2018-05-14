@@ -15,7 +15,7 @@ function DepartmentSelect(id,options){
 		options.labelCaption = options.labelCaption || "Отдел:";
 	}
 	
-	options.keyIds = options.keyIds || ["department_id"];
+	options.keyIds = options.keyIds || ["id"];
 	options.modelKeyFields = [options.model.getField("id")];
 	options.modelDescrFields = [options.model.getField("name")];
 	

@@ -4,13 +4,14 @@ require_once(FRAME_WORK_PATH.'db/db_pgsql.php');
 require_once("EmailSender.php");
 
 class ExpertEmailSender extends EmailSender{
-	public static function addEMail(
-			$link,
+
+	public static function regMail(
+			$dbLink,
 			$funcText,
 			$attArray=NULL,
 			$smsType=NULL
 		){
-		$ar = $link->query_first(sprintf(
+		$ar = $dbLink->query_first(sprintf(
 		//throw new Exception(sprintf(
 		"SELECT * FROM %s AS (
 			body text,
@@ -22,9 +23,9 @@ class ExpertEmailSender extends EmailSender{
 		));
 		
 		$mail_id = NULL;
-		if (is_array($ar)&&count($ar)){
-			$mail_id = parent::addEMail(
-				$link,
+		if (is_array($ar) && count($ar)){
+			$mail_id = EmailSender::addEMail(
+				$dbLink,
 				EMAIL_FROM_ADDR,EMAIL_FROM_NAME,
 				$ar['email'],$ar['client'],
 				EMAIL_FROM_ADDR,EMAIL_FROM_NAME,
@@ -35,13 +36,14 @@ class ExpertEmailSender extends EmailSender{
 			);
 			if (is_array($attArray)){
 				foreach ($attArray as $f){
-					self::addAttachment($link,$mail_id,$f);
+					self::addAttachment($dbLink,$mail_id,$f);
 				}
 			}
 		}
 		return $mail_id;
 	}
-	public static function sendAllMail($delFiles=TRUE){
+	public static function sendAllMail($delFiles=TRUE,$dbLink=NULL,
+				$smtpHost=NULL,$smtpPort=NULL,$smtpUser=NULL,$smtpPwd=NULL){
 		$dbLink = new DB_Sql();
 		$dbLink->persistent=true;
 		$dbLink->database	= DB_NAME;			

@@ -1,4 +1,8 @@
 /**	
+ *
+ * THIS FILE IS GENERATED FROM TEMPLATE build/templates/models/Model_js.xsl
+ * ALL DIRECT MODIFICATIONS WILL BE LOST WITH THE NEXT BUILD PROCESS!!!
+ *
  * @author Andrey Mikhalevich <katrenplus@mail.ru>, 2017
  * @class
  * @classdesc Model class. Created from template build/templates/models/Model_js.xsl. !!!DO NOT MODEFY!!!
@@ -53,6 +57,17 @@ function ApplicationDocumentFile_Model(options){
 	
 	var filed_options = {};
 	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.document_type = new FieldEnum("document_type",filed_options);
+	filed_options.enumValues = 'pd,eng_survey,cost_eval_validity,modification,audit';
+	options.fields.document_type.getValidator().setRequired(true);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
 	filed_options.defValue = true;
 	
 	filed_options.autoInc = false;	
@@ -76,7 +91,45 @@ function ApplicationDocumentFile_Model(options){
 	
 	filed_options.autoInc = false;	
 	
+	options.fields.file_path = new FieldText("file_path",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	filed_options.defValue = true;
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.file_signed = new FieldBool("file_signed",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
 	options.fields.file_size = new FieldInt("file_size",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	filed_options.defValue = true;
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.deleted = new FieldBool("deleted",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.deleted_dt = new FieldDateTimeTZ("deleted_dt",filed_options);
 	
 			
 		ApplicationDocumentFile_Model.superclass.constructor.call(this,id,options);

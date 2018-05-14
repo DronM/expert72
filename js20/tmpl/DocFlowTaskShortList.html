@@ -1,0 +1,22 @@
+<div id={{id}} class="dropdown-menu dropdown-content">
+	<div class="dropdown-content-heading">
+		Активные задачи
+	</div>
+
+	<ul class="media-list dropdown-content-body width-350">
+		{{#rows}}
+		<li class="media">
+			<div class="media-left">
+				<div href="#" class="btn border-primary text-primary btn-flat btn-rounded btn-icon btn-sm">
+					<i class="icon-bell3"></i>
+				</div>
+			</div>
+
+			<div class="media-body task-short-descr" docs_ref="{{fields.docs_ref}}">
+				{{fields.description}}
+				<div class="media-annotation">{{fields.passed_time}}</div>
+			</div>
+		</li>
+		{{/rows}}
+	</ul>
+</div>

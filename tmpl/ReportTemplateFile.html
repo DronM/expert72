@@ -1,0 +1,50 @@
+<div id="{{id}}" class="panel panel-flat">
+	<div id="{{id}}:cmd">
+		<div id="{{id}}:cmdOk"/>
+		<div id="{{id}}:cmdSave"/>
+		<div id="{{id}}:cmdCancel"/>
+	</div>
+
+	<div class="panel-heading">
+		<h3 class="panel-title">{{HEAD_TITLE}}</h3>
+	</div>
+
+
+	<div class="tabbable">
+		<ul class="nav nav-tabs nav-tabs-highlight">				
+			<li class="active">
+				<a href="#common" data-toggle="tab" aria-expanded="true">
+					Шаблон</a>
+			</li>
+			<li class=""><a href="#usage" data-toggle="tab" aria-expanded="false">Использование</a></li>
+			<li class=""><a href="#permissions" data-toggle="tab" aria-expanded="false">Права доступа</a></li>
+		</ul>
+	</div>
+
+	<div class="tab-content dialogForm">
+		<div class="tab-pane fade in active" id="common">
+			<div id="{{id}}:report_templates_ref"/>		
+		
+			<div id="{{id}}:fields"/>		
+		
+			<div id="{{id}}:file_inf"/>		
+				
+			<div id="{{id}}:comment_text"/>
+		
+			<div id="{{id}}:employees_ref"/>
+		</div>
+		
+		<div class="tab-pane fade in" id="usage">
+			<h6>Определите формы, в которых будет показан данный шаблон</h6>
+			<div id="{{id}}:for_all_views"/>
+			<div id="{{id}}:views"/>
+		</div>
+		
+		<div class="tab-pane fade in" id="permissions">
+			<h6>Доступность шаблона для других сотрудников</h6>
+			<div id="{{id}}:permissions"/>
+		
+		</div>
+	</div>
+	
+</div>	

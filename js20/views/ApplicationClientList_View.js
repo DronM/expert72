@@ -58,7 +58,7 @@ function ApplicationClientList_View(id,options){
 											if (fields.kpp.isSet()
 											&& fields.client_type.getValue()=="enterprise"
 											){
-												console.log("KPP="+fields.kpp.getValue())
+												//console.log("KPP="+fields.kpp.getValue())
 												res+="/"+fields.kpp.getValue();
 											}
 										}
@@ -88,7 +88,7 @@ function ApplicationClientList_View(id,options){
 		"focus":true
 	}));		
 }
-extend(ApplicationClientList_View,ViewAjx);
+extend(ApplicationClientList_View,ViewAjxList);
 
 /* Constants */
 

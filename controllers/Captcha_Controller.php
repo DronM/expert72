@@ -1,17 +1,19 @@
 <?php
 require_once(FRAME_WORK_PATH.'basic_classes/Controller.php');
-
 require_once(FRAME_WORK_PATH.'basic_classes/FieldExtInt.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldExtString.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldExtFloat.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldExtEnum.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldExtText.php');
+require_once(FRAME_WORK_PATH.'basic_classes/FieldExtDateTime.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldExtDate.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldExtPassword.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldExtBool.php');
+require_once(FRAME_WORK_PATH.'basic_classes/FieldExtInterval.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldExtDateTimeTZ.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldExtJSON.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldExtJSONB.php');
+require_once(FRAME_WORK_PATH.'basic_classes/FieldExtArray.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldExtXML.php');
 
 /**

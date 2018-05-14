@@ -1,7 +1,12 @@
 <div id="{{id}} class="panel panel-info">
 	<div class="panel-heading">
-		<h6 class="panel-title"><span class="text-semibold">Исполнитель {{IND}}</span>
-		<a class="heading-elements-toggle"><i class="icon-more"></i></a></h6>		
+		<!--  {{IND}} -->
+		<h6 class="panel-title">
+			<span class="text-semibold">Сведения об исполнителе</span>
+			<a class="heading-elements-toggle">
+				<i class="icon-more"></i>
+			</a>
+		</h6>				
 		<div class="heading-elements">
 			<ul class="icons-list">
 				<li><a id="{{id}}:cmdToggle" data-action="collapse" class=""></a></li>
@@ -15,12 +20,13 @@
 	<div class="panel-body" style="display: block;">	
 		<div class="dropdown">
 			{{#isClient}}
-			<button class="btn {{colorClass}} dropdown-toggle fillClientData" type="button" data-toggle="dropdown">Заполнить
+			<button class="btn bg-{{colorClass}} dropdown-toggle fillClientData" type="button" data-toggle="dropdown">Заполнить
 				<span class="caret"></span>
 			</button>
 			<ul class="dropdown-menu" title="Зполнить по другим данным">
-				<li><a id="{{id}}:fillOnCustomer" href="#">По заказчику</a></li>
-				<li><a id="{{id}}:fillOnApplicant" href="#">По заявителю</a></li>			
+				<li><a id="{{id}}:fillOnApplicant" href="#">По заявителю</a></li>
+				<li><a id="{{id}}:fillOnCustomer" href="#">По техн.заказчику</a></li>				
+				<li><a id="{{id}}:fillOnApplicant" href="#">По застройщику</a></li>						
 				<li><a id="{{id}}:fillOnClientList" href="#">Выбрать из списка клиентов</a></li>
 			</ul>
 			{{/isClient}}

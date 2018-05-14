@@ -1,4 +1,8 @@
 /**	
+ *
+ * THIS FILE IS GENERATED FROM TEMPLATE build/templates/models/Model_js.xsl
+ * ALL DIRECT MODIFICATIONS WILL BE LOST WITH THE NEXT BUILD PROCESS!!!
+ *
  * @author Andrey Mikhalevich <katrenplus@mail.ru>, 2017
  * @class
  * @classdesc Model class. Created from template build/templates/models/Model_js.xsl. !!!DO NOT MODEFY!!!
@@ -23,10 +27,11 @@ function InMailAttachment_Model(options){
 	var filed_options = {};
 	filed_options.primaryKey = true;	
 	
-	filed_options.autoInc = true;	
+	filed_options.autoInc = false;	
 	
-	options.fields.id = new FieldInt("id",filed_options);
-	options.fields.id.getValidator().setRequired(true);
+	options.fields.file_id = new FieldString("file_id",filed_options);
+	options.fields.file_id.getValidator().setRequired(true);
+	options.fields.file_id.getValidator().setMaxLength('36');
 	
 				
 	
@@ -46,6 +51,15 @@ function InMailAttachment_Model(options){
 	
 	options.fields.file_name = new FieldString("file_name",filed_options);
 	options.fields.file_name.getValidator().setMaxLength('255');
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.file_size = new FieldInt("file_size",filed_options);
 	
 			
 		InMailAttachment_Model.superclass.constructor.call(this,id,options);

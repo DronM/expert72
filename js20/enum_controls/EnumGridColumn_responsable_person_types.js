@@ -16,13 +16,13 @@ function EnumGridColumn_responsable_person_types(options){
 	
 	options.multyLangValues = {};
 	
-	options.multyLangValues.ru = {};
+	options.multyLangValues["ru"] = {};
 
-	options.multyLangValues.ru.boss = "Руководитель";
+	options.multyLangValues["ru"]["boss"] = "Руководитель";
 
-	options.multyLangValues.ru.chef_accountant = "Главны бухгалтер";
+	options.multyLangValues["ru"]["chef_accountant"] = "Главны бухгалтер";
 
-	options.multyLangValues.ru.other = "Прочий";
+	options.multyLangValues["ru"]["other"] = "Прочий";
 EnumGridColumn_responsable_person_types.superclass.constructor.call(this,options);
 	
 }

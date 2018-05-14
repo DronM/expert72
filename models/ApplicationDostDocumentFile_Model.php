@@ -1,4 +1,10 @@
 <?php
+/**
+ *
+ * THIS FILE IS GENERATED FROM TEMPLATE build/templates/models/Model_php.xsl
+ * ALL DIRECT MODIFICATIONS WILL BE LOST WITH THE NEXT BUILD PROCESS!!!
+ *
+ */
 
 require_once(FRAME_WORK_PATH.'basic_classes/ModelSQL.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLInt.php');
@@ -6,7 +12,7 @@ require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLString.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLText.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLBool.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLDateTimeTZ.php');
-
+ 
 class ApplicationDostDocumentFile_Model extends ModelSQL{
 	
 	public function __construct($dbLink){
@@ -25,7 +31,7 @@ class ApplicationDostDocumentFile_Model extends ModelSQL{
 		$f_file_id=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"file_id",$f_opts);
 		$this->addField($f_file_id);
 		//********************
-	
+		
 		//*** Field application_id ***
 		$f_opts = array();
 		$f_opts['id']="application_id";
@@ -33,7 +39,7 @@ class ApplicationDostDocumentFile_Model extends ModelSQL{
 		$f_application_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"application_id",$f_opts);
 		$this->addField($f_application_id);
 		//********************
-	
+		
 		//*** Field document_id ***
 		$f_opts = array();
 		$f_opts['id']="document_id";
@@ -41,7 +47,7 @@ class ApplicationDostDocumentFile_Model extends ModelSQL{
 		$f_document_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"document_id",$f_opts);
 		$this->addField($f_document_id);
 		//********************
-	
+		
 		//*** Field date_time ***
 		$f_opts = array();
 		$f_opts['defaultValue']='now()';
@@ -50,7 +56,7 @@ class ApplicationDostDocumentFile_Model extends ModelSQL{
 		$f_date_time=new FieldSQLDateTimeTZ($this->getDbLink(),$this->getDbName(),$this->getTableName(),"date_time",$f_opts);
 		$this->addField($f_date_time);
 		//********************
-	
+		
 		//*** Field file_name ***
 		$f_opts = array();
 		$f_opts['id']="file_name";
@@ -58,7 +64,7 @@ class ApplicationDostDocumentFile_Model extends ModelSQL{
 		$f_file_name=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"file_name",$f_opts);
 		$this->addField($f_file_name);
 		//********************
-	
+		
 		//*** Field file_path ***
 		$f_opts = array();
 		$f_opts['id']="file_path";
@@ -66,7 +72,7 @@ class ApplicationDostDocumentFile_Model extends ModelSQL{
 		$f_file_path=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"file_path",$f_opts);
 		$this->addField($f_file_path);
 		//********************
-	
+		
 		//*** Field file_size ***
 		$f_opts = array();
 		$f_opts['id']="file_size";
@@ -74,7 +80,15 @@ class ApplicationDostDocumentFile_Model extends ModelSQL{
 		$f_file_size=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"file_size",$f_opts);
 		$this->addField($f_file_size);
 		//********************
-	
+		
+		//*** Field file_signed ***
+		$f_opts = array();
+		$f_opts['id']="file_signed";
+		
+		$f_file_signed=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"file_signed",$f_opts);
+		$this->addField($f_file_signed);
+		//********************
+		
 		//*** Field deleted ***
 		$f_opts = array();
 		$f_opts['id']="deleted";
@@ -82,7 +96,7 @@ class ApplicationDostDocumentFile_Model extends ModelSQL{
 		$f_deleted=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"deleted",$f_opts);
 		$this->addField($f_deleted);
 		//********************
-	
+		
 		//*** Field deleted_dt ***
 		$f_opts = array();
 		$f_opts['id']="deleted_dt";
@@ -90,7 +104,7 @@ class ApplicationDostDocumentFile_Model extends ModelSQL{
 		$f_deleted_dt=new FieldSQLDateTimeTZ($this->getDbLink(),$this->getDbName(),$this->getTableName(),"deleted_dt",$f_opts);
 		$this->addField($f_deleted_dt);
 		//********************
-$this->setLimitConstant('doc_per_page_count');
+	$this->setLimitConstant('doc_per_page_count');
 	}
 
 }

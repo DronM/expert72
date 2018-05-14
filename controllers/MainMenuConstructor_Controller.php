@@ -1,17 +1,19 @@
 <?php
 require_once(FRAME_WORK_PATH.'basic_classes/ControllerSQL.php');
-
 require_once(FRAME_WORK_PATH.'basic_classes/FieldExtInt.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldExtString.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldExtFloat.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldExtEnum.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldExtText.php');
+require_once(FRAME_WORK_PATH.'basic_classes/FieldExtDateTime.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldExtDate.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldExtPassword.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldExtBool.php');
+require_once(FRAME_WORK_PATH.'basic_classes/FieldExtInterval.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldExtDateTimeTZ.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldExtJSON.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldExtJSONB.php');
+require_once(FRAME_WORK_PATH.'basic_classes/FieldExtArray.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldExtXML.php');
 
 /**
@@ -31,7 +33,7 @@ class MainMenuConstructor_Controller extends ControllerSQL{
 		/* insert */
 		$pm = new PublicMethod('insert');
 		
-				$param = new FieldExtEnum('role_id',',','admin,client,lawyer'
+				$param = new FieldExtEnum('role_id',',','admin,client,lawyer,expert,boss'
 				,array('required'=>TRUE));
 		$pm->addParam($param);
 		$param = new FieldExtInt('user_id'
@@ -63,7 +65,7 @@ class MainMenuConstructor_Controller extends ControllerSQL{
 			));
 			$pm->addParam($param);
 		
-				$param = new FieldExtEnum('role_id',',','admin,client,lawyer'
+				$param = new FieldExtEnum('role_id',',','admin,client,lawyer,expert,boss'
 				,array(
 			));
 			$pm->addParam($param);
@@ -121,13 +123,13 @@ class MainMenuConstructor_Controller extends ControllerSQL{
 			
 		/* get_object */
 		$pm = new PublicMethod('get_object');
-		$pm->addParam(new FieldExtInt('browse_mode'));
+		$pm->addParam(new FieldExtString('mode'));
 		
 		$pm->addParam(new FieldExtInt('id'
 		));
 		
 		$this->addPublicMethod($pm);
-		$this->setObjectModelId('MainMenuConstructor_Model');		
+		$this->setObjectModelId('MainMenuConstructorDialog_Model');		
 
 		
 	}	
@@ -154,7 +156,7 @@ class MainMenuConstructor_Controller extends ControllerSQL{
 		
 		//!!!XMLNS!!!
 		$content = str_replace('xmlns="http://www.w3.org/1999/xhtml"','',$content);
-		
+		$content = str_replace('xmlns="http://www.katren.org/crm/doc/mainmenu"','',$content);		
 		$xml = simplexml_load_string($content);
 		//throw new Exception("XML=".html_entity_decode($content));
 		$items = $xml->xpath('//menuitem[@viewid]');
@@ -183,20 +185,21 @@ class MainMenuConstructor_Controller extends ControllerSQL{
 			$content = str_replace(sprintf('viewid = "%s"',$view_id),$v,$content);
 		}
 		//throw new Exception(USER_MODELS_PATH.'MainMenu_Model_'.$role_id. ( (isset($user_id))? '_'.$user_id:'' ). '.php');
-				
+		
+		$postf = ( (isset($role_id))? '_'.$role_id:'' ).( (isset($user_id))? '_'.$user_id:'' ); 		
 		file_put_contents(
-			USER_MODELS_PATH.'MainMenu_Model_'.$role_id. ( (isset($user_id))? '_'.$user_id:'' ). '.php',
+			USER_MODELS_PATH.'MainMenu_Model'. $postf. '.php',
 			sprintf('<?php
 require_once(FRAME_WORK_PATH.\'basic_classes/Model.php\');
 
-class MainMenu_Model_%s extends Model{
+class MainMenu_Model%s extends Model{
 	public function dataToXML(){
 		return \'<model id="MainMenu_Model" sysModel="1">
 		%s
 		</model>\';
 	}
 }
-?>',$role_id,$content));
+?>',$postf,$content));
 	}
 
 	public function insert($pm){		
@@ -206,6 +209,21 @@ class MainMenu_Model_%s extends Model{
 	public function update($pm){
 		$this->gen_menu($pm);
 		parent::update($pm);	
+	}
+
+	public function delete($pm){
+		$ar = $this->getDbLink()->query_first(sprintf(
+			"SELECT user_id,role_id FROM main_menus
+			WHERE id=%s",
+		$this->getExtDbVal($pm,"id")
+		));
+		
+		$postf = ( (isset($ar['role_id']))? '_'.$ar['role_id']:'' ).( (isset($ar['user_id']))? '_'.$ar['user_id']:'' ); 		
+		$fl = USER_MODELS_PATH.'MainMenu_Model'. $postf. '.php';
+		if (file_exists($fl)){
+			unlink($fl);
+		}
+		parent::delete($pm);
 	}
 	
 

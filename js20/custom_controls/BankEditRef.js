@@ -34,8 +34,8 @@ function BankEditRef(id,options){
 	var self = this;
 	
 	options.onSelect = options.onSelect || function(fields){
-		if (self.view){
-			self.view.m_bankDescr = fields["name"].getValue();
+		if (self.m_view){
+			self.m_view.m_bankDescr = fields["name"].getValue();
 		}
 	}
 	

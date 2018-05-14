@@ -30,7 +30,7 @@ extend(EditKPP,EditString);
 EditKPP.prototype.m_isEnterprise;
 
 /* private members */
-EditKPP.prototype.LEN = 10;
+EditKPP.prototype.LEN = 9;
 
 /* protected*/
 
