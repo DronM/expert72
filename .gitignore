@@ -96,3 +96,7 @@ uploads
 /build/templates/controllers/View_Controller_php.xsl
 /build/templates/models/MainMenuContent_Model_js.xsl
 /functions/bank_refresh.php
+/client_files
+/Uploads2
+/tmps
+/output
