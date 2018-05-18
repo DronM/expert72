@@ -84,7 +84,12 @@ function DocFlowOutClientList_View(id,options){
 			"columns":[
 				new GridColumnDate({
 					"field":model.getField("date_time"),
-					"dateFormat":"d/m/Y H:i"
+					"dateFormat":"d/m/Y H:i",
+					"ctrlClass":EditDate,
+					"searchOptions":{
+						"field":new FieldDate("date_time"),
+						"searchType":"on_beg"
+					}
 				})
 			],
 			"sortable":true,

@@ -156,6 +156,9 @@ class Contract_Controller extends ControllerSQL{
 		$param = new FieldExtDate('invoice_date'
 				,array());
 		$pm->addParam($param);
+		$param = new FieldExtJSON('linked_contracts'
+				,array());
+		$pm->addParam($param);
 		
 		$pm->addParam(new FieldExtInt('ret_id'));
 		
@@ -330,6 +333,10 @@ class Contract_Controller extends ControllerSQL{
 			));
 			$pm->addParam($param);
 		$param = new FieldExtDate('invoice_date'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtJSON('linked_contracts'
 				,array(
 			));
 			$pm->addParam($param);

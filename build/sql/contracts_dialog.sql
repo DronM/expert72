@@ -104,7 +104,9 @@ CREATE OR REPLACE VIEW contracts_dialog AS
 		
 		t.contract_ext_id,
 		
-		t.contract_return_date
+		t.contract_return_date,
+		
+		t.linked_contracts
 		
 	FROM contracts t
 	LEFT JOIN applications_dialog AS app ON app.id=t.application_id

@@ -56,6 +56,7 @@
 <li><a href="#FundSource_Controller">FundSource_Controller</a></li>
 <li><a href="#Holiday_Controller">Holiday_Controller</a></li>
 <li><a href="#Kladr_Controller">Kladr_Controller</a></li>
+<li><a href="#LinkedContractList_Controller">LinkedContractList_Controller</a></li>
 <li><a href="#MailForSending_Controller">MailForSending_Controller</a></li>
 <li><a href="#MainMenuConstructor_Controller">MainMenuConstructor_Controller</a></li>
 <li><a href="#MainMenuContent_Controller">MainMenuContent_Controller</a></li>
@@ -64,6 +65,7 @@
 <li><a href="#Order1CList_Controller">Order1CList_Controller</a></li>
 <li><a href="#PersonIdPaper_Controller">PersonIdPaper_Controller</a></li>
 <li><a href="#Post_Controller">Post_Controller</a></li>
+<li><a href="#ProjectManager_Controller">ProjectManager_Controller</a></li>
 <li><a href="#Reminder_Controller">Reminder_Controller</a></li>
 <li><a href="#ReportTemplate_Controller">ReportTemplate_Controller</a></li>
 <li><a href="#ReportTemplateField_Controller">ReportTemplateField_Controller</a></li>
@@ -206,6 +208,7 @@
 <li><a href="#ClientPayment_Model">ClientPayment_Model</a></li>
 <li><a href="#ClientPaymentList_Model">ClientPaymentList_Model</a></li>
 <li><a href="#Order1CList_Model">Order1CList_Model</a></li>
+<li><a href="#LinkedContractList_Model">LinkedContractList_Model</a></li>
 </ul>
 <div class="section-title">Enumerations</div>
 <ul>
@@ -1765,6 +1768,19 @@
 </div>
 </div>
 </div>
+<div id="LinkedContractList_Controller" class="content_box">
+<h1>LinkedContractList_Controller</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Методы:</p>
+<h2>insert</h2>
+<a href="#LinkedContractList_Model">Model: LinkedContractList_Model</a><h2>update</h2>
+<a href="#LinkedContractList_Model">Model: LinkedContractList_Model</a><h2>delete</h2>
+<a href="#LinkedContractList_Model">Model: LinkedContractList_Model</a><h2>get_list</h2>
+<a href="#LinkedContractList_Model">Model: LinkedContractList_Model</a><h2>get_object</h2>
+<a href="#LinkedContractList_Model">Model: LinkedContractList_Model</a>
+</div>
+</div>
 <div id="MailForSending_Controller" class="content_box">
 <h1>MailForSending_Controller</h1>
 <div class="content_item">
@@ -1862,6 +1878,74 @@
 <a href="#Post_Model">Model: Post_Model</a><h2>get_list</h2>
 <a href="#Post_Model">Model: Post_Model</a><h2>complete</h2>
 <a href="#Post_Model">Model: Post_Model</a>
+</div>
+</div>
+<div id="ProjectManager_Controller" class="content_box">
+<h1>ProjectManager_Controller</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Методы:</p>
+<h2>open_version</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>version</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Нет</p>
+<p>Length:15</p>
+</div>
+</div>
+<h2>close_version</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>commit_description</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Text</p>
+<p>Required:
+								Нет</p>
+</div>
+</div>
+<h2>minify_js</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2"></div>
+<h2>build_all</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2"></div>
+<h2>create_symlinks</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2"></div>
+<h2>pull</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2"></div>
+<h2>push</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>commit_description</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Text</p>
+<p>Required:
+								Нет</p>
+</div>
+</div>
+<h2>zip_project</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2"></div>
+<h2>zip_db</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2"></div>
+<h2>get_version</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2"></div>
+<h2>apply_patch</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2"></div>
+<h2>apply_sql</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2"></div>
 </div>
 </div>
 <div id="Reminder_Controller" class="content_box">
@@ -2951,6 +3035,12 @@
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
+<h2>office_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
 <h2>office_descr</h2>
 <div>Type:Text</div>
 <div>Primary key:</div>
@@ -3959,6 +4049,12 @@
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
+<h2>linked_contracts</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
 </div>
 </div>
 <div id="ContractDialog_Model" class="content_box">
@@ -4291,6 +4387,12 @@
 <div>Precision:</div>
 <h2>contract_ext_id</h2>
 <div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>linked_contracts</h2>
+<div>Type:JSON</div>
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>
@@ -7723,6 +7825,24 @@
 <div>Precision:</div>
 <h2>full_name</h2>
 <div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="LinkedContractList_Model" class="content_box">
+<h1>LinkedContractList_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>contracts_ref</h2>
+<div>Type:JSON</div>
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>

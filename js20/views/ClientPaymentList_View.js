@@ -18,12 +18,7 @@ function ClientPaymentList_View(id,options){
 	
 	var model = (options.models && options.models.ClientPaymentList_Model)? options.models.ClientPaymentList_Model : new ClientPaymentList_Model();
 	var contr = new ClientPayment_Controller();
-	
-	var constants = {"doc_per_page_count":null};
-	window.getApp().getConstantManager().get(constants);
-	
-	var pagClass = window.getApp().getPaginationClass();
-	
+		
 	var popup_menu = new PopUpMenu();
 	
 	var period_ctrl = new EditPeriodDate(id+":filter-ctrl-period",{
@@ -55,7 +50,14 @@ function ClientPaymentList_View(id,options){
 	
 	var grid_columns;
 	
+	var pagination;
+	
 	if (!options.detail){
+		var constants = {"doc_per_page_count":null};
+		window.getApp().getConstantManager().get(constants);
+		var pagClass = window.getApp().getPaginationClass();
+		pagination = new pagClass(id+"_page",{"countPerPage":constants.doc_per_page_count.getValue()});	
+		
 		filters.client = {
 			"binding":new CommandBinding({
 				"control":new ClientEditRef(id+":filter-ctrl-client",{"labelCaption":"Заявитель:"}),
@@ -138,9 +140,7 @@ function ClientPaymentList_View(id,options){
 				})
 			]
 		}),
-		"pagination":new pagClass(id+"_page",
-			{"countPerPage":constants.doc_per_page_count.getValue()}),		
-		
+		"pagination":pagination,				
 		"autoRefresh":false,
 		"refreshInterval":0,
 		"rowSelect":false,

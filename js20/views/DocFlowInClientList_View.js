@@ -74,7 +74,12 @@ function DocFlowInClientList_View(id,options){
 			"columns":[
 				new GridColumnDate({
 					"field":model.getField("date_time"),
-					"dateFormat":"d/m/Y H:i"
+					"dateFormat":"d/m/Y H:i",
+					"ctrlClass":EditDate,
+					"searchOptions":{
+						"field":new FieldDate("date_time"),
+						"searchType":"on_beg"
+					}
 				})
 			],
 			"sortable":true,
@@ -103,7 +108,12 @@ function DocFlowInClientList_View(id,options){
 			"columns":[
 				new GridColumnDateTime({
 					"field":model.getField("viewed_dt"),
-					"dateFormat":"d/m/Y H:i"
+					"dateFormat":"d/m/Y H:i",
+					"ctrlClass":EditDate,
+					"searchOptions":{
+						"field":new FieldDate("viewed_dt"),
+						"searchType":"on_beg"
+					}
 				})
 			]
 		})		

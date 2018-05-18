@@ -169,17 +169,6 @@ function ContractDialog_View(id,options){
 			//таблица оплаты
 			this.addElement(new ClientPaymentList_View(id+":client_payment_list",{
 				"detail":true
-				/*
-				"autoRefresh":true,
-				"filters":[
-					{"field":"contract_id",
-					"sign":"e",
-					"val":options.model.getFieldValue("id")
-					}					
-				],
-				"client_id":options.model.getFieldValue("clients_ref").getKey("id"),
-				"contract_id":options.model.getFieldValue("id")
-				*/
 			}));			
 			
 		}
@@ -306,6 +295,7 @@ function ContractDialog_View(id,options){
 			"labelCaption":"Дата заключения:",
 			"enabled":options.templateOptions.notExpert
 		}));	
+		//ApplicationRegNumber
 		this.addElement(new ApplicationRegNumber(id+":reg_number",{			
 			"labelCaption":"Регистрационный номер:",
 			"editContClassName":editContClassName,
@@ -384,6 +374,12 @@ function ContractDialog_View(id,options){
 				"val":app_key
 			}]
 		}));
+		
+		//********* linked contracts grid ***********************
+		this.addElement(new LinkedContractListGrid(id+":linked_contracts",{
+			"enabled":(role=="expert")
+		}));		
+		
 	};
 		
 	ContractDialog_View.superclass.constructor.call(this,id,options);
@@ -409,11 +405,13 @@ function ContractDialog_View(id,options){
 		,new DataBinding({"control":this.getElement("cost_eval_validity_simult")})
 		,new DataBinding({"control":this.getElement("expertise_result"),"field":this.m_model.getField("expertise_result")})
 		,new DataBinding({"control":this.getElement("expertise_result_date")})
+		,new DataBinding({"control":this.getElement("reg_number")})
 		,new DataBinding({"control":this.getElement("expertise_reject_types_ref")})		
 		,new DataBinding({"control":this.getElement("expertise_day_count")})
 		,new DataBinding({"control":this.getElement("work_start_date")})
 		,new DataBinding({"control":this.getElement("work_end_date")})
 		,new DataBinding({"control":this.getElement("constr_address")})
+		,new DataBinding({"control":this.getElement("linked_contracts")})
 		
 	];
 	
@@ -459,6 +457,7 @@ function ContractDialog_View(id,options){
 			,new CommandBinding({"control":this.getElement("expertise_result_date")})
 			,new CommandBinding({"control":this.getElement("expertise_reject_types_ref"),"fieldId":"expertise_reject_type_id"})
 			,new CommandBinding({"control":this.getElement("expertise_day_count")})
+			,new CommandBinding({"control":this.getElement("reg_number")})
 			,new CommandBinding({"control":this.getElement("contract_date")})
 			,new CommandBinding({"control":this.getElement("contract_return_date")})
 			,new CommandBinding({"control":this.getElement("akt_number")})
@@ -466,6 +465,7 @@ function ContractDialog_View(id,options){
 			,new CommandBinding({"control":this.getElement("contract_number")})
 			,new CommandBinding({"control":this.getElement("work_start_date")})
 			,new CommandBinding({"control":this.getElement("work_end_date")})
+			,new CommandBinding({"control":this.getElement("linked_contracts"),"fieldId":"linked_contracts"})
 		];
 	}
 	else{

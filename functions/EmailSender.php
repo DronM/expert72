@@ -87,7 +87,7 @@ class EmailSender {
 					$mail->SMTPDebug 		= FALSE;
 					$mail->CharSet			='UTF-8';				
 					$mail->Host  			= $smtpHost;
-					$mail->Port				= $smtpPort;
+					$mail->Port			= $smtpPort;
 					$mail->SMTPAuth			= TRUE;
 					$mail->AuthType			= 'LOGIN';
 					$mail->Username			= $smtpUser;

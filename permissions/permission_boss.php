@@ -714,6 +714,40 @@ $permissions = array();
 				
 					$permissions['Order1CList_Controller_get_object']=TRUE;
 				
+					$permissions['ProjectManager_Controller_open_version']=TRUE;
+				
+					$permissions['ProjectManager_Controller_close_version']=TRUE;
+				
+					$permissions['ProjectManager_Controller_minify_js']=TRUE;
+				
+					$permissions['ProjectManager_Controller_build_all']=TRUE;
+				
+					$permissions['ProjectManager_Controller_create_symlinks']=TRUE;
+				
+					$permissions['ProjectManager_Controller_pull']=TRUE;
+				
+					$permissions['ProjectManager_Controller_push']=TRUE;
+				
+					$permissions['ProjectManager_Controller_zip_project']=TRUE;
+				
+					$permissions['ProjectManager_Controller_zip_db']=TRUE;
+				
+					$permissions['ProjectManager_Controller_get_version']=TRUE;
+				
+					$permissions['ProjectManager_Controller_apply_patch']=TRUE;
+				
+					$permissions['ProjectManager_Controller_apply_sql']=TRUE;
+				
+					$permissions['LinkedContractList_Controller_insert']=TRUE;
+				
+					$permissions['LinkedContractList_Controller_update']=TRUE;
+				
+					$permissions['LinkedContractList_Controller_delete']=TRUE;
+				
+					$permissions['LinkedContractList_Controller_get_list']=TRUE;
+				
+					$permissions['LinkedContractList_Controller_get_object']=TRUE;
+				
 return array_key_exists($contrId.'_'.$methId,$permissions);
 }
 ?>

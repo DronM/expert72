@@ -94,7 +94,12 @@ function DocFlowApprovementList_View(id,options){
 			"columns":[
 				new GridColumnDate({
 					"field":model.getField("date_time"),
-					"dateFormat":"d/m/Y H:i"
+					"dateFormat":"d/m/Y H:i",
+					"ctrlClass":EditDate,
+					"searchOptions":{
+						"field":new FieldDate("date_time"),
+						"searchType":"on_beg"
+					}
 				})
 			],
 			"sortable":true,
@@ -128,7 +133,12 @@ function DocFlowApprovementList_View(id,options){
 			"value":"Срок",
 			"columns":[
 				new GridColumnDateTime({
-					"field":model.getField("end_date_time")
+					"field":model.getField("end_date_time"),
+					"ctrlClass":EditDate,
+					"searchOptions":{
+						"field":new FieldDate("end_date_time"),
+						"searchType":"on_beg"
+					}
 				})
 			],
 			"sortable":true

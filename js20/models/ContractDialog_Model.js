@@ -353,6 +353,14 @@ function ContractDialog_Model(options){
 	filed_options.autoInc = false;	
 	
 	options.fields.invoice_date = new FieldDate("invoice_date",filed_options);
+		
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.linked_contracts = new FieldJSON("linked_contracts",filed_options);
 	
 			
 			
@@ -632,6 +640,7 @@ function ContractDialog_Model(options){
 	
 	options.fields.audit = new FieldBool("audit",filed_options);
 	
+			
 			
 		ContractDialog_Model.superclass.constructor.call(this,id,options);
 }

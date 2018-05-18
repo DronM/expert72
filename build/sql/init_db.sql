@@ -126,3 +126,61 @@ where users.tmp_inn IS NOT NULL AND users.id IN (
 ) AS sub
 WHERE id=sub.application_id
 
+
+SELECT setval('contracts_id_seq', 1);
+SELECT setval('applications_id_seq', 1);
+-- Trigger: contacts_before_trigger on public.contacts
+
+ DROP TRIGGER contacts_before_trigger ON public.contacts;
+
+CREATE TRIGGER contacts_before_trigger
+  BEFORE INSERT
+  ON public.contacts
+  FOR EACH ROW
+  EXECUTE PROCEDURE public.contacts_process();
+
+
+--"{"id":"LinkedContractList_Model","rows":[{"fields":{"id":1,"contracts_ref":{"keys":{"id":2},"descr":"Контракт №0001/15 от 12/01/15"}}}]}"
+UPDATE contracts
+SET linked_contracts=sel.linked_contracts
+FROM
+(SELECT
+	contr1.id,
+	json_build_object(
+	'id',
+	'LinkedContractList_Model',
+	'rows',
+	array_agg(
+		json_build_object(
+			'fields',
+			json_build_object(
+				'id',
+				contr1.rank,
+				'contracts_ref',
+				contracts_ref(contr2)
+			)
+		)
+	)
+	) AS linked_contracts
+	/*,
+	contr1.expertise_result_number,
+	contr1.document_type
+	*/
+FROM (
+	SELECT
+		*,
+		rank() over (PARTITION BY id ORDER BY expertise_result_number) AS rank
+	FROM (
+	select
+		id,	
+		jsonb_array_elements(linked_contracts2)->>'number' AS expertise_result_number,
+		(jsonb_array_elements(linked_contracts2)->>'document_type')::document_types AS document_type
+	from contracts
+	where linked_contracts2 is not null-- limit 10
+	) AS sub
+
+) AS contr1
+LEFT JOIN contracts AS contr2 ON contr2.expertise_result_number=contr1.expertise_result_number AND contr2.document_type=contr1.document_type
+GROUP BY contr1.id
+) AS sel
+WHERE sel.id=contracts.id 

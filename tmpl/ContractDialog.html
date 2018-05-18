@@ -46,6 +46,12 @@
 			{{#modifPrimaryContractExists}}
 			<div id="{{id}}:modif_primary_contracts_ref"/>
 			{{/modifPrimaryContractExists}}
+			
+			<div class="panel">
+				<h4>Связанные контракты</h4>
+				<div id="{{id}}:linked_contracts"/>
+			</div>
+			
 			<div class="row">
 				<div class="{{bsCol}}3">
 					<div id="{{id}}:expertise_day_count"/>
@@ -56,7 +62,7 @@
 				<div class="{{bsCol}}3">
 					<div id="{{id}}:work_end_date"/>
 				</div>				
-			</div>									
+			</div>
 		</div>
 		{{#notExpert}}
 		<div class="tab-pane fade in" id="contract-data">

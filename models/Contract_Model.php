@@ -15,6 +15,7 @@ require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLEnum.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLDate.php');
 require_once(FRAME_WORK_PATH.'basic_classes/ModelOrderSQL.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLDateTimeTZ.php');
+require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLJSON.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLJSONB.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLArray.php');
  
@@ -356,6 +357,14 @@ class Contract_Model extends ModelSQL{
 				
 		$f_invoice_date=new FieldSQLDate($this->getDbLink(),$this->getDbName(),$this->getTableName(),"invoice_date",$f_opts);
 		$this->addField($f_invoice_date);
+		//********************
+		
+		//*** Field linked_contracts ***
+		$f_opts = array();
+		$f_opts['id']="linked_contracts";
+				
+		$f_linked_contracts=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"linked_contracts",$f_opts);
+		$this->addField($f_linked_contracts);
 		//********************
 	
 		$order = new ModelOrderSQL();		

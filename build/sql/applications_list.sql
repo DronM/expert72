@@ -1,6 +1,6 @@
 -- VIEW: applications_list
 
---DROP VIEW applications_list;
+DROP VIEW applications_list;
 
 CREATE OR REPLACE VIEW applications_list AS
 	SELECT
@@ -22,6 +22,7 @@ CREATE OR REPLACE VIEW applications_list AS
 		
 		l.filled_percent,
 		off.address AS office_descr,
+		l.office_id,
 		
 		--'Заявление №'||l.id||' от '||to_char(l.create_dt,'DD/MM/YY') AS select_descr,
 		applications_ref(l)->>'descr' AS select_descr,

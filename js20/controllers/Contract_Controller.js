@@ -293,6 +293,12 @@ extend(Contract_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	
+	var field = new FieldJSON("linked_contracts",options);
+	
+	pm.addField(field);
+	
 	pm.addField(new FieldInt("ret_id",{}));
 	
 	
@@ -551,6 +557,12 @@ extend(Contract_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	
+	var field = new FieldJSON("linked_contracts",options);
+	
+	pm.addField(field);
+	
 	
 }
 
@@ -708,6 +720,9 @@ extend(Contract_Controller,ControllerObjServer);
 	var f_opts = {};
 	
 	pm.addField(new FieldDate("invoice_date",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldJSON("linked_contracts",f_opts));
 	pm.getField(this.PARAM_ORD_FIELDS).setValue("date_time");
 	
 }

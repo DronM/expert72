@@ -1195,6 +1195,7 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/DocFlowApprovementTemplateList_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ClientPaymentList_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/NewOrder_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ProjectManager_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'tmpl/App.templates.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/App.enums.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/App.predefinedItems.js'));
@@ -1270,6 +1271,7 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Doc1c.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Doc1cOrder.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Doc1cAkt.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/LinkedContractListGrid.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/Enum_role_types.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/rs_ru.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/rs_common_ru.js'));
@@ -1510,6 +1512,9 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ClientPaymentList_Model.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/Order1CList_Controller.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/Order1CList_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/ProjectManager_Controller.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/LinkedContractList_Controller.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/LinkedContractList_Model.js'));
 	
 			if (isset($_SESSION['scriptId'])){
 				$script_id = $_SESSION['scriptId'];

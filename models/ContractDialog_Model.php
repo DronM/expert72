@@ -359,6 +359,14 @@ class ContractDialog_Model extends ModelSQL{
 		$this->addField($f_invoice_date);
 		//********************
 		
+		//*** Field linked_contracts ***
+		$f_opts = array();
+		$f_opts['id']="linked_contracts";
+				
+		$f_linked_contracts=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"linked_contracts",$f_opts);
+		$this->addField($f_linked_contracts);
+		//********************
+		
 		//*** Field applications_ref ***
 		$f_opts = array();
 		$f_opts['id']="applications_ref";

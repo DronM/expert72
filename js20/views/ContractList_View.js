@@ -102,7 +102,12 @@ ContractList_View.prototype.addGrid = function(options){
 				"value":"Услуга",
 				"columns":[
 					new EnumGridColumn_document_types({
-						"field":model.getField("document_type")
+						"field":model.getField("document_type"),
+						"ctrlClass":Enum_document_types,
+						"searchOptions":{
+							"searchType":"on_match",
+							"typeChange":false
+						}
 					})
 				]
 			})
@@ -121,7 +126,14 @@ ContractList_View.prototype.addGrid = function(options){
 		new GridCellHead(id+":grid:head:date_time",{
 			"value":"Дата",
 			"columns":[
-				new GridColumnDate({"field":model.getField("date_time")})
+				new GridColumnDate({
+					"field":model.getField("date_time"),
+					"ctrlClass":EditDate,
+					"searchOptions":{
+						"field":new FieldDate("date_time"),
+						"searchType":"on_beg"
+					}
+				})
 			],
 			"sortable":true,
 			"sort":"desc"
@@ -140,7 +152,10 @@ ContractList_View.prototype.addGrid = function(options){
 		new GridCellHead(id+":grid:head:contract_date",{
 			"value":"Дата контракта",
 			"columns":[
-				new GridColumnDate({"field":model.getField("contract_date")})
+				new GridColumnDate({
+					"field":model.getField("contract_date"),
+					"ctrlClass":EditDate
+				})
 			]
 		})
 	);
@@ -149,7 +164,13 @@ ContractList_View.prototype.addGrid = function(options){
 			"value":"Заявитель",
 			"columns":[
 				new GridColumn({
-					"field":model.getField("client_descr")
+					"field":model.getField("client_descr"),
+					"ctrlClass":ClientEditRef,
+					"searchOptions":{
+						"field":new FieldInt("client_id"),
+						"searchType":"on_match",
+						"typeChange":false
+					}
 				})
 			],
 			"sortable":true
@@ -170,7 +191,13 @@ ContractList_View.prototype.addGrid = function(options){
 			"value":"Эксперт",
 			"columns":[
 				new GridColumn({
-					"field":model.getField("main_expert_descr")
+					"field":model.getField("main_expert_descr"),
+					"ctrlClass":EmployeeEditRef,
+					"searchOptions":{
+						"field":new FieldInt("main_expert_id"),
+						"searchType":"on_match",
+						"typeChange":false
+					}
 				})
 			],
 			"sortable":true

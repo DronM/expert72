@@ -83,7 +83,14 @@ function ApplicationList_View(id,options){
 		new GridCellHead(id+":grid:head:create_dt",{
 			"value":this.COL_CAP_create_dt,
 			"columns":[
-				new GridColumnDate({"field":model.getField("create_dt")})
+				new GridColumnDate({
+					"field":model.getField("create_dt"),
+					"ctrlClass":EditDate,
+					"searchOptions":{
+						"field":new FieldDate("create_dt"),
+						"searchType":"on_beg"
+					}
+				})
 			],
 			"sortable":true,
 			"sort":"desc"
@@ -116,6 +123,14 @@ function ApplicationList_View(id,options){
 			"columns":[
 				new EnumGridColumn_application_states({									
 					"field":model.getField("application_state"),
+					"ctrlClass":Enum_application_states,
+					"ctrlOptions":{
+						"labelCaption":this.FLT_CAP_application_state
+					},
+					"searchOptions":{
+						"searchType":"on_match",
+						"typeChange":false
+					},
 					"formatFunction":function(fields){
 						var val = fields.application_state.getValue();
 						var res = this.getAssocValueList()[val];
@@ -146,7 +161,13 @@ function ApplicationList_View(id,options){
 			"value":this.COL_CAP_office,
 			"columns":[
 				new GridColumn({
-					"field":model.getField("office_descr")
+					"field":model.getField("office_descr"),
+					"ctrlClass":OfficeSelect,
+					"searchOptions":{
+						"field":new FieldInt("office_id"),
+						"searchType":"on_match",
+						"typeChange":false
+					}
 				})
 			],
 			"sortable":true

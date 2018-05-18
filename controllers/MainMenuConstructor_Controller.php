@@ -178,7 +178,7 @@ class MainMenuConstructor_Controller extends ControllerSQL{
 		//throw new Exception("SELECT ".$sql);
 		$ar = $this->getDbLink()->query_first("SELECT ".$sql);
 		foreach($ar as $f=>$v){
-			list($view_t, $view_id) = split('_',$f);
+			list($view_t, $view_id) = explode('_',$f);
 			$content = str_replace(sprintf('viewid="%s"',$view_id),$v,$content);
 			$content = str_replace(sprintf('viewid ="%s"',$view_id),$v,$content);
 			$content = str_replace(sprintf('viewid= "%s"',$view_id),$v,$content);
