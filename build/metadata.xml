@@ -2,7 +2,7 @@
 <metadata owner="expert72">
 	<versions>
 		<version dateOpen="2017-09-27 12:09:48" dateClose="2017-12-08 10:12:08">1.001 
-		<lastBuild>2018-05-18 09:56:41</lastBuild></version>
+		<lastBuild>2018-05-21 06:34:46</lastBuild></version>
 		<version dateOpen="2017-12-08 11:12:01" dateClose="2017-12-08 11:12:04">1.002</version>
 		<version dateOpen="2017-12-08 11:12:20" dateClose="2017-12-08 11:12:20">1.0.3</version>
 		<version dateOpen="2017-12-12 11:12:07" dateClose="2017-12-12 11:12:07">1.0.4</version>
@@ -32,6 +32,7 @@
 		<version dateOpen="2018-05-14 12:05:45" dateClose="2018-05-14 12:05:46">1.0.28</version>
 		<version dateOpen="2018-05-14 16:05:32" dateClose="2018-05-14 16:05:33">1.0.29</version>
 		<version dateOpen="2018-05-14 16:05:57" dateClose="2018-05-18 09:05:56">1.0.30</version>
+		<version dateOpen="2018-05-19 08:05:45" dateClose="2018-05-21 06:05:34">1.0.31</version>
 	</versions>
 	<globalFilters>
 		<field id="user_id"/>
@@ -774,7 +775,7 @@
 			<field id="name" dataType="String" length="200"/>
 			<field id="technical_features" dataType="JSONB"/>
 		</model>
-		<model id="Application" parent="ModelSQL" dataTable="applications" virtual="FALSE">
+		<model id="Application" parent="ModelSQL" dataTable="applications" virtual="FALSE" refFunction="applications_ref">
 			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE" required="FALSE"/>
 			<field id="user_id" dataType="Int" refTable="users" refField="id"/>
 			<field id="create_dt" dataType="DateTimeTZ" defaultValue="CURRENT_TIMESTAMP"/>
@@ -1899,7 +1900,7 @@
 			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE"/>
 			<field id="name" dataType="String"/>
 		</model>
-		<model id="Contract" parent="ModelSQL" dataTable="contracts" virtual="FALSE">
+		<model id="Contract" parent="ModelSQL" dataTable="contracts" virtual="FALSE" refFunction="contracts_ref">
 			<defaultOrder>
 				<field id="date_time" sortDirect="DESC"/>
 			</defaultOrder>

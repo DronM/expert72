@@ -115,10 +115,11 @@
 		$struc->Вставить('ref',$contract_ref);
 		$struc->Вставить('name',$params['contract_name']);
 		$struc->Вставить('number',$params['contract_number']);
-		$struc->Вставить('date',dateISO_to_date1c($params['contract_date']));		
+		$struc->Вставить('date',dateISO_to_date1c($params['contract_date']));
+		$struc->Вставить('contract_type',$params['contract_type']);				
 	}
 
-	function params_struc($v8,&$struc){
+	function params_struc($v8,&$params,&$struc){
 		$struc = $v8->NewObject('Структура');
 		$struc->Вставить('ДатаДокумента',date('YmdHis'));
 		$struc->Вставить('Руководитель',$v8->Справочники->Сотрудники->НайтиПоНаименованию(CONST_1C_RUK));
@@ -129,7 +130,11 @@
 		$struc->Вставить('КОСГУ', CONST_1C_KPS_CODE);
 		$struc->Вставить('НазначениеПлатежа', CONST_1C_PAY_COMMENT);
 		$struc->Вставить('КФО', $v8->Перечисления->КВД->Внебюджет);
-		$struc->Вставить('Комментарий', CONST_1C_DOC_COMMENT);								
+		$struc->Вставить('Комментарий', CONST_1C_DOC_COMMENT);
+		$struc->Вставить('item_1c_descr', $params['item_1c_descr']);
+		$struc->Вставить('item_1c_descr_full', $params['item_1c_descr_full']);
+		$struc->Вставить('item_1c_doc_descr', $params['item_1c_doc_descr']);
+		$struc->Вставить('document_type', $params['document_type']);		
 	}
 	
 	function float1c_to_float($float1c){

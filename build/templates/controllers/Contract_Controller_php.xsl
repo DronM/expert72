@@ -148,10 +148,24 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 	private function get_data_for_1c($contractId){
 		return $this->getDbLink()->query_first(sprintf(
 		"SELECT
-			contracts_descr1c(contr) AS contract_name,
+			'Контракт от '||to_char(contr.date_time,'DD.MM.YYYY')||' № '||contr.expertise_result_number AS contract_name,
+			'Контракт' AS contract_type,
 			contr.contract_ext_id,
 			contr.contract_number,
 			contr.contract_date,
+			'Работы по контракту' AS item_1c_descr,
+			'Работы по контракту' AS item_1c_descr_full,
+			CASE
+				WHEN contr.document_type='pd' THEN 'Проведение госудаственной экспертизы проектной документации'
+				WHEN contr.document_type='eng_survey' THEN 'Проведение проверки достоверности определения сметной стоимости'
+				WHEN contr.document_type='modification' THEN 'Проведение модификации'
+				WHEN contr.document_type='audit' THEN 'Проведение аудита'
+				ELSE ''
+			END||' объекта капитального строительства '||app.constr_name||' согласно договора № '||contr.contract_number||
+			' от '||to_char(contr.date_time,'DD.MM.YYYY')
+			--kladr_parse_addr(d.constr_address)
+			AS item_1c_doc_descr,
+			
 			cl.ext_id AS client_ext_id,
 			cl.name AS client_name,
 			cl.name_full AS client_name_full,
@@ -165,6 +179,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			bank_accounts->'rows' AS client_bank_accounts,
 			CASE WHEN contr.expertise_type IS NOT NULL THEN contr.expertise_type::text ELSE contr.document_type::text END AS service_descr
 		FROM contracts AS contr
+		LEFT JOIN applications AS app ON app.id=contr.application_id		
 		LEFT JOIN clients AS cl ON cl.id=contr.client_id
 		WHERE contr.id=%d",
 		$contractId
@@ -196,6 +211,10 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		$params = $this->get_data_for_1c($this->getExtDbVal($pm,'id'));
 		$params['total'] = $this->getExtDbVal($pm,'total');
 		
+		if (!$params['client_inn'] || !$params['client_kpp']){
+			throw new Exception('Не задан ИНН или КПП для контрагента');
+		}
+		
 		$res = [];
 		ExtProg::make_order($params,$res);
 		
@@ -222,6 +241,10 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 	}
 	public function make_akt($pm){
 		$params = $this->get_data_for_1c($this->getExtDbVal($pm,'id'));
+		if (!$params['client_inn'] || !$params['client_kpp']){
+			throw new Exception('Не задан ИНН или КПП для контрагента');
+		}
+		
 		$res = [];
 		ExtProg::make_akt($params,$res);
 		
@@ -314,22 +337,27 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 	
 	public function get_order_list($pm){
 		$params = $this->get_data_for_1c($this->getExtDbVal($pm,'id'));
-		$res = [];
-		ExtProg::get_order_list($params,$res);
-		
-		if (!$params['contract_ext_id'] &amp;&amp; $res['contract_ext_id']){
-			$this->set_contract_ext_id($this->getExtDbVal($pm,'id'), $res['contract_ext_id']);
+		if (!$params['client_inn'] || !$params['client_kpp']){
+			$field_val = NULL;
 		}
+		else{
+			$res = [];
+			ExtProg::get_order_list($params,$res);
+		
+			if (!$params['contract_ext_id'] &amp;&amp; $res['contract_ext_id']){
+				$this->set_contract_ext_id($this->getExtDbVal($pm,'id'), $res['contract_ext_id']);
+			}
 
-		if (!$params['client_ext_id'] &amp;&amp; $res['client_ext_id']){
-			$this->set_client_ext_id($this->getExtDbVal($pm,'id'), $res['client_ext_id']);
-		}
-		
+			if (!$params['client_ext_id'] &amp;&amp; $res['client_ext_id']){
+				$this->set_client_ext_id($this->getExtDbVal($pm,'id'), $res['client_ext_id']);
+			}
+			$field_val = json_encode($res['orders']);
+		}		
 		$this->addModel(new ModelVars(
 			array('name'=>'Vars',
 				'id'=>'OrderList_Model',
 				'values'=>array(
-					new Field('list',DT_STRING,array('value'=>json_encode($res['orders'])))
+					new Field('list',DT_STRING,array('value'=>$field_val))
 				)
 			)
 		));		

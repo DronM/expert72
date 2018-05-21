@@ -95,15 +95,17 @@ Doc1cOrder.prototype.updateList = function(contractId){
 				var ctrl_list = self.getElement("docList");
 				ctrl_list.clear();
 				var list = m.getFieldValue("list");
-				for(var i=0;i<list.length;i++){					
-					ctrl_list.addElement(
-						self.createDocElement(
-							list[i].ext_id,
-							list[i].number,
-							DateHelper.strtotime(list[i].date),
-							parseFloat(list[i].total)
-						)
-					);
+				if (list){
+					for(var i=0;i<list.length;i++){					
+						ctrl_list.addElement(
+							self.createDocElement(
+								list[i].ext_id,
+								list[i].number,
+								DateHelper.strtotime(list[i].date),
+								parseFloat(list[i].total)
+							)
+						);
+					}
 				}
 				ctrl_list.toDOM(self.getNode());
 			}

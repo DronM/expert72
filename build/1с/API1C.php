@@ -141,11 +141,11 @@
 			contract1c_struc_from_params($v8,$params,$struc_contract);
 			
 			$struc_params = NULL;			
-			params_struc($v8,$params,$struc_contract);
+			params_struc($v8,$params,$struc_params);
 			
 			$obr = get_ext_obr($v8);
 			$invoice_ref = NULL;
-			$akt_ref = $obr->СоздатьАкт($struc_client,$struc_contract,$struc_params,$params['document_type'],floatval($params['total']),$invoice_ref);
+			$akt_ref = $obr->СоздатьАкт($struc_client,$struc_contract,$struc_params,floatval($params['total']),$invoice_ref);
 			if ($akt_ref->Пустая()){
 				throw new Exception(ER_MAKE_AKT);
 			}
@@ -187,10 +187,10 @@
 			contract1c_struc_from_params($v8,$params,$struc_contract);
 
 			$struc_params = NULL;			
-			params_struc($v8,$params,$struc_contract);
+			params_struc($v8,$params,$struc_params);
 			
 			$obr = get_ext_obr($v8);
-			$order_ref = $obr->СоздатьСчет($struc_client,$struc_contract,$params['document_type'],floatval($params['total']),$struc_params);
+			$order_ref = $obr->СоздатьСчет($struc_client,$struc_contract,floatval($params['total']),$struc_params);
 			
 			$xml_body = sprintf(
 				'<order_ext_id>%s</akt_order_id>

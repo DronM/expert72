@@ -129,6 +129,7 @@ WHERE id=sub.application_id
 
 SELECT setval('contracts_id_seq', 1);
 SELECT setval('applications_id_seq', 1);
+SELECT setval('client_payments_id_seq', 1);
 -- Trigger: contacts_before_trigger on public.contacts
 
  DROP TRIGGER contacts_before_trigger ON public.contacts;
@@ -184,3 +185,9 @@ LEFT JOIN contracts AS contr2 ON contr2.expertise_result_number=contr1.expertise
 GROUP BY contr1.id
 ) AS sel
 WHERE sel.id=contracts.id 
+
+
+
+update contracts
+set linked_contracts='{"id":"LinkedContractList_Model","rows":[]}'
+where linked_contracts is null
