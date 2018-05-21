@@ -41,6 +41,7 @@ function Contract_Controller(options){
 	this.add_print_akt();
 	this.add_print_invoice();
 	this.add_make_akt();
+	this.add_get_ext_data();
 		
 }
 extend(Contract_Controller,ControllerObjServer);
@@ -936,6 +937,23 @@ extend(Contract_Controller,ControllerObjServer);
 	var opts = {"controller":this};
 	
 	var pm = new PublicMethodServer('make_akt',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("id",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			Contract_Controller.prototype.add_get_ext_data = function(){
+	var opts = {"controller":this};
+	
+	var pm = new PublicMethodServer('get_ext_data',opts);
 	
 				
 	

@@ -562,6 +562,18 @@ class Contract_Controller extends ControllerSQL{
 			
 		$this->addPublicMethod($pm);
 
+			
+		$pm = new PublicMethod('get_ext_data');
+		
+				
+	$opts=array();
+	
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtInt('id',$opts));
+	
+			
+		$this->addPublicMethod($pm);
+
 		
 	}	
 	
@@ -679,7 +691,7 @@ class Contract_Controller extends ControllerSQL{
 	private function get_data_for_1c($contractId){
 		return $this->getDbLink()->query_first(sprintf(
 		"SELECT
-			'Контракт от '||to_char(contr.date_time,'DD.MM.YYYY')||' № '||contr.expertise_result_number AS contract_name,
+			'Контракт от '||to_char(contr.date_time,'DD.MM.YYYY')||' № '||contr.contract_number AS contract_name,
 			'Контракт' AS contract_type,
 			contr.contract_ext_id,
 			contr.contract_number,
@@ -688,7 +700,8 @@ class Contract_Controller extends ControllerSQL{
 			'Работы по контракту' AS item_1c_descr_full,
 			CASE
 				WHEN contr.document_type='pd' THEN 'Проведение госудаственной экспертизы проектной документации'
-				WHEN contr.document_type='eng_survey' THEN 'Проведение проверки достоверности определения сметной стоимости'
+				WHEN contr.document_type='eng_survey' THEN 'Проведение госудаственной экспертизы результатов инженерных изысканий'
+				WHEN contr.document_type='cost_eval_validity' THEN 'Проведение проверки достоверности определения сметной стоимости'
 				WHEN contr.document_type='modification' THEN 'Проведение модификации'
 				WHEN contr.document_type='audit' THEN 'Проведение аудита'
 				ELSE ''
@@ -745,6 +758,9 @@ class Contract_Controller extends ControllerSQL{
 		if (!$params['client_inn'] || !$params['client_kpp']){
 			throw new Exception('Не задан ИНН или КПП для контрагента');
 		}
+		if (!$params['contract_number'] || !$params['contract_date']){
+			throw new Exception('Не задан номер или дата контракта!');
+		}
 		
 		$res = [];
 		ExtProg::make_order($params,$res);
@@ -768,12 +784,15 @@ class Contract_Controller extends ControllerSQL{
 				)
 			)
 		));
-		//ExtProg::print_order($res['doc_ext_id'],FALSE,array('name'=>'Счет№'.$res['doc_number'],'disposition'=>'inline'));
+		//ExtProg::print_order($res['doc_ext_id'],FALSE,array('name'=>'Счет№'.$res['doc_number'].'.pdf','disposition'=>'inline'));
 	}
 	public function make_akt($pm){
 		$params = $this->get_data_for_1c($this->getExtDbVal($pm,'id'));
 		if (!$params['client_inn'] || !$params['client_kpp']){
 			throw new Exception('Не задан ИНН или КПП для контрагента');
+		}
+		if (!$params['contract_number'] || !$params['contract_date']){
+			throw new Exception('Не задан номер или дата контракта!');
 		}
 		
 		$res = [];
@@ -828,7 +847,7 @@ class Contract_Controller extends ControllerSQL{
 				)
 			)
 		));
-		//ExtProg::print_akt($res['doc_ext_id'],FALSE,array('name'=>'Акт№'.$res['doc_number'],'disposition'=>'inline'));
+		//ExtProg::print_akt($res['doc_ext_id'],FALSE,array('name'=>'Акт№'.$res['doc_number'].'.pdf','disposition'=>'inline'));
 	}
 	
 	public function print_akt($pm){
@@ -844,7 +863,7 @@ class Contract_Controller extends ControllerSQL{
 			header(HEADER_404);
 			
 		}
-		ExtProg::print_akt($ar['akt_ext_id'],FALSE,array('name'=>'Акт№'.$ar['akt_number'],'disposition'=>'inline'));
+		ExtProg::print_invoice($this->getExtVal($pm,'order_ext_id'),FALSE,array('name'=>'Акт№'.$ar['akt_number'].'.pdf','disposition'=>'inline'));
 	}
 	public function print_invoice($pm){
 		$ar = $this->getDbLinkMaster()->query_first(sprintf(
@@ -859,16 +878,19 @@ class Contract_Controller extends ControllerSQL{
 			header(HEADER_404);
 			
 		}
-		ExtProg::print_akt($ar['invoice_ext_id'],FALSE,array('name'=>'СчетФактура№'.$ar['invoice_number'],'disposition'=>'inline'));
+		ExtProg::print_invoice($this->getExtVal($pm,'order_ext_id'),FALSE,array('name'=>'СчетФактура№'.$ar['invoice_number'].'.pdf','disposition'=>'inline'));
+		return TRUE;
+		
 	}
 	
 	public function print_order($pm){
-		ExtProg::print_order($this->getExtVal($pm,'order_ext_id'),FALSE,array('name'=>'Счет№'.$this->getExtVal($pm,'order_number'),'disposition'=>'inline'));
+		ExtProg::print_order($this->getExtVal($pm,'order_ext_id'),FALSE,array('name'=>'Счет№'.$this->getExtVal($pm,'order_number').'.pdf','disposition'=>'inline'));
+		return TRUE;
 	}
 	
 	public function get_order_list($pm){
 		$params = $this->get_data_for_1c($this->getExtDbVal($pm,'id'));
-		if (!$params['client_inn'] || !$params['client_kpp']){
+		if (!$params['contract_number'] || !$params['contract_date'] || !$params['client_inn'] || !$params['client_kpp']){
 			$field_val = NULL;
 		}
 		else{
@@ -894,6 +916,24 @@ class Contract_Controller extends ControllerSQL{
 		));		
 	}
 	
+	public function get_ext_data($pm){
+		$params = $this->get_data_for_1c($this->getExtDbVal($pm,'id'));
+		$this->addModel(new ModelVars(
+			array('name'=>'Vars',
+				'id'=>'ExtDoc_Model',
+				'values'=>array(
+					new Field('akt_ext_id',DT_STRING,array('value'=>$res['doc_ext_id'])),
+					new Field('akt_number',DT_STRING,array('value'=>$res['doc_number'])),
+					new Field('akt_date',DT_DATETIME,array('value'=>$res['doc_date'])),
+					new Field('akt_total',DT_FLOAT,array('value'=>$res['doc_total'])),
+					new Field('invoice_ext_id',DT_STRING,array('value'=>$res['invoice_ext_id'])),
+					new Field('invoice_number',DT_STRING,array('value'=>$res['invoice_number'])),
+					new Field('invoice_date',DT_DATETIME,array('value'=>$res['invoice_date']))
+				)
+			)
+		));
+		
+	}
 	
 
 }

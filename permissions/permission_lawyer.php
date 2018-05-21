@@ -634,6 +634,8 @@ $permissions = array();
 				
 					$permissions['Contract_Controller_make_akt']=TRUE;
 				
+					$permissions['Contract_Controller_get_ext_data']=TRUE;
+				
 					$permissions['ExpertiseRejectType_Controller_insert']=TRUE;
 				
 					$permissions['ExpertiseRejectType_Controller_update']=TRUE;

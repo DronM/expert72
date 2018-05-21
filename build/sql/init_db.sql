@@ -191,3 +191,18 @@ WHERE sel.id=contracts.id
 update contracts
 set linked_contracts='{"id":"LinkedContractList_Model","rows":[]}'
 where linked_contracts is null
+
+
+
+
+update contracts
+set contract_number=cor.corrected_contract_number
+FROM(
+select contract_number AS old_number,
+regexp_replace(contract_number,'\D+.*$','')||'/Д' AS corrected_contract_number
+FROM contracts
+where document_type='cost_eval_validity' AND substring(contract_number from length(contract_number)-1 FOR length(contract_number))<>'/Д'
+AND length(contract_number)<5
+ORDER BY date_time desc
+) AS cor
+WHERE cor.old_number=contract_number;

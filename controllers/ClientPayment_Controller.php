@@ -23,7 +23,7 @@ require_once(FRAME_WORK_PATH.'basic_classes/FieldExtXML.php');
 
 
 
-require_once('functions/ExtProg.php');
+require_once(ABSOLUTE_PATH.'functions/ExtProg.php');
 
 class ClientPayment_Controller extends ControllerSQL{
 	public function __construct($dbLinkMaster=NULL){
@@ -140,10 +140,13 @@ class ClientPayment_Controller extends ControllerSQL{
 		
 	}	
 	
+
+	//php /var/www/expert72/functions/regl_get_payments.php
+	
 	public function get_from_1c($pm){
 		$xml = NULL;
-		$from = $this->getExtVal('date_from')? $this->getExtVal('date_from') : mktime();
-		$to = $this->getExtVal('date_to')? $this->getExtVal('date_to') : mktime();
+		$from = $pm->getParamValue('date_from')? $this->getExtVal($pm,'date_from') : mktime();
+		$to = $pm->getParamValue('date_to')? $this->getExtVal($pm,'date_to') : mktime();
 		ExtProg::get_payments($from,$to,$xml);
 		
 		if ($xml && $xml->rec && $xml->rec->count()){
@@ -152,7 +155,7 @@ class ClientPayment_Controller extends ControllerSQL{
 				date('Y-m-d',$d_from),
 				date('Y-m-d',$d_to)
 			));
-			$q = 'INSERT INTO client_payments (contract_id, pay_date, total) VALUES %s';
+			$q = 'INSERT INTO client_payments (contract_id, pay_date, total) VALUES ';
 			/**
 			 * contract_ext_id
 			 * contract_name
@@ -161,15 +164,40 @@ class ClientPayment_Controller extends ControllerSQL{
 		 	 */
 		 	$q_ins = '';		
 			foreach($xml->rec as $payment){
-				$q_ins.= ($q_ins=='')? '':',';
-				$q_ins.= sprintf(
-					"(contracts_find('%s','%s','%s'),'%s',%f)",
+				$contract_id = $this->getDbLink()->query_first(sprintf(
+					"SELECT contracts_find('%s','%s','%s'::date) AS contract_id"),
 					(string)$payment->contract_ext_id,
 					(string)$payment->contract_number,
-					(string)$payment->contract_date,
-					(string)$payment->pay_date,
-					(float)$payment->total
+					(string)$payment->contract_date
 				);
+				if ($contract_id){
+					$q_ins.= ($q_ins=='')? '':',';
+					$q_ins.= sprintf(
+						"(%d,'%s',%f)",
+						$contract_id,
+						(string)$payment->pay_date,
+						(float)$payment->total
+					);
+				}
+				else{
+					$this->getDbLinkMaster()->query(sprintf(
+					"INSERT INTO mail_for_sending
+					(to_addr,to_name,body,subject,email_type)
+					SELECT
+						email,
+						name_full,
+						'При загрузке оплаты из 1с от %s на сумму %f, не смогли найти контракт %s от %s',
+						'Ошибка загрузки оплат',
+						'new_remind'::email_types
+					FROM users
+					WHERE id=4
+					",
+					date('d/m/Y',strtotime((string)$payment->pay_date)),
+					(float)$payment->total,
+					(string)$payment->contract_number,
+					date('d/m/Y',strtotime((string)$payment->contract_date))
+					));
+				}
 			}
 			$this->getDbLinkMaster()->query($q.$q_ins);
 		}

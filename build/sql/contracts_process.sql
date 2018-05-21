@@ -23,14 +23,6 @@ BEGIN
 			SELECT
 				coalesce(max(regexp_replace(ct.expertise_result_number,'\D+.*$','')::int),0)+1,
 				coalesce(max(regexp_replace(ct.contract_number,'\D+.*$','')::int),0)+1
-				/*
-				coalesce(max(
-					(CASE WHEN position('/' in ct.contract_number)>0 THEN
-						substring(ct.contract_number,1,position('/' in ct.contract_number)-1)
-						ELSE ct.contract_number
-					END)::int
-				),0)+1
-				*/
 			INTO NEW.expertise_result_number,NEW.contract_number
 			FROM contracts AS ct
 			WHERE

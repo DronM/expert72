@@ -131,7 +131,8 @@ class ExtProg{
 	
 	public static function get_order_list(&$params,&$res){
 		//debugg
-		$res['contrcat_ext_id'] = uniqid();
+		/*
+		$res['contract_ext_id'] = uniqid();
 		$res['client_ext_id'] = uniqid();
 		$res['orders'] = [];
 		array_push($res['orders'],array(
@@ -148,13 +149,13 @@ class ExtProg{
 		));		
 		
 		return;
-		
+		*/
 		$xml=null;
 		ExtProg::send_query('get_order_list',
 			array('params'=>serialize($params)),
 			$xml
 		);
-		$res['contrcat_ext_id'] = (string)$xml->contrcat_ext_id;
+		$res['contract_ext_id'] = (string)$xml->contract_ext_id;
 		$res['client_ext_id'] = (string)$xml->client_ext_id;
 		$res['orders'] = [];
 		foreach ($xml->rec as $rec){
@@ -168,6 +169,7 @@ class ExtProg{
 	}
 
 	public static function print_doc($cmd,$docId,$stamp=FALSE,$fileOpts=NULL){
+		/*
 		$contents = file_get_contents('/home/andrey/www/htdocs/expert72/uploads/0b97dcc2-30c3-4eb7-8680-211c0fe438ea');
 		$fileOpts['contentType'] = 'application/pdf';
 		ob_clean();//attachment
@@ -178,36 +180,37 @@ class ExtProg{
 		header("Cache-control: private");
 		echo $contents;
 		return;	
-		
+		*/
 		$xml=null;
-		return ExtProg::send_query($cmd,
+		ExtProg::send_query($cmd,
 			array('doc_ext_id'=>$docId,'stamp'=>($stamp? '1':'0')),
 			$xml,$fileOpts
 		);
 	}			
 	
 	public static function print_order($docId,$stamp=FALSE,$fileOpts=NULL){
-		return self::print_doc('print_order',$docId,$stamp,$fileOpts);
+		self::print_doc('print_order',$docId,$stamp,$fileOpts);
 	}			
 
 	/**
 	 */
 	public static function print_akt($docId,$stamp=FALSE,$fileOpts=NULL){
-		return self::print_doc('print_akt',$docId,$stamp,$fileOpts);
+		self::print_doc('print_akt',$docId,$stamp,$fileOpts);
 	}			
 
 	public static function print_invoice($docId,$stamp=FALSE,$fileOpts=NULL){
-		return self::print_doc('print_invoice',$docId,$stamp,$fileOpts);
+		self::print_doc('print_invoice',$docId,$stamp,$fileOpts);
 	}			
 	
 	public static function make_order(&$params,&$res){
+		/*
 		$res['contract_ext_id']	= uniqid();
 		$res['client_ext_id']	= uniqid();
 		$res['doc_ext_id']	= uniqid();
 		$res['doc_date']	= '2018-05-14';
 		$res['doc_number']	= '123456';	
 		return;
-		
+		*/
 		$xml=null;
 		ExtProg::send_query('make_order',
 			array('params'=>serialize($params)),
@@ -221,6 +224,7 @@ class ExtProg{
 	}
 	
 	public static function make_akt(&$params,&$res){
+		/*
 		$res['doc_ext_id']	= uniqid();
 		$res['doc_date']	= '2018-05-14';
 		$res['doc_number']	= '111222333';
@@ -230,6 +234,7 @@ class ExtProg{
 		$res['invoice_number']	= 'Inv-123';
 		$res['invoice_date']	= '2018-05-14';
 		return;
+		*/
 		$xml=null;
 		ExtProg::send_query('make_akt',
 			array('params'=>serialize($params)),

@@ -32,10 +32,12 @@ function NewOrder_View(id,options){
 				if (!contr_id){
 					throw Error("Контракт не задан!");
 				}
+				self.setEnabled(false);
 				self.getCommand("ok").getPublicMethod().setFieldValue("id", contr_id);
 				self.execCommand(
 					"ok",
 					function(resp){
+						self.setEnabled(true);
 						var m = new ModelXML("ExtDoc_Model",{
 							"fields":{
 								"doc_ext_id":new FieldString("doc_ext_id"),

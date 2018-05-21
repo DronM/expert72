@@ -17,6 +17,11 @@ function Doc1cAkt(id,options){
 	options.caption = "Новый акт";
 	
 	Doc1cAkt.superclass.constructor.call(this,id,options);
+	
+	if (options.contractId){
+		this.updateList(options.contractId);
+	}
+	
 }
 extend(Doc1cAkt,Doc1c);
 
@@ -24,30 +29,11 @@ Doc1cAkt.prototype.makeDoc = function(e){
 	var self = this;
 	var pm = (new Contract_Controller()).getPublicMethod("make_akt");
 	pm.setFieldValue("id",this.m_getContractId());
+	this.getElement("makeDoc").setEnabled(false);
 	pm.run({
 		"ok":function(resp){
-			var m = new ModelXML("ExtDoc_Model",{
-				"fields":{
-					"akt_ext_id":new FieldString("akt_ext_id"),
-					"akt_number":new FieldString("akt_number"),
-					"akt_date":new FieldDate("akt_date"),
-					"akt_total":new FieldFloat("akt_total"),
-					"invoice_ext_id":new FieldString("invoice_ext_id"),
-					"invoice_date":new FieldDate("invoice_date"),
-					"invoice_number":new FieldString("invoice_number")
-				},
-				"data":resp.getModelData("ExtDoc_Model")
-			});
-			if (m.getNextRow()){
-				window.showNote("Создан новый акт и счет-фактура: "+self.getDocDescr(
-					model.getFieldValue("akt_number"),
-					model.getFieldValue("akt_date"),
-					model.getFieldValue("akt_total"),
-					"Акт"
-				));
-			
-				self.update(m.getFields());	
-			}
+			self.getElement("makeDoc").setEnabled(true);
+			self.onGetResp(resp);
 		}
 	})
 }
@@ -90,3 +76,46 @@ Doc1cAkt.prototype.update = function(fields){
 	list.toDOM();
 }
 
+Doc1cAkt.prototype.updateList = function(contractId){
+	if (!contractId){
+		var ctrl_list = self.getElement("docList");
+		ctrl_list.clear();
+		ctrl_list.toDOM();
+		return;
+	}
+	
+	var pm = (new Contract_Controller()).getPublicMethod("get_ext_data");
+	pm.setFieldValue("id",contractId);
+	
+	var self = this;
+	pm.run({
+		"ok":function(resp){
+			self.onGetResp(resp);
+		}
+	});
+}
+
+Doc1cAkt.prototype.onGetResp = function(resp){
+	var m = new ModelXML("ExtDoc_Model",{
+		"fields":{
+			"akt_ext_id":new FieldString("akt_ext_id"),
+			"akt_number":new FieldString("akt_number"),
+			"akt_date":new FieldDate("akt_date"),
+			"akt_total":new FieldFloat("akt_total"),
+			"invoice_ext_id":new FieldString("invoice_ext_id"),
+			"invoice_date":new FieldDate("invoice_date"),
+			"invoice_number":new FieldString("invoice_number")
+		},
+		"data":resp.getModelData("ExtDoc_Model")
+	});
+	if (m.getNextRow()){
+		window.showNote("Создан новый акт и счет-фактура: "+this.getDocDescr(
+			model.getFieldValue("akt_number"),
+			model.getFieldValue("akt_date"),
+			model.getFieldValue("akt_total"),
+			"Акт"
+		));
+	
+		this.update(m.getFields());	
+	}
+}

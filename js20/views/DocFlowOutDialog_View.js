@@ -215,7 +215,8 @@ function DocFlowOutDialog_View(id,options){
 				"getContractId":function(){
 					return self.getElement("to_contracts_ref").getValue().getKey("id");
 				},
-				"visible":(model_exists && options.model.getFieldValue("to_contracts_ref"))				
+				"visible":(model_exists && options.model.getFieldValue("to_contracts_ref")),
+				"contractId":(model_exists && options.model.getFieldValue("to_contracts_ref"))? options.model.getFieldValue("to_contracts_ref").getKey("id"):null
 			}));
 		}
 		if (order1c){

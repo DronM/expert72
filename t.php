@@ -1,4 +1,6 @@
 <?php
+phpinfo();
+return;
 //http://localhost/expert72/index.php?c=Contract_Controller&v=Child&f=get_object&t=ContractDialog&id=4#
 
 echo intval('01');
