@@ -9,57 +9,57 @@
 	define('PAR_STAMP', 'stamp');//number 1/0
 	define('PAR_PARAMS', 'params');
 	
-	define('ER_PAR_DOC', 'РќРµ Р·Р°РґР°РЅ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РґРѕРєСѓРјРµРЅС‚Р°!');
-	define('ER_PAR_DATE', 'РќРµ Р·Р°РґР°РЅР° РґР°С‚Р°!');
-	define('ER_PAR_PARAMS', 'РќРµ Р·Р°РґР°РЅ РїР°СЂР°РјРµС‚СЂ СЃ РјР°СЃСЃРёРІРѕРј РґР°РЅРЅС‹С…!');
-	define('ER_MAKE_AKT', 'РћС€РёР±РєР° РїСЂРё С„РѕСЂРјРёСЂРѕРІР°РЅРёРё Р°РєС‚Р°.');
+	define('ER_PAR_DOC', 'Не задан идентификатор документа!');
+	define('ER_PAR_DATE', 'Не задана дата!');
+	define('ER_PAR_PARAMS', 'Не задан параметр с массивом данных!');
+	define('ER_MAKE_AKT', 'Ошибка при формировании акта.');
 	
 	
-	//********* РєРѕРјР°РЅРґС‹ *************
+	//********* команды *************
 	set_time_limit(300);
 	
 	/**
-	 * Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃРїРёСЃРѕРє РѕРїР»Р°С‚ РѕС‚ РґР°С‚С‹ РЅР°С‡Р°Р»Р° РїРѕ С‚РµРєСѓС‰СѓСЋ
+	 * Возвращает список оплат от даты начала по текущую
 	 */
 	define('CMD_GET_PAYMENTS', 'get_payments');	
 
 	/**
 	 * @param {string} params
-	 * Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃРїРёСЃРѕРє СЃС‡РµС‚РѕРІ, СЃРѕР·РґР°РµС‚ РґРѕРіРѕРІРѕСЂ РІ 1СЃ РµСЃР»Рё РµРіРѕ РЅРµ Р±С‹Р»Рѕ
+	 * Возвращает список счетов, создает договор в 1с если его не было
 	 */
 	define('CMD_GET_ORDER_LIST', 'get_order_list');	
 
 	/**
-	 * @param {string} doc_id СЃСЃС‹Р»РєР° РґРѕРєСѓРјРµРЅС‚ СЃС‡РµС‚
-	 * Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРµС‡Р°С‚РЅСѓСЋ С„РѕСЂРјСѓ СЃС‡РµС‚Р°
+	 * @param {string} doc_id ссылка документ счет
+	 * Возвращает печатную форму счета
 	 */
 	define('CMD_PRINT_ORDER', 'print_order');	
 
 	/**
-  	 * @param {string} doc_ref СЃСЃС‹Р»РєР° РґРѕРєСѓРјРµРЅС‚ Р°РєС‚
-	 * Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРµС‡Р°С‚РЅСѓСЋ С„РѕСЂРјСѓ Р°РєС‚Р°
+  	 * @param {string} doc_ref ссылка документ акт
+	 * Возвращает печатную форму акта
 	 */
 	define('CMD_PRINT_AKT', 'print_akt');	
 
 	/**
-  	 * @param {string} doc_ref СЃСЃС‹Р»РєР° РґРѕРєСѓРјРµРЅС‚ Р°РєС‚
-	 * Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРµС‡Р°С‚РЅСѓСЋ С„РѕСЂРјСѓ Р°РєС‚Р°
+  	 * @param {string} doc_ref ссылка документ акт
+	 * Возвращает печатную форму акта
 	 */
 	define('CMD_PRINT_INVOICE', 'print_invoice');	
 
 	/**
-  	 * @param {string} params СЃС‚СЂСѓРєС‚СѓСЂР°
-	 * Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃСЃС‹Р»РєСѓ
+  	 * @param {string} params структура
+	 * Возвращает ссылку
 	 */
 	define('CMD_MAKE_AKT', 'make_akt');	
 
 	/**
-  	 * @param {string} params СЃС‚СЂСѓРєС‚СѓСЂР°
-	 * Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃСЃС‹Р»РєСѓ
+  	 * @param {string} params структура
+	 * Возвращает ссылку
 	 */
 	define('CMD_MAKE_ORDER', 'make_order');	
 
-	define('COM_OBJ_NAME', 'v83Server.Connection');
+	define('COM_OBJ_NAME', 'v8Server.Connection');
 	
 	$xml_status = 'true';
 	$xml_body = '';
@@ -79,7 +79,6 @@
 			if (!isset($_REQUEST[PAR_DATE_TO])){
 				throw new Exception(ER_PAR_DATE);
 			}		
-			
 			$v8 = new COM(COM_OBJ_NAME);			
 			$xml_body = get_payments($v8,strtotime($_REQUEST[PAR_DATE_FROM]),strtotime($_REQUEST[PAR_DATE_TO]));
 		}
@@ -92,7 +91,7 @@
 			$par_stamp = (isset($_REQUEST[PAR_STAMP]))? (($_REQUEST[PAR_STAMP]=='1')? TRUE:FALSE) : FALSE;
 			$v8 = new COM(COM_OBJ_NAME);
 			$obr = get_ext_obr($v8);
-			$file = $obr->РџРµС‡Р°С‚СЊРЎС‡РµС‚Р°Р’Р¤Р°Р№Р»($par_doc_id,$par_stamp);
+			$file = $obr->ПечатьСчетаВФайл($par_doc_id,$par_stamp);
 			downloadfile($file);
 			unlink($file);
 			$SENT_FILE = TRUE;		
@@ -106,7 +105,7 @@
 			$par_stamp = (isset($_REQUEST[PAR_STAMP]))? (($_REQUEST[PAR_STAMP]=='1')? TRUE:FALSE) : FALSE;
 			$v8 = new COM(COM_OBJ_NAME);
 			$obr = get_ext_obr($v8);
-			$file = $obr->РџРµС‡Р°С‚СЊРђРєС‚Р°Р’Р¤Р°Р№Р»($par_doc_id,$par_stamp);
+			$file = $obr->ПечатьАктаВФайл($par_doc_id,$par_stamp);
 			downloadfile($file);
 			unlink($file);
 			$SENT_FILE = TRUE;		
@@ -120,7 +119,7 @@
 			$par_stamp = (isset($_REQUEST[PAR_STAMP]))? (($_REQUEST[PAR_STAMP]=='1')? TRUE:FALSE) : FALSE;
 			$v8 = new COM(COM_OBJ_NAME);
 			$obr = get_ext_obr($v8);
-			$file = $obr->РџРµС‡Р°С‚СЊРЎС‡РЅС‚Р°Р¤Р°РєС‚СѓСЂС‹Р’Р¤Р°Р№Р»($par_doc_id,$par_stamp);
+			$file = $obr->ПечатьСчетаФактурыВФайл($par_doc_id,$par_stamp);
 			downloadfile($file);
 			unlink($file);
 			$SENT_FILE = TRUE;		
@@ -131,6 +130,7 @@
 				throw new Exception(ER_PAR_PARAMS);
 			}
 			$params = unserialize(stripslashes($_REQUEST[PAR_PARAMS]));
+			cyr_ar_decode($params);
 			
 			$v8 = new COM(COM_OBJ_NAME);
 			
@@ -145,8 +145,10 @@
 			
 			$obr = get_ext_obr($v8);
 			$invoice_ref = NULL;
-			$akt_ref = $obr->РЎРѕР·РґР°С‚СЊРђРєС‚($struc_client,$struc_contract,$struc_params,floatval($params['total']),$invoice_ref);
-			if ($akt_ref->РџСѓСЃС‚Р°СЏ()){
+			$res_struc = $obr->СоздатьАкт($struc_client,$struc_contract,$struc_params,floatval($params['total']));
+			$akt_ref = $res_struc->Акт;
+			$invoice_ref = $res_struc->СЧФ;
+			if ($akt_ref->Пустая()){
 				throw new Exception(ER_MAKE_AKT);
 			}
 			
@@ -154,21 +156,21 @@
 				'<doc_ext_id>%s</doc_ext_id>
 				<invoice_ext_id>%s</invoice_ext_id>
 				<client_ext_id>%s</client_ext_id>
-				<contract_ext_id>%s</dogovor_ext_id>
+				<contract_ext_id>%s</contract_ext_id>
 				<doc_number>%s</doc_number>
 				<doc_date>%s</doc_date>
 				<doc_total>%f</doc_total>
 				<invoice_number>%s</invoice_number>
 				<invoice_date>%s</invoice_date>',
-				$v8->String($akt_ref->РЈРЅРёРєР°Р»СЊРЅС‹Р№РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ()),
-				$v8->String($invoice_ref->РЈРЅРёРєР°Р»СЊРЅС‹Р№РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ()),
-				$v8->String($akt_ref->РљРѕРЅС‚СЂР°РіРµРЅС‚->РЈРЅРёРєР°Р»СЊРЅС‹Р№РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ()),
-				$v8->String($akt_ref->Р”РѕРіРѕРІРѕСЂ->РЈРЅРёРєР°Р»СЊРЅС‹Р№РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ()),
-				$v8->String($akt_ref->РќРѕРјРµСЂ),
-				date1c_to_ISO($v8,$akt_ref->Р”Р°С‚Р°),
-				float1c_to_float($akt_ref->РЎСѓРјРјР°Р”РѕРєСѓРјРµРЅС‚Р°),
-				$v8->String($invoice_ref->РќРѕРјРµСЂ),
-				date1c_to_ISO($v8,$invoice_ref->Р”Р°С‚Р°)
+				$v8->String($akt_ref->УникальныйИдентификатор()),
+				$v8->String($invoice_ref->УникальныйИдентификатор()),
+				$v8->String($akt_ref->Контрагент->УникальныйИдентификатор()),
+				$v8->String($akt_ref->Договор->УникальныйИдентификатор()),
+				$v8->String($akt_ref->Номер),
+				date1c_to_ISO($v8,$akt_ref->Дата),
+				float1c_to_float($akt_ref->СуммаДокумента),
+				$v8->String($invoice_ref->Номер),
+				date1c_to_ISO($v8,$invoice_ref->Дата)
 			);
 		}
 		
@@ -177,6 +179,7 @@
 				throw new Exception(ER_PAR_PARAMS);
 			}
 			$params = unserialize(stripslashes($_REQUEST[PAR_PARAMS]));
+			cyr_ar_decode($params);
 			
 			$v8 = new COM(COM_OBJ_NAME);
 			
@@ -190,19 +193,19 @@
 			params_struc($v8,$params,$struc_params);
 			
 			$obr = get_ext_obr($v8);
-			$order_ref = $obr->РЎРѕР·РґР°С‚СЊРЎС‡РµС‚($struc_client,$struc_contract,floatval($params['total']),$struc_params);
+			$order_ref = $obr->СоздатьСчет($struc_client,$struc_contract,$struc_params,floatval($params['total']));
 			
 			$xml_body = sprintf(
-				'<order_ext_id>%s</akt_order_id>
+				'<doc_ext_id>%s</doc_ext_id>
 				<client_ext_id>%s</client_ext_id>
-				<dogovor_ext_id>%s</dogovor_ext_id>
-				<order_number>%s</order_number>
-				<order_date>%s</order_date>',
-				$v8->String($order_ref->РЈРЅРёРєР°Р»СЊРЅС‹Р№РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ()),
-				$v8->String($order_ref->РљРѕРЅС‚СЂР°РіРµРЅС‚->РЈРЅРёРєР°Р»СЊРЅС‹Р№РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ()),
-				$v8->String($order_ref->Р”РѕРіРѕРІРѕСЂ->РЈРЅРёРєР°Р»СЊРЅС‹Р№РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ()),
-				$v8->String($order_ref->РќРѕРјРµСЂ),
-				date1c_to_ISO($v8,$order_ref->Р”Р°С‚Р°)
+				<contract_ext_id>%s</contract_ext_id>
+				<doc_number>%s</doc_number>
+				<doc_date>%s</doc_date>',
+				$v8->String($order_ref->УникальныйИдентификатор()),
+				$v8->String($order_ref->Контрагент->УникальныйИдентификатор()),
+				$v8->String($order_ref->Договор->УникальныйИдентификатор()),
+				$v8->String($order_ref->Номер),
+				date1c_to_ISO($v8,$order_ref->Дата)
 			);
 		}
 		
@@ -211,7 +214,8 @@
 				throw new Exception(ER_PAR_PARAMS);
 			}
 			$params = unserialize(stripslashes($_REQUEST[PAR_PARAMS]));
-			
+			cyr_ar_decode($params);
+
 			$v8 = new COM(COM_OBJ_NAME);			
 			$xml_body = get_orders($v8,$params);
 		}

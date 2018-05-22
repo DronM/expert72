@@ -145,15 +145,15 @@ class ClientPayment_Controller extends ControllerSQL{
 	
 	public function get_from_1c($pm){
 		$xml = NULL;
-		$from = $pm->getParamValue('date_from')? $this->getExtVal($pm,'date_from') : mktime();
+		$from = $pm->getParamValue('date_from')? $this->getExtVal($pm,'date_from') : mktime();//strtotime('2018-05-17')
 		$to = $pm->getParamValue('date_to')? $this->getExtVal($pm,'date_to') : mktime();
 		ExtProg::get_payments($from,$to,$xml);
 		
 		if ($xml && $xml->rec && $xml->rec->count()){
 			$this->getDbLinkMaster()->query(sprintf(
 				"DELETE FROM client_payments WHERE pay_date BETWEEN '%s' AND '%s'",
-				date('Y-m-d',$d_from),
-				date('Y-m-d',$d_to)
+				date('Y-m-d',$from),
+				date('Y-m-d',$to)
 			));
 			$q = 'INSERT INTO client_payments (contract_id, pay_date, total) VALUES ';
 			/**
@@ -164,17 +164,17 @@ class ClientPayment_Controller extends ControllerSQL{
 		 	 */
 		 	$q_ins = '';		
 			foreach($xml->rec as $payment){
-				$contract_id = $this->getDbLink()->query_first(sprintf(
-					"SELECT contracts_find('%s','%s','%s'::date) AS contract_id"),
+				$ar = $this->getDbLink()->query_first(sprintf(
+					"SELECT contracts_find('%s','%s','%s'::date) AS contract_id",
 					(string)$payment->contract_ext_id,
 					(string)$payment->contract_number,
 					(string)$payment->contract_date
-				);
-				if ($contract_id){
+				));
+				if (is_array($ar) && count($ar) && intval($ar['contract_id'])){
 					$q_ins.= ($q_ins=='')? '':',';
 					$q_ins.= sprintf(
 						"(%d,'%s',%f)",
-						$contract_id,
+						intval($ar['contract_id']),
 						(string)$payment->pay_date,
 						(float)$payment->total
 					);
@@ -199,7 +199,8 @@ class ClientPayment_Controller extends ControllerSQL{
 					));
 				}
 			}
-			$this->getDbLinkMaster()->query($q.$q_ins);
+			if (strlen($q_ins))
+				$this->getDbLinkMaster()->query($q.$q_ins);
 		}
 	}
 

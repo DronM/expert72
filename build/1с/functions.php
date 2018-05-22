@@ -1,69 +1,97 @@
 <?php
-	/* РЎРїСЂР°РІРѕС‡РЅРёРє Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹РµРћС‚С‡РµС‚С‹РРћР±СЂР°Р±РѕС‚РєРё */
-	define("CONST_1C_OBR_NAME",'Web Functions');
+	/* Справочник ДополнительныеОтчетыИОбработки */
+	define("CONST_1C_OBR_NAME",'API1C');
 
-	/* РЎРїСЂР°РІРѕС‡РЅРёРє РљР»Р°СЃСЃРёС„РёРєР°С†РёРѕРЅРЅС‹Рµ РїСЂРёР·РЅР°РєРё СЃС‡РµС‚РѕРІ РљРѕРґ*/
-	define("CONST_1C_KPS_CODE",'00000000000000000');
+	/* Справочник Классификационные признаки счетов Код*/
+	define("CONST_1C_KPS_CODE",'00000000000000130');	
 
-	/* РЎРїСЂР°РІРѕС‡РЅРёРє РљР­Рљ РљРћРЎР“РЈ РљРѕРґ*/
+	/* Справочник КЭК КОСГУ Код*/
 	define("CONST_1C_KEK",'130');
 	define("CONST_1C_KEK_INVOICE",'130');	
 
-	/* РЎРїСЂР°РІРѕС‡РЅРёРє Р›РёС†РµРІС‹Рµ СЃС‡РµС‚Р° РљРѕРґ*/
-	define("CONST_1C_LSCHET",'999999999999999999999999999999');
+	/* Справочник Лицевые счета Код*/
+	define("CONST_1C_LSCHET",'40603810500994000122');
 	
-	/* СЃС‚СЂРѕРєР° РЅР°Р·РЅР°С‡РµРЅРёРµ РїР»Р°С‚РµР¶Р° РґР»СЏ СЃС‡РµС‚Р° */
-	define("CONST_1C_PAY_COMMENT",'РћРїР»Р°С‚Р° РїРѕ РєРѕРЅС‚СЂР°РєС‚Сѓ');
+	/* строка назначение платежа для счета */
+	define("CONST_1C_PAY_COMMENT",'Оплата по контракту');
 
-	/* Р¤РРћ СЂСѓРєРѕРІРѕРґРёС‚РµР»СЏ РєР°Рє РѕРЅРѕ Р·Р°РґРѕРЅРѕ РІ 1СЃ РЎРѕС‚СЂСѓРґРЅРёРєР°С…*/	
-	define("CONST_1C_RUK",'РљСѓС‡РµСЂСЏРІС‹Р№ РђР»РµРєСЃРµР№ РђРЅР°С‚Р°Р»СЊРµРІРёС‡');
+	/* ФИО руководителя как оно задоно в 1с Сотрудниках*/	
+	define("CONST_1C_RUK",'Кучерявый Алексей Александрович');
 
-	/* Р¤РРћ СЂСѓРєРѕРІРѕРґРёС‚РµР»СЏ РєР°Рє РѕРЅРѕ Р·Р°РґРѕРЅРѕ РІ 1СЃ РЎРѕС‚СЂСѓРґРЅРёРєР°С…*/	
-	define("CONST_1C_BUH",'Р СѓРєРѕРІРёС€РЅРёРєРѕРІР° РќР°С‚Р°Р»СЊСЏ Р’Р»Р°РґРёРјРёСЂРѕРІРЅР°');
+	/* ФИО руководителя как оно задоно в 1с Сотрудниках*/	
+	define("CONST_1C_BUH",'Рукавишникова Наталья Владимировна');
 
-	/* РљРѕРјРјРµРЅС‚Р°СЂРёР№ СЃРѕР·РґР°РІР°РµРјС‹С… РґРѕРєСѓРјРµРЅС‚РѕРІ */	
+	/* Комментарий создаваемых документов */	
 	define("CONST_1C_DOC_COMMENT",'#Web');
 
+	/* ИсточникиФинансовогоОбеспечения */	
+	define("CONST_1C_IFO",'Предпринимательская деятельность');
+	
+	/* НаправленияДеятельности */
+	define("CONST_1C_ACT_NAME",'Доходы текущего финансового года');
+	
 	//*******************************************************************************
 	
-	function get_ext_obr($v8){
-		$ext_form = $v8->РЎРїСЂР°РІРѕС‡РЅРёРєРё->Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹РµРћС‚С‡РµС‚С‹РРћР±СЂР°Р±РѕС‚РєРё->РќР°Р№С‚РёРџРѕРќР°РёРјРµРЅРѕРІР°РЅРёСЋ(CONST_1C_OBR_NAME,TRUE);
-		if ($ext_form->РџСѓСЃС‚Р°СЏ()){
-			throw new Exception('РќРµ РЅР°Р№РґРµРЅР° РІРЅРµС€РЅСЏСЏ РѕР±СЂР°Р±РѕС‚РєР° "'.CONST_1C_OBR_NAME.'"');
+	function cyr_str_encode($str){
+		return $str;
+	}
+
+	function cyr_str_decode($str){
+		return iconv('UTF-8','Windows-1251',$str);
+	}
+
+	function cyr_ar_decode(&$ar){
+		foreach($ar as $k=>$v){
+			$ar[$k] = cyr_str_decode($v);
 		}
-		$f = $v8->РџРѕР»СѓС‡РёС‚СЊРРјСЏР’СЂРµРјРµРЅРЅРѕРіРѕР¤Р°Р№Р»Р°();
-		$d = $ext_form->РҐСЂР°РЅРёР»РёС‰РµРћР±СЂР°Р±РѕС‚РєРё->РџРѕР»СѓС‡РёС‚СЊ();
-		$d->Р—Р°РїРёСЃР°С‚СЊ($f);
-		return $v8->Р’РЅРµС€РЅРёРµРћР±СЂР°Р±РѕС‚РєРё->РЎРѕР·РґР°С‚СЊ($f,FALSE);
+	}
+	
+	function get_ext_obr($v8){
+
+		$ext_form = $v8->Справочники->ДополнительныеОтчетыИОбработки->НайтиПоНаименованию(CONST_1C_OBR_NAME,TRUE);
+		if ($ext_form->Пустая()){
+			throw new Exception('Не найдена внешняя обработка "'.CONST_1C_OBR_NAME.'"');
+		}
+		$f = $v8->ПолучитьИмяВременногоФайла();
+		$d = $ext_form->ХранилищеОбработки->Получить();
+		$d->Записать($f);
+		return $v8->ВнешниеОбработки->Создать($f,FALSE);
 	}
 
 	function get_payments($v8,$dFrom,$dTo){
-		$q_obj = $v8->NewObject('Р—Р°РїСЂРѕСЃ');
-		$q_obj->РўРµРєСЃС‚ ="
-		Р’Р«Р‘Р РђРўР¬
-		Р”РѕРє.Р”РѕРіРѕРІРѕСЂ,
-		Р”РѕРє.Р”РѕРіРѕРІРѕСЂ.РќРѕРјРµСЂР”РѕРіРѕРІРѕСЂР° РљРђРљ РќРѕРјРµСЂР”РѕРіРѕРІРѕСЂР°,
-		Р”РѕРє.Р”РѕРіРѕРІРѕСЂ.Р”Р°С‚Р°Р”РѕРіРѕРІРѕСЂР° РљРђРљ Р”Р°С‚Р°Р”РѕРіРѕРІРѕСЂР°,
-		Р’Р«Р РђР—РРўР¬(РЎРЈРњРњРђ(Р•РЎРўР¬NULL(Р”РѕРє.РЎСѓРјРјР°Р”РѕРєСѓРјРµРЅС‚Р°,0)) РљРђРљ Р§РРЎР›Рћ(15,2)) AS РЎСѓРјРјР°
-		РР— Р”РѕРєСѓРјРµРЅС‚.РљР°СЃСЃРѕРІРѕРµРџРѕСЃС‚СѓРїР»РµРЅРёРµ РљРђРљ Р”РѕРє
-		Р“Р”Р• Р”РѕРє.Р”Р°С‚Р° РњР•Р–Р”РЈ Р”РђРўРђР’Р Р•РњРЇ(".date('Y,m,d,0,0,0',$dFrom).") Р Р”РђРўРђР’Р Р•РњРЇ(".date('Y,m,d,23,59,59',$dTo).")
-		РЎР“Р РЈРџРџРР РћР’РђРўР¬ РџРћ Р”РѕРє.Р”РѕРіРѕРІРѕСЂ,Р”РѕРє.Р”РѕРіРѕРІРѕСЂ.РќРѕРјРµСЂР”РѕРіРѕРІРѕСЂР°,Р”РѕРє.Р”РѕРіРѕРІРѕСЂ.Р”Р°С‚Р°Р”РѕРіРѕРІРѕСЂР°";
-		$sel = $q_obj->Р’С‹РїРѕР»РЅРёС‚СЊ()->Р’С‹Р±СЂР°С‚СЊ();
+		$q_obj = $v8->NewObject('Запрос');
+		$q_obj->Текст ="
+		ВЫБРАТЬ
+		Док.Дата,
+		Расш.Договор,
+		Расш.Договор.НомерДоговора КАК НомерДоговора,
+		Расш.Договор.ДатаДоговора КАК ДатаДоговора,
+		ВЫРАЗИТЬ(СУММА(ЕСТЬNULL(Расш.Сумма,0)) КАК ЧИСЛО(15,2)) AS Сумма
+		ИЗ Документ.КассовоеПоступление КАК Док
+		ЛЕВОЕ СОЕДИНЕНИЕ Документ.КассовоеПоступление.РасшифровкаПлатежа КАК Расш
+		ПО Расш.Ссылка=Док.Ссылка
+		ГДЕ Док.Дата МЕЖДУ ДАТАВРЕМЯ(".date('Y,m,d,0,0,0',$dFrom).") И ДАТАВРЕМЯ(".date('Y,m,d,23,59,59',$dTo).") И Док.Проведен
+		СГРУППИРОВАТЬ ПО Док.Дата,Расш.Договор,Расш.Договор.НомерДоговора,Расш.Договор.ДатаДоговора";
+		$sel = $q_obj->Выполнить()->Выбрать();
 		$xml_body = '';
-		while ($sel->РЎР»РµРґСѓСЋС‰РёР№()){
-			$sm = str_replace(' ','',$sel->РЎСѓРјРјР°);
+		while ($sel->Следующий()){
+			$sm = str_replace(' ','',$sel->Сумма);
 			$sm = str_replace(',','.',$sm);
 			$sm = floatval($sm);
+			//throw new Exception($v8->String($v8,$sel->ДатаДоговора));
 			if ($sm<>0){
 				$xml_body.='<rec>'.
 					sprintf('<contract_ext_id>%s</contract_ext_id>',
-						$v8->String($sel->Р”РѕРіРѕРІРѕСЂ->РЈРЅРёРєР°Р»СЊРЅС‹Р№РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ())
+						$v8->String($sel->Договор->УникальныйИдентификатор())
 					).
 					sprintf('<contract_number>%s</contract_number>',
-						$v8->String($sel->РќРѕРјРµСЂР”РѕРіРѕРІРѕСЂР°)
+						$v8->String($sel->НомерДоговора)
 					).
 					sprintf('<contract_date>%s</contract_date>',
-						date1c_to_ISO($v8,$sel->Р”Р°С‚Р°Р”РѕРіРѕРІРѕСЂР°);
+						date1c_to_ISO($v8,$sel->ДатаДоговора)
+					).					
+					sprintf('<pay_date>%s</pay_date>',
+						date1c_to_ISO($v8,$sel->Дата)
 					).					
 					sprintf('<total>%f</total>',
 						$sm
@@ -75,66 +103,76 @@
 	}
 	
 	function client1c_struc_from_params($v8,&$params,&$struc){
-		$client_id = $v8->NewObject('РЈРЅРёРєР°Р»СЊРЅС‹Р№РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ',$params['client_ext_id']);
-		$client_ref = $v8->РЎРїСЂР°РІРѕС‡РЅРёРєРё->РљРѕРЅС‚СЂР°РіРµРЅС‚С‹->РџРѕР»СѓС‡РёС‚СЊРЎСЃС‹Р»РєСѓ($client_id);
-		$struc = $v8->NewObject('РЎС‚СЂСѓРєС‚СѓСЂР°');			
-		$struc->Р’СЃС‚Р°РІРёС‚СЊ('ref',$client_ref);
-		$struc->Р’СЃС‚Р°РІРёС‚СЊ('name',$params['client_name']);
-		$struc->Р’СЃС‚Р°РІРёС‚СЊ('name_full',$params['client_name_full']);
-		$struc->Р’СЃС‚Р°РІРёС‚СЊ('inn',$params['client_inn']);
-		$struc->Р’СЃС‚Р°РІРёС‚СЊ('kpp',$params['client_kpp']);
-		$struc->Р’СЃС‚Р°РІРёС‚СЊ('ogrn',$params['client_ogrn']);
-		$struc->Р’СЃС‚Р°РІРёС‚СЊ('okpo',$params['client_okpo']);		
-		$struc->Р’СЃС‚Р°РІРёС‚СЊ('address_legal',$params['client_address_legal']);
-		$struc->Р’СЃС‚Р°РІРёС‚СЊ('address_post',$params['client_address_post']);
-		$struc->Р’СЃС‚Р°РІРёС‚СЊ('client_type',$params['client_type']);
+		if ($params['client_ext_id']){
+			$client_id = $v8->NewObject('УникальныйИдентификатор',$params['client_ext_id']);
+			$client_ref = $v8->Справочники->Контрагенты->ПолучитьСсылку($client_id);
+		}
+		else{			
+			$client_ref = $v8->Справочники->Контрагенты->ПустаяСсылка();
+		}
+		$struc = $v8->NewObject('Структура');			
+		$struc->Вставить('ref',$client_ref);
+		$struc->Вставить('name',$params['client_name']);
+		$struc->Вставить('name_full',$params['client_name_full']);
+		$struc->Вставить('inn',$params['client_inn']);
+		$struc->Вставить('kpp',$params['client_kpp']);
+		$struc->Вставить('ogrn',$params['client_ogrn']);
+		$struc->Вставить('okpo',$params['client_okpo']);		
+		$struc->Вставить('address_legal',$params['client_address_legal']);
+		$struc->Вставить('address_post',$params['client_address_post']);
+		$struc->Вставить('client_type',$params['client_type']);
 		
-		$bank_accounts = $v8->NewObject('РњР°СЃСЃРёРІ');
+		$bank_accounts = $v8->NewObject('Массив');
 		if ($params['client_bank_accounts']){			
 			$acc_ar = json_decode($params['client_bank_accounts']);
 			foreach($acc_ar as $acc){
 				if ($acc->fields && $acc->fields->bik && $acc->fields->acc_number){
-					$bnk_ref = $v8->РЎРїСЂР°РІР»С‡РЅРёРєРё->Р‘Р°РЅРєРё->РќР°Р№С‚РёРџРѕРљРѕРґСѓ($acc->fields->bik);
-					if (!$bnk_ref->РџСѓСЃС‚Р°СЏ()){
-						$bnk = $v8->NewObject('РЎС‚СЂСѓРєС‚СѓСЂР°');
-						$bnk->Р’СЃС‚Р°РІРёС‚СЊ('ref',$bnk_ref);
-						$bnk->Р’СЃС‚Р°РІРёС‚СЊ('acc_number',$acc->fields->acc_number);
-						$bank_accounts->Р”РѕР±Р°РІРёС‚СЊ($bnk);
+					$bnk_ref = $v8->Справочники->Банки->НайтиПоКоду($acc->fields->bik);
+					if (!$bnk_ref->Пустая()){
+						$bnk = $v8->NewObject('Структура');
+						$bnk->Вставить('ref',$bnk_ref);
+						$bnk->Вставить('acc_number',$acc->fields->acc_number);
+						$bank_accounts->Добавить($bnk);
 					}
 				}
 			}
 		}
-		$struc->Р’СЃС‚Р°РІРёС‚СЊ('bank_accounts',$bank_accounts);
+		$struc->Вставить('bank_accounts',$bank_accounts);
 	}
 	
 	function contract1c_struc_from_params($v8,&$params,&$struc){
-		$contract_id = $v8->NewObject('РЈРЅРёРєР°Р»СЊРЅС‹Р№РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ',$params['contract_ext_id']);
-		$contract_ref = $v8->РЎРїСЂР°РІРѕС‡РЅРёРєРё->Р”РѕРіРѕРІРѕСЂС‹->РџРѕР»СѓС‡РёС‚СЊРЎСЃС‹Р»РєСѓ($contract_id);
-	
-		$struc = $v8->NewObject('РЎС‚СЂСѓРєС‚СѓСЂР°');
-		$struc->Р’СЃС‚Р°РІРёС‚СЊ('ref',$contract_ref);
-		$struc->Р’СЃС‚Р°РІРёС‚СЊ('name',$params['contract_name']);
-		$struc->Р’СЃС‚Р°РІРёС‚СЊ('number',$params['contract_number']);
-		$struc->Р’СЃС‚Р°РІРёС‚СЊ('date',dateISO_to_date1c($params['contract_date']));
-		$struc->Р’СЃС‚Р°РІРёС‚СЊ('contract_type',$params['contract_type']);				
+		if ($params['contract_ext_id']){
+			$contract_id = $v8->NewObject('УникальныйИдентификатор',$params['contract_ext_id']);
+			$contract_ref = $v8->Справочники->Договоры->ПолучитьСсылку($contract_id);
+		}
+		else{
+			$contract_ref = $v8->Справочники->Договоры->ПустаяСсылка();
+		}
+		$struc = $v8->NewObject('Структура');
+		$struc->Вставить('ref',$contract_ref);
+		$struc->Вставить('name',$params['contract_name']);
+		$struc->Вставить('number',$params['contract_number']);
+		$struc->Вставить('date',dateISO_to_date1c($params['contract_date']));
+		$struc->Вставить('contract_type',$params['contract_type']);				
 	}
 
 	function params_struc($v8,&$params,&$struc){
-		$struc = $v8->NewObject('РЎС‚СЂСѓРєС‚СѓСЂР°');
-		$struc->Р’СЃС‚Р°РІРёС‚СЊ('Р”Р°С‚Р°Р”РѕРєСѓРјРµРЅС‚Р°',date('YmdHis'));
-		$struc->Р’СЃС‚Р°РІРёС‚СЊ('Р СѓРєРѕРІРѕРґРёС‚РµР»СЊ',$v8->РЎРїСЂР°РІРѕС‡РЅРёРєРё->РЎРѕС‚СЂСѓРґРЅРёРєРё->РќР°Р№С‚РёРџРѕРќР°РёРјРµРЅРѕРІР°РЅРёСЋ(CONST_1C_RUK));
-		$struc->Р’СЃС‚Р°РІРёС‚СЊ('Р“Р»Р‘СѓС…РіР°Р»С‚РµСЂ',$v8->РЎРїСЂР°РІРѕС‡РЅРёРєРё->РЎРѕС‚СЂСѓРґРЅРёРєРё->РќР°Р№С‚РёРџРѕРќР°РёРјРµРЅРѕРІР°РЅРёСЋ(CONST_1C_BUH));
-		$struc->Р’СЃС‚Р°РІРёС‚СЊ('Р›РЎ',CONST_1C_LSCHET);
-		$struc->Р’СЃС‚Р°РІРёС‚СЊ('РљРџРЎ', CONST_1C_KEK);
-		$struc->Р’СЃС‚Р°РІРёС‚СЊ('РљРџРЎРЎС‡РµС‚Р°Р¤Р°РєС‚СѓСЂС‹', CONST_1C_KEK_INVOICE);
-		$struc->Р’СЃС‚Р°РІРёС‚СЊ('РљРћРЎР“РЈ', CONST_1C_KPS_CODE);
-		$struc->Р’СЃС‚Р°РІРёС‚СЊ('РќР°Р·РЅР°С‡РµРЅРёРµРџР»Р°С‚РµР¶Р°', CONST_1C_PAY_COMMENT);
-		$struc->Р’СЃС‚Р°РІРёС‚СЊ('РљР¤Рћ', $v8->РџРµСЂРµС‡РёСЃР»РµРЅРёСЏ->РљР’Р”->Р’РЅРµР±СЋРґР¶РµС‚);
-		$struc->Р’СЃС‚Р°РІРёС‚СЊ('РљРѕРјРјРµРЅС‚Р°СЂРёР№', CONST_1C_DOC_COMMENT);
-		$struc->Р’СЃС‚Р°РІРёС‚СЊ('item_1c_descr', $params['item_1c_descr']);
-		$struc->Р’СЃС‚Р°РІРёС‚СЊ('item_1c_descr_full', $params['item_1c_descr_full']);
-		$struc->Р’СЃС‚Р°РІРёС‚СЊ('item_1c_doc_descr', $params['item_1c_doc_descr']);
-		$struc->Р’СЃС‚Р°РІРёС‚СЊ('document_type', $params['document_type']);		
+		$struc = $v8->NewObject('Структура');
+		$struc->Вставить('ДатаДокумента',date('YmdHis'));
+		$struc->Вставить('Руководитель',$v8->Справочники->Сотрудники->НайтиПоНаименованию(CONST_1C_RUK));
+		$struc->Вставить('ГлБухгалтер',$v8->Справочники->Сотрудники->НайтиПоНаименованию(CONST_1C_BUH));
+		$struc->Вставить('ЛС',CONST_1C_LSCHET);
+		$struc->Вставить('КЭК', CONST_1C_KEK);
+		$struc->Вставить('НаправленияДеятельности', CONST_1C_ACT_NAME);		
+		$struc->Вставить('КПС', CONST_1C_KPS_CODE);
+		$struc->Вставить('НазначениеПлатежа', CONST_1C_PAY_COMMENT);
+		$struc->Вставить('КФО', $v8->Перечисления->КВД->Внебюджет);
+		$struc->Вставить('Комментарий', CONST_1C_DOC_COMMENT);
+		$struc->Вставить('ИФО', CONST_1C_IFO);
+		$struc->Вставить('item_1c_descr', $params['item_1c_descr']);
+		$struc->Вставить('item_1c_descr_full', $params['item_1c_descr_full']);
+		$struc->Вставить('item_1c_doc_descr', $params['item_1c_doc_descr']);
+		$struc->Вставить('document_type', $params['document_type']);		
 	}
 	
 	function float1c_to_float($float1c){
@@ -143,8 +181,9 @@
 		return floatval($float1c);	
 	}
 	
-	function date1c_to_ISO($v,$date1c){
+	function date1c_to_ISO($v8,$date1c){
 		$d_str = $v8->String($date1c);
+		
 		$d_parts = explode(' ',$d_str);
 		$y = 0;
 		$m = 0;
@@ -171,7 +210,12 @@
 				$sec = intval($d_ar[2]);
 			}
 		}
-		return date('Y-m-dTH:i:s',mktime($h,$min,$sec,$m,$d,$y));
+		$d = (($d<10)? '0':'').(string)$d;
+		$m = (($m<10)? '0':'').(string)$m;
+		$h = (($h<10)? '0':'').(string)$h;
+		$min = (($min<10)? '0':'').(string)$min;
+		$sec = (($sec<10)? '0':'').(string)$sec;
+		return ($y.'-'.$m.'-'.$d.' '.$h.':'.$min.':'.$sec);
 	}
 	
 	function dateISO_to_date1c($d){
@@ -183,45 +227,47 @@
 	}
 	
 	function get_orders($v8,$params){
-		$contract_ref = NULL;
+		$contract_ref = NULL;		
 		if ($params['contract_ext_id']){
-			$contract_id = $v8->NewObject('РЈРЅРёРєР°Р»СЊРЅС‹Р№РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ',$params['contract_ext_id']);
-			$contract_ref = $v8->РЎРїСЂР°РІРѕС‡РЅРёРєРё->Р”РѕРіРѕРІРѕСЂС‹->РџРѕР»СѓС‡РёС‚СЊРЎСЃС‹Р»РєСѓ($contract_id);
-			$client_ext_id = $v8->String($contract_ref->РљРѕРЅС‚СЂР°РіРµРЅС‚->РЈРЅРёРєР°Р»СЊРЅС‹Р№РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ());
+			$contract_id = $v8->NewObject('УникальныйИдентификатор',$params['contract_ext_id']);
+			$contract_ref = $v8->Справочники->Договоры->ПолучитьСсылку($contract_id);
+			$client_ext_id = $v8->String($contract_ref->Контрагент->УникальныйИдентификатор());
 		}
-		else{
-			$struc_client = NULL;			
-			client1c_struc_from_params($v8,$params,$struc_client);
+		else{			
+			$struc_client = NULL;					
+			client1c_struc_from_params($v8,$params,$struc_client);						
 			$struc_contract = NULL;			
-			contract1c_struc_from_params($v8,$params,$struc_contract);		
+			contract1c_struc_from_params($v8,$params,$struc_contract);					
 			$obr = get_ext_obr($v8);
-			$obr->РћРїСЂРµРґРµР»РёС‚СЊРљРѕРЅС‚СЂР°РіРµРЅС‚Р°($struc_client);
-			$obr->РћРїСЂРµРґРµР»РёС‚СЊР”РѕРіРѕРІРѕСЂ($struc_contract,$struc_client);
+			$obr->ОпределитьКонтрагента($struc_client);
+			$obr->ОпределитьДоговор($struc_contract,$struc_client);
+
 			$contract_ref = $struc_contract->ref; 
-			$client_ext_id = $v8->String($struc_client->ref->РЈРЅРёРєР°Р»СЊРЅС‹Р№РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ());
-		}	
-		$q_obj = $v8->NewObject('Р—Р°РїСЂРѕСЃ');
-		$q_obj->РўРµРєСЃС‚ ="
-		Р’Р«Р‘Р РђРўР¬
-		РЎСЃС‹Р»РєР°,
-		РќРѕРјРµСЂ,
-		Р”Р°С‚Р°,
-		Р’Р«Р РђР—РРўР¬(Р•РЎРўР¬NULL(РЎСѓРјРјР°Р”РѕРєСѓРјРµРЅС‚Р°,0) РљРђРљ Р§РРЎР›Рћ(15,2)) AS РЎСѓРјРјР°
-		РР— Р”РѕРєСѓРјРµРЅС‚.РЎС‡РµС‚РќР°РћРїР»Р°С‚Сѓ
-		Р“Р”Р• Р”РѕРє.Р”РѕРіРѕРІРѕСЂ=&Р”РѕРіРѕРІРѕСЂ
+			$client_ext_id = $v8->String($struc_client->ref->УникальныйИдентификатор());
+		}
+
+		$q_obj = $v8->NewObject('Запрос');
+		$q_obj->Текст ="
+		ВЫБРАТЬ
+		Ссылка,
+		Номер,
+		Дата,
+		ВЫРАЗИТЬ(ЕСТЬNULL(СуммаДокумента,0) КАК ЧИСЛО(15,2)) AS Сумма
+		ИЗ Документ.СчетНаОплату
+		ГДЕ Договор=&Договор И НЕ ПометкаУдаления
 		";
-		$q_obj->РЈСЃС‚Р°РЅРѕРІРёС‚СЊРџР°СЂР°РјРµС‚СЂ('Р”РѕРіРѕРІРѕСЂ',$contract_ref);
-		$sel = $q_obj->Р’С‹РїРѕР»РЅРёС‚СЊ()->Р’С‹Р±СЂР°С‚СЊ();
+		$q_obj->УстановитьПараметр('Договор',$contract_ref);
+		$sel = $q_obj->Выполнить()->Выбрать();
 		
-		$xml_body = sprintf('<contrcat_ext_id>%s<contrcat_ext_id>',$v8->String($contract_ref->РЈРЅРёРєР°Р»СЊРЅС‹Р№РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ())).
-			sprintf('<client_ext_id>%s<client_ext_id>',$client_ext_id);
-		while ($sel->РЎР»РµРґСѓСЋС‰РёР№()){
-			$sm = float1c_to_float($sel->РЎСѓРјРјР°);
+		$xml_body = sprintf('<contract_ext_id>%s</contract_ext_id>',$v8->String($contract_ref->УникальныйИдентификатор())).
+			sprintf('<client_ext_id>%s</client_ext_id>',$client_ext_id);
+		while ($sel->Следующий()){
+			$sm = float1c_to_float($sel->Сумма);
 			if ($sm<>0){
 				$xml_body.='<rec>'.
-					sprintf('<ext_id>%s</ext_id>',$v8->String($sel->РЎСЃС‹Р»РєР°->РЈРЅРёРєР°Р»СЊРЅС‹Р№РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ())).
-					sprintf('<number>%s</number>',$v8->String($sel->РќРѕРјРµСЂ)).
-					sprintf('<date>%s</date>',date1c_to_ISO($v8,$sel->Р”Р°С‚Р°)).					
+					sprintf('<ext_id>%s</ext_id>',$v8->String($sel->Ссылка->УникальныйИдентификатор())).
+					sprintf('<number>%s</number>',$v8->String($sel->Номер)).
+					sprintf('<date>%s</date>',date1c_to_ISO($v8,$sel->Дата)).					
 					sprintf('<total>%f</total>',$sm).
 					'</rec>';
 			}

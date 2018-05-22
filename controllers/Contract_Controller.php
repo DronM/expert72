@@ -710,6 +710,8 @@ class Contract_Controller extends ControllerSQL{
 			--kladr_parse_addr(d.constr_address)
 			AS item_1c_doc_descr,
 			
+			coalesce(contr.expertise_cost_budget,0)+coalesce(contr.expertise_cost_self_fund,0) AS total,
+			
 			cl.ext_id AS client_ext_id,
 			cl.name AS client_name,
 			cl.name_full AS client_name_full,
@@ -863,7 +865,8 @@ class Contract_Controller extends ControllerSQL{
 			header(HEADER_404);
 			
 		}
-		ExtProg::print_invoice($this->getExtVal($pm,'order_ext_id'),FALSE,array('name'=>'Акт№'.$ar['akt_number'].'.pdf','disposition'=>'inline'));
+		ExtProg::print_akt($ar['akt_ext_id'],FALSE,array('name'=>'Акт№'.$ar['akt_number'].'.pdf','disposition'=>'inline'));
+		return TRUE;
 	}
 	public function print_invoice($pm){
 		$ar = $this->getDbLinkMaster()->query_first(sprintf(
@@ -878,7 +881,7 @@ class Contract_Controller extends ControllerSQL{
 			header(HEADER_404);
 			
 		}
-		ExtProg::print_invoice($this->getExtVal($pm,'order_ext_id'),FALSE,array('name'=>'СчетФактура№'.$ar['invoice_number'].'.pdf','disposition'=>'inline'));
+		ExtProg::print_invoice($ar['invoice_ext_id'],FALSE,array('name'=>'СчетФактура№'.$ar['invoice_number'].'.pdf','disposition'=>'inline'));
 		return TRUE;
 		
 	}
@@ -917,15 +920,32 @@ class Contract_Controller extends ControllerSQL{
 	}
 	
 	public function get_ext_data($pm){
-		$params = $this->get_data_for_1c($this->getExtDbVal($pm,'id'));
+		$res = $this->getDbLink()->query_first(sprintf(
+		"SELECT
+			akt_ext_id,
+			akt_number,
+			akt_date,
+			akt_total,
+			invoice_ext_id,
+			invoice_number,
+			invoice_date			
+		FROM contracts
+		WHERE id=%d",
+		$this->getExtDbVal($pm,'id')
+		));
+		
+		if (!count($res)){
+			throw new Exception('Contract not found!');
+		}
+		
 		$this->addModel(new ModelVars(
 			array('name'=>'Vars',
 				'id'=>'ExtDoc_Model',
 				'values'=>array(
-					new Field('akt_ext_id',DT_STRING,array('value'=>$res['doc_ext_id'])),
-					new Field('akt_number',DT_STRING,array('value'=>$res['doc_number'])),
-					new Field('akt_date',DT_DATETIME,array('value'=>$res['doc_date'])),
-					new Field('akt_total',DT_FLOAT,array('value'=>$res['doc_total'])),
+					new Field('akt_ext_id',DT_STRING,array('value'=>$res['akt_ext_id'])),
+					new Field('akt_number',DT_STRING,array('value'=>$res['akt_number'])),
+					new Field('akt_date',DT_DATETIME,array('value'=>$res['akt_date'])),
+					new Field('akt_total',DT_FLOAT,array('value'=>$res['akt_total'])),
 					new Field('invoice_ext_id',DT_STRING,array('value'=>$res['invoice_ext_id'])),
 					new Field('invoice_number',DT_STRING,array('value'=>$res['invoice_number'])),
 					new Field('invoice_date',DT_DATETIME,array('value'=>$res['invoice_date']))

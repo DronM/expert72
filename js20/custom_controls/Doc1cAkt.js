@@ -33,7 +33,7 @@ Doc1cAkt.prototype.makeDoc = function(e){
 	pm.run({
 		"ok":function(resp){
 			self.getElement("makeDoc").setEnabled(true);
-			self.onGetResp(resp);
+			self.onGetResp(resp,true);
 		}
 	})
 }
@@ -90,12 +90,12 @@ Doc1cAkt.prototype.updateList = function(contractId){
 	var self = this;
 	pm.run({
 		"ok":function(resp){
-			self.onGetResp(resp);
+			self.onGetResp(resp,false);
 		}
 	});
 }
 
-Doc1cAkt.prototype.onGetResp = function(resp){
+Doc1cAkt.prototype.onGetResp = function(resp,newAkt){
 	var m = new ModelXML("ExtDoc_Model",{
 		"fields":{
 			"akt_ext_id":new FieldString("akt_ext_id"),
@@ -109,13 +109,14 @@ Doc1cAkt.prototype.onGetResp = function(resp){
 		"data":resp.getModelData("ExtDoc_Model")
 	});
 	if (m.getNextRow()){
-		window.showNote("Создан новый акт и счет-фактура: "+this.getDocDescr(
-			model.getFieldValue("akt_number"),
-			model.getFieldValue("akt_date"),
-			model.getFieldValue("akt_total"),
-			"Акт"
-		));
-	
+		if (newAkt){
+			window.showNote("Создан новый акт и счет-фактура: "+this.getDocDescr(
+				m.getFieldValue("akt_number"),
+				m.getFieldValue("akt_date"),
+				m.getFieldValue("akt_total"),
+				"Акт"
+			));
+		}	
 		this.update(m.getFields());	
 	}
 }
