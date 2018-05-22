@@ -147,6 +147,12 @@ extend(ClientPayment_Controller,ControllerObjServer);
 	pm.addField(new FieldJSON("contracts_ref",f_opts));
 	var f_opts = {};
 	
+	pm.addField(new FieldInt("contract_id",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldInt("clients_id",f_opts));
+	var f_opts = {};
+	
 	pm.addField(new FieldDate("pay_date",f_opts));
 	var f_opts = {};
 	

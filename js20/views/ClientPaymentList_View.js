@@ -80,18 +80,30 @@ function ClientPaymentList_View(id,options){
 				"columns":[
 					new GridColumnRef({
 						"field":model.getField("clients_ref"),
-						"ctrlClass":ClientEditRef
+						"ctrlClass":ClientEditRef,
+						"searchOptions":{
+							"field":model.getField("client_id"),
+							"searchType":"on_match",
+							"typeChange":false
+						}
 					})
-				]
+				],
+				"sortable":true
 			})
 			,new GridCellHead(id+":grid:head:contracts_ref",{
 				"value":"Контракт",
 				"columns":[
 					new GridColumnRef({
 						"field":model.getField("contracts_ref"),
-						"ctrlClass":ContractEditRef
-					})
-				]
+						"ctrlClass":ContractEditRef,
+						"searchOptions":{
+							"field":model.getField("contract_id"),
+							"searchType":"on_match",
+							"typeChange":false
+						}
+					})					
+				],
+				"sortable":true
 			})
 		];
 				
@@ -109,8 +121,16 @@ function ClientPaymentList_View(id,options){
 		new GridCellHead(id+":grid:head:pay_date",{
 				"value":"Дата",
 				"columns":[
-					new GridColumnDate({"field":model.getField("pay_date")})
-				]
+					new GridColumnDate({
+						"field":model.getField("pay_date"),
+						"searchOptions":{
+							"field":new FieldDate("pay_date"),
+							"searchType":"on_beg"
+						}						
+					})
+				],
+				"sortable":true,
+				"sort":"desc"
 			})	
 	);
 	grid_columns.push(

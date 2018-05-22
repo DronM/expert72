@@ -22,6 +22,9 @@ function ClientPayment_Model(options){
 	
 	options.fields = {};
 	
+			
+				
+			
 				
 	
 	var filed_options = {};
@@ -40,7 +43,7 @@ function ClientPayment_Model(options){
 	
 	options.fields.contract_id = new FieldInt("contract_id",filed_options);
 	options.fields.contract_id.getValidator().setRequired(true);
-	
+				
 				
 	
 	var filed_options = {};

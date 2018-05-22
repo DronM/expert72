@@ -56,6 +56,24 @@ function ClientPaymentList_Model(options){
 	
 	filed_options.autoInc = false;	
 	
+	options.fields.contract_id = new FieldInt("contract_id",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.clients_id = new FieldInt("clients_id",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
 	options.fields.pay_date = new FieldDate("pay_date",filed_options);
 	
 				

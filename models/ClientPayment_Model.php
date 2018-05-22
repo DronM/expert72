@@ -10,6 +10,7 @@ require_once(FRAME_WORK_PATH.'basic_classes/ModelSQL.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLInt.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLFloat.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLDate.php');
+require_once(FRAME_WORK_PATH.'basic_classes/ModelOrderSQL.php');
  
 class ClientPayment_Model extends ModelSQL{
 	
@@ -18,7 +19,7 @@ class ClientPayment_Model extends ModelSQL{
 		
 		$this->setDbName("");
 		
-		$this->setTableName("client_payments");
+		$this->setTableName("client_payments_list");
 			
 		//*** Field id ***
 		$f_opts = array();
@@ -54,7 +55,12 @@ class ClientPayment_Model extends ModelSQL{
 		$f_total=new FieldSQLFloat($this->getDbLink(),$this->getDbName(),$this->getTableName(),"total",$f_opts);
 		$this->addField($f_total);
 		//********************
-	$this->setLimitConstant('doc_per_page_count');
+	
+		$order = new ModelOrderSQL();		
+		$this->setDefaultModelOrder($order);		
+		$direct = 'DESC';
+		$order->addField($f_pay_date,$direct);
+$this->setLimitConstant('doc_per_page_count');
 	}
 
 }

@@ -1,3 +1,5 @@
+
+-- ******************* update 22/05/2018 08:53:58 ******************
 -- VIEW: client_payments_list
 
 --DROP VIEW client_payments_list;

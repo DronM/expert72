@@ -14,6 +14,7 @@ CREATE OR REPLACE VIEW client_payments_list AS
 	FROM client_payments AS pm	
 	LEFT JOIN contracts AS contr ON contr.id=pm.contract_id
 	LEFT JOIN clients AS cl ON cl.id=contr.client_id
+	ORDER BY pm.pay_date DESC
 	;
 	
 ALTER VIEW client_payments_list OWNER TO ;

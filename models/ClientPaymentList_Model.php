@@ -47,6 +47,22 @@ class ClientPaymentList_Model extends ModelSQL{
 		$this->addField($f_contracts_ref);
 		//********************
 		
+		//*** Field contract_id ***
+		$f_opts = array();
+		$f_opts['id']="contract_id";
+				
+		$f_contract_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"contract_id",$f_opts);
+		$this->addField($f_contract_id);
+		//********************
+		
+		//*** Field clients_id ***
+		$f_opts = array();
+		$f_opts['id']="clients_id";
+				
+		$f_clients_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"clients_id",$f_opts);
+		$this->addField($f_clients_id);
+		//********************
+		
 		//*** Field pay_date ***
 		$f_opts = array();
 		$f_opts['id']="pay_date";
