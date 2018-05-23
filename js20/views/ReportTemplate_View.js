@@ -58,7 +58,7 @@ function ReportTemplate_View(id,options){
 				"elements":[
 					new GridRow(id+":in_params:head:row0",{
 						"elements":[
-							new GridCellHead(id+":in_params:head:id",{
+							new GridCellHead(id+":in_params:head:row0:id",{
 								"value":"Поле",
 								"columns":[
 									new GridColumn({
@@ -71,7 +71,7 @@ function ReportTemplate_View(id,options){
 									})
 								]
 							}),
-							new GridCellHead(id+":in_params:head:cond",{
+							new GridCellHead(id+":in_params:head:row0:cond",{
 								"value":"Поле условия запроса",
 								"columns":[
 									new GridColumnBool({
@@ -80,7 +80,7 @@ function ReportTemplate_View(id,options){
 									})
 								]
 							}),																							
-							new GridCellHead(id+":in_params:head:editCtrlClass",{
+							new GridCellHead(id+":in_params:head:row0:editCtrlClass",{
 								"value":"Элемент управления js",
 								"columns":[
 									new GridColumn({
@@ -93,11 +93,11 @@ function ReportTemplate_View(id,options){
 									})
 								]
 							}),
-							new GridCellHead(id+":in_params:head:editCtrlOptions",{
+							new GridCellHead(id+":in_params:head:row0:editCtrlOptions",{
 								"value":"Опции элемента управления",
 								"columns":[
 									new GridColumn({
-										"field":model_in_param.getField("editCtrlClass"),
+										"field":model_in_param.getField("editCtrlOptions"),
 										"ctrlClass":EditString,
 										"maxLength":"500"
 									})

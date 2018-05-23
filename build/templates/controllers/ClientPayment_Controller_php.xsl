@@ -45,20 +45,24 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				date('Y-m-d',$from),
 				date('Y-m-d',$to)
 			));
-			$q = 'INSERT INTO client_payments (contract_id, pay_date, total) VALUES ';
+			$q = 'INSERT INTO client_payments (contract_id, pay_date, total,pay_docum_date,pay_docum_number) VALUES ';
 			/**
 			 * contract_ext_id
 			 * contract_name
 			 * pay_date
 		 	 * total
+		 	 * pay_docum_date
+		 	 * pay_docum_number
 		 	 */
 		 	$q_ins = '';		
 			foreach($xml->rec as $payment){
 				$ar = $this->getDbLink()->query_first(sprintf(
-					"SELECT contracts_find('%s','%s','%s'::date) AS contract_id",
+					"SELECT contracts_find('%s','%s','%s'::date,'%s'::date,'%s') AS contract_id",
 					(string)$payment->contract_ext_id,
 					(string)$payment->contract_number,
-					(string)$payment->contract_date
+					(string)$payment->contract_date,
+					(string)$payment->pay_docum_date,
+					(string)$payment->pay_docum_number
 				));
 				if (is_array($ar) &amp;&amp; count($ar) &amp;&amp; intval($ar['contract_id'])){
 					$q_ins.= ($q_ins=='')? '':',';

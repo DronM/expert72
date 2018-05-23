@@ -8,6 +8,7 @@
 
 require_once(FRAME_WORK_PATH.'basic_classes/ModelSQL.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLInt.php');
+require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLString.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLFloat.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLDate.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLJSON.php');
@@ -93,6 +94,22 @@ class ClientPaymentList_Model extends ModelSQL{
 				
 		$f_client_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"client_id",$f_opts);
 		$this->addField($f_client_id);
+		//********************
+		
+		//*** Field pay_docum_date ***
+		$f_opts = array();
+		$f_opts['id']="pay_docum_date";
+				
+		$f_pay_docum_date=new FieldSQLDate($this->getDbLink(),$this->getDbName(),$this->getTableName(),"pay_docum_date",$f_opts);
+		$this->addField($f_pay_docum_date);
+		//********************
+		
+		//*** Field pay_docum_number ***
+		$f_opts = array();
+		$f_opts['id']="pay_docum_number";
+				
+		$f_pay_docum_number=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"pay_docum_number",$f_opts);
+		$this->addField($f_pay_docum_number);
 		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}

@@ -17,12 +17,19 @@ function ReportTemplateFieldGrid(id,options){
 
 	var model = new ReportTemplateField_Model();
 	
-	var cmd = (options.enabled==undefined || options.enabled)?
+	var cmd = (options.readOnly!=undefined && options.readOnly)?
+		new GridCmdContainerAjx(id+":fields:cmd",{
+					"cmdInsert":false,
+					"cmdEdit":false,
+					"cmdDelete":false,
+					"cmdSearch":false,
+					"cmdExport":false
+				})
+		:	
 		new GridCmdContainerAjx(id+":fields:cmd",{
 					"cmdSearch":false,
 					"cmdExport":false
 				})
-		: null
 		;
 	var popup_menu = (options.enabled==undefined || options.enabled)? new PopUpMenu():null;
 	CommonHelper.merge(options,

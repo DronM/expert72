@@ -8,6 +8,7 @@
 
 require_once(FRAME_WORK_PATH.'basic_classes/ModelSQL.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLInt.php');
+require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLString.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLFloat.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLDate.php');
 require_once(FRAME_WORK_PATH.'basic_classes/ModelOrderSQL.php');
@@ -19,7 +20,7 @@ class ClientPayment_Model extends ModelSQL{
 		
 		$this->setDbName("");
 		
-		$this->setTableName("client_payments_list");
+		$this->setTableName("client_payments");
 			
 		//*** Field id ***
 		$f_opts = array();
@@ -45,6 +46,23 @@ class ClientPayment_Model extends ModelSQL{
 				
 		$f_pay_date=new FieldSQLDate($this->getDbLink(),$this->getDbName(),$this->getTableName(),"pay_date",$f_opts);
 		$this->addField($f_pay_date);
+		//********************
+		
+		//*** Field pay_docum_date ***
+		$f_opts = array();
+		$f_opts['id']="pay_docum_date";
+				
+		$f_pay_docum_date=new FieldSQLDate($this->getDbLink(),$this->getDbName(),$this->getTableName(),"pay_docum_date",$f_opts);
+		$this->addField($f_pay_docum_date);
+		//********************
+		
+		//*** Field pay_docum_number ***
+		$f_opts = array();
+		$f_opts['length']=20;
+		$f_opts['id']="pay_docum_number";
+				
+		$f_pay_docum_number=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"pay_docum_number",$f_opts);
+		$this->addField($f_pay_docum_number);
 		//********************
 		
 		//*** Field total ***

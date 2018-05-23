@@ -19,7 +19,7 @@ function ReportTemplateApply_View(id,options){
 	options.addElement = function(){
 		for (var i=0;i<options.inParams.length;i++){
 			var edit_class = eval(options.inParams[i].fields.editCtrlClass);
-			var edit_opts = (options.inParams[i].fields.editCtrlOptions)? eval(options.inParams[i].fields.editCtrlOptions) : {};
+			var edit_opts = (options.inParams[i].fields.editCtrlOptions)? CommonHelper.unserialize(options.inParams[i].fields.editCtrlOptions) : {};
 			var ctrl = new edit_class(id+":param"+i,edit_opts);
 			this.addElement(ctrl);
 			this.m_paramControls[options.inParams[i].fields.id] = {

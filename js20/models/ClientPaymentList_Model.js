@@ -103,6 +103,24 @@ function ClientPaymentList_Model(options){
 	
 	options.fields.client_id = new FieldInt("client_id",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.pay_docum_date = new FieldDate("pay_docum_date",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.pay_docum_number = new FieldString("pay_docum_number",filed_options);
+	
 		ClientPaymentList_Model.superclass.constructor.call(this,id,options);
 }
 extend(ClientPaymentList_Model,ModelXML);

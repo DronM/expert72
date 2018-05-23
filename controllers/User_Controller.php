@@ -61,7 +61,7 @@ class User_Controller extends ControllerSQL{
 				,array());
 		$pm->addParam($param);
 		
-				$param = new FieldExtEnum('role_id',',','admin,client,lawyer,expert,boss'
+				$param = new FieldExtEnum('role_id',',','admin,client,lawyer,expert,boss,accountant'
 				,array('required'=>TRUE));
 		$pm->addParam($param);
 		$param = new FieldExtPassword('pwd'
@@ -141,7 +141,7 @@ class User_Controller extends ControllerSQL{
 			));
 			$pm->addParam($param);
 		
-				$param = new FieldExtEnum('role_id',',','admin,client,lawyer,expert,boss'
+				$param = new FieldExtEnum('role_id',',','admin,client,lawyer,expert,boss,accountant'
 				,array(
 			));
 			$pm->addParam($param);

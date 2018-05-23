@@ -43,7 +43,7 @@ function ClientPayment_Model(options){
 	
 	options.fields.contract_id = new FieldInt("contract_id",filed_options);
 	options.fields.contract_id.getValidator().setRequired(true);
-				
+	
 				
 	
 	var filed_options = {};
@@ -53,6 +53,25 @@ function ClientPayment_Model(options){
 	
 	options.fields.pay_date = new FieldDate("pay_date",filed_options);
 	options.fields.pay_date.getValidator().setRequired(true);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.pay_docum_date = new FieldDate("pay_docum_date",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.pay_docum_number = new FieldString("pay_docum_number",filed_options);
+	options.fields.pay_docum_number.getValidator().setMaxLength('20');
 	
 				
 	

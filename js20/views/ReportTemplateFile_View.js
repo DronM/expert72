@@ -49,7 +49,9 @@ function ReportTemplateFile_View(id,options){
 		}));	
 
 		//********* fields grid ***********************
-		this.addElement(new ReportTemplateFieldGrid(id+":fields",{}));
+		this.addElement(new ReportTemplateFieldGrid(id+":fields",{
+			"readOnly":true
+		}));
 		
 		//********* permissions grid ***********************
 		this.addElement(new AccessPermissionGrid(id+":permissions"));

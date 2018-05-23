@@ -14,6 +14,7 @@ require_once(USER_CONTROLLERS_PATH.'DocFlowInClient_Controller.php');
 			require_once('models/MainMenu_Model_lawyer.php');
 			require_once('models/MainMenu_Model_expert.php');
 			require_once('models/MainMenu_Model_boss.php');
+			require_once('models/MainMenu_Model_accountant.php');
 		
 class ViewBase extends ViewHTMLXSLT {	
 
@@ -1195,6 +1196,7 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/DocFlowApprovementTemplateList_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ClientPaymentList_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/NewOrder_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ClientPaymentLoader_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ProjectManager_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'tmpl/App.templates.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/App.enums.js'));
@@ -1268,6 +1270,7 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ViewLocalGrid.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/DocFlowApprovementTypeEdit.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/DocFlowApprovementSelectRecipientTmplCmd.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ClientPaymentLoaderCmd.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Doc1c.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Doc1cOrder.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Doc1cAkt.js'));

@@ -691,8 +691,8 @@ class Contract_Controller extends ControllerSQL{
 	private function get_data_for_1c($contractId){
 		return $this->getDbLink()->query_first(sprintf(
 		"SELECT
-			'Контракт от '||to_char(contr.date_time,'DD.MM.YYYY')||' № '||contr.contract_number AS contract_name,
-			'Контракт' AS contract_type,
+			'Договор от '||to_char(contr.date_time,'DD.MM.YYYY')||' № '||contr.contract_number AS contract_name,
+			'Договор' AS contract_type,
 			contr.contract_ext_id,
 			contr.contract_number,
 			contr.contract_date,
@@ -711,6 +711,7 @@ class Contract_Controller extends ControllerSQL{
 			AS item_1c_doc_descr,
 			
 			coalesce(contr.expertise_cost_budget,0)+coalesce(contr.expertise_cost_self_fund,0) AS total,
+			contr.reg_number,
 			
 			cl.ext_id AS client_ext_id,
 			cl.name AS client_name,

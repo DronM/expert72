@@ -85,6 +85,11 @@ function ClientPaymentList_View(id,options){
 							"field":model.getField("client_id"),
 							"searchType":"on_match",
 							"typeChange":false
+						},
+						"ctrlOptions":{
+							"labelCaption":"",
+							"cmdClear":false,
+							"cmdOpen":false
 						}
 					})
 				],
@@ -100,6 +105,11 @@ function ClientPaymentList_View(id,options){
 							"field":model.getField("contract_id"),
 							"searchType":"on_match",
 							"typeChange":false
+						},
+						"ctrlOptions":{
+							"labelCaption":"",
+							"cmdClear":false,
+							"cmdOpen":false
 						}
 					})					
 				],
@@ -123,6 +133,9 @@ function ClientPaymentList_View(id,options){
 				"columns":[
 					new GridColumnDate({
 						"field":model.getField("pay_date"),
+						"ctrlOptions":{
+							"cmdClear":false
+						},
 						"searchOptions":{
 							"field":new FieldDate("pay_date"),
 							"searchType":"on_beg"
@@ -137,7 +150,40 @@ function ClientPaymentList_View(id,options){
 		new GridCellHead(id+":grid:head:total",{
 			"value":"Сумма",
 			"columns":[
-				new GridColumnFloat({"field":model.getField("total")})
+				new GridColumnFloat({
+					"field":model.getField("total"),
+					"ctrlOptions":{
+						"cmdClear":false
+					}
+				})
+			]
+		})					
+	);
+	grid_columns.push(
+		new GridCellHead(id+":grid:head:pay_docum_date",{
+			"value":"Дата п/п",
+			"columns":[
+				new GridColumnDate({
+					"field":model.getField("pay_docum_date"),
+					"ctrlOptions":{
+						"cmdClear":false
+					}
+				})
+			]
+		})					
+	);
+	grid_columns.push(
+		new GridCellHead(id+":grid:head:pay_docum_number",{
+			"value":"Номер п/п",
+			"columns":[
+				new GridColumn({
+					"field":model.getField("pay_docum_number"),
+					"ctrlClass":EditString,
+					"ctrlOptions":{
+						"maxLength":20,
+						"cmdClear":false
+					}
+				})
 			]
 		})					
 	);
@@ -150,6 +196,9 @@ function ClientPaymentList_View(id,options){
 		"editWinClass":null,
 		"popUpMenu":popup_menu,
 		"commands":new GridCmdContainerAjx(id+":grid:cmd",{
+			"addCustomCommands":options.detail? null:function(commands){
+				commands.push(new ClientPaymentLoaderCmd(id+":cmd:clientLoader"));
+			},
 			"filters":filters,
 			"variantStorage":options.variantStorage
 		}),

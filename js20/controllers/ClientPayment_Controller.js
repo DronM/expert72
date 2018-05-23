@@ -20,7 +20,7 @@
 function ClientPayment_Controller(options){
 	options = options || {};
 	options.listModelClass = ClientPaymentList_Model;
-	options.objModelClass = ClientPaymentList_Model;
+	options.objModelClass = ClientPayment_Model;
 	ClientPayment_Controller.superclass.constructor.call(this,options);	
 	
 	//methods
@@ -59,6 +59,18 @@ extend(ClientPayment_Controller,ControllerObjServer);
 	
 	var options = {};
 	
+	var field = new FieldDate("pay_docum_date",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldString("pay_docum_number",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
 	var field = new FieldFloat("total",options);
 	
 	pm.addField(field);
@@ -90,6 +102,18 @@ extend(ClientPayment_Controller,ControllerObjServer);
 	var options = {};
 	
 	var field = new FieldDate("pay_date",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldDate("pay_docum_date",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldString("pay_docum_number",options);
 	
 	pm.addField(field);
 	
@@ -163,6 +187,12 @@ extend(ClientPayment_Controller,ControllerObjServer);
 	var f_opts = {};
 	
 	pm.addField(new FieldInt("client_id",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldDate("pay_docum_date",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldString("pay_docum_number",f_opts));
 }
 
 			ClientPayment_Controller.prototype.add_get_from_1c = function(){
