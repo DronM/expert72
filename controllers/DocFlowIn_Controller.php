@@ -57,6 +57,9 @@ class DocFlowIn_Controller extends DocFlow_Controller{
 		$param = new FieldExtInt('from_application_id'
 				,array());
 		$pm->addParam($param);
+		$param = new FieldExtInt('from_doc_flow_out_client_id'
+				,array());
+		$pm->addParam($param);
 		$param = new FieldExtDateTimeTZ('end_date_time'
 				,array());
 		$pm->addParam($param);
@@ -135,6 +138,10 @@ class DocFlowIn_Controller extends DocFlow_Controller{
 			));
 			$pm->addParam($param);
 		$param = new FieldExtInt('from_application_id'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtInt('from_doc_flow_out_client_id'
 				,array(
 			));
 			$pm->addParam($param);

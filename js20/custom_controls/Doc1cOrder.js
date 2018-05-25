@@ -1,7 +1,7 @@
 /**	
  * @author Andrey Mikhalevich <katrenplus@mail.ru>, 2017
 
- * @extends
+ * @extends Doc1c
  * @requires core/extend.js  
 
  * @class

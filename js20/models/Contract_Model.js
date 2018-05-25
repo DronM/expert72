@@ -172,6 +172,16 @@ function Contract_Model(options){
 	
 	filed_options.autoInc = false;	
 	
+	options.fields.cost_eval_validity_pd_order = new FieldEnum("cost_eval_validity_pd_order",filed_options);
+	filed_options.enumValues = 'no_pd,simult_with_pd,after_pd';
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
 	options.fields.work_start_date = new FieldDate("work_start_date",filed_options);
 	
 				
@@ -405,6 +415,70 @@ function Contract_Model(options){
 	filed_options.autoInc = false;	
 	
 	options.fields.linked_contracts = new FieldJSON("linked_contracts",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.date_type = new FieldEnum("date_type",filed_options);
+	filed_options.enumValues = 'calendar,bank';
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.argument_document = new FieldText("argument_document",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.order_document = new FieldText("order_document",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.auth_letter = new FieldText("auth_letter",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.constr_name = new FieldText("constr_name",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.constr_address = new FieldJSONB("constr_address",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.constr_technical_features = new FieldJSONB("constr_technical_features",filed_options);
 	
 			
 			

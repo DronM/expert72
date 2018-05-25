@@ -103,6 +103,12 @@ extend(DocFlowIn_Controller,ControllerObjServer);
 	
 	var options = {};
 	
+	var field = new FieldInt("from_doc_flow_out_client_id",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
 	var field = new FieldDateTimeTZ("end_date_time",options);
 	
 	pm.addField(field);
@@ -224,6 +230,12 @@ extend(DocFlowIn_Controller,ControllerObjServer);
 	var options = {};
 	
 	var field = new FieldInt("from_application_id",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldInt("from_doc_flow_out_client_id",options);
 	
 	pm.addField(field);
 	

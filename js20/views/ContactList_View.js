@@ -1,9 +1,9 @@
 /**	
  * @author Andrey Mikhalevich <katrenplus@mail.ru>, 2017
 
- * @extends ViewAjx
+ * @extends ViewAjxList
  * @requires core/extend.js
- * @requires controls/ViewAjx.js    
+ * @requires controls/ViewAjxList.js    
 
  * @class
  * @classdesc
@@ -65,7 +65,7 @@ function ContactList_View(id,options){
 		"focus":true
 	}));		
 }
-extend(ContactList_View,ViewAjx);
+extend(ContactList_View,ViewAjxList);
 
 /* Constants */
 

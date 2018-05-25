@@ -176,11 +176,7 @@ $permissions = array();
 			
 				$permissions['DocFlowOutClient_Controller_remove_file']=TRUE;
 			
-				$permissions['DocFlowInClient_Controller_insert']=TRUE;
-			
 				$permissions['DocFlowInClient_Controller_update']=TRUE;
-			
-				$permissions['DocFlowInClient_Controller_delete']=TRUE;
 			
 				$permissions['DocFlowInClient_Controller_get_object']=TRUE;
 			

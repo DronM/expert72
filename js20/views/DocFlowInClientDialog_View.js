@@ -1,7 +1,7 @@
 /**	
  * @author Andrey Mikhalevich <katrenplus@mail.ru>, 2017
 
- * @extends
+ * @extends ViewObjectAjx
  * @requires core/extend.js  
 
  * @class
@@ -18,13 +18,15 @@ function DocFlowInClientDialog_View(id,options){
 	options.controller = new DocFlowInClient_Controller();
 	options.model = options.models.DocFlowInClientDialog_Model;
 	
-	options.cmdSave = false;
-	options.cmdOk = false;
+	options.cmdSave = true;
+	options.cmdOk = true;
 	
 	options.addElement = function(){
 		var bs = window.getBsCol();
 		var editContClassName = "input-group "+bs+"10";
 		var labelClassName = "control-label "+bs+"2";
+
+		this.addElement(new HiddenKey(this.getId()+":id"));
 
 		this.addElement(new EditString(id+":reg_number",{
 			"attrs":{"style":"width:150px;"},
@@ -43,6 +45,13 @@ function DocFlowInClientDialog_View(id,options){
 			"cmdClear":false,
 			"cmdSelect":false,
 			"enabled":false
+		}));	
+
+		this.addElement(new EditString(id+":reg_number_out",{
+			"editContClassName":editContClassName,
+			"labelClassName":labelClassName,
+			"labelCaption":"Наш рег.номер:",
+			"cmdClear":false
 		}));	
 		
 		this.addElement(new EditString(id+":subject",{
@@ -79,13 +88,19 @@ function DocFlowInClientDialog_View(id,options){
 	
 	//read	
 	this.setDataBindings([
-		new DataBinding({"control":this.getElement("date_time")})
+		new DataBinding({"control":this.getElement("id")})
+		,new DataBinding({"control":this.getElement("date_time")})
 		,new DataBinding({"control":this.getElement("reg_number")})
+		,new DataBinding({"control":this.getElement("reg_number_out")})
 		,new DataBinding({"control":this.getElement("subject")})
 		,new DataBinding({"control":this.getElement("content")})
 		,new DataBinding({"control":this.getElement("comment_text")})
 	]);
-	
+	//write
+	this.setWriteBindings([
+		new CommandBinding({"control":this.getElement("id")})
+		,new CommandBinding({"control":this.getElement("reg_number_out")})
+	]);
 }
 extend(DocFlowInClientDialog_View,ViewObjectAjx);
 

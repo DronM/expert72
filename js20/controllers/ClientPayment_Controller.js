@@ -212,6 +212,12 @@ extend(ClientPayment_Controller,ControllerObjServer);
 	
 		pm.addField(new FieldDate("date_to",options));
 	
+				
+	
+	var options = {};
+	
+		pm.addField(new FieldInt("interactive",options));
+	
 			
 	this.addPublicMethod(pm);
 }

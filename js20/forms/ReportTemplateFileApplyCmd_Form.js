@@ -1,8 +1,9 @@
 /**	
  * @author Andrey Mikhalevich <katrenplus@mail.ru>, 2017
 
- * @extends
- * @requires core/extend.js  
+ * @extends WindowFormModalBS
+ * @requires core/extend.js
+ * @requires WindowFormModalBS.js     
 
  * @class
  * @classdesc

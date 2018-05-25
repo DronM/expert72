@@ -44,6 +44,9 @@ DELETE FROM user_email_confirmations;
 
 INSERT INTO client_payments
 (contract_id,pay_date,total)
+(select id,date_time,payment from contracts where payment2>0)
+INSERT INTO client_payments
+(contract_id,pay_date,total)
 (select id,date_time,payment from contracts where payment>0)
 
 
@@ -93,7 +96,6 @@ FROM tmp_logins AS t
 
 update contracts
 set user_id=sub.user_id
-
 FROM (
 select contracts.id AS contract_id,contracts.application_id,users.id AS user_id
 from contracts
@@ -111,7 +113,6 @@ WHERE id=sub.contract_id
 
 update applications
 set user_id=sub.user_id
-
 FROM (
 select contracts.id AS contract_id,contracts.application_id,users.id AS user_id
 from contracts
@@ -127,13 +128,14 @@ where users.tmp_inn IS NOT NULL AND users.id IN (
 WHERE id=sub.application_id
 
 
+--ПЕРЕЗАПУСТИТЬ ПЕРЕЗ ЗАГРУЗКОЙ
 SELECT setval('contracts_id_seq', 1);
 SELECT setval('applications_id_seq', 1);
 SELECT setval('client_payments_id_seq', 1);
 -- Trigger: contacts_before_trigger on public.contacts
 
- DROP TRIGGER contacts_before_trigger ON public.contacts;
-
+--*** УБРАТЬ ТРИГГЕР ПЕРЕД ЗАПУСКОМ ЗАГРУЗКИ *****
+DROP TRIGGER contacts_before_trigger ON public.contacts;
 CREATE TRIGGER contacts_before_trigger
   BEFORE INSERT
   ON public.contacts
@@ -141,6 +143,7 @@ CREATE TRIGGER contacts_before_trigger
   EXECUTE PROCEDURE public.contacts_process();
 
 
+--*** ДЛЯ ВСЕХ ЗАПОЛНИТЬ  linked_contracts *****
 --"{"id":"LinkedContractList_Model","rows":[{"fields":{"id":1,"contracts_ref":{"keys":{"id":2},"descr":"Контракт №0001/15 от 12/01/15"}}}]}"
 UPDATE contracts
 SET linked_contracts=sel.linked_contracts
@@ -187,14 +190,15 @@ GROUP BY contr1.id
 WHERE sel.id=contracts.id 
 
 
-
+--*** ВРОДЕ НЕ НАДО *****
+/*
 update contracts
 set linked_contracts='{"id":"LinkedContractList_Model","rows":[]}'
 where linked_contracts is null
+*/
 
 
-
-
+--*** ДЛЯ ВСЕХ Добавить слэш!!! *****
 update contracts
 set contract_number=cor.corrected_contract_number
 FROM(
@@ -206,3 +210,22 @@ AND length(contract_number)<5
 ORDER BY date_time desc
 ) AS cor
 WHERE cor.old_number=contract_number;
+
+
+--***************************************************
+update contracts
+set
+	constr_name=app.constr_name,
+	constr_address=app.constr_address,
+	constr_technical_features=app.constr_technical_features
+
+FROM (
+SELECT
+	applications.id,
+	applications.constr_name,
+	applications.constr_address,
+	applications.constr_technical_features					
+	
+FROM applications
+) As app
+WHERE app.id=contracts.application_id

@@ -107,6 +107,15 @@ class DocFlowOutClientDialog_Model extends ModelSQL{
 		$f_applications_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"applications_ref",$f_opts);
 		$this->addField($f_applications_ref);
 		//********************
+		
+		//*** Field reg_number_in ***
+		$f_opts = array();
+		$f_opts['length']=15;
+		$f_opts['id']="reg_number_in";
+				
+		$f_reg_number_in=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"reg_number_in",$f_opts);
+		$this->addField($f_reg_number_in);
+		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}
 

@@ -153,6 +153,14 @@ class ContractDialog_Model extends ModelSQL{
 		$this->addField($f_expertise_cost_self_fund);
 		//********************
 		
+		//*** Field cost_eval_validity_pd_order ***
+		$f_opts = array();
+		$f_opts['id']="cost_eval_validity_pd_order";
+				
+		$f_cost_eval_validity_pd_order=new FieldSQLEnum($this->getDbLink(),$this->getDbName(),$this->getTableName(),"cost_eval_validity_pd_order",$f_opts);
+		$this->addField($f_cost_eval_validity_pd_order);
+		//********************
+		
 		//*** Field work_start_date ***
 		$f_opts = array();
 		$f_opts['id']="work_start_date";
@@ -367,6 +375,62 @@ class ContractDialog_Model extends ModelSQL{
 		$this->addField($f_linked_contracts);
 		//********************
 		
+		//*** Field date_type ***
+		$f_opts = array();
+		$f_opts['id']="date_type";
+				
+		$f_date_type=new FieldSQLEnum($this->getDbLink(),$this->getDbName(),$this->getTableName(),"date_type",$f_opts);
+		$this->addField($f_date_type);
+		//********************
+		
+		//*** Field argument_document ***
+		$f_opts = array();
+		$f_opts['id']="argument_document";
+				
+		$f_argument_document=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"argument_document",$f_opts);
+		$this->addField($f_argument_document);
+		//********************
+		
+		//*** Field order_document ***
+		$f_opts = array();
+		$f_opts['id']="order_document";
+				
+		$f_order_document=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"order_document",$f_opts);
+		$this->addField($f_order_document);
+		//********************
+		
+		//*** Field auth_letter ***
+		$f_opts = array();
+		$f_opts['id']="auth_letter";
+				
+		$f_auth_letter=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"auth_letter",$f_opts);
+		$this->addField($f_auth_letter);
+		//********************
+		
+		//*** Field constr_name ***
+		$f_opts = array();
+		$f_opts['id']="constr_name";
+				
+		$f_constr_name=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"constr_name",$f_opts);
+		$this->addField($f_constr_name);
+		//********************
+		
+		//*** Field constr_address ***
+		$f_opts = array();
+		$f_opts['id']="constr_address";
+				
+		$f_constr_address=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"constr_address",$f_opts);
+		$this->addField($f_constr_address);
+		//********************
+		
+		//*** Field constr_technical_features ***
+		$f_opts = array();
+		$f_opts['id']="constr_technical_features";
+				
+		$f_constr_technical_features=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"constr_technical_features",$f_opts);
+		$this->addField($f_constr_technical_features);
+		//********************
+		
 		//*** Field applications_ref ***
 		$f_opts = array();
 		$f_opts['id']="applications_ref";
@@ -399,12 +463,12 @@ class ContractDialog_Model extends ModelSQL{
 		$this->addField($f_customer_descr);
 		//********************
 		
-		//*** Field contractors_descr ***
+		//*** Field contractors_list ***
 		$f_opts = array();
-		$f_opts['id']="contractors_descr";
+		$f_opts['id']="contractors_list";
 				
-		$f_contractors_descr=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"contractors_descr",$f_opts);
-		$this->addField($f_contractors_descr);
+		$f_contractors_list=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"contractors_list",$f_opts);
+		$this->addField($f_contractors_list);
 		//********************
 		
 		//*** Field developer_descr ***
@@ -421,30 +485,6 @@ class ContractDialog_Model extends ModelSQL{
 				
 		$f_build_types_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"build_types_ref",$f_opts);
 		$this->addField($f_build_types_ref);
-		//********************
-		
-		//*** Field constr_name ***
-		$f_opts = array();
-		$f_opts['id']="constr_name";
-				
-		$f_constr_name=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"constr_name",$f_opts);
-		$this->addField($f_constr_name);
-		//********************
-		
-		//*** Field constr_address ***
-		$f_opts = array();
-		$f_opts['id']="constr_address";
-				
-		$f_constr_address=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"constr_address",$f_opts);
-		$this->addField($f_constr_address);
-		//********************
-		
-		//*** Field constr_technical_features ***
-		$f_opts = array();
-		$f_opts['id']="constr_technical_features";
-				
-		$f_constr_technical_features=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"constr_technical_features",$f_opts);
-		$this->addField($f_constr_technical_features);
 		//********************
 		
 		//*** Field construction_types_ref ***

@@ -30,44 +30,6 @@ class DocFlowInClient_Controller extends ControllerSQL{
 	public function __construct($dbLinkMaster=NULL){
 		parent::__construct($dbLinkMaster);
 			
-
-		/* insert */
-		$pm = new PublicMethod('insert');
-		$param = new FieldExtDateTimeTZ('date_time'
-				,array());
-		$pm->addParam($param);
-		$param = new FieldExtString('reg_number'
-				,array());
-		$pm->addParam($param);
-		$param = new FieldExtInt('application_id'
-				,array());
-		$pm->addParam($param);
-		$param = new FieldExtInt('user_id'
-				,array());
-		$pm->addParam($param);
-		$param = new FieldExtText('subject'
-				,array());
-		$pm->addParam($param);
-		$param = new FieldExtText('content'
-				,array());
-		$pm->addParam($param);
-		$param = new FieldExtText('comment_text'
-				,array());
-		$pm->addParam($param);
-		$param = new FieldExtJSONB('files'
-				,array());
-		$pm->addParam($param);
-		$param = new FieldExtBool('viewed'
-				,array());
-		$pm->addParam($param);
-		
-		$pm->addParam(new FieldExtInt('ret_id'));
-		
-		
-		$this->addPublicMethod($pm);
-		$this->setInsertModelId('DocFlowInClient_Model');
-
-			
 		/* update */		
 		$pm = new PublicMethod('update');
 		
@@ -119,21 +81,16 @@ class DocFlowInClient_Controller extends ControllerSQL{
 			));
 			$pm->addParam($param);
 		
+			$f_params = array();
+			
+				$f_params['required']=TRUE;
+			$param = new FieldExtText('reg_number_out'
+			,$f_params);
+		$pm->addParam($param);		
+		
 		
 			$this->addPublicMethod($pm);
 			$this->setUpdateModelId('DocFlowInClient_Model');
-
-			
-		/* delete */
-		$pm = new PublicMethod('delete');
-		
-		$pm->addParam(new FieldExtInt('id'
-		));		
-		
-		$pm->addParam(new FieldExtInt('count'));
-		$pm->addParam(new FieldExtInt('from'));				
-		$this->addPublicMethod($pm);					
-		$this->setDeleteModelId('DocFlowInClient_Model');
 
 			
 		/* get_object */
@@ -291,6 +248,17 @@ class DocFlowInClient_Controller extends ControllerSQL{
 			)
 		);
 		return $model;		
+	}
+	
+	public function update($pm){
+		$reg_number_out = $this->getExtDbVal($pm,'reg_number_out');
+		if ($pm->getParamValue('reg_number_out')){
+			$this->getDbLinkMaster()->query(sprintf(
+			"SELECT doc_flow_in_client_reg_numbers_insert(%d,%s)",
+			$this->getExtDbVal($pm,'old_id'),
+			$reg_number_out
+			));
+		}
 	}
 	
 

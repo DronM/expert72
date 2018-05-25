@@ -1,23 +1,29 @@
--- VIEW: client_payments_list
+-- VIEW: doc_flow_in_client_dialog
 
---DROP VIEW client_payments_list;
+--DROP VIEW doc_flow_in_client_dialog;
 
-CREATE OR REPLACE VIEW client_payments_list AS
+CREATE OR REPLACE VIEW doc_flow_in_client_dialog AS
 	SELECT
-		pm.id,
-		clients_ref(cl) AS clients_ref,
-		contracts_ref(contr) AS contracts_ref,
-		pm.pay_date,
-		pm.total,
-		contr.client_id,
-		pm.contract_id,
-		pm.pay_docum_date,
-		pm.pay_docum_number
+		t.id,
+		t.date_time,
+		t.reg_number,
+		t.subject,
+		t.user_id,
+		t.viewed,
+		applications_ref(applications) AS applications_ref,
+		t.comment_text,
+		t.content,
+		json_build_array(
+			json_build_object(
+				'files',t.files
+			)
+		) AS files,
+		regs.reg_number AS reg_number_out
 		
-	FROM client_payments AS pm	
-	LEFT JOIN contracts AS contr ON contr.id=pm.contract_id
-	LEFT JOIN clients AS cl ON cl.id=contr.client_id
-	ORDER BY pm.pay_date DESC
+	FROM doc_flow_in_client t
+	LEFT JOIN applications ON applications.id=t.application_id
+	LEFT JOIN doc_flow_in_client_reg_numbers AS regs ON regs.doc_flow_in_client_id=t.id
+	ORDER BY t.date_time DESC
 	;
 	
-ALTER VIEW client_payments_list OWNER TO expert72;
+ALTER VIEW doc_flow_in_client_dialog OWNER TO expert72;

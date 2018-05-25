@@ -1142,7 +1142,6 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ConstructionTypeList_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ConstructionTypeDialog_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/HolidayList_View.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ApplicationInMailList_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/DocFlowOutList_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/DocFlowOutDialog_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/DocFlowInList_View.js'));
@@ -1275,6 +1274,7 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Doc1cOrder.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Doc1cAkt.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/LinkedContractListGrid.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ContractorListGrid.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/Enum_role_types.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/rs_ru.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/rs_common_ru.js'));
@@ -1518,6 +1518,14 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/ProjectManager_Controller.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/LinkedContractList_Controller.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/LinkedContractList_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/Enum_cost_eval_validity_pd_orders.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/EnumGridColumn_cost_eval_validity_pd_orders.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/Enum_date_types.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/EnumGridColumn_date_types.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/ContractorList_Controller.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ContractorList_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowOutClientRegNumber_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowInClientRegNumber_Model.js'));
 	
 			if (isset($_SESSION['scriptId'])){
 				$script_id = $_SESSION['scriptId'];

@@ -117,6 +117,16 @@ function DocFlowInClientDialog_Model(options){
 	
 			
 			
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.reg_number_out = new FieldString("reg_number_out",filed_options);
+	options.fields.reg_number_out.getValidator().setMaxLength('30');
+	
 			
 			
 			

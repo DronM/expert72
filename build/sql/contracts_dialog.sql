@@ -17,10 +17,35 @@ CREATE OR REPLACE VIEW contracts_dialog AS
 		applications_client_descr(app.applicant) AS applicant_descr,
 		applications_client_descr(app.customer) AS customer_descr,
 		applications_client_descr(app.developer) AS developer_descr,
+		
+		(SELECT
+			json_build_object(
+				'id','ContractorList_Model',
+				'rows',json_build_array(
+					json_build_object(
+						'fields',
+						json_build_object(
+							'name',
+							sub.contractors->>'name'||
+							coalesce(' '||(sub.contractors->>'inn')::text,'')||
+							coalesce('/'||(sub.contractors->>'kpp')::text,'')
+						)
+					)
+				)
+			)
+		FROM (
+			SELECT
+				jsonb_array_elements(contractors) AS contractors
+			FROM applications app_contr WHERE app_contr.id=app.id
+		) AS sub		
+		)
+		AS contractors_list,
+		
 		app.construction_types_ref,
-		app.constr_name AS constr_name,
-		kladr_parse_addr(app.constr_address) AS constr_address,
-		app.constr_technical_features,
+		t.constr_name AS constr_name,
+		--kladr_parse_addr(t.constr_address) AS constr_address,
+		t.constr_address,
+		t.constr_technical_features,
 		app.total_cost_eval,
 		app.limit_cost_eval,
 		app.build_types_ref,
@@ -106,7 +131,13 @@ CREATE OR REPLACE VIEW contracts_dialog AS
 		
 		t.contract_return_date,
 		
-		t.linked_contracts
+		t.linked_contracts,
+		
+		t.cost_eval_validity_pd_order,
+		t.date_type,
+		t.argument_document,
+		t.order_document,
+		t.auth_letter		
 		
 	FROM contracts t
 	LEFT JOIN applications_dialog AS app ON app.id=t.application_id

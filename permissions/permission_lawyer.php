@@ -554,11 +554,7 @@ $permissions = array();
 				
 					$permissions['DocFlowOutClient_Controller_remove_file']=TRUE;
 				
-					$permissions['DocFlowInClient_Controller_insert']=TRUE;
-				
 					$permissions['DocFlowInClient_Controller_update']=TRUE;
-				
-					$permissions['DocFlowInClient_Controller_delete']=TRUE;
 				
 					$permissions['DocFlowInClient_Controller_get_object']=TRUE;
 				
@@ -749,6 +745,8 @@ $permissions = array();
 					$permissions['LinkedContractList_Controller_get_list']=TRUE;
 				
 					$permissions['LinkedContractList_Controller_get_object']=TRUE;
+				
+					$permissions['ContractorList_Controller_get_list']=TRUE;
 				
 return array_key_exists($contrId.'_'.$methId,$permissions);
 }

@@ -1,7 +1,7 @@
 /**	
  * @author Andrey Mikhalevich <katrenplus@mail.ru>, 2017
 
- * @extends
+ * @extends DocumentDialog_View
  * @requires core/extend.js  
 
  * @class
@@ -32,6 +32,9 @@ function ContractDialog_View(id,options){
 	
 	options.templateOptions.primaryContractExists = (!options.model.getField("primary_contracts_ref").isNull()||options.model.getField("primary_contract_reg_number").isSet());
 	options.templateOptions.modifPrimaryContractExists = (!options.model.getField("modif_primary_contracts_ref").isNull()||options.model.getField("modif_primary_contract_reg_number").isSet());
+	
+	options.templateOptions.costEvalValidity = options.model.getFieldValue("cost_eval_validity");
+	options.templateOptions.pd = (options.model.getFieldValue("document_type")=="pd");
 	
 	options.templateOptions.notExpert = (window.getApp().getServVar("role_id")!="expert");
 	options.templateOptions.setAccess = (
@@ -96,12 +99,14 @@ function ContractDialog_View(id,options){
 			"enabled":false
 		}));	
 
-		this.addElement(new Enum_expertise_types(id+":expertise_type",{
-			"labelCaption":"Вид экспертизы:",
-			"editContClassName":editContClassName,
-			"labelClassName":labelClassName,			
-			"enabled":false
-		}));	
+		if (options.templateOptions.pd){
+			this.addElement(new Enum_expertise_types(id+":expertise_type",{
+				"labelCaption":"Вид гос.экспертизы:",
+				"editContClassName":editContClassName,
+				"labelClassName":labelClassName,			
+				"enabled":false
+			}));	
+		}
 		this.addElement(new Enum_document_types(id+":document_type",{
 			"labelCaption":"Услуга:",
 			"editContClassName":editContClassName,
@@ -213,14 +218,15 @@ function ContractDialog_View(id,options){
 			"editContClassName":editContClassName,
 			"labelClassName":labelClassName,
 			"labelCaption":"Объект строительства:",
-			"enabled":false
+			"enabled":options.templateOptions.notExpert
 		}));	
-		this.addElement(new EditString(id+":constr_address",{
+		this.addElement(new EditAddress(id+":constr_address",{
+			"mainView":this,
 			"cmdClear":false,
 			"editContClassName":editContClassName,
 			"labelClassName":labelClassName,
 			"labelCaption":"Адрес объекта строительства:",
-			"enabled":false
+			"enabled":options.templateOptions.notExpert
 		}));	
 		this.addElement(new EditString(id+":kadastr_number",{
 			"editContClassName":editContClassName,
@@ -242,7 +248,9 @@ function ContractDialog_View(id,options){
 		}));	
 
 		//application based fields
-		this.addElement(new ConstrTechnicalFeatureGrid(id+":constr_technical_features",{"editEnabled":false}));
+		this.addElement(new ConstrTechnicalFeatureGrid(id+":constr_technical_features",{
+			"editEnabled":options.templateOptions.notExpert
+		}));
 		
 		this.addElement(new ConstructionTypeSelect(id+":construction_types_ref",{
 			"editContClassName":editContClassName,
@@ -255,13 +263,23 @@ function ContractDialog_View(id,options){
 			"labelClassName":labelClassName,
 			"enabled":false
 		}));	
-		this.addElement(new EditCheckBox(id+":cost_eval_validity_simult",{
-			"cmdClear":false,
-			"editContClassName":editContClassName,
-			"labelClassName":labelClassName,
-			"labelCaption":"Одновременном с ПД:",
-			"enabled":false
-		}));			
+		
+		if (options.templateOptions.costEvalValidity){
+			this.addElement(new Enum_cost_eval_validity_pd_orders(id+":cost_eval_validity_pd_order",{
+				"editContClassName":editContClassName,
+				"labelClassName":labelClassName,
+				"labelCaption":"Тип проверки ПД:",
+				"enabled":false
+			}));			
+			this.addElement(new EditString(id+":order_document",{
+				"maxLength":"150",
+				"labelCaption":"Распорядительный акт:",
+				"editContClassName":"input-group "+bs+"8",
+				"labelClassName":"control-label "+bs+"4"
+			}));	
+			
+		}
+		
 		if (options.templateOptions.primaryContractExists){
 			this.addElement(new ApplicationPrimaryCont(id+":primary_contracts_ref",{
 				"isModification":false,
@@ -327,6 +345,24 @@ function ContractDialog_View(id,options){
 			"labelClassName":"control-label "+bs+"4",
 			"enabled":options.templateOptions.notExpert
 		}));	
+		this.addElement(new Enum_date_types(id+":date_type",{
+			"labelCaption":"Дни:",
+			"editContClassName":"input-group "+bs+"8",
+			"labelClassName":"control-label "+bs+"4",
+			"enabled":options.templateOptions.notExpert
+		}));	
+		this.addElement(new EditString(id+":argument_document",{
+			"maxLength":"150",
+			"labelCaption":"Акт оспаривания:",
+			"editContClassName":"input-group "+bs+"8",
+			"labelClassName":"control-label "+bs+"4"
+		}));	
+		this.addElement(new EditString(id+":auth_letter",{
+			"maxLength":"150",
+			"labelCaption":"Доверенность:",
+			"editContClassName":"input-group "+bs+"8",
+			"labelClassName":"control-label "+bs+"4"
+		}));	
 		
 		//Вкладки с документацией
 		this.addDocumentTabs(options.model,null,true);
@@ -379,6 +415,9 @@ function ContractDialog_View(id,options){
 		this.addElement(new LinkedContractListGrid(id+":linked_contracts",{
 			"enabled":(role=="expert")
 		}));		
+
+		//********* contractors list grid ***********************
+		this.addElement(new ContractorListGrid(id+":contractors_list"));		
 		
 	};
 		
@@ -391,7 +430,6 @@ function ContractDialog_View(id,options){
 		,new DataBinding({"control":this.getElement("applicant_descr")})
 		,new DataBinding({"control":this.getElement("customer_descr")})
 		,new DataBinding({"control":this.getElement("developer_descr")})
-		,new DataBinding({"control":this.getElement("expertise_type")})
 		,new DataBinding({"control":this.getElement("document_type")})
 		,new DataBinding({"control":this.getElement("employees_ref")})
 		,new DataBinding({"control":this.getElement("comment_text")})
@@ -408,10 +446,14 @@ function ContractDialog_View(id,options){
 		,new DataBinding({"control":this.getElement("reg_number")})
 		,new DataBinding({"control":this.getElement("expertise_reject_types_ref")})		
 		,new DataBinding({"control":this.getElement("expertise_day_count")})
+		,new DataBinding({"control":this.getElement("date_type"),"field":this.m_model.getField("date_type")})
+		,new DataBinding({"control":this.getElement("auth_letter")})
+		,new DataBinding({"control":this.getElement("argument_document")})
 		,new DataBinding({"control":this.getElement("work_start_date")})
 		,new DataBinding({"control":this.getElement("work_end_date")})
 		,new DataBinding({"control":this.getElement("constr_address")})
 		,new DataBinding({"control":this.getElement("linked_contracts")})
+		,new DataBinding({"control":this.getElement("contractors_list")})
 		
 	];
 	
@@ -437,6 +479,14 @@ function ContractDialog_View(id,options){
 	if (options.templateOptions.primaryContractExists){
 		read_b.push(new DataBinding({"control":this.getElement("primary_contracts_ref")}));
 	}
+	if (options.templateOptions.costEvalValidity){
+		read_b.push(new DataBinding({"control":this.getElement("cost_eval_validity_pd_order")}));
+		read_b.push(new DataBinding({"control":this.getElement("order_document")}));
+	}
+	if (options.templateOptions.pd){
+		read_b.push(new DataBinding({"control":this.getElement("expertise_type")}));
+	}
+	
 	if (options.templateOptions.modifPrimaryContractExists){
 		read_b.push(new DataBinding({"control":this.getElement("modif_primary_contracts_ref")}));
 	}
@@ -457,6 +507,9 @@ function ContractDialog_View(id,options){
 			,new CommandBinding({"control":this.getElement("expertise_result_date")})
 			,new CommandBinding({"control":this.getElement("expertise_reject_types_ref"),"fieldId":"expertise_reject_type_id"})
 			,new CommandBinding({"control":this.getElement("expertise_day_count")})
+			,new CommandBinding({"control":this.getElement("argument_document")})
+			,new CommandBinding({"control":this.getElement("auth_letter")})
+			,new CommandBinding({"control":this.getElement("date_type")})
 			,new CommandBinding({"control":this.getElement("reg_number")})
 			,new CommandBinding({"control":this.getElement("contract_date")})
 			,new CommandBinding({"control":this.getElement("contract_return_date")})
@@ -466,7 +519,13 @@ function ContractDialog_View(id,options){
 			,new CommandBinding({"control":this.getElement("work_start_date")})
 			,new CommandBinding({"control":this.getElement("work_end_date")})
 			,new CommandBinding({"control":this.getElement("linked_contracts"),"fieldId":"linked_contracts"})
+			,new CommandBinding({"control":this.getElement("constr_name")})
+			,new CommandBinding({"control":this.getElement("constr_address"),"fieldId":"constr_address"})
+			,new CommandBinding({"control":this.getElement("constr_technical_features"),"fieldId":"constr_technical_features"})
 		];
+		if (options.templateOptions.costEvalValidity){
+			write_b.push(new CommandBinding({"control":this.getElement("order_document")}));
+		}
 	}
 	else{
 		//no write

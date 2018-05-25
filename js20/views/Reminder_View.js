@@ -1,7 +1,7 @@
 /**	
  * @author Andrey Mikhalevich <katrenplus@mail.ru>, 2018
 
- * @extends
+ * @extends ControlContainer
  * @requires core/extend.js  
 
  * @class

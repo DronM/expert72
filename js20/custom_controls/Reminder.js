@@ -1,9 +1,6 @@
 /**	
  * @author Andrey Mikhalevich <katrenplus@mail.ru>, 2018
 
- * @extends
- * @requires core/extend.js  
-
  * @class
  * @classdesc
  * @param {int} checkInterval in Seconds

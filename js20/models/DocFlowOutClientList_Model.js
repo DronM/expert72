@@ -112,6 +112,16 @@ function DocFlowOutClientList_Model(options){
 			
 			
 			
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.reg_number_in = new FieldString("reg_number_in",filed_options);
+	options.fields.reg_number_in.getValidator().setMaxLength('15');
+	
 			
 			
 		DocFlowOutClientList_Model.superclass.constructor.call(this,id,options);

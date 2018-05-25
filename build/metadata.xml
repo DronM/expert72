@@ -2,7 +2,7 @@
 <metadata owner="expert72">
 	<versions>
 		<version dateOpen="2017-09-27 12:09:48" dateClose="2017-12-08 10:12:08">1.001 
-		<lastBuild>2018-05-23 06:05:31</lastBuild></version>
+		<lastBuild>2018-05-25 10:12:36</lastBuild></version>
 		<version dateOpen="2017-12-08 11:12:01" dateClose="2017-12-08 11:12:04">1.002</version>
 		<version dateOpen="2017-12-08 11:12:20" dateClose="2017-12-08 11:12:20">1.0.3</version>
 		<version dateOpen="2017-12-12 11:12:07" dateClose="2017-12-12 11:12:07">1.0.4</version>
@@ -37,6 +37,7 @@
 		<version dateOpen="2018-05-22 06:05:38" dateClose="2018-05-22 06:05:48">1.0.33</version>
 		<version dateOpen="2018-05-22 08:05:52" dateClose="2018-05-22 09:05:07">1.0.34</version>
 		<version dateOpen="2018-05-22 09:05:07" dateClose="2018-05-23 06:05:05">1.0.35</version>
+		<version dateOpen="2018-05-23 10:05:33" dateClose="2018-05-25 10:05:12">1.0.36</version>
 	</versions>
 	<globalFilters>
 		<field id="user_id"/>
@@ -331,6 +332,25 @@
 			</value>
 			<value id="negative">
 				<ru descr="&#x41E;&#x442;&#x440;&#x438;&#x446;&#x430;&#x442;&#x435;&#x43B;&#x44C;&#x43D;&#x43E;&#x435; &#x437;&#x430;&#x43A;&#x43B;&#x44E;&#x447;&#x435;&#x43D;&#x438;&#x435;"/>
+			</value>
+		</enum>
+		<enum id="cost_eval_validity_pd_orders" descr="&#x41F;&#x43E;&#x440;&#x44F;&#x434;&#x43E;&#x43A; &#x440;&#x430;&#x441;&#x441;&#x43C;&#x43E;&#x442;&#x440;&#x435;&#x43D;&#x438;&#x44F; &#x41F;&#x414; &#x43F;&#x440;&#x438; &#x434;&#x43E;&#x441;&#x442;&#x43E;&#x432;&#x435;&#x440;&#x43D;&#x43E;&#x441;&#x442;&#x438;">
+			<value id="no_pd">
+				<ru descr="&#x41F;&#x414; &#x43D;&#x435; &#x43F;&#x43E;&#x434;&#x43B;&#x435;&#x436;&#x438;&#x442;"/>
+			</value>
+			<value id="simult_with_pd">
+				<ru descr="&#x41E;&#x434;&#x43D;&#x43E;&#x432;&#x440;&#x435;&#x43C;&#x435;&#x43D;&#x43D;&#x43E; &#x441; &#x41F;&#x414;"/>
+			</value>
+			<value id="after_pd">
+				<ru descr="&#x41F;&#x43E;&#x441;&#x43B;&#x435; &#x41F;&#x414;"/>
+			</value>
+		</enum>
+		<enum id="date_types" descr="&#x412;&#x438;&#x434;&#x44B; &#x434;&#x43D;&#x435;&#x439;">
+			<value id="calendar">
+				<ru descr="&#x41A;&#x430;&#x43B;&#x435;&#x43D;&#x434;&#x430;&#x440;&#x43D;&#x44B;&#x435;"/>
+			</value>
+			<value id="bank">
+				<ru descr="&#x420;&#x430;&#x431;&#x43E;&#x447;&#x438;&#x435;"/>
 			</value>
 		</enum>
 	</enums>
@@ -1281,8 +1301,9 @@
 			<field id="from_client_number" dataType="String" length="20"/>
 			<field id="from_client_date" dataType="Date"/>
 			<field id="from_addr_name" dataType="String" length="250"/>
-			<field id="from_user_id" dataType="Int" refTable="users" refField="id"/>
-			<field id="from_application_id" dataType="Int" refTable="applications" refField="id"/>
+			<field id="from_user_id" dataType="Int"/>
+			<field id="from_application_id" dataType="Int"/>
+			<field id="from_doc_flow_out_client_id" dataType="Int"/>
 			<field id="end_date_time" dataType="DateTimeTZ"/>
 			<field id="subject" dataType="Text"/>
 			<field id="content" dataType="Text"/>
@@ -1727,6 +1748,7 @@
 			<field id="subject" dataType="Text"/>
 			<field id="user_id" dataType="Int"/>
 			<field id="reg_number" dataType="String" length="15"/>
+			<field id="reg_number_in" dataType="String" length="15"/>
 			<field id="sent" dataType="Bool"/>
 			<globalFilter id="user_id"/>
 		</model>
@@ -1737,6 +1759,7 @@
 			<field id="subject" dataType="Text"/>
 			<field id="user_id" dataType="Int"/>
 			<field id="reg_number" dataType="String" length="15"/>
+			<field id="reg_number_in" dataType="String" length="15"/>
 			<field id="comment_text" dataType="Text"/>
 			<field id="content" dataType="Text"/>
 			<field id="sent" dataType="Bool"/>
@@ -1748,6 +1771,11 @@
 			<index id="doc_flow_out_client_document_files_doc_idx">
 				<field id="doc_flow_out_client_id"/>
 			</index>
+		</model>
+		<model id="DocFlowOutClientRegNumber" parent="ModelSQL" dataTable="doc_flow_out_client_reg_numbers" virtual="FALSE">
+			<field id="doc_flow_out_client_id" dataType="Int" required="TRUE" primaryKey="TRUE"/>
+			<field id="application_id" dataType="Int" required="TRUE" primaryKey="TRUE"/>
+			<field id="reg_number" dataType="String" length="15" required="TRUE"/>
 		</model>
 		<model id="DocFlowInClient" parent="ModelSQL" dataTable="doc_flow_in_client" virtual="FALSE">
 			<defaultOrder>
@@ -1786,6 +1814,7 @@
 			<field id="subject" dataType="Text"/>
 			<field id="reg_number" dataType="String" length="15"/>
 			<field id="viewed_dt" dataType="DateTime"/>
+			<field id="reg_number_out" dataType="String" length="30"/>
 			<globalFilter id="user_id"/>
 		</model>
 		<model id="DocFlowInClientDialog" parent="ModelSQL" dataTable="doc_flow_in_client_dialog" virtual="TRUE" baseModelId="DocFlowInClient">
@@ -1793,13 +1822,18 @@
 			<field id="date_time" dataType="DateTimeTZ"/>
 			<field id="applications_ref" dataType="JSON"/>
 			<field id="subject" dataType="Text"/>
-			<field id="reg_number" dataType="String" length="15"/>
+			<field id="reg_number" dataType="String" length="30"/>
+			<field id="reg_number_out" dataType="String" length="30"/>
 			<field id="comment_text" dataType="Text"/>
 			<field id="user_id" dataType="Int"/>
 			<field id="content" dataType="Text"/>
 			<field id="files" dataType="JSONB"/>
 			<field id="viewed" dataType="Bool"/>
 			<globalFilter id="user_id"/>
+		</model>
+		<model id="DocFlowInClientRegNumber" parent="ModelSQL" dataTable="doc_flow_in_client_reg_numbers" virtual="FALSE">
+			<field id="doc_flow_in_client_id" dataType="Int" required="TRUE" primaryKey="TRUE"/>
+			<field id="reg_number" dataType="String" length="30" required="TRUE"/>
 		</model>
 		<model id="ShortMessage" parent="ModelSQL" dataTable="short_messages" virtual="FALSE">
 			<defaultOrder>
@@ -1926,6 +1960,7 @@
 			<field id="expertise_result_number" dataType="Text"/>
 			<field id="expertise_cost_budget" dataType="Float" length="15" precision="2"/>
 			<field id="expertise_cost_self_fund" dataType="Float" length="15" precision="2"/>
+			<field id="cost_eval_validity_pd_order" dataType="Enum" enumId="cost_eval_validity_pd_orders"/>
 			<field id="work_start_date" dataType="Date"/>
 			<field id="work_end_date" dataType="Date"/>
 			<field id="expertise_day_count" dataType="Int"/>
@@ -1952,6 +1987,13 @@
 			<field id="invoice_number" dataType="Text"/>
 			<field id="invoice_date" dataType="Date"/>
 			<field id="linked_contracts" dataType="JSON"/>
+			<field id="date_type" dataType="Enum" enumId="date_types"/>
+			<field id="argument_document" dataType="Text"/>
+			<field id="order_document" dataType="Text"/>
+			<field id="auth_letter" dataType="Text"/>
+			<field id="constr_name" dataType="Text"/>
+			<field id="constr_address" dataType="JSONB"/>
+			<field id="constr_technical_features" dataType="JSONB"/>
 			<index id="contracts_reg_number_idx" unique="TRUE">
 				<field id="reg_number"/>
 			</index>
@@ -2024,10 +2066,11 @@
 			<field id="reg_number" dataType="Text"/>
 			<field id="expertise_type" dataType="Enum" enumId="expertise_types"/>
 			<field id="document_type" dataType="Enum" enumId="document_types"/>
+			<field id="cost_eval_validity_pd_order" dataType="Enum" enumId="cost_eval_validity_pd_orders"/>
 			<field id="expertise_result_number" dataType="Text"/>
 			<field id="applicant_descr" dataType="Text"/>
 			<field id="customer_descr" dataType="Text"/>
-			<field id="contractors_descr" dataType="Text"/>
+			<field id="contractors_list" dataType="JSON"/>
 			<field id="developer_descr" dataType="Text"/>
 			<field id="contract_number" dataType="Text"/>
 			<field id="contract_date" dataType="Text"/>
@@ -2072,6 +2115,10 @@
 			<field id="audit" dataType="Bool"/>
 			<field id="contract_ext_id" dataType="String"/>
 			<field id="linked_contracts" dataType="JSON"/>
+			<field id="date_type" dataType="Enum" enumId="date_types"/>
+			<field id="argument_document" dataType="Text"/>
+			<field id="order_document" dataType="Text"/>
+			<field id="auth_letter" dataType="Text"/>
 		</model>
 		<model id="ExpertWork" parent="ModelSQL" dataTable="expert_works" virtual="FALSE">
 			<field id="id" dataType="Int" primaryKey="TRUE" required="FALSE" autoInc="TRUE"/>
@@ -2150,6 +2197,9 @@
 		<model id="LinkedContractList" parentJS="ModelJSON" virtual="TRUE" server="FALSE">
 			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="FALSE"/>
 			<field id="contracts_ref" dataType="JSON"/>
+		</model>
+		<model id="ContractorList" parentJS="ModelJSON" virtual="TRUE" server="FALSE">
+			<field id="name" dataType="String" primaryKey="TRUE" autoInc="FALSE"/>
 		</model>
 	</models>
 	<constants>
@@ -2761,9 +2811,9 @@
 			</publicMethod>
 		</controller>
 		<controller id="DocFlowInClient" parentId="ControllerSQL">
-			<publicMethod id="insert" modelId="DocFlowInClient"/>
-			<publicMethod id="update" modelId="DocFlowInClient"/>
-			<publicMethod id="delete" modelId="DocFlowInClient"/>
+			<publicMethod id="update" modelId="DocFlowInClient">
+				<field id="reg_number_out" dataType="Text" required="TRUE"/>
+			</publicMethod>
 			<publicMethod id="get_object" modelId="DocFlowInClientDialog"/>
 			<publicMethod id="get_list" modelId="DocFlowInClientList"/>
 			<publicMethod id="get_file">
@@ -2900,6 +2950,7 @@
 			<publicMethod id="get_from_1c">
 				<field id="date_from" dataType="Date"/>
 				<field id="date_to" dataType="Date"/>
+				<field id="interactive" dataType="Int"/>
 			</publicMethod>
 		</controller>
 		<controller id="Order1CList" parentIdJS="ControllerObjClient" server="FALSE">
@@ -2935,6 +2986,9 @@
 			<publicMethod id="delete" modelId="LinkedContractList"/>
 			<publicMethod id="get_list" modelId="LinkedContractList"/>
 			<publicMethod id="get_object" modelId="LinkedContractList"/>
+		</controller>
+		<controller id="ContractorList" parentIdJS="ControllerObjClient" server="FALSE">
+			<publicMethod id="get_list" modelId="ContractorList"/>
 		</controller>
 	</controllers>
 	<permissions>
@@ -3153,7 +3207,7 @@
 		<jsScript file="core/AppWin.js"/>
 		<jsScript file="core/CommonHelper.js"/>
 		<jsScript file="core/DOMHelper.js"/>
-		<jsScript file="core/DateHelper.js"/>
+		<jsScript file="core/DateHelper.js" jsDoc="FALSE"/>
 		<jsScript file="core/EventHelper.js"/>
 		<jsScript file="core/ConstantManager.js"/>
 		<jsScript file="core/ServConnector.js"/>
@@ -3540,7 +3594,6 @@
 		<jsScript file="views/ConstructionTypeList_View.js"/>
 		<jsScript file="views/ConstructionTypeDialog_View.js"/>
 		<jsScript file="views/HolidayList_View.js"/>
-		<jsScript file="views/ApplicationInMailList_View.js"/>
 		<jsScript file="views/DocFlowOutList_View.js"/>
 		<jsScript file="views/DocFlowOutDialog_View.js"/>
 		<jsScript file="views/DocFlowInList_View.js"/>
@@ -3673,6 +3726,7 @@
 		<jsScript file="custom_controls/Doc1cOrder.js"/>
 		<jsScript file="custom_controls/Doc1cAkt.js"/>
 		<jsScript file="custom_controls/LinkedContractListGrid.js"/>
+		<jsScript file="custom_controls/ContractorListGrid.js"/>
 		<jsScript file="enum_controls/Enum_role_types.js"/>
 		<jsScript file="views/rs_ru.js"/>
 		<jsScript file="views/rs_common_ru.js"/>
@@ -3916,6 +3970,14 @@
 		<jsScript file="controllers/ProjectManager_Controller.js"/>
 		<jsScript file="controllers/LinkedContractList_Controller.js"/>
 		<jsScript file="models/LinkedContractList_Model.js"/>
+		<jsScript file="enum_controls/Enum_cost_eval_validity_pd_orders.js"/>
+		<jsScript file="enum_controls/EnumGridColumn_cost_eval_validity_pd_orders.js"/>
+		<jsScript file="enum_controls/Enum_date_types.js"/>
+		<jsScript file="enum_controls/EnumGridColumn_date_types.js"/>
+		<jsScript file="controllers/ContractorList_Controller.js"/>
+		<jsScript file="models/ContractorList_Model.js"/>
+		<jsScript file="models/DocFlowOutClientRegNumber_Model.js"/>
+		<jsScript file="models/DocFlowInClientRegNumber_Model.js"/>
 	</jsScripts>
 	<cssScripts>
 		<cssScript file="assets/css/icons/icomoon/styles.css" compressed="TRUE" standalone="TRUE"/>

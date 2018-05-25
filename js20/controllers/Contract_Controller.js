@@ -144,6 +144,13 @@ extend(Contract_Controller,ControllerObjServer);
 	pm.addField(field);
 	
 	var options = {};
+		
+	options.enumValues = 'no_pd,simult_with_pd,after_pd';
+	var field = new FieldEnum("cost_eval_validity_pd_order",options);
+	
+	pm.addField(field);
+	
+	var options = {};
 	
 	var field = new FieldDate("work_start_date",options);
 	
@@ -297,6 +304,49 @@ extend(Contract_Controller,ControllerObjServer);
 	var options = {};
 	
 	var field = new FieldJSON("linked_contracts",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+		
+	options.enumValues = 'calendar,bank';
+	var field = new FieldEnum("date_type",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldText("argument_document",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldText("order_document",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldText("auth_letter",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldText("constr_name",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldJSONB("constr_address",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldJSONB("constr_technical_features",options);
 	
 	pm.addField(field);
 	
@@ -407,6 +457,14 @@ extend(Contract_Controller,ControllerObjServer);
 	pm.addField(field);
 	
 	var options = {};
+		
+	options.enumValues = 'no_pd,simult_with_pd,after_pd';
+	
+	var field = new FieldEnum("cost_eval_validity_pd_order",options);
+	
+	pm.addField(field);
+	
+	var options = {};
 	
 	var field = new FieldDate("work_start_date",options);
 	
@@ -564,6 +622,50 @@ extend(Contract_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+		
+	options.enumValues = 'calendar,bank';
+	
+	var field = new FieldEnum("date_type",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldText("argument_document",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldText("order_document",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldText("auth_letter",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldText("constr_name",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldJSONB("constr_address",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldJSONB("constr_technical_features",options);
+	
+	pm.addField(field);
+	
 	
 }
 
@@ -648,6 +750,9 @@ extend(Contract_Controller,ControllerObjServer);
 	pm.addField(new FieldFloat("expertise_cost_self_fund",f_opts));
 	var f_opts = {};
 	
+	pm.addField(new FieldEnum("cost_eval_validity_pd_order",f_opts));
+	var f_opts = {};
+	
 	pm.addField(new FieldDate("work_start_date",f_opts));
 	var f_opts = {};
 	
@@ -724,6 +829,27 @@ extend(Contract_Controller,ControllerObjServer);
 	var f_opts = {};
 	
 	pm.addField(new FieldJSON("linked_contracts",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldEnum("date_type",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldText("argument_document",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldText("order_document",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldText("auth_letter",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldText("constr_name",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldJSONB("constr_address",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldJSONB("constr_technical_features",f_opts));
 	pm.getField(this.PARAM_ORD_FIELDS).setValue("date_time");
 	
 }

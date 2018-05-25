@@ -1,7 +1,7 @@
 /**	
  * @author Andrey Mikhalevich <katrenplus@mail.ru>, 2017
 
- * @extends
+ * @extends ViewAjxList
  * @requires core/extend.js  
 
  * @class
@@ -9,7 +9,6 @@
  
  * @param {string} id - Object identifier
  * @param {namespace} options
- * @param {string} options.className
  */
 function ApplicationClientList_View(id,options){
 	options = options || {};	

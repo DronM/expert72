@@ -32,6 +32,7 @@
 <li><a href="#ContactName_Controller">ContactName_Controller</a></li>
 <li><a href="#Contract_Controller">Contract_Controller</a></li>
 <li><a href="#ContractSection_Controller">ContractSection_Controller</a></li>
+<li><a href="#ContractorList_Controller">ContractorList_Controller</a></li>
 <li><a href="#Department_Controller">Department_Controller</a></li>
 <li><a href="#DocFlow_Controller">DocFlow_Controller</a></li>
 <li><a href="#DocFlowApprovement_Controller">DocFlowApprovement_Controller</a></li>
@@ -182,9 +183,11 @@
 <li><a href="#DocFlowOutClientList_Model">DocFlowOutClientList_Model</a></li>
 <li><a href="#DocFlowOutClientDialog_Model">DocFlowOutClientDialog_Model</a></li>
 <li><a href="#DocFlowOutClientDocumentFile_Model">DocFlowOutClientDocumentFile_Model</a></li>
+<li><a href="#DocFlowOutClientRegNumber_Model">DocFlowOutClientRegNumber_Model</a></li>
 <li><a href="#DocFlowInClient_Model">DocFlowInClient_Model</a></li>
 <li><a href="#DocFlowInClientList_Model">DocFlowInClientList_Model</a></li>
 <li><a href="#DocFlowInClientDialog_Model">DocFlowInClientDialog_Model</a></li>
+<li><a href="#DocFlowInClientRegNumber_Model">DocFlowInClientRegNumber_Model</a></li>
 <li><a href="#ShortMessage_Model">ShortMessage_Model</a></li>
 <li><a href="#ReportTemplate_Model">ReportTemplate_Model</a></li>
 <li><a href="#ReportTemplateDialog_Model">ReportTemplateDialog_Model</a></li>
@@ -209,6 +212,7 @@
 <li><a href="#ClientPaymentList_Model">ClientPaymentList_Model</a></li>
 <li><a href="#Order1CList_Model">Order1CList_Model</a></li>
 <li><a href="#LinkedContractList_Model">LinkedContractList_Model</a></li>
+<li><a href="#ContractorList_Model">ContractorList_Model</a></li>
 </ul>
 <div class="section-title">Enumerations</div>
 <ul>
@@ -228,6 +232,8 @@
 <li><a href="#doc_flow_approvement_orders">doc_flow_approvement_orders</a></li>
 <li><a href="#doc_flow_approvement_results">doc_flow_approvement_results</a></li>
 <li><a href="#expertise_results">expertise_results</a></li>
+<li><a href="#cost_eval_validity_pd_orders">cost_eval_validity_pd_orders</a></li>
+<li><a href="#date_types">date_types</a></li>
 </ul>
 </div>
 <div class="content">
@@ -618,6 +624,13 @@
 <p>Required:
 								Нет</p>
 </div>
+<h3>interactive</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Нет</p>
+</div>
 </div>
 </div>
 </div>
@@ -854,6 +867,15 @@
 <p>Методы:</p>
 <h2>get_list</h2>
 <a href="#ContractSection_Model">Model: ContractSection_Model</a>
+</div>
+</div>
+<div id="ContractorList_Controller" class="content_box">
+<h1>ContractorList_Controller</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Методы:</p>
+<h2>get_list</h2>
+<a href="#ContractorList_Model">Model: ContractorList_Model</a>
 </div>
 </div>
 <div id="Department_Controller" class="content_box">
@@ -1134,9 +1156,7 @@
 <div class="content_item">
 <p class="big"></p>
 <p>Методы:</p>
-<h2>insert</h2>
-<a href="#DocFlowInClient_Model">Model: DocFlowInClient_Model</a><h2>update</h2>
-<a href="#DocFlowInClient_Model">Model: DocFlowInClient_Model</a><h2>delete</h2>
+<h2>update</h2>
 <a href="#DocFlowInClient_Model">Model: DocFlowInClient_Model</a><h2>get_object</h2>
 <a href="#DocFlowInClientDialog_Model">Model: DocFlowInClientDialog_Model</a><h2>get_list</h2>
 <a href="#DocFlowInClientList_Model">Model: DocFlowInClientList_Model</a><h2>get_file</h2>
@@ -3946,6 +3966,12 @@
 <div>Required:</div>
 <div>Length:15</div>
 <div>Precision:2</div>
+<h2>cost_eval_validity_pd_order</h2>
+<div>Type:Enum</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
 <h2>work_start_date</h2>
 <div>Type:Date</div>
 <div>Primary key:</div>
@@ -4102,6 +4128,48 @@
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
+<h2>date_type</h2>
+<div>Type:Enum</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>argument_document</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>order_document</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>auth_letter</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>constr_name</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>constr_address</h2>
+<div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>constr_technical_features</h2>
+<div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
 </div>
 </div>
 <div id="ContractDialog_Model" class="content_box">
@@ -4156,6 +4224,12 @@
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
+<h2>cost_eval_validity_pd_order</h2>
+<div>Type:Enum</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
 <h2>expertise_result_number</h2>
 <div>Type:Text</div>
 <div>Primary key:</div>
@@ -4174,8 +4248,8 @@
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
-<h2>contractors_descr</h2>
-<div>Type:Text</div>
+<h2>contractors_list</h2>
+<div>Type:JSON</div>
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>
@@ -4444,6 +4518,30 @@
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
+<h2>date_type</h2>
+<div>Type:Enum</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>argument_document</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>order_document</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>auth_letter</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
 </div>
 </div>
 <div id="ContractList_Model" class="content_box">
@@ -4621,6 +4719,18 @@
 <h2>experts_list</h2>
 <div>Type:String</div>
 <div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="ContractorList_Model" class="content_box">
+<h1>ContractorList_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>name</h2>
+<div>Type:String</div>
+<div>Primary key:TRUE</div>
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
@@ -5830,6 +5940,12 @@
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
+<h2>from_doc_flow_out_client_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
 <h2>end_date_time</h2>
 <div>Type:DateTimeTZ</div>
 <div>Primary key:</div>
@@ -5984,7 +6100,13 @@
 <div>Type:String</div>
 <div>Primary key:</div>
 <div>Required:</div>
-<div>Length:15</div>
+<div>Length:30</div>
+<div>Precision:</div>
+<h2>reg_number_out</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:30</div>
 <div>Precision:</div>
 <h2>comment_text</h2>
 <div>Type:Text</div>
@@ -6069,6 +6191,30 @@
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>
+<div>Precision:</div>
+<h2>reg_number_out</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:30</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="DocFlowInClientRegNumber_Model" class="content_box">
+<h1>DocFlowInClientRegNumber_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>doc_flow_in_client_id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>reg_number</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:TRUE</div>
+<div>Length:30</div>
 <div>Precision:</div>
 </div>
 </div>
@@ -6568,6 +6714,12 @@
 <div>Required:</div>
 <div>Length:15</div>
 <div>Precision:</div>
+<h2>reg_number_in</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:15</div>
+<div>Precision:</div>
 <h2>comment_text</h2>
 <div>Type:Text</div>
 <div>Primary key:</div>
@@ -6652,11 +6804,41 @@
 <div>Required:</div>
 <div>Length:15</div>
 <div>Precision:</div>
+<h2>reg_number_in</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:15</div>
+<div>Precision:</div>
 <h2>sent</h2>
 <div>Type:Bool</div>
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="DocFlowOutClientRegNumber_Model" class="content_box">
+<h1>DocFlowOutClientRegNumber_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>doc_flow_out_client_id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>application_id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>reg_number</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:TRUE</div>
+<div>Length:15</div>
 <div>Precision:</div>
 </div>
 </div>
@@ -9470,6 +9652,19 @@
 <div>Description:</div>
 </div>
 </div>
+<div id="cost_eval_validity_pd_orders" class="content_box">
+<h1>cost_eval_validity_pd_orders</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Values:</p>
+<h2>no_pd</h2>
+<div>Description:</div>
+<h2>simult_with_pd</h2>
+<div>Description:</div>
+<h2>after_pd</h2>
+<div>Description:</div>
+</div>
+</div>
 <div id="data_types" class="content_box">
 <h1>data_types</h1>
 <div class="content_item">
@@ -9512,6 +9707,17 @@
 <h2>doc_flow_importance_types</h2>
 <div>Description:</div>
 <h2>expertise_reject_types</h2>
+<div>Description:</div>
+</div>
+</div>
+<div id="date_types" class="content_box">
+<h1>date_types</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Values:</p>
+<h2>calendar</h2>
+<div>Description:</div>
+<h2>bank</h2>
 <div>Description:</div>
 </div>
 </div>

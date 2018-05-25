@@ -1,8 +1,9 @@
 /**	
  * @author Andrey Mikhalevich <katrenplus@mail.ru>, 2017
 
- * @extends
- * @requires core/extend.js  
+ * @extends ViewObjectAjx
+ * @requires js20/core/extend.js
+ * @requires js20/controls/ViewObjectAjx.js     
 
  * @class
  * @classdesc

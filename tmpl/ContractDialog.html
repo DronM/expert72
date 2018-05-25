@@ -36,9 +36,31 @@
 			<div id="{{id}}:applicant_descr"/>
 			<div id="{{id}}:customer_descr"/>
 			<div id="{{id}}:developer_descr"/>
-			<div id="{{id}}:document_type"/>
-			<div id="{{id}}:expertise_type"/>					
-			<div id="{{id}}:cost_eval_validity_simult"/>
+			<div class="panel">
+				<h4>Исполнители</h4>			
+				<div id="{{id}}:contractors_list"/>
+			</div>
+			<div class="row">
+				<div class="{{bsCol}}5">			
+					<div id="{{id}}:document_type"/>
+				</div>	
+				{{#pd}}
+				<div class="{{bsCol}}5">			
+					<div id="{{id}}:expertise_type"/>
+				</div>
+				{{/pd}}
+			</div>
+					
+			{{#costEvalValidity}}
+			<div class="row">
+				<div class="{{bsCol}}5">			
+					<div id="{{id}}:cost_eval_validity_pd_order"/>
+				</div>
+				<div class="{{bsCol}}5">				
+					<div id="{{id}}:order_document"/>
+				</div>
+			</div>	
+			{{/costEvalValidity}}
 			
 			{{#primaryContractExists}}
 			<div id="{{id}}:primary_contracts_ref"/>
@@ -54,6 +76,9 @@
 			
 			<div class="row">
 				<div class="{{bsCol}}3">
+					<div id="{{id}}:date_type"/>
+				</div>
+				<div class="{{bsCol}}3">
 					<div id="{{id}}:expertise_day_count"/>
 				</div>
 				<div class="{{bsCol}}3">
@@ -63,6 +88,15 @@
 					<div id="{{id}}:work_end_date"/>
 				</div>				
 			</div>
+			<div class="row">
+				<div class="{{bsCol}}3">
+					<div id="{{id}}:argument_document"/>
+				</div>
+				<div class="{{bsCol}}3">
+					<div id="{{id}}:auth_letter"/>
+				</div>
+			</div>
+			
 		</div>
 		{{#notExpert}}
 		<div class="tab-pane fade in" id="contract-data">

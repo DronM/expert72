@@ -124,6 +124,15 @@ class DocFlowInClientList_Model extends ModelSQL{
 		$f_viewed_dt=new FieldSQLDateTime($this->getDbLink(),$this->getDbName(),$this->getTableName(),"viewed_dt",$f_opts);
 		$this->addField($f_viewed_dt);
 		//********************
+		
+		//*** Field reg_number_out ***
+		$f_opts = array();
+		$f_opts['length']=30;
+		$f_opts['id']="reg_number_out";
+				
+		$f_reg_number_out=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"reg_number_out",$f_opts);
+		$this->addField($f_reg_number_out);
+		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}
 

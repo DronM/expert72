@@ -31,26 +31,29 @@ function DocFlowOutClientDialog_View(id,options){
 		var editContClassName = "input-group "+bs+"10";
 		var labelClassName = "control-label "+bs+"2";
 	
-		this.addElement(new EditDate(id+":date_time",{//DateTime
+		this.addElement(new EditDate(id+":date_time",{
 			"attrs":{"style":"width:250px;"},
-			//"value":DateHelper.time(),
 			"inline":true,
-			//"editMask":"99/99/9999 99:99",
 			"dateFormat":"d/m/Y H:i",
 			"cmdClear":false,
 			"cmdSelect":false,
 			"enabled":false
 		}));	
-		/*
-		this.addElement(new EditString(id+":reg_number",{
-			"attrs":{"autofocus":"autofocus","style":"width:150px;"},
+		this.addElement(new EditString(id+":reg_number_in",{
+			"attrs":{"style":"width:150px;"},
 			"inline":true,
 			"cmdClear":false,
 			"maxLength":"15",
-			"placeholder":"Номер",
 			"enabled":false
 		}));	
-		*/
+		
+		this.addElement(new EditString(id+":reg_number",{
+			"editContClassName":editContClassName,
+			"labelClassName":labelClassName,
+			"cmdClear":false,
+			"labelCaption":"Наш рег.номер:"			
+		}));	
+		
 		var app_ctrl = new ApplicationEditRef(id+":applications_ref",{
 			"editContClassName":editContClassName,
 			"labelClassName":labelClassName,
@@ -97,7 +100,6 @@ function DocFlowOutClientDialog_View(id,options){
 		});		
 		options.controlSave = new ButtonOK(id+":cmdSave",{
 			"onClick":function(){
-				self.setSent(false);
 				self.onSave();
 			}
 		});		
@@ -111,7 +113,7 @@ function DocFlowOutClientDialog_View(id,options){
 	this.setDataBindings([
 		new DataBinding({"control":this.getElement("date_time")})
 		,new DataBinding({"control":this.getElement("applications_ref"),"fieldId":"applications_ref"})
-		//,new DataBinding({"control":this.getElement("reg_number")})
+		,new DataBinding({"control":this.getElement("reg_number")})
 		,new DataBinding({"control":this.getElement("subject")})
 		,new DataBinding({"control":this.getElement("content")})
 		//,new DataBinding({"control":this.getElement("comment_text")})
@@ -121,7 +123,7 @@ function DocFlowOutClientDialog_View(id,options){
 	this.setWriteBindings([
 		new CommandBinding({"control":this.getElement("date_time")})
 		,new CommandBinding({"control":this.getElement("applications_ref"),"fieldId":"application_id"})
-		//,new CommandBinding({"control":this.getElement("reg_number")})
+		,new CommandBinding({"control":this.getElement("reg_number")})
 		,new CommandBinding({"control":this.getElement("subject")})
 		,new CommandBinding({"control":this.getElement("content")})
 		//,new CommandBinding({"control":this.getElement("comment_text")})
@@ -174,7 +176,9 @@ DocFlowOutClientDialog_View.prototype.onGetData = function(resp,cmd){
 	if (sent){
 		this.setEnabled(false);
 		this.getControlOK().setEnabled(false);
-		this.getControlSave().setEnabled(false);
+		//
+		this.getElement("reg_number").setEnabled(true);
+		this.getControlSave().setEnabled(true);
 		this.getControlCancel().setEnabled(true);
 	}
 	else{

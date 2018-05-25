@@ -1,7 +1,7 @@
 /**	
  * @author Andrey Mikhalevich <katrenplus@mail.ru>, 2017
 
- * @extends
+ * @extends ViewAjxList
  * @requires core/extend.js  
 
  * @class
@@ -95,15 +95,21 @@ function DocFlowOutClientList_View(id,options){
 			"sortable":true,
 			"sort":"desc"
 		}),
-		/*
-		new GridCellHead(id+":grid:head:reg_number",{
+		
+		new GridCellHead(id+":grid:head:reg_number_in",{
 			"value":"Рег.номер",
+			"columns":[
+				new GridColumn({"field":model.getField("reg_number_in")})
+			]
+		}),					
+		new GridCellHead(id+":grid:head:reg_number",{
+			"value":"Наш рег.номер",
 			"columns":[
 				new GridColumn({"field":model.getField("reg_number")})
 			],
 			"sortable":true							
 		}),					
-		*/
+		
 		new GridCellHead(id+":grid:head:subject",{
 			"value":"Тема",
 			"columns":[
@@ -125,7 +131,7 @@ function DocFlowOutClientList_View(id,options){
 	];
 	
 	if (!options.application){
-		//общая форма писка
+		//общая форма списка
 		columns.push(
 			new GridCellHead(id+":grid:head:applications_ref",{
 				"value":"Заявление",
@@ -171,7 +177,7 @@ function DocFlowOutClientList_View(id,options){
 		"focus":true
 	}));		
 }
-extend(DocFlowOutClientList_View,ViewAjx);
+extend(DocFlowOutClientList_View,ViewAjxList);
 
 /* Constants */
 

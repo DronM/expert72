@@ -17,6 +17,7 @@ DECLARE
 	v_contract_id int;
 	v_main_department_id int;
 	v_main_expert_id int;
+	v_reg_number text;
 BEGIN
 	IF (TG_WHEN='BEFORE' AND TG_OP='DELETE') THEN		
 		DELETE FROM doc_flow_out_client_document_files WHERE doc_flow_out_client_id=OLD.id;
@@ -67,7 +68,8 @@ BEGIN
 				end_date_time,
 				subject,content,
 				recipient,
-				from_client_app
+				from_doc_flow_out_client_id,
+				from_client_app				
 			)
 			VALUES (
 				v_from_date_time,
@@ -78,10 +80,17 @@ BEGIN
 				NEW.subject,
 				NEW.content,
 				departments_ref((SELECT departments FROM departments WHERE id=(SELECT const_app_recipient_department_val()->'keys'->>'id')::int)),
+				NEW.id,
 				TRUE
 			)
-			RETURNING id,recipient
-			INTO v_doc_flow_in_id,v_recipient;
+			RETURNING id,recipient,reg_number
+			INTO v_doc_flow_in_id,v_recipient,v_reg_number;
+			
+			--Рег номер наш - клиенту
+			INSERT INTO doc_flow_out_client_reg_numbers
+			(doc_flow_out_client_id,application_id,reg_number)
+			VALUES (NEW.id,NEW.application_id,v_reg_number);
+			
 --RAISE EXCEPTION 'v_main_expert_id=%',v_main_expert_id;			
 			IF v_contract_id IS NULL THEN
 				--НЕТ контракта - Передача на рассмотрение в отдел приема

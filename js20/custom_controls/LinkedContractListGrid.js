@@ -1,15 +1,15 @@
 /**	
  * @author Andrey Mikhalevich <katrenplus@mail.ru>, 2017
 
- * @extends
- * @requires core/extend.js  
+ * @extends GridAjx
+ * @requires core/extend.js
+ * @requires GridAjx.js     
 
  * @class
  * @classdesc
  
  * @param {string} id - Object identifier
  * @param {Object} options
- * @param {string} options.className
  */
 function LinkedContractListGrid(id,options){
 	var model = new LinkedContractList_Model({
@@ -18,7 +18,6 @@ function LinkedContractListGrid(id,options){
 
 	var cells = [
 		new GridCellHead(id+":head:contracts_ref",{
-			"value":"Контракт",
 			"columns":[
 				new GridColumnRef({
 					"field":model.getField("contracts_ref"),
@@ -29,6 +28,7 @@ function LinkedContractListGrid(id,options){
 	];
 
 	options = {
+		"showHead":false,
 		"model":model,
 		"keyIds":["id"],
 		"controller":new LinkedContractList_Controller({"clientModel":model}),

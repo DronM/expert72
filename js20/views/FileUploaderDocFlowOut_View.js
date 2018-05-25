@@ -1,7 +1,7 @@
 /**	
  * @author Andrey Mikhalevich <katrenplus@mail.ru>, 2017
 
- * @extends
+ * @extends FileUploader_View
  * @requires core/extend.js  
 
  * @class
@@ -9,7 +9,6 @@
  
  * @param {string} id - Object identifier
  * @param {Object} options
- * @param {string} options.className
  */
 function FileUploaderDocFlowOut_View(id,options){
 	options = options || {};	

@@ -24,9 +24,7 @@ function DocFlowInClient_Controller(options){
 	DocFlowInClient_Controller.superclass.constructor.call(this,options);	
 	
 	//methods
-	this.addInsert();
 	this.addUpdate();
-	this.addDelete();
 	this.addGetObject();
 	this.addGetList();
 	this.add_get_file();
@@ -34,76 +32,6 @@ function DocFlowInClient_Controller(options){
 		
 }
 extend(DocFlowInClient_Controller,ControllerObjServer);
-
-			DocFlowInClient_Controller.prototype.addInsert = function(){
-	DocFlowInClient_Controller.superclass.addInsert.call(this);
-	
-	var pm = this.getInsert();
-	
-	var options = {};
-	options.primaryKey = true;options.autoInc = true;
-	var field = new FieldInt("id",options);
-	
-	pm.addField(field);
-	
-	var options = {};
-	
-	var field = new FieldDateTimeTZ("date_time",options);
-	
-	pm.addField(field);
-	
-	var options = {};
-	
-	var field = new FieldString("reg_number",options);
-	
-	pm.addField(field);
-	
-	var options = {};
-	
-	var field = new FieldInt("application_id",options);
-	
-	pm.addField(field);
-	
-	var options = {};
-	
-	var field = new FieldInt("user_id",options);
-	
-	pm.addField(field);
-	
-	var options = {};
-	
-	var field = new FieldText("subject",options);
-	
-	pm.addField(field);
-	
-	var options = {};
-	
-	var field = new FieldText("content",options);
-	
-	pm.addField(field);
-	
-	var options = {};
-	
-	var field = new FieldText("comment_text",options);
-	
-	pm.addField(field);
-	
-	var options = {};
-	
-	var field = new FieldJSONB("files",options);
-	
-	pm.addField(field);
-	
-	var options = {};
-	
-	var field = new FieldBool("viewed",options);
-	
-	pm.addField(field);
-	
-	pm.addField(new FieldInt("ret_id",{}));
-	
-	
-}
 
 			DocFlowInClient_Controller.prototype.addUpdate = function(){
 	DocFlowInClient_Controller.superclass.addUpdate.call(this);
@@ -172,15 +100,11 @@ extend(DocFlowInClient_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+		var options = {};
+		options.required = true;		
+		pm.addField(new FieldText("reg_number_out",options));
 	
-}
-
-			DocFlowInClient_Controller.prototype.addDelete = function(){
-	DocFlowInClient_Controller.superclass.addDelete.call(this);
-	var pm = this.getDelete();
-	var options = {"required":true};
-		
-	pm.addField(new FieldInt("id",options));
+	
 }
 
 			DocFlowInClient_Controller.prototype.addGetObject = function(){

@@ -18,6 +18,11 @@ DECLARE
 	v_primary_contract_id int;
 	v_modif_primary_contract_id int;	
 	v_app_process_dt timestampTZ;
+	v_linked_app int;
+	v_cost_eval_validity_simult bool;
+	v_constr_name text;
+	v_constr_address jsonb;
+	v_constr_technical_features jsonb;
 BEGIN
 	IF (TG_WHEN='AFTER' AND TG_OP='INSERT') THEN
 		v_ref = doc_flow_examinations_ref((SELECT doc_flow_examinations FROM doc_flow_examinations WHERE id=NEW.id));
@@ -185,7 +190,12 @@ BEGIN
 					app.user_id,
 					app.applicant,
 					p_contr.id,
-					mp_contr.id
+					mp_contr.id,
+					coalesce(app.base_application_id,app.derived_application_id),
+					app.cost_eval_validity_simult,
+					app.constr_name,
+					app.constr_address,
+					app.constr_technical_features					
 				INTO
 					v_app_expertise_type,
 					v_app_cost_eval_validity,
@@ -194,7 +204,13 @@ BEGIN
 					v_app_user_id,
 					v_app_applicant,
 					v_primary_contract_id,
-					v_modif_primary_contract_id
+					v_modif_primary_contract_id,
+					v_linked_app,
+					v_cost_eval_validity_simult,
+					v_constr_name,
+					v_constr_address,
+					v_constr_technical_features					
+					
 				FROM applications AS app
 				LEFT JOIN contracts AS p_contr ON p_contr.application_id=app.primary_application_id
 				LEFT JOIN contracts AS mp_contr ON mp_contr.application_id=app.modif_primary_application_id
@@ -273,6 +289,10 @@ BEGIN
 					expertise_type,
 					primary_contract_id,
 					modif_primary_contract_id,
+					cost_eval_validity_pd_order,
+					constr_name,
+					constr_address,
+					constr_technical_features,
 					user_id)
 				VALUES (
 					now(),
@@ -288,6 +308,18 @@ BEGIN
 					v_app_expertise_type,
 					v_primary_contract_id,
 					v_modif_primary_contract_id,
+					CASE
+						WHEN v_app_cost_eval_validity THEN
+							CASE
+								WHEN v_cost_eval_validity_simult THEN 'simult_with_pd'::cost_eval_validity_pd_orders
+								WHEN v_linked_app IS NOT NULL THEN 'after_pd'::cost_eval_validity_pd_orders
+								ELSE 'no_pd'::cost_eval_validity_pd_orders
+							END
+						ELSE NULL
+					END,
+					v_constr_name,
+					v_constr_address,
+					v_constr_technical_features,
 					v_app_user_id
 				);
 				

@@ -63,6 +63,8 @@
 		$q_obj->Текст ="
 		ВЫБРАТЬ
 		Док.Дата,
+		Док.НомерПервичногоДокумента,
+		Док.ДатаПервичногоДокумента,
 		Расш.Договор,
 		Расш.Договор.НомерДоговора КАК НомерДоговора,
 		Расш.Договор.ДатаДоговора КАК ДатаДоговора,
@@ -71,7 +73,7 @@
 		ЛЕВОЕ СОЕДИНЕНИЕ Документ.КассовоеПоступление.РасшифровкаПлатежа КАК Расш
 		ПО Расш.Ссылка=Док.Ссылка
 		ГДЕ Док.Дата МЕЖДУ ДАТАВРЕМЯ(".date('Y,m,d,0,0,0',$dFrom).") И ДАТАВРЕМЯ(".date('Y,m,d,23,59,59',$dTo).") И Док.Проведен
-		СГРУППИРОВАТЬ ПО Док.Дата,Расш.Договор,Расш.Договор.НомерДоговора,Расш.Договор.ДатаДоговора";
+		СГРУППИРОВАТЬ ПО Док.Дата,Док.НомерПервичногоДокумента,Док.ДатаПервичногоДокумента,Расш.Договор,Расш.Договор.НомерДоговора,Расш.Договор.ДатаДоговора";
 		$sel = $q_obj->Выполнить()->Выбрать();
 		$xml_body = '';
 		while ($sel->Следующий()){
@@ -81,21 +83,13 @@
 			//throw new Exception($v8->String($v8,$sel->ДатаДоговора));
 			if ($sm<>0){
 				$xml_body.='<rec>'.
-					sprintf('<contract_ext_id>%s</contract_ext_id>',
-						$v8->String($sel->Договор->УникальныйИдентификатор())
-					).
-					sprintf('<contract_number>%s</contract_number>',
-						$v8->String($sel->НомерДоговора)
-					).
-					sprintf('<contract_date>%s</contract_date>',
-						date1c_to_ISO($v8,$sel->ДатаДоговора)
-					).					
-					sprintf('<pay_date>%s</pay_date>',
-						date1c_to_ISO($v8,$sel->Дата)
-					).					
-					sprintf('<total>%f</total>',
-						$sm
-					).
+					sprintf('<contract_ext_id>%s</contract_ext_id>', $v8->String($sel->Договор->УникальныйИдентификатор())).
+					sprintf('<contract_number>%s</contract_number>', $v8->String($sel->НомерДоговора)).
+					sprintf('<contract_date>%s</contract_date>', date1c_to_ISO($v8,$sel->ДатаДоговора)).					
+					sprintf('<pay_date>%s</pay_date>', date1c_to_ISO($v8,$sel->Дата)).					
+					sprintf('<total>%f</total>', $sm).
+					sprintf('<pay_docum_number>%s</pay_docum_number>', $v8->String($sel->НомерПервичногоДокумента)).
+					sprintf('<pay_docum_date>%s</pay_docum_date>', date1c_to_ISO($v8,$sel->ДатаПервичногоДокумента)).
 					'</rec>';
 			}
 		}
@@ -173,6 +167,7 @@
 		$struc->Вставить('item_1c_descr_full', $params['item_1c_descr_full']);
 		$struc->Вставить('item_1c_doc_descr', $params['item_1c_doc_descr']);
 		$struc->Вставить('document_type', $params['document_type']);		
+		$struc->Вставить('reg_number', $params['reg_number']);		
 	}
 	
 	function float1c_to_float($float1c){

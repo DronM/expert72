@@ -1,15 +1,13 @@
 /**	
- * @author Andrey Mikhalevich <katrenplus@mail.ru>, 2017
+ * @author Andrey Mikhalevich <katrenplus@mail.ru>, 2018
 
- * @extends
- * @requires core/extend.js  
+ * @requires core/extend.js
 
  * @class
  * @classdesc
  
  * @param {string} id - Object identifier
- * @param {Object} options
- * @param {string} options.className
+ * @param {object} options
  */
 function Doc1cAkt(id,options){
 	options = options || {};	
@@ -35,7 +33,7 @@ Doc1cAkt.prototype.makeDoc = function(e){
 			self.getElement("makeDoc").setEnabled(true);
 			self.onGetResp(resp,true);
 		}
-	})
+	});
 }
 
 Doc1cAkt.prototype.getDocDescr = function(docNumber,docDate,docTotal,docType){
@@ -61,7 +59,7 @@ Doc1cAkt.prototype.update = function(fields){
 				fields.akt_date.getValue(),
 				fields.akt_total.getValue(),
 				"Акт"
-			),
+			)
 		);
 		list.addElement(
 			this.createDocElement(
@@ -70,7 +68,7 @@ Doc1cAkt.prototype.update = function(fields){
 				fields.invoice_date.getValue(),
 				fields.akt_total.getValue(),
 				"Счет-фактура"
-			),
+			)
 		);
 	}
 	list.toDOM();

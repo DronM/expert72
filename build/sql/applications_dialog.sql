@@ -1,5 +1,6 @@
 -- VIEW: applications_dialog
 
+DROP VIEW contracts_dialog;
 DROP VIEW applications_dialog;
 
 CREATE OR REPLACE VIEW applications_dialog AS
@@ -20,9 +21,9 @@ CREATE OR REPLACE VIEW applications_dialog AS
 		d.customer,
 		d.contractors,
 		d.developer,
-		d.constr_name,
-		d.constr_address,
-		d.constr_technical_features,
+		coalesce(contr.constr_name,d.constr_name) AS constr_name,
+		coalesce(contr.constr_address,d.constr_address) AS constr_address,
+		coalesce(contr.constr_technical_features,d.constr_technical_features) As constr_technical_features,
 		d.total_cost_eval,
 		d.limit_cost_eval,
 		offices_ref(offices) AS offices_ref,
@@ -79,6 +80,7 @@ CREATE OR REPLACE VIEW applications_dialog AS
 		
 	FROM applications AS d
 	LEFT JOIN offices ON offices.id=d.office_id
+	LEFT JOIN contracts AS contr ON contr.application_id=d.id
 	LEFT JOIN fund_sources ON fund_sources.id=d.fund_source_id
 	LEFT JOIN construction_types ON construction_types.id=d.construction_type_id
 	LEFT JOIN build_types ON build_types.id=d.build_type_id

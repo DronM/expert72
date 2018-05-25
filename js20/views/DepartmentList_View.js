@@ -1,9 +1,9 @@
 /**	
  * @author Andrey Mikhalevich <katrenplus@mail.ru>, 2017
 
- * @extends ViewAjx
+ * @extends ViewAjxList
  * @requires core/extend.js
- * @requires controls/ViewAjx.js    
+ * @requires controls/ViewAjxList.js    
 
  * @class
  * @classdesc
@@ -73,7 +73,7 @@ function DepartmentList_View(id,options){
 		"focus":true
 	}));		
 }
-extend(DepartmentList_View,ViewAjx);
+extend(DepartmentList_View,ViewAjxList);
 
 /* Constants */
 

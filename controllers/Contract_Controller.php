@@ -80,6 +80,10 @@ class Contract_Controller extends ControllerSQL{
 		$param = new FieldExtFloat('expertise_cost_self_fund'
 				,array());
 		$pm->addParam($param);
+		
+				$param = new FieldExtEnum('cost_eval_validity_pd_order',',','no_pd,simult_with_pd,after_pd'
+				,array());
+		$pm->addParam($param);
 		$param = new FieldExtDate('work_start_date'
 				,array());
 		$pm->addParam($param);
@@ -157,6 +161,28 @@ class Contract_Controller extends ControllerSQL{
 				,array());
 		$pm->addParam($param);
 		$param = new FieldExtJSON('linked_contracts'
+				,array());
+		$pm->addParam($param);
+		
+				$param = new FieldExtEnum('date_type',',','calendar,bank'
+				,array());
+		$pm->addParam($param);
+		$param = new FieldExtText('argument_document'
+				,array());
+		$pm->addParam($param);
+		$param = new FieldExtText('order_document'
+				,array());
+		$pm->addParam($param);
+		$param = new FieldExtText('auth_letter'
+				,array());
+		$pm->addParam($param);
+		$param = new FieldExtText('constr_name'
+				,array());
+		$pm->addParam($param);
+		$param = new FieldExtJSONB('constr_address'
+				,array());
+		$pm->addParam($param);
+		$param = new FieldExtJSONB('constr_technical_features'
 				,array());
 		$pm->addParam($param);
 		
@@ -235,6 +261,11 @@ class Contract_Controller extends ControllerSQL{
 				,array(
 			));
 			$pm->addParam($param);
+		
+				$param = new FieldExtEnum('cost_eval_validity_pd_order',',','no_pd,simult_with_pd,after_pd'
+				,array(
+			));
+			$pm->addParam($param);
 		$param = new FieldExtDate('work_start_date'
 				,array(
 			));
@@ -337,6 +368,35 @@ class Contract_Controller extends ControllerSQL{
 			));
 			$pm->addParam($param);
 		$param = new FieldExtJSON('linked_contracts'
+				,array(
+			));
+			$pm->addParam($param);
+		
+				$param = new FieldExtEnum('date_type',',','calendar,bank'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtText('argument_document'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtText('order_document'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtText('auth_letter'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtText('constr_name'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtJSONB('constr_address'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtJSONB('constr_technical_features'
 				,array(
 			));
 			$pm->addParam($param);

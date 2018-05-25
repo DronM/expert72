@@ -126,6 +126,17 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		return $model;		
 	}
 	
+	public function update($pm){
+		$reg_number_out = $this->getExtDbVal($pm,'reg_number_out');
+		if ($pm->getParamValue('reg_number_out')){
+			$this->getDbLinkMaster()->query(sprintf(
+			"SELECT doc_flow_in_client_reg_numbers_insert(%d,%s)",
+			$this->getExtDbVal($pm,'old_id'),
+			$reg_number_out
+			));
+		}
+	}
+	
 </xsl:template>
 
 </xsl:stylesheet>

@@ -1,7 +1,7 @@
 /**	
  * @author Andrey Mikhalevich <katrenplus@mail.ru>, 2017
 
- * @extends
+ * @extends ViewAjxList
  * @requires core/extend.js  
 
  * @class
@@ -216,7 +216,7 @@ function ClientPaymentList_View(id,options){
 		"focus":true
 	}));		
 }
-extend(ClientPaymentList_View,ViewAjx);
+extend(ClientPaymentList_View,ViewAjxList);
 
 /* Constants */
 

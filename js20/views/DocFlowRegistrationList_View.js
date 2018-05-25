@@ -1,7 +1,7 @@
 /**	
  * @author Andrey Mikhalevich <katrenplus@mail.ru>, 2017
 
- * @extends
+ * @extends ViewAjxList
  * @requires core/extend.js  
 
  * @class
@@ -109,7 +109,7 @@ function DocFlowRegistrationList_View(id,options){
 		"focus":true
 	}));		
 }
-extend(DocFlowRegistrationList_View,ViewAjx);
+extend(DocFlowRegistrationList_View,ViewAjxList);
 
 /* Constants */
 

@@ -114,6 +114,14 @@ class DocFlowIn_Model extends ModelSQL{
 		$this->addField($f_from_application_id);
 		//********************
 		
+		//*** Field from_doc_flow_out_client_id ***
+		$f_opts = array();
+		$f_opts['id']="from_doc_flow_out_client_id";
+				
+		$f_from_doc_flow_out_client_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"from_doc_flow_out_client_id",$f_opts);
+		$this->addField($f_from_doc_flow_out_client_id);
+		//********************
+		
 		//*** Field end_date_time ***
 		$f_opts = array();
 		$f_opts['id']="end_date_time";

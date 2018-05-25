@@ -1,7 +1,7 @@
 /**	
  * @author Andrey Mikhalevich <katrenplus@mail.ru>, 2017
 
- * @extends
+ * @extends ViewAjx
  * @requires core/extend.js  
 
  * @class
@@ -31,15 +31,18 @@ function ClientPaymentLoader_View(id,options){
 			"caption":"ОК",
 			"onClick":function(){
 				self.setEnabled(false);
+				self.getCommand("ok").getPublicMethod().setFieldValue("interactive", 1);
 				self.execCommand(
 					"ok",
-					function(resp){
-						self.setEnabled(true);
-						self.m_onClose(true);
+					function(resp){						
+						window.showOk("Загружены оплаты из 1с.",function(){
+							self.m_onClose(true);
+						});
 					},
-					function(resp){
-						self.setEnabled(true);
-						self.m_onClose(false);
+					function(resp,errCode,errStr){
+						window.showError("Ошибка загрузки оплат из 1с "+errStr,function(){
+							self.m_onClose(false);
+						});
 					}					
 				);				
 			}
