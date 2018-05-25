@@ -135,10 +135,74 @@ extend(ClientResponsableGrid,GridAjx);
  * В зависимости от типа контрагента отключает некоторые колнки
  */
 ClientResponsableGrid.prototype.setClientType = function(ctp){
-//console.log("ClientResponsableGrid.prototype.setClientType "+ctp)
-	this.setColumnVisible(["dep","name","post","person_type"],(ctp!="person"));
+	this.m_clientType = ctp;
+	this.setColumnVisible(["dep","post","person_type"],(ctp!="person"));
 }
 
 ClientResponsableGrid.prototype.getFillPercent = function(){
 	return ( (this.getModel().getRowCount()||this.m_minInf)? 100:0);
 }
+
+ClientResponsableGrid.prototype.edit = function(cmd){
+	if (cmd=="edit"){
+		var sel_n = this.getSelectedRow();
+		this.setModelToCurrentRow(sel_n);
+	}
+	
+	this.m_view = new ClientResponsablePersonEdit(this.getId()+":view:body:view",{
+		"clientTypePerson":(this.m_clientType=="person"),
+		"valueJSON":{
+			"dep":(cmd=="edit" && this.m_clientType!="person")? this.getModel().getFieldValue("dep") : null
+			,"name":(cmd=="edit")? this.getModel().getFieldValue("name") : null
+			,"post":(cmd=="edit" && this.m_clientType!="person")? this.getModel().getFieldValue("post") : null
+			,"tel":(cmd=="edit")? this.getModel().getFieldValue("tel") : null
+			,"email":(cmd=="edit")? this.getModel().getFieldValue("email") : null
+			,"person_type":(cmd=="edit" && this.m_clientType!="person")? this.getModel().getFieldValue("person_type") : null
+		}
+		//,"template":window.getApp().getTemplate("DocFlowApprovementRecipientEdit")		
+	});
+	var self = this;
+	this.m_form = new WindowFormModalBS(this.getId()+":form",{
+		"cmdCancel":true,
+		"controlCancelCaption":this.BTN_CANCEL_CAP,
+		"controlCancelTitle":this.BTN_CANCEL_TITLE,
+		"cmdOk":true,
+		"controlOkCaption":this.BTN_OK_CAP,
+		"controlOkTitle":this.BTN_OK_TITLE,
+		"onClickCancel":function(){
+			self.closeSelect();
+		},		
+		"onClickOk":function(){
+			var v = self.m_view.getValueJSON();
+			var pm = (cmd=="edit")? self.getUpdatePublicMethod() : self.getInsertPublicMethod();
+			if(cmd=="edit")pm.setFieldValue("old_id",self.getModel().getFieldValue("id"));
+			if(v.dep && self.m_clientType!="person")pm.setFieldValue("dep",v.dep);
+			if(v["name"])pm.setFieldValue("name",v["name"]);
+			if(v["post"] && self.m_clientType!="person")pm.setFieldValue("post",v["post"]);
+			if(v["tel"])pm.setFieldValue("tel",v["tel"]);
+			if(v["email"])pm.setFieldValue("email",v["email"]);
+			if(v["person_type"] && self.m_clientType!="person")pm.setFieldValue("person_type",v["person_type"]);
+			pm.run({
+				"ok":function(){
+					self.closeSelect();
+					self.onRefresh();
+				}
+			});
+		},				
+		"content":this.m_view,
+		"contentHead":"Редактирование контакта"
+	});
+
+	this.m_form.open();
+}
+ClientResponsableGrid.prototype.closeSelect = function(){
+	if (this.m_view){
+		this.m_view.delDOM();
+		delete this.m_view;
+	}
+	if (this.m_form){
+		this.m_form.close();
+		delete this.m_form;
+	}		
+}
+

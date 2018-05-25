@@ -24,7 +24,7 @@ function EditINN(id,options){
 	options.type = "text";	
 	options.cmdSelect = false;
 	options.maxLength =  (this.m_isEnterprise)? this.ENT_LEN:this.PERS_LEN;
-	options.editMask = "99999999999999999999".substr(0,options.maxLength);
+	//options.editMask = "99999999999999999999".substr(0,options.maxLength);
 	options.fixLength = true;
 	options.events = options.events || {};
 	/*
@@ -60,10 +60,11 @@ EditINN.prototype.validate = function(){
 	}
 }
 EditINN.prototype.setIsEnterprise = function(v){
+console.log("EditINN.prototype.setIsEnterprise="+v)
 	var len = v? this.ENT_LEN:this.PERS_LEN;
 	this.setAttr("maxlength",len);
-	this.setEditMask("99999999999999999999".substr(0,len));
-	this.applyMask();
+	//this.setEditMask("99999999999999999999".substr(0,len));
+	//this.applyMask();
 }
 EditINN.prototype.getIsEnterprise = function(){
 	return this.m_isEnterprise;

@@ -2,7 +2,7 @@
 <metadata owner="expert72">
 	<versions>
 		<version dateOpen="2017-09-27 12:09:48" dateClose="2017-12-08 10:12:08">1.001 
-		<lastBuild>2018-05-25 10:12:36</lastBuild></version>
+		<lastBuild>2018-05-25 12:20:08</lastBuild></version>
 		<version dateOpen="2017-12-08 11:12:01" dateClose="2017-12-08 11:12:04">1.002</version>
 		<version dateOpen="2017-12-08 11:12:20" dateClose="2017-12-08 11:12:20">1.0.3</version>
 		<version dateOpen="2017-12-12 11:12:07" dateClose="2017-12-12 11:12:07">1.0.4</version>
@@ -38,6 +38,7 @@
 		<version dateOpen="2018-05-22 08:05:52" dateClose="2018-05-22 09:05:07">1.0.34</version>
 		<version dateOpen="2018-05-22 09:05:07" dateClose="2018-05-23 06:05:05">1.0.35</version>
 		<version dateOpen="2018-05-23 10:05:33" dateClose="2018-05-25 10:05:12">1.0.36</version>
+		<version dateOpen="2018-05-25 12:05:18" dateClose="2018-05-25 12:05:20">1.0.37</version>
 	</versions>
 	<globalFilters>
 		<field id="user_id"/>
@@ -3727,6 +3728,7 @@
 		<jsScript file="custom_controls/Doc1cAkt.js"/>
 		<jsScript file="custom_controls/LinkedContractListGrid.js"/>
 		<jsScript file="custom_controls/ContractorListGrid.js"/>
+		<jsScript file="custom_controls/ClientResponsablePersonEdit.js"/>
 		<jsScript file="enum_controls/Enum_role_types.js"/>
 		<jsScript file="views/rs_ru.js"/>
 		<jsScript file="views/rs_common_ru.js"/>
