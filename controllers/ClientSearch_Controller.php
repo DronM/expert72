@@ -29,8 +29,8 @@ require_once(FRAME_WORK_PATH.'basic_classes/Field.php');
 require_once('common/ClientSearch.php');
 
 class ClientSearch_Controller extends ControllerSQL{
-	public function __construct($dbLinkMaster=NULL){
-		parent::__construct($dbLinkMaster);
+	public function __construct($dbLinkMaster=NULL,$dbLink=NULL){
+		parent::__construct($dbLinkMaster,$dbLink);
 			
 		$pm = new PublicMethod('search');
 		

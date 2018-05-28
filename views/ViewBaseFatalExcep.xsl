@@ -23,7 +23,7 @@
 			<!-- Page Content -->
 			<div id="page-wrapper">
 			    <div class="container-fluid">
-				<div class="panel panel-flat">			    
+				<div class="panel panel-flat" style="position:relative;top:50px;width:400px;margin:0 auto;">			    
 					<div class="panel-heading">
 						<h1>Фатальная ошибка</h1>
 					</div>

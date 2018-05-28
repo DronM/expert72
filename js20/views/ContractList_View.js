@@ -45,7 +45,7 @@ ContractList_View.prototype.addGrid = function(options){
 	var id = this.getId();
 	
 	var period_ctrl = new EditPeriodDate(id+":filter-ctrl-period",{
-		"field":new FieldDate("create_dt")
+		"field":new FieldDateTime("date_time")
 	});
 	
 	var filters = {
@@ -71,14 +71,15 @@ ContractList_View.prototype.addGrid = function(options){
 		}
 		,"client":{
 			"binding":new CommandBinding({
-				"control":new ClientEditRef(id+":filter-ctrl-client",{"labelCaption":"Заявитель:"}),
+				"control":new ClientEditRef(id+":filter-ctrl-client",{"labelCaption":"Заявитель:","contClassName":"form-group-filter"}),
 				"field":new FieldInt("client_id")
 			}),
 			"sign":"e"
 		}
+		
 		,"expert":{
 			"binding":new CommandBinding({
-				"control":new EmployeeEditRef(id+":filter-ctrl-expert",{"labelCaption":"Эксперт:"}),
+				"control":new EmployeeEditRef(id+":filter-ctrl-expert",{"labelCaption":"Эксперт:","contClassName":"form-group-filter"}),
 				"field":new FieldInt("main_expert_id")
 			}),
 			"sign":"e"
@@ -88,7 +89,7 @@ ContractList_View.prototype.addGrid = function(options){
 	if (this.GRID_ALL){
 		filters.document_type = {
 				"binding":new CommandBinding({
-					"control":new Enum_document_types(id+":filter-ctrl-document_type",{"labelCaption":"Услуга:"}),
+					"control":new Enum_document_types(id+":filter-ctrl-document_type",{"labelCaption":"Услуга:","contClassName":"form-group-filter"}),
 					"field":new FieldString("document_type")
 				})
 		};

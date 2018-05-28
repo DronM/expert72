@@ -126,6 +126,8 @@ $permissions = array();
 			
 				$permissions['VariantStorage_Controller_upsert_col_order_data']=TRUE;
 			
+				$permissions['VariantStorage_Controller_upsert_all_data']=TRUE;
+			
 				$permissions['VariantStorage_Controller_update']=TRUE;
 			
 				$permissions['VariantStorage_Controller_delete']=TRUE;
@@ -139,6 +141,8 @@ $permissions = array();
 				$permissions['VariantStorage_Controller_get_col_visib_data']=TRUE;
 			
 				$permissions['VariantStorage_Controller_get_col_order_data']=TRUE;
+			
+				$permissions['VariantStorage_Controller_get_all_data']=TRUE;
 			
 			$permissions['Office_Controller_get_list']=TRUE;
 		

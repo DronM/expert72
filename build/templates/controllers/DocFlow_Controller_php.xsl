@@ -27,8 +27,8 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 	const ER_EMPLOYEE_NOT_DEFINED = 'К пользователю не привязан сотрудник!@1003';
 	const ER_ALLOWED_TO_ADMIN = 'Действие разрешено только администратору!@1004';
 
-	public function __construct($dbLinkMaster=NULL){
-		parent::__construct($dbLinkMaster);<xsl:apply-templates/>
+	public function __construct($dbLinkMaster=NULL,$dbLink=NULL){
+		parent::__construct($dbLinkMaster,$dbLink);<xsl:apply-templates/>
 	}	
 	<xsl:call-template name="extra_methods"/>
 }

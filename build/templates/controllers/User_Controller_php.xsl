@@ -40,8 +40,8 @@ class <xsl:value-of select="@id"/>_Controller extends ControllerSQL{
 	const ER_WRONG_CAPTCHA = "Неверный код с картинки.@1004";
 	const ER_BANNED = "Доступ запрещен!@1005";
 
-	public function __construct($dbLinkMaster=NULL){
-		parent::__construct($dbLinkMaster);<xsl:apply-templates/>
+	public function __construct($dbLinkMaster=NULL,$dbLink=NULL){
+		parent::__construct($dbLinkMaster,$dbLink);<xsl:apply-templates/>
 	}
 		
 	<xsl:call-template name="extra_methods"/>

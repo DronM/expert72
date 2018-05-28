@@ -27,8 +27,8 @@ require_once('functions/ExpertEmailSender.php');
 require_once(USER_CONTROLLERS_PATH.'DocFlowExamination_Controller.php');
 
 class DocFlowRegistration_Controller extends ControllerSQL{
-	public function __construct($dbLinkMaster=NULL){
-		parent::__construct($dbLinkMaster);
+	public function __construct($dbLinkMaster=NULL,$dbLink=NULL){
+		parent::__construct($dbLinkMaster,$dbLink);
 			
 
 		/* insert */
@@ -219,9 +219,11 @@ class DocFlowRegistration_Controller extends ControllerSQL{
 					CASE
 						WHEN doc_flow_type_id=(pdfn_doc_flow_types_app_resp()->'keys'->>'id')::int THEN 'waiting_for_contract'::application_states
 						WHEN doc_flow_type_id=(pdfn_doc_flow_types_app_resp_return()->'keys'->>'id')::int THEN 'returned'::application_states
+						WHEN doc_flow_type_id=(pdfn_doc_flow_types_app_resp_correct()->'keys'->>'id')::int THEN 'filling'::application_states
 						WHEN doc_flow_type_id=(pdfn_doc_flow_types_contr_wait_pay()->'keys'->>'id')::int THEN 'waiting_for_pay'::application_states
 						WHEN doc_flow_type_id=(pdfn_doc_flow_types_contr_expertise()->'keys'->>'id')::int THEN 'expertise'::application_states
 						WHEN doc_flow_type_id=(pdfn_doc_flow_types_contr_close()->'keys'->>'id')::int THEN 'closed'::application_states
+						WHEN doc_flow_type_id=(pdfn_doc_flow_types_contr_return()->'keys'->>'id')::int THEN 'closed_no_expertise'::application_states
 						ELSE NULL
 					END AS app_state 
 				FROM doc_flow_out

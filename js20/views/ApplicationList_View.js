@@ -29,7 +29,7 @@ function ApplicationList_View(id,options){
 	var popup_menu = new PopUpMenu();
 	
 	var period_ctrl = new EditPeriodDate(id+":filter-ctrl-period",{
-		"field":new FieldDate("create_dt")
+		"field":new FieldDateTime("create_dt")
 	});
 	
 	var filters = {
@@ -56,6 +56,7 @@ function ApplicationList_View(id,options){
 		"application_state":{
 			"binding":new CommandBinding({
 				"control":new Enum_application_states(id+":filter-ctrl-application_state",{
+					"contClassName":"form-group-filter",
 					"labelCaption":this.FLT_CAP_application_state
 				}),
 				"field":new FieldString("application_state")}),
@@ -64,6 +65,7 @@ function ApplicationList_View(id,options){
 		"office":{
 			"binding":new CommandBinding({
 				"control":new OfficeSelect(id+":filter-ctrl-office",{
+					"contClassName":"form-group-filter",
 					"labelCaption":this.FLT_CAP_office
 				}),
 				"field":new FieldInt("office_id")}),

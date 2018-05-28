@@ -46,8 +46,8 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 
 	const ER_PRINT_FILE_CNT = 'Нет файла ЭЦП с заявлением по ';
 
-	public function __construct($dbLinkMaster=NULL){
-		parent::__construct($dbLinkMaster);<xsl:apply-templates/>
+	public function __construct($dbLinkMaster=NULL,$dbLink=NULL){
+		parent::__construct($dbLinkMaster,$dbLink);<xsl:apply-templates/>
 	}	
 	<xsl:call-template name="extra_methods"/>
 }

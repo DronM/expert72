@@ -28,8 +28,7 @@ function DocFlowTaskActiveList_View(id,options){
 	
 	var popup_menu = new PopUpMenu();
 	
-	var filters = {
-	};
+	var filters = null;
 	
 	var columns = [
 		new GridCellHead(id+":grid:head:date_time",{

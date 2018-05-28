@@ -1,0 +1,31 @@
+<div id="{{id}}">
+	<div class="form-group {{bsCol}}12">
+		<div id="{{id}}:save"></div>
+		<div id="{{id}}:open"></div>
+	</div>
+
+	<div class="tabbable">
+		<ul class="nav nav-tabs nav-tabs-highlight">				
+			<li class="active"><a href="#columns" data-toggle="tab" aria-expanded="true">{{TAB_COLUMNS}}</a></li>
+			<li><a href="#sortings" data-toggle="tab" aria-expanded="false">{{TAB_SORT}}</a></li>
+		</ul>
+	</div>
+
+	<!-- Tab panes -->
+	<div class="tab-content">	
+		<div class="tab-pane fade in active" id="columns">
+			<div id="{{id}}:view-visibility"></div>
+		</div>
+
+		<div class="tab-pane fade" id="sortings">
+			<div id="{{id}}:view-order"></div>
+		</div>
+<!--	
+		<div role="tabpanel" class="tab-pane" id="filters">
+			<div class="panel panel-body">
+				<div id="{{id}}:view-filter"></div>
+			</div>
+		</div>
+-->
+</div>
+

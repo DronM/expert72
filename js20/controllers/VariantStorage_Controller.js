@@ -27,6 +27,7 @@ function VariantStorage_Controller(options){
 	this.add_upsert_filter_data();
 	this.add_upsert_col_visib_data();
 	this.add_upsert_col_order_data();
+	this.add_upsert_all_data();
 	this.addUpdate();
 	this.addDelete();
 	this.addGetList();
@@ -34,6 +35,7 @@ function VariantStorage_Controller(options){
 	this.add_get_filter_data();
 	this.add_get_col_visib_data();
 	this.add_get_col_order_data();
+	this.add_get_all_data();
 		
 }
 extend(VariantStorage_Controller,ControllerObjServer);
@@ -69,19 +71,19 @@ extend(VariantStorage_Controller,ControllerObjServer);
 	
 	var options = {};
 	
-	var field = new FieldText("filter_data",options);
+	var field = new FieldJSON("filter_data",options);
 	
 	pm.addField(field);
 	
 	var options = {};
 	
-	var field = new FieldText("col_visib_data",options);
+	var field = new FieldJSON("col_visib_data",options);
 	
 	pm.addField(field);
 	
 	var options = {};
 	
-	var field = new FieldText("col_order_data",options);
+	var field = new FieldJSON("col_order_data",options);
 	
 	pm.addField(field);
 	
@@ -115,7 +117,7 @@ extend(VariantStorage_Controller,ControllerObjServer);
 	
 		options.required = true;
 	
-		pm.addField(new FieldString("filter_data",options));
+		pm.addField(new FieldJSON("filter_data",options));
 	
 				
 	
@@ -156,7 +158,7 @@ extend(VariantStorage_Controller,ControllerObjServer);
 	
 		options.required = true;
 	
-		pm.addField(new FieldString("col_visib",options));
+		pm.addField(new FieldJSON("col_visib",options));
 	
 				
 	
@@ -197,7 +199,48 @@ extend(VariantStorage_Controller,ControllerObjServer);
 	
 		options.required = true;
 	
-		pm.addField(new FieldString("col_order",options));
+		pm.addField(new FieldJSON("col_order",options));
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldBool("default_variant",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			VariantStorage_Controller.prototype.add_upsert_all_data = function(){
+	var opts = {"controller":this};
+	
+	var pm = new PublicMethodServer('upsert_all_data',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldString("storage_name",options));
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldString("variant_name",options));
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldJSON("all_data",options));
 	
 				
 	
@@ -250,19 +293,19 @@ extend(VariantStorage_Controller,ControllerObjServer);
 	
 	var options = {};
 	
-	var field = new FieldText("filter_data",options);
+	var field = new FieldJSON("filter_data",options);
 	
 	pm.addField(field);
 	
 	var options = {};
 	
-	var field = new FieldText("col_visib_data",options);
+	var field = new FieldJSON("col_visib_data",options);
 	
 	pm.addField(field);
 	
 	var options = {};
 	
-	var field = new FieldText("col_order_data",options);
+	var field = new FieldJSON("col_order_data",options);
 	
 	pm.addField(field);
 	
@@ -377,6 +420,29 @@ extend(VariantStorage_Controller,ControllerObjServer);
 	var opts = {"controller":this};
 	
 	var pm = new PublicMethodServer('get_col_order_data',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldString("storage_name",options));
+	
+				
+	
+	var options = {};
+	
+		pm.addField(new FieldString("variant_name",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			VariantStorage_Controller.prototype.add_get_all_data = function(){
+	var opts = {"controller":this};
+	
+	var pm = new PublicMethodServer('get_all_data',opts);
 	
 				
 	

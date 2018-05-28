@@ -19,10 +19,14 @@ ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT USAGE ON SEQUENCES TO expert72;
 psql -U expert72 -d expert72 -f expert.dmp
 159753
 
+
+
+ИСПРАВИТЬ КПП "7203321348 КПП 7"
+psql -d expert72 -U expert72 -f /home/andrey/\!Экспертиза/ЛК/cl.sql
+
 DELETE FROM contacts;
 delete from contracts;
 delete from applications;
-
 delete from clients where id<>4;
 
 DELETE FROM doc_flow_approvements;
@@ -42,12 +46,37 @@ DELETE FROM reminders;
 DELETE FROM sessions;
 DELETE FROM user_email_confirmations;
 
+--ЗАМЕНА
+'{\'id\':\'LinkedContractList_Model\',\'rows\':[]}'
+'{"id":"LinkedContractList_Model","rows":[]}'
+
+--ПЕРЕЗАПУСТИТЬ ПЕРЕЗ ЗАГРУЗКОЙ
+SELECT setval('contracts_id_seq', 1);
+SELECT setval('applications_id_seq', 1);
+SELECT setval('client_payments_id_seq', 1);
+-- Trigger: contacts_before_trigger on public.contacts
+
+--*** УБРАТЬ ТРИГГЕР ПЕРЕД ЗАПУСКОМ ЗАГРУЗКИ *****
+DROP TRIGGER contacts_before_trigger ON public.contacts;
+CREATE TRIGGER contacts_before_trigger
+  BEFORE INSERT
+  ON public.contacts
+  FOR EACH ROW
+  EXECUTE PROCEDURE public.contacts_process();
+
+
+
+
+
+
+
+
 INSERT INTO client_payments
 (contract_id,pay_date,total)
-(select id,date_time,payment from contracts where payment2>0)
+(select id,date_time,payment2 from contracts where payment2>0)
 INSERT INTO client_payments
 (contract_id,pay_date,total)
-(select id,date_time,payment from contracts where payment>0)
+(select id,date_time+'1 day',payment from contracts where payment>0)
 
 
 COPY tmp_logins FROM '/home/andrey/logins.csv' (FORMAT csv, DELIMITER '@')
@@ -126,21 +155,6 @@ where users.tmp_inn IS NOT NULL AND users.id IN (
 )
 ) AS sub
 WHERE id=sub.application_id
-
-
---ПЕРЕЗАПУСТИТЬ ПЕРЕЗ ЗАГРУЗКОЙ
-SELECT setval('contracts_id_seq', 1);
-SELECT setval('applications_id_seq', 1);
-SELECT setval('client_payments_id_seq', 1);
--- Trigger: contacts_before_trigger on public.contacts
-
---*** УБРАТЬ ТРИГГЕР ПЕРЕД ЗАПУСКОМ ЗАГРУЗКИ *****
-DROP TRIGGER contacts_before_trigger ON public.contacts;
-CREATE TRIGGER contacts_before_trigger
-  BEFORE INSERT
-  ON public.contacts
-  FOR EACH ROW
-  EXECUTE PROCEDURE public.contacts_process();
 
 
 --*** ДЛЯ ВСЕХ ЗАПОЛНИТЬ  linked_contracts *****

@@ -24,8 +24,6 @@ function DepartmentList_View(id,options){
 	
 	var pagClass = window.getApp().getPaginationClass();
 	
-	var filters = {};
-	
 	var popup_menu = new PopUpMenu();
 	
 	this.addElement(new GridAjx(id+":grid",{
@@ -35,9 +33,7 @@ function DepartmentList_View(id,options){
 		"editInline":false,
 		"editWinClass":DepartmentDialog_Form,
 		"popUpMenu":popup_menu,
-		"commands":new GridCmdContainerAjx(id+":grid:cmd",{
-			"filters":filters
-		}),
+		"commands":new GridCmdContainerAjx(id+":grid:cmd"),
 		"head":new GridHead(id+":grid:head",{
 			"elements":[
 				new GridRow(id+":grid:head:row0",{					

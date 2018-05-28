@@ -28,7 +28,7 @@ function DocFlowExaminationList_View(id,options){
 	var popup_menu = new PopUpMenu();
 	
 	var period_ctrl = new EditPeriodDate(id+":filter-ctrl-period",{
-		"field":new FieldDate("date_time")
+		"field":new FieldDateTime("date_time")
 	});
 	
 	var filters = {
@@ -54,13 +54,14 @@ function DocFlowExaminationList_View(id,options){
 		}
 		,"doc_flow_importance_type":{
 			"binding":new CommandBinding({
-				"control":new DocFlowImportanceTypeSelect(id+":filter-ctrl-doc_flow_importance_type"),
+				"control":new DocFlowImportanceTypeSelect(id+":filter-ctrl-doc_flow_importance_type",{"contClassName":"form-group-filter"}),
 				"field":new FieldInt("doc_flow_importance_type_id")
 			})		
 		}
 		,"closed":{
 			"binding":new CommandBinding({
 				"control":new EditSelect(id+":filter-ctrl-closed",{
+					"contClassName":"form-group-filter",
 					"labelCaption":"Состояние",
 					"addNotSelected":true,
 					"options":[
@@ -73,13 +74,13 @@ function DocFlowExaminationList_View(id,options){
 		}
 		,"doc_flow_importance_type":{
 			"binding":new CommandBinding({
-				"control":new DocFlowImportanceTypeSelect(id+":filter-ctrl-doc_flow_importance_type"),
+				"control":new DocFlowImportanceTypeSelect(id+":filter-ctrl-doc_flow_importance_type",{"contClassName":"form-group-filter"}),
 				"field":new FieldInt("doc_flow_importance_type_id")
 			})		
 		}
 		,"close_employees_ref":{
 			"binding":new CommandBinding({
-				"control":new EmployeeEditRef(id+":filter-ctrl-close_employees_ref"),
+				"control":new EmployeeEditRef(id+":filter-ctrl-close_employees_ref",{"contClassName":"form-group-filter"}),
 				"field":new FieldInt("close_employee_id")
 			})		
 		}

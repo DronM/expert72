@@ -24,7 +24,7 @@ function ContactList_View(id,options){
 	
 	var pagClass = window.getApp().getPaginationClass();
 	
-	var filters = {};
+	var filters = null;
 	
 	var popup_menu = new PopUpMenu();
 	
@@ -37,8 +37,7 @@ function ContactList_View(id,options){
 		"popUpMenu":popup_menu,
 		"commands":new GridCmdContainerAjx(id+":grid:cmd",{
 			"cmdInsert":false,
-			"cmdEdit":false,
-			"filters":filters
+			"cmdEdit":false
 		}),
 		"head":new GridHead(id+":grid:head",{
 			"elements":[

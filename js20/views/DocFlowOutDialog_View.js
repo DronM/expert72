@@ -290,23 +290,24 @@ DocFlowOutDialog_View.prototype.setDocVis = function(){
 	var v = this.getElement("doc_flow_types_ref").getValue();
 	var app_vis = false;
 	var contr_vis = false;
-	if (v &&
-	(
-		v.getKey()==window.getApp().getPredefinedItem("doc_flow_types","app_resp").getKey()
-		||v.getKey()==window.getApp().getPredefinedItem("doc_flow_types","app_resp_return").getKey()
-	)
-	){
-		app_vis = true;
-	}
-	else if (v &&
-	(
-		v.getKey()==window.getApp().getPredefinedItem("doc_flow_types","contr").getKey()
-		||v.getKey()==window.getApp().getPredefinedItem("doc_flow_types","contr_close").getKey()
-		||v.getKey()==window.getApp().getPredefinedItem("doc_flow_types","contr_wait_pay").getKey()
-		||v.getKey()==window.getApp().getPredefinedItem("doc_flow_types","contr_expertise").getKey()
-	)
-	){
-		contr_vis = true;
+	if (v){
+		var v_key = v.getKey();
+		if (
+			v_key==window.getApp().getPredefinedItem("doc_flow_types","app_resp").getKey()
+			||v_key==window.getApp().getPredefinedItem("doc_flow_types","app_resp_return").getKey()
+			||v_key==window.getApp().getPredefinedItem("doc_flow_types","app_resp_correct").getKey()
+		){
+			app_vis = true;
+		}
+		else if (
+			v_key==window.getApp().getPredefinedItem("doc_flow_types","contr").getKey()
+			||v_key==window.getApp().getPredefinedItem("doc_flow_types","contr_close").getKey()
+			||v_key==window.getApp().getPredefinedItem("doc_flow_types","contr_wait_pay").getKey()
+			||v_key==window.getApp().getPredefinedItem("doc_flow_types","contr_expertise").getKey()
+			||v_key==window.getApp().getPredefinedItem("doc_flow_types","contr_return").getKey()
+		){
+			contr_vis = true;
+		}
 	}
 	this.getElement("to_applications_ref").setVisible(app_vis);
 	this.getElement("to_contracts_ref").setVisible(contr_vis);

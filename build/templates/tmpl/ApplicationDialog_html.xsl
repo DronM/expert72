@@ -69,7 +69,7 @@ Edit template instead.
 					<h5 class="no-margin text-semibold">Заявление закрыто без проведения экспертизы.</h5>
 					</div>					
 					<div id="{{{{id}}}}:inf_returned" class="hidden">
-					<h5 class="no-margin text-semibold">Заявление возвращено на доработку.</h5>
+					<h5 class="no-margin text-semibold">Отказ по заявлению. Файлы будут храниться в течении трех месяцев.</h5>
 					</div>
 					<div id="{{{{id}}}}:inf_waiting_for_pay" class="hidden">
 					<h5 class="no-margin text-semibold">Ожидание оплаты.</h5>

@@ -35,7 +35,7 @@ function DocFlowOutList_View(id,options){
 	var popup_menu = new PopUpMenu();
 	
 	var period_ctrl = new EditPeriodDate(id+":filter-ctrl-period",{
-		"field":new FieldDate("date_time")
+		"field":new FieldDateTime("date_time")
 	});
 	
 	var filters = {
@@ -61,13 +61,13 @@ function DocFlowOutList_View(id,options){
 		},
 		"mail_type":{
 			"binding":new CommandBinding({
-				"control":new DocFlowTypeSelect(id+":filter-ctrl-doc_flow_type"),
-				"field":period_ctrl.getField()
+				"control":new DocFlowTypeSelect(id+":filter-ctrl-doc_flow_type",{"type_id":"out","contClassName":"form-group-filter"}),
+				"field":new FieldInt("doc_flow_type_id")
 			})
 		}
 		,"state":{
 			"binding":new CommandBinding({
-				"control":new Enum_doc_flow_out_states(id+":filter-ctrl-state",{"labelCaption":"Статус:"}),
+				"control":new Enum_doc_flow_out_states(id+":filter-ctrl-state",{"labelCaption":"Статус:","contClassName":"form-group-filter"}),
 				"field":new FieldString("state")
 			})		
 		}

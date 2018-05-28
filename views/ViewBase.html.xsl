@@ -361,7 +361,7 @@
 		v_opts.variantStorage = {
 			"name":"<xsl:value-of select="@templateId"/>"
 			<xsl:if test="/document/model[@id='VariantStorage_Model']">
-			,"model":models.VariantStorage_Model
+			,"model":editViewOptions.models.VariantStorage_Model
 			</xsl:if>			
 		};	
 		

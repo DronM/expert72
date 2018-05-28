@@ -26,8 +26,8 @@ require_once(FRAME_WORK_PATH.'basic_classes/FieldExtXML.php');
 require_once(USER_CONTROLLERS_PATH.'Application_Controller.php');
 
 class DocFlowOutClient_Controller extends ControllerSQL{
-	public function __construct($dbLinkMaster=NULL){
-		parent::__construct($dbLinkMaster);
+	public function __construct($dbLinkMaster=NULL,$dbLink=NULL){
+		parent::__construct($dbLinkMaster,$dbLink);
 			
 
 		/* insert */

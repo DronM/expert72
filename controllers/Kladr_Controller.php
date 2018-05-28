@@ -30,7 +30,7 @@ require_once(FRAME_WORK_PATH.'basic_classes/ParamsSQL.php');
 class Kladr_Controller extends ControllerSQL{
 	const COMPLETE_RES_COUNT=5;
 	
-	public function __construct($dbLinkMaster=NULL){
+	public function __construct($dbLinkMaster=NULL,$dbLink=NULL){
 		$kladr_link = new DB_Sql();
 		$kladr_link->appname		= APP_NAME;
 		$kladr_link->technicalemail = TECH_EMAIL;

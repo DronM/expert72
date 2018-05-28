@@ -68,7 +68,7 @@ function VariantStorage_Model(options){
 	
 	filed_options.autoInc = false;	
 	
-	options.fields.filter_data = new FieldText("filter_data",filed_options);
+	options.fields.filter_data = new FieldJSON("filter_data",filed_options);
 	
 				
 	
@@ -77,7 +77,7 @@ function VariantStorage_Model(options){
 	
 	filed_options.autoInc = false;	
 	
-	options.fields.col_visib_data = new FieldText("col_visib_data",filed_options);
+	options.fields.col_visib_data = new FieldJSON("col_visib_data",filed_options);
 	
 				
 	
@@ -86,7 +86,7 @@ function VariantStorage_Model(options){
 	
 	filed_options.autoInc = false;	
 	
-	options.fields.col_order_data = new FieldText("col_order_data",filed_options);
+	options.fields.col_order_data = new FieldJSON("col_order_data",filed_options);
 	
 		VariantStorage_Model.superclass.constructor.call(this,id,options);
 }

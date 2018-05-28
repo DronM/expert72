@@ -27,8 +27,8 @@ require_once(USER_CONTROLLERS_PATH.'Application_Controller.php');
 require_once('common/file_func.php');
 
 class DocFlowExamination_Controller extends ControllerSQL{
-	public function __construct($dbLinkMaster=NULL){
-		parent::__construct($dbLinkMaster);
+	public function __construct($dbLinkMaster=NULL,$dbLink=NULL){
+		parent::__construct($dbLinkMaster,$dbLink);
 			
 
 		/* insert */

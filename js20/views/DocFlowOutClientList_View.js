@@ -33,7 +33,7 @@ function DocFlowOutClientList_View(id,options){
 	var popup_menu = new PopUpMenu();
 	
 	var period_ctrl = new EditPeriodDate(id+":filter-ctrl-period",{
-		"field":new FieldDate("date_time")
+		"field":new FieldDateTime("date_time")
 	});	
 	var filters = {
 		"period":{

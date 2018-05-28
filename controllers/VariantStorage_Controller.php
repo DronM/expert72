@@ -27,8 +27,8 @@ require_once(FRAME_WORK_PATH.'basic_classes/ParamsSQL.php');
 require_once(FRAME_WORK_PATH.'basic_classes/VariantStorage.php');
 
 class VariantStorage_Controller extends ControllerSQL{
-	public function __construct($dbLinkMaster=NULL){
-		parent::__construct($dbLinkMaster);
+	public function __construct($dbLinkMaster=NULL,$dbLink=NULL){
+		parent::__construct($dbLinkMaster,$dbLink);
 			
 
 		/* insert */
@@ -45,13 +45,13 @@ class VariantStorage_Controller extends ControllerSQL{
 		$param = new FieldExtBool('default_variant'
 				,array());
 		$pm->addParam($param);
-		$param = new FieldExtText('filter_data'
+		$param = new FieldExtJSON('filter_data'
 				,array());
 		$pm->addParam($param);
-		$param = new FieldExtText('col_visib_data'
+		$param = new FieldExtJSON('col_visib_data'
 				,array());
 		$pm->addParam($param);
-		$param = new FieldExtText('col_order_data'
+		$param = new FieldExtJSON('col_order_data'
 				,array());
 		$pm->addParam($param);
 		
@@ -77,7 +77,7 @@ class VariantStorage_Controller extends ControllerSQL{
 				
 	$opts=array();
 			
-		$pm->addParam(new FieldExtText('filter_data',$opts));
+		$pm->addParam(new FieldExtJSON('filter_data',$opts));
 	
 				
 	$opts=array();
@@ -106,7 +106,7 @@ class VariantStorage_Controller extends ControllerSQL{
 	$opts=array();
 	
 		$opts['required']=TRUE;				
-		$pm->addParam(new FieldExtString('col_visib',$opts));
+		$pm->addParam(new FieldExtJSON('col_visib',$opts));
 	
 				
 	$opts=array();
@@ -135,7 +135,36 @@ class VariantStorage_Controller extends ControllerSQL{
 	$opts=array();
 	
 		$opts['required']=TRUE;				
-		$pm->addParam(new FieldExtString('col_order',$opts));
+		$pm->addParam(new FieldExtJSON('col_order',$opts));
+	
+				
+	$opts=array();
+			
+		$pm->addParam(new FieldExtBool('default_variant',$opts));
+	
+			
+		$this->addPublicMethod($pm);
+
+			
+		$pm = new PublicMethod('upsert_all_data');
+		
+				
+	$opts=array();
+	
+		$opts['required']=TRUE;		
+		$pm->addParam(new FieldExtText('storage_name',$opts));
+	
+				
+	$opts=array();
+	
+		$opts['required']=TRUE;		
+		$pm->addParam(new FieldExtText('variant_name',$opts));
+	
+				
+	$opts=array();
+	
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtJSON('all_data',$opts));
 	
 				
 	$opts=array();
@@ -172,15 +201,15 @@ class VariantStorage_Controller extends ControllerSQL{
 				,array(
 			));
 			$pm->addParam($param);
-		$param = new FieldExtText('filter_data'
+		$param = new FieldExtJSON('filter_data'
 				,array(
 			));
 			$pm->addParam($param);
-		$param = new FieldExtText('col_visib_data'
+		$param = new FieldExtJSON('col_visib_data'
 				,array(
 			));
 			$pm->addParam($param);
-		$param = new FieldExtText('col_order_data'
+		$param = new FieldExtJSON('col_order_data'
 				,array(
 			));
 			$pm->addParam($param);
@@ -318,6 +347,24 @@ class VariantStorage_Controller extends ControllerSQL{
 			
 		$this->addPublicMethod($pm);
 
+			
+		$pm = new PublicMethod('get_all_data');
+		
+				
+	$opts=array();
+	
+		$opts['required']=TRUE;		
+		$pm->addParam(new FieldExtText('storage_name',$opts));
+	
+				
+	$opts=array();
+	
+		$opts['required']=TRUE;		
+		$pm->addParam(new FieldExtText('variant_name',$opts));
+	
+			
+		$this->addPublicMethod($pm);
+
 		
 	}	
 	
@@ -336,7 +383,7 @@ class VariantStorage_Controller extends ControllerSQL{
 		VariantStorage::clear($params->getVal("storage_name"));
 	}
 
-	public function upsert($pm,$dataCol){
+	public function upsert($pm,$dataCol,$dataColVal){
 		$params = new ParamsSQL($pm,$this->getDbLink());
 		$params->addAll();
 	
@@ -346,7 +393,7 @@ class VariantStorage_Controller extends ControllerSQL{
 		$_SESSION['user_id'],
 		$params->getDbVal("storage_name"),
 		$params->getDbVal("variant_name"),
-		$params->getDbVal($dataCol),
+		$dataColVal,
 		$params->getDbVal("default_variant")
 		));
 		
@@ -354,15 +401,28 @@ class VariantStorage_Controller extends ControllerSQL{
 	}
 	
 	public function upsert_filter_data($pm){
-		$this->upsert($pm,'filter_data');
+		$this->upsert($pm, 'filter_data', $this->getExtDbVal($pm,'filter_data'));
 	}
 
 	public function upsert_col_visib_data($pm){
-		$this->upsert($pm,'col_visib_data');
+		$this->upsert($pm, 'col_visib_data', $this->getExtDbVal($pm,'col_visib_data'));
 	}
 
 	public function upsert_col_order_data($pm){
-		$this->upsert($pm,'col_visib_order');
+		$this->upsert($pm, 'col_visib_order', $this->getExtDbVal($pm,'col_visib_order'));
+	}
+	public function upsert_all_data($pm){
+		$all_data = json_decode($this->getExtDbVal($pm,'all_data'));
+		if ($all_data->filter_data){
+			$this->upsert($pm, 'filter_data', json_encode($all_data->filter_data));
+		}
+		if ($all_data->col_visib_data){
+			$this->upsert($pm, 'col_visib_data', json_encode($all_data->col_visib_data));
+		}
+		if ($all_data->col_order_data){
+			$this->upsert($pm, 'col_order_data', json_encode($all_data->col_order_data));
+		}
+		
 	}
 	
 	public function get_list($pm){
@@ -413,6 +473,10 @@ class VariantStorage_Controller extends ControllerSQL{
 	public function get_col_order_data($pm){
 		$this->get_obj_col($pm,'col_order_data');
 	}	
+	public function get_all_data($pm){
+		$this->get_obj_col($pm,'filter_data,col_visib_data,col_order_data');
+	}	
+	
 	
 
 }

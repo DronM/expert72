@@ -2,7 +2,7 @@
 <metadata owner="expert72">
 	<versions>
 		<version dateOpen="2017-09-27 12:09:48" dateClose="2017-12-08 10:12:08">1.001 
-		<lastBuild>2018-05-25 12:20:08</lastBuild></version>
+		<lastBuild>2018-05-28 13:22:22</lastBuild></version>
 		<version dateOpen="2017-12-08 11:12:01" dateClose="2017-12-08 11:12:04">1.002</version>
 		<version dateOpen="2017-12-08 11:12:20" dateClose="2017-12-08 11:12:20">1.0.3</version>
 		<version dateOpen="2017-12-12 11:12:07" dateClose="2017-12-12 11:12:07">1.0.4</version>
@@ -39,6 +39,7 @@
 		<version dateOpen="2018-05-22 09:05:07" dateClose="2018-05-23 06:05:05">1.0.35</version>
 		<version dateOpen="2018-05-23 10:05:33" dateClose="2018-05-25 10:05:12">1.0.36</version>
 		<version dateOpen="2018-05-25 12:05:18" dateClose="2018-05-25 12:05:20">1.0.37</version>
+		<version dateOpen="2018-05-28 13:05:21" dateClose="2018-05-28 13:05:22">1.0.38</version>
 	</versions>
 	<globalFilters>
 		<field id="user_id"/>
@@ -129,10 +130,10 @@
 				<ru descr="&#x41F;&#x440;&#x43E;&#x432;&#x435;&#x440;&#x43A;&#x430; &#x430;&#x43D;&#x43A;&#x435;&#x442;&#x44B;"/>
 			</value>
 			<value id="returned">
-				<ru descr="&#x410;&#x43D;&#x43A;&#x435;&#x442;&#x430; &#x432;&#x43E;&#x437;&#x432;&#x440;&#x430;&#x449;&#x435;&#x43D;&#x430; &#x43D;&#x430; &#x434;&#x43E;&#x440;&#x430;&#x431;&#x43E;&#x442;&#x43A;&#x443;"/>
+				<ru descr="&#x41E;&#x442;&#x43A;&#x430;&#x437; &#x43F;&#x43E; &#x437;&#x430;&#x44F;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x44E;"/>
 			</value>
 			<value id="closed_no_expertise">
-				<ru descr="&#x412;&#x43E;&#x437;&#x432;&#x440;&#x430;&#x442; &#x431;&#x435;&#x437; &#x440;&#x430;&#x441;&#x441;&#x43C;&#x43E;&#x442;&#x440;&#x435;&#x43D;&#x438;&#x44F;"/>
+				<ru descr="&#x412;&#x43E;&#x437;&#x432;&#x440;&#x430;&#x442; &#x431;&#x435;&#x437; &#x44D;&#x43A;&#x441;&#x43F;&#x435;&#x440;&#x442;&#x438;&#x437;&#x44B;"/>
 			</value>
 			<value id="waiting_for_contract">
 				<ru descr="&#x41F;&#x43E;&#x434;&#x43F;&#x438;&#x441;&#x430;&#x43D;&#x438;&#x435; &#x43A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x430;"/>
@@ -477,9 +478,9 @@
 			<field id="storage_name" dataType="Text" primaryKey="TRUE" required="TRUE"/>
 			<field id="variant_name" dataType="Text" primaryKey="TRUE" required="TRUE"/>
 			<field id="default_variant" dataType="Bool"/>
-			<field id="filter_data" dataType="Text"/>
-			<field id="col_visib_data" dataType="Text"/>
-			<field id="col_order_data" dataType="Text"/>
+			<field id="filter_data" dataType="JSON"/>
+			<field id="col_visib_data" dataType="JSON"/>
+			<field id="col_order_data" dataType="JSON"/>
 		</model>
 		<model id="VariantStorageList" parent="ModelSQL" dataTable="variant_storages_list" virtual="TRUE">
 			<field id="user_id" dataType="Int" refTable="users" refField="id" primaryKey="TRUE" required="TRUE"/>
@@ -1124,6 +1125,18 @@
 					<id>11</id>
 					<num_prefix>&#x418;&#x441;&#x445;-</num_prefix>
 					<name>&#x41D;&#x430;&#x447;&#x430;&#x43B;&#x43E; &#x440;&#x430;&#x431;&#x43E;&#x442;</name>
+					<doc_flow_types_type_id>out</doc_flow_types_type_id>
+				</predefinedItem>
+				<predefinedItem alias="app_resp_correct">
+					<id>12</id>
+					<num_prefix>&#x417;&#x432;-</num_prefix>
+					<name>&#x41E;&#x442;&#x432;&#x435;&#x442;&#x44B; &#x43D;&#x430; &#x437;&#x430;&#x44F;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x44F; (&#x432;&#x43E;&#x437;&#x432;&#x440;&#x430;&#x442; &#x43D;&#x430; &#x438;&#x441;&#x43F;&#x440;&#x430;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x435;)</name>
+					<doc_flow_types_type_id>out</doc_flow_types_type_id>
+				</predefinedItem>
+				<predefinedItem alias="contr_return">
+					<id>13</id>
+					<num_prefix>&#x418;&#x441;&#x445;-</num_prefix>
+					<name>&#x412;&#x43E;&#x437;&#x432;&#x440;&#x430;&#x442; &#x431;&#x435;&#x437; &#x44D;&#x441;&#x43F;&#x435;&#x440;&#x442;&#x438;&#x437;&#x44B;</name>
 					<doc_flow_types_type_id>out</doc_flow_types_type_id>
 				</predefinedItem>
 			</predefinedItems>
@@ -2261,19 +2274,25 @@
 			<publicMethod id="upsert_filter_data" modelId="VariantStorage">
 				<field id="storage_name" dataType="String" required="TRUE"/>
 				<field id="variant_name" dataType="String" required="TRUE"/>
-				<field id="filter_data" dataType="String" required="TRUE"/>
+				<field id="filter_data" dataType="JSON" required="TRUE"/>
 				<field id="default_variant" dataType="Bool" required="TRUE"/>
 			</publicMethod>
 			<publicMethod id="upsert_col_visib_data" modelId="VariantStorage">
 				<field id="storage_name" dataType="String" required="TRUE"/>
 				<field id="variant_name" dataType="String" required="TRUE"/>
-				<field id="col_visib" dataType="String" required="TRUE"/>
+				<field id="col_visib" dataType="JSON" required="TRUE"/>
 				<field id="default_variant" dataType="Bool" required="TRUE"/>
 			</publicMethod>
 			<publicMethod id="upsert_col_order_data" modelId="VariantStorage">
 				<field id="storage_name" dataType="String" required="TRUE"/>
 				<field id="variant_name" dataType="String" required="TRUE"/>
-				<field id="col_order" dataType="String" required="TRUE"/>
+				<field id="col_order" dataType="JSON" required="TRUE"/>
+				<field id="default_variant" dataType="Bool" required="TRUE"/>
+			</publicMethod>
+			<publicMethod id="upsert_all_data" modelId="VariantStorage">
+				<field id="storage_name" dataType="String" required="TRUE"/>
+				<field id="variant_name" dataType="String" required="TRUE"/>
+				<field id="all_data" dataType="JSON" required="TRUE"/>
 				<field id="default_variant" dataType="Bool" required="TRUE"/>
 			</publicMethod>
 			<publicMethod id="update" modelId="VariantStorage"/>
@@ -2292,6 +2311,10 @@
 				<field id="variant_name" dataType="String"/>
 			</publicMethod>
 			<publicMethod id="get_col_order_data" modelId="VariantStorage">
+				<field id="storage_name" dataType="String" required="TRUE"/>
+				<field id="variant_name" dataType="String"/>
+			</publicMethod>
+			<publicMethod id="get_all_data" modelId="VariantStorage">
 				<field id="storage_name" dataType="String" required="TRUE"/>
 				<field id="variant_name" dataType="String"/>
 			</publicMethod>
@@ -3127,7 +3150,7 @@
 	</serverTemplates>
 	<jsTemplates>
 		<jsTemplate id="GridCmdContainerAjx" file="tmpl/GridCmdContainerAjx.html"/>
-		<jsTemplate id="ViewGridColManager" file="controls/tmpl/ViewGridColManager.html"/>
+		<jsTemplate id="ViewGridColManager" file="tmpl/ViewGridColManager.html"/>
 		<jsTemplate id="PopOver" file="controls/tmpl/PopOver.html"/>
 		<jsTemplate id="GridCmdFilterView" file="controls/tmpl/GridCmdFilterView.html"/>
 		<jsTemplate id="EditPeriodDate" file="controls/tmpl/EditPeriodDate.html"/>
@@ -3381,6 +3404,7 @@
 		<jsScript file="controls/GridBody.js"/>
 		<jsScript file="controls/Grid.js"/>
 		<jsScript file="controls/rs/Grid.rs_ru.js" resource="ru"/>
+		<jsScript file="controls/VariantStorage.js"/>
 		<jsScript file="controls/GridCommands.js"/>
 		<jsScript file="controls/GridCmd.js"/>
 		<jsScript file="controls/GridCmdContainer.js"/>
@@ -3447,6 +3471,7 @@
 		<jsScript file="controls/rs/GridCommandsDOC.rs_ru.js" resource="ru"/>
 		<jsScript file="controls/GridPagination.js"/>
 		<jsScript file="controls/rs/GridPagination.rs_ru.js" resource="ru"/>
+		<jsScript file="controls/GridFilterInfo.js"/>
 		<jsScript file="controls/GridFilter.js"/>
 		<jsScript file="controls/rs/GridFilter.rs_ru.js" resource="ru"/>
 		<jsScript file="controls/EditPeriodDate.js"/>

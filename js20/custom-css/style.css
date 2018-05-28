@@ -225,6 +225,10 @@ h2 div.btn{
 	height:40px;
 }
 
+.form-group-filter{
+	margin-bottom:20px;
+}
+
 #DocFlowApprovementList\:grid td[close_result="approved"]{
 	background:#33ffc7;
 }

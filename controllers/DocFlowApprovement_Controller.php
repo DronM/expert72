@@ -29,8 +29,8 @@ class DocFlowApprovement_Controller extends ControllerSQL{
 
 	const ER_NOT_FOUND = 'Документ не нйден!@1000';
 
-	public function __construct($dbLinkMaster=NULL){
-		parent::__construct($dbLinkMaster);
+	public function __construct($dbLinkMaster=NULL,$dbLink=NULL){
+		parent::__construct($dbLinkMaster,$dbLink);
 			
 
 		/* insert */

@@ -10,6 +10,7 @@ require_once(FRAME_WORK_PATH.'basic_classes/ModelSQL.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLInt.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLText.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLBool.php');
+require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLJSON.php');
  
 class VariantStorage_Model extends ModelSQL{
 	
@@ -59,7 +60,7 @@ class VariantStorage_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['id']="filter_data";
 				
-		$f_filter_data=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"filter_data",$f_opts);
+		$f_filter_data=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"filter_data",$f_opts);
 		$this->addField($f_filter_data);
 		//********************
 		
@@ -67,7 +68,7 @@ class VariantStorage_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['id']="col_visib_data";
 				
-		$f_col_visib_data=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"col_visib_data",$f_opts);
+		$f_col_visib_data=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"col_visib_data",$f_opts);
 		$this->addField($f_col_visib_data);
 		//********************
 		
@@ -75,7 +76,7 @@ class VariantStorage_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['id']="col_order_data";
 				
-		$f_col_order_data=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"col_order_data",$f_opts);
+		$f_col_order_data=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"col_order_data",$f_opts);
 		$this->addField($f_col_order_data);
 		//********************
 	$this->setLimitConstant('doc_per_page_count');

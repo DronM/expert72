@@ -26,8 +26,8 @@ class Bank_Controller extends ControllerSQL{
 
 	const REFRESH_URL = 'http://cbrates.rbc.ru/bnk/bnk.zip';
 
-	public function __construct($dbLinkMaster=NULL){
-		parent::__construct($dbLinkMaster);
+	public function __construct($dbLinkMaster=NULL,$dbLink=NULL){
+		parent::__construct($dbLinkMaster,$dbLink);
 			
 		/* get_list */
 		$pm = new PublicMethod('get_list');

@@ -28,6 +28,7 @@ function EmployeeList_View(id,options){
 		"office":{
 			"binding":new CommandBinding({
 				"control":new DepartmentSelect(id+":filter-ctrl-department",{
+					"contClassName":"form-group-filter",
 					"labelCaption":this.FLT_CAP_department
 				}),
 				"field":new FieldInt("department_id")}),

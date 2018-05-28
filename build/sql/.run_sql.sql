@@ -1,29 +1,57 @@
--- VIEW: doc_flow_in_client_dialog
+﻿-- Function: variant_storages_upsert_col_order_data(in_user_id int, in_storage_name text, in_variant_name text, in_col_order_data json, in_default_variant boolean)
 
---DROP VIEW doc_flow_in_client_dialog;
+--DROP FUNCTION variant_storages_upsert_col_order_data(in_user_id int, in_storage_name text, in_variant_name text, in_col_order_data json, in_default_variant boolean);
 
-CREATE OR REPLACE VIEW doc_flow_in_client_dialog AS
-	SELECT
-		t.id,
-		t.date_time,
-		t.reg_number,
-		t.subject,
-		t.user_id,
-		t.viewed,
-		applications_ref(applications) AS applications_ref,
-		t.comment_text,
-		t.content,
-		json_build_array(
-			json_build_object(
-				'files',t.files
-			)
-		) AS files,
-		regs.reg_number AS reg_number_out
-		
-	FROM doc_flow_in_client t
-	LEFT JOIN applications ON applications.id=t.application_id
-	LEFT JOIN doc_flow_in_client_reg_numbers AS regs ON regs.doc_flow_in_client_id=t.id
-	ORDER BY t.date_time DESC
+CREATE OR REPLACE FUNCTION variant_storages_upsert_col_order_data(in_user_id int, in_storage_name text, in_variant_name text, in_col_order_data json, in_default_variant boolean)
+  RETURNS void AS
+$BODY$  
+BEGIN
+	IF in_default_variant THEN
+		UPDATE variant_storages
+		SET
+			default_variant = FALSE
+		WHERE
+			user_id = in_user_id
+			AND storage_name = in_storage_name
+		;	
+	END IF;
+	
+	UPDATE variant_storages
+	SET
+		--set_time = now(),
+		col_order_data = in_col_order_data,
+		default_variant = in_default_variant
+	WHERE
+		user_id = in_user_id
+		AND storage_name = in_storage_name
+		AND variant_name = in_variant_name
 	;
 	
-ALTER VIEW doc_flow_in_client_dialog OWNER TO expert72;
+	IF FOUND THEN
+		RETURN;
+	END IF;
+	
+	BEGIN
+		INSERT INTO variant_storages (user_id, storage_name, variant_name, col_order_data, default_variant)
+		VALUES(in_user_id, in_storage_name, in_variant_name, in_col_order_data, in_default_variant);
+		
+	EXCEPTION WHEN OTHERS THEN
+		UPDATE variant_storages
+		SET
+			--set_time = now(),
+			col_order_data = in_col_order_data,
+			default_variant = in_default_variant
+		WHERE
+			user_id = in_user_id
+			AND storage_name = in_storage_name
+			AND variant_name = in_variant_name
+		;
+	END;
+	
+	RETURN;
+
+END;	
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION variant_storages_upsert_col_order_data(in_user_id int, in_storage_name text, in_variant_name text, in_col_order_data json, in_default_variant boolean) OWNER TO expert72;

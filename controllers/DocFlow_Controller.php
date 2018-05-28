@@ -32,8 +32,8 @@ class DocFlow_Controller extends ControllerSQL{
 	const ER_EMPLOYEE_NOT_DEFINED = 'К пользователю не привязан сотрудник!@1003';
 	const ER_ALLOWED_TO_ADMIN = 'Действие разрешено только администратору!@1004';
 
-	public function __construct($dbLinkMaster=NULL){
-		parent::__construct($dbLinkMaster);
+	public function __construct($dbLinkMaster=NULL,$dbLink=NULL){
+		parent::__construct($dbLinkMaster,$dbLink);
 			
 		$pm = new PublicMethod('remove_file');
 		

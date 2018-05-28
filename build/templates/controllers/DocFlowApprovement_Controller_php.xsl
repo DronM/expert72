@@ -25,8 +25,8 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 
 	const ER_NOT_FOUND = 'Документ не нйден!@1000';
 
-	public function __construct($dbLinkMaster=NULL){
-		parent::__construct($dbLinkMaster);<xsl:apply-templates/>
+	public function __construct($dbLinkMaster=NULL,$dbLink=NULL){
+		parent::__construct($dbLinkMaster,$dbLink);<xsl:apply-templates/>
 	}	
 	<xsl:call-template name="extra_methods"/>
 }
