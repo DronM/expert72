@@ -175,6 +175,11 @@ function ContractDialog_View(id,options){
 			this.addElement(new ClientPaymentList_View(id+":client_payment_list",{
 				"detail":true
 			}));			
+
+			//таблица статусов
+			this.addElement(new ApplicationProcessList_View(id+":application_process_list",{
+				"detail":true
+			}));			
 			
 		}
 		
@@ -337,7 +342,8 @@ function ContractDialog_View(id,options){
 		this.addElement(new EditDate(id+":work_end_date",{
 			"labelCaption":"Дата выдачи заключ.:",
 			"editContClassName":"input-group "+bs+"8",
-			"labelClassName":"control-label "+bs+"4"
+			"labelClassName":"control-label "+bs+"4",
+			"buttonClear":new BtnEndDate(id+":btnEndDate",{"view":this})
 		}));	
 		this.addElement(new EditInt(id+":expertise_day_count",{
 			"labelCaption":"Срок экспертизы:",
@@ -361,7 +367,8 @@ function ContractDialog_View(id,options){
 			"maxLength":"150",
 			"labelCaption":"Доверенность:",
 			"editContClassName":"input-group "+bs+"8",
-			"labelClassName":"control-label "+bs+"4"
+			"labelClassName":"control-label "+bs+"4",
+			"enabled":false
 		}));	
 		
 		//Вкладки с документацией
@@ -508,7 +515,6 @@ function ContractDialog_View(id,options){
 			,new CommandBinding({"control":this.getElement("expertise_reject_types_ref"),"fieldId":"expertise_reject_type_id"})
 			,new CommandBinding({"control":this.getElement("expertise_day_count")})
 			,new CommandBinding({"control":this.getElement("argument_document")})
-			,new CommandBinding({"control":this.getElement("auth_letter")})
 			,new CommandBinding({"control":this.getElement("date_type")})
 			,new CommandBinding({"control":this.getElement("reg_number")})
 			,new CommandBinding({"control":this.getElement("contract_date")})
@@ -545,6 +551,11 @@ function ContractDialog_View(id,options){
 		"control":this.getElement("client_payment_list").getElement("grid"),
 		"controlFieldId":"contract_id",
 		"value":options.model.getFieldValue("id")
+	});
+	this.addDetailDataSet({
+		"control":this.getElement("application_process_list").getElement("grid"),
+		"controlFieldId":"application_id",
+		"value":options.model.getFieldValue("application_id")
 	});
 	
 }

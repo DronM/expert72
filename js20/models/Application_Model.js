@@ -320,6 +320,33 @@ function Application_Model(options){
 	
 	options.fields.derived_application_id = new FieldInt("derived_application_id",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.pd_usage_info = new FieldText("pd_usage_info",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.auth_letter = new FieldText("auth_letter",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.auth_letter_file = new FieldJSONB("auth_letter_file",filed_options);
+	
 			
 			
 			

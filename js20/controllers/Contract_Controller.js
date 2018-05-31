@@ -42,6 +42,7 @@ function Contract_Controller(options){
 	this.add_print_invoice();
 	this.add_make_akt();
 	this.add_get_ext_data();
+	this.add_get_work_end_date();
 		
 }
 extend(Contract_Controller,ControllerObjServer);
@@ -323,12 +324,6 @@ extend(Contract_Controller,ControllerObjServer);
 	var options = {};
 	
 	var field = new FieldText("order_document",options);
-	
-	pm.addField(field);
-	
-	var options = {};
-	
-	var field = new FieldText("auth_letter",options);
 	
 	pm.addField(field);
 	
@@ -644,12 +639,6 @@ extend(Contract_Controller,ControllerObjServer);
 	
 	var options = {};
 	
-	var field = new FieldText("auth_letter",options);
-	
-	pm.addField(field);
-	
-	var options = {};
-	
 	var field = new FieldText("constr_name",options);
 	
 	pm.addField(field);
@@ -684,6 +673,7 @@ extend(Contract_Controller,ControllerObjServer);
 	var f_opts = {};
 		
 	pm.addField(new FieldInt("id",f_opts));
+	pm.addField(new FieldString("mode"));
 }
 
 			Contract_Controller.prototype.addGetList = function(){
@@ -838,9 +828,6 @@ extend(Contract_Controller,ControllerObjServer);
 	var f_opts = {};
 	
 	pm.addField(new FieldText("order_document",f_opts));
-	var f_opts = {};
-	
-	pm.addField(new FieldText("auth_letter",f_opts));
 	var f_opts = {};
 	
 	pm.addField(new FieldText("constr_name",f_opts));
@@ -1088,6 +1075,47 @@ extend(Contract_Controller,ControllerObjServer);
 		options.required = true;
 	
 		pm.addField(new FieldInt("id",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			Contract_Controller.prototype.add_get_work_end_date = function(){
+	var opts = {"controller":this};
+	
+	var pm = new PublicMethodServer('get_work_end_date',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("contract_id",options));
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldEnum("date_type",options));
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("expertise_day_count",options));
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldDate("work_start_date",options));
 	
 			
 	this.addPublicMethod(pm);

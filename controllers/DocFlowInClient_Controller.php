@@ -82,8 +82,6 @@ class DocFlowInClient_Controller extends ControllerSQL{
 			$pm->addParam($param);
 		
 			$f_params = array();
-			
-				$f_params['required']=TRUE;
 			$param = new FieldExtText('reg_number_out'
 			,$f_params);
 		$pm->addParam($param);		

@@ -215,7 +215,7 @@ function DocFlowOutList_View(id,options){
 		
 		"autoRefresh":(options.autoRefresh!=undefined)? options.autoRefresh:false,
 		"filters":options.filters,
-		"refreshInterval":constants.grid_refresh_interval.getValue()*1000,
+		"refreshInterval":!options.fromApp? (constants.grid_refresh_interval.getValue()*1000) : 0,
 		"rowSelect":false,
 		"focus":true
 	}));		

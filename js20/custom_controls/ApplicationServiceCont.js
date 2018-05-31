@@ -113,6 +113,7 @@ function ApplicationServiceCont(id,options){
 					var cur_val = this.getValue();
 					
 					self.m_mainView.getElement("limit_cost_eval").setVisible(cur_val);
+					self.m_mainView.getElement("limit_cost_eval").setAttr("percentcalc",cur_val);
 					
 					self.getElement("cost_eval_validity_simult").setEnabled(cur_val);
 					if (!cur_val && self.getElement("cost_eval_validity_simult").getValue()){
@@ -213,7 +214,8 @@ function ApplicationServiceCont(id,options){
 			"isModification":true,
 			"editClass":ApplicationEditRef,
 			"editLabelCaption":"Первичное заявление:",
-			"primaryFieldId":"primary_application_reg_number"
+			"primaryFieldId":"primary_application_reg_number",
+			"mainView":options.mainView
 		}));
 		
 		this.addElement(new EditCheckBox(id+":audit",{
@@ -276,6 +278,22 @@ function ApplicationServiceCont(id,options){
 	}
 		
 	ApplicationServiceCont.superclass.constructor.call(this,id,"DIV",options);
+	
+	this.tabId = "common_inf-tab";
+	this.setAttr("percentcalc","true");
+	this.getFillPercent = function(){
+		var perc;
+		if ( this.isNull() ){
+			perc = 0;
+		}
+		else if (self.getElement("modification").getValue()){		
+			perc = self.getElement("primary_application").isNull()? 0:100;	
+		}
+		else{
+			perc = 100;
+		}
+		return perc;	
+	}
 }
 extend(ApplicationServiceCont,ControlContainer);
 
@@ -308,9 +326,13 @@ ApplicationServiceCont.prototype.onChangeExpertiseType = function(){
 	){
 		doc_types_for_remove.push("eng_survey");
 	}
+	
 	var self = this;
 	this.m_mainView.removeDocumentTypeWithWarn(doc_types_for_remove,
 		function(){
+			var pd_usage_info_vis = (cur_val=="pd"||cur_val=="pd_eng_survey");
+			self.m_mainView.getElement("pd_usage_info").setVisible(pd_usage_info_vis);
+			self.m_mainView.getElement("pd_usage_info").setAttr("percentcalc",pd_usage_info_vis);
 			self.m_mainView.toggleDocTypeVis();
 		},
 		function(){

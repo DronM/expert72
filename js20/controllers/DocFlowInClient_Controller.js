@@ -101,7 +101,7 @@ extend(DocFlowInClient_Controller,ControllerObjServer);
 	pm.addField(field);
 	
 		var options = {};
-		options.required = true;		
+				
 		pm.addField(new FieldText("reg_number_out",options));
 	
 	
@@ -114,6 +114,7 @@ extend(DocFlowInClient_Controller,ControllerObjServer);
 	var f_opts = {};
 		
 	pm.addField(new FieldInt("id",f_opts));
+	pm.addField(new FieldString("mode"));
 }
 
 			DocFlowInClient_Controller.prototype.addGetList = function(){

@@ -295,6 +295,30 @@ class ApplicationList_Model extends ModelSQL{
 		$this->addField($f_derived_application_id);
 		//********************
 		
+		//*** Field pd_usage_info ***
+		$f_opts = array();
+		$f_opts['id']="pd_usage_info";
+				
+		$f_pd_usage_info=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"pd_usage_info",$f_opts);
+		$this->addField($f_pd_usage_info);
+		//********************
+		
+		//*** Field auth_letter ***
+		$f_opts = array();
+		$f_opts['id']="auth_letter";
+				
+		$f_auth_letter=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"auth_letter",$f_opts);
+		$this->addField($f_auth_letter);
+		//********************
+		
+		//*** Field auth_letter_file ***
+		$f_opts = array();
+		$f_opts['id']="auth_letter_file";
+				
+		$f_auth_letter_file=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"auth_letter_file",$f_opts);
+		$this->addField($f_auth_letter_file);
+		//********************
+		
 		//*** Field users_ref ***
 		$f_opts = array();
 		$f_opts['id']="users_ref";
@@ -373,6 +397,14 @@ class ApplicationList_Model extends ModelSQL{
 				
 		$f_unviewed_in_docs=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"unviewed_in_docs",$f_opts);
 		$this->addField($f_unviewed_in_docs);
+		//********************
+		
+		//*** Field contract_number ***
+		$f_opts = array();
+		$f_opts['id']="contract_number";
+				
+		$f_contract_number=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"contract_number",$f_opts);
+		$this->addField($f_contract_number);
 		//********************
 	
 		$order = new ModelOrderSQL();		

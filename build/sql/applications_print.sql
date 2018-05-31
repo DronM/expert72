@@ -34,9 +34,20 @@ CREATE OR REPLACE VIEW applications_print AS
 		construction_types.name AS construction_types_descr,
 		
 		d.total_cost_eval,
+		d.limit_cost_eval,
 		
 		clients.name_full AS office_client_name_full,
-		contacts_get_persons(clients.id,'clients') AS office_responsable_persons
+		contacts_get_persons(clients.id,'clients') AS office_responsable_persons,
+		
+		d.pd_usage_info,
+		--developer
+		d.developer AS developer,
+		banks_format((d.developer->>'bank')::jsonb) AS developer_bank,
+		kladr_parse_addr((d.developer->>'post_address')::jsonb) AS developer_post_address,
+		kladr_parse_addr((d.developer->>'legal_address')::jsonb) AS developer_legal_address,
+		
+		d.auth_letter
+		
 		
 	FROM applications AS d
 	LEFT JOIN offices ON offices.id=d.office_id

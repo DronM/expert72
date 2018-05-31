@@ -90,6 +90,14 @@ $permissions = array();
 			
 				$permissions['Application_Controller_delete_app_print_cost_eval']=TRUE;
 			
+				$permissions['Application_Controller_set_user']=TRUE;
+			
+				$permissions['Application_Controller_download_auth_letter_file']=TRUE;
+			
+				$permissions['Application_Controller_download_auth_letter_file_sig']=TRUE;
+			
+				$permissions['Application_Controller_delete_auth_letter_file']=TRUE;
+			
 				$permissions['Constant_Controller_set_value']=TRUE;
 			
 				$permissions['Constant_Controller_get_list']=TRUE;

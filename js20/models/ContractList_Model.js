@@ -402,14 +402,6 @@ function ContractList_Model(options){
 	
 	filed_options.autoInc = false;	
 	
-	options.fields.auth_letter = new FieldText("auth_letter",filed_options);
-		
-	
-	var filed_options = {};
-	filed_options.primaryKey = false;	
-	
-	filed_options.autoInc = false;	
-	
 	options.fields.constr_name = new FieldText("constr_name",filed_options);
 		
 	
@@ -498,6 +490,33 @@ function ContractList_Model(options){
 			
 			
 			
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.state = new FieldString("state",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.state_dt = new FieldDateTimeTZ("state_dt",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.state_end_date = new FieldDate("state_end_date",filed_options);
+	
 		ContractList_Model.superclass.constructor.call(this,id,options);
 }
 extend(ContractList_Model,ModelXML);

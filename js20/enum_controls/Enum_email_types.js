@@ -23,6 +23,7 @@ function Enum_email_types(id,options){
 ,"ru_app_change":"Ответы на замечания"
 ,"ru_new_remind":"Новая задача"
 ,"ru_out_mail_to_app":"Исходящее письмо по заявлению/контракту"
+,"ru_contract_state_change":"Смена статуса контракта"
 };
 	options.options = [{"value":"new_account",
 "descr":multy_lang_values[window.getApp().getLocale()+"_"+"new_account"],
@@ -48,6 +49,9 @@ checked:(options.defaultValue&&options.defaultValue=="new_remind")}
 ,{"value":"out_mail_to_app",
 "descr":multy_lang_values[window.getApp().getLocale()+"_"+"out_mail_to_app"],
 checked:(options.defaultValue&&options.defaultValue=="out_mail_to_app")}
+,{"value":"contract_state_change",
+"descr":multy_lang_values[window.getApp().getLocale()+"_"+"contract_state_change"],
+checked:(options.defaultValue&&options.defaultValue=="contract_state_change")}
 ];
 	
 	Enum_email_types.superclass.constructor.call(this,id,options);

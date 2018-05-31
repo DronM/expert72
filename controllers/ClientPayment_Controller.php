@@ -48,6 +48,9 @@ class ClientPayment_Controller extends ControllerSQL{
 		$param = new FieldExtFloat('total'
 				,array());
 		$pm->addParam($param);
+		$param = new FieldExtInt('employee_id'
+				,array());
+		$pm->addParam($param);
 		
 		$pm->addParam(new FieldExtInt('ret_id'));
 		
@@ -83,6 +86,10 @@ class ClientPayment_Controller extends ControllerSQL{
 			));
 			$pm->addParam($param);
 		$param = new FieldExtFloat('total'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtInt('employee_id'
 				,array(
 			));
 			$pm->addParam($param);
@@ -275,6 +282,15 @@ class ClientPayment_Controller extends ControllerSQL{
 			}
 		}
 	}
+	
+	public function insert($pm){
+		$employees_ref = json_decode($_SESSION['employees_ref']);
+		if ($employees_ref && $employees_ref->keys && $employees_ref->keys->id){
+			$pm->setParamValue('employee_id', $employees_ref->keys->id);
+		}
+		parent::insert($pm);
+	}
+	
 
 }
 ?>

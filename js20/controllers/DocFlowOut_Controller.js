@@ -34,6 +34,7 @@ function DocFlowOut_Controller(options){
 	this.add_get_next_num();
 	this.addComplete();
 	this.add_get_app_state();
+	this.add_get_next_contract_number();
 		
 }
 extend(DocFlowOut_Controller,ControllerObjServer);
@@ -130,6 +131,12 @@ extend(DocFlowOut_Controller,ControllerObjServer);
 	var options = {};
 	
 	var field = new FieldInt("doc_flow_in_id",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldText("new_contract_number",options);
 	
 	pm.addField(field);
 	
@@ -235,6 +242,12 @@ extend(DocFlowOut_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	
+	var field = new FieldText("new_contract_number",options);
+	
+	pm.addField(field);
+	
 	
 }
 
@@ -308,6 +321,9 @@ extend(DocFlowOut_Controller,ControllerObjServer);
 	var f_opts = {};
 	
 	pm.addField(new FieldInt("doc_flow_in_id",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldText("new_contract_number",f_opts));
 	pm.getField(this.PARAM_ORD_FIELDS).setValue("date_time");
 	
 }
@@ -319,6 +335,7 @@ extend(DocFlowOut_Controller,ControllerObjServer);
 	var f_opts = {};
 		
 	pm.addField(new FieldInt("id",f_opts));
+	pm.addField(new FieldString("mode"));
 }
 
 			DocFlowOut_Controller.prototype.add_remove_file = function(){
@@ -414,6 +431,23 @@ extend(DocFlowOut_Controller,ControllerObjServer);
 		options.required = true;
 	
 		pm.addField(new FieldInt("id",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			DocFlowOut_Controller.prototype.add_get_next_contract_number = function(){
+	var opts = {"controller":this};
+	
+	var pm = new PublicMethodServer('get_next_contract_number',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("application_id",options));
 	
 			
 	this.addPublicMethod(pm);

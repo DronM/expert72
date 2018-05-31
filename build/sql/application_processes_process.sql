@@ -92,6 +92,40 @@ BEGIN
 				);
 				
 			END IF;
+			
+		ELSIF NEW.state='waiting_for_pay' OR NEW.state='expertise' THEN
+			--письмо об изменении состояния
+			INSERT INTO mail_for_sending
+			(to_addr,to_name,body,subject,email_type)
+			(WITH 
+				templ AS (
+					SELECT
+						t.template AS v,
+						t.mes_subject AS s
+					FROM email_templates t
+					WHERE t.email_type= 'contract_state_change'::email_types
+				)
+			SELECT
+				users.email,
+				users.name_full,
+				sms_templates_text(
+					ARRAY[
+						ROW('contract_number', contr.contract_number)::template_value,
+						ROW('contract_date',to_char(contr.contract_date,'DD/MM/YY'))::template_value,
+						ROW('state',enum_application_states_val(NEW.state,'ru'))::template_value
+					],
+					(SELECT v FROM templ)
+				) AS mes_body,		
+				(SELECT s FROM templ),
+				'contract_state_change'::email_types
+			FROM contracts AS contr
+			LEFT JOIN applications AS app ON app.id=contr.application_id
+			LEFT JOIN users ON users.id=app.user_id
+			WHERE
+				contr.application_id=NEW.application_id
+				--email_confirmed					
+			);				
+			
 		END IF;
 				
 		RETURN NEW;

@@ -75,4 +75,18 @@
 		</div>	
 	</div>
 	
+	{{#isApplicant}}
+	<div class="panel panel-flat">
+		<div class="panel-heading">
+			<h5 class="panel-title">Доверенность</h5>
+			<p class="panel-title">Заполняется в том случае, если заявитель не является ни заказчиком ни застройщиком</p>
+		</div>
+		<div class="panel-body">
+			<div id="{{id}}:auth_letter">
+			</div>
+			<div id="{{id}}:auth_letter_file">
+			</div>
+		</div>	
+	</div>
+	{{/isApplicant}}
 </div>

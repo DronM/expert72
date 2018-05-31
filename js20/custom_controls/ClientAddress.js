@@ -21,7 +21,7 @@ function ClientPostAddressEdit(id,options){
 extend(ClientPostAddressEdit,EditAddress);
 
 ClientPostAddressEdit.prototype.copyFromLegal = function(){
-	this.setValue(this.m_view.getElement("legal_address").getValue());	
+	if(this.m_view)this.setValue(this.m_view.getElement("legal_address").getValue());	
 	
 	if (this.m_mainView && this.m_mainView.calcFillPercent){
 		this.m_mainView.calcFillPercent();

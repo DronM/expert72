@@ -291,6 +291,30 @@ class Application_Model extends ModelSQL{
 		$f_derived_application_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"derived_application_id",$f_opts);
 		$this->addField($f_derived_application_id);
 		//********************
+		
+		//*** Field pd_usage_info ***
+		$f_opts = array();
+		$f_opts['id']="pd_usage_info";
+				
+		$f_pd_usage_info=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"pd_usage_info",$f_opts);
+		$this->addField($f_pd_usage_info);
+		//********************
+		
+		//*** Field auth_letter ***
+		$f_opts = array();
+		$f_opts['id']="auth_letter";
+				
+		$f_auth_letter=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"auth_letter",$f_opts);
+		$this->addField($f_auth_letter);
+		//********************
+		
+		//*** Field auth_letter_file ***
+		$f_opts = array();
+		$f_opts['id']="auth_letter_file";
+				
+		$f_auth_letter_file=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"auth_letter_file",$f_opts);
+		$this->addField($f_auth_letter_file);
+		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}
 

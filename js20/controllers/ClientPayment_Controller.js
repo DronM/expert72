@@ -75,6 +75,12 @@ extend(ClientPayment_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	
+	var field = new FieldInt("employee_id",options);
+	
+	pm.addField(field);
+	
 	pm.addField(new FieldInt("ret_id",{}));
 	
 	
@@ -123,6 +129,12 @@ extend(ClientPayment_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	
+	var field = new FieldInt("employee_id",options);
+	
+	pm.addField(field);
+	
 	
 }
 
@@ -141,6 +153,7 @@ extend(ClientPayment_Controller,ControllerObjServer);
 	var f_opts = {};
 		
 	pm.addField(new FieldInt("id",f_opts));
+	pm.addField(new FieldString("mode"));
 }
 
 			ClientPayment_Controller.prototype.addGetList = function(){

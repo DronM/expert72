@@ -1,8 +1,8 @@
-﻿-- Function: applications_check_period(in_office_id int,days int)
+﻿-- Function: applications_check_period(in_office_id int,in_date_time timestampTZ, in_days int)
 
--- DROP FUNCTION applications_check_period(in_office_id int,days int);
+-- DROP FUNCTION applications_check_period(in_office_id int,in_date_time timestampTZ,in_days int);
 
-CREATE OR REPLACE FUNCTION applications_check_period(in_office_id int,days int)
+CREATE OR REPLACE FUNCTION applications_check_period(in_office_id int,in_date_time timestampTZ,in_days int)
   RETURNS record AS
 $$
 	WITH
@@ -25,7 +25,11 @@ $$
 						(SELECT week_sched.hours FROM week_sched OFFSET (CASE WHEN EXTRACT(DOW FROM d)-1<0 THEN 6 ELSE EXTRACT(DOW FROM d)-1 END ) LIMIT 1)
 					END
 				)->>'to')::time AS h_to
-			FROM generate_series(now()::date,now()::date+'30 days'::interval,'1 day'::interval) AS d
+			FROM generate_series(
+				in_date_time::date,
+				in_date_time::date+(greatest(in_days*5,30)||' days')::interval,
+				'1 day'::interval
+			) AS d
 			LEFT JOIN office_day_schedules AS off_sched ON off_sched.office_id=in_office_id AND off_sched.day=d::date
 			LEFT JOIN holidays AS hol ON hol.date=d::date
 			WHERE
@@ -42,12 +46,12 @@ $$
 						ELSE
 							0
 						END)
-					LIMIT days
+					LIMIT in_days
 		)
 	SELECT	
 		(SELECT
 			CASE
-				WHEN d=now()::date THEN now()
+				WHEN d=in_date_time::date THEN in_date_time
 				ELSE (d+h_from)::timestampTZ
 			END
 		FROM period OFFSET 0 LIMIT 1
@@ -55,10 +59,10 @@ $$
 		
 		(SELECT
 			(d+h_to)::timestampTZ
-		FROM period OFFSET days-1 LIMIT 1
+		FROM period OFFSET in_days-1 LIMIT 1
 		) AS d_to
 	;
 $$
   LANGUAGE sql VOLATILE
   COST 100;
-ALTER FUNCTION applications_check_period(in_office_id int,days int) OWNER TO ;
+ALTER FUNCTION applications_check_period(in_office_id int,in_date_time timestampTZ,days int) OWNER TO ;

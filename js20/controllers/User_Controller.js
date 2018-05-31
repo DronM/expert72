@@ -312,6 +312,7 @@ extend(User_Controller,ControllerObjServer);
 	var f_opts = {};
 	f_opts.alias = "Код";	
 	pm.addField(new FieldInt("id",f_opts));
+	pm.addField(new FieldString("mode"));
 }
 
 			User_Controller.prototype.addComplete = function(){

@@ -17,6 +17,7 @@
 <li><a href="#Application_Controller">Application_Controller</a></li>
 <li><a href="#ApplicationClient_Controller">ApplicationClient_Controller</a></li>
 <li><a href="#ApplicationContractor_Controller">ApplicationContractor_Controller</a></li>
+<li><a href="#ApplicationProcess_Controller">ApplicationProcess_Controller</a></li>
 <li><a href="#ApplicationTemplateContent_Controller">ApplicationTemplateContent_Controller</a></li>
 <li><a href="#Bank_Controller">Bank_Controller</a></li>
 <li><a href="#BuildType_Controller">BuildType_Controller</a></li>
@@ -72,6 +73,7 @@
 <li><a href="#ReportTemplateField_Controller">ReportTemplateField_Controller</a></li>
 <li><a href="#ReportTemplateFile_Controller">ReportTemplateFile_Controller</a></li>
 <li><a href="#ReportTemplateInParam_Controller">ReportTemplateInParam_Controller</a></li>
+<li><a href="#Service_Controller">Service_Controller</a></li>
 <li><a href="#TechnicalFeature_Controller">TechnicalFeature_Controller</a></li>
 <li><a href="#TimeZoneLocale_Controller">TimeZoneLocale_Controller</a></li>
 <li><a href="#User_Controller">User_Controller</a></li>
@@ -133,6 +135,7 @@
 <li><a href="#ApplicationClientList_Model">ApplicationClientList_Model</a></li>
 <li><a href="#ApplicationContractor_Model">ApplicationContractor_Model</a></li>
 <li><a href="#ApplicationProcess_Model">ApplicationProcess_Model</a></li>
+<li><a href="#ApplicationProcessList_Model">ApplicationProcessList_Model</a></li>
 <li><a href="#ApplicationDocumentFile_Model">ApplicationDocumentFile_Model</a></li>
 <li><a href="#Contact_Model">Contact_Model</a></li>
 <li><a href="#ApplicationClient_Model">ApplicationClient_Model</a></li>
@@ -213,6 +216,7 @@
 <li><a href="#Order1CList_Model">Order1CList_Model</a></li>
 <li><a href="#LinkedContractList_Model">LinkedContractList_Model</a></li>
 <li><a href="#ContractorList_Model">ContractorList_Model</a></li>
+<li><a href="#Service_Model">Service_Model</a></li>
 </ul>
 <div class="section-title">Enumerations</div>
 <ul>
@@ -495,6 +499,57 @@
 								Да</p>
 </div>
 </div>
+<h2>set_user</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>user_id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Да</p>
+</div>
+<h3>id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Да</p>
+</div>
+</div>
+<h2>download_auth_letter_file</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Да</p>
+</div>
+</div>
+<h2>download_auth_letter_file_sig</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Да</p>
+</div>
+</div>
+<h2>delete_auth_letter_file</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Да</p>
+</div>
+</div>
 </div>
 </div>
 <div id="ApplicationClient_Controller" class="content_box">
@@ -521,6 +576,19 @@
 <a href="#ApplicationContractor_Model">Model: ApplicationContractor_Model</a><h2>get_list</h2>
 <a href="#ApplicationContractor_Model">Model: ApplicationContractor_Model</a><h2>get_object</h2>
 <a href="#ApplicationContractor_Model">Model: ApplicationContractor_Model</a>
+</div>
+</div>
+<div id="ApplicationProcess_Controller" class="content_box">
+<h1>ApplicationProcess_Controller</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Методы:</p>
+<h2>insert</h2>
+<a href="#ApplicationProcess_Model">Model: ApplicationProcess_Model</a><h2>update</h2>
+<a href="#ApplicationProcess_Model">Model: ApplicationProcess_Model</a><h2>delete</h2>
+<a href="#ApplicationProcess_Model">Model: ApplicationProcess_Model</a><h2>get_object</h2>
+<a href="#ApplicationProcessList_Model">Model: ApplicationProcessList_Model</a><h2>get_list</h2>
+<a href="#ApplicationProcessList_Model">Model: ApplicationProcessList_Model</a>
 </div>
 </div>
 <div id="ApplicationTemplateContent_Controller" class="content_box">
@@ -854,6 +922,38 @@
 <p></p>
 <div class="content_item content_item3">
 <p>Type:Int</p>
+<p>Required:
+								Да</p>
+</div>
+</div>
+<h2>get_work_end_date</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>contract_id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Да</p>
+</div>
+<h3>date_type</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Enum</p>
+<p>Required:
+								Да</p>
+</div>
+<h3>expertise_day_count</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Да</p>
+</div>
+<h3>work_start_date</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Date</p>
 <p>Required:
 								Да</p>
 </div>
@@ -1255,6 +1355,17 @@
 <p>Arguments:</p>
 <div class="content_item content_item2">
 <h3>id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Да</p>
+</div>
+</div>
+<h2>get_next_contract_number</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>application_id</h3>
 <p></p>
 <div class="content_item content_item3">
 <p>Type:Int</p>
@@ -2095,6 +2206,19 @@
 <a href="#ReportTemplateInParam_Model">Model: ReportTemplateInParam_Model</a>
 </div>
 </div>
+<div id="Service_Controller" class="content_box">
+<h1>Service_Controller</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Методы:</p>
+<h2>insert</h2>
+<a href="#Service_Model">Model: Service_Model</a><h2>update</h2>
+<a href="#Service_Model">Model: Service_Model</a><h2>delete</h2>
+<a href="#Service_Model">Model: Service_Model</a><h2>get_object</h2>
+<a href="#Service_Model">Model: Service_Model</a><h2>get_list</h2>
+<a href="#Service_Model">Model: Service_Model</a>
+</div>
+</div>
 <div id="TechnicalFeature_Controller" class="content_box">
 <h1>TechnicalFeature_Controller</h1>
 <div class="content_item">
@@ -2582,6 +2706,24 @@
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
+<h2>pd_usage_info</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>auth_letter</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>auth_letter_file</h2>
+<div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
 </div>
 </div>
 <div id="ApplicationClient_Model" class="content_box">
@@ -2936,6 +3078,12 @@
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
+<h2>users_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
 </div>
 </div>
 <div id="ApplicationDocumentFile_Model" class="content_box">
@@ -3110,6 +3258,12 @@
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
+<h2>contract_number</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
 </div>
 </div>
 <div id="ApplicationProcess_Model" class="content_box">
@@ -3138,6 +3292,78 @@
 <div>Type:Int</div>
 <div>Primary key:</div>
 <div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>end_date_time</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>doc_flow_examination_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="ApplicationProcessList_Model" class="content_box">
+<h1>ApplicationProcessList_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>application_id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>date_time</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:TRUE</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>state</h2>
+<div>Type:Enum</div>
+<div>Primary key:</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>user_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>employee_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>employees_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>contract_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>contracts_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>applications_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
 <h2>end_date_time</h2>
@@ -3524,6 +3750,12 @@
 <div>Required:</div>
 <div>Length:15</div>
 <div>Precision:2</div>
+<h2>employee_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
 </div>
 </div>
 <div id="ClientPaymentList_Model" class="content_box">
@@ -4148,12 +4380,6 @@
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
-<h2>auth_letter</h2>
-<div>Type:Text</div>
-<div>Primary key:</div>
-<div>Required:</div>
-<div>Length:</div>
-<div>Precision:</div>
 <h2>constr_name</h2>
 <div>Type:Text</div>
 <div>Primary key:</div>
@@ -4695,6 +4921,24 @@
 <div>Length:</div>
 <div>Precision:</div>
 <h2>invoice_date</h2>
+<div>Type:Date</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>state</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>state_dt</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>state_end_date</h2>
 <div>Type:Date</div>
 <div>Primary key:</div>
 <div>Required:</div>
@@ -6614,6 +6858,12 @@
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
+<h2>new_contract_number</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
 </div>
 </div>
 <div id="DocFlowOutClient_Model" class="content_box">
@@ -6976,6 +7226,12 @@
 <div>Precision:</div>
 <h2>doc_flow_out_processes_chain</h2>
 <div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>new_contract_number</h2>
+<div>Type:Text</div>
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>
@@ -9016,6 +9272,42 @@
 <div>Precision:</div>
 </div>
 </div>
+<div id="Service_Model" class="content_box">
+<h1>Service_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:FALSE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:50</div>
+<div>Precision:</div>
+<h2>date_type</h2>
+<div>Type:Enum</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>work_day_count</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>contract_postf</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:5</div>
+<div>Precision:</div>
+</div>
+</div>
 <div id="ShortMessage_Model" class="content_box">
 <h1>ShortMessage_Model</h1>
 <div class="content_item">
@@ -9710,6 +10002,8 @@
 <div>Description:</div>
 <h2>expertise_reject_types</h2>
 <div>Description:</div>
+<h2>services</h2>
+<div>Description:</div>
 </div>
 </div>
 <div id="date_types" class="content_box">
@@ -9856,6 +10150,8 @@
 <h2>new_remind</h2>
 <div>Description:</div>
 <h2>out_mail_to_app</h2>
+<div>Description:</div>
+<h2>contract_state_change</h2>
 <div>Description:</div>
 </div>
 </div>

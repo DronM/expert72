@@ -1198,7 +1198,9 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ClientPaymentList_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/NewOrder_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ClientPaymentLoader_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ApplicationProcessList_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ProjectManager_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ServiceList_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'tmpl/App.templates.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/App.enums.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/App.predefinedItems.js'));
@@ -1257,6 +1259,8 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Reminder.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/EditColorPalette.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/BtnNextNum.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/BtnNextContractNum.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/BtnEndDate.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ReportTemplateFieldGrid.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ReportTemplateEditRef.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ReportTemplateFileApplyCmd.js'));
@@ -1529,6 +1533,10 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ContractorList_Model.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowOutClientRegNumber_Model.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowInClientRegNumber_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/ApplicationProcess_Controller.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ApplicationProcessList_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/Service_Controller.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/Service_Model.js'));
 	
 			if (isset($_SESSION['scriptId'])){
 				$script_id = $_SESSION['scriptId'];

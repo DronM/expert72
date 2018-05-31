@@ -93,6 +93,7 @@ extend(Post_Controller,ControllerObjServer);
 	var f_opts = {};
 		
 	pm.addField(new FieldInt("id",f_opts));
+	pm.addField(new FieldString("mode"));
 }
 
 			Post_Controller.prototype.addGetList = function(){

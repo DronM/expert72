@@ -399,14 +399,6 @@ class ContractList_Model extends ModelSQL{
 		$this->addField($f_order_document);
 		//********************
 		
-		//*** Field auth_letter ***
-		$f_opts = array();
-		$f_opts['id']="auth_letter";
-				
-		$f_auth_letter=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"auth_letter",$f_opts);
-		$this->addField($f_auth_letter);
-		//********************
-		
 		//*** Field constr_name ***
 		$f_opts = array();
 		$f_opts['id']="constr_name";
@@ -469,6 +461,30 @@ class ContractList_Model extends ModelSQL{
 				
 		$f_main_expert_descr=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"main_expert_descr",$f_opts);
 		$this->addField($f_main_expert_descr);
+		//********************
+		
+		//*** Field state ***
+		$f_opts = array();
+		$f_opts['id']="state";
+				
+		$f_state=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"state",$f_opts);
+		$this->addField($f_state);
+		//********************
+		
+		//*** Field state_dt ***
+		$f_opts = array();
+		$f_opts['id']="state_dt";
+				
+		$f_state_dt=new FieldSQLDateTimeTZ($this->getDbLink(),$this->getDbName(),$this->getTableName(),"state_dt",$f_opts);
+		$this->addField($f_state_dt);
+		//********************
+		
+		//*** Field state_end_date ***
+		$f_opts = array();
+		$f_opts['id']="state_end_date";
+				
+		$f_state_end_date=new FieldSQLDate($this->getDbLink(),$this->getDbName(),$this->getTableName(),"state_end_date",$f_opts);
+		$this->addField($f_state_end_date);
 		//********************
 	
 		$order = new ModelOrderSQL();		

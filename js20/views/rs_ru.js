@@ -76,3 +76,5 @@ ExpertiseRejectTypeList_View.prototype.HEAD_TITLE = "Виды отрицател
 ClientPaymentList_View.prototype.HEAD_TITLE = "Оплаты клиентов";
 
 ProjectManager_View.prototype.HEAD_TITLE = "Управление проектом";
+
+ApplicationProcessList_View.prototype.HEAD_TITLE = "Статусы контрактов";

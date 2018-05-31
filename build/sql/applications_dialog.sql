@@ -1,7 +1,7 @@
 -- VIEW: applications_dialog
 
-DROP VIEW contracts_dialog;
-DROP VIEW applications_dialog;
+--DROP VIEW contracts_dialog;
+--DROP VIEW applications_dialog;
 
 CREATE OR REPLACE VIEW applications_dialog AS
 	SELECT
@@ -75,11 +75,19 @@ CREATE OR REPLACE VIEW applications_dialog AS
 		d.primary_application_id,
 		d.primary_application_reg_number,
 		d.modif_primary_application_id,
-		d.modif_primary_application_reg_number
+		d.modif_primary_application_reg_number,
+		
+		d.pd_usage_info,
+		
+		users_ref(users) AS users_ref,
+		
+		d.auth_letter,
+		d.auth_letter_file
 		
 		
 	FROM applications AS d
 	LEFT JOIN offices ON offices.id=d.office_id
+	LEFT JOIN users ON users.id=d.user_id
 	LEFT JOIN contracts AS contr ON contr.application_id=d.id
 	LEFT JOIN fund_sources ON fund_sources.id=d.fund_source_id
 	LEFT JOIN construction_types ON construction_types.id=d.construction_type_id

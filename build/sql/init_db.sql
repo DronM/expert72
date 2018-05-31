@@ -59,7 +59,7 @@ SELECT setval('client_payments_id_seq', 1);
 --*** УБРАТЬ ТРИГГЕР ПЕРЕД ЗАПУСКОМ ЗАГРУЗКИ *****
 DROP TRIGGER contacts_before_trigger ON public.contacts;
 CREATE TRIGGER contacts_before_trigger
-  BEFORE INSERT
+  BEFORE INSERT OR UPDATE
   ON public.contacts
   FOR EACH ROW
   EXECUTE PROCEDURE public.contacts_process();

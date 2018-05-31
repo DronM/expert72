@@ -100,6 +100,7 @@ extend(DownloadFileType_Controller,ControllerObjClient);
 	var f_opts = {};
 		
 	pm.addField(new FieldString("ext",f_opts));
+	pm.addField(new FieldString("mode"));
 }
 
 		

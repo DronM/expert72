@@ -15,14 +15,24 @@ DECLARE
 	v_app_client_id int;
 	v_app_user_id int;
 	v_app_applicant JSONB;
-	v_primary_contract_id int;
-	v_modif_primary_contract_id int;	
+	v_primary_contracts_ref JSONB;
+	v_modif_primary_contracts_ref JSONB;	
+	v_linked_contracts_ref JSONB;
 	v_app_process_dt timestampTZ;
 	v_linked_app int;
 	v_cost_eval_validity_simult bool;
 	v_constr_name text;
 	v_constr_address jsonb;
 	v_constr_technical_features jsonb;
+	v_linked_contracts JSONB[];
+	v_linked_contracts_n int;
+	v_new_contract_number text;
+	v_document_type document_types;
+	v_expertise_result_number text;
+	v_date_type date_types;
+	v_work_day_count int;
+	v_office_id int;
+	v_new_contract_id int;
 BEGIN
 	IF (TG_WHEN='AFTER' AND TG_OP='INSERT') THEN
 		v_ref = doc_flow_examinations_ref((SELECT doc_flow_examinations FROM doc_flow_examinations WHERE id=NEW.id));
@@ -149,7 +159,16 @@ BEGIN
 	
 		--если тип основания - заявление - сменим его статус
 		IF NEW.subject_doc->>'dataType'='doc_flow_in' AND NEW.closed<>OLD.closed AND NEW.closed THEN
-			SELECT from_application_id INTO v_application_id FROM doc_flow_in WHERE id=(NEW.subject_doc->'keys'->>'id')::int;
+			SELECT
+				from_application_id,
+				doc_flow_out.new_contract_number
+			INTO
+				v_application_id,
+				v_new_contract_number
+			FROM doc_flow_in
+			LEFT JOIN doc_flow_out ON doc_flow_out.doc_flow_in_id=doc_flow_in.id
+			WHERE doc_flow_in.id=(NEW.subject_doc->'keys'->>'id')::int;
+			
 			IF v_application_id IS NOT NULL THEN
 				IF NEW.closed THEN
 					SELECT
@@ -189,13 +208,21 @@ BEGIN
 					app.audit,
 					app.user_id,
 					app.applicant,
-					p_contr.id,
-					mp_contr.id,
+					(contracts_ref(p_contr))::jsonb,
+					(contracts_ref(mp_contr))::jsonb,
 					coalesce(app.base_application_id,app.derived_application_id),
 					app.cost_eval_validity_simult,
 					app.constr_name,
 					app.constr_address,
-					app.constr_technical_features					
+					app.constr_technical_features,
+					CASE
+						WHEN app.expertise_type IS NOT NULL THEN 'pd'::document_types
+						WHEN app.cost_eval_validity THEN 'cost_eval_validity'::document_types
+						WHEN app.modification THEN 'modification'::document_types
+						WHEN app.audit THEN 'audit'::document_types						
+					END,
+					app.office_id
+					
 				INTO
 					v_app_expertise_type,
 					v_app_cost_eval_validity,
@@ -203,13 +230,15 @@ BEGIN
 					v_app_audit,
 					v_app_user_id,
 					v_app_applicant,
-					v_primary_contract_id,
-					v_modif_primary_contract_id,
+					v_primary_contracts_ref,
+					v_modif_primary_contracts_ref,
 					v_linked_app,
 					v_cost_eval_validity_simult,
 					v_constr_name,
 					v_constr_address,
-					v_constr_technical_features					
+					v_constr_technical_features,
+					v_document_type,
+					v_office_id
 					
 				FROM applications AS app
 				LEFT JOIN contracts AS p_contr ON p_contr.application_id=app.primary_application_id
@@ -278,7 +307,56 @@ BEGIN
 					;
 				END IF;
 				
+				v_linked_contracts_n = 0;
+				IF (v_primary_contracts_ref->'keys'->>'id' IS NOT NULL) THEN
+					v_linked_contracts_n = v_linked_contracts_n + 1;
+					v_linked_contracts = v_linked_contracts || jsonb_build_object('fields',jsonb_build_object('id',v_linked_contracts_n,'contracts_ref',v_primary_contracts_ref));
+				END IF;
+				IF (v_modif_primary_contracts_ref->'keys'->>'id' IS NOT NULL) THEN
+					v_linked_contracts_n = v_linked_contracts_n + 1;
+					v_linked_contracts = v_linked_contracts || jsonb_build_object('fields',jsonb_build_object('id',v_linked_contracts_n,'contracts_ref',v_modif_primary_contracts_ref));
+				END IF;
 				
+				IF v_linked_app IS NOT NULL THEN
+					--Поиск связного контракта по заявлению
+					SELECT contracts_ref(contracts) INTO v_linked_contracts_ref FROM contracts WHERE application_id=v_linked_app;
+					IF v_linked_contracts_ref IS NOT NULL THEN
+						v_linked_contracts_n = v_linked_contracts_n + 1;
+						v_linked_contracts = v_linked_contracts || jsonb_build_object('fields',jsonb_build_object('id',v_linked_contracts_n,'contracts_ref',v_linked_contracts_ref));
+					END IF;
+				END IF;
+				
+				--Сначала из исх.письма, затем генерим новый
+				IF v_new_contract_number IS NULL THEN
+					v_new_contract_number = contracts_next_number(v_document_type,now()::date);
+				END IF;
+				
+				--Номер экспертного заключения
+				v_expertise_result_number = regexp_replace(v_new_contract_number,'\D+.*$','');
+				v_expertise_result_number = substr('0000',1,4-length(v_expertise_result_number))||
+							v_expertise_result_number||
+							'/'||(extract(year FROM now())-2000)::text;
+				
+				--Дни проверки
+				SELECT
+					services.date_type,
+					services.work_day_count
+				INTO
+					v_date_type,
+					v_work_day_count
+				FROM services
+				WHERE services.id=
+				((
+					CASE
+						WHEN v_document_type='pd' THEN pdfn_services_expertise()
+						WHEN v_document_type='cost_eval_validity' THEN pdfn_services_eng_survey()
+						WHEN v_document_type='modification' THEN pdfn_services_modification()
+						WHEN v_document_type='audit' THEN pdfn_services_audit()
+						ELSE NULL
+					END
+				)->'keys'->>'id')::int;
+								
+				--RAISE EXCEPTION 'v_linked_contracts=%',v_linked_contracts;
 				--Контракт
 				INSERT INTO contracts (
 					date_time,
@@ -287,27 +365,26 @@ BEGIN
 					employee_id,
 					document_type,
 					expertise_type,
-					primary_contract_id,
-					modif_primary_contract_id,
 					cost_eval_validity_pd_order,
 					constr_name,
 					constr_address,
 					constr_technical_features,
+					contract_number,
+					expertise_result_number,
+					linked_contracts,
+					contract_date,					
+					date_type,
+					expertise_day_count,
+					work_end_date,
+					permissions,
 					user_id)
 				VALUES (
 					now(),
 					v_application_id,
 					v_app_client_id,
 					NEW.close_employee_id,
-					CASE
-						WHEN v_app_expertise_type IS NOT NULL THEN 'pd'::document_types
-						WHEN v_app_cost_eval_validity THEN 'cost_eval_validity'::document_types
-						WHEN v_app_modification THEN 'modification'::document_types
-						WHEN v_app_audit THEN 'audit'::document_types						
-					END,
+					v_document_type,
 					v_app_expertise_type,
-					v_primary_contract_id,
-					v_modif_primary_contract_id,
 					CASE
 						WHEN v_app_cost_eval_validity THEN
 							CASE
@@ -320,8 +397,89 @@ BEGIN
 					v_constr_name,
 					v_constr_address,
 					v_constr_technical_features,
+					
+					v_new_contract_number,
+					v_expertise_result_number,
+					
+					--linked_contracts
+					CASE WHEN v_linked_contracts IS NOT NULL THEN
+						jsonb_build_object(
+							'id','LinkedContractList_Model',
+							'rows',v_linked_contracts
+						)
+					ELSE
+						'{"id":"LinkedContractList_Model","rows":[]}'::jsonb
+					END,
+					
+					now()::date,--contract_date
+					
+					v_date_type,
+					v_work_day_count,
+					
+					--ПРИ ОПЛАТЕ client_payments_process()
+					--ставятся work_start_date&&work_end_date
+					--contracts_work_end_date(v_office_id, v_date_type, now(), v_work_day_count),
+					NULL,					
+					
+					'{"id":"AccessPermission_Model","rows":[]}'::jsonb,
+					
 					v_app_user_id
-				);
+				)
+				RETURNING id INTO v_new_contract_id;
+				
+				--В связные контракты запишем данный по текущему новому
+				IF (v_linked_contracts_ref->'keys'->>'id' IS NOT NULL) THEN
+				--RAISE EXCEPTION 'Updating contracts, id=%',(v_linked_contracts_ref->'keys'->>'id')::int;
+					UPDATE contracts
+					SET
+						linked_contracts = jsonb_build_object(
+							'id','LinkedContractList_Model',
+							'rows',
+							linked_contracts->'rows'||
+								jsonb_build_object(
+								'fields',jsonb_build_object(
+									'id',
+									jsonb_array_length(linked_contracts->'rows')+1,
+									'contracts_ref',contracts_ref((SELECT contracts FROM contracts WHERE id=v_new_contract_id))
+									)
+								)							
+						)
+					WHERE id=(v_linked_contracts_ref->'keys'->>'id')::int;
+				END IF;
+				IF (v_primary_contracts_ref->'keys'->>'id' IS NOT NULL) THEN
+					UPDATE contracts
+					SET
+						linked_contracts = jsonb_build_object(
+							'id','LinkedContractList_Model',
+							'rows',
+							linked_contracts->'rows'||
+								jsonb_build_object(
+								'fields',jsonb_build_object(
+									'id',
+									jsonb_array_length(linked_contracts->'rows')+1,
+									'contracts_ref',contracts_ref((SELECT contracts FROM contracts WHERE id=v_new_contract_id))
+									)
+								)							
+						)
+					WHERE id=(v_primary_contracts_ref->'keys'->>'id')::int;
+				END IF;
+				IF (v_modif_primary_contracts_ref->'keys'->>'id' IS NOT NULL) THEN
+					UPDATE contracts
+					SET
+						linked_contracts = jsonb_build_object(
+							'id','LinkedContractList_Model',
+							'rows',
+							linked_contracts->'rows'||
+								jsonb_build_object(
+								'fields',jsonb_build_object(
+									'id',
+									jsonb_array_length(linked_contracts->'rows')+1,
+									'contracts_ref',contracts_ref((SELECT contracts FROM contracts WHERE id=v_new_contract_id))
+									)
+								)							
+						)
+					WHERE id=(v_modif_primary_contracts_ref->'keys'->>'id')::int;
+				END IF;
 				
 			END IF;
 		END IF;

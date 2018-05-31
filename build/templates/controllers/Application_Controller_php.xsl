@@ -61,7 +61,8 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			'app_print_expertise'=>' экспертизе',
 			'app_print_cost_eval'=>' достоверности',
 			'app_print_modification'=>' модификации',
-			'app_print_modification'=>' аудиту'
+			'app_print_modification'=>' аудиту',
+			'auth_letter_file'=>' доверенности'
 			];
 	
 	
@@ -109,7 +110,11 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			$res = TRUE;
 		}
 		if (isset($_FILES['app_print_audit_files'])){
-			$this->copy_print_file($appId,'app_print_audit_files',$fileParams,$_FILES['app_print_audit_files']);
+			$this->copy_print_file($appId,'app_print_audit',$fileParams,$_FILES['app_print_audit_files']);
+			$res = TRUE;
+		}
+		if (isset($_FILES['auth_letter_files'])){
+			$this->copy_print_file($appId,'auth_letter_file',$fileParams,$_FILES['auth_letter_files']);
 			$res = TRUE;
 		}
 		
@@ -185,6 +190,10 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 	}
 
 	public function delete_print($appId,$docType){
+		$state = self::checkSentState($this->getDbLink(),$appId,TRUE);
+		if ($_SESSION['role_id']!='admin' &amp;&amp; $state!='filling'){
+			throw new Exception(ER_DOC_SENT);
+		}
 		$fullPath = '';
 		$fileName = '';
 		if ($this->get_print_file($appId,$docType,FALSE,$fullPath,$fileName)){
@@ -228,7 +237,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 	}
 	public function download_app_print_expertise_sig($pm){
 		return $this->download_print($this->getExtDbVal($pm,'id'),'app_print_expertise',TRUE);
-	}
+	}	
 	public function delete_app_print_expertise($pm){
 		return $this->delete_print($this->getExtDbVal($pm,'id'),'app_print_expertise');
 	}
@@ -261,6 +270,15 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 	}
 	public function delete_app_print_cost_eval($pm){
 		return $this->delete_print($this->getExtDbVal($pm,'id'),'app_print_cost_eval');
+	}
+	public function download_auth_letter_file($pm){
+		return $this->download_print($this->getExtDbVal($pm,'id'),'auth_letter_file',FALSE);
+	}
+	public function download_auth_letter_file_sig($pm){
+		return $this->download_print($this->getExtDbVal($pm,'id'),'auth_letter_file',TRUE);
+	}
+	public function delete_auth_letter_file($pm){
+		return $this->delete_print($this->getExtDbVal($pm,'id'),'auth_letter_file');
 	}
 
 	public function get_object($pm){
@@ -351,7 +369,11 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				NULL AS app_print_modification,
 				NULL AS app_print_audit,
 				NULL AS base_applications_ref,
-				NULL AS derived_applications_ref
+				NULL AS derived_applications_ref,
+				NULL as users_ref,
+				NULL as auth_letter,
+				NULL as auth_letter_file,
+				NULL as pd_usage_info
 				"
 			);
 		}
@@ -405,7 +427,11 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 					new Field('app_print_audit',DT_STRING,array('value'=>$ar_obj['app_print_audit'])),
 					new Field('app_print_cost_eval',DT_STRING,array('value'=>$ar_obj['app_print_cost_eval'])),
 					new Field('base_applications_ref',DT_STRING,array('value'=>$ar_obj['base_applications_ref'])),
-					new Field('derived_applications_ref',DT_STRING,array('value'=>$ar_obj['derived_applications_ref']))
+					new Field('derived_applications_ref',DT_STRING,array('value'=>$ar_obj['derived_applications_ref'])),
+					new Field('users_ref',DT_STRING,array('value'=>$ar_obj['users_ref'])),
+					new Field('auth_letter',DT_STRING,array('value'=>$ar_obj['auth_letter'])),
+					new Field('auth_letter_file',DT_STRING,array('value'=>$ar_obj['auth_letter_file'])),
+					new Field('pd_usage_info',DT_STRING,array('value'=>$ar_obj['pd_usage_info']))
 					)
 				)
 			)
@@ -455,6 +481,9 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		}				
 		else if ($docType=='app_print_audit'){
 			$res = self::APP_PRINT_PREF.DIRECTORY_SEPARATOR.'Аудит';
+		}
+		else if ($docType=='auth_letter_file'){
+			$res = 'Доверенность';
 		}				
 		else{
 			$res = 'НеизвестныйТип';
@@ -580,10 +609,26 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		if ($ar['state']=='sent'){
 			throw new Exception(self::ER_DOC_SENT);
 		}
+		return $ar['state'];
+	}
+	
+	public function set_user($pm){
+		if ($_SESSION['role_id']!='admin' || !defined('TEMP_DOC_STORAGE') || !TEMP_DOC_STORAGE){
+			throw new Exception('Действие разрешено администратору только на сервере с ЛК!');
+		}
+		$this->getDbLinkMaster()->query(sprintf(
+		"UPDATE applications SET user_id=%d WHERE id=%d",
+		$this->getExtDbVal($pm,'user_id'),
+		$this->getExtDbVal($pm,'id')
+		));
 	}
 	
 	public function update($pm){
 		self::checkSentState($this->getDbLink(),$this->getExtDbVal($pm,'old_id'),TRUE);
+
+		if ($pm->getParamValue('user_id') &amp;&amp; $_SESSION['role_id']!='admin'){
+			$pm->setParamValue('user_id', $_SESSION['user_id']);
+		}
 
 		$file_params = [];
 		if ($this->upload_prints($this->getExtDbVal($pm,'old_id'),$file_params)){
@@ -884,7 +929,8 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				app.app_print_modification,
 				app.modification,
 				app.app_print_audit,
-				app.audit
+				app.audit,
+				app.auth_letter_file
 			FROM applications app			
 			WHERE app.id=%s",
 			$this->getExtDbVal($pm,'application_id')
@@ -954,6 +1000,10 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			}
 			if ($ar_app['audit']=='t'){
 				self::add_print_to_zip('app_print_audit',$ar_app['app_print_audit'],$rel_dir_zip,$zip,$cnt);
+			}
+			//Доверенность
+			if ($ar_app['auth_letter_file']){
+				self::add_print_to_zip('auth_letter_file',$ar_app['auth_letter_file'],$rel_dir_zip,$zip,$cnt);
 			}
 			
 			if (!$cnt){
@@ -1120,10 +1170,13 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		$featrures_m = json_decode($ar['constr_technical_features'],TRUE);
 		$ar['constr_technical_features'] = '';
 		foreach($featrures_m['rows'] as $row){
-			$ar['constr_technical_features'].=sprintf('&lt;feature name="%s" value="%s"/&gt;',
-				$row['fields']['name'],
-				(array_key_exists('value',$row['fields']))? $row['fields']['value']:''
-			);
+			$feature_val = (array_key_exists('value',$row['fields']))? $row['fields']['value'] : '';
+			if (strlen($feature_val)){
+				$ar['constr_technical_features'].=sprintf('&lt;feature name="%s" value="%s"/&gt;',
+					$row['fields']['name'],
+					$feature_val
+				);
+			}
 		}
 
 		//applicant
@@ -1169,6 +1222,17 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		else{
 			$person_head_post_rod = '';
 		}				
+		$applicant_contacts = '';
+		if ($applicant_m['responsable_persons']){			
+			$responsable_persons = json_decode($applicant_m['responsable_persons'],TRUE);
+			foreach($responsable_persons['rows'] as $appl_resp){
+				$applicant_contacts.= ($appl_contacts=='')? '':', ';
+				$applicant_contacts.= strlen($appl_resp['fields']['post'])? $appl_resp['fields']['post'].' ' : '';
+				$applicant_contacts.= $appl_resp['fields']['name'];
+				$applicant_contacts.= strlen($appl_resp['fields']['tel'])? ' '.$appl_resp['fields']['tel'] : '';
+				$applicant_contacts.= strlen($appl_resp['fields']['email'])? ' '.$appl_resp['fields']['email'] : '';
+			}
+		}
 		$ar['applicant'] =
 			sprintf('&lt;field id="Наименование"&gt;%s&lt;/field&gt;',$applicant_m['name_full']).
 			sprintf('&lt;field id="ИНН/КПП"&gt;%s&lt;/field&gt;',$inn).
@@ -1179,7 +1243,9 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			sprintf('&lt;field id="Должность руководителя"&gt;%s&lt;/field&gt;',$person_head['post']).
 			sprintf('&lt;field id="Действует на основании"&gt;%s&lt;/field&gt;',$base_document_for_contract).
 			sprintf('&lt;person_head_name_rod&gt;%s&lt;/person_head_name_rod&gt;',$person_head_name_rod).
-			sprintf('&lt;person_head_post_rod&gt;%s&lt;/person_head_post_rod&gt;',$person_head_post_rod)
+			sprintf('&lt;person_head_post_rod&gt;%s&lt;/person_head_post_rod&gt;',$person_head_post_rod).
+			sprintf('&lt;field id="Контакты"&gt;%s&lt;/field&gt;',$applicant_contacts).
+			(($ar['auth_letter'])? sprintf('&lt;field id="Доверенность"&gt;%s&lt;/field&gt;',$ar['auth_letter']) : '')
 		;
 
 		//customer
@@ -1233,6 +1299,64 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			sprintf('&lt;field id="Юридический адрес"&gt;%s&lt;/field&gt;',$ar['customer_legal_address']).
 			sprintf('&lt;field id="Почтовый адрес"&gt;%s&lt;/field&gt;',$ar['customer_post_address']).
 			sprintf('&lt;field id="Банк"&gt;%s&lt;/field&gt;',$ar['customer_bank']).		
+			sprintf('&lt;field id="ФИО руководителя"&gt;%s&lt;/field&gt;',$person_head['name']).
+			sprintf('&lt;field id="Должность руководителя"&gt;%s&lt;/field&gt;',$person_head['post']).
+			sprintf('&lt;field id="Действует на основании"&gt;%s&lt;/field&gt;',$base_document_for_contract).
+			sprintf('&lt;person_head_name_rod&gt;%s&lt;/person_head_name_rod&gt;',$person_head_name_rod).
+			sprintf('&lt;person_head_post_rod&gt;%s&lt;/person_head_post_rod&gt;',$person_head_post_rod)			
+		;
+		
+		//developer
+		$developer_m = json_decode($ar['developer'],TRUE);
+		$inn = $developer_m['inn'].( (strlen($developer_m['kpp']))? ('/'.$developer_m['kpp']):'' );		
+		if ($developer_m['client_type']=='enterprise'){
+			$person_head = json_decode($developer_m['responsable_person_head'],TRUE);
+		}
+		else{
+			//pboul and person = name
+			$person_head = $developer_m['name'];
+		}
+		
+		if (strlen($developer_m['base_document_for_contract'])){
+			try{
+				$base_document_for_contract = Morpher::declension($this->getDbLink(),array('s'=>$developer_m['base_document_for_contract'],'flags'=>'common'))['Р'];
+			}
+			catch(Exception $e){
+				$base_document_for_contract = $developer_m['base_document_for_contract'];
+			}				
+		}
+		else{
+			$base_document_for_contract = '';
+		}
+		
+		if (strlen($person_head['name'])){
+			try{
+				$person_head_name_rod = Morpher::declension($this->getDbLink(),array('s'=>$person_head['name'],'flags'=>'name'))['Р'];
+			}
+			catch(Exception $e){
+				$person_head_name_rod = $person_head['name'];
+			}				
+		}
+		else{
+			$person_head_name_rod = '';
+		}		
+		if (strlen($person_head['post'])){
+			try{
+				$person_head_post_rod = Morpher::declension($this->getDbLink(),array('s'=>$person_head['post'],'flags'=>'common'))['Р'];
+			}
+			catch(Exception $e){
+				$person_head_post_rod = $person_head['post'];
+			}				
+		}
+		else{
+			$person_head_post_rod = '';
+		}								
+		$ar['developer'] =
+			sprintf('&lt;field id="Наименование"&gt;%s&lt;/field&gt;',$developer_m['name_full']).
+			sprintf('&lt;field id="ИНН/КПП"&gt;%s&lt;/field&gt;',$inn).
+			sprintf('&lt;field id="Юридический адрес"&gt;%s&lt;/field&gt;',$ar['developer_legal_address']).
+			sprintf('&lt;field id="Почтовый адрес"&gt;%s&lt;/field&gt;',$ar['developer_post_address']).
+			sprintf('&lt;field id="Банк"&gt;%s&lt;/field&gt;',$ar['developer_bank']).		
 			sprintf('&lt;field id="ФИО руководителя"&gt;%s&lt;/field&gt;',$person_head['name']).
 			sprintf('&lt;field id="Должность руководителя"&gt;%s&lt;/field&gt;',$person_head['post']).
 			sprintf('&lt;field id="Действует на основании"&gt;%s&lt;/field&gt;',$base_document_for_contract).
@@ -1493,12 +1617,33 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			
 				$this->getDbLinkMaster()->query_first(sprintf(
 					"UPDATE applications
-					SET %s = NULL
+					SET
+						%s = NULL,
+						auth_letter_file = NULL
 					WHERE id=%d",				
 				$print_type,
 				$this->getExtDbVal($pm,'application_id')
 				));
 			}
+			else{
+				//might be an auth letter
+				$this->getDbLinkMaster()->query_first(sprintf(
+					"UPDATE applications
+					SET
+						auth_letter_file = NULL
+					WHERE id=%d",				
+				$this->getExtDbVal($pm,'application_id')
+				));
+			}
+			//Доверенность
+			if (file_exists($dir = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
+					self::APP_DIR_PREF.$app_id. DIRECTORY_SEPARATOR.
+					self::dirNameOnDocType('auth_letter_file')
+				)
+			){
+				rrmdir($dir);
+			}
+			
 									
 			$this->getDbLinkMaster()->query("COMMIT");
 		}		

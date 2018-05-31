@@ -148,6 +148,14 @@ class DocFlowOut_Model extends ModelSQL{
 		$f_doc_flow_in_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"doc_flow_in_id",$f_opts);
 		$this->addField($f_doc_flow_in_id);
 		//********************
+		
+		//*** Field new_contract_number ***
+		$f_opts = array();
+		$f_opts['id']="new_contract_number";
+				
+		$f_new_contract_number=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"new_contract_number",$f_opts);
+		$this->addField($f_new_contract_number);
+		//********************
 	
 		$order = new ModelOrderSQL();		
 		$this->setDefaultModelOrder($order);		

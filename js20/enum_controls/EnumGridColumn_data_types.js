@@ -55,6 +55,8 @@ function EnumGridColumn_data_types(options){
 	options.multyLangValues["ru"]["doc_flow_importance_types"] = "Виды важностей";
 
 	options.multyLangValues["ru"]["expertise_reject_types"] = "Виды отрицательных заключений";
+
+	options.multyLangValues["ru"]["services"] = "Услуги";
 EnumGridColumn_data_types.superclass.constructor.call(this,options);
 	
 }

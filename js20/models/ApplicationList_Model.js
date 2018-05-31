@@ -287,6 +287,30 @@ function ApplicationList_Model(options){
 	filed_options.autoInc = false;	
 	
 	options.fields.derived_application_id = new FieldInt("derived_application_id",filed_options);
+		
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.pd_usage_info = new FieldText("pd_usage_info",filed_options);
+		
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.auth_letter = new FieldText("auth_letter",filed_options);
+		
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.auth_letter_file = new FieldJSONB("auth_letter_file",filed_options);
 	
 			
 				
@@ -386,6 +410,15 @@ function ApplicationList_Model(options){
 	filed_options.autoInc = false;	
 	
 	options.fields.unviewed_in_docs = new FieldJSON("unviewed_in_docs",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.contract_number = new FieldString("contract_number",filed_options);
 	
 			
 		ApplicationList_Model.superclass.constructor.call(this,id,options);

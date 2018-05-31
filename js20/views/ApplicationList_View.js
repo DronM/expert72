@@ -142,9 +142,13 @@ function ApplicationList_View(id,options){
 						}
 						else if (val=="checking"){
 							res+=" до ";
-							res+= DateHelper.format(fields.application_state_end_date.getValue(),"d/m/Y H:i");
-						
+							res+= DateHelper.format(fields.application_state_end_date.getValue(),"d/m/Y H:i");						
 						}
+						else if (val=="expertise"){
+							res+=", выдача ";
+							res+= DateHelper.format(fields.application_state_end_date.getValue(),"d/m/Y");
+						}
+						
 						return res;
 					}
 				})
@@ -173,7 +177,16 @@ function ApplicationList_View(id,options){
 				})
 			],
 			"sortable":true
+		}),
+		new GridCellHead(id+":grid:head:contract_number",{
+			"value":"Контракт",
+			"columns":[
+				new GridColumn({
+					"field":model.getField("contract_number")
+				})
+			]
 		})
+		
 	];
 	
 	if (role_id!="client"){
@@ -192,7 +205,8 @@ function ApplicationList_View(id,options){
 			"value":"Новые письма",
 			"columns":[
 				new GridColumnRef({
-					"field":model.getField("unviewed_in_docs")
+					"field":model.getField("unviewed_in_docs"),
+					"form":DocFlowInClientDialog_Form
 				})
 			]
 		})

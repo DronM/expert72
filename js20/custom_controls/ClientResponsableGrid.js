@@ -176,12 +176,20 @@ ClientResponsableGrid.prototype.edit = function(cmd){
 			var v = self.m_view.getValueJSON();
 			var pm = (cmd=="edit")? self.getUpdatePublicMethod() : self.getInsertPublicMethod();
 			if(cmd=="edit")pm.setFieldValue("old_id",self.getModel().getFieldValue("id"));
+			
 			if(v.dep && self.m_clientType!="person")pm.setFieldValue("dep",v.dep);
+			pm.setFieldValue("name",v["name"]);
+			pm.setFieldValue("post",v["post"]);
+			pm.setFieldValue("email",v["email"]);
+			if(v["person_type"] && self.m_clientType!="person")pm.setFieldValue("person_type",v["person_type"]);
+			
+			/*
 			if(v["name"])pm.setFieldValue("name",v["name"]);
 			if(v["post"] && self.m_clientType!="person")pm.setFieldValue("post",v["post"]);
 			if(v["tel"])pm.setFieldValue("tel",v["tel"]);
 			if(v["email"])pm.setFieldValue("email",v["email"]);
 			if(v["person_type"] && self.m_clientType!="person")pm.setFieldValue("person_type",v["person_type"]);
+			*/
 			pm.run({
 				"ok":function(){
 					self.closeSelect();

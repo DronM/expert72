@@ -1,6 +1,6 @@
 -- VIEW: doc_flow_out_dialog
 
---DROP VIEW doc_flow_out_dialog;
+DROP VIEW doc_flow_out_dialog;
 
 CREATE OR REPLACE VIEW doc_flow_out_dialog AS
 	SELECT

@@ -146,6 +146,15 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			}
 		}
 	}
+	
+	public function insert($pm){
+		$employees_ref = json_decode($_SESSION['employees_ref']);
+		if ($employees_ref &amp;&amp; $employees_ref->keys &amp;&amp; $employees_ref->keys->id){
+			$pm->setParamValue('employee_id', $employees_ref->keys->id);
+		}
+		parent::insert($pm);
+	}
+	
 </xsl:template>
 
 </xsl:stylesheet>

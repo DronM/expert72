@@ -46,7 +46,7 @@ extend(EmailTemplate_Controller,ControllerObjServer);
 	
 	var options = {};
 	options.alias = "Тип email";	
-	options.enumValues = 'new_account,reset_pwd,user_email_conf,out_mail,new_app,app_change,new_remind,out_mail_to_app';
+	options.enumValues = 'new_account,reset_pwd,user_email_conf,out_mail,new_app,app_change,new_remind,out_mail_to_app,contract_state_change';
 	options.enumValues+= (options.enumValues=='')? '':',';
 	options.enumValues+= 'null';
 	
@@ -116,6 +116,7 @@ extend(EmailTemplate_Controller,ControllerObjServer);
 	var f_opts = {};
 		
 	pm.addField(new FieldInt("id",f_opts));
+	pm.addField(new FieldString("mode"));
 }
 
 		

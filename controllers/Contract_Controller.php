@@ -173,9 +173,6 @@ class Contract_Controller extends ControllerSQL{
 		$param = new FieldExtText('order_document'
 				,array());
 		$pm->addParam($param);
-		$param = new FieldExtText('auth_letter'
-				,array());
-		$pm->addParam($param);
 		$param = new FieldExtText('constr_name'
 				,array());
 		$pm->addParam($param);
@@ -381,10 +378,6 @@ class Contract_Controller extends ControllerSQL{
 			));
 			$pm->addParam($param);
 		$param = new FieldExtText('order_document'
-				,array(
-			));
-			$pm->addParam($param);
-		$param = new FieldExtText('auth_letter'
 				,array(
 			));
 			$pm->addParam($param);
@@ -630,6 +623,36 @@ class Contract_Controller extends ControllerSQL{
 	
 		$opts['required']=TRUE;				
 		$pm->addParam(new FieldExtInt('id',$opts));
+	
+			
+		$this->addPublicMethod($pm);
+
+			
+		$pm = new PublicMethod('get_work_end_date');
+		
+				
+	$opts=array();
+	
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtInt('contract_id',$opts));
+	
+				
+	$opts=array();
+	
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtEnum('date_type',$opts));
+	
+				
+	$opts=array();
+	
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtInt('expertise_day_count',$opts));
+	
+				
+	$opts=array();
+	
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtDate('work_start_date',$opts));
 	
 			
 		$this->addPublicMethod($pm);
@@ -1014,6 +1037,29 @@ class Contract_Controller extends ControllerSQL{
 			)
 		));
 		
+	}
+	
+	public function get_work_end_date($pm){
+		$this->addNewModel(
+			sprintf(
+			"SELECT contracts_work_end_date(
+				(SELECT app.office_id
+				FROM contracts As contr
+				LEFT JOIN applications AS app ON app.id=contr.application_id
+				WHERE contr.id=%d
+				),
+				%s,
+				%s,
+				%d
+			) AS dt
+			",
+			$this->getExtDbVal($pm,'contract_id'),
+			$this->getExtDbVal($pm,'date_type'),
+			$this->getExtDbVal($pm,'work_start_date'),
+			$this->getExtDbVal($pm,'expertise_day_count')
+			),
+		'Date_Model'
+		);		
 	}
 	
 

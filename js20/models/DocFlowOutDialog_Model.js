@@ -143,6 +143,14 @@ function DocFlowOutDialog_Model(options){
 	filed_options.autoInc = false;	
 	
 	options.fields.doc_flow_in_id = new FieldInt("doc_flow_in_id",filed_options);
+		
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.new_contract_number = new FieldText("new_contract_number",filed_options);
 	
 			
 				
@@ -282,6 +290,7 @@ function DocFlowOutDialog_Model(options){
 	
 	options.fields.doc_flow_out_processes_chain = new FieldJSON("doc_flow_out_processes_chain",filed_options);
 	
+			
 		DocFlowOutDialog_Model.superclass.constructor.call(this,id,options);
 }
 extend(DocFlowOutDialog_Model,ModelXML);

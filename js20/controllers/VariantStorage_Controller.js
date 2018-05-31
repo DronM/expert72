@@ -368,6 +368,7 @@ extend(VariantStorage_Controller,ControllerObjServer);
 	var f_opts = {};
 		
 	pm.addField(new FieldText("variant_name",f_opts));
+	pm.addField(new FieldString("mode"));
 }
 
 			VariantStorage_Controller.prototype.add_get_filter_data = function(){

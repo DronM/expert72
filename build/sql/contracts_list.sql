@@ -38,13 +38,28 @@ CREATE OR REPLACE VIEW contracts_list AS
 		t.contract_date,
 		t.expertise_result_number,
 		
-		t.comment_text
+		t.comment_text,
+		
+		st.state AS state,
+		st.date_time AS state_dt,
+		st.end_date_time AS state_end_date
+		
 		
 	FROM contracts AS t
 	LEFT JOIN applications ON applications.id=t.application_id
 	LEFT JOIN employees ON employees.id=t.employee_id
 	LEFT JOIN employees AS m_exp ON m_exp.id=t.main_expert_id
 	LEFT JOIN clients ON clients.id=t.client_id
+	LEFT JOIN (
+		SELECT
+			t.application_id,
+			max(t.date_time) AS date_time
+		FROM application_processes t
+		GROUP BY t.application_id
+	) AS h_max ON h_max.application_id=t.application_id
+	LEFT JOIN application_processes st
+		ON st.application_id=h_max.application_id AND st.date_time = h_max.date_time
+	
 	;
 	
 ALTER VIEW contracts_list OWNER TO ;

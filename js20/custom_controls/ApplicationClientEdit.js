@@ -23,8 +23,15 @@ function ApplicationClientEdit(id,options){
 	options.templateOptions.isDeveloper = (id=="ApplicationDialog:developer");		
 	options.templateOptions.isClient = true;//(window.getApp().getServVar('role_id')=="client");
 	
+	this.m_isApplicant = options.templateOptions.isApplicant;
+	this.m_isDeveloper = options.templateOptions.isDeveloper;
+	this.m_isCustomer = options.templateOptions.isCustomer;
+	
 	this.m_minInf = options.minInf;
 	this.m_mainView = options.mainView;
+	
+	options.attrs = options.attrs || {};
+	options.attrs.percentcalc = "true";
 	
 	var self = this;
 	options.addElement = function(){
@@ -72,26 +79,27 @@ function ApplicationClientEdit(id,options){
 
 		this.addElement(new ClientType(id+":client_type",{
 			"mainView":this.m_mainView,
-			"view":this
+			"view":this,
+			"minInf":options.minInf
 		}));	
 
 		/* если minInf=true то только name && name_full - обязательны для расчета процента!
-		 * надо как то выделять это визуально
 		 */
 		var bs = window.getBsCol(4);
 		this.addElement(new ClientNameEdit(id+":name",{
-			"attrs":{"percentCalc":"true"},
+			"attrs":{"percentcalc":"true"},
 			"labelClassName":"control-label percentcalc "+bs,
 			"view":this,
 			"events":{
 				"blur":function(){
+					if (self.m_isApplicant||self.m_isDeveloper||self.m_isCustomer)self.setAuthLetterRequired();
 					self.m_mainView.calcFillPercent();
 				}
 			}			
 		}));	
 
 		this.addElement(new ClientNameFullEdit(id+":name_full",{
-			"attrs":{"percentCalc":"true"},
+			"attrs":{"percentcalc":"true"},
 			"labelClassName":"control-label percentcalc "+bs,
 			"events":{
 				"blur":function(){
@@ -101,7 +109,7 @@ function ApplicationClientEdit(id,options){
 		}));	
 
 		this.addElement(new ClientINN(id+":inn",{			
-			"attrs":{"percentCalc":!options.minInf},
+			"attrs":{"percentcalc":!options.minInf},
 			"labelClassName": !options.minInf? ("control-label percentcalc "+bs) : undefined,
 			"mainView":this,
 			"events":{
@@ -112,7 +120,7 @@ function ApplicationClientEdit(id,options){
 		}));
 		
 		this.addElement(new ClientKPP(id+":kpp",{
-			"attrs":{"percentCalc":!options.minInf},
+			"attrs":{"percentcalc":!options.minInf},
 			"labelClassName": !options.minInf? ("control-label percentcalc "+bs) : undefined,
 			"events":{
 				"blur":function(){
@@ -121,10 +129,10 @@ function ApplicationClientEdit(id,options){
 			}									
 		}));	
 		this.addElement(new ClientOGRN(id+":ogrn",{
-			"attrs":{"percentCalc":!options.minInf},
+			"attrs":{"percentcalc":!options.minInf},
 			"labelClassName": !options.minInf? ("control-label percentcalc "+bs) : undefined,
 			"events":{
-				"blur":function(){
+				"blur":function(){					
 					self.m_mainView.calcFillPercent();
 				}
 			}									
@@ -132,21 +140,21 @@ function ApplicationClientEdit(id,options){
 		
 
 		this.addElement(new ClientPostAddressEdit(id+":post_address",{
-			"attrs":{"percentCalc":!options.minInf},
+			"attrs":{"percentcalc":!options.minInf},
 			"labelClassName": !options.minInf? ("control-label percentcalc "+bs) : undefined,
 			"mainView":this.m_mainView,
 			"view":this
 		}));	
 
 		this.addElement(new ClientLegalAddressEdit(id+":legal_address",{
-			"attrs":{"percentCalc":!options.minInf},
+			"attrs":{"percentcalc":!options.minInf},
 			"labelClassName": !options.minInf? ("control-label percentcalc "+bs) : undefined,
 			"mainView":this.m_mainView
 		}));	
 		
 
 		this.addElement(new EditRespPerson(id+":responsable_person_head",{
-			"attrs":{"percentCalc":!options.minInf},
+			"attrs":{"percentcalc":!options.minInf},
 			"labelClassName": !options.minInf? ("control-label percentcalc "+bs) : undefined,
 			"labelCaption":"Руководитель:",			
 			"mainView":this.m_mainView,
@@ -154,26 +162,26 @@ function ApplicationClientEdit(id,options){
 		}));	
 
 		this.addElement(new EditUserClientBankAcc(id+":bank",{			
-			"attrs":{"percentCalc":!options.minInf},
+			"attrs":{"percentcalc":!options.minInf},
 			"labelClassName": !options.minInf? ("control-label percentcalc "+bs) : undefined,
 			"mainView":this.m_mainView,
 			"minInf":options.minInf
 		}));	
 
 		this.addElement(new EditPersonIdPaper(id+":person_id_paper",{			
-			"attrs":{"percentCalc":!options.minInf},
+			"attrs":{"percentcalc":!options.minInf},
 			"labelClassName": !options.minInf? ("control-label percentcalc "+bs) : undefined,
 			"mainView":this.m_mainView
 		}));	
 
 		this.addElement(new EditPersonRegistrPaper(id+":person_registr_paper",{			
-			"attrs":{"percentCalc":!options.minInf},
+			"attrs":{"percentcalc":!options.minInf},
 			"labelClassName": !options.minInf? ("control-label percentcalc "+bs) : undefined,
 			"mainView":this.m_mainView
 		}));	
 		
 		this.addElement(new ClientDocForContract(id+":base_document_for_contract",{
-			"attrs":{"percentCalc":!options.minInf},
+			"attrs":{"percentcalc":!options.minInf},
 			"labelClassName": !options.minInf? ("control-label percentcalc "+bs) : undefined,
 			"events":{
 				"blur":function(){
@@ -185,10 +193,53 @@ function ApplicationClientEdit(id,options){
 		//********* responsable grid ***********************
 		this.addElement(new ClientResponsableGrid(id+":responsable_persons",{
 			"mainView":this.m_mainView,
-			"attrs":{"percentCalc":!options.minInf},
+			"attrs":{"percentcalc":!options.minInf},
 			"minInf":options.minInf
 		}));
 		
+		if (this.m_isApplicant){
+			this.addElement(new EditString(id+":auth_letter",{
+				"maxLength":200,
+				"attrs":{"percentcalc":"false","notForValue":"true"},
+				"contClassName":"form-group "+window.getBsCol(6),
+				"placeholder":"Номер и дата доверенности",
+				"editContClassName":"input-group "+window.getBsCol(12),
+				"view":this,
+				"events":{
+					"blur":function(){
+						self.m_mainView.calcFillPercent();
+					}
+				}			
+			}));	
+			this.addElement(new EditFile(id+":auth_letter_file",{
+				"attrs":{"percentcalc":"false","notForValue":"true"},
+				"labelClassName": "control-label "+window.getBsCol(2),//percentcalc
+				"contClassName":"form-group "+window.getBsCol(6),
+				"labelCaption":"Файлы (бланк и ЭЦП)",
+				"editContClassName":"input-group "+window.getBsCol(10),
+				"template":window.getApp().getTemplate("EditFileApp"),
+				"addControls":null,
+				"mainView":this,
+				"separateSignature":true,
+				"allowOnlySignedFiles":true,
+				"onDeleteFile":function(fileId,callBack){
+					self.m_mainView.deletePrint("delete_auth_letter_file",fileId,callBack);
+				},
+				"onFileDeleted":function(){
+					self.m_mainView.calcFillPercent();
+				},
+				"onFileAdded":function(){
+					self.m_mainView.calcFillPercent();
+				},
+				"onFileSigAdded":function(){
+					self.m_mainView.calcFillPercent();
+				},
+				"onDownload":function(){
+					self.m_mainView.downloadPrint("download_auth_letter_file");
+				}
+			}));			
+		}
+				
 		if (options.cmdClose){
 			this.addElement(new Control(id+":cmdClose","A",{
 				"title":"Удалить исполнителя",
@@ -202,16 +253,17 @@ function ApplicationClientEdit(id,options){
 	}
 	
 	ApplicationClientEdit.superclass.constructor.call(this,id,options);
-	
+	/*
 	var f_getFillPercent= function(){
 		return (!self.m_minInf && this.isNull())? 0:100;
 	};
-	var f_getFillPercent_strict= function(){
-		return (this.isNull())? 0:100;
+	*/
+	var f_getFillPercent= function(){
+		return (this.getAttr("percentcalc")=="true"&&this.isNull())? 0:100;
 	};
 
 	this.getElement("name").getFillPercent = f_getFillPercent;
-	this.getElement("name_full").getFillPercent =  f_getFillPercent_strict;//(this.getElement("name_full").getVisible())? f_getFillPercent_strict:f_getFillPercent;
+	this.getElement("name_full").getFillPercent =  f_getFillPercent;
 	
 	this.getElement("inn").getFillPercent = function(){
 		return (self.getElement("client_type").getValue()=="person")?
@@ -235,6 +287,9 @@ function ApplicationClientEdit(id,options){
 		
 	this.getElement("client_type").setClientType("enterprise");
 	
+	if (this.m_isApplicant){
+		this.getElement("auth_letter").getFillPercent =  f_getFillPercent;
+	}
 }
 extend(ApplicationClientEdit,EditJSON);
 
@@ -323,4 +378,43 @@ ApplicationClientEdit.prototype.getValueJSON = function(){
 		o["name"] = o["name_full"];
 	}
 	return o;
+}
+
+ApplicationClientEdit.prototype.setAuthLetterRequired = function(init){
+	if (!this.m_isApplicant&&!this.m_isDeveloper&&!this.m_isCustomer)return;
+	var DIF_FIELD = "name";
+	var appl = this.m_mainView.getElement("applicant");
+	var appl_v = appl.getElement(DIF_FIELD).getValue();
+	var appl_f = appl_v? appl_v.toLowerCase():"";
+	var old_auth_req = appl.getElement("auth_letter").getEnabled();
+	var cust_v = this.m_mainView.getElement("customer").getElement(DIF_FIELD).getValue();
+	var dev_v = this.m_mainView.getElement("developer").getElement(DIF_FIELD).getValue();
+	var auth_req = (
+		appl_f.length
+		&& appl_f!=(cust_v? cust_v.toLowerCase():"")
+		&& appl_f!=(dev_v? dev_v.toLowerCase() : "")
+	);
+	appl.getElement("auth_letter").setEnabled(auth_req);
+	appl.getElement("auth_letter").setAttr("percentCalc",auth_req);
+	appl.getElement("auth_letter_file").setEnabled(auth_req);
+	appl.getElement("auth_letter_file").setAttr("percentCalc",auth_req);
+	if (!init && !old_auth_req && auth_req && cust_v && dev_v){
+		window.showWarn("Заявитель не является ни заказчиком ни застройщиком. Необходимо прикрепить доверенность.");
+	}
+	else if (!init && old_auth_req && !auth_req){
+		appl.getElement("auth_letter").reset();
+		if (appl.getElement("auth_letter_file").getFileControls().length){			
+			var app_id = this.m_mainView.getElement("id").getValue();
+			if (app_id){
+				var pm = this.m_mainView.getController().getPublicMethod("delete_auth_letter_file");
+				pm.setFieldValue("id",app_id);
+				pm.run({
+					"ok":function(){
+						appl.getElement("auth_letter_file").reset();
+					}
+				});
+			}
+		}
+		
+	}
 }

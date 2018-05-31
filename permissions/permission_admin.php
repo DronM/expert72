@@ -298,6 +298,14 @@ $permissions = array();
 				
 					$permissions['Application_Controller_delete_app_print_cost_eval']=TRUE;
 				
+					$permissions['Application_Controller_set_user']=TRUE;
+				
+					$permissions['Application_Controller_download_auth_letter_file']=TRUE;
+				
+					$permissions['Application_Controller_download_auth_letter_file_sig']=TRUE;
+				
+					$permissions['Application_Controller_delete_auth_letter_file']=TRUE;
+				
 					$permissions['ApplicationClient_Controller_insert']=TRUE;
 				
 					$permissions['ApplicationClient_Controller_update']=TRUE;
@@ -345,6 +353,8 @@ $permissions = array();
 					$permissions['DocFlowOut_Controller_complete']=TRUE;
 				
 					$permissions['DocFlowOut_Controller_get_app_state']=TRUE;
+				
+					$permissions['DocFlowOut_Controller_get_next_contract_number']=TRUE;
 				
 					$permissions['DocFlowIn_Controller_insert']=TRUE;
 				
@@ -636,6 +646,8 @@ $permissions = array();
 				
 					$permissions['Contract_Controller_get_ext_data']=TRUE;
 				
+					$permissions['Contract_Controller_get_work_end_date']=TRUE;
+				
 					$permissions['ExpertiseRejectType_Controller_insert']=TRUE;
 				
 					$permissions['ExpertiseRejectType_Controller_update']=TRUE;
@@ -706,6 +718,16 @@ $permissions = array();
 				
 					$permissions['ClientPayment_Controller_get_from_1c']=TRUE;
 				
+					$permissions['ApplicationProcess_Controller_insert']=TRUE;
+				
+					$permissions['ApplicationProcess_Controller_update']=TRUE;
+				
+					$permissions['ApplicationProcess_Controller_delete']=TRUE;
+				
+					$permissions['ApplicationProcess_Controller_get_object']=TRUE;
+				
+					$permissions['ApplicationProcess_Controller_get_list']=TRUE;
+				
 					$permissions['Order1CList_Controller_insert']=TRUE;
 				
 					$permissions['Order1CList_Controller_update']=TRUE;
@@ -751,6 +773,16 @@ $permissions = array();
 					$permissions['LinkedContractList_Controller_get_object']=TRUE;
 				
 					$permissions['ContractorList_Controller_get_list']=TRUE;
+				
+					$permissions['Service_Controller_insert']=TRUE;
+				
+					$permissions['Service_Controller_update']=TRUE;
+				
+					$permissions['Service_Controller_delete']=TRUE;
+				
+					$permissions['Service_Controller_get_object']=TRUE;
+				
+					$permissions['Service_Controller_get_list']=TRUE;
 				
 return array_key_exists($contrId.'_'.$methId,$permissions);
 }

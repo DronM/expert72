@@ -276,6 +276,7 @@ extend(ApplicationClient_Controller,ControllerObjClient);
 	ApplicationClient_Controller.superclass.addGetObject.call(this);
 	
 	var pm = this.getGetObject();
+	pm.addField(new FieldString("mode"));
 }
 
 		

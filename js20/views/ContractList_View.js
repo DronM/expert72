@@ -204,6 +204,39 @@ ContractList_View.prototype.addGrid = function(options){
 			"sortable":true
 		})
 	);
+	fields.push(
+		new GridCellHead(id+":grid:head:state",{
+			"value":"Статус",
+			"colAttrs":{
+				"state":function(fields){
+					return fields.state.getValue();
+				}
+			},
+			"columns":[
+				new EnumGridColumn_application_states({									
+					"field":model.getField("state"),
+					"ctrlClass":Enum_application_states,
+					"ctrlOptions":{
+						"labelCaption":"Статус:"
+					},
+					"searchOptions":{
+						"searchType":"on_match",
+						"typeChange":false
+					},
+					"formatFunction":function(fields){
+						var val = fields.state.getValue();
+						var res = this.getAssocValueList()[val];
+						if (val=="expertise"){
+							res+=" ";
+							res+= DateHelper.format(fields.state_end_date.getValue(),"d/m/Y");
+						
+						}
+						return res;
+					}
+				})
+			]
+		})										
+	);
 	fields.push(	
 		new GridCellHead(id+":grid:head:comment_text",{
 			"value":"Комментарий",

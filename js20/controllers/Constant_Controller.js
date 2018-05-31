@@ -110,6 +110,7 @@ extend(Constant_Controller,ControllerObjServer);
 	var f_opts = {};
 		
 	pm.addField(new FieldString("id",f_opts));
+	pm.addField(new FieldString("mode"));
 }
 
 			Constant_Controller.prototype.add_get_values = function(){

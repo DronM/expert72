@@ -21,6 +21,7 @@ function LinkedContractListGrid(id,options){
 			"columns":[
 				new GridColumnRef({
 					"field":model.getField("contracts_ref"),
+					"form":ContractDialog_Form,
 					"ctrlClass":ContractEditRef
 				})
 			]

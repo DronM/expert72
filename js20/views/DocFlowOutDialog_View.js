@@ -91,6 +91,14 @@ function DocFlowOutDialog_View(id,options){
 			"labelClassName":labelClassName,
 			"visible":false			
 		}));	
+		this.addElement(new EditString(id+":new_contract_number",{
+			"labelCaption":"№ контракта:",
+			"editContClassName":editContClassName,
+			"labelClassName":labelClassName,
+			"visible":false,
+			"buttonClear":new BtnNextContractNum(id+":cmdNextContractNum",{"view":this})
+		}));	
+		
 		this.addElement(new ContractEditRef(id+":to_contracts_ref",{
 			"labelCaption":"Контракт:",
 			"editContClassName":editContClassName,
@@ -253,6 +261,7 @@ function DocFlowOutDialog_View(id,options){
 		,new DataBinding({"control":this.getElement("doc_flow_types_ref"),"model":this.m_model})	
 		,new DataBinding({"control":this.getElement("to_addr_names"),"model":this.m_model})
 		,new DataBinding({"control":this.getElement("to_applications_ref"),"model":this.m_model})
+		,new DataBinding({"control":this.getElement("new_contract_number"),"model":this.m_model})
 		,new DataBinding({"control":this.getElement("to_contracts_ref"),"model":this.m_model})
 		,new DataBinding({"control":this.getElement("doc_flow_in_ref"),"model":this.m_model})
 		,new DataBinding({"control":this.getElement("subject"),"model":this.m_model})
@@ -269,6 +278,7 @@ function DocFlowOutDialog_View(id,options){
 		,new CommandBinding({"control":this.getElement("doc_flow_types_ref"),"fieldId":"doc_flow_type_id"})
 		,new CommandBinding({"control":this.getElement("to_addr_names")})
 		,new CommandBinding({"control":this.getElement("to_applications_ref"),"fieldId":"to_application_id"})
+		,new CommandBinding({"control":this.getElement("new_contract_number")})
 		,new CommandBinding({"control":this.getElement("to_contracts_ref"),"fieldId":"to_contract_id"})
 		,new CommandBinding({"control":this.getElement("doc_flow_in_ref"),"fieldId":"doc_flow_in_id"})
 		,new CommandBinding({"control":this.getElement("subject")})
@@ -290,26 +300,41 @@ DocFlowOutDialog_View.prototype.setDocVis = function(){
 	var v = this.getElement("doc_flow_types_ref").getValue();
 	var app_vis = false;
 	var contr_vis = false;
+	var new_contr_num_vis = false;
 	if (v){
 		var v_key = v.getKey();
-		if (
-			v_key==window.getApp().getPredefinedItem("doc_flow_types","app_resp").getKey()
-			||v_key==window.getApp().getPredefinedItem("doc_flow_types","app_resp_return").getKey()
-			||v_key==window.getApp().getPredefinedItem("doc_flow_types","app_resp_correct").getKey()
-		){
+		var doc_type;
+		if (v_key==window.getApp().getPredefinedItem("doc_flow_types","app_resp").getKey()){
 			app_vis = true;
+			doc_type = "app_resp";
+			new_contr_num_vis = true;
 		}
-		else if (
-			v_key==window.getApp().getPredefinedItem("doc_flow_types","contr").getKey()
-			||v_key==window.getApp().getPredefinedItem("doc_flow_types","contr_close").getKey()
-			||v_key==window.getApp().getPredefinedItem("doc_flow_types","contr_wait_pay").getKey()
-			||v_key==window.getApp().getPredefinedItem("doc_flow_types","contr_expertise").getKey()
-			||v_key==window.getApp().getPredefinedItem("doc_flow_types","contr_return").getKey()
-		){
+		else if (v_key==window.getApp().getPredefinedItem("doc_flow_types","app_resp_return").getKey()){
+			app_vis = true;
+			doc_type = "app_resp_return";
+		}
+		else if (v_key==window.getApp().getPredefinedItem("doc_flow_types","app_resp_correct").getKey()){
+			app_vis = true;
+			doc_type = "app_resp_correct";
+		}
+		else if (v_key==window.getApp().getPredefinedItem("doc_flow_types","contr").getKey()){
 			contr_vis = true;
+			doc_type = "contr";
+		}
+		else if (v_key==window.getApp().getPredefinedItem("doc_flow_types","contr_close").getKey()){
+			contr_vis = true;
+			doc_type = "contr_close";
+		}
+		else if (v_key==window.getApp().getPredefinedItem("doc_flow_types","contr_return").getKey()){
+			contr_vis = true;
+			doc_type = "contr_return";
+		}
+		if (app_vis||contr_vis){
+			this.getElement("subject").setValue(window.getApp().getPredefinedItem("doc_flow_types",doc_type).getDescr());
 		}
 	}
 	this.getElement("to_applications_ref").setVisible(app_vis);
+	this.getElement("new_contract_number").setVisible(new_contr_num_vis);
 	this.getElement("to_contracts_ref").setVisible(contr_vis);
 	if (this.elementExists("order1c")){
 		this.getElement("order1c").setVisible(contr_vis);

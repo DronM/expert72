@@ -17,7 +17,12 @@ BEGIN
 			) AS sub		
 			;
 		END IF;
-				
+		/*
+		IF TG_OP='UPDATE' THEN
+			RAISE EXCEPTION 'Updating contracts linked_contracts=%',NEW.linked_contracts;
+		END IF;
+		*/
+		/*		
 		--ГЕНЕРАЦИЯ НОМЕРА ЭКСПЕРТНОГО ЗАКЛЮЧЕНИЯ
 		IF TG_OP='INSERT' THEN
 			SELECT
@@ -42,6 +47,7 @@ BEGIN
 				;
 			NEW.contract_date = now()::date;
 		END IF;
+		*/
 		
 		RETURN NEW;
 		

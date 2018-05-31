@@ -402,14 +402,6 @@ function ContractDialog_Model(options){
 	
 	filed_options.autoInc = false;	
 	
-	options.fields.auth_letter = new FieldText("auth_letter",filed_options);
-		
-	
-	var filed_options = {};
-	filed_options.primaryKey = false;	
-	
-	filed_options.autoInc = false;	
-	
 	options.fields.constr_name = new FieldText("constr_name",filed_options);
 		
 	
@@ -688,7 +680,15 @@ function ContractDialog_Model(options){
 			
 			
 			
-			
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.auth_letter = new FieldText("auth_letter",filed_options);
+	
 		ContractDialog_Model.superclass.constructor.call(this,id,options);
 }
 extend(ContractDialog_Model,ModelXML);

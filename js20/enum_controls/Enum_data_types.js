@@ -34,6 +34,7 @@ function Enum_data_types(id,options){
 ,"ru_application_contractors":"Исполнители заявлений"
 ,"ru_doc_flow_importance_types":"Виды важностей"
 ,"ru_expertise_reject_types":"Виды отрицательных заключений"
+,"ru_services":"Услуги"
 };
 	options.options = [{"value":"users",
 "descr":multy_lang_values[window.getApp().getLocale()+"_"+"users"],
@@ -92,6 +93,9 @@ checked:(options.defaultValue&&options.defaultValue=="doc_flow_importance_types"
 ,{"value":"expertise_reject_types",
 "descr":multy_lang_values[window.getApp().getLocale()+"_"+"expertise_reject_types"],
 checked:(options.defaultValue&&options.defaultValue=="expertise_reject_types")}
+,{"value":"services",
+"descr":multy_lang_values[window.getApp().getLocale()+"_"+"services"],
+checked:(options.defaultValue&&options.defaultValue=="services")}
 ];
 	
 	Enum_data_types.superclass.constructor.call(this,id,options);

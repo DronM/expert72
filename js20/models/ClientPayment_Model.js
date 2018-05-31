@@ -83,6 +83,15 @@ function ClientPayment_Model(options){
 	options.fields.total = new FieldFloat("total",filed_options);
 	options.fields.total.getValidator().setMaxLength('15');
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.employee_id = new FieldInt("employee_id",filed_options);
+	
 			
 			
 		ClientPayment_Model.superclass.constructor.call(this,id,options);

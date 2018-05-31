@@ -21,6 +21,8 @@ function ApplicationPrimaryCont(id,options){
 	this.m_isModification = options.isModification;
 	this.m_primaryFieldId = options.primaryFieldId;
 	
+	this.m_mainView = options.mainView;
+		
 	var self = this;
 	options.addElement = function(){
 	
@@ -37,7 +39,9 @@ function ApplicationPrimaryCont(id,options){
 						"checked":true,
 						"events":{
 							"change":function(){
+								self.m_mainView.getElement("primary_application").setAttr("percentcalc","false");
 								self.setType(self.getElement("grp").getValue());	
+								self.m_mainView.calcFillPercent();
 							}
 						}					
 					}),
@@ -49,7 +53,9 @@ function ApplicationPrimaryCont(id,options){
 						"labelClassName":"control-label "+window.getBsCol(4),
 						"events":{
 							"change":function(){
+								self.m_mainView.getElement("primary_application").setAttr("percentcalc","true");
 								self.setType(self.getElement("grp").getValue());	
+								self.m_mainView.calcFillPercent();
 							}
 						}
 					})				
@@ -61,12 +67,37 @@ function ApplicationPrimaryCont(id,options){
 				"labelCaption":options.editLabelCaption,
 				"contClassName":"row",
 				//"inputEnabled":false,
-				"enabled":false
+				"enabled":false,
+				"events":{
+					"blur":function(){
+						self.m_mainView.calcFillPercent();
+					}
+				},
+				"onSelect":function(){
+					if (!self.m_isModification){
+						//fill on primary
+						WindowQuestion.show({
+							"text":"Заполнить по первичному заявлению?",
+							"cancel":false,
+							"callBack":function(res){			
+								if (res==WindowQuestion.RES_YES){
+									self.fillOnPrimary();
+								}
+							}
+						});
+					}
+				}
 		}));
 		this.addElement(new ApplicationRegNumber(id+":primary_reg_number",{
 			"labelCaption":"Или рег. номер:",
 			"contClassName":"row",
-			"enabled":false
+			"enabled":false,
+			"events":{
+				"blur":function(){
+					self.m_mainView.calcFillPercent();
+				}
+			}
+			
 		}));
 	}
 	ApplicationPrimaryCont.superclass.constructor.call(this,id,"DIV",options);
@@ -143,4 +174,14 @@ ApplicationPrimaryCont.prototype.getModified = function(){
 		return (this.getElement("primary_ref").getModified()||this.getElement("primary_reg_number").getModified());
 	}
 }
-
+ApplicationPrimaryCont.prototype.fillOnPrimary = function(){
+	var pm = this.m_mainView.getController().getPublicMethod("get_object");
+	pm.setFieldValue("id",this.getElement("primary_ref").getValue().getKey("id"));
+	pm.setFieldValue("mode","copy");
+	var self = this;
+	pm.run({
+		"ok":function(resp){
+			self.m_mainView.onGetData(resp,"copy");
+		}
+	})
+}

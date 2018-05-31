@@ -197,7 +197,7 @@ function DocFlowInList_View(id,options){
 			{"countPerPage":constants.doc_per_page_count.getValue()}),		
 		
 		"autoRefresh":(options.autoRefresh!=undefined)? options.autoRefresh:false,
-		"refreshInterval":constants.grid_refresh_interval.getValue()*1000,
+		"refreshInterval":!options.fromApp? (constants.grid_refresh_interval.getValue()*1000) : 0,
 		"filters":options.filters,
 		"rowSelect":false,
 		"focus":true

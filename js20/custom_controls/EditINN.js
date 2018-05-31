@@ -60,7 +60,7 @@ EditINN.prototype.validate = function(){
 	}
 }
 EditINN.prototype.setIsEnterprise = function(v){
-console.log("EditINN.prototype.setIsEnterprise="+v)
+//console.log("EditINN.prototype.setIsEnterprise="+v)
 	var len = v? this.ENT_LEN:this.PERS_LEN;
 	this.setAttr("maxlength",len);
 	//this.setEditMask("99999999999999999999".substr(0,len));

@@ -115,6 +115,7 @@ extend(TechnicalFeature_Controller,ControllerObjClient);
 	var f_opts = {};
 		
 	pm.addField(new FieldString("name",f_opts));
+	pm.addField(new FieldString("mode"));
 }
 
 		

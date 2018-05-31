@@ -80,7 +80,8 @@ function ClientType(id,options){
 			"placeholder":{
 				"enterprise":"Краткое наименование контрагента"
 			},
-			"visible":{"enterprise":true,"person":false,"pboul":false}
+			"visible":{"enterprise":true,"person":false,"pboul":false},
+			"percentcalc":true
 		},
 		"name_full":{
 			"labelCaption":{
@@ -92,13 +93,16 @@ function ClientType(id,options){
 				"enterprise":"Наименование в точном соответствии с учредительными документами",
 				"person":"Фамилия имя отчество физического лица",
 				"pboul":"Фамилия имя отчество предпринимателя"						
-			}			
+			},
+			"percentcalc":true			
 		},
 		"person_id_paper":{
-			"visible":{"enterprise":false,"person":true,"pboul":true}
+			"visible":{"enterprise":false,"person":true,"pboul":true},
+			"percentcalc":!options.minInf
 		},
 		"person_registr_paper":{
-			"visible":{"enterprise":false,"pboul":true,"person":false}
+			"visible":{"enterprise":false,"pboul":true,"person":false},
+			"percentcalc":!options.minInf
 		},		
 		"inn":{
 			"labelCaption":{
@@ -110,7 +114,8 @@ function ClientType(id,options){
 				"pboul":"ИНН предпринимателя"			
 			},
 			"enterpriseAttr":true,
-			"visible":{"enterprise":true,"pboul":true,"person":false}
+			"visible":{"enterprise":true,"pboul":true,"person":false},
+			"percentcalc":!options.minInf
 		},
 		"ogrn":{
 			"labelCaption":{
@@ -122,13 +127,16 @@ function ClientType(id,options){
 				"pboul":"ОГРН предпринимателя"			
 			},
 			"enterpriseAttr":true,
-			"visible":{"enterprise":true,"pboul":true,"person":false}
+			"visible":{"enterprise":true,"pboul":true,"person":false},
+			"percentcalc":!options.minInf
 		},
 		"kpp":{
-			"visible":{"enterprise":true,"person":false,"pboul":false}
+			"visible":{"enterprise":true,"pboul":false,"person":false},
+			"percentcalc":!options.minInf
 		},
 		"okved":{
-			"visible":{"enterprise":true,"person":false,"pboul":false}
+			"visible":{"enterprise":true,"person":false,"pboul":false},
+			"percentcalc":!options.minInf
 		},
 		"okpo":{
 			"visible":{"enterprise":true,"person":false,"pboul":false}
@@ -138,23 +146,29 @@ function ClientType(id,options){
 				"enterprise":"Юридический адрес:",
 				"pboul":"Адрес регистрации:"
 			},		
-			"visible":{"enterprise":true,"person":false,"pboul":true}
+			"visible":{"enterprise":true,"pboul":true,"person":false},
+			"percentcalc":!options.minInf
 		},
 		"post_address":{
 			"fillTitle":{"enterprise":"Заполнить как юридический адрес","person":"Заполнить как адрес регистрации"},
-			"fillVisible":{"enterprise":true,"person":false,"pboul":true},
+			"fillVisible":{"enterprise":true,"pboul":true,"person":false},
+			"percentcalc":!options.minInf
 		},
 		"responsable_person_head":{
-			"visible":{"enterprise":true,"person":false,"pboul":false}
+			"visible":{"enterprise":true,"person":false,"pboul":false},
+			"percentcalc":!options.minInf
 		},
 		"bank":{
-			"visible":{"enterprise":true,"person":false,"pboul":true}
+			"visible":{"enterprise":true,"pboul":true,"person":false},
+			"percentcalc":!options.minInf
 		},
 		"base_document_for_contract":{
-			"visible":{"enterprise":true,"person":false,"pboul":false}
+			"visible":{"enterprise":true,"pboul":false,"person":false},
+			"percentcalc":!options.minInf
 		}
 		,"responsable_persons":{
-			"setClientType":true
+			"setClientType":true,
+			"percentcalc":!options.minInf
 		}						
 	};
 	
@@ -222,8 +236,10 @@ if (ctp==undefined)return;
 		if (this.m_view.elementExists(id)){
 			if (this.m_clientTypeLabels[id].visible && !this.m_clientTypeLabels[id].visible[ctp]){
 				this.m_view.getElement(id).setVisible(false);
+				this.m_view.getElement(id).setAttr("percentcalc","false");
 			}
 			else{
+				if(this.m_clientTypeLabels[id].percentcalc)this.m_view.getElement(id).setAttr("percentcalc","true");
 				var ctrl = this.m_view.getElement(id);
 				if (this.m_clientTypeLabels[id].labelCaption){
 					ctrl.getLabel().setValue(this.m_clientTypeLabels[id].labelCaption[ctp]);

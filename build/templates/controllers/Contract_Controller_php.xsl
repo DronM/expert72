@@ -413,6 +413,29 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		
 	}
 	
+	public function get_work_end_date($pm){
+		$this->addNewModel(
+			sprintf(
+			"SELECT contracts_work_end_date(
+				(SELECT app.office_id
+				FROM contracts As contr
+				LEFT JOIN applications AS app ON app.id=contr.application_id
+				WHERE contr.id=%d
+				),
+				%s,
+				%s,
+				%d
+			) AS dt
+			",
+			$this->getExtDbVal($pm,'contract_id'),
+			$this->getExtDbVal($pm,'date_type'),
+			$this->getExtDbVal($pm,'work_start_date'),
+			$this->getExtDbVal($pm,'expertise_day_count')
+			),
+		'Date_Model'
+		);		
+	}
+	
 </xsl:template>
 
 </xsl:stylesheet>

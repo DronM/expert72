@@ -71,6 +71,9 @@ class DocFlowOut_Controller extends DocFlow_Controller{
 		$param = new FieldExtInt('doc_flow_in_id'
 				,array());
 		$pm->addParam($param);
+		$param = new FieldExtText('new_contract_number'
+				,array());
+		$pm->addParam($param);
 		
 		$pm->addParam(new FieldExtInt('ret_id'));
 		
@@ -142,6 +145,10 @@ class DocFlowOut_Controller extends DocFlow_Controller{
 			));
 			$pm->addParam($param);
 		$param = new FieldExtInt('doc_flow_in_id'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtText('new_contract_number'
 				,array(
 			));
 			$pm->addParam($param);
@@ -268,6 +275,18 @@ class DocFlowOut_Controller extends DocFlow_Controller{
 			
 		$this->addPublicMethod($pm);
 
+			
+		$pm = new PublicMethod('get_next_contract_number');
+		
+				
+	$opts=array();
+	
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtInt('application_id',$opts));
+	
+			
+		$this->addPublicMethod($pm);
+
 		
 	}	
 	
@@ -282,6 +301,27 @@ class DocFlowOut_Controller extends DocFlow_Controller{
 	
 	public function get_next_num($pm){
 		$this->get_next_num_on_type('out', $this->getExtDbVal($pm,'doc_flow_type_id'));
+	}
+
+	public function get_next_contract_number($pm){
+		$this->addNewModel(
+			sprintf(
+			"SELECT
+				contracts_next_number(
+					CASE
+					WHEN applications.expertise_type IS NOT NULL THEN 'pd'::document_types
+					WHEN applications.cost_eval_validity THEN 'cost_eval_validity'::document_types
+					WHEN applications.modification THEN 'modification'::document_types
+					WHEN applications.audit THEN 'audit'::document_types						
+					END,
+					now()::date
+				) AS num
+			FROM applications
+			WHERE id=%d",
+			$this->getExtDbVal($pm,'application_id')
+			),
+		'NewNum_Model'
+		);		
 	}
 	
 	public function get_app_state($pm){

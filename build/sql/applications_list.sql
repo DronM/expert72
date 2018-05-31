@@ -56,10 +56,13 @@ CREATE OR REPLACE VIEW applications_list AS
 		SELECT json_agg(doc_flow_in_client_ref(in_docs))
 		FROM doc_flow_in_client AS in_docs
 		WHERE in_docs.application_id=l.id AND NOT coalesce(in_docs.viewed,FALSE)
-		) AS unviewed_in_docs
+		) AS unviewed_in_docs,
+		
+		contr.contract_number
 				
 	FROM applications AS l
 	LEFT JOIN offices_list AS off ON off.id=l.office_id
+	LEFT JOIN contracts AS contr ON contr.application_id=l.id
 	LEFT JOIN (
 		SELECT
 			t.application_id,

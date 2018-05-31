@@ -57,7 +57,7 @@ BEGIN
 			SELECT
 				d_from,d_to
 			INTO v_from_date_time,v_end_date_time
-			FROM applications_check_period(v_office_id,const_application_check_days_val()) AS (d_from timestampTZ,d_to timestampTZ);
+			FROM applications_check_period(v_office_id,now(),const_application_check_days_val()) AS (d_from timestampTZ,d_to timestampTZ);
 			
 			--Входящее письмо НАШЕ отделу приема
 			INSERT INTO doc_flow_in (

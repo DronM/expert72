@@ -130,11 +130,9 @@ function DocFlowExamination_View(id,options){
 			"labelCaption":"Новый статус заявления:",		
 			"addNotSelected":false,
 			"options":[
-				{"value":"waiting_for_contract","descr":"Подписание контракта","checked":true}
-				,{"value":"returned","descr":"Анкета возвращена на доработку"}
-				,{"value":"closed_no_expertise","descr":"Возврат без рассмотрения"}
-				,{"value":"waiting_for_contract","descr":"Ожидание оплаты"}
-				,{"value":"closed","descr":"Заключение"}
+				{"value":"waiting_for_contract","descr":"Подписание контракта по заявлению","checked":true}
+				,{"value":"closed","descr":"Отказ по заявлению"}
+				,{"value":"filling","descr":"Замечания по контракту"}
 			]
 		}));
 		
@@ -353,14 +351,27 @@ DocFlowExamination_View.prototype.onGetData = function(resp,cmd){
 DocFlowExamination_View.prototype.createDocFlowOut = function(){
 	var model = new DocFlowOutDialog_Model();
 	model.setFieldValue("employees_ref",CommonHelper.unserialize(window.getApp().getServVar("employees_ref")));
-	model.setFieldValue("subject","Ответ на заявление");
-	
-	if (this.getModel().getFieldValue("application_based")){
-		model.setFieldValue("doc_flow_types_ref", window.getApp().getPredefinedItem("doc_flow_types","app_resp"));
+	var subject = "";
+	if (this.getModel().getFieldValue("application_based")){		
+		var app_st = this.getElement("application_resolution_state").getValue();
+		var doc_type;
+		if (app_st=="waiting_for_contract"){
+			doc_type = "app_resp";
+		}
+		else if (app_st=="closed"){
+			doc_type = "app_resp_return";
+		}
+		else if (app_st=="filling"){
+			doc_type = "app_resp_correct";
+		}	
+		type_ref = window.getApp().getPredefinedItem("doc_flow_types",doc_type);	
+		subject = type_ref.getDescr();
+		model.setFieldValue("doc_flow_types_ref", type_ref);
 		model.setFieldValue("to_applications_ref", this.getModel().getFieldValue("applications_ref"));
 	}
-		
+	model.setFieldValue("subject",subject);
 	model.setFieldValue("signed_by_employees_ref",null);
+	
 	model.setFieldValue("doc_flow_in_ref",this.getElement("subject_docs_ref").getValue());
 	model.recInsert();
 	

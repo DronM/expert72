@@ -60,7 +60,8 @@ Edit template instead.
 					</div>					
 					<div id="{{{{id}}}}:inf_filling" class="hidden">
 					<h5 class="no-margin text-semibold">Для подачи необходимо заполнить заявление на 100%.</h5>
-					<h5 class="no-margin text-semibold">Все поля данных обязательны для заполнения. При отсутствии данных, необходимо указать <u class="text-bold">«Отсутствует»</u> или <u class="text-bold">«Не требуется»</u>, для числовых полей <u class="text-bold">«0»</u>.</h5>
+					<h5 class="no-margin text-semibold">Все поля, отмеченные звездочкой, обязательны для заполнения.</h5>
+					<!--  При отсутствии данных, необходимо указать <u class="text-bold">«Отсутствует»</u> или <u class="text-bold">«Не требуется»</u>, для числовых полей <u class="text-bold">«0»</u>. -->
 					</div>
 					<div id="{{{{id}}}}:inf_closed" class="hidden">
 					<h5 class="no-margin text-semibold">Заявление закрыто.</h5>
@@ -150,6 +151,7 @@ Edit template instead.
 								
 								<div id="{{{{id}}}}:total_cost_eval"/>
 								<div id="{{{{id}}}}:limit_cost_eval"/>
+								<div id="{{{{id}}}}:pd_usage_info"/>
 								
 								<div class="panel panel-flat">
 									<div class="panel-heading">
@@ -219,6 +221,10 @@ Edit template instead.
 			</div>
 		</div>
 	</div>
+	
+	{{{#is_admin}}}
+	<div id="{{{{id}}}}:users_ref"/>
+	{{{/is_admin}}}
 	
 </div>
 

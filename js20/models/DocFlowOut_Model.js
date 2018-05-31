@@ -162,6 +162,16 @@ function DocFlowOut_Model(options){
 	
 	options.fields.doc_flow_in_id = new FieldInt("doc_flow_in_id",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.new_contract_number = new FieldText("new_contract_number",filed_options);
+	
+			
 			
 			
 			

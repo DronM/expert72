@@ -33,6 +33,8 @@ function EnumGridColumn_email_types(options){
 	options.multyLangValues["ru"]["new_remind"] = "Новая задача";
 
 	options.multyLangValues["ru"]["out_mail_to_app"] = "Исходящее письмо по заявлению/контракту";
+
+	options.multyLangValues["ru"]["contract_state_change"] = "Смена статуса контракта";
 EnumGridColumn_email_types.superclass.constructor.call(this,options);
 	
 }

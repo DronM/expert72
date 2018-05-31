@@ -399,14 +399,6 @@ class Contract_Model extends ModelSQL{
 		$this->addField($f_order_document);
 		//********************
 		
-		//*** Field auth_letter ***
-		$f_opts = array();
-		$f_opts['id']="auth_letter";
-				
-		$f_auth_letter=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"auth_letter",$f_opts);
-		$this->addField($f_auth_letter);
-		//********************
-		
 		//*** Field constr_name ***
 		$f_opts = array();
 		$f_opts['id']="constr_name";

@@ -50,6 +50,10 @@ function Application_Controller(options){
 	this.add_download_app_print_cost_eval();
 	this.add_download_app_print_cost_eval_sig();
 	this.add_delete_app_print_cost_eval();
+	this.add_set_user();
+	this.add_download_auth_letter_file();
+	this.add_download_auth_letter_file_sig();
+	this.add_delete_auth_letter_file();
 		
 }
 extend(Application_Controller,ControllerObjServer);
@@ -256,6 +260,24 @@ extend(Application_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	
+	var field = new FieldText("pd_usage_info",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldText("auth_letter",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldJSONB("auth_letter_file",options);
+	
+	pm.addField(field);
+	
 	pm.addField(new FieldInt("ret_id",{}));
 	
 		var options = {};
@@ -277,6 +299,10 @@ extend(Application_Controller,ControllerObjServer);
 		var options = {};
 				
 		pm.addField(new FieldText("app_print_audit_files",options));
+	
+		var options = {};
+				
+		pm.addField(new FieldText("auth_letter_files",options));
 	
 	
 }
@@ -486,6 +512,24 @@ extend(Application_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	
+	var field = new FieldText("pd_usage_info",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldText("auth_letter",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldJSONB("auth_letter_file",options);
+	
+	pm.addField(field);
+	
 		var options = {};
 				
 		pm.addField(new FieldBool("set_sent",options));
@@ -506,6 +550,10 @@ extend(Application_Controller,ControllerObjServer);
 				
 		pm.addField(new FieldText("app_print_audit_files",options));
 	
+		var options = {};
+				
+		pm.addField(new FieldText("auth_letter_files",options));
+	
 	
 }
 
@@ -524,6 +572,7 @@ extend(Application_Controller,ControllerObjServer);
 	var f_opts = {};
 		
 	pm.addField(new FieldInt("id",f_opts));
+	pm.addField(new FieldString("mode"));
 }
 
 			Application_Controller.prototype.add_get_print = function(){
@@ -674,6 +723,15 @@ extend(Application_Controller,ControllerObjServer);
 	var f_opts = {};
 	
 	pm.addField(new FieldInt("derived_application_id",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldText("pd_usage_info",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldText("auth_letter",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldJSONB("auth_letter_file",f_opts));
 	pm.getField(this.PARAM_ORD_FIELDS).setValue("create_dt");
 	
 }
@@ -994,6 +1052,82 @@ extend(Application_Controller,ControllerObjServer);
 	var opts = {"controller":this};
 	
 	var pm = new PublicMethodServer('delete_app_print_cost_eval',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("id",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			Application_Controller.prototype.add_set_user = function(){
+	var opts = {"controller":this};
+	
+	var pm = new PublicMethodServer('set_user',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("user_id",options));
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("id",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			Application_Controller.prototype.add_download_auth_letter_file = function(){
+	var opts = {"controller":this};
+	
+	var pm = new PublicMethodServer('download_auth_letter_file',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("id",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			Application_Controller.prototype.add_download_auth_letter_file_sig = function(){
+	var opts = {"controller":this};
+	
+	var pm = new PublicMethodServer('download_auth_letter_file_sig',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("id",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			Application_Controller.prototype.add_delete_auth_letter_file = function(){
+	var opts = {"controller":this};
+	
+	var pm = new PublicMethodServer('delete_auth_letter_file',opts);
 	
 				
 	

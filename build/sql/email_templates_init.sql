@@ -57,4 +57,21 @@ VALUES (
 );
 
 
+INSERT INTO email_templates (
+	email_type,
+	template,
+	mes_subject,comment_text,fields
+	)
+VALUES (
+	'contract_state_change',
+	'Контракт №[contract_number] от [contract_date] перешел в статус [state]',
+	'Смена статуса контракта',
+	'Отправляется при изменении статуса контракта"',
+	json_build_object(
+		'id','ReportTemplateField_Model',
+		'rows','[{"fields":{"id":"contract_number","descr":"Номер контракта"}},{"fields":{"id":"contract_date","descr":"Дата контракта"},{"fields":{"id":"state","descr":"Статус"}}]'
+	)
+);
+
+
 {"id":"ReportTemplateField_Model","rows":[{"fields":{"id":"applicant","descr":"Заявитель"}},{"fields":{"id":"constr_name","descr":"Адрес строительства"},{"fields":{"id":"id","descr":"Идентификатор заявления"}}]}

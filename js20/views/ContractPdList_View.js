@@ -20,7 +20,7 @@ extend(ContractPdList_View,ContractList_View);
 
 /* Constants */
 ContractPdList_View.prototype.GRID_READ_PM = "get_pd_list";
-ContractPdList_View.prototype.GRID_ALL = true;
+ContractPdList_View.prototype.GRID_ALL = false;
 
 /* private members */
 

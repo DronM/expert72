@@ -12,4 +12,5 @@ ApplicationDialog_View.prototype.COL_constr_technical_features_VALUE = "Знач
 ApplicationDialog_View.prototype.FIELD_CAP_construction_types_ref = "Вид объекта:"
 ApplicationDialog_View.prototype.FIELD_CAP_total_cost_eval = "Стоимость изгот. ПД и материалов инженерных изысканий в ценах 2001 года (руб.):";
 ApplicationDialog_View.prototype.FIELD_CAP_limit_cost_eval = "Сметная или предполагаемая (предельная) стоимость объекта (тыс.руб.):";
+ApplicationDialog_View.prototype.FIELD_CAP_pd_usage_info = "Сведения об использовании (о причинах неиспользования) повторного использования пд:";
 

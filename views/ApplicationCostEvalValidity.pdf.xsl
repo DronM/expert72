@@ -8,14 +8,14 @@
 <xsl:import href="Application.pdf.xsl"/>
 
 <xsl:template name="doc_head">
-	<xsl:text>Просим Вас провести проверку определения сметной стоимости объекта капитального строительства </xsl:text>
+	<xsl:text>Просим Вас провести проверку достоверности определения сметной стоимости объекта капитального строительства </xsl:text>
 </xsl:template>
 
 <xsl:template name="doc_foot">
 	<fo:block font-family="Arial" font-style="normal"
 		margin-top="15px" font-size="8px" text-indent="1cm"
 		text-align="left">
-		Оплата проведения проверки определения сметной стоимости объекта капитального строительства гарантируется.
+		Оплата проведения проверки достоверности определения сметной стоимости объекта капитального строительства гарантируется.
 	</fo:block>
 
 </xsl:template>

@@ -294,6 +294,30 @@ class ApplicationDialog_Model extends ModelSQL{
 		$this->addField($f_derived_application_id);
 		//********************
 		
+		//*** Field pd_usage_info ***
+		$f_opts = array();
+		$f_opts['id']="pd_usage_info";
+				
+		$f_pd_usage_info=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"pd_usage_info",$f_opts);
+		$this->addField($f_pd_usage_info);
+		//********************
+		
+		//*** Field auth_letter ***
+		$f_opts = array();
+		$f_opts['id']="auth_letter";
+				
+		$f_auth_letter=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"auth_letter",$f_opts);
+		$this->addField($f_auth_letter);
+		//********************
+		
+		//*** Field auth_letter_file ***
+		$f_opts = array();
+		$f_opts['id']="auth_letter_file";
+				
+		$f_auth_letter_file=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"auth_letter_file",$f_opts);
+		$this->addField($f_auth_letter_file);
+		//********************
+		
 		//*** Field construction_types_ref ***
 		$f_opts = array();
 		$f_opts['id']="construction_types_ref";
@@ -396,6 +420,14 @@ class ApplicationDialog_Model extends ModelSQL{
 				
 		$f_derived_applications_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"derived_applications_ref",$f_opts);
 		$this->addField($f_derived_applications_ref);
+		//********************
+		
+		//*** Field users_ref ***
+		$f_opts = array();
+		$f_opts['id']="users_ref";
+				
+		$f_users_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"users_ref",$f_opts);
+		$this->addField($f_users_ref);
 		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}

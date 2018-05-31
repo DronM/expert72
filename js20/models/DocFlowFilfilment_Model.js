@@ -61,7 +61,7 @@ function DocFlowFilfilment_Model(options){
 	filed_options.autoInc = false;	
 	
 	options.fields.subject_doc_type = new FieldEnum("subject_doc_type",filed_options);
-	filed_options.enumValues = 'users,employees,departments,clients,doc_flow_out,doc_flow_in,doc_flow_inside,doc_flow_approvements,doc_flow_confirmations,doc_flow_acqaintances,doc_flow_examinations,doc_flow_fulfilments,doc_flow_registrations,applications,application_applicants,application_customers,application_contractors,doc_flow_importance_types,expertise_reject_types';
+	filed_options.enumValues = 'users,employees,departments,clients,doc_flow_out,doc_flow_in,doc_flow_inside,doc_flow_approvements,doc_flow_confirmations,doc_flow_acqaintances,doc_flow_examinations,doc_flow_fulfilments,doc_flow_registrations,applications,application_applicants,application_customers,application_contractors,doc_flow_importance_types,expertise_reject_types,services';
 	
 				
 	
