@@ -151,13 +151,7 @@ function DocFlowApprovement_View(id,options){
 				"dateFormat":"d/m/Y H:i",
 				"enabled":is_admin			
 			}));	
-
 		
-			//******** recipient list grid ********************	
-			this.addElement(new DocFlowApprovementRecipientGrid(id+":recipient_list_ref",{
-				"view":this
-			}));
-			//****************************************************
 		}
 		else if (this.m_formVariant=="approve"){
 			this.addElement(new EmployeeEditRef(id+":employees_ref",{
@@ -207,7 +201,13 @@ function DocFlowApprovement_View(id,options){
 				}
 			}));	
 			
-		}		
+		}
+		//******** recipient list grid ********************	
+		this.addElement(new DocFlowApprovementRecipientGrid(id+":recipient_list_ref",{
+			"view":this
+		}));
+		//****************************************************
+				
 	}
 	
 	//steps
@@ -228,10 +228,10 @@ function DocFlowApprovement_View(id,options){
 		,new DataBinding({"control":this.getElement("employees_ref")})
 		,new DataBinding({"control":this.getElement("description")})		
 	];
-	if (this.m_formVariant=="setTask"){
-		read_b.push(new DataBinding({"control":this.getElement("recipient_list_ref")}));
+	if (this.m_formVariant=="setTask"){		
 		read_b.push(new DataBinding({"control":this.getElement("close_date_time")}));
 	}
+	read_b.push(new DataBinding({"control":this.getElement("recipient_list_ref")}));
 	this.setDataBindings(read_b);
 	
 	//write
@@ -266,20 +266,20 @@ extend(DocFlowApprovement_View,DocFlowBaseDialog_View);
 
 DocFlowApprovement_View.prototype.onGetData = function(resp,cmd){
 	DocFlowApprovement_View.superclass.onGetData.call(this,resp,cmd);
+
+	var model = this.getModel();
+	var grid = this.getElement("recipient_list_ref");
+	if (is_new){		
+		grid.setColumnVisible(["employee_comment","author_comment","approvement_dt","approvement_result"],false);
+		this.calcEndDate();
+	}
+	else if (model.getFieldValue("doc_flow_approvement_type")!="mixed"){
+		grid.setColumnVisible("approvement_order",false);			
+	}
 	
 	if (this.m_formVariant=="setTask"){
 		var is_new = (this.getCmd()=="insert");
-		var model = this.getModel();
-		var grid = this.getElement("recipient_list_ref");
 	
-		if (is_new){		
-			grid.setColumnVisible(["employee_comment","author_comment","approvement_dt","approvement_result"],false);
-			this.calcEndDate();
-		}
-		else if (model.getFieldValue("doc_flow_approvement_type")!="mixed"){
-			grid.setColumnVisible("approvement_order",false);			
-		}
-		
 		if (!is_new){
 			this.setEnabled(false);
 			this.getControlOK().setEnabled(false);
