@@ -20,7 +20,9 @@ CREATE OR REPLACE VIEW doc_flow_out_list AS
 		st.end_date_time AS state_end_dt,
 		st.register_doc AS state_register_doc,
 		
-		(applications.applicant->>'name')::text||' '||(applications.applicant->>'inn')::text AS applicant_descr
+		(applications.applicant->>'name')::text||' '||(applications.applicant->>'inn')::text AS applicant_descr,
+		
+		applications.constr_name AS to_constr_name
 		
 	FROM doc_flow_out
 	LEFT JOIN applications ON applications.id=doc_flow_out.to_application_id

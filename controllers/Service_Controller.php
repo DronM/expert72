@@ -39,6 +39,9 @@ class Service_Controller extends ControllerSQL{
 		$param = new FieldExtInt('work_day_count'
 				,array());
 		$pm->addParam($param);
+		$param = new FieldExtInt('expertise_day_count'
+				,array());
+		$pm->addParam($param);
 		$param = new FieldExtString('contract_postf'
 				,array());
 		$pm->addParam($param);
@@ -70,6 +73,10 @@ class Service_Controller extends ControllerSQL{
 			));
 			$pm->addParam($param);
 		$param = new FieldExtInt('work_day_count'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtInt('expertise_day_count'
 				,array(
 			));
 			$pm->addParam($param);

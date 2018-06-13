@@ -406,6 +406,30 @@ class ApplicationList_Model extends ModelSQL{
 		$f_contract_number=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"contract_number",$f_opts);
 		$this->addField($f_contract_number);
 		//********************
+		
+		//*** Field contract_date ***
+		$f_opts = array();
+		$f_opts['id']="contract_date";
+				
+		$f_contract_date=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"contract_date",$f_opts);
+		$this->addField($f_contract_date);
+		//********************
+		
+		//*** Field expertise_result_number ***
+		$f_opts = array();
+		$f_opts['id']="expertise_result_number";
+				
+		$f_expertise_result_number=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expertise_result_number",$f_opts);
+		$this->addField($f_expertise_result_number);
+		//********************
+		
+		//*** Field expertise_result_date ***
+		$f_opts = array();
+		$f_opts['id']="expertise_result_date";
+				
+		$f_expertise_result_date=new FieldSQLDate($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expertise_result_date",$f_opts);
+		$this->addField($f_expertise_result_date);
+		//********************
 	
 		$order = new ModelOrderSQL();		
 		$this->setDefaultModelOrder($order);		

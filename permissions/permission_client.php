@@ -188,6 +188,12 @@ $permissions = array();
 			
 				$permissions['DocFlowOutClient_Controller_remove_file']=TRUE;
 			
+				$permissions['DocFlowOutClient_Controller_remove_contract_file']=TRUE;
+			
+				$permissions['DocFlowOutClient_Controller_download_contract_file']=TRUE;
+			
+				$permissions['DocFlowOutClient_Controller_download_contract_file_sig']=TRUE;
+			
 				$permissions['DocFlowInClient_Controller_update']=TRUE;
 			
 				$permissions['DocFlowInClient_Controller_get_object']=TRUE;
@@ -195,6 +201,8 @@ $permissions = array();
 				$permissions['DocFlowInClient_Controller_get_list']=TRUE;
 			
 				$permissions['DocFlowInClient_Controller_get_file']=TRUE;
+			
+				$permissions['DocFlowInClient_Controller_get_file_sig']=TRUE;
 			
 				$permissions['DocFlowInClient_Controller_set_viewed']=TRUE;
 			

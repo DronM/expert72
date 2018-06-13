@@ -27,6 +27,8 @@ function EnumGridColumn_document_types(options){
 	options.multyLangValues["ru"]["modification"] = "Модификация";
 
 	options.multyLangValues["ru"]["audit"] = "Аудит";
+
+	options.multyLangValues["ru"]["documents"] = "Документы";
 EnumGridColumn_document_types.superclass.constructor.call(this,options);
 	
 }

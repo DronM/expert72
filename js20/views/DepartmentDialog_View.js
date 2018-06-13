@@ -24,6 +24,10 @@ function DepartmentDialog_View(id,options){
 		this.addElement(new EditString(id+":name",{
 								"labelCaption":this.FIELD_CAP_name
 							}));	
+		this.addElement(new EditEmail(id+":email",{
+								"labelCaption":"Эл.почта:",
+								"maxLength":50
+							}));	
 						
 		this.addElement(new EmployeeEditRef(id+":boss_employees_ref",{
 								"labelCaption":this.FIELD_CAP_boss,
@@ -38,12 +42,14 @@ function DepartmentDialog_View(id,options){
 	//read
 	this.setDataBindings([
 		new DataBinding({"control":this.getElement("name")})
+		,new DataBinding({"control":this.getElement("email")})
 		,new DataBinding({"control":this.getElement("boss_employees_ref"),"fieldId":"boss_employees_ref"})
 	]);
 	
 	//write
 	this.setWriteBindings([
 		new CommandBinding({"control":this.getElement("name"),"fieldId":"name"})
+		,new CommandBinding({"control":this.getElement("email"),"fieldId":"email"})
 		,new CommandBinding({"control":this.getElement("boss_employees_ref"),"fieldId":"boss_employee_id"})
 	]);
 		

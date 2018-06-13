@@ -30,6 +30,9 @@ function ContractDialog_View(id,options){
 		options.templateOptions.expertise_sections = options.model.getFieldValue("expertise_sections");
 	}
 	
+	//все прочие папки	
+	var doc_folders = options.model.getFieldValue("doc_folders");
+
 	options.templateOptions.primaryContractExists = (!options.model.getField("primary_contracts_ref").isNull()||options.model.getField("primary_contract_reg_number").isSet());
 	options.templateOptions.modifPrimaryContractExists = (!options.model.getField("modif_primary_contracts_ref").isNull()||options.model.getField("modif_primary_contract_reg_number").isSet());
 	
@@ -37,9 +40,15 @@ function ContractDialog_View(id,options){
 	options.templateOptions.pd = (options.model.getFieldValue("document_type")=="pd");
 	
 	options.templateOptions.notExpert = (window.getApp().getServVar("role_id")!="expert");
+	options.templateOptions.expert = !options.templateOptions.notExpert;
 	options.templateOptions.setAccess = (
-		options.templateOptions.notExpert || 
-		options.model.getFieldValue("main_experts_ref").getKey("id")==CommonHelper.unserialize(window.getApp().getServVar("employees_ref")).getKey("id")
+		options.templateOptions.notExpert
+		//Это главный эксперт
+		||options.model.getFieldValue("main_experts_ref").getKey("id")==CommonHelper.unserialize(window.getApp().getServVar("employees_ref")).getKey("id")
+		//Это начальник отдела
+		||(options.model.getFieldValue("main_departments_ref").getKey("id")==CommonHelper.unserialize(window.getApp().getServVar("departments_ref")).getKey("id")
+			&& window.getApp().getServVar("department_boss")=="1"
+		)
 	);
 	
 	options.addElement = function(){
@@ -57,6 +66,7 @@ function ContractDialog_View(id,options){
 			"editMask":"99/99/9999 99:99",
 			"dateFormat":"d/m/Y H:i",
 			"cmdClear":false,
+			"cmdSelect":options.templateOptions.notExpert,
 			"enabled":options.templateOptions.notExpert
 		}));	
 	
@@ -65,15 +75,6 @@ function ContractDialog_View(id,options){
 			"inline":true,
 			"cmdClear":false,
 			"enabled":options.templateOptions.notExpert
-		}));	
-
-		this.addElement(new ApplicationEditRef(id+":applications_ref",{			
-			"cmdClear":false,
-			"cmdSelect":false,
-			"labelCaption":"Заявление:",
-			"editContClassName":editContClassName,
-			"labelClassName":labelClassName,			
-			"enabled":false
 		}));	
 
 		this.addElement(new EditString(id+":applicant_descr",{
@@ -99,23 +100,51 @@ function ContractDialog_View(id,options){
 			"enabled":false
 		}));	
 
-		if (options.templateOptions.pd){
-			this.addElement(new Enum_expertise_types(id+":expertise_type",{
-				"labelCaption":"Вид гос.экспертизы:",
+		//********* linked contracts grid ***********************
+		this.addElement(new LinkedContractListGrid(id+":linked_contracts",{
+			"enabled":options.templateOptions.notExpert
+		}));		
+
+		this.addElement(new EditString(id+":contract_number",{
+			"labelCaption":"Номер контракта:",
+			"editContClassName":editContClassName,
+			"labelClassName":labelClassName,
+			"enabled":options.templateOptions.notExpert	
+		}));	
+		this.addElement(new EditDate(id+":contract_date",{
+			"labelCaption":"Дата контракта:",
+			"editContClassName":editContClassName,
+			"labelClassName":labelClassName,
+			"enabled":options.templateOptions.notExpert		
+		}));	
+
+		//Право на вкладку контракт	
+		if (options.templateOptions.notExpert){
+			if (options.templateOptions.pd){
+				this.addElement(new Enum_expertise_types(id+":expertise_type",{
+					"labelCaption":"Вид гос.экспертизы:",
+					"editContClassName":editContClassName,
+					"labelClassName":labelClassName,			
+					"enabled":false
+				}));	
+			}
+		
+			this.addElement(new Enum_document_types(id+":document_type",{			
+				"labelCaption":"Услуга:",
+				"editContClassName":editContClassName,
+				"labelClassName":labelClassName,
+				"enabled":false
+			}));
+		
+			this.addElement(new ApplicationEditRef(id+":applications_ref",{			
+				"cmdClear":false,
+				"cmdSelect":false,
+				"labelCaption":"Заявление:",
 				"editContClassName":editContClassName,
 				"labelClassName":labelClassName,			
 				"enabled":false
 			}));	
-		}
-		this.addElement(new Enum_document_types(id+":document_type",{
-			"labelCaption":"Услуга:",
-			"editContClassName":editContClassName,
-			"labelClassName":labelClassName,
-			"enabled":false
-		}));
-		
-		//Право на вкладку контракт	
-		if (options.templateOptions.notExpert){
+
 			this.addElement(new EditMoney(id+":expertise_cost_budget",{
 				"editContClassName":editContClassName,
 				"labelClassName":labelClassName,
@@ -139,16 +168,6 @@ function ContractDialog_View(id,options){
 				"editContClassName":editContClassName,
 				"labelClassName":labelClassName,
 				"enabled":false		
-			}));	
-			this.addElement(new EditString(id+":contract_number",{
-				"labelCaption":"Номер контракта:",
-				"editContClassName":editContClassName,
-				"labelClassName":labelClassName			
-			}));	
-			this.addElement(new EditDate(id+":contract_date",{
-				"labelCaption":"Дата контракта:",
-				"editContClassName":editContClassName,
-				"labelClassName":labelClassName			
 			}));	
 			this.addElement(new EditDate(id+":contract_return_date",{
 				"labelCaption":"Дата возврата контракта:",
@@ -180,7 +199,137 @@ function ContractDialog_View(id,options){
 			this.addElement(new ApplicationProcessList_View(id+":application_process_list",{
 				"detail":true
 			}));			
+		
+			this.addElement(new EditAddress(id+":constr_address",{
+				"mainView":this,
+				"cmdClear":false,
+				"editContClassName":editContClassName,
+				"labelClassName":labelClassName,
+				"labelCaption":"Адрес объекта строительства:",
+				"enabled":options.templateOptions.notExpert
+			}));	
+			this.addElement(new EditString(id+":kadastr_number",{
+				"editContClassName":editContClassName,
+				"labelClassName":labelClassName,
+				"labelCaption":"Кадастровый номер:",
+				"enabled":options.templateOptions.notExpert
+			}));	
+			this.addElement(new EditString(id+":grad_plan_number",{
+				"editContClassName":editContClassName,
+				"labelClassName":labelClassName,
+				"labelCaption":"Номер град.плана:",
+				"enabled":options.templateOptions.notExpert
+			}));	
+			this.addElement(new EditString(id+":area_document",{
+				"editContClassName":editContClassName,
+				"labelClassName":labelClassName,
+				"labelCaption":"Документы на з/у:",
+				"enabled":options.templateOptions.notExpert
+			}));	
+
+			//application based fields
+			this.addElement(new ConstrTechnicalFeatureGrid(id+":constr_technical_features",{
+				"editEnabled":options.templateOptions.notExpert
+			}));
+		
+			this.addElement(new ConstructionTypeSelect(id+":construction_types_ref",{
+				"editContClassName":editContClassName,
+				"labelClassName":labelClassName,
+				"labelCaption":ApplicationDialog_View.prototype.FIELD_CAP_construction_types_ref,
+				"enabled":false
+			}));
+			this.addElement(new BuildTypeSelect(id+":build_types_ref",{
+				"editContClassName":editContClassName,
+				"labelClassName":labelClassName,
+				"enabled":false
+			}));	
+		
+			if (options.templateOptions.costEvalValidity){
+				this.addElement(new Enum_cost_eval_validity_pd_orders(id+":cost_eval_validity_pd_order",{
+					"editContClassName":editContClassName,
+					"labelClassName":labelClassName,
+					"labelCaption":"Тип проверки ПД:",
+					"enabled":false
+				}));			
+				this.addElement(new EditString(id+":order_document",{
+					"maxLength":"150",
+					"labelCaption":"Распорядительный акт:",
+					"editContClassName":"input-group "+bs+"8",
+					"labelClassName":"control-label "+bs+"4"
+				}));	
 			
+			}
+		
+			if (options.templateOptions.primaryContractExists){
+				this.addElement(new ApplicationPrimaryCont(id+":primary_contracts_ref",{
+					"isModification":false,
+					"editClass":ContractEditRef,
+					"editLabelCaption":"Первичный контракт модификации:",
+					"primaryFieldId":"primary_contract_reg_number",
+					"template":window.getApp().getTemplate("ApplicationPrimaryContTmpl"),
+					"enabled":false
+				}));
+			}
+			if (options.templateOptions.modifPrimaryContractExists){
+				this.addElement(new ApplicationPrimaryCont(id+":modif_primary_contracts_ref",{
+					"isModification":true,
+					"editClass":ContractEditRef,
+					"editLabelCaption":"Первичный контракт:",
+					"primaryFieldId":"modif_primary_contract_reg_number",
+					"enabled":false
+				}));
+			}		
+			
+		
+			this.addElement(new Enum_expertise_results(id+":expertise_result",{
+				"editContClassName":editContClassName,
+				"labelClassName":labelClassName,
+				"labelCaption":"Результат экспертизы:",
+				"enabled":options.templateOptions.notExpert
+			}));	
+			this.addElement(new EditDate(id+":expertise_result_date",{
+				"editContClassName":editContClassName,
+				"labelClassName":labelClassName,
+				"labelCaption":"Дата заключения:",
+				"enabled":options.templateOptions.notExpert
+			}));	
+			//ApplicationRegNumber
+			this.addElement(new ApplicationRegNumber(id+":reg_number",{			
+				"labelCaption":"Регистрационный номер:",
+				"editContClassName":editContClassName,
+				"labelClassName":labelClassName,
+				"enabled":options.templateOptions.notExpert			
+			}));	
+
+		
+			this.addElement(new ExpertiseRejectTypeSelect(id+":expertise_reject_types_ref",{
+				"editContClassName":editContClassName,
+				"labelClassName":labelClassName,
+				"labelCaption":"Вид отрицательного закл.:",
+				"enabled":options.templateOptions.notExpert
+			}));	
+		
+			this.addElement(new EditString(id+":argument_document",{
+				"maxLength":"150",
+				"labelCaption":"Акт оспаривания:",
+				"editContClassName":"input-group "+bs+"8",
+				"labelClassName":"control-label "+bs+"4"
+			}));	
+			this.addElement(new EditString(id+":auth_letter",{
+				"maxLength":"150",
+				"labelCaption":"Доверенность:",
+				"editContClassName":"input-group "+bs+"8",
+				"labelClassName":"control-label "+bs+"4",
+				"enabled":false
+			}));	
+		
+			//********* contractors list grid ***********************
+			this.addElement(new ContractorListGrid(id+":contractors_list"));		
+		
+			//Вкладка с документами
+			this.addElement(new DocFolder_View(id+":doc_folders",{
+				"items":doc_folders
+			}));				
 		}
 		
 		//Право на вкладку access
@@ -225,114 +374,7 @@ function ContractDialog_View(id,options){
 			"labelCaption":"Объект строительства:",
 			"enabled":options.templateOptions.notExpert
 		}));	
-		this.addElement(new EditAddress(id+":constr_address",{
-			"mainView":this,
-			"cmdClear":false,
-			"editContClassName":editContClassName,
-			"labelClassName":labelClassName,
-			"labelCaption":"Адрес объекта строительства:",
-			"enabled":options.templateOptions.notExpert
-		}));	
-		this.addElement(new EditString(id+":kadastr_number",{
-			"editContClassName":editContClassName,
-			"labelClassName":labelClassName,
-			"labelCaption":"Кадастровый номер:",
-			"enabled":options.templateOptions.notExpert
-		}));	
-		this.addElement(new EditString(id+":grad_plan_number",{
-			"editContClassName":editContClassName,
-			"labelClassName":labelClassName,
-			"labelCaption":"Номер град.плана:",
-			"enabled":options.templateOptions.notExpert
-		}));	
-		this.addElement(new EditString(id+":area_document",{
-			"editContClassName":editContClassName,
-			"labelClassName":labelClassName,
-			"labelCaption":"Документы на з/у:",
-			"enabled":options.templateOptions.notExpert
-		}));	
-
-		//application based fields
-		this.addElement(new ConstrTechnicalFeatureGrid(id+":constr_technical_features",{
-			"editEnabled":options.templateOptions.notExpert
-		}));
-		
-		this.addElement(new ConstructionTypeSelect(id+":construction_types_ref",{
-			"editContClassName":editContClassName,
-			"labelClassName":labelClassName,
-			"labelCaption":ApplicationDialog_View.prototype.FIELD_CAP_construction_types_ref,
-			"enabled":false
-		}));
-		this.addElement(new BuildTypeSelect(id+":build_types_ref",{
-			"editContClassName":editContClassName,
-			"labelClassName":labelClassName,
-			"enabled":false
-		}));	
-		
-		if (options.templateOptions.costEvalValidity){
-			this.addElement(new Enum_cost_eval_validity_pd_orders(id+":cost_eval_validity_pd_order",{
-				"editContClassName":editContClassName,
-				"labelClassName":labelClassName,
-				"labelCaption":"Тип проверки ПД:",
-				"enabled":false
-			}));			
-			this.addElement(new EditString(id+":order_document",{
-				"maxLength":"150",
-				"labelCaption":"Распорядительный акт:",
-				"editContClassName":"input-group "+bs+"8",
-				"labelClassName":"control-label "+bs+"4"
-			}));	
-			
-		}
-		
-		if (options.templateOptions.primaryContractExists){
-			this.addElement(new ApplicationPrimaryCont(id+":primary_contracts_ref",{
-				"isModification":false,
-				"editClass":ContractEditRef,
-				"editLabelCaption":"Первичный контракт модификации:",
-				"primaryFieldId":"primary_contract_reg_number",
-				"template":window.getApp().getTemplate("ApplicationPrimaryContTmpl"),
-				"enabled":false
-			}));
-		}
-		if (options.templateOptions.modifPrimaryContractExists){
-			this.addElement(new ApplicationPrimaryCont(id+":modif_primary_contracts_ref",{
-				"isModification":true,
-				"editClass":ContractEditRef,
-				"editLabelCaption":"Первичный контракт:",
-				"primaryFieldId":"modif_primary_contract_reg_number",
-				"enabled":false
-			}));
-		}		
 		//***************************
-		
-		this.addElement(new Enum_expertise_results(id+":expertise_result",{
-			"editContClassName":editContClassName,
-			"labelClassName":labelClassName,
-			"labelCaption":"Результат экспертизы:",
-			"enabled":options.templateOptions.notExpert
-		}));	
-		this.addElement(new EditDate(id+":expertise_result_date",{
-			"editContClassName":editContClassName,
-			"labelClassName":labelClassName,
-			"labelCaption":"Дата заключения:",
-			"enabled":options.templateOptions.notExpert
-		}));	
-		//ApplicationRegNumber
-		this.addElement(new ApplicationRegNumber(id+":reg_number",{			
-			"labelCaption":"Регистрационный номер:",
-			"editContClassName":editContClassName,
-			"labelClassName":labelClassName,
-			"enabled":options.templateOptions.notExpert			
-		}));	
-
-		
-		this.addElement(new ExpertiseRejectTypeSelect(id+":expertise_reject_types_ref",{
-			"editContClassName":editContClassName,
-			"labelClassName":labelClassName,
-			"labelCaption":"Вид отрицательного закл.:",
-			"enabled":options.templateOptions.notExpert
-		}));	
 		this.addElement(new EditDate(id+":work_start_date",{
 			"labelCaption":"Дата начала работ:",
 			"editContClassName":"input-group "+bs+"8",
@@ -343,8 +385,25 @@ function ContractDialog_View(id,options){
 			"labelCaption":"Дата выдачи заключ.:",
 			"editContClassName":"input-group "+bs+"8",
 			"labelClassName":"control-label "+bs+"4",
-			"buttonClear":new BtnEndDate(id+":btnEndDate",{"view":this})
+			"buttonClear":new BtnEndDate(id+":btnEndDate",{"view":this,"enabled":options.templateOptions.notExpert}),
+			"cmdSelect":options.templateOptions.notExpert,
+			"enabled":options.templateOptions.notExpert
 		}));	
+		this.addElement(new EditDate(id+":expert_work_end_date",{
+			"labelCaption":"Дата заверш.работ:",
+			"editContClassName":"input-group "+bs+"8",
+			"labelClassName":"control-label "+bs+"4",
+			"buttonClear":options.templateOptions.notExpert? new BtnEndDate(id+":btnExpEndDate",{"view":this}):null,
+			"cmdSelect":options.templateOptions.notExpert,
+			"enabled":options.templateOptions.notExpert
+		}));	
+		this.addElement(new EditInt(id+":expert_work_day_count",{
+			"labelCaption":"Срок оценки:",
+			"editContClassName":"input-group "+bs+"8",
+			"labelClassName":"control-label "+bs+"4",
+			"enabled":options.templateOptions.notExpert
+		}));	
+		
 		this.addElement(new EditInt(id+":expertise_day_count",{
 			"labelCaption":"Срок экспертизы:",
 			"editContClassName":"input-group "+bs+"8",
@@ -356,19 +415,6 @@ function ContractDialog_View(id,options){
 			"editContClassName":"input-group "+bs+"8",
 			"labelClassName":"control-label "+bs+"4",
 			"enabled":options.templateOptions.notExpert
-		}));	
-		this.addElement(new EditString(id+":argument_document",{
-			"maxLength":"150",
-			"labelCaption":"Акт оспаривания:",
-			"editContClassName":"input-group "+bs+"8",
-			"labelClassName":"control-label "+bs+"4"
-		}));	
-		this.addElement(new EditString(id+":auth_letter",{
-			"maxLength":"150",
-			"labelCaption":"Доверенность:",
-			"editContClassName":"input-group "+bs+"8",
-			"labelClassName":"control-label "+bs+"4",
-			"enabled":false
 		}));	
 		
 		//Вкладки с документацией
@@ -383,7 +429,8 @@ function ContractDialog_View(id,options){
 				"field":"to_application_id",
 				"sign":"e",
 				"val":app_key
-			}]
+			}],
+			"readOnly":!options.templateOptions.setAccess
 		});
 		this.addElement(tab_out);
 		var contr_descr = "Контракт №"+options.model.getFieldValue("expertise_result_number")+" от "+DateHelper.format(options.model.getFieldValue("date_time"),"d/m/Y");
@@ -418,14 +465,6 @@ function ContractDialog_View(id,options){
 			}]
 		}));
 		
-		//********* linked contracts grid ***********************
-		this.addElement(new LinkedContractListGrid(id+":linked_contracts",{
-			"enabled":(role=="expert")
-		}));		
-
-		//********* contractors list grid ***********************
-		this.addElement(new ContractorListGrid(id+":contractors_list"));		
-		
 	};
 		
 	ContractDialog_View.superclass.constructor.call(this,id,options);
@@ -437,41 +476,46 @@ function ContractDialog_View(id,options){
 		,new DataBinding({"control":this.getElement("applicant_descr")})
 		,new DataBinding({"control":this.getElement("customer_descr")})
 		,new DataBinding({"control":this.getElement("developer_descr")})
-		,new DataBinding({"control":this.getElement("document_type")})
+		
 		,new DataBinding({"control":this.getElement("employees_ref")})
 		,new DataBinding({"control":this.getElement("comment_text")})
 		,new DataBinding({"control":this.getElement("constr_name")})
-		,new DataBinding({"control":this.getElement("kadastr_number")})
-		,new DataBinding({"control":this.getElement("grad_plan_number")})
-		,new DataBinding({"control":this.getElement("area_document")})
-		,new DataBinding({"control":this.getElement("constr_technical_features")})
-		,new DataBinding({"control":this.getElement("build_types_ref")})
-		,new DataBinding({"control":this.getElement("construction_types_ref")})
-		,new DataBinding({"control":this.getElement("cost_eval_validity_simult")})
-		,new DataBinding({"control":this.getElement("expertise_result"),"field":this.m_model.getField("expertise_result")})
-		,new DataBinding({"control":this.getElement("expertise_result_date")})
+		
 		,new DataBinding({"control":this.getElement("reg_number")})
 		,new DataBinding({"control":this.getElement("expertise_reject_types_ref")})		
 		,new DataBinding({"control":this.getElement("expertise_day_count")})
 		,new DataBinding({"control":this.getElement("date_type"),"field":this.m_model.getField("date_type")})
-		,new DataBinding({"control":this.getElement("auth_letter")})
-		,new DataBinding({"control":this.getElement("argument_document")})
 		,new DataBinding({"control":this.getElement("work_start_date")})
 		,new DataBinding({"control":this.getElement("work_end_date")})
-		,new DataBinding({"control":this.getElement("constr_address")})
+		,new DataBinding({"control":this.getElement("expert_work_end_date")})
+		,new DataBinding({"control":this.getElement("expert_work_day_count")})
 		,new DataBinding({"control":this.getElement("linked_contracts")})
-		,new DataBinding({"control":this.getElement("contractors_list")})
+		,new DataBinding({"control":this.getElement("contract_number")})
+		,new DataBinding({"control":this.getElement("contract_date")})
 		
 	];
 	
 	if (options.templateOptions.notExpert){
+		read_b.push(new DataBinding({"control":this.getElement("document_type")}));
+		read_b.push(new DataBinding({"control":this.getElement("kadastr_number")}));
+		read_b.push(new DataBinding({"control":this.getElement("grad_plan_number")}));
+		read_b.push(new DataBinding({"control":this.getElement("area_document")}));
+		read_b.push(new DataBinding({"control":this.getElement("constr_technical_features")}));
+		read_b.push(new DataBinding({"control":this.getElement("build_types_ref")}));
+		read_b.push(new DataBinding({"control":this.getElement("construction_types_ref")}));
+		read_b.push(new DataBinding({"control":this.getElement("cost_eval_validity_simult")}));
+		read_b.push(new DataBinding({"control":this.getElement("expertise_result"),"field":this.m_model.getField("expertise_result")}));
+		read_b.push(new DataBinding({"control":this.getElement("expertise_result_date")}));
+		read_b.push(new DataBinding({"control":this.getElement("auth_letter")}));
+		read_b.push(new DataBinding({"control":this.getElement("argument_document")}));
+		read_b.push(new DataBinding({"control":this.getElement("constr_address")}));
+		read_b.push(new DataBinding({"control":this.getElement("contractors_list")}));
+		
 		read_b.push(new DataBinding({"control":this.getElement("expertise_cost_budget")}));
 		read_b.push(new DataBinding({"control":this.getElement("expertise_cost_self_fund")}));
 		read_b.push(new DataBinding({"control":this.getElement("total_cost_eval")}));
 		read_b.push(new DataBinding({"control":this.getElement("limit_cost_eval")}));
 		read_b.push(new DataBinding({"control":this.getElement("fund_sources_ref")}));
-		read_b.push(new DataBinding({"control":this.getElement("contract_number")}));
-		read_b.push(new DataBinding({"control":this.getElement("contract_date")}));
 		read_b.push(new DataBinding({"control":this.getElement("contract_return_date")}));
 		read_b.push(new DataBinding({"control":this.getElement("akt_number")}));
 		read_b.push(new DataBinding({"control":this.getElement("akt_date")}));
@@ -524,6 +568,8 @@ function ContractDialog_View(id,options){
 			,new CommandBinding({"control":this.getElement("contract_number")})
 			,new CommandBinding({"control":this.getElement("work_start_date")})
 			,new CommandBinding({"control":this.getElement("work_end_date")})
+			,new CommandBinding({"control":this.getElement("expert_work_end_date")})
+			,new CommandBinding({"control":this.getElement("expert_work_day_count")})
 			,new CommandBinding({"control":this.getElement("linked_contracts"),"fieldId":"linked_contracts"})
 			,new CommandBinding({"control":this.getElement("constr_name")})
 			,new CommandBinding({"control":this.getElement("constr_address"),"fieldId":"constr_address"})
@@ -547,17 +593,18 @@ function ContractDialog_View(id,options){
 	
 	this.m_grids = {};
 	
-	this.addDetailDataSet({
-		"control":this.getElement("client_payment_list").getElement("grid"),
-		"controlFieldId":"contract_id",
-		"value":options.model.getFieldValue("id")
-	});
-	this.addDetailDataSet({
-		"control":this.getElement("application_process_list").getElement("grid"),
-		"controlFieldId":"application_id",
-		"value":options.model.getFieldValue("application_id")
-	});
-	
+	if (options.templateOptions.notExpert){
+		this.addDetailDataSet({
+			"control":this.getElement("client_payment_list").getElement("grid"),
+			"controlFieldId":"contract_id",
+			"value":options.model.getFieldValue("id")
+		});
+		this.addDetailDataSet({
+			"control":this.getElement("application_process_list").getElement("grid"),
+			"controlFieldId":"application_id",
+			"value":options.model.getFieldValue("application_id")
+		});
+	}	
 }
 extend(ContractDialog_View,DocumentDialog_View);//ViewObjectAjx
 

@@ -348,21 +348,31 @@ DocFlowInDialog_View.prototype.addFileToContainer = function(container,itemFile,
 	}));	
 	
 }
-
+/*
 DocFlowInDialog_View.prototype.toDOM = function(p){
 	DocFlowInDialog_View.superclass.toDOM.call(this,p);
-	
 }
+*/
 
 DocFlowInDialog_View.prototype.setAppVis = function(){
 	var v = this.getElement("doc_flow_types_ref").getValue();
-	var app_vis = (v? (v.getKey()==1) : false);
+	v = v? v.getKey():null;
+	
+	var app_vis = (v &&
+		(v==window.getApp().getPredefinedItem("doc_flow_types","app").getKey()
+		||v==window.getApp().getPredefinedItem("doc_flow_types","contr_resp").getKey()
+		)
+	);
+	
+	var att_vis = (v &&!app_vis && v!=window.getApp().getPredefinedItem("doc_flow_types","contr_paper_return").getKey()
+	);
+	
 	this.getElement("from_applications_ref").setVisible(app_vis);
 	this.getElement("employees_ref").setVisible(!app_vis);
 	this.getElement("from_addr_name").setVisible(!app_vis);
 	this.getElement("doc_flow_out_ref").setVisible(!app_vis);
 	this.getElement("content").setVisible(!app_vis);
-	this.getElement("attachments").setVisible(!app_vis);
+	this.getElement("attachments").setVisible(att_vis);
 	
 	var cont_n = document.getElementById(this.getId()+":from_client_cont");
 	if (!app_vis && cont_n){

@@ -56,6 +56,14 @@ class Service_Model extends ModelSQL{
 		$this->addField($f_work_day_count);
 		//********************
 		
+		//*** Field expertise_day_count ***
+		$f_opts = array();
+		$f_opts['id']="expertise_day_count";
+				
+		$f_expertise_day_count=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expertise_day_count",$f_opts);
+		$this->addField($f_expertise_day_count);
+		//********************
+		
 		//*** Field contract_postf ***
 		$f_opts = array();
 		$f_opts['length']=5;

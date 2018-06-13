@@ -24,8 +24,14 @@ require_once(FRAME_WORK_PATH.'basic_classes/FieldExtXML.php');
 
 
 require_once(USER_CONTROLLERS_PATH.'Application_Controller.php');
+require_once('common/file_func.php');
 
 class DocFlowOutClient_Controller extends ControllerSQL{
+	
+	const CONTRACT_FOLDER = 'Контракт';
+	const ER_NO_CONTRACT_SIG = 'Нет файла эцп с контрактом!';
+	const ER_NO_DOC = 'Document not found!';
+
 	public function __construct($dbLinkMaster=NULL,$dbLink=NULL){
 		parent::__construct($dbLinkMaster,$dbLink);
 			
@@ -57,7 +63,16 @@ class DocFlowOutClient_Controller extends ControllerSQL{
 				,array());
 		$pm->addParam($param);
 		
+				$param = new FieldExtEnum('doc_flow_out_client_type',',','app,contr_resp,contr_return,contr_other'
+				,array());
+		$pm->addParam($param);
+		
 		$pm->addParam(new FieldExtInt('ret_id'));
+		
+			$f_params = array();
+			$param = new FieldExtText('contract_files'
+			,$f_params);
+		$pm->addParam($param);		
 		
 		
 		$this->addPublicMethod($pm);
@@ -107,9 +122,19 @@ class DocFlowOutClient_Controller extends ControllerSQL{
 			));
 			$pm->addParam($param);
 		
+				$param = new FieldExtEnum('doc_flow_out_client_type',',','app,contr_resp,contr_return,contr_other'
+				,array(
+			));
+			$pm->addParam($param);
+		
 			$param = new FieldExtInt('id',array(
 			));
 			$pm->addParam($param);
+		
+			$f_params = array();
+			$param = new FieldExtText('contract_files'
+			,$f_params);
+		$pm->addParam($param);		
 		
 		
 			$this->addPublicMethod($pm);
@@ -192,13 +217,313 @@ class DocFlowOutClient_Controller extends ControllerSQL{
 			
 		$this->addPublicMethod($pm);
 
+			
+		$pm = new PublicMethod('remove_contract_file');
+		
+				
+	$opts=array();
+	
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtInt('id',$opts));
+	
+				
+	$opts=array();
+	
+		$opts['length']=36;
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtString('file_id',$opts));
+	
+			
+		$this->addPublicMethod($pm);
+
+			
+		$pm = new PublicMethod('download_contract_file');
+		
+				
+	$opts=array();
+	
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtInt('id',$opts));
+	
+				
+	$opts=array();
+	
+		$opts['length']=36;
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtString('file_id',$opts));
+	
+			
+		$this->addPublicMethod($pm);
+
+			
+		$pm = new PublicMethod('download_contract_file_sig');
+		
+				
+	$opts=array();
+	
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtInt('id',$opts));
+	
+				
+	$opts=array();
+	
+		$opts['length']=36;
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtString('file_id',$opts));
+	
+			
+		$this->addPublicMethod($pm);
+
 		
 	}	
 	
+	private function move_contract_files($appId,$docFlowId,&$files){
+	
+		if (count($files['name'])!=2){
+			throw new Exception(self::ER_NO_CONTRACT_SIG);
+		}
+	
+		//sig-data indexes ".sig" - 4 chars
+		$sig_ind = (strtolower(substr($files['name'][0],strlen($files['name'][0])-4,4))=='.sig')? 0 : NULL;		
+		if (is_null($sig_ind)){
+			$sig_ind = (strtolower(substr($files['name'][1],strlen($files['name'][1])-4,4))=='.sig')? 1 : NULL;
+			if (is_null($sig_ind)){
+				throw new Exception(self::ER_NO_CONTRACT_SIG);
+			}
+		}
+		$data_ind = ($sig_ind==1)? 0:1;
+
+		$dir = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
+			Application_Controller::APP_DIR_PREF.$appId.DIRECTORY_SEPARATOR.
+			self::CONTRACT_FOLDER;
+			
+		//*************** А если уже был контракт? надо удалять... *************************
+		if (file_exists($dir)){
+			rrmdir($dir);
+		}
+		$this->getDbLinkMaster()->query(sprintf(
+		"DELETE FROM doc_flow_out_client_document_files
+		WHERE file_id IN (
+			SELECT file_id
+			FROM application_document_files
+			WHERE application_id=%d AND file_path='%s')",
+		$appId,
+		self::CONTRACT_FOLDER
+		));
+		
+		$this->getDbLinkMaster()->query(sprintf(
+		"DELETE FROM application_document_files WHERE application_id=%d AND file_path='%s'",
+		$appId,
+		self::CONTRACT_FOLDER
+		));
+		//***********************************************
+				
+		mkdir($dir,0777,TRUE);
+	
+		$file_id = md5(uniqid());
+	
+		if (!move_uploaded_file($files['tmp_name'][$data_ind],$dir.DIRECTORY_SEPARATOR.$file_id)){
+			throw new Exception('Ошибка загрузки контракта');
+		}
+		//sig
+		if (!move_uploaded_file($files['tmp_name'][$sig_ind],$dir.DIRECTORY_SEPARATOR.$file_id.'.sig')){
+			throw new Exception('Ошибка загрузки подписи контракта');
+		}
+		
+		$this->getDbLinkMaster()->query(sprintf(
+			"INSERT INTO application_document_files
+			(file_id,application_id,document_id,document_type,date_time,
+			file_name,file_path,file_signed,file_size)
+			VALUES
+			('%s',%d,0,'documents',now(),'%s','%s',TRUE,%f)",
+			$file_id,
+			$appId,
+			$files['name'][$data_ind],
+			self::CONTRACT_FOLDER,
+			$files['size'][$data_ind]
+		));
+		//Отметка к письму				
+		$this->getDbLinkMaster()->query(sprintf(
+			"INSERT INTO doc_flow_out_client_document_files
+			(file_id,doc_flow_out_client_id)
+			VALUES
+			('%s',%d)",
+			$file_id,
+			$docFlowId
+		));				
+	}
+
 	public function insert($pm){
 		$pm->setParamValue("user_id",$_SESSION['user_id']);
-		parent::insert($pm);
+		$this->getDbLinkMaster()->query("BEGIN");
+		try{			
+			$inserted_id_ar = parent::insert($pm);
+			
+			if (isset($_FILES['contract_files'])){
+				$this->move_contract_files($this->getExtDbVal($pm,'application_id'),$inserted_id_ar['id'],$_FILES['contract_files']);
+			}
+			
+			$this->getDbLinkMaster()->query("COMMIT");			
+		}		
+		catch(Exception $e){
+			$this->getDbLinkMaster()->query("ROLLBACK");
+			throw $e;
+		}
+		return $inserted_id_ar;
 	}	
+
+	public function update($pm){
+		if ($pm->getParamValue('user_id')){
+			$pm->setParamValue("user_id",$_SESSION['user_id']);
+		}
+		
+		$app_id = NULL;
+		if ($pm->getParamValue('application_id')){
+			$app_id = $this->getExtDbVal('application_id');
+			$ar = $this->getDbLink()->query_first(sprintf(
+			"SELECT
+				user_id,
+				(SELECT t.user_id FROM doc_flow_out_client t WHERE t.id=%d) AS doc_user_id
+			FROM applications
+			WHERE id=%d",
+			$this->getExtDbVal($pm,'old_id'),
+			$app_id
+			));
+			if (!count($ar)||$ar['user_id']!=$_SESSION['user_id']||$ar['doc_user_id']!=$_SESSION['user_id']){
+				throw new Exception(self::ER_NO_DOC);
+			}			
+		}
+		else{
+			//no app_id
+			$ar = $this->getDbLink()->query_first(sprintf(
+			"SELECT
+				d.application_id,
+				d.user_id
+			FROM doc_flow_out_client AS d
+			WHERE d.id=%d",
+			$this->getExtDbVal($pm,'old_id')
+			));
+			if (!count($ar)){
+				throw new Exception(self::ER_NO_DOC);
+			}
+			$app_id = $ar['application_id'];
+		}
+		
+		
+		$this->getDbLinkMaster()->query("BEGIN");
+		try{			
+			parent::update($pm);
+			
+			if (isset($_FILES['contract_files'])){
+				$this->move_contract_files(
+					$app_id,
+					$this->getExtDbVal($pm,'old_id'),
+					$_FILES['contract_files']
+				);
+			}
+			
+			$this->getDbLinkMaster()->query("COMMIT");			
+		}		
+		catch(Exception $e){
+			$this->getDbLinkMaster()->query("ROLLBACK");
+			throw $e;
+		}
+		return $inserted_id_ar;
+	}	
+
+	/**	
+	 * @params {string} file path+name
+	 * @params {string} fileName returns file name for downloading
+	 * @returns {string} file path+name
+	 */
+	public function get_file_on_type($docFlowId,$fileId,$isSig,&$file,&$fileName,&$appId){
+		$ar = $this->getDbLink()->query_first(sprintf(
+		"SELECT
+			d.application_id,
+			d.user_id,
+			d.sent
+		FROM doc_flow_out_client AS d
+		WHERE d.id=%d",
+		$docFlowId
+		));
+		if (!count($ar)||$ar['user_id']!=$_SESSION['user_id']||$ar['sent']=='t'){
+			throw new Exception(self::ER_NO_DOC);
+		}			
+				
+		$ar = $this->getDbLink()->query_first(sprintf(
+		"SELECT
+			file_id,
+			file_name,
+			file_path,
+			file_signed,
+			application_id
+		FROM application_document_files
+		WHERE file_id=%s",
+		$fileId
+		));
+		if (!count($ar)){
+			throw new Exception(self::ER_NO_DOC);
+		}
+					
+		$rel_dir = Application_Controller::APP_DIR_PREF.$ar['application_id'].DIRECTORY_SEPARATOR.self::CONTRACT_FOLDER;
+		$postf = $isSig? '.sig':'';
+		if (file_exists($file = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_dir.DIRECTORY_SEPARATOR.$ar['file_id'].$postf)
+		||( 
+			defined('FILE_STORAGE_DIR_MAIN')
+			&&file_exists($file = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$rel_dir.DIRECTORY_SEPARATOR.$ar['file_id'].$postf)
+		)
+		){
+			$fileName = $ar['file_name'].$postf;
+			$appId = $ar['application_id'];
+			return TRUE;
+		}
+	}
+
+	private function download_contract_file_on_type($pm,$isSig){
+		$file = NULL;
+		$fileName = NULL;
+		$appId = 0;
+		if ($this->get_file_on_type($this->getExtDbVal($pm,'id'),$this->getExtDbVal($pm,'file_id'),$isSig,$file,$fileName,$appId)){
+			$mime = getMimeTypeOnExt($fileName);
+			ob_clean();
+			downloadFile($file, $mime,'attachment;',$fileName);
+			return TRUE;
+		}
+	}
+
+	public function download_contract_file($pm){
+		$this->download_contract_file_on_type($pm,FALSE);
+	}
+	public function download_contract_file_sig($pm){
+		$this->download_contract_file_on_type($pm,TRUE);
+	}
+	public function remove_contract_file($pm){
+		$file = NULL;
+		$fileName = NULL;
+		$appId = 0;
+		if ($this->get_file_on_type($this->getExtDbVal($pm,'id'),$this->getExtDbVal($pm,'file_id'),FALSE,$file,$fileName,$appId)){
+		
+			$this->getDbLinkMaster()->query("BEGIN");
+			try{
+				Application_Controller::removeAllZipFile($appId);
+				unlink($file);
+				
+				$file = NULL;
+				if ($this->get_file_on_type($this->getExtDbVal($pm,'id'),$this->getExtDbVal($pm,'file_id'),TRUE,$file,$fileName,$appId)){
+					unlink($file);
+				}
+
+				$this->getDbLinkMaster()->query(sprintf("DELETE FROM doc_flow_out_client_document_files WHERE file_id=%s",$this->getExtDbVal($pm,'file_id')));
+				$this->getDbLinkMaster()->query(sprintf("DELETE FROM application_document_files WHERE file_id=%s",$this->getExtDbVal($pm,'file_id')));
+				
+				$this->getDbLinkMaster()->query("COMMIT");
+			}
+			catch(Exception $e){
+				$this->getDbLinkMaster()->query("ROLLBACK");
+				throw $e;
+			}
+		}
+	}
 
 	private function add_application($applicationId,$docId){
 		$document_exists = FALSE;
@@ -233,8 +558,15 @@ class DocFlowOutClient_Controller extends ControllerSQL{
 			
 			if (!is_null($docId)){
 				$files_q_id = $this->getDbLink()->query(sprintf(
-					"SELECT fl.*
+					"SELECT
+						fl.*,
+						mdf.doc_flow_out_client_id,
+						m.date_time AS doc_flow_out_date_time,
+						reg.reg_number AS doc_flow_out_reg_number
 					FROM application_document_files AS fl
+					LEFT JOIN doc_flow_out_client_document_files AS mdf ON mdf.file_id=fl.file_id
+					LEFT JOIN doc_flow_out_client AS m ON m.id=mdf.doc_flow_out_client_id
+					LEFT JOIN doc_flow_out_client_reg_numbers AS reg ON reg.doc_flow_out_client_id=m.id
 					WHERE fl.application_id=%d AND NOT fl.deleted
 					ORDER BY document_type,document_id,file_name,deleted_dt ASC NULLS LAST",
 				$applicationId
@@ -348,7 +680,7 @@ class DocFlowOutClient_Controller extends ControllerSQL{
 		$this->getExtDbVal($pm,'id')
 		));
 		if (!count($ar) || ($_SESSION['role_id']!='admin' && $ar['user_id']!=$_SESSION['user_id']) || $ar['sent']=='t'){
-			throw new Exception('Forbidden!');
+			throw new Exception(self::ER_NO_DOC);
 		}
 		parent::delete($pm);
 	}

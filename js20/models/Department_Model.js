@@ -53,6 +53,16 @@ function Department_Model(options){
 	
 	options.fields.boss_employee_id = new FieldInt("boss_employee_id",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.email = new FieldString("email",filed_options);
+	options.fields.email.getValidator().setMaxLength('50');
+	
 			
 		Department_Model.superclass.constructor.call(this,id,options);
 }

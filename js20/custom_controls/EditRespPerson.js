@@ -14,7 +14,12 @@
 function EditRespPerson(id,options){
 	options = options || {};	
 
-	options.viewClass = ViewRespPerson;
+	options.viewClass = ClientResponsablePersonEdit;//ViewRespPerson;
+	options.viewOptions = {
+		"clientTypePerson":true,
+		"calcPercent":true,
+		"showPost":true,
+	};
 	options.viewTemplate = "EditRespPerson";
 	options.headTitle = "Редактирование данных физического лица";
 	
@@ -54,7 +59,7 @@ EditRespPerson.prototype.formatValue = function(val){
 	return res;	
 }
 EditRespPerson.prototype.getFillPercent = function(){
-	return (
+	var percent = (
 		this.m_minInf? 100 :
 		(
 			((this.m_valueJSON && this.m_valueJSON["name"])? 34:0)
@@ -62,6 +67,15 @@ EditRespPerson.prototype.getFillPercent = function(){
 			+((this.m_valueJSON && this.m_valueJSON.tel)? 33:0)
 		)
 	);
+	this.setAttr("title","Заполнено на "+percent+"%");
+	if (percent>0 && percent<100){
+		DOMHelper.addClass(this.m_node,"null-ref");
+	}
+	else{
+		DOMHelper.delClass(this.m_node,"null-ref");
+	}
+	
+	return percent;
 }
 
 EditRespPerson.prototype.closeSelect = function(){

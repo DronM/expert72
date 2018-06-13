@@ -82,8 +82,27 @@ CREATE OR REPLACE VIEW applications_dialog AS
 		users_ref(users) AS users_ref,
 		
 		d.auth_letter,
-		d.auth_letter_file
+		d.auth_letter_file,
 		
+		/*
+		CASE WHEN folders.files IS NOT NULL THEN
+			json_agg(
+				json_build_object(
+					'fields',json_build_object('id',folders.folder_id,'descr',folders.folder_descr),
+					'parent_id',NULL,
+					'files',folders.files
+				)
+			)
+		ELSE NULL
+		END AS doc_folders,
+		*/
+		folders.files AS doc_folders,
+		
+		contr.work_start_date,
+		contr.contract_number,
+		contr.contract_date,
+		contr.expertise_result_number,
+		contr.expertise_result_date
 		
 	FROM applications AS d
 	LEFT JOIN offices ON offices.id=d.office_id
@@ -103,7 +122,41 @@ CREATE OR REPLACE VIEW applications_dialog AS
 	) AS h_max ON h_max.application_id=d.id
 	LEFT JOIN application_processes st
 		ON st.application_id=h_max.application_id AND st.date_time = h_max.date_time
-	
+	LEFT JOIN
+		(
+		SELECT
+			doc_att.application_id,
+			json_agg(
+				json_build_object(
+					'fields',json_build_object('id',doc_att.folder_id,'descr',doc_att.folder_descr),
+					'parent_id',NULL,
+					'files',doc_att.files
+				)
+			) AS files
+		FROM
+		(SELECT
+			adf.application_id,
+			adf.file_path AS folder_descr,
+			app_fd.id AS folder_id,
+			json_agg(
+				json_build_object(
+					'file_id',adf.file_id,
+					'file_name',adf.file_name,
+					'file_size',adf.file_size,
+					'file_signed',adf.file_signed,
+					'file_uploaded','true',
+					'file_path',adf.file_path,
+					'date_time',adf.date_time
+				)
+			) AS files
+		FROM application_document_files adf
+		LEFT JOIN application_doc_folders AS app_fd ON app_fd.name=adf.file_path
+		WHERE adf.document_type='documents'
+		GROUP BY adf.application_id,adf.file_path,app_fd.id
+		ORDER BY app_fd.id	
+		) AS doc_att
+		GROUP BY doc_att.application_id
+	) AS folders ON folders.application_id=d.id
 	;
 	
 ALTER VIEW applications_dialog OWNER TO ;

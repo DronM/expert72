@@ -5,6 +5,10 @@
 CREATE OR REPLACE FUNCTION doc_flow_approvements_process()
   RETURNS trigger AS
 $BODY$
+DECLARE
+	v_doc_flow_type_id int;
+	v_id int;
+	v_reg_number text;
 BEGIN
 	IF (TG_WHEN='AFTER' AND TG_OP='INSERT') THEN
 		--v_ref = doc_flow_approvements_ref((SELECT doc_flow_approvements FROM doc_flow_approvements WHERE id=NEW.id));
@@ -67,7 +71,7 @@ BEGIN
 				'Ознакомиться с результатом согласования'
 			);
 			
-			--сменим статус при закрытии
+			--сменим статус при закрытии			
 			INSERT INTO doc_flow_out_processes (
 				doc_flow_out_id,
 				date_time,
@@ -84,6 +88,36 @@ BEGIN
 				NEW.doc_flow_importance_type_id,
 				NEW.end_date_time
 			);
+			
+			--Если это исх.письмо по контракту - сразу зарегистрируем
+			IF ((NEW.close_result)::text)::doc_flow_out_states='approved'::doc_flow_out_states
+			AND NEW.subject_doc->>'dataType'='doc_flow_out' THEN
+				SELECT
+					t.doc_flow_type_id,
+					t.reg_number,
+					t.id
+				INTO 
+					v_doc_flow_type_id,
+					v_reg_number,
+					v_id
+				FROM doc_flow_out t				
+				WHERE t.id = (NEW.subject_doc->'keys'->>'id')::int;
+				
+				IF (v_doc_flow_type_id=(pdfn_doc_flow_types_contr()->'keys'->>'id')::int) THEN
+					IF v_reg_number IS NULL THEN
+						UPDATE doc_flow_out
+						SET reg_number=doc_flow_out_next_num(v_doc_flow_type_id)
+						WHERE id=v_id;
+					END IF;
+					
+					INSERT INTO doc_flow_registrations
+					(date_time,subject_doc,employee_id,comment_text)
+					VALUES (
+					now()+'1 second'::interval,NEW.subject_doc,NEW.employee_id,'Создано автоматически'
+					);
+				END IF;
+			END IF;
+			
 		END IF;
 							
 		RETURN NEW;

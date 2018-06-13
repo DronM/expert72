@@ -485,6 +485,8 @@ class User_Controller extends ControllerSQL{
 		$_SESSION['color_palette'] 	= $ar['color_palette'];				
 		if ($ar['role_id']!='client'){
 			$_SESSION['employees_ref'] = $ar['employees_ref'];
+			$_SESSION['departments_ref'] = $ar['departments_ref'];
+			$_SESSION['department_boss'] = ($ar['department_boss']=='t');
 		}
 		
 		//global filters				

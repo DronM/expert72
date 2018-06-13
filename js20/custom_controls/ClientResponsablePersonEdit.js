@@ -16,32 +16,40 @@ function ClientResponsablePersonEdit(id,options){
 
 	self = this;
 	options.addElement = function(){
-		var id = this.getId();
+		var id = this.getId();		
+		var bs = window.getBsCol(4);
+		
 		if (!options.clientTypePerson){
 			this.addElement(new EditString(id+":dep",{
 				"labelCaption":"Отдел:",
 				"attrs":{"autofocus":true},
-				"maxLength":"150"
+				"maxLength":"150",
+				"autofocus":true
 			}));
 		}		
 		
 		this.addElement(new EditString(id+":name",{
+			"labelClassName":"control-label "+bs+( options.calcPercent? " percentcalc":""),
 			"labelCaption":"ФИО:",
-			"maxLength":"150"
+			"maxLength":"150",
+			"autofocus":(options.clientTypePerson===true)
 		}));
 		
-		if (!options.clientTypePerson){
+		if (options.showPost || !options.clientTypePerson){
 			this.addElement(new EditString(id+":post",{
+				"labelClassName":"control-label "+bs+( options.showPost? " percentcalc":""),
 				"labelCaption":"Должность:",
 				"maxLength":"150"
 			}));
 		}
 		
 		this.addElement(new EditPhone(id+":tel",{
+			"labelClassName":"control-label "+bs+( options.calcPercent? " percentcalc":""),
 			"labelCaption":"Телефон:"
 		}));
 		
 		this.addElement(new EditEmail(id+":email",{
+			"labelClassName":"control-label "+bs+( options.calcPercent? " percentcalc":""),
 			"labelCaption":"Эл.почта:"
 		}));
 
@@ -53,6 +61,14 @@ function ClientResponsablePersonEdit(id,options){
 	}
 	
 	ClientResponsablePersonEdit.superclass.constructor.call(this,id,options);
+	
+	if (options.calcPercent){
+		this.getElement("name").setRequired(true);
+		this.getElement("tel").setRequired(true);
+		this.getElement("email").setRequired(true);
+	}
+	
+	
 }
 //ViewObjectAjx,ViewAjxList
 extend(ClientResponsablePersonEdit,EditJSON);

@@ -140,6 +140,7 @@ function ApplicationClientEdit(id,options){
 		
 
 		this.addElement(new ClientPostAddressEdit(id+":post_address",{
+			"enabled":options.enabled,
 			"attrs":{"percentcalc":!options.minInf},
 			"labelClassName": !options.minInf? ("control-label percentcalc "+bs) : undefined,
 			"mainView":this.m_mainView,
@@ -213,11 +214,12 @@ function ApplicationClientEdit(id,options){
 			}));	
 			this.addElement(new EditFile(id+":auth_letter_file",{
 				"attrs":{"percentcalc":"false","notForValue":"true"},
-				"labelClassName": "control-label "+window.getBsCol(2),//percentcalc
-				"contClassName":"form-group "+window.getBsCol(6),
+				"labelClassName": "control-label "+window.getBsCol(4),//percentcalc
+				//"contClassName":"form-group "+window.getBsCol(6),
 				"labelCaption":"Файлы (бланк и ЭЦП)",
-				"editContClassName":"input-group "+window.getBsCol(10),
+				"editContClassName":"input-group "+window.getBsCol(8),
 				"template":window.getApp().getTemplate("EditFileApp"),
+				"templateOptions":{"bsColClass":window.getBsCol(6)},
 				"addControls":null,
 				"mainView":this,
 				"separateSignature":true,
@@ -381,7 +383,7 @@ ApplicationClientEdit.prototype.getValueJSON = function(){
 }
 
 ApplicationClientEdit.prototype.setAuthLetterRequired = function(init){
-	if (!this.m_isApplicant&&!this.m_isDeveloper&&!this.m_isCustomer)return;
+	if (this.m_mainView.m_readOnly|| (!this.m_isApplicant&&!this.m_isDeveloper&&!this.m_isCustomer))return;
 	var DIF_FIELD = "name";
 	var appl = this.m_mainView.getElement("applicant");
 	var appl_v = appl.getElement(DIF_FIELD).getValue();
@@ -395,10 +397,13 @@ ApplicationClientEdit.prototype.setAuthLetterRequired = function(init){
 		&& appl_f!=(dev_v? dev_v.toLowerCase() : "")
 	);
 	appl.getElement("auth_letter").setEnabled(auth_req);
-	appl.getElement("auth_letter").setAttr("percentCalc",auth_req);
+	appl.getElement("auth_letter").setAttr("percentcalc", (auth_req && cust_v!=undefined && dev_v!=undefined) );
 	appl.getElement("auth_letter_file").setEnabled(auth_req);
-	appl.getElement("auth_letter_file").setAttr("percentCalc",auth_req);
-	if (!init && !old_auth_req && auth_req && cust_v && dev_v){
+	
+	//В расчет процента только если все заполнено
+	appl.getElement("auth_letter_file").setAttr("percentcalc", (auth_req && cust_v!=undefined && dev_v!=undefined) );
+	
+	if (!init && !old_auth_req && auth_req && cust_v!=undefined && dev_v!=undefined){
 		window.showWarn("Заявитель не является ни заказчиком ни застройщиком. Необходимо прикрепить доверенность.");
 	}
 	else if (!init && old_auth_req && !auth_req){

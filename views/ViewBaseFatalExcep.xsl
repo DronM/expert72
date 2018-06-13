@@ -25,14 +25,13 @@
 			    <div class="container-fluid">
 				<div class="panel panel-flat" style="position:relative;top:50px;width:400px;margin:0 auto;">			    
 					<div class="panel-heading">
-						<h1>Фатальная ошибка</h1>
+						<h1>Ошибка <strong><xsl:value-of select="/document/model[@id='ModelServResponse']/row[1]/result"/></strong></h1>
 					</div>
 					<div class="panel-body">
 					    	<h3>
-					    	<xsl:value-of select="/document/model[@id='ModelServResponse']/row[1]/result"/>:
 					    	<xsl:value-of select="/document/model[@id='ModelServResponse']/row[1]/descr"/>
 					    	</h3>
-					    	<div>Необходима <a href="{/document/model[@id='ModelVars']/row[1]/basePath}">авторизация</a>.</div>
+					    	<div>Необходима повторная <a href="{/document/model[@id='ModelVars']/row[1]/basePath}">авторизация</a>.</div>
 					</div>
 				</div>
 			    </div>

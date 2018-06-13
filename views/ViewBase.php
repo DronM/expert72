@@ -112,6 +112,7 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'core/DOMHelper.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'core/DateHelper.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'core/EventHelper.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'core/FatalException.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'core/ConstantManager.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'core/ServConnector.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'core/Response.js'));
@@ -1126,7 +1127,7 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ApplicationDialog_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/rs/ApplicationDialog_View.rs_ru.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ViewBankAcc.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ViewRespPerson.js'));
+		
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ViewPersonIdPaper.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ViewPersonRegistrPaper.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ViewKladr.js'));
@@ -1201,6 +1202,8 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ApplicationProcessList_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ProjectManager_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ServiceList_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ApplicationDocFolderList_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/DocFolder_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'tmpl/App.templates.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/App.enums.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/App.predefinedItems.js'));
@@ -1234,6 +1237,7 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/DocFlowTypeSelect.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/EmployeeEditRef.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/DepartmentSelect.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ApplicationDocFolderSelect.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/DepartmentEditRef.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ConstructionTypeSelect.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/FundSourceSelect.js'));
@@ -1537,6 +1541,10 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ApplicationProcessList_Model.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/Service_Controller.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/Service_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/Enum_doc_flow_out_client_types.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/EnumGridColumn_doc_flow_out_client_types.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ApplicationDocFolder_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/ApplicationDocFolder_Controller.js'));
 	
 			if (isset($_SESSION['scriptId'])){
 				$script_id = $_SESSION['scriptId'];
@@ -1549,7 +1557,9 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->getVarModel()->addField(new Field('role_id',DT_STRING));
 		$this->getVarModel()->addField(new Field('user_name',DT_STRING));
 		if (isset($_SESSION['role_id']) && $_SESSION['role_id']!='client'){
-			$this->getVarModel()->addField(new Field('employees_ref',DT_STRING));			
+			$this->getVarModel()->addField(new Field('employees_ref',DT_STRING));
+			$this->getVarModel()->addField(new Field('departments_ref',DT_STRING));
+			$this->getVarModel()->addField(new Field('department_boss',DT_STRING));												
 		}
 		if (isset($_SESSION['role_id'])){
 			$this->getVarModel()->addField(new Field('user_name_full',DT_STRING));
@@ -1593,6 +1603,8 @@ class ViewBase extends ViewHTMLXSLT {
 			
 			if ($_SESSION['role_id']!='client'){
 				$this->setVarValue('employees_ref',$_SESSION['employees_ref']);
+				$this->setVarValue('departments_ref',$_SESSION['departments_ref']);
+				$this->setVarValue('department_boss',$_SESSION['department_boss']);
 			}
 		}
 		

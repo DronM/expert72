@@ -65,6 +65,12 @@ extend(Service_Controller,ControllerObjServer);
 	
 	var options = {};
 	
+	var field = new FieldInt("expertise_day_count",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
 	var field = new FieldString("contract_postf",options);
 	
 	pm.addField(field);
@@ -104,6 +110,12 @@ extend(Service_Controller,ControllerObjServer);
 	var options = {};
 	
 	var field = new FieldInt("work_day_count",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldInt("expertise_day_count",options);
 	
 	pm.addField(field);
 	
@@ -163,6 +175,9 @@ extend(Service_Controller,ControllerObjServer);
 	var f_opts = {};
 	
 	pm.addField(new FieldInt("work_day_count",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldInt("expertise_day_count",f_opts));
 	var f_opts = {};
 	
 	pm.addField(new FieldString("contract_postf",f_opts));

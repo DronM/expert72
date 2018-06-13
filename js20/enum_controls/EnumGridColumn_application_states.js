@@ -24,11 +24,11 @@ function EnumGridColumn_application_states(options){
 
 	options.multyLangValues["ru"]["checking"] = "Проверка анкеты";
 
-	options.multyLangValues["ru"]["returned"] = "Отказ по заявлению";
+	options.multyLangValues["ru"]["returned"] = "Возврат без рассмотрения";
 
 	options.multyLangValues["ru"]["closed_no_expertise"] = "Возврат без экспертизы";
 
-	options.multyLangValues["ru"]["waiting_for_contract"] = "Подписание контракта";
+	options.multyLangValues["ru"]["waiting_for_contract"] = "Контракт по заявлению";
 
 	options.multyLangValues["ru"]["waiting_for_pay"] = "Ожидание оплаты";
 

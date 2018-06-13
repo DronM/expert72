@@ -4,7 +4,8 @@
 function ClientPostAddressEdit(id,options){
 	options = options || {};
 	var self = this;
-	options.buttonOpen = new ButtonCtrl(id+":copy-from-legal",{
+	options.buttonSelect = new ButtonCtrl(id+":copy-from-legal",{
+		"enabled":options.enabled,
 		"glyph":"glyphicon-arrow-left",
 		"title":"заполнить как юридический",
 		"onClick":function(){
@@ -29,11 +30,11 @@ ClientPostAddressEdit.prototype.copyFromLegal = function(){
 }
 
 ClientPostAddressEdit.prototype.setFillTitle = function(v){
-	this.getButtonOpen().setAttr("title",v);
+	this.getButtonSelect().setAttr("title",v);
 }
 
 ClientPostAddressEdit.prototype.setFillVisible = function(v){
-	this.getButtonOpen().setVisible(v);
+	this.getButtonSelect().setVisible(v);
 }
 
 function ClientLegalAddressEdit(id,options){

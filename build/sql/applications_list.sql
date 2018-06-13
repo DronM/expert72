@@ -58,7 +58,10 @@ CREATE OR REPLACE VIEW applications_list AS
 		WHERE in_docs.application_id=l.id AND NOT coalesce(in_docs.viewed,FALSE)
 		) AS unviewed_in_docs,
 		
-		contr.contract_number
+		contr.contract_number,
+		contr.contract_date,
+		contr.expertise_result_number,
+		contr.expertise_result_date
 				
 	FROM applications AS l
 	LEFT JOIN offices_list AS off ON off.id=l.office_id

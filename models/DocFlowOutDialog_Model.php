@@ -270,6 +270,30 @@ class DocFlowOutDialog_Model extends ModelSQL{
 		$f_doc_flow_out_processes_chain=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"doc_flow_out_processes_chain",$f_opts);
 		$this->addField($f_doc_flow_out_processes_chain);
 		//********************
+		
+		//*** Field expertise_result ***
+		$f_opts = array();
+		$f_opts['id']="expertise_result";
+				
+		$f_expertise_result=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expertise_result",$f_opts);
+		$this->addField($f_expertise_result);
+		//********************
+		
+		//*** Field expertise_reject_types_ref ***
+		$f_opts = array();
+		$f_opts['id']="expertise_reject_types_ref";
+				
+		$f_expertise_reject_types_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expertise_reject_types_ref",$f_opts);
+		$this->addField($f_expertise_reject_types_ref);
+		//********************
+		
+		//*** Field expertise_reject_type_id ***
+		$f_opts = array();
+		$f_opts['id']="expertise_reject_type_id";
+				
+		$f_expertise_reject_type_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expertise_reject_type_id",$f_opts);
+		$this->addField($f_expertise_reject_type_id);
+		//********************
 	
 		$order = new ModelOrderSQL();		
 		$this->setDefaultModelOrder($order);		

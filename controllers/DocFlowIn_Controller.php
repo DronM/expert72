@@ -270,6 +270,25 @@ class DocFlowIn_Controller extends DocFlow_Controller{
 		$this->addPublicMethod($pm);
 
 			
+		$pm = new PublicMethod('get_file_sig');
+		
+				
+	$opts=array();
+	
+		$opts['length']=36;
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtString('file_id',$opts));
+	
+				
+	$opts=array();
+	
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtInt('doc_id',$opts));
+	
+			
+		$this->addPublicMethod($pm);
+
+			
 		$pm = new PublicMethod('get_next_num');
 		
 				

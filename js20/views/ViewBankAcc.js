@@ -8,12 +8,18 @@ function ViewBankAcc(id,options){
 	
 	options.addElement = function(){
 		var id = this.getId();
+		
+		var bs = window.getBsCol(4);
+		
 		this.addElement(new BankEditRef(id+":bank",{
+			"labelClassName":"control-label "+bs+( options.calcPercent? " percentcalc":""),
 			"keyIds":["bik"],
-			"cmdOpen":false
+			"cmdOpen":false,
+			"attrs":{"autofocus":"true"}
 		}));
 	
 		this.addElement(new EditBankAcc(id+":acc_number",{
+			"labelClassName":"control-label "+bs+( options.calcPercent? " percentcalc":""),
 			"labelCaption":"Номер счета:"
 		}));
 	}	

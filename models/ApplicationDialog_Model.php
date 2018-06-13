@@ -429,6 +429,54 @@ class ApplicationDialog_Model extends ModelSQL{
 		$f_users_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"users_ref",$f_opts);
 		$this->addField($f_users_ref);
 		//********************
+		
+		//*** Field doc_folders ***
+		$f_opts = array();
+		$f_opts['id']="doc_folders";
+				
+		$f_doc_folders=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"doc_folders",$f_opts);
+		$this->addField($f_doc_folders);
+		//********************
+		
+		//*** Field work_start_date ***
+		$f_opts = array();
+		$f_opts['id']="work_start_date";
+				
+		$f_work_start_date=new FieldSQLDate($this->getDbLink(),$this->getDbName(),$this->getTableName(),"work_start_date",$f_opts);
+		$this->addField($f_work_start_date);
+		//********************
+		
+		//*** Field contract_number ***
+		$f_opts = array();
+		$f_opts['id']="contract_number";
+				
+		$f_contract_number=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"contract_number",$f_opts);
+		$this->addField($f_contract_number);
+		//********************
+		
+		//*** Field contract_date ***
+		$f_opts = array();
+		$f_opts['id']="contract_date";
+				
+		$f_contract_date=new FieldSQLDate($this->getDbLink(),$this->getDbName(),$this->getTableName(),"contract_date",$f_opts);
+		$this->addField($f_contract_date);
+		//********************
+		
+		//*** Field expertise_result_number ***
+		$f_opts = array();
+		$f_opts['id']="expertise_result_number";
+				
+		$f_expertise_result_number=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expertise_result_number",$f_opts);
+		$this->addField($f_expertise_result_number);
+		//********************
+		
+		//*** Field expertise_result_date ***
+		$f_opts = array();
+		$f_opts['id']="expertise_result_date";
+				
+		$f_expertise_result_date=new FieldSQLDate($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expertise_result_date",$f_opts);
+		$this->addField($f_expertise_result_date);
+		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}
 

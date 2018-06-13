@@ -57,6 +57,8 @@ function EnumGridColumn_data_types(options){
 	options.multyLangValues["ru"]["expertise_reject_types"] = "Виды отрицательных заключений";
 
 	options.multyLangValues["ru"]["services"] = "Услуги";
+
+	options.multyLangValues["ru"]["contracts"] = "Контракты";
 EnumGridColumn_data_types.superclass.constructor.call(this,options);
 	
 }

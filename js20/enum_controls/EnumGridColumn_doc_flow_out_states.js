@@ -30,7 +30,7 @@ function EnumGridColumn_doc_flow_out_states(options){
 
 	options.multyLangValues["ru"]["not_confirmed"] = "Не утвержден";
 
-	options.multyLangValues["ru"]["registered"] = "Зарегистрировано";
+	options.multyLangValues["ru"]["registered"] = "Отправлено";
 
 	options.multyLangValues["ru"]["registering"] = "На регистрации";
 EnumGridColumn_doc_flow_out_states.superclass.constructor.call(this,options);

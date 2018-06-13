@@ -17,6 +17,9 @@ function FileUploaderApplication_View(id,options){
 	
 	options.readOnly = (options.readOnly!=undefined)? options.readOnly:false;
 	
+	options.constDownloadTypes = "client_download_file_types";
+	options.constDownloadMaxSize = "client_download_file_max_size";
+	
 	this.m_mainView = options.mainView;
 	this.m_documentType = options.documentType;
 	this.m_documentTitle = options.documentTitle;
@@ -35,6 +38,10 @@ function FileUploaderApplication_View(id,options){
 		"isClient":true	
 	};
 	options.allowIdList = true;
+	
+	options.setFileOptions = function(fileOpts,file){
+		self.setFileOptions(fileOpts,file);
+	}
 	
 	FileUploaderApplication_View.superclass.constructor.call(this,id,options);
 }
@@ -97,7 +104,6 @@ FileUploaderApplication_View.prototype.deleteFileFromServer = function(fileId,it
 }
 
 FileUploaderApplication_View.prototype.downloadFile = function(btnCtrl){
-//return;
 	var contr = new Application_Controller();
 	var pm = contr.getPublicMethod("get_file");
 	pm.setFieldValue("id",btnCtrl.getAttr("file_id"));
@@ -133,4 +139,27 @@ FileUploaderApplication_View.prototype.setEnabled = function(v){
 	if (!v){
 		$(".uploadedFile").removeAttr("disabled");
 	}
+}
+
+FileUploaderApplication_View.prototype.setFileOptions = function(fileOpts,file){
+	//this.m_mainView.getModel().fieldExists("work_start_date")
+	/*
+	if (!this.m_work_start_date_set){
+		this.m_work_start_date_set = true;
+		this.m_work_start_date = this.m_mainView.getModel().fieldExists("work_start_date")? this.m_mainView.getModel().getFieldValue("work_start_date"):undefined;
+	}
+	if (this.m_work_start_date && this.m_work_start_date<upl_dt){
+	*/
+	if (file.doc_flow_out){
+		//id,date_time,reg_number
+		fileOpts.refTitle = "Загружен документом №"+file.doc_flow_out.reg_number+" от "+DateHelper.format(DateHelper.strtotime(file.doc_flow_out.date_time),"d/m/y");	
+		fileOpts.refClass = "uploadedAfterPost";	
+	}
+	else{
+	
+		fileOpts.refTitle = "Загружен при подаче заявления";
+		fileOpts.refClass = "";	
+	}
+		
+	fileOpts.file_date_time_formatted = DateHelper.format(DateHelper.strtotime(file.date_time),"d/m/y");	
 }

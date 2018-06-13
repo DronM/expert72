@@ -186,6 +186,15 @@ function DocFlowOutList_Model(options){
 	options.fields.to_applications_ref = new FieldJSON("to_applications_ref",filed_options);
 	
 			
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.to_constr_name = new FieldString("to_constr_name",filed_options);
+	
 			
 			
 				

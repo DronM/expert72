@@ -14,9 +14,26 @@
 				<p>Добавьте файлы и затем нажмите "загрузить".</p>
 				
 				<div id="upload-container">
-					<div id="{{id}}:file-upload" class="btn bg-{{COLOR_CLASS}}" type="button" title="Загрузить на сервер добавленные файлы">Загрузить все файлы  <span id="{{id}}:total_upload_files" class="badge badge-danger" title="Количество файлов для загрузки">0</span></div>
+					<div id="{{id}}:file-upload" style="display:inline;" class="btn bg-{{COLOR_CLASS}}" type="button" title="Загрузить на сервер добавленные файлы">Загрузить все файлы  <span id="{{id}}:total_upload_files" class="badge badge-danger" title="Количество файлов для загрузки">0</span></div>
+					{{#attFromTemplate}}
+					<div id="{{id}}:attFromTemplate" style="display:inline;">
+					</div>
+					{{/attFromTemplate}}
+					{{#order1c}}
+					<div id="{{id}}:order1c" style="display:inline;" title="Выписать новый счет в 1с">
+						<img id="{{id}}:order1c:wait" src="img/wait-sm.gif">
+						</img>
+					</div>
+					{{/order1c}}
+					{{#akt1c}}
+					<div id="{{id}}:akt1c" title="Выписать новый акт в 1с">
+						<img id="{{id}}:akt1c:wait" src="img/wait-sm.gif">
+						</img>
+					</div>
+					{{/akt1c}}
+					
 	
-					<div class="progress hide" id="{{id}}:upload-progress">
+					<div class="progress hide" id="{{id}}:upload-progress" style="margin-top:7px;">
 						<div class="progress-bar progress-bar-success" role="progressbar"
 						aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%">
 							<span id="{{id}}:upload-progress-val"></span>
@@ -26,22 +43,6 @@
 				{{/isNotSent}}
 				<div class="uploader-file-list-doc" item_id="doc">
 					{{#isNotSent}}
-					{{#attFromTemplate}}
-					<div id="{{id}}:attFromTemplate">
-					</div>
-					{{/attFromTemplate}}
-					{{#order1c}}
-					<div id="{{id}}:order1c" style="margin-top:10px;">
-						<img id="{{id}}:order1c:wait" src="img/wait-sm.gif">
-						</img>
-					</div>
-					{{/order1c}}
-					{{#akt1c}}
-					<div id="{{id}}:akt1c">
-						<img id="{{id}}:akt1c:wait" src="img/wait-sm.gif">
-						</img>
-					</div>
-					{{/akt1c}}
 					
 					<div id="{{id}}:file-add" class="uploader-file-add-doc btn btn-sm" title="Добавить файл">
 						<i class="glyphicon glyphicon-plus"></i>

@@ -31,6 +31,9 @@ function DocFlowOutClient_Controller(options){
 	this.addGetList();
 	this.add_get_application_dialog();
 	this.add_remove_file();
+	this.add_remove_contract_file();
+	this.add_download_contract_file();
+	this.add_download_contract_file_sig();
 		
 }
 extend(DocFlowOutClient_Controller,ControllerObjServer);
@@ -39,6 +42,10 @@ extend(DocFlowOutClient_Controller,ControllerObjServer);
 	DocFlowOutClient_Controller.superclass.addInsert.call(this);
 	
 	var pm = this.getInsert();
+	
+	pm.setRequestType('post');
+	
+	pm.setEncType(ServConnector.prototype.ENCTYPES.MULTIPART);
 	
 	var options = {};
 	options.primaryKey = true;options.autoInc = true;
@@ -94,7 +101,18 @@ extend(DocFlowOutClient_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+		
+	options.enumValues = 'app,contr_resp,contr_return,contr_other';
+	var field = new FieldEnum("doc_flow_out_client_type",options);
+	
+	pm.addField(field);
+	
 	pm.addField(new FieldInt("ret_id",{}));
+	
+		var options = {};
+				
+		pm.addField(new FieldText("contract_files",options));
 	
 	
 }
@@ -102,6 +120,10 @@ extend(DocFlowOutClient_Controller,ControllerObjServer);
 			DocFlowOutClient_Controller.prototype.addUpdate = function(){
 	DocFlowOutClient_Controller.superclass.addUpdate.call(this);
 	var pm = this.getUpdate();
+	
+	pm.setRequestType('post');
+	
+	pm.setEncType(ServConnector.prototype.ENCTYPES.MULTIPART);
 	
 	var options = {};
 	options.primaryKey = true;options.autoInc = true;
@@ -159,6 +181,18 @@ extend(DocFlowOutClient_Controller,ControllerObjServer);
 	var field = new FieldBool("sent",options);
 	
 	pm.addField(field);
+	
+	var options = {};
+		
+	options.enumValues = 'app,contr_resp,contr_return,contr_other';
+	
+	var field = new FieldEnum("doc_flow_out_client_type",options);
+	
+	pm.addField(field);
+	
+		var options = {};
+				
+		pm.addField(new FieldText("contract_files",options));
 	
 	
 }
@@ -225,6 +259,9 @@ extend(DocFlowOutClient_Controller,ControllerObjServer);
 	var f_opts = {};
 	
 	pm.addField(new FieldBool("sent",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldEnum("doc_flow_out_client_type",f_opts));
 }
 
 			DocFlowOutClient_Controller.prototype.add_get_application_dialog = function(){
@@ -262,6 +299,87 @@ extend(DocFlowOutClient_Controller,ControllerObjServer);
 		options.required = true;
 	
 		pm.addField(new FieldInt("application_id",options));
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		options.maxlength = "36";
+	
+		pm.addField(new FieldString("file_id",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			DocFlowOutClient_Controller.prototype.add_remove_contract_file = function(){
+	var opts = {"controller":this};
+	
+	var pm = new PublicMethodServer('remove_contract_file',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("id",options));
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		options.maxlength = "36";
+	
+		pm.addField(new FieldString("file_id",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			DocFlowOutClient_Controller.prototype.add_download_contract_file = function(){
+	var opts = {"controller":this};
+	
+	var pm = new PublicMethodServer('download_contract_file',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("id",options));
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		options.maxlength = "36";
+	
+		pm.addField(new FieldString("file_id",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			DocFlowOutClient_Controller.prototype.add_download_contract_file_sig = function(){
+	var opts = {"controller":this};
+	
+	var pm = new PublicMethodServer('download_contract_file_sig',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("id",options));
 	
 				
 	

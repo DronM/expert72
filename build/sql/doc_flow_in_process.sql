@@ -8,11 +8,12 @@ $BODY$
 BEGIN
 	IF (TG_WHEN='BEFORE' AND TG_OP='INSERT') THEN
 		IF
-			(const_client_lk_val() OR const_debug_val())
+			(NOT const_client_lk_val() OR const_debug_val())
 			AND NEW.reg_number IS NULL
 			AND (
-				--заявление || ответы на замечания
-				NEW.doc_flow_type_id=1 OR NEW.doc_flow_type_id=3
+				--ЛЮБОЕ ОТ КЛИЕНТА
+				--doc_flow_type_id=1 OR NEW.doc_flow_type_id=3
+				NEW.from_application_id IS NOT NULL
 			)
 		THEN
 			--назначим номер

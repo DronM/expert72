@@ -21,6 +21,9 @@
 require_once('common/downloader.php');
 require_once(FRAME_WORK_PATH.'basic_classes/ModelVars.php');
 
+require_once(USER_CONTROLLERS_PATH.'Application_Controller.php');
+require_once(USER_CONTROLLERS_PATH.'DocFlow_Controller.php');
+
 class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@parentId"/>{
 	public function __construct($dbLinkMaster=NULL,$dbLink=NULL){
 		parent::__construct($dbLinkMaster,$dbLink);<xsl:apply-templates/>
@@ -31,13 +34,14 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 </xsl:template>
 
 <xsl:template name="extra_methods">
-	public function get_file($pm){
+	private function get_file_on_type($pm,$isSig){
 		$user_constr = ($_SESSION['role_id']=='client')?
 				(" AND user_id=".$_SESSION['user_id']) : '';
 				
 		$ar = $this->getDbLink()->query_first(sprintf(
 			"SELECT
-				files
+				files,
+				application_id
 			FROM doc_flow_in_client
 			WHERE id=%d".$user_constr,
 			$this->getExtDbVal($pm,'doc_id')
@@ -49,18 +53,24 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		$new_files = [];
 		$found = FALSE;
 		$file_name = NULL;
+		$file_path = NULL;
 		foreach($files as $file){
 			if ($file->file_id==$file_id){
 				$file_name = $file->file_name;
+				$file_path = $file->file_path;
 				$found = TRUE;
 			}
 			else{
 				array_push($new_files,$file);
 			}
 		}
+		//
+		$rel_file = Application_Controller::APP_DIR_PREF.$ar['application_id'].DIRECTORY_SEPARATOR.
+				($file_path? $file_path : DocFlow_Controller::getDefAppDir('out') ) .DIRECTORY_SEPARATOR.
+				$file_id.($isSig? '.sig':'');
 		if (!$found ||
-			(!file_exists($fl = DOC_FLOW_FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$file_id)
-			&amp;&amp; ( defined('DOC_FLOW_FILE_STORAGE_DIR_MAIN') &amp;&amp; !file_exists($fl = DOC_FLOW_FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$file_id) )
+			(!file_exists($fl = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_file)
+			&amp;&amp; ( defined('FILE_STORAGE_DIR_MAIN') &amp;&amp; !file_exists($fl = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$rel_file) )
 			) 
 		){
 			throw new Exception(self::ER_STORAGE_FILE_NOT_FOUND);
@@ -68,10 +78,16 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 	
 		$mime = getMimeTypeOnExt($file_name);
 		ob_clean();
-		downloadFile($fl, $mime,'attachment;',$file_name);
+		downloadFile($fl, $mime,'attachment;',$file_name.($isSig? '.sig':''));
 		return TRUE;	
 	}
 
+	public function get_file($pm){
+		$this->get_file_on_type($pm,FALSE);
+	}
+	public function get_file_sig($pm){
+		$this->get_file_on_type($pm,TRUE);
+	}
 
 	public function set_viewed($pm){
 		if ($_SESSION['role_id']=='client'){

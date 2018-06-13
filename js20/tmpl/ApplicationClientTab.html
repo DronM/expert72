@@ -67,7 +67,9 @@
 
 	<div class="panel panel-flat">
 		<div class="panel-heading">
-			<h5 class="panel-title">Контакты</h5>
+			<h5 class="panel-title">
+			{{#isApplicant}}<span style="font-size:120%;color:red;">*</span>{{/isApplicant}}Контакты
+			</h5>
 		</div>
 		<div class="panel-body">
 			<div id="{{id}}:responsable_persons">

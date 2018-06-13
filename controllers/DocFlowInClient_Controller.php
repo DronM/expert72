@@ -26,6 +26,9 @@ require_once(FRAME_WORK_PATH.'basic_classes/FieldExtXML.php');
 require_once('common/downloader.php');
 require_once(FRAME_WORK_PATH.'basic_classes/ModelVars.php');
 
+require_once(USER_CONTROLLERS_PATH.'Application_Controller.php');
+require_once(USER_CONTROLLERS_PATH.'DocFlow_Controller.php');
+
 class DocFlowInClient_Controller extends ControllerSQL{
 	public function __construct($dbLinkMaster=NULL,$dbLink=NULL){
 		parent::__construct($dbLinkMaster,$dbLink);
@@ -73,6 +76,14 @@ class DocFlowInClient_Controller extends ControllerSQL{
 			));
 			$pm->addParam($param);
 		$param = new FieldExtBool('viewed'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtInt('doc_flow_type_id'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtInt('doc_flow_out_id'
 				,array(
 			));
 			$pm->addParam($param);
@@ -139,6 +150,25 @@ class DocFlowInClient_Controller extends ControllerSQL{
 		$this->addPublicMethod($pm);
 
 			
+		$pm = new PublicMethod('get_file_sig');
+		
+				
+	$opts=array();
+	
+		$opts['length']=36;
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtString('file_id',$opts));
+	
+				
+	$opts=array();
+	
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtInt('doc_id',$opts));
+	
+			
+		$this->addPublicMethod($pm);
+
+			
 		$pm = new PublicMethod('set_viewed');
 		
 				
@@ -153,13 +183,14 @@ class DocFlowInClient_Controller extends ControllerSQL{
 		
 	}	
 	
-	public function get_file($pm){
+	private function get_file_on_type($pm,$isSig){
 		$user_constr = ($_SESSION['role_id']=='client')?
 				(" AND user_id=".$_SESSION['user_id']) : '';
 				
 		$ar = $this->getDbLink()->query_first(sprintf(
 			"SELECT
-				files
+				files,
+				application_id
 			FROM doc_flow_in_client
 			WHERE id=%d".$user_constr,
 			$this->getExtDbVal($pm,'doc_id')
@@ -171,18 +202,24 @@ class DocFlowInClient_Controller extends ControllerSQL{
 		$new_files = [];
 		$found = FALSE;
 		$file_name = NULL;
+		$file_path = NULL;
 		foreach($files as $file){
 			if ($file->file_id==$file_id){
 				$file_name = $file->file_name;
+				$file_path = $file->file_path;
 				$found = TRUE;
 			}
 			else{
 				array_push($new_files,$file);
 			}
 		}
+		//
+		$rel_file = Application_Controller::APP_DIR_PREF.$ar['application_id'].DIRECTORY_SEPARATOR.
+				($file_path? $file_path : DocFlow_Controller::getDefAppDir('out') ) .DIRECTORY_SEPARATOR.
+				$file_id.($isSig? '.sig':'');
 		if (!$found ||
-			(!file_exists($fl = DOC_FLOW_FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$file_id)
-			&& ( defined('DOC_FLOW_FILE_STORAGE_DIR_MAIN') && !file_exists($fl = DOC_FLOW_FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$file_id) )
+			(!file_exists($fl = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_file)
+			&& ( defined('FILE_STORAGE_DIR_MAIN') && !file_exists($fl = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$rel_file) )
 			) 
 		){
 			throw new Exception(self::ER_STORAGE_FILE_NOT_FOUND);
@@ -190,10 +227,16 @@ class DocFlowInClient_Controller extends ControllerSQL{
 	
 		$mime = getMimeTypeOnExt($file_name);
 		ob_clean();
-		downloadFile($fl, $mime,'attachment;',$file_name);
+		downloadFile($fl, $mime,'attachment;',$file_name.($isSig? '.sig':''));
 		return TRUE;	
 	}
 
+	public function get_file($pm){
+		$this->get_file_on_type($pm,FALSE);
+	}
+	public function get_file_sig($pm){
+		$this->get_file_on_type($pm,TRUE);
+	}
 
 	public function set_viewed($pm){
 		if ($_SESSION['role_id']=='client'){

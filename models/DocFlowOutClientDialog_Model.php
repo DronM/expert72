@@ -10,6 +10,7 @@ require_once(FRAME_WORK_PATH.'basic_classes/ModelSQL.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLInt.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLString.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLText.php');
+require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLEnum.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLBool.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLDateTimeTZ.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLJSON.php');
@@ -100,6 +101,14 @@ class DocFlowOutClientDialog_Model extends ModelSQL{
 		$this->addField($f_sent);
 		//********************
 		
+		//*** Field doc_flow_out_client_type ***
+		$f_opts = array();
+		$f_opts['id']="doc_flow_out_client_type";
+				
+		$f_doc_flow_out_client_type=new FieldSQLEnum($this->getDbLink(),$this->getDbName(),$this->getTableName(),"doc_flow_out_client_type",$f_opts);
+		$this->addField($f_doc_flow_out_client_type);
+		//********************
+		
 		//*** Field applications_ref ***
 		$f_opts = array();
 		$f_opts['id']="applications_ref";
@@ -115,6 +124,22 @@ class DocFlowOutClientDialog_Model extends ModelSQL{
 				
 		$f_reg_number_in=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"reg_number_in",$f_opts);
 		$this->addField($f_reg_number_in);
+		//********************
+		
+		//*** Field contract_file ***
+		$f_opts = array();
+		$f_opts['id']="contract_file";
+				
+		$f_contract_file=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"contract_file",$f_opts);
+		$this->addField($f_contract_file);
+		//********************
+		
+		//*** Field contract_files ***
+		$f_opts = array();
+		$f_opts['id']="contract_files";
+				
+		$f_contract_files=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"contract_files",$f_opts);
+		$this->addField($f_contract_files);
 		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}

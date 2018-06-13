@@ -9,6 +9,7 @@
 require_once(FRAME_WORK_PATH.'basic_classes/ModelSQL.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLInt.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLString.php');
+require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLText.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLEnum.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLDateTime.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLBool.php');
@@ -80,6 +81,14 @@ class DocFlowAttachment_Model extends ModelSQL{
 				
 		$f_file_date=new FieldSQLDateTime($this->getDbLink(),$this->getDbName(),$this->getTableName(),"file_date",$f_opts);
 		$this->addField($f_file_date);
+		//********************
+		
+		//*** Field file_path ***
+		$f_opts = array();
+		$f_opts['id']="file_path";
+				
+		$f_file_path=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"file_path",$f_opts);
+		$this->addField($f_file_path);
 		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}

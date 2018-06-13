@@ -54,7 +54,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			$examinationIdForDb
 			));
 			
-			if($applicationResolutionStateForDb=="'returned'"){
+			if($applicationResolutionStateForDb=="'filling'"){
 				
 				$subject_doc = json_decode($ar['subject_doc']);
 				if ($subject_doc &amp;&amp; $subject_doc->dataType=='doc_flow_in'){
@@ -88,6 +88,18 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 						){
 							rrmdir($dir);
 						}	
+						$ar = $this->getDbLinkMaster()->query(sprintf(
+						"UPDATE applications
+						SET
+							filled_percent = 92,
+							app_print_expertise = NULL,
+							app_print_cost_eval = NULL,
+							app_print_modification = NULL,
+							app_print_audit = NULL,
+							cost_eval_validity_simult = CASE WHEN cost_eval_validity_simult IS NULL THEN NULL ELSE FALSE END
+						WHERE id=%d",
+						$ar['application_id']
+						));
 						
 					}
 				}
@@ -133,7 +145,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			$this->getExtDbVal($pm,'id')
 			));
 			
-			if($pm->getParamValue('application_resolution_state')=='returned'){
+			if($pm->getParamValue('application_resolution_state')=='filling'){
 				
 				$subject_doc = json_decode($ar['subject_doc']);
 				if ($subject_doc &amp;&amp; $subject_doc->dataType=='doc_flow_in'){

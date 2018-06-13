@@ -97,7 +97,7 @@ extend(Contract_Controller,ControllerObjServer);
 	
 	var options = {};
 		
-	options.enumValues = 'pd,eng_survey,cost_eval_validity,modification,audit';
+	options.enumValues = 'pd,eng_survey,cost_eval_validity,modification,audit,documents';
 	var field = new FieldEnum("document_type",options);
 	
 	pm.addField(field);
@@ -160,6 +160,18 @@ extend(Contract_Controller,ControllerObjServer);
 	var options = {};
 	
 	var field = new FieldDate("work_end_date",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldDate("expert_work_end_date",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldInt("expert_work_day_count",options);
 	
 	pm.addField(field);
 	
@@ -403,7 +415,7 @@ extend(Contract_Controller,ControllerObjServer);
 	
 	var options = {};
 		
-	options.enumValues = 'pd,eng_survey,cost_eval_validity,modification,audit';
+	options.enumValues = 'pd,eng_survey,cost_eval_validity,modification,audit,documents';
 	
 	var field = new FieldEnum("document_type",options);
 	
@@ -468,6 +480,18 @@ extend(Contract_Controller,ControllerObjServer);
 	var options = {};
 	
 	var field = new FieldDate("work_end_date",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldDate("expert_work_end_date",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldInt("expert_work_day_count",options);
 	
 	pm.addField(field);
 	
@@ -747,6 +771,12 @@ extend(Contract_Controller,ControllerObjServer);
 	var f_opts = {};
 	
 	pm.addField(new FieldDate("work_end_date",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldDate("expert_work_end_date",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldInt("expert_work_day_count",f_opts));
 	var f_opts = {};
 	
 	pm.addField(new FieldInt("expertise_day_count",f_opts));
@@ -1108,6 +1138,14 @@ extend(Contract_Controller,ControllerObjServer);
 		options.required = true;
 	
 		pm.addField(new FieldInt("expertise_day_count",options));
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("expert_work_day_count",options));
 	
 				
 	

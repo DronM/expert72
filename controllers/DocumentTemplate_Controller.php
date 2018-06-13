@@ -30,7 +30,7 @@ class DocumentTemplate_Controller extends ControllerSQL{
 		/* insert */
 		$pm = new PublicMethod('insert');
 		
-				$param = new FieldExtEnum('document_type',',','pd,eng_survey,cost_eval_validity,modification,audit'
+				$param = new FieldExtEnum('document_type',',','pd,eng_survey,cost_eval_validity,modification,audit,documents'
 				,array('required'=>TRUE));
 		$pm->addParam($param);
 		$param = new FieldExtInt('construction_type_id'
@@ -65,7 +65,7 @@ class DocumentTemplate_Controller extends ControllerSQL{
 		/* update */		
 		$pm = new PublicMethod('update');
 		
-		$pm->addParam(new FieldExtEnum('old_document_type',',','pd,eng_survey,cost_eval_validity,modification,audit',array('required'=>TRUE)));
+		$pm->addParam(new FieldExtEnum('old_document_type',',','pd,eng_survey,cost_eval_validity,modification,audit,documents',array('required'=>TRUE)));
 		
 		$pm->addParam(new FieldExtInt('old_construction_type_id',array('required'=>TRUE)));
 		
@@ -73,7 +73,7 @@ class DocumentTemplate_Controller extends ControllerSQL{
 		
 		$pm->addParam(new FieldExtInt('obj_mode'));
 		
-				$param = new FieldExtEnum('document_type',',','pd,eng_survey,cost_eval_validity,modification,audit'
+				$param = new FieldExtEnum('document_type',',','pd,eng_survey,cost_eval_validity,modification,audit,documents'
 				,array(
 			));
 			$pm->addParam($param);
@@ -106,7 +106,7 @@ class DocumentTemplate_Controller extends ControllerSQL{
 			));
 			$pm->addParam($param);
 		
-			$param = new FieldExtEnum('document_type',',','pd,eng_survey,cost_eval_validity,modification,audit',array(
+			$param = new FieldExtEnum('document_type',',','pd,eng_survey,cost_eval_validity,modification,audit,documents',array(
 			));
 			$pm->addParam($param);
 		
@@ -129,7 +129,7 @@ class DocumentTemplate_Controller extends ControllerSQL{
 		$pm = new PublicMethod('delete');
 		
 		$pm->addParam(new FieldExtEnum('document_type'
-		,',','pd,eng_survey,cost_eval_validity,modification,audit'));		
+		,',','pd,eng_survey,cost_eval_validity,modification,audit,documents'));		
 		
 		$pm->addParam(new FieldExtInt('construction_type_id'
 		));		
@@ -166,7 +166,7 @@ class DocumentTemplate_Controller extends ControllerSQL{
 		$pm->addParam(new FieldExtString('mode'));
 		
 		$pm->addParam(new FieldExtEnum('document_type'
-		,',','pd,eng_survey,cost_eval_validity,modification,audit'));
+		,',','pd,eng_survey,cost_eval_validity,modification,audit,documents'));
 		
 		$pm->addParam(new FieldExtInt('construction_type_id'
 		));

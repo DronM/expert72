@@ -14,7 +14,7 @@ $$
 			((
 				CASE
 					WHEN in_document_type='pd' THEN pdfn_services_expertise()
-					WHEN in_document_type='cost_eval_validity' THEN pdfn_services_eng_survey()
+					WHEN in_document_type='cost_eval_validity' THEN pdfn_services_cost_eval_validity()
 					WHEN in_document_type='modification' THEN pdfn_services_modification()
 					WHEN in_document_type='audit' THEN pdfn_services_audit()
 					ELSE NULL

@@ -46,6 +46,15 @@ function DepartmentList_Model(options){
 	filed_options.autoInc = false;	
 	
 	options.fields.boss_employee_id = new FieldInt("boss_employee_id",filed_options);
+		
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.email = new FieldString("email",filed_options);
+	options.fields.email.getValidator().setMaxLength('50');
 	
 			
 				
@@ -61,6 +70,7 @@ function DepartmentList_Model(options){
 	
 	options.fields.boss_employees_ref = new FieldJSON("boss_employees_ref",filed_options);
 	
+			
 		DepartmentList_Model.superclass.constructor.call(this,id,options);
 }
 extend(DepartmentList_Model,ModelXML);

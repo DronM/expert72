@@ -46,6 +46,12 @@ function AppExpert(options){
 			"ctrlOptions":{"keyIds":["id"]},
 			"dialogClass":ApplicationDialog_Form
 		}
+		,"contracts":{
+			"dataTypeDescrLoc":"Контракт",
+			"ctrlClass":ContractEditRef,
+			"ctrlOptions":{"keyIds":["id"]},
+			"dialogClass":ContractDialog_Form
+		}
 		
 	});
 	

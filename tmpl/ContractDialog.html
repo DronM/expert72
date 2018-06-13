@@ -11,27 +11,42 @@
 	
 	<div class="tabbable">
 		<ul class="nav nav-tabs nav-tabs-highlight">				
+			{{#notExpert}}
 			<li class="active">
 				<a href="#common" data-toggle="tab" aria-expanded="true">
 					Общая</a>
 			</li>
 			<li id="{{id}}:tab-construction" class=""><a href="#construction" data-toggle="tab" aria-expanded="false">Объект строительства</a></li>
-			{{#notExpert}}
 			<li id="{{id}}:tab-contract-data" class=""><a href="#contract-data" data-toggle="tab" aria-expanded="false">Контракт</a></li>				
-			{{/notExpert}}
+			
 			<li id="{{id}}:tab-result" class=""><a href="#result" data-toggle="tab" aria-expanded="false">Заключение</a></li>				
+			{{/notExpert}}
+			
 			{{#setAccess}}
 			<li id="{{id}}:tab-access" class=""><a href="#access" data-toggle="tab" aria-expanded="false">Права доступа</a></li>
 			{{/setAccess}}
-			<li id="{{id}}:tab-documents" class=""><a href="#documents" data-toggle="tab" aria-expanded="false">Документация</a></li>
-			<li id="{{id}}:tab-expertise" class=""><a href="#expertise" data-toggle="tab" aria-expanded="false">Экспертиза</a></li>
+			
+			<li id="{{id}}:tab-documents"><a href="#documents" data-toggle="tab" aria-expanded="false">Документация</a></li>
+			
+			{{#notExpert}}
+			<li id="{{id}}:tab-doc_folders"><a href="#doc_folders" data-toggle="tab" aria-expanded="false">Документы</a></li>
+			<li id="{{id}}:tab-expertise"><a href="#expertise" data-toggle="tab" aria-expanded="false">Экспертиза</a></li>
+			{{/notExpert}}
+			
+			{{#expert}}
+			<li class="active" id="{{id}}:tab-expertise"><a href="#expertise" data-toggle="tab" aria-expanded="true">Экспертиза</a></li>
+			{{/expert}}
+			
 			<li id="{{id}}:tab-doc_flow_in" class=""><a href="#doc_flow_in" data-toggle="tab" aria-expanded="false">Входящие</a></li>
 			<li id="{{id}}:tab-doc_flow_out" class=""><a href="#doc_flow_out" data-toggle="tab" aria-expanded="false">Исходящие</a></li>
+			{{#notExpert}}
 			<li id="{{id}}:tab-states" class=""><a href="#states" data-toggle="tab" aria-expanded="false">Статусы</a></li>
+			{{/notExpert}}
 		</ul>
 	</div>
 	
 	<div class="tab-content dialogForm">
+		{{#notExpert}}
 		<div class="tab-pane fade in active" id="common">
 			<div id="{{id}}:applications_ref"/>
 			<div id="{{id}}:applicant_descr"/>
@@ -91,15 +106,22 @@
 			</div>
 			<div class="row">
 				<div class="{{bsCol}}3">
+					<div id="{{id}}:expert_work_day_count"/>
+				</div>
+				<div class="{{bsCol}}3">
+					<div id="{{id}}:expert_work_end_date"/>
+				</div>				
+			</div>
+			
+			<div class="row">
+				<div class="{{bsCol}}3">
 					<div id="{{id}}:argument_document"/>
 				</div>
 				<div class="{{bsCol}}3">
 					<div id="{{id}}:auth_letter"/>
 				</div>
-			</div>
-			
+			</div>			
 		</div>
-		{{#notExpert}}
 		<div class="tab-pane fade in" id="contract-data">
 			<div id="{{id}}:fund_sources_ref"/>
 			<div class="row">
@@ -119,9 +141,19 @@
 				</div>				
 			</div>									
 			
-			<div id="{{id}}:contract_number"/>
-			<div id="{{id}}:contract_date"/>
-			<div id="{{id}}:contract_return_date"/>
+			
+			<div class="row">
+				<div class="{{bsCol}}3">
+					<div id="{{id}}:contract_number"/>
+				</div>
+				<div class="{{bsCol}}3">
+					<div id="{{id}}:contract_date"/>
+				</div>
+				<div class="{{bsCol}}3">
+					<div id="{{id}}:contract_return_date"/>
+				</div>
+			</div>
+			
 			<div class="row">
 				<div class="{{bsCol}}3">
 					<div id="{{id}}:akt_number"/>
@@ -139,15 +171,24 @@
 				<div id="{{id}}:client_payment_list"/>
 			</div>
 		</div>
-		{{/notExpert}}
+		
 		<div class="tab-pane fade" id="construction">
 			<div id="{{id}}:constr_name"/>
 			<div id="{{id}}:constr_address"/>
 			<div id="{{id}}:construction_types_ref"/>
 			<div id="{{id}}:build_types_ref"/>
-			<div id="{{id}}:kadastr_number"/>
-			<div id="{{id}}:grad_plan_number"/>
-			<div id="{{id}}:area_document"/>
+			<div class="row">
+				<div class="{{bsCol}}4">
+					<div id="{{id}}:kadastr_number"/>
+				</div>
+				<div class="{{bsCol}}4">
+					<div id="{{id}}:grad_plan_number"/>
+				</div>
+				<div class="{{bsCol}}4">
+					<div id="{{id}}:area_document"/>
+				</div>
+				
+			</div>
 			
 			<h4>Технико-экономические показатели</h4>
 			<div id="{{id}}:constr_technical_features"/>
@@ -159,6 +200,8 @@
 			<div id="{{id}}:expertise_result_date"/>
 			<div id="{{id}}:expertise_reject_types_ref"/>
 		</div>
+		{{/notExpert}}		
+		
 		{{#setAccess}}
 		<div class="tab-pane fade" id="access">
 			<div id="{{id}}:main_departments_ref"/>
@@ -197,7 +240,55 @@
 			</div>
 		</div>
 
+		{{#notExpert}}
+		<div class="tab-pane fade" id="doc_folders">
+			<div id="{{id}}:doc_folders"/>
+		</div>
+		{{/notExpert}}
+
 		<div class="tab-pane fade" id="expertise">
+			{{#expert}}
+			<div id="{{id}}:applicant_descr"/>
+			<div id="{{id}}:customer_descr"/>
+			<div id="{{id}}:developer_descr"/>
+			<div id="{{id}}:constr_name"/>
+			<div class="row">
+				<div class="{{bsCol}}3">
+					<div id="{{id}}:contract_number"/>
+				</div>
+				<div class="{{bsCol}}3">
+					<div id="{{id}}:contract_date"/>
+				</div>
+			</div>					
+			<div class="panel">
+				<h4>Связанные контракты</h4>
+				<div id="{{id}}:linked_contracts"/>
+			</div>				
+			<div class="row">
+				<div class="{{bsCol}}3">
+					<div id="{{id}}:date_type"/>
+				</div>
+				<div class="{{bsCol}}3">
+					<div id="{{id}}:expertise_day_count"/>
+				</div>
+				<div class="{{bsCol}}3">
+					<div id="{{id}}:work_start_date"/>
+				</div>
+				<div class="{{bsCol}}3">
+					<div id="{{id}}:work_end_date"/>
+				</div>				
+			</div>
+			<div class="row">
+				<div class="{{bsCol}}3">
+					<div id="{{id}}:expert_work_day_count"/>
+				</div>
+				<div class="{{bsCol}}3">
+					<div id="{{id}}:expert_work_end_date"/>
+				</div>				
+			</div>
+			
+			{{/expert}}
+		
 			<div id="{{id}}-expertise_sections" class="easy-tree">
 				<ul>
 				{{#expertise_sections}}

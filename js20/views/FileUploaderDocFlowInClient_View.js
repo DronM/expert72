@@ -16,6 +16,9 @@ function FileUploaderDocFlowInClient_View(id,options){
 	
 	this.m_mainView = options.mainView;
 	
+	options.constDownloadTypes = "client_download_file_types";
+	options.constDownloadMaxSize = "client_download_file_max_size";
+	
 	options.filePicClass = "file-pic-doc";	
 	options.fileAddClass = "uploader-file-add-doc";
 	options.fileListClass = "uploader-file-list-doc";
@@ -60,12 +63,18 @@ FileUploaderDocFlowInClient_View.prototype.deleteFileFromServer = function(fileI
 }
 
 FileUploaderDocFlowInClient_View.prototype.downloadFile = function(btnCtrl){
-//return;
 	var contr = new DocFlowInClient_Controller();
 	var pm = contr.getPublicMethod("get_file");
 	pm.setFieldValue("file_id",btnCtrl.getAttr("file_id"));
 	pm.setFieldValue("doc_id",this.m_mainView.getElement("id").getValue());
 	pm.download();
+	if (btnCtrl.getAttr("file_signed")=="true"){
+		var pm_sig = contr.getPublicMethod("get_file_sig");
+		pm_sig.setFieldValue("file_id",btnCtrl.getAttr("file_id"));
+		pm_sig.setFieldValue("doc_id",this.m_mainView.getElement("id").getValue());
+		pm_sig.download(null,1);
+	}
+	
 }
 
 FileUploaderDocFlowInClient_View.prototype.getQuerySruc = function(file){

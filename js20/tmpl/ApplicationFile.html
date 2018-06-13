@@ -1,4 +1,4 @@
-<li id="{{id}}" {{#file_uploaded}}uploaded="true"{{/file_uploaded}} file_id="{{file_id}}" file_name="{{file_name}}">
+<li id="{{id}}" {{#file_uploaded}}uploaded="true"{{/file_uploaded}} file_id="{{file_id}}" file_name="{{file_name}}" class="appFileItem">
 	{{#file_not_deleted}}
 		{{#file_uploaded}}
 		<i class="glyphicon glyphicon-ok" title="Файл загружен на сервер"></i>	
@@ -24,13 +24,13 @@
 		<i class="glyphicon glyphicon-remove" title="Файл удален"></i>	
 	{{/file_deleted}}
 	
-	<a id="{{id}}_href" href="#" title="Скачать файл" file_uploaded="{{file_uploaded}}" class="uploadedFile">
+	<a id="{{id}}_href" href="#" title="{{refTitle}}" download_href="true" file_uploaded="{{file_uploaded}}" class="{{refClass}}">
 		{{#file_not_deleted}}
-		{{file_name}}({{file_size_formatted}})
+		{{file_name}} ({{file_size_formatted}}, {{file_date_time_formatted}})
 		{{/file_not_deleted}}
 		
 		{{#file_deleted}}
-		<span class="text-thin" title="Удален {{file_deleted_dt}}">{{file_name}}({{file_size_formatted}})</span>
+		<span class="text-thin appFileDeleted" title="Удален {{file_deleted_dt}}">{{file_name}} ({{file_size_formatted}}, {{file_date_time_formatted}})</span>
 		{{/file_deleted}}		
 	</a>
 	
@@ -41,6 +41,13 @@
 		<i class="glyphicon glyphicon-trash"></i>	
 	</div>
 	{{/file_deletable}}
+	
+	{{#customFolder}}
+	<span id="{{id}}:include">
+	<span id="{{id}}:include:check"></span>
+	<span id="{{id}}:include:folder"></span>
+	</span>
+	{{/customFolder}}
 	
 	{{/file_not_deleted}}
 </li>

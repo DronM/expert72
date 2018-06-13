@@ -348,6 +348,8 @@ $permissions = array();
 				
 					$permissions['DocFlowOut_Controller_get_file']=TRUE;
 				
+					$permissions['DocFlowOut_Controller_get_file_sig']=TRUE;
+				
 					$permissions['DocFlowOut_Controller_get_next_num']=TRUE;
 				
 					$permissions['DocFlowOut_Controller_complete']=TRUE;
@@ -369,6 +371,8 @@ $permissions = array();
 					$permissions['DocFlowIn_Controller_remove_file']=TRUE;
 				
 					$permissions['DocFlowIn_Controller_get_file']=TRUE;
+				
+					$permissions['DocFlowIn_Controller_get_file_sig']=TRUE;
 				
 					$permissions['DocFlowIn_Controller_get_next_num']=TRUE;
 				
@@ -568,6 +572,12 @@ $permissions = array();
 				
 					$permissions['DocFlowOutClient_Controller_remove_file']=TRUE;
 				
+					$permissions['DocFlowOutClient_Controller_remove_contract_file']=TRUE;
+				
+					$permissions['DocFlowOutClient_Controller_download_contract_file']=TRUE;
+				
+					$permissions['DocFlowOutClient_Controller_download_contract_file_sig']=TRUE;
+				
 					$permissions['DocFlowInClient_Controller_update']=TRUE;
 				
 					$permissions['DocFlowInClient_Controller_get_object']=TRUE;
@@ -575,6 +585,8 @@ $permissions = array();
 					$permissions['DocFlowInClient_Controller_get_list']=TRUE;
 				
 					$permissions['DocFlowInClient_Controller_get_file']=TRUE;
+				
+					$permissions['DocFlowInClient_Controller_get_file_sig']=TRUE;
 				
 					$permissions['DocFlowInClient_Controller_set_viewed']=TRUE;
 				
@@ -783,6 +795,16 @@ $permissions = array();
 					$permissions['Service_Controller_get_object']=TRUE;
 				
 					$permissions['Service_Controller_get_list']=TRUE;
+				
+					$permissions['ApplicationDocFolder_Controller_insert']=TRUE;
+				
+					$permissions['ApplicationDocFolder_Controller_update']=TRUE;
+				
+					$permissions['ApplicationDocFolder_Controller_delete']=TRUE;
+				
+					$permissions['ApplicationDocFolder_Controller_get_object']=TRUE;
+				
+					$permissions['ApplicationDocFolder_Controller_get_list']=TRUE;
 				
 return array_key_exists($contrId.'_'.$methId,$permissions);
 }

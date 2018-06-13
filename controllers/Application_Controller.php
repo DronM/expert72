@@ -760,21 +760,33 @@ class Application_Controller extends ControllerSQL{
 			self::dirNameOnDocType($id);
 		mkdir($dir,0777,TRUE);
 		
+		$file_id = md5(uniqid());
+		
+		//sig-data indexes ".sig" - 4 chars
+		$sig_ind = (strtolower(substr($files['name'][0],strlen($files['name'][0])-4,4))=='.sig')? 0 : NULL;		
+		if (is_null($sig_ind)){
+			$sig_ind = (strtolower(substr($files['name'][1],strlen($files['name'][1])-4,4))=='.sig')? 1 : NULL;
+			if (is_null($sig_ind)){
+				throw new Exception(self::ER_PRINT_FILE_CNT.$ER_PRINT_FILE_CNT_END[$id].'.');
+			}
+		}
+		$data_ind = ($sig_ind==1)? 0:1;
+		
 		//data
-		if (!move_uploaded_file($files['tmp_name'][0],$dir.DIRECTORY_SEPARATOR.$files['name'][0])){
+		if (!move_uploaded_file($files['tmp_name'][$data_ind],$dir.DIRECTORY_SEPARATOR.$file_id)){
 			throw new Exception('Ошибка загрузки заявления о '.$ER_PRINT_FILE_CNT_END[$id].'.');
 		}
 		
 		//sig
-		if (!move_uploaded_file($files['tmp_name'][1],$dir.DIRECTORY_SEPARATOR.$files['name'][1])){
+		if (!move_uploaded_file($files['tmp_name'][$sig_ind],$dir.DIRECTORY_SEPARATOR.$file_id.'.sig')){
 			throw new Exception('Ошибка загрузки подписи заявления о '.$ER_PRINT_FILE_CNT_END[$id].'.');
 		}
 	
 		$fileParams[$id] = sprintf(
 			'[{"name":"%s","id":"%s","size":"%s","file_signed":"true"}]',
-			$files['name'][0],
-			md5(uniqid()),
-			$files['size'][0]
+			$files['name'][$data_ind],
+			$file_id,
+			$files['size'][$data_ind]
 		);
 	
 	}
@@ -830,6 +842,13 @@ class Application_Controller extends ControllerSQL{
 						$file_o->file_path	= $file['file_path'];
 						$file_o->file_signed	= ($file['file_signed']=='t')? TRUE:FALSE;
 						$file_o->file_uploaded	= TRUE;
+						
+						if ($file['doc_flow_out_client_id']){
+							$file_o->doc_flow_out	= new stdClass();
+							$file_o->doc_flow_out->id = $file['doc_flow_out_client_id'];
+							$file_o->doc_flow_out->date_time = $file['doc_flow_out_date_time'];
+							$file_o->doc_flow_out->reg_number = $file['doc_flow_out_reg_number'];
+						}
 						array_push($files,$file_o);
 					}
 				}
@@ -863,11 +882,11 @@ class Application_Controller extends ControllerSQL{
 		}
 		//throw new Exception($ar['file_info']);
 		$f = json_decode($ar['file_info']);
-		if (count($f) && $f[0]->name){
+		if (count($f) && $f[0]->id){
 			$fileName = $f[0]->name. ($isSig? '.sig':'');
 			$rel_fl = self::APP_DIR_PREF.$appId.DIRECTORY_SEPARATOR.
 				self::dirNameOnDocType($docType).DIRECTORY_SEPARATOR.
-				$fileName;
+				$f[0]->id. ($isSig? '.sig':'');
 			return (
 				file_exists($fullPath=FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_fl)
 				|| ( defined('FILE_STORAGE_DIR_MAIN') && file_exists($fullPath=FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$rel_fl) )
@@ -1001,10 +1020,17 @@ class Application_Controller extends ControllerSQL{
 			//On copy - no files, no links!
 			if ($pm->getParamValue('mode')!='copy'){
 				$files_q_id = $this->getDbLink()->query(sprintf(
-					"SELECT *
-					FROM application_document_files
-					WHERE application_id=%d %s
-					ORDER BY document_type,document_id,file_name,deleted_dt ASC NULLS LAST",
+					"SELECT
+						adf.*,
+						mdf.doc_flow_out_client_id,
+						m.date_time AS doc_flow_out_date_time,
+						reg.reg_number AS doc_flow_out_reg_number
+					FROM application_document_files AS adf
+					LEFT JOIN doc_flow_out_client_document_files AS mdf ON mdf.file_id=adf.file_id
+					LEFT JOIN doc_flow_out_client AS m ON m.id=mdf.doc_flow_out_client_id
+					LEFT JOIN doc_flow_out_client_reg_numbers AS reg ON reg.doc_flow_out_client_id=m.id
+					WHERE adf.application_id=%d %s
+					ORDER BY adf.document_type,adf.document_id,adf.file_name,adf.deleted_dt ASC NULLS LAST",
 				$this->getExtDbVal($pm,'id'),
 				$deleted_cond
 				));			
@@ -1012,9 +1038,16 @@ class Application_Controller extends ControllerSQL{
 			else{
 				//Copy mode!!!
 				$ar_obj['document_exists'] = 'f';
-				$ar_obj['documents'] = null;
-				$ar_obj['base_applications_ref'] = null;
-				$ar_obj['derived_applications_ref'] = null;
+				$ar_obj['documents'] = NULL;
+				$ar_obj['base_applications_ref'] = NULL;
+				$ar_obj['derived_applications_ref'] = NULL;
+				$ar_obj['auth_letter'] = NULL;
+				$ar_obj['auth_letter_file'] = NULL;
+				$ar_obj['application_state'] = NULL;
+				$ar_obj['contract_date'] = NULL;
+				$ar_obj['contract_number'] = NULL;
+				$ar_obj['expertise_result_number'] = NULL;
+				$ar_obj['expertise_result_date'] = NULL;
 			}
 		}
 		else{
@@ -1059,7 +1092,13 @@ class Application_Controller extends ControllerSQL{
 				NULL as users_ref,
 				NULL as auth_letter,
 				NULL as auth_letter_file,
-				NULL as pd_usage_info
+				NULL as pd_usage_info,
+				NULL AS doc_folders,
+				NULL AS work_start_date,
+				NULL AS contract_number,
+				NULL AS contract_date,
+				NULL AS expertise_result_number,
+				NULL AS expertise_result_date
 				"
 			);
 		}
@@ -1117,7 +1156,13 @@ class Application_Controller extends ControllerSQL{
 					new Field('users_ref',DT_STRING,array('value'=>$ar_obj['users_ref'])),
 					new Field('auth_letter',DT_STRING,array('value'=>$ar_obj['auth_letter'])),
 					new Field('auth_letter_file',DT_STRING,array('value'=>$ar_obj['auth_letter_file'])),
-					new Field('pd_usage_info',DT_STRING,array('value'=>$ar_obj['pd_usage_info']))
+					new Field('pd_usage_info',DT_STRING,array('value'=>$ar_obj['pd_usage_info'])),
+					new Field('doc_folders',DT_STRING,array('value'=>$ar_obj['doc_folders'])),
+					new Field('work_start_date',DT_DATE,array('value'=>$ar_obj['work_start_date'])),
+					new Field('expertise_result_number',DT_DATE,array('value'=>$ar_obj['expertise_result_number'])),
+					new Field('expertise_result_date',DT_DATE,array('value'=>$ar_obj['expertise_result_date'])),
+					new Field('contract_number',DT_DATE,array('value'=>$ar_obj['contract_number'])),
+					new Field('contract_date',DT_DATE,array('value'=>$ar_obj['contract_date']))
 					)
 				)
 			)
@@ -1170,6 +1215,9 @@ class Application_Controller extends ControllerSQL{
 		}
 		else if ($docType=='auth_letter_file'){
 			$res = 'Доверенность';
+		}				
+		else if ($docType=='documents'){
+			$res = '';
 		}				
 		else{
 			$res = 'НеизвестныйТип';
@@ -1468,7 +1516,7 @@ class Application_Controller extends ControllerSQL{
 			$rel_fl = self::APP_DIR_PREF.$ar['application_id'].DIRECTORY_SEPARATOR.
 				self::dirNameOnDocType($ar['document_type']).DIRECTORY_SEPARATOR.				
 				$ar['file_path'].DIRECTORY_SEPARATOR.
-				$ar['file_name'];
+				$ar['file_id'];
 				
 			if (file_exists($fl = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_fl)){
 				if (!file_exists($dest = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_dest)){
@@ -1563,7 +1611,7 @@ class Application_Controller extends ControllerSQL{
 			$rel_fl = self::APP_DIR_PREF.$ar['application_id'].DIRECTORY_SEPARATOR.
 				self::dirNameOnDocType($ar['document_type']).DIRECTORY_SEPARATOR.
 				$ar['file_path'].DIRECTORY_SEPARATOR.
-				$ar['file_name'].$fl_postf;		
+				$ar['file_id'].$fl_postf;		
 		}
 		
 		if (!file_exists($fl=FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_fl)
@@ -1588,16 +1636,16 @@ class Application_Controller extends ControllerSQL{
 	private static function add_print_to_zip($docType,&$fileInfo,&$relDirZip,&$zip,&$cnt){
 		$file_ar = json_decode($fileInfo);
 		if (count($file_ar)){
-			$rel_path = self::dirNameOnDocType($docType).DIRECTORY_SEPARATOR.$file_ar[0]->name;
-			if (file_exists($file_doc = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$relDirZip.DIRECTORY_SEPARATOR. $rel_path)
-			||( defined('FILE_STORAGE_DIR_MAIN') && file_exists($file_doc = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$relDirZip.DIRECTORY_SEPARATOR. $rel_path) )
+			$rel_path = self::dirNameOnDocType($docType).DIRECTORY_SEPARATOR;
+			if (file_exists($file_doc = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$relDirZip.DIRECTORY_SEPARATOR. $rel_path.$file_ar[0]->id)
+			||( defined('FILE_STORAGE_DIR_MAIN') && file_exists($file_doc = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$relDirZip.DIRECTORY_SEPARATOR. $rel_path.$file_ar[0]->id) )
 			){
-				$zip->addFile($file_doc, $rel_path);
+				$zip->addFile($file_doc, $rel_path.$file_ar[0]->name);
 				$cnt++;				
-				if (file_exists($file_doc = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$relDirZip.DIRECTORY_SEPARATOR.$rel_path.self::SIG_EXT)
-				||( defined('FILE_STORAGE_DIR_MAIN') && file_exists($file_doc = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$relDirZip.DIRECTORY_SEPARATOR.$rel_path.self::SIG_EXT))
+				if (file_exists($file_doc = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$relDirZip.DIRECTORY_SEPARATOR.$rel_path.$file_ar[0]->id.self::SIG_EXT)
+				||( defined('FILE_STORAGE_DIR_MAIN') && file_exists($file_doc = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$relDirZip.DIRECTORY_SEPARATOR.$rel_path.$file_ar[0]->id.self::SIG_EXT))
 				){
-					$zip->addFile($file_doc,$rel_path.self::SIG_EXT);
+					$zip->addFile($file_doc,$rel_path.$file_ar[0]->name.self::SIG_EXT);
 					$cnt++;									
 				}
 			}				
@@ -1629,7 +1677,6 @@ class Application_Controller extends ControllerSQL{
 		$rel_dir_zip =	self::APP_DIR_PREF.$this->getExtVal($pm,'application_id');
 				
 		if (!file_exists($file_zip = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_dir_zip.DIRECTORY_SEPARATOR.self::ALL_DOC_ZIP_FILE)
-		&&( defined('FILE_STORAGE_DIR_MAIN') && !file_exists($file_zip = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$rel_dir_zip.DIRECTORY_SEPARATOR.self::ALL_DOC_ZIP_FILE) )
 		){
 			//Всегда на клиентском сервере
 			$file_zip = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_dir_zip.DIRECTORY_SEPARATOR.self::ALL_DOC_ZIP_FILE;
@@ -1655,19 +1702,18 @@ class Application_Controller extends ControllerSQL{
 			));			
 			while($file = $this->getDbLink()->fetch_array($qid)){
 				$rel_path = self::dirNameOnDocType($file['document_type']).DIRECTORY_SEPARATOR.
-						$file['file_path'].DIRECTORY_SEPARATOR.
-						$file['file_name'];
-				if (file_exists($file_doc = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_dir_zip.DIRECTORY_SEPARATOR. $rel_path)
-				|| (defined('FILE_STORAGE_DIR_MAIN') && file_exists($file_doc = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$rel_dir_zip.DIRECTORY_SEPARATOR. $rel_path) )
+						$file['file_path'].DIRECTORY_SEPARATOR;
+				if (file_exists($file_doc = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_dir_zip.DIRECTORY_SEPARATOR. $rel_path. $file['file_id'])
+				|| (defined('FILE_STORAGE_DIR_MAIN') && file_exists($file_doc = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$rel_dir_zip.DIRECTORY_SEPARATOR. $rel_path. $file['file_id']) )
 				){
-					$zip->addFile($file_doc, $rel_path);
+					$zip->addFile($file_doc, $rel_path. $file['file_name']);
 					$cnt++;				
 					
 					if ($file['file_signed']=='t'){
-						if (file_exists($file_doc = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_dir_zip.DIRECTORY_SEPARATOR.$rel_path.self::SIG_EXT)
-						|| (defined('FILE_STORAGE_DIR_MAIN') && file_exists($file_doc = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$rel_dir_zip.DIRECTORY_SEPARATOR.$rel_path.self::SIG_EXT) )
+						if (file_exists($file_doc = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_dir_zip.DIRECTORY_SEPARATOR.$rel_path.$file['file_id'].self::SIG_EXT)
+						|| (defined('FILE_STORAGE_DIR_MAIN') && file_exists($file_doc = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$rel_dir_zip.DIRECTORY_SEPARATOR.$rel_path.$file['file_id'].self::SIG_EXT) )
 						){
-							$zip->addFile($file_doc,$rel_path.self::SIG_EXT);
+							$zip->addFile($file_doc,$rel_path.$file['file_name'].self::SIG_EXT);
 							$cnt++;									
 						}
 					}					
@@ -1733,6 +1779,18 @@ class Application_Controller extends ControllerSQL{
 		mkdir($dest,0777,TRUE);
 		rmove($source,$dest);
 		rrmdir($source);
+		
+		//Доверенность?
+		$doc_type_auth_dir = self::dirNameOnDocType('auth_letter_file');
+		if (file_exists($source = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
+			self::APP_DIR_PREF.$ar['old_app_id'].DIRECTORY_SEPARATOR.
+			$doc_type_auth_dir)
+		){
+			$dest = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
+				self::APP_DIR_PREF.$ar['new_app_id'];
+			mkdir($dest,0777,TRUE);									
+			rcopy($source,$dest);
+		}
 	}
 	
 	/**

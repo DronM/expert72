@@ -420,6 +420,33 @@ function ApplicationList_Model(options){
 	
 	options.fields.contract_number = new FieldString("contract_number",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.contract_date = new FieldString("contract_date",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.expertise_result_number = new FieldString("expertise_result_number",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.expertise_result_date = new FieldDate("expertise_result_date",filed_options);
+	
 			
 		ApplicationList_Model.superclass.constructor.call(this,id,options);
 }

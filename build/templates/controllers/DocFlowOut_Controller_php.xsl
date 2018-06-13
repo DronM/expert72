@@ -84,6 +84,67 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		);
 	}
 	
+	private function update_contract_data($pm){
+		$fld = NULL;
+		$app_id = 0;
+		if ($pm->getParamValue('expertise_result')){
+			$fld = sprintf('expertise_result=%s',$this->getExtDbVal($pm,'expertise_result'));
+		}
+		if ($pm->getParamValue('expertise_reject_type_id') &amp;&amp; $this->getExtDbVal($pm,'expertise_reject_type_id')>0){
+			$fld = (is_null($fld))? '':($fld.',');
+			$fld.= sprintf('expertise_reject_type_id=%d',$this->getExtDbVal($pm,'expertise_reject_type_id'));
+		}
+		
+		if (!is_null($fld)){
+			if ($pm->getParamValue('to_application_id')){
+				$app_id = $this->getExtDbVal($pm,'to_application_id');
+			}
+			else if ($pm->getParamValue('old_id')){
+				$app_id = $this->getDbLink()->query_first_col(sprintf("SELECT to_application_id FROM doc_flow_out WHERE id=%d",
+				$this->getExtDbVal($pm,'old_id')
+				));
+			
+			}
+			if ($app_id){
+				$this->getDbLinkMaster()->query(sprintf("UPDATE contracts SET %s WHERE application_id=%d",
+				$fld,$app_id
+				));
+			}
+		}
+	}
+
+
+	public function insert($pm){
+		try{
+			$this->getDbLinkMaster()->query("BEGIN");
+			
+			$this->update_contract_data($pm);
+			
+			parent::insert($pm);
+			
+			$this->getDbLinkMaster()->query("COMMIT");
+		}
+		catch(Exception $e){
+			$this->getDbLinkMaster()->query("ROLLBACK");
+			throw $e;
+		}
+	}
+	
+	public function update($pm){
+		try{
+			$this->getDbLinkMaster()->query("BEGIN");
+			
+			$this->update_contract_data($pm);
+			
+			parent::update($pm);
+			
+			$this->getDbLinkMaster()->query("COMMIT");
+		}
+		catch(Exception $e){
+			$this->getDbLinkMaster()->query("ROLLBACK");
+			throw $e;
+		}
+	}
 
 </xsl:template>
 

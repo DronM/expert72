@@ -28,9 +28,27 @@ function ApplicationDialog_View(id,options){
 	options.uploaderClass = FileUploaderApplication_View;
 	
 	options.templateOptions = options.templateOptions || {};
+
+	//все прочие папки	
+	var doc_folders;
 	
 	if (options.model && (options.model.getRowIndex()>=0 || options.model.getNextRow()) ){			
 		options.templateOptions.is_admin = (window.getApp().getServVar("role_id")=="admin");
+		options.readOnly = (options.model.getField("application_state").isSet() && options.model.getFieldValue("application_state")!="filling");
+		
+		options.templateOptions.contractExists = options.model.getField("contract_number").isSet();
+		if (options.templateOptions.contractExists){
+			options.templateOptions.contractNumber = options.model.getField("contract_number").getValue();
+			options.templateOptions.contractDate = DateHelper.format(options.model.getField("contract_date").getValue(),"d/m/y");
+			options.templateOptions.expertiseResultNumber = options.model.getField("expertise_result_number").getValue();
+			if (options.model.getField("expertise_result_date").getValue()){
+				options.templateOptions.expertiseResultExists = true;
+				options.templateOptions.expertiseResultNumber = DateHelper.format(options.model.getField("expertise_result_date").getValue(),"d/m/y");
+			}
+		}
+		
+		doc_folders = options.model.getFieldValue("doc_folders");
+		
 		if (!options.model.getField("base_applications_ref").isNull()){
 			options.templateOptions.linkedApp = options.model.getFieldValue("base_applications_ref").getDescr();
 			options.templateOptions.linkedAppExists = true;
@@ -40,6 +58,9 @@ function ApplicationDialog_View(id,options){
 			options.templateOptions.linkedAppExists = true;
 		}
 	}
+	options.templateOptions.contractNotExists = !options.templateOptions.contractExists;
+	options.templateOptions.readOnly = options.readOnly;
+	
 	var self = this;
 	
 	options.addElement = function(){
@@ -367,6 +388,7 @@ function ApplicationDialog_View(id,options){
 	
 		this.addElement(new ApplicationClientContainer(id+":contractors",{
 			"attrs":{"percentcalc":"true"},
+			"readOnly":options.readOnly,
 			"elementClass":ApplicationClientEdit,
 			"templateOptions":{"isClient":true},
 			"elementOptions":{
@@ -387,6 +409,11 @@ function ApplicationDialog_View(id,options){
 		
 		//Вкладки с документацией
 		this.addDocumentTabs(options.model,options.models.DocumentTemplateAllList_Model);
+
+		//Вкладка с документами
+		this.addElement(new DocFolder_View(id+":doc_folders",{
+			"items":doc_folders			
+		}));				
 		
 		//Команды
 		options.controlOk = new ButtonOK(id+":cmdOk",{
@@ -669,7 +696,7 @@ ApplicationDialog_View.prototype.onGetData = function(resp,cmd){
 	
 	//this.m_started = true;
 	//this.toggleDocTypeVis();
-	
+
 	var m = this.getModel();
 	if (cmd=="copy"){
 		m.setFieldValue("application_state","filling");
@@ -681,7 +708,7 @@ ApplicationDialog_View.prototype.onGetData = function(resp,cmd){
 	}
 	
 	var do_expertise = (m.getFieldValue("expertise_type")=="pd" || m.getFieldValue("expertise_type")=="eng_survey" || m.getFieldValue("expertise_type")=="pd_eng_survey");
-	this.getElement("service_cont").getElement("do_expertise").setValue(do_expertise);
+	this.getElement("service_cont").getElement("expertise").setValue(do_expertise);
 	
 	this.calcFillPercent();
 	
@@ -689,24 +716,19 @@ ApplicationDialog_View.prototype.onGetData = function(resp,cmd){
 	
 	var mes_id = "inf_"+st;
 	
-	//Входящие/исходящие
-	/*
-	if (st=="filling"){
-		DOMHelper.addClass(document.getElementById(this.getId()+":tab-doc_flow_in"),"hidden");
-		DOMHelper.addClass(document.getElementById(this.getId()+":tab-doc_flow_out"),"hidden");
-	}	
-	else{
-	*/
 	if (cmd!="insert"){
 		//add doc flow elements
 		var app_ref = new RefType({"keys":{"id":m.getFieldValue("id")},"descr":m.getFieldValue("select_descr")});
 		var tab_out = new DocFlowOutClientList_View(this.getId()+":doc_flow_out",{
 			"application":app_ref,
+			"readOnly":(st!="waiting_for_contract"&&st!="waiting_for_pay"&&st!="expertise"),
 			"models":{"DocFlowOutClientList_Model":this.m_DocFlowOutClientList_Model}
 		});
 		var dlg_m = new DocFlowOutClientDialog_Model();
 		dlg_m.setFieldValue("applications_ref",app_ref);
-		dlg_m.setFieldValue("subject","Изменения по заявлению №"+m.getFieldValue("id")+" от "+DateHelper.format(m.getFieldValue("create_dt"),"d/m/Y"));
+		//dlg_m.setFieldValue("subject","Изменения по заявлению №"+m.getFieldValue("id")+" от "+DateHelper.format(m.getFieldValue("create_dt"),"d/m/Y"));
+		dlg_m.setFieldValue("subject","Ответы на замечания");
+		
 		dlg_m.recInsert();
 		tab_out.getElement("grid").setInsertViewOptions({
 			"models":{
@@ -725,8 +747,14 @@ ApplicationDialog_View.prototype.onGetData = function(resp,cmd){
 		this.addElement(tab_in);
 	}
 	
-	//File attachments ВРЕМЕННО
-	//|| st=="expertise" || st=="waiting_for_contract"
+	if (!cmd || cmd=="edit"){
+		DOMHelper.delClass(document.getElementById(this.getId()+":tab-doc_flow_in"),"hidden");
+		DOMHelper.delClass(document.getElementById(this.getId()+":tab-doc_flow_out"),"hidden");
+		if (this.getModel().getField("doc_folders").isSet()){
+			DOMHelper.delClass(document.getElementById(this.getId()+":tab-doc_folders"),"hidden");
+		}
+	}
+	
 	if ((st=="filling" ) && cmd!="copy"){
 		//doc flow files can be modified
 		for (var tab_name in this.m_documentTabs){
@@ -740,20 +768,12 @@ ApplicationDialog_View.prototype.onGetData = function(resp,cmd){
 	if (m.getField("application_state_end_date").isSet()){
 		var n = document.getElementById(this.getId()+":application_state_end_date");
 		var dt = m.getFieldValue("application_state_end_date");
-		n.textContent = DateHelper.format(dt,"d/m/Y");
-		
+		n.textContent = DateHelper.format(dt,"d/m/Y");		
 	}
 
-	//read only stattes
-	if (st!="filling"){
-		this.disableAll();
-		
-		this.getElement("doc_flow_out").setEnabled(true);
-		this.getElement("doc_flow_in").setEnabled(true);
-		this.getElement("app_print_expertise").setEnabled(true);
-		this.getElement("app_print_cost_eval").setEnabled(true);
-		this.getElement("app_print_modification").setEnabled(true);
-		this.getElement("app_print_audit").setEnabled(true);		
+	//read only states
+	if(this.m_readOnly){
+		this.disableAll();		
 	}
 	
 	//base derived app
@@ -934,7 +954,6 @@ ApplicationDialog_View.prototype.checkBeforePrint = function(){
 	var tab_values = this.calcFillPercent();
 	for(var id in tab_values){
 		if (id!="application_prints-tab" && tab_values[id].percent<100){
-			console.dir(tab_values[id])
 			throw new Error("Закладка "+tab_values[id].alias+" не заполнена на 100%!");
 		}		
 	}
@@ -967,19 +986,49 @@ ApplicationDialog_View.prototype.disableAll = function(){
 	this.setEnabled(false);
 	document.getElementById(this.getId()+":cmdOk").setAttribute("disabled","disabled");
 	
+	this.getElement("doc_flow_out").setEnabled(true);
+	this.getElement("doc_flow_in").setEnabled(true);
+
+	this.getElement("applicant").getElement("auth_letter_file").setEnabled(false);
+	this.getElement("doc_folders").setEnabled(true);
+	
+	var serv_cont = this.getElement("service_cont");
+	if (serv_cont.getElement("expertise").getValue()){
+		DOMHelper.swapClasses(
+			document.getElementById("ApplicationDialog:service_cont:expertise-panel"),
+			"service-type-en","service-type-dis"
+		);	
+	}
+	if (serv_cont.getElement("cost_eval_validity").getValue()){
+		DOMHelper.swapClasses(
+			document.getElementById("ApplicationDialog:service_cont:cost_eval_validity-panel"),
+			"service-type-en","service-type-dis"
+		);	
+	}
+	if (serv_cont.getElement("modification").getValue()){
+		DOMHelper.swapClasses(
+			document.getElementById("ApplicationDialog:service_cont:modification-panel"),
+			"service-type-en","service-type-dis"
+		);	
+	}
+	if (serv_cont.getElement("audit").getValue()){
+		DOMHelper.swapClasses(
+			document.getElementById("ApplicationDialog:service_cont:audit-panel"),
+			"service-type-en","service-type-dis"
+		);	
+	}
+	
 	this.setCmdEnabled();
 	
 	$(".fileDeleteBtn").attr("disabled","disabled");
 	$(".fillClientData").attr("disabled","disabled");
 	$(".uploader-file-add").attr("disabled","disabled");
+	$("a[download_href=true]").removeAttr("disabled");
 	
 	if (window.getApp().getServVar("role_id")=="admin" && window.getApp().getServVar("temp_doc_storage")=="1"){
 		this.getElement("users_ref").setEnabled(true);
 	}
 	
-	if (this.getElement("app_print_expertise").getVisible()){
-		this.getElement("app_print_expertise").setEnabled(false);
-	}
 }
 
 /**

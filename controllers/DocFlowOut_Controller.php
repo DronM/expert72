@@ -77,6 +77,17 @@ class DocFlowOut_Controller extends DocFlow_Controller{
 		
 		$pm->addParam(new FieldExtInt('ret_id'));
 		
+			$f_params = array();
+			
+			$param = new FieldExtEnum('expertise_result',',','positive,negative'
+			,$f_params);
+		$pm->addParam($param);		
+		
+			$f_params = array();
+			$param = new FieldExtInt('expertise_reject_type_id'
+			,$f_params);
+		$pm->addParam($param);		
+		
 		
 		$this->addPublicMethod($pm);
 		$this->setInsertModelId('DocFlowOut_Model');
@@ -157,6 +168,17 @@ class DocFlowOut_Controller extends DocFlow_Controller{
 			));
 			$pm->addParam($param);
 		
+			$f_params = array();
+			
+			$param = new FieldExtEnum('expertise_result',',','positive,negative'
+			,$f_params);
+		$pm->addParam($param);		
+		
+			$f_params = array();
+			$param = new FieldExtInt('expertise_reject_type_id'
+			,$f_params);
+		$pm->addParam($param);		
+		
 		
 			$this->addPublicMethod($pm);
 			$this->setUpdateModelId('DocFlowOut_Model');
@@ -223,6 +245,25 @@ class DocFlowOut_Controller extends DocFlow_Controller{
 
 			
 		$pm = new PublicMethod('get_file');
+		
+				
+	$opts=array();
+	
+		$opts['length']=36;
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtString('file_id',$opts));
+	
+				
+	$opts=array();
+	
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtInt('doc_id',$opts));
+	
+			
+		$this->addPublicMethod($pm);
+
+			
+		$pm = new PublicMethod('get_file_sig');
 		
 				
 	$opts=array();
@@ -347,6 +388,67 @@ class DocFlowOut_Controller extends DocFlow_Controller{
 		);
 	}
 	
+	private function update_contract_data($pm){
+		$fld = NULL;
+		$app_id = 0;
+		if ($pm->getParamValue('expertise_result')){
+			$fld = sprintf('expertise_result=%s',$this->getExtDbVal($pm,'expertise_result'));
+		}
+		if ($pm->getParamValue('expertise_reject_type_id') && $this->getExtDbVal($pm,'expertise_reject_type_id')>0){
+			$fld = (is_null($fld))? '':($fld.',');
+			$fld.= sprintf('expertise_reject_type_id=%d',$this->getExtDbVal($pm,'expertise_reject_type_id'));
+		}
+		
+		if (!is_null($fld)){
+			if ($pm->getParamValue('to_application_id')){
+				$app_id = $this->getExtDbVal($pm,'to_application_id');
+			}
+			else if ($pm->getParamValue('old_id')){
+				$app_id = $this->getDbLink()->query_first_col(sprintf("SELECT to_application_id FROM doc_flow_out WHERE id=%d",
+				$this->getExtDbVal($pm,'old_id')
+				));
+			
+			}
+			if ($app_id){
+				$this->getDbLinkMaster()->query(sprintf("UPDATE contracts SET %s WHERE application_id=%d",
+				$fld,$app_id
+				));
+			}
+		}
+	}
+
+
+	public function insert($pm){
+		try{
+			$this->getDbLinkMaster()->query("BEGIN");
+			
+			$this->update_contract_data($pm);
+			
+			parent::insert($pm);
+			
+			$this->getDbLinkMaster()->query("COMMIT");
+		}
+		catch(Exception $e){
+			$this->getDbLinkMaster()->query("ROLLBACK");
+			throw $e;
+		}
+	}
+	
+	public function update($pm){
+		try{
+			$this->getDbLinkMaster()->query("BEGIN");
+			
+			$this->update_contract_data($pm);
+			
+			parent::update($pm);
+			
+			$this->getDbLinkMaster()->query("COMMIT");
+		}
+		catch(Exception $e){
+			$this->getDbLinkMaster()->query("ROLLBACK");
+			throw $e;
+		}
+	}
 
 
 }

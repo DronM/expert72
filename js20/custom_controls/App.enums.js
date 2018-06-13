@@ -28,7 +28,7 @@ App.prototype.m_enums = {
 		,"ru_approved":"Согласован"
 		,"ru_confirming":"На утверждении"
 		,"ru_not_confirmed":"Не утвержден"
-		,"ru_registered":"Зарегистрирован"
+		,"ru_registered":"Отправлен"
 		,"ru_registering":"На регистрации"
 		},
 	"data_types":{

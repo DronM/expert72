@@ -10,6 +10,7 @@ FileUploader_View.prototype.ER_NO_DATA_FILE_FOR_SIG = "Файл с данным�
 FileUploader_View.prototype.ER_NO_SIG_FILES = "У следующих файлов нет ЭЦП: %";
 FileUploader_View.prototype.ER_NO_SIG_IDLISTS = "У следующих информационно-удостоверяющих листов нет ЭЦП: %";
 FileUploader_View.prototype.ER_NO_SIG_NO_IDLIST_FILES = "У следующих файлов нет ни ЭЦП ни информационно-удостоверяющего листа: %";
+FileUploader_View.prototype.ER_FILE_EXISTS = "Файл с именем '%' уже есть в разделе!";
 
 FileUploader_View.prototype.NT_FILE_DOWNLOADED = "Загружен файл %";
 FileUploader_View.prototype.NT_FILE_DELETED = "Файл удален.";

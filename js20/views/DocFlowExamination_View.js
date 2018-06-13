@@ -130,9 +130,9 @@ function DocFlowExamination_View(id,options){
 			"labelCaption":"Новый статус заявления:",		
 			"addNotSelected":false,
 			"options":[
-				{"value":"waiting_for_contract","descr":"Подписание контракта по заявлению","checked":true}
-				,{"value":"closed","descr":"Отказ по заявлению"}
-				,{"value":"filling","descr":"Замечания по контракту"}
+				{"value":"waiting_for_contract","descr":"Контракт по заявлению","checked":true}				
+				,{"value":"filling","descr":"Отказ с замечаниями"}
+				,{"value":"returned","descr":"Возврат без рассмотрения"}
 			]
 		}));
 		
@@ -358,7 +358,7 @@ DocFlowExamination_View.prototype.createDocFlowOut = function(){
 		if (app_st=="waiting_for_contract"){
 			doc_type = "app_resp";
 		}
-		else if (app_st=="closed"){
+		else if (app_st=="returned"){
 			doc_type = "app_resp_return";
 		}
 		else if (app_st=="filling"){

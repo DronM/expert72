@@ -6,6 +6,7 @@ require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLString.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLInt.php');
 
 require_once(ABSOLUTE_PATH.'controllers/Application_Controller.php');
+require_once(ABSOLUTE_PATH.'controllers/DocFlow_Controller.php');
 
 include ABSOLUTE_PATH.'vendor/autoload.php';
  
@@ -42,172 +43,240 @@ function prolongate_session() {
 	}
 }
  
-/*
-Еще есть необязательный doc_flow_out_client_id
-*/
-if (
-	$_SESSION['LOGGED']
-	&& isset($_REQUEST['f']) &&  $_REQUEST['f']=='app_file_upload'
-	&& isset($_REQUEST['application_id'])
-	&& isset($_REQUEST['file_id'])
-	&& isset($_REQUEST['doc_id'])
-	&& isset($_REQUEST['doc_type'])
-	&& isset($_REQUEST['file_path'])
-	&& isset($_REQUEST['file_signed'])
-	&& isset($_REQUEST['signature'])
-){
-	prolongate_session();
+try{ 
+	/**
+	 * Еще есть необязательный doc_flow_out_client_id
+	 */
+	if (
+		$_SESSION['LOGGED']
+		&& isset($_REQUEST['f']) &&  $_REQUEST['f']=='app_file_upload'
+		&& isset($_REQUEST['application_id'])
+		&& isset($_REQUEST['file_id'])
+		&& isset($_REQUEST['doc_id'])
+		&& isset($_REQUEST['doc_type'])
+		&& isset($_REQUEST['file_path'])
+		&& isset($_REQUEST['file_signed'])
+		&& isset($_REQUEST['signature'])
+	){
+		prolongate_session();
 	
-	$resumable = new Resumable($request, $response);
-	$resumable->tempFolder = ABSOLUTE_PATH.'tmps';
+		$resumable = new Resumable($request, $response);
+		$resumable->tempFolder = ABSOLUTE_PATH.'output';
 	
-	//recursive depth check
-	if (count(explode('/',$_REQUEST['file_path']))>MAX_DOC_DEPTH){
-		//
-		throw new Exception('Max document depth exceeded!');
-	}
-	
-	$resumable->uploadFolder =
-		FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
-		Application_Controller::APP_DIR_PREF.$_REQUEST['application_id'].DIRECTORY_SEPARATOR.
-		Application_Controller::dirNameOnDocType($_REQUEST['doc_type']).DIRECTORY_SEPARATOR.
-		$_REQUEST['file_path']
-		;			
-	mkdir_or_error($resumable->uploadFolder);
-	
-	//$resumable->debug = true;
-	$resumable->process();
-	
-	if ($resumable->isUploadComplete()){	
-		if (!isset($_SESSION['client_download_file_types_ar'])){
-			$_SESSION['client_download_file_types_ar'] = array();
-			$ar = json_decode($dbLink->query_first("SELECT const_client_download_file_types_val() AS val")['val'],TRUE);
-			foreach($ar['rows'] as $row){
-				array_push($_SESSION['client_download_file_types_ar'], strtolower($row['fields']['ext']));
-	
-			}			
-			$_SESSION['client_download_file_max_size'] = intval($dbLink->query_first("SELECT const_client_download_file_max_size_val() AS val")['val']);
+		//recursive depth check
+		if (count(explode('/',$_REQUEST['file_path']))>MAX_DOC_DEPTH){
+			//
+			throw new Exception('Max document depth exceeded!');
 		}
+	
+		$resumable->uploadFolder =
+			FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
+			Application_Controller::APP_DIR_PREF.$_REQUEST['application_id'].DIRECTORY_SEPARATOR.
+			Application_Controller::dirNameOnDocType($_REQUEST['doc_type']).DIRECTORY_SEPARATOR.
+			$_REQUEST['file_path']
+			;			
+		mkdir_or_error($resumable->uploadFolder);
+	
+		//$resumable->debug = true;
+		$resumable->process();
+	
+		if ($resumable->isUploadComplete()){	
+			if (!isset($_SESSION['client_download_file_types_ar'])){
+				$_SESSION['client_download_file_types_ar'] = array();
+				$ar = json_decode($dbLink->query_first("SELECT const_client_download_file_types_val() AS val")['val'],TRUE);
+				foreach($ar['rows'] as $row){
+					array_push($_SESSION['client_download_file_types_ar'], strtolower($row['fields']['ext']));
+	
+				}			
+				$_SESSION['client_download_file_max_size'] = intval($dbLink->query_first("SELECT const_client_download_file_max_size_val() AS val")['val']);
+			}
 		
-		$orig_file = $resumable->uploadFolder.DIRECTORY_SEPARATOR.$_REQUEST['resumableFilename'];
+			$orig_file = $resumable->uploadFolder.DIRECTORY_SEPARATOR.$_REQUEST['resumableFilename'];
 		
-		try{
-			$db_app_id = NULL;
-			FieldSQLInt::formatForDb($_REQUEST['application_id'],$db_app_id);
+			try{
+				$db_app_id = NULL;
+				FieldSQLInt::formatForDb($_REQUEST['application_id'],$db_app_id);
 			
-			//application state
-			Application_Controller::checkSentState($dbLink,$db_app_id,TRUE);
+				//application state
+				Application_Controller::checkSentState($dbLink,$db_app_id,TRUE);
 
-			if ($_SESSION['client_download_file_max_size']<filesize($orig_file)){
-				throw new Exception("Превышение максимального размера файла!");
-			}
-		
-			if ($_REQUEST['signature']!='true'){
-				$orig_ext = strtolower(pathinfo($orig_file, PATHINFO_EXTENSION));
-				if (!in_array($orig_ext,$_SESSION['client_download_file_types_ar'])){					
-					throw new Exception("Неверное расширение файла!");
+				if ($_SESSION['client_download_file_max_size']<filesize($orig_file)){
+					throw new Exception("Превышение максимального размера файла!");
 				}
 		
-				$file = $orig_file;
-				//$resumable->uploadFolder.DIRECTORY_SEPARATOR.$_REQUEST['file_id'];
-				//rename($orig_file,$file);
+				$is_sig = (isset($_REQUEST['signature']) && $_REQUEST['signature']=='true');
+				if (!$is_sig){
+					$orig_ext = strtolower(pathinfo($_REQUEST['resumableFilename'], PATHINFO_EXTENSION));
+					if (!in_array($orig_ext,$_SESSION['client_download_file_types_ar'])){					
+						throw new Exception("Неверное расширение файла!");
+					}
 		
-				$db_fileName = NULL;				
-				$db_doc_type = NULL;
-				$db_doc_id = NULL;
-				$db_file_id = NULL;
-				$db_file_path = NULL;
+					$db_fileName = NULL;				
+					$db_doc_type = NULL;
+					$db_doc_id = NULL;
+					$db_file_id = NULL;
+					$db_file_path = NULL;
 						
-				FieldSQLInt::formatForDb($_REQUEST['doc_id'],$db_doc_id);
-				FieldSQLString::formatForDb($dbLink,$_REQUEST['doc_type'],$db_doc_type);
-				FieldSQLString::formatForDb($dbLink,$_REQUEST['resumableFilename'],$db_fileName);
-				FieldSQLString::formatForDb($dbLink,$_REQUEST['file_id'],$db_file_id);
-				FieldSQLString::formatForDb($dbLink,$_REQUEST['file_path'],$db_file_path);
-		
-				//throw new Exception('AppId='.$db_app_id.' DocId='.$db_doc_id);
-				//throw new Exception(sprintf(
-				$dbLink->query(sprintf(		
-				"INSERT INTO application_document_files
-				(file_id,application_id,document_type,document_id,file_size,file_name,file_path,file_signed)
-				VALUES
-				(%s,%d,%s::document_types,%d,%d,%s,%s,%s)",
-					$db_file_id,
-					$db_app_id,
-					$db_doc_type,
-					$db_doc_id,				
-					filesize($file),
-					$db_fileName,
-					$db_file_path,
-					($_REQUEST['file_signed']=='true')? 'TRUE':'FALSE'
-				));
-		
-				Application_Controller::removeAllZipFile($db_app_id);
-				Application_Controller::removePDFFile($db_app_id);
-				
-				//Если есть парамтер doc_flow_out_client_id значит грузим из исходящего письма клиента - ставим отметку!!!
-				if (isset($_REQUEST['doc_flow_out_client_id'])){
-					$db_doc_flow_out_client_id = NULL;
-					FieldSQLInt::formatForDb($_REQUEST['doc_flow_out_client_id'],$db_doc_flow_out_client_id);
-					$dbLink->query(sprintf(		
-					"INSERT INTO doc_flow_out_client_document_files (file_id,doc_flow_out_client_id)
-					VALUES (%s,%d)",
-					$db_file_id,$db_doc_flow_out_client_id
+					FieldSQLInt::formatForDb($_REQUEST['doc_id'],$db_doc_id);
+					FieldSQLString::formatForDb($dbLink,$_REQUEST['doc_type'],$db_doc_type);
+					FieldSQLString::formatForDb($dbLink,$_REQUEST['resumableFilename'],$db_fileName);
+					FieldSQLString::formatForDb($dbLink,$_REQUEST['file_id'],$db_file_id);
+					FieldSQLString::formatForDb($dbLink,$_REQUEST['file_path'],$db_file_path);
+
+					//Проверка файла в разделе по имени
+					$ar = $dbLink->query_first(sprintf("SELECT TRUE AS present FROM application_document_files
+					WHERE application_id=%d AND document_type=%s AND file_path=%s AND file_name=%s AND coalesce(deleted,FALSE)=FALSE",
+					$db_app_id,$db_doc_type,$db_file_path,$db_fileName
 					));
+					if (count($ar)&&$ar['present']=='t'){
+						throw new Exception(sprintf("Файл с данным именем уже присутствует в разделе %s данного заявления",
+						$db_file_path));
+					}
+		
+					//throw new Exception('AppId='.$db_app_id.' DocId='.$db_doc_id);
+					//throw new Exception(sprintf(
+					$dbLink->query(sprintf(		
+					"INSERT INTO application_document_files
+					(file_id,application_id,document_type,document_id,file_size,file_name,file_path,file_signed)
+					VALUES
+					(%s,%d,%s::document_types,%d,%d,%s,%s,%s)",
+						$db_file_id,
+						$db_app_id,
+						$db_doc_type,
+						$db_doc_id,				
+						filesize($orig_file),
+						$db_fileName,
+						$db_file_path,
+						($_REQUEST['file_signed']=='true')? 'TRUE':'FALSE'
+					));
+		
+					Application_Controller::removeAllZipFile($db_app_id);
+					Application_Controller::removePDFFile($db_app_id);
 				
-					
+					//Если есть парамтер doc_flow_out_client_id значит грузим из исходящего письма клиента - ставим отметку!!!
+					if (isset($_REQUEST['doc_flow_out_client_id'])){
+						$db_doc_flow_out_client_id = NULL;
+						FieldSQLInt::formatForDb($_REQUEST['doc_flow_out_client_id'],$db_doc_flow_out_client_id);
+						$dbLink->query(sprintf(		
+						"INSERT INTO doc_flow_out_client_document_files (file_id,doc_flow_out_client_id)
+						VALUES (%s,%d)",
+						$db_file_id,$db_doc_flow_out_client_id
+						));
+					}				
 				}
+				rename(
+					$orig_file,
+					$resumable->uploadFolder.DIRECTORY_SEPARATOR.$_REQUEST['file_id'].($is_sig? '.sig':'')
+				);
+			
+			}
+			catch(Exception $e){
+				unlink($orig_file);
+				throw $e;			
 			}
 		}
-		catch(Exception $e){
-			unlink($orig_file);
-			throw $e;
+	}
+	else if (
+		$_SESSION['LOGGED']
+		&& isset($_REQUEST['f']) &&  $_REQUEST['f']=='doc_flow_file_upload'
+		&& isset($_REQUEST['doc_flow_id'])
+		&& isset($_REQUEST['file_id'])
+		&& isset($_REQUEST['doc_type']) && ($_REQUEST['doc_type']=='in' || $_REQUEST['doc_type']=='out')
+	){
+		prolongate_session();
+	
+		$resumable = new Resumable($request, $response);
+		$resumable->tempFolder = ABSOLUTE_PATH.'output';
+	
+		$file_path = (isset($_REQUEST['file_path']))? $_REQUEST['file_path'] : DocFlow_Controller::getDefAppDir($_REQUEST['doc_type']);
+	
+		//Определим куда поместить файл в заявление или отдельно
+		if ($_REQUEST['doc_type']=='out'){
+			$ar = $dbLink->query_first(sprintf("SELECT to_application_id FROM doc_flow_out WHERE id=%d",$_REQUEST['doc_flow_id']));
+			if (!count($ar)){
+				throw new Exception(DocFlow_Controller::ER_NOT_FOUND);
+			}
+			if ($ar['to_application_id']){
+				$resumable->uploadFolder =
+					FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
+					Application_Controller::APP_DIR_PREF.$ar['to_application_id'].DIRECTORY_SEPARATOR.$file_path;
+			}
+			else{
+				$resumable->uploadFolder = DOC_FLOW_FILE_STORAGE_DIR;
+			}
 		}
-	}
-}
-else if (
-	$_SESSION['LOGGED']
-	&& isset($_REQUEST['f']) &&  $_REQUEST['f']=='doc_flow_file_upload'
-	&& isset($_REQUEST['doc_flow_id'])
-	&& isset($_REQUEST['file_id'])
-	&& isset($_REQUEST['doc_type']) && ($_REQUEST['doc_type']=='in' || $_REQUEST['doc_type']=='out')
-){
-	prolongate_session();
-	
-	$resumable = new Resumable($request, $response);
-	$resumable->tempFolder = ABSOLUTE_PATH.'tmps';
-	
-	$resumable->uploadFolder = DOC_FLOW_FILE_STORAGE_DIR;			
-	mkdir_or_error($resumable->uploadFolder);
-	
-	//$resumable->debug = true;
-	$resumable->process();
-	
-	if ($resumable->isUploadComplete()){	
-	
-		$orig_file = $resumable->uploadFolder.DIRECTORY_SEPARATOR.$_REQUEST['resumableFilename'];
-		$file = $resumable->uploadFolder.DIRECTORY_SEPARATOR.$_REQUEST['file_id'];
-		rename($orig_file,$file);
-	
-		$db_id = NULL;
-		$db_file_id = NULL;
-		$db_file_name = NULL;
-	
-		FieldSQLInt::formatForDb($_REQUEST['doc_flow_id'],$db_id);
-		FieldSQLString::formatForDb($dbLink,$_REQUEST['file_id'],$db_file_id);
-		FieldSQLString::formatForDb($dbLink,$_REQUEST['resumableFilename'],$db_file_name);
-	
-		$dbLink->query(sprintf(
-		"INSERT INTO doc_flow_attachments
-		(file_id,doc_type,doc_id,file_size,file_name,file_signed)
-		VALUES
-		(%s,'%s'::data_types,%d,%s,%s,TRUE)",
-			$db_file_id,
-			($_REQUEST['doc_type']=='in')? "doc_flow_in":"doc_flow_out",
-			$db_id,			
-			filesize($file),
-			$db_file_name
-		));
-	}
+		else{
+			$resumable->uploadFolder = DOC_FLOW_FILE_STORAGE_DIR;
+		}
 
+		mkdir_or_error($resumable->uploadFolder);
+	
+		//$resumable->debug = true;
+		$resumable->process();
+	
+		if ($resumable->isUploadComplete()){	
+			if (!isset($_SESSION['employee_download_file_types_ar'])){
+				$_SESSION['employee_download_file_types_ar'] = array();
+				$ar = json_decode($dbLink->query_first("SELECT const_employee_download_file_types_val() AS val")['val'],TRUE);
+				foreach($ar['rows'] as $row){
+					array_push($_SESSION['employee_download_file_types_ar'], strtolower($row['fields']['ext']));
+	
+				}
+				if (!array_key_exists('sig',$_SESSION['employee_download_file_types_ar'])){
+					array_push($_SESSION['employee_download_file_types_ar'], 'sig');
+			
+				}
+				$_SESSION['employee_download_file_max_size'] = intval($dbLink->query_first("SELECT const_employee_download_file_max_size_val() AS val")['val']);
+			}
+	
+			$orig_file = $resumable->uploadFolder.DIRECTORY_SEPARATOR.$_REQUEST['resumableFilename'];
+			try{
+				if ($_SESSION['employee_download_file_max_size']<filesize($orig_file)){
+					throw new Exception("Превышение максимального размера файла!");
+				}
+		
+				$is_sig = (isset($_REQUEST['signature']) && $_REQUEST['signature']=='true');
+			
+				if (!$is_sig){
+					$db_id = NULL;
+					$db_file_id = NULL;
+					$db_file_name = NULL;
+					$db_file_path = NULL;
+	
+					FieldSQLInt::formatForDb($_REQUEST['doc_flow_id'],$db_id);
+					FieldSQLString::formatForDb($dbLink,$_REQUEST['file_id'],$db_file_id);
+					FieldSQLString::formatForDb($dbLink,$_REQUEST['resumableFilename'],$db_file_name);
+					FieldSQLString::formatForDb($dbLink,$file_path,$db_file_path);
+	
+					$dbLink->query(sprintf(
+					"INSERT INTO doc_flow_attachments
+					(file_id,doc_type,doc_id,file_size,file_name,file_path,file_signed)
+					VALUES
+					(%s,'%s'::data_types,%d,%s,%s,%s,%s)",
+						$db_file_id,
+						($_REQUEST['doc_type']=='in')? "doc_flow_in":"doc_flow_out",
+						$db_id,			
+						filesize($orig_file),
+						$db_file_name,
+						$db_file_path,
+						(isset($_REQUEST['file_signed']) && $_REQUEST['file_signed']=='true')? 'TRUE':'FALSE'
+					));
+				}
+				rename(
+					$orig_file,
+					$resumable->uploadFolder.DIRECTORY_SEPARATOR.$_REQUEST['file_id'].($is_sig? '.sig':'')
+				);			
+			}
+			catch(Exception $e){
+				unlink($orig_file);
+				throw $e;
+			}		
+		}
+
+	}
 }
+catch(Exception $e){
+	die($e->getMessage());	
+}
+
 ?>

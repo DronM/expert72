@@ -70,6 +70,15 @@ function Service_Model(options){
 	
 	filed_options.autoInc = false;	
 	
+	options.fields.expertise_day_count = new FieldInt("expertise_day_count",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
 	options.fields.contract_postf = new FieldString("contract_postf",filed_options);
 	options.fields.contract_postf.getValidator().setMaxLength('5');
 	

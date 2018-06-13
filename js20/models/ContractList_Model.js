@@ -87,7 +87,7 @@ function ContractList_Model(options){
 	filed_options.autoInc = false;	
 	
 	options.fields.document_type = new FieldEnum("document_type",filed_options);
-	filed_options.enumValues = 'pd,eng_survey,cost_eval_validity,modification,audit';
+	filed_options.enumValues = 'pd,eng_survey,cost_eval_validity,modification,audit,documents';
 		
 	
 	var filed_options = {};
@@ -171,6 +171,22 @@ function ContractList_Model(options){
 	filed_options.autoInc = false;	
 	
 	options.fields.work_end_date = new FieldDate("work_end_date",filed_options);
+		
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.expert_work_end_date = new FieldDate("expert_work_end_date",filed_options);
+		
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.expert_work_day_count = new FieldInt("expert_work_day_count",filed_options);
 		
 	
 	var filed_options = {};

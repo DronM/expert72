@@ -30,7 +30,7 @@ function ExpertSection_Model(options){
 	filed_options.autoInc = false;	
 	
 	options.fields.document_type = new FieldEnum("document_type",filed_options);
-	filed_options.enumValues = 'pd,eng_survey,cost_eval_validity,modification,audit';
+	filed_options.enumValues = 'pd,eng_survey,cost_eval_validity,modification,audit,documents';
 	options.fields.document_type.getValidator().setRequired(true);
 	
 				

@@ -76,6 +76,12 @@ function DocFlowInList_View(id,options){
 					"field":new FieldString("state")
 				})		
 			}
+			,"mail_type":{
+				"binding":new CommandBinding({
+					"control":new DocFlowTypeSelect(id+":filter-ctrl-doc_flow_type",{"type_id":"out","contClassName":"form-group-filter"}),
+					"field":new FieldInt("doc_flow_type_id")
+				})
+			}
 		
 		};
 		commands = new GridCmdContainerAjx(id+":grid:cmd",{
@@ -92,8 +98,8 @@ function DocFlowInList_View(id,options){
 				new GridColumn({"field":model.getField("reg_number")})
 			],
 			"sortable":true							
-		}),					
-		new GridCellHead(id+":grid:head:date_time",{
+		})					
+		,new GridCellHead(id+":grid:head:date_time",{
 			"value":"Дата",
 			"columns":[
 				new GridColumnDate({
@@ -108,8 +114,9 @@ function DocFlowInList_View(id,options){
 			],
 			"sortable":true,
 			"sort":"desc"
-		}),
-		new GridCellHead(id+":grid:head:subject",{
+		})
+		/*
+		,new GridCellHead(id+":grid:head:subject",{
 			"value":"Тема",
 			"columns":[
 				new GridColumn({
@@ -117,9 +124,9 @@ function DocFlowInList_View(id,options){
 				})
 			],
 			"sortable":true
-		}),
-		/*
-		new GridCellHead(id+":grid:head:doc_flow_types_ref",{
+		})
+		*/
+		,new GridCellHead(id+":grid:head:doc_flow_types_ref",{
 			"value":"Вид письма",
 			"columns":[
 				new GridColumnRef({
@@ -128,7 +135,14 @@ function DocFlowInList_View(id,options){
 			],
 			"sortable":true
 		})
-		*/
+		,new GridCellHead(id+":grid:head:sender_construction_name",{
+			"value":"Объект",
+			"columns":[
+				new GridColumn({
+					"field":model.getField("sender_construction_name")
+				})
+			]
+		})
 		,new GridCellHead(id+":grid:head:state",{
 			"value":"Статус",
 			"columns":[
@@ -154,14 +168,6 @@ function DocFlowInList_View(id,options){
 			"columns":[
 				new GridColumn({
 					"field":model.getField("sender")
-				})
-			]
-		})
-		,new GridCellHead(id+":grid:head:sender_construction_name",{
-			"value":"Объект",
-			"columns":[
-				new GridColumn({
-					"field":model.getField("sender_construction_name")
 				})
 			]
 		})

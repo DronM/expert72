@@ -40,7 +40,7 @@ extend(DocumentTemplate_Controller,ControllerObjServer);
 	
 	var options = {};
 	options.primaryKey = true;options.required = true;	
-	options.enumValues = 'pd,eng_survey,cost_eval_validity,modification,audit';
+	options.enumValues = 'pd,eng_survey,cost_eval_validity,modification,audit,documents';
 	var field = new FieldEnum("document_type",options);
 	
 	pm.addField(field);
@@ -84,7 +84,7 @@ extend(DocumentTemplate_Controller,ControllerObjServer);
 	
 	var options = {};
 	options.primaryKey = true;	
-	options.enumValues = 'pd,eng_survey,cost_eval_validity,modification,audit';
+	options.enumValues = 'pd,eng_survey,cost_eval_validity,modification,audit,documents';
 	options.enumValues+= (options.enumValues=='')? '':',';
 	options.enumValues+= 'null';
 	

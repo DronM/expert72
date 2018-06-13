@@ -16,6 +16,7 @@ function ClientINN(id,options){
 			this.applyResult(model);
 			self.m_mainView.getElement("name_full").reset();
 			self.m_mainView.getElement("name").fillFullName();
+			if(self.m_mainView&&self.m_mainView.m_mainView&&self.m_mainView.m_mainView.calcFillPercent)self.m_mainView.m_mainView.calcFillPercent();
 		}
 		
 	});

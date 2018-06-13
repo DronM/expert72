@@ -291,6 +291,33 @@ function DocFlowOutDialog_Model(options){
 	options.fields.doc_flow_out_processes_chain = new FieldJSON("doc_flow_out_processes_chain",filed_options);
 	
 			
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.expertise_result = new FieldString("expertise_result",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.expertise_reject_types_ref = new FieldJSON("expertise_reject_types_ref",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.expertise_reject_type_id = new FieldInt("expertise_reject_type_id",filed_options);
+	
 		DocFlowOutDialog_Model.superclass.constructor.call(this,id,options);
 }
 extend(DocFlowOutDialog_Model,ModelXML);

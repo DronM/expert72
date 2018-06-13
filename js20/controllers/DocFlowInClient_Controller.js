@@ -28,6 +28,7 @@ function DocFlowInClient_Controller(options){
 	this.addGetObject();
 	this.addGetList();
 	this.add_get_file();
+	this.add_get_file_sig();
 	this.add_set_viewed();
 		
 }
@@ -100,6 +101,18 @@ extend(DocFlowInClient_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	
+	var field = new FieldInt("doc_flow_type_id",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldInt("doc_flow_out_id",options);
+	
+	pm.addField(field);
+	
 		var options = {};
 				
 		pm.addField(new FieldText("reg_number_out",options));
@@ -164,12 +177,45 @@ extend(DocFlowInClient_Controller,ControllerObjServer);
 	var f_opts = {};
 	
 	pm.addField(new FieldBool("viewed",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldInt("doc_flow_type_id",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldInt("doc_flow_out_id",f_opts));
 }
 
 			DocFlowInClient_Controller.prototype.add_get_file = function(){
 	var opts = {"controller":this};
 	
 	var pm = new PublicMethodServer('get_file',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		options.maxlength = "36";
+	
+		pm.addField(new FieldString("file_id",options));
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("doc_id",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			DocFlowInClient_Controller.prototype.add_get_file_sig = function(){
+	var opts = {"controller":this};
+	
+	var pm = new PublicMethodServer('get_file_sig',opts);
 	
 				
 	

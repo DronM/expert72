@@ -10,6 +10,7 @@ require_once(FRAME_WORK_PATH.'basic_classes/ModelSQL.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLInt.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLString.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLText.php');
+require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLEnum.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLBool.php');
 require_once(FRAME_WORK_PATH.'basic_classes/ModelOrderSQL.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLDateTimeTZ.php');
@@ -98,6 +99,14 @@ class DocFlowOutClient_Model extends ModelSQL{
 				
 		$f_sent=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"sent",$f_opts);
 		$this->addField($f_sent);
+		//********************
+		
+		//*** Field doc_flow_out_client_type ***
+		$f_opts = array();
+		$f_opts['id']="doc_flow_out_client_type";
+				
+		$f_doc_flow_out_client_type=new FieldSQLEnum($this->getDbLink(),$this->getDbName(),$this->getTableName(),"doc_flow_out_client_type",$f_opts);
+		$this->addField($f_doc_flow_out_client_type);
 		//********************
 	
 		$order = new ModelOrderSQL();		

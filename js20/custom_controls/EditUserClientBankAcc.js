@@ -15,6 +15,7 @@ function EditUserClientBankAcc(id,options){
 	options = options || {};	
 	
 	options.viewClass = ViewBankAcc;
+	options.viewOptions = {"calcPercent":true};
 	options.viewTemplate = "ViewBankAcc";
 	options.labelCaption = "Банк:";
 	options.headTitle = "Редактирование банковского счета";
@@ -48,13 +49,22 @@ EditUserClientBankAcc.prototype.formatValue = function(val){
 }
 
 EditUserClientBankAcc.prototype.getFillPercent = function(){
-	return (
+	var percent = (
 		this.m_minInf? 100 :
 		(
-			((this.m_valueJSON && this.m_valueJSON.bank && this.m_valueJSON.bank.getDescr()!="")? 50:0)
+			((this.m_valueJSON && this.m_valueJSON.bank && (this.m_valueJSON.bank.getDescr()&&this.m_valueJSON.bank.getDescr()!=""))? 50:0)
 			+((this.m_valueJSON && this.m_valueJSON.acc_number && this.m_valueJSON.acc_number!="")? 50:0)
 		)
 	);
+	this.setAttr("title","Заполнено на "+percent+"%");
+	if (percent>0 && percent<100){
+		DOMHelper.addClass(this.m_node,"null-ref");
+	}
+	else{
+		DOMHelper.delClass(this.m_node,"null-ref");
+	}
+	//this.setAttr("fill_percent",(percent==100)? 100 : ( (percent<50)? 0:50 ));
+	return percent;
 }
 
 EditUserClientBankAcc.prototype.closeSelect = function(){

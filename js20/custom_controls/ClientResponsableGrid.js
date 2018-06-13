@@ -110,14 +110,16 @@ function ClientResponsableGrid(id,options){
 		}
 		this.m_orig_afterServerDelRow();
 	}
+	/*
 	this.m_orig_refreshAfterEdit = this.refreshAfterEdit;
 	this.refreshAfterEdit = function(res){
+		console.log("this.refreshAfterEdit")
 		if (this.m_mainView && res && res.updated){
 			this.m_mainView.calcFillPercent();
 		}
 		this.m_orig_refreshAfterEdit(res);
 	}
-		
+	*/	
 	ClientResponsableGrid.superclass.constructor.call(this,id,options);
 }
 extend(ClientResponsableGrid,GridAjx);
@@ -140,7 +142,25 @@ ClientResponsableGrid.prototype.setClientType = function(ctp){
 }
 
 ClientResponsableGrid.prototype.getFillPercent = function(){
-	return ( (this.getModel().getRowCount()||this.m_minInf)? 100:0);
+	var percent = 0;
+	if (this.m_minInf){
+		percent = 100;
+	}
+	else if (this.getModel().getRowCount()){
+		this.getModel().setRowIndex(0);
+		percent = this.getModel().getField("name").isSet()? 50:0;
+		percent += ((this.getModel().getField("email").isSet()||this.getModel().getField("tel").isSet())? 50:0);
+	}
+	this.setAttr("title","Заполнено на "+percent+"%");
+	//this.setAttr("fill_percent",(percent==100)? 100 : ( (percent<50)? 0:50 ));
+	if (percent>0 && percent<100){
+		DOMHelper.addClass(this.m_node,"null-ref");
+	}
+	else{
+		DOMHelper.delClass(this.m_node,"null-ref");
+	}
+	
+	return percent;
 }
 
 ClientResponsableGrid.prototype.edit = function(cmd){
@@ -150,6 +170,7 @@ ClientResponsableGrid.prototype.edit = function(cmd){
 	}
 	
 	this.m_view = new ClientResponsablePersonEdit(this.getId()+":view:body:view",{
+		"calcPercent":true,
 		"clientTypePerson":(this.m_clientType=="person"),
 		"valueJSON":{
 			"dep":(cmd=="edit" && this.m_clientType!="person")? this.getModel().getFieldValue("dep") : null
@@ -181,19 +202,15 @@ ClientResponsableGrid.prototype.edit = function(cmd){
 			pm.setFieldValue("name",v["name"]);
 			pm.setFieldValue("post",v["post"]);
 			pm.setFieldValue("email",v["email"]);
+			pm.setFieldValue("tel",v["tel"])
 			if(v["person_type"] && self.m_clientType!="person")pm.setFieldValue("person_type",v["person_type"]);
 			
-			/*
-			if(v["name"])pm.setFieldValue("name",v["name"]);
-			if(v["post"] && self.m_clientType!="person")pm.setFieldValue("post",v["post"]);
-			if(v["tel"])pm.setFieldValue("tel",v["tel"]);
-			if(v["email"])pm.setFieldValue("email",v["email"]);
-			if(v["person_type"] && self.m_clientType!="person")pm.setFieldValue("person_type",v["person_type"]);
-			*/
 			pm.run({
 				"ok":function(){
 					self.closeSelect();
-					self.onRefresh();
+					self.onRefresh(function(){
+						self.m_mainView.calcFillPercent();
+					});
 				}
 			});
 		},				
@@ -213,4 +230,3 @@ ClientResponsableGrid.prototype.closeSelect = function(){
 		delete this.m_form;
 	}		
 }
-

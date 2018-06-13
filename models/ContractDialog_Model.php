@@ -177,6 +177,22 @@ class ContractDialog_Model extends ModelSQL{
 		$this->addField($f_work_end_date);
 		//********************
 		
+		//*** Field expert_work_end_date ***
+		$f_opts = array();
+		$f_opts['id']="expert_work_end_date";
+				
+		$f_expert_work_end_date=new FieldSQLDate($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expert_work_end_date",$f_opts);
+		$this->addField($f_expert_work_end_date);
+		//********************
+		
+		//*** Field expert_work_day_count ***
+		$f_opts = array();
+		$f_opts['id']="expert_work_day_count";
+				
+		$f_expert_work_day_count=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expert_work_day_count",$f_opts);
+		$this->addField($f_expert_work_day_count);
+		//********************
+		
 		//*** Field expertise_day_count ***
 		$f_opts = array();
 		$f_opts['id']="expertise_day_count";
@@ -629,6 +645,14 @@ class ContractDialog_Model extends ModelSQL{
 				
 		$f_auth_letter=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"auth_letter",$f_opts);
 		$this->addField($f_auth_letter);
+		//********************
+		
+		//*** Field doc_folders ***
+		$f_opts = array();
+		$f_opts['id']="doc_folders";
+				
+		$f_doc_folders=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"doc_folders",$f_opts);
+		$this->addField($f_doc_folders);
 		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}

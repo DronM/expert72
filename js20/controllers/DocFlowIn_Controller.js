@@ -31,6 +31,7 @@ function DocFlowIn_Controller(options){
 	this.addGetObject();
 	this.add_remove_file();
 	this.add_get_file();
+	this.add_get_file_sig();
 	this.add_get_next_num();
 		
 }
@@ -408,6 +409,33 @@ extend(DocFlowIn_Controller,ControllerObjServer);
 	var opts = {"controller":this};
 	
 	var pm = new PublicMethodServer('get_file',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		options.maxlength = "36";
+	
+		pm.addField(new FieldString("file_id",options));
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("doc_id",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			DocFlowIn_Controller.prototype.add_get_file_sig = function(){
+	var opts = {"controller":this};
+	
+	var pm = new PublicMethodServer('get_file_sig',opts);
 	
 				
 	

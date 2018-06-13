@@ -148,6 +148,28 @@ function DocFlowOutDialog_View(id,options){
 			}			
 		}));	
 
+		this.addElement(new ExpertiseRejectTypeSelect(id+":expertise_reject_types_ref",{
+			"editContClassName":editContClassName,
+			"labelClassName":labelClassName,
+			"visible":false
+		}));	
+		this.addElement(new Enum_expertise_results(id+":expertise_result",{
+			"labelCaption":"Вид заключения:",
+			"editContClassName":editContClassName,
+			"labelClassName":labelClassName,
+			"visible":false,
+			"events":{
+				"change":function(){					
+					var v = this.getValue();
+					if (v=="positive"){
+						self.getElement("expertise_reject_types_ref").reset();						
+					}
+					self.getElement("expertise_reject_types_ref").setVisible((v=="negative"));
+				}
+			}
+		}));	
+		
+
 		var files;
 		var st;
 		var model_exists = false;
@@ -227,7 +249,7 @@ function DocFlowOutDialog_View(id,options){
 				"contractId":(model_exists && options.model.getFieldValue("to_contracts_ref"))? options.model.getFieldValue("to_contracts_ref").getKey("id"):null
 			}));
 		}
-		if (order1c){
+		if (order1c){		
 			this.addElement(new Doc1cOrder(id+":attachments:order1c",{
 				"getContractId":function(){
 					return self.getElement("to_contracts_ref").getValue().getKey("id");
@@ -269,6 +291,8 @@ function DocFlowOutDialog_View(id,options){
 		,new DataBinding({"control":this.getElement("comment_text"),"model":this.m_model})
 		,new DataBinding({"control":this.getElement("employees_ref"),"model":this.m_model})
 		,new DataBinding({"control":this.getElement("signed_by_employees_ref")})
+		,new DataBinding({"control":this.getElement("expertise_reject_types_ref")})
+		,new DataBinding({"control":this.getElement("expertise_result")})		
 	]);
 	
 	//write
@@ -286,6 +310,8 @@ function DocFlowOutDialog_View(id,options){
 		,new CommandBinding({"control":this.getElement("comment_text")})		
 		,new CommandBinding({"control":this.getElement("employees_ref"),"fieldId":"employee_id"})
 		,new CommandBinding({"control":this.getElement("signed_by_employees_ref"),"fieldId":"signed_by_employee_id"})
+		,new CommandBinding({"control":this.getElement("expertise_reject_types_ref"),"fieldId":"expertise_reject_type_id"})
+		,new CommandBinding({"control":this.getElement("expertise_result")})		
 	]);
 	
 }
@@ -301,6 +327,7 @@ DocFlowOutDialog_View.prototype.setDocVis = function(){
 	var app_vis = false;
 	var contr_vis = false;
 	var new_contr_num_vis = false;
+	var result_vis = false;
 	if (v){
 		var v_key = v.getKey();
 		var doc_type;
@@ -324,6 +351,7 @@ DocFlowOutDialog_View.prototype.setDocVis = function(){
 		else if (v_key==window.getApp().getPredefinedItem("doc_flow_types","contr_close").getKey()){
 			contr_vis = true;
 			doc_type = "contr_close";
+			result_vis = true;
 		}
 		else if (v_key==window.getApp().getPredefinedItem("doc_flow_types","contr_return").getKey()){
 			contr_vis = true;
@@ -336,8 +364,12 @@ DocFlowOutDialog_View.prototype.setDocVis = function(){
 	this.getElement("to_applications_ref").setVisible(app_vis);
 	this.getElement("new_contract_number").setVisible(new_contr_num_vis);
 	this.getElement("to_contracts_ref").setVisible(contr_vis);
+	
+	this.getElement("expertise_result").setVisible(result_vis);
+	this.getElement("expertise_reject_types_ref").setVisible((result_vis && this.getElement("expertise_result").getValue()=="negative"));	
+	
 	if (this.elementExists("order1c")){
-		this.getElement("order1c").setVisible(contr_vis);
+		this.getElement("order1c").setVisible(contr_vis||new_contr_num_vis);
 	}
 	if (this.elementExists("akt1c")){
 		this.getElement("akt1c").setVisible(contr_vis);
@@ -373,8 +405,6 @@ DocFlowOutDialog_View.prototype.onGetData = function(resp,cmd){
 		DOMHelper.delClass(n,"hidden");
 	}
 	
-	//if not sent
-	//st=="approving"||
 	if (st=="registered"){
 		this.setEnabled(false);
 		this.getElement("attachments").setEnabled(true);

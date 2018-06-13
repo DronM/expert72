@@ -30,6 +30,7 @@ function DocumentDialog_View(id,options){
 		this.m_allowedFileExt.push({"ext":t_model.rows[i].fields.ext});
 	}
 		
+	this.m_readOnly = options.readOnly;
 	
 	DocumentDialog_View.superclass.constructor.call(this,id,options);
 }
@@ -111,7 +112,8 @@ DocumentDialog_View.prototype.addDocTab = function(tabName,items,toDOM){
 		"documentTitle":this.m_documentTabs[tabName].title,
 		"maxFileSize":this.m_maxFileSize,
 		"allowedFileExt":this.m_allowedFileExt,
-		"items":items
+		"items":items,
+		"readOnly":this.m_readOnly
 	});
 	this.addElement(this.m_documentTabs[tabName].control);
 	if (toDOM){

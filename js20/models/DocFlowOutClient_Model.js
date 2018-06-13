@@ -109,6 +109,16 @@ function DocFlowOutClient_Model(options){
 	
 	options.fields.sent = new FieldBool("sent",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.doc_flow_out_client_type = new FieldEnum("doc_flow_out_client_type",filed_options);
+	filed_options.enumValues = 'app,contr_resp,contr_return,contr_other';
+	
 			
 			
 			

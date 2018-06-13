@@ -20,6 +20,7 @@ function Enum_document_types(id,options){
 ,"ru_cost_eval_validity":"Проверка достоверности"
 ,"ru_modification":"Модификация"
 ,"ru_audit":"Аудит"
+,"ru_documents":"Документы"
 };
 	options.options = [{"value":"pd",
 "descr":multy_lang_values[window.getApp().getLocale()+"_"+"pd"],
@@ -36,6 +37,9 @@ checked:(options.defaultValue&&options.defaultValue=="modification")}
 ,{"value":"audit",
 "descr":multy_lang_values[window.getApp().getLocale()+"_"+"audit"],
 checked:(options.defaultValue&&options.defaultValue=="audit")}
+,{"value":"documents",
+"descr":multy_lang_values[window.getApp().getLocale()+"_"+"documents"],
+checked:(options.defaultValue&&options.defaultValue=="documents")}
 ];
 	
 	Enum_document_types.superclass.constructor.call(this,id,options);

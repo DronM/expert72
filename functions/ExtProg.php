@@ -21,6 +21,11 @@ class ExtProg{
 	/* $fileOpts = array('name',disposition,contentType,toFile boolean)*/
 	private static function send_query($cmd,$params,&$xml,$fileOpts=NULL){
 		$CON_TIMEOUT = 300;		
+		
+		if(!defined('HOST_1C')||!defined('PORT_1C')){
+			throw new Exception('Нет настроек доступа к 1с!');
+		}
+		
 		/*
 		$par_str = '';
 		foreach($params as $name=>$val){

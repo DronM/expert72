@@ -118,7 +118,8 @@ function DocFlowOutList_View(id,options){
 			],
 			"sortable":true
 		}),			
-		*/		
+		*/
+		/*		
 		new GridCellHead(id+":grid:head:subject",{
 			"value":"Тема",
 			"columns":[
@@ -128,9 +129,20 @@ function DocFlowOutList_View(id,options){
 			],
 			"sortable":true
 		})
+		*/
 	];
 	
 	if (!options.fromApp){
+		columns.push(
+			new GridCellHead(id+":grid:head:to_constr_name",{
+				"value":"Объект",
+				"columns":[
+					new GridColumn({
+						"field":model.getField("to_constr_name")
+					})
+				]
+			})
+		);	
 		columns.push(
 			new GridCellHead(id+":grid:head:to_addr_names",{
 				"value":"Получатель",
@@ -196,13 +208,13 @@ function DocFlowOutList_View(id,options){
 		"editInline":false,		
 		"editWinClass":DocFlowOutDialog_Form,
 		"popUpMenu":popup_menu,
-		"commands":new GridCmdContainerAjx(id+":grid:cmd",{
+		"commands":!options.readOnly? new GridCmdContainerAjx(id+":grid:cmd",{
 			"cmdInsert":true,
 			"cmdEdit":true,
 			"cmdFilter":true,
 			"filters":filters,
 			"variantStorage":options.variantStorage
-		}),
+		}):null,
 		"head":new GridHead(id+"-grid:head",{
 			"elements":[
 				new GridRow(id+":grid:head:row0",{

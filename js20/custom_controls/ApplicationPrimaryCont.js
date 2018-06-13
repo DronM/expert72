@@ -35,7 +35,7 @@ function ApplicationPrimaryCont(id,options){
 						"value":"primary",
 						"labelCaption":"Первичная",
 						"contClassName":window.getBsCol(6),
-						"labelClassName":"control-label "+window.getBsCol(4),
+						"labelClassName":"control-label "+window.getBsCol(7),
 						"checked":true,
 						"events":{
 							"change":function(){
@@ -50,7 +50,7 @@ function ApplicationPrimaryCont(id,options){
 						"value":"not_primary",
 						"labelCaption":"Повторная",
 						"contClassName":window.getBsCol(6),
-						"labelClassName":"control-label "+window.getBsCol(4),
+						"labelClassName":"control-label "+window.getBsCol(7),
 						"events":{
 							"change":function(){
 								self.m_mainView.getElement("primary_application").setAttr("percentcalc","true");

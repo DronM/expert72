@@ -12,7 +12,7 @@ function ExpertiseRejectTypeSelect(id,options){
 	options.model = new ExpertiseRejectType_Model();
 	
 	if (options.labelCaption!=""){
-		options.labelCaption = options.labelCaption || "Вид отрицпт.закл.:";
+		options.labelCaption = options.labelCaption || "Вид отрицат.закл.:";
 	}
 	
 	options.keyIds = options.keyIds || ["expertise_reject_type_id"];

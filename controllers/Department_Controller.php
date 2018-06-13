@@ -35,6 +35,9 @@ class Department_Controller extends ControllerSQL{
 		$param = new FieldExtInt('boss_employee_id'
 				,array());
 		$pm->addParam($param);
+		$param = new FieldExtString('email'
+				,array());
+		$pm->addParam($param);
 		
 		$pm->addParam(new FieldExtInt('ret_id'));
 		
@@ -58,6 +61,10 @@ class Department_Controller extends ControllerSQL{
 			));
 			$pm->addParam($param);
 		$param = new FieldExtInt('boss_employee_id'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtString('email'
 				,array(
 			));
 			$pm->addParam($param);

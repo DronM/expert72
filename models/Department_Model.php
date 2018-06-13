@@ -46,6 +46,15 @@ class Department_Model extends ModelSQL{
 		$f_boss_employee_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"boss_employee_id",$f_opts);
 		$this->addField($f_boss_employee_id);
 		//********************
+		
+		//*** Field email ***
+		$f_opts = array();
+		$f_opts['length']=50;
+		$f_opts['id']="email";
+				
+		$f_email=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"email",$f_opts);
+		$this->addField($f_email);
+		//********************
 	
 		$order = new ModelOrderSQL();		
 		$this->setDefaultModelOrder($order);		

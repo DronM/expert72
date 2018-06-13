@@ -107,6 +107,22 @@ class DocFlowInClient_Model extends ModelSQL{
 		$f_viewed=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"viewed",$f_opts);
 		$this->addField($f_viewed);
 		//********************
+		
+		//*** Field doc_flow_type_id ***
+		$f_opts = array();
+		$f_opts['id']="doc_flow_type_id";
+				
+		$f_doc_flow_type_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"doc_flow_type_id",$f_opts);
+		$this->addField($f_doc_flow_type_id);
+		//********************
+		
+		//*** Field doc_flow_out_id ***
+		$f_opts = array();
+		$f_opts['id']="doc_flow_out_id";
+				
+		$f_doc_flow_out_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"doc_flow_out_id",$f_opts);
+		$this->addField($f_doc_flow_out_id);
+		//********************
 	
 		$order = new ModelOrderSQL();		
 		$this->setDefaultModelOrder($order);		

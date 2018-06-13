@@ -12,7 +12,7 @@
 function Doc1cAkt(id,options){
 	options = options || {};	
 
-	options.caption = "Новый акт";
+	options.caption = "Создать акт";
 	
 	Doc1cAkt.superclass.constructor.call(this,id,options);
 	

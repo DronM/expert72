@@ -33,9 +33,8 @@ FileUploaderDocFlowOutClient_View.prototype.checkRequiredFiles = function(){
 FileUploaderDocFlowOutClient_View.prototype.deleteFileFromServer = function(fileId,itemId){
 	var self = this;
 	
-	var pm = (new DocFlowOutClient_Controller()).getPublicMethod("remove_file");
+	var pm = (new Application_Controller()).getPublicMethod("remove_file");
 	pm.setFieldValue("file_id",fileId);
-	pm.setFieldValue("application_id", this.m_mainView.getElement("applications_ref").getValue().getKey("id") );
 	pm.run({"ok":function(){
 		window.showNote(self.NT_FILE_DELETED);
 		self.decTotalFileCount();
@@ -67,4 +66,26 @@ FileUploaderDocFlowOutClient_View.prototype.getQuerySruc = function(file){
 	struc.doc_flow_out_client_id = this.m_mainView.getElement("id").getValue();
 	struc.application_id = this.m_mainView.getElement("applications_ref").getValue().getKey("id");
 	return struc;	
+}
+
+FileUploaderDocFlowOutClient_View.prototype.setFileOptions = function(fileOpts,file){
+	if (file.doc_flow_out){
+		//id,date_time,reg_number
+		console.log("file.doc_flow_out.id="+file.doc_flow_out.id)
+		if (file.doc_flow_out.id==this.m_mainView.getModel().getFieldValue("id")){
+			fileOpts.refTitle = "Загружен этим документом";	
+			fileOpts.refClass = "uploadedByThis";	
+		}
+		else{
+			fileOpts.refTitle = "Загружен документом №"+file.doc_flow_out.reg_number+" от "+DateHelper.format(DateHelper.strtotime(file.doc_flow_out.date_time),"d/m/y");	
+			fileOpts.refClass = "uploadedAfterPost";	
+		}
+	}
+	else{
+	
+		fileOpts.refTitle = "Загружен при подаче заявления";
+		fileOpts.refClass = "";	
+	}
+		
+	fileOpts.file_date_time_formatted = DateHelper.format(DateHelper.strtotime(file.date_time),"d/m/y");	
 }

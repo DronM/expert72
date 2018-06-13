@@ -27,11 +27,16 @@ CREATE OR REPLACE VIEW doc_flow_out_dialog AS
 		
 		contracts_ref(contracts) AS to_contracts_ref,
 		
-		doc_flow_out_processes_chain(doc_flow_out.id) AS doc_flow_out_processes_chain
+		doc_flow_out_processes_chain(doc_flow_out.id) AS doc_flow_out_processes_chain,
+		
+		contracts.expertise_result,
+		expertise_reject_types_ref(expertise_reject_types) AS expertise_reject_types_ref,
+		expertise_reject_types.id AS expertise_reject_type_id
 		
 	FROM doc_flow_out
 	LEFT JOIN applications ON applications.id=doc_flow_out.to_application_id
 	LEFT JOIN contracts ON contracts.id=doc_flow_out.to_contract_id
+	LEFT JOIN expertise_reject_types ON expertise_reject_types.id=contracts.expertise_reject_type_id
 	LEFT JOIN users ON users.id=doc_flow_out.to_user_id
 	LEFT JOIN clients ON clients.id=doc_flow_out.to_client_id
 	LEFT JOIN doc_flow_in ON doc_flow_in.id=doc_flow_out.doc_flow_in_id
@@ -47,7 +52,8 @@ CREATE OR REPLACE VIEW doc_flow_out_dialog AS
 					'file_name',t.file_name,
 					'file_size',t.file_size,
 					'file_signed',t.file_signed,
-					'file_uploaded','true'
+					'file_uploaded','true',
+					'file_path',t.file_path
 				)
 			) AS attachments			
 		FROM doc_flow_attachments AS t

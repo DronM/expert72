@@ -14,7 +14,7 @@
 function Doc1cOrder(id,options){
 	options = options || {};	
 
-	options.caption = "Новый счет";
+	options.caption = "Создать счет";
 	
 	Doc1cOrder.superclass.constructor.call(this,id,options);
 	
@@ -35,7 +35,7 @@ Doc1cOrder.prototype.makeDoc = function(e){
 			new NewOrder_View(this.getId()+":NewOrderTotal",{
 				"onNewOrderCreated":function(model){
 					self.m_panel.delDOM();					
-					if (model.getNextRow()){
+					if (model && model.getNextRow()){
 						window.showNote("Создан новый счет: "+self.getDocDescr(
 							model.getFieldValue("doc_number"),
 							model.getFieldValue("doc_date"),
@@ -109,6 +109,9 @@ Doc1cOrder.prototype.updateList = function(contractId){
 				}
 				ctrl_list.toDOM(self.getNode());
 			}
+		},
+		"fail":function(resp,errCode,errStr){
+			window.showError("Невозможно получить выписанные счета из 1с: "+errStr);
 		}
 	})
 }

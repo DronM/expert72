@@ -46,7 +46,17 @@ function DepartmentDialog_Model(options){
 	filed_options.autoInc = false;	
 	
 	options.fields.boss_employee_id = new FieldInt("boss_employee_id",filed_options);
+		
 	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.email = new FieldString("email",filed_options);
+	options.fields.email.getValidator().setMaxLength('50');
+	
+			
 			
 			
 				

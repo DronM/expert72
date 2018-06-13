@@ -155,7 +155,7 @@ function DocFlowOutClientList_View(id,options){
 		"popUpMenu":popup_menu,
 		"filters":grid_filters,
 		"commands":new GridCmdContainerAjx(id+":grid:cmd",{
-			"cmdInsert":true,
+			"cmdInsert":!options.readOnly,
 			"cmdEdit":true,
 			"cmdFilter":true,
 			"filters":filters,

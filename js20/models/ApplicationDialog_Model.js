@@ -459,6 +459,60 @@ function ApplicationDialog_Model(options){
 	
 	options.fields.users_ref = new FieldJSON("users_ref",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.doc_folders = new FieldJSON("doc_folders",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.work_start_date = new FieldDate("work_start_date",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.contract_number = new FieldString("contract_number",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.contract_date = new FieldDate("contract_date",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.expertise_result_number = new FieldString("expertise_result_number",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.expertise_result_date = new FieldDate("expertise_result_date",filed_options);
+	
 			
 		ApplicationDialog_Model.superclass.constructor.call(this,id,options);
 }

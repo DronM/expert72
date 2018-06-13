@@ -50,10 +50,17 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		//$deleted_cond = ($_SESSION['role_id']=='client')? "AND deleted=FALSE":"";
 		
 		$files_q_id = $this->getDbLink()->query(sprintf(
-			"SELECT *
-			FROM application_document_files
-			WHERE application_id=%d
-			ORDER BY document_type,document_id,file_name,deleted_dt ASC NULLS LAST",
+			"SELECT
+				adf.*,
+				mdf.doc_flow_out_client_id,
+				m.date_time AS doc_flow_out_date_time,
+				reg.reg_number AS doc_flow_out_reg_number
+			FROM application_document_files AS adf
+			LEFT JOIN doc_flow_out_client_document_files AS mdf ON mdf.file_id=adf.file_id
+			LEFT JOIN doc_flow_out_client AS m ON m.id=mdf.doc_flow_out_client_id
+			LEFT JOIN doc_flow_out_client_reg_numbers AS reg ON reg.doc_flow_out_client_id=m.id
+			WHERE adf.application_id=%d
+			ORDER BY adf.document_type,adf.document_id,adf.file_name,adf.deleted_dt ASC NULLS LAST",
 		$ar_obj['application_id']
 		));			
 			
@@ -93,9 +100,12 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			$where->addExpression('permission_ar',
 				sprintf(
 				"main_expert_id=%d OR 'employees%s' =ANY (permission_ar) OR 'departments%s' =ANY (permission_ar)
+				OR ( %s AND main_department_id=%d )
 				",
 				$_SESSION['employee_id'],
 				$_SESSION['employee_id'],
+				$_SESSION['department_id'],
+				($_SESSION['department_boss']==TRUE)? 'TRUE':'FALSE',
 				$_SESSION['department_id']
 				)
 			);
@@ -416,21 +426,32 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 	public function get_work_end_date($pm){
 		$this->addNewModel(
 			sprintf(
-			"SELECT contracts_work_end_date(
-				(SELECT app.office_id
-				FROM contracts As contr
+			"WITH (SELECT app.office_id AS office_id
+				FROM contracts AS contr
 				LEFT JOIN applications AS app ON app.id=contr.application_id
 				WHERE contr.id=%d
-				),
-				%s,
-				%s,
-				%d
-			) AS dt
+			) AS contr
+			SELECT
+				contracts_work_end_date(
+					(SELECT office_id FROM contr),
+					%s,
+					%s,
+					%d
+				) AS end_dt,
+				contracts_work_end_date(
+					(SELECT office_id FROM contr),
+					%s,
+					%s,
+					%d
+				) AS work_end_dt				
 			",
 			$this->getExtDbVal($pm,'contract_id'),
 			$this->getExtDbVal($pm,'date_type'),
 			$this->getExtDbVal($pm,'work_start_date'),
-			$this->getExtDbVal($pm,'expertise_day_count')
+			$this->getExtDbVal($pm,'expertise_day_count'),
+			$this->getExtDbVal($pm,'date_type'),
+			$this->getExtDbVal($pm,'work_start_date'),
+			$this->getExtDbVal($pm,'expert_work_day_count')
 			),
 		'Date_Model'
 		);		

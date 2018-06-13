@@ -2,7 +2,7 @@
 <metadata owner="expert72">
 	<versions>
 		<version dateOpen="2017-09-27 12:09:48" dateClose="2017-12-08 10:12:08">1.001 
-		<lastBuild>2018-05-31 12:41:51</lastBuild></version>
+		<lastBuild>2018-06-13 10:09:51</lastBuild></version>
 		<version dateOpen="2017-12-08 11:12:01" dateClose="2017-12-08 11:12:04">1.002</version>
 		<version dateOpen="2017-12-08 11:12:20" dateClose="2017-12-08 11:12:20">1.0.3</version>
 		<version dateOpen="2017-12-12 11:12:07" dateClose="2017-12-12 11:12:07">1.0.4</version>
@@ -42,6 +42,7 @@
 		<version dateOpen="2018-05-28 13:05:21" dateClose="2018-05-28 13:05:22">1.0.38</version>
 		<version dateOpen="2018-05-29 05:05:46" dateClose="2018-05-31 11:05:43">1.0.39</version>
 		<version dateOpen="2018-05-31 12:05:41" dateClose="2018-05-31 12:05:42">1.0.40</version>
+		<version dateOpen="2018-06-13 11:06:03" dateClose="2018-06-13 11:06:04">1.0.41</version>
 	</versions>
 	<globalFilters>
 		<field id="user_id"/>
@@ -135,13 +136,13 @@
 				<ru descr="&#x41F;&#x440;&#x43E;&#x432;&#x435;&#x440;&#x43A;&#x430; &#x430;&#x43D;&#x43A;&#x435;&#x442;&#x44B;"/>
 			</value>
 			<value id="returned">
-				<ru descr="&#x41E;&#x442;&#x43A;&#x430;&#x437; &#x43F;&#x43E; &#x437;&#x430;&#x44F;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x44E;"/>
+				<ru descr="&#x412;&#x43E;&#x437;&#x432;&#x440;&#x430;&#x442; &#x431;&#x435;&#x437; &#x440;&#x430;&#x441;&#x441;&#x43C;&#x43E;&#x442;&#x440;&#x435;&#x43D;&#x438;&#x44F;"/>
 			</value>
 			<value id="closed_no_expertise">
 				<ru descr="&#x412;&#x43E;&#x437;&#x432;&#x440;&#x430;&#x442; &#x431;&#x435;&#x437; &#x44D;&#x43A;&#x441;&#x43F;&#x435;&#x440;&#x442;&#x438;&#x437;&#x44B;"/>
 			</value>
 			<value id="waiting_for_contract">
-				<ru descr="&#x41F;&#x43E;&#x434;&#x43F;&#x438;&#x441;&#x430;&#x43D;&#x438;&#x435; &#x43A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x430;"/>
+				<ru descr="&#x41A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442; &#x43F;&#x43E; &#x437;&#x430;&#x44F;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x44E;"/>
 			</value>
 			<value id="waiting_for_pay">
 				<ru descr="&#x41E;&#x436;&#x438;&#x434;&#x430;&#x43D;&#x438;&#x435; &#x43E;&#x43F;&#x43B;&#x430;&#x442;&#x44B;"/>
@@ -184,7 +185,7 @@
 				<ru descr="&#x41D;&#x435; &#x443;&#x442;&#x432;&#x435;&#x440;&#x436;&#x434;&#x435;&#x43D;"/>
 			</value>
 			<value id="registered">
-				<ru descr="&#x417;&#x430;&#x440;&#x435;&#x433;&#x438;&#x441;&#x442;&#x440;&#x438;&#x440;&#x43E;&#x432;&#x430;&#x43D;&#x43E;"/>
+				<ru descr="&#x41E;&#x442;&#x43F;&#x440;&#x430;&#x432;&#x43B;&#x435;&#x43D;&#x43E;"/>
 			</value>
 			<value id="registering">
 				<ru descr="&#x41D;&#x430; &#x440;&#x435;&#x433;&#x438;&#x441;&#x442;&#x440;&#x430;&#x446;&#x438;&#x438;"/>
@@ -277,6 +278,9 @@
 			<value id="services">
 				<ru descr="&#x423;&#x441;&#x43B;&#x443;&#x433;&#x438;"/>
 			</value>
+			<value id="contracts">
+				<ru descr="&#x41A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x44B;"/>
+			</value>
 		</enum>
 		<enum id="document_types" descr="&#x412;&#x438;&#x434;&#x44B; &#x432;&#x43A;&#x43B;&#x430;&#x434;&#x43E;&#x43A; &#x441; &#x434;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x430;&#x446;&#x438;&#x435;&#x439;">
 			<value id="pd">
@@ -293,6 +297,9 @@
 			</value>
 			<value id="audit">
 				<ru descr="&#x410;&#x443;&#x434;&#x438;&#x442;"/>
+			</value>
+			<value id="documents">
+				<ru descr="&#x414;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;"/>
 			</value>
 		</enum>
 		<enum id="doc_flow_type_types" descr="&#x422;&#x438;&#x43F;&#x44B; &#x43F;&#x438;&#x441;&#x435;&#x43C;">
@@ -361,6 +368,20 @@
 			</value>
 			<value id="bank">
 				<ru descr="&#x420;&#x430;&#x431;&#x43E;&#x447;&#x438;&#x435;"/>
+			</value>
+		</enum>
+		<enum id="doc_flow_out_client_types" descr="&#x422;&#x438;&#x43F;&#x44B; &#x438;&#x441;&#x445;&#x43E;&#x434;&#x44F;&#x449;&#x438;&#x445; &#x43F;&#x438;&#x441;&#x435;&#x43C; &#x43A;&#x43B;&#x438;&#x435;&#x43D;&#x442;&#x430;">
+			<value id="app">
+				<ru descr="&#x417;&#x430;&#x44F;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x435;"/>
+			</value>
+			<value id="contr_resp">
+				<ru descr="&#x41E;&#x442;&#x432;&#x435;&#x442;&#x44B; &#x43D;&#x430; &#x437;&#x430;&#x43C;&#x435;&#x447;&#x430;&#x43D;&#x438;&#x44F; &#x43F;&#x43E; &#x43A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x443;"/>
+			</value>
+			<value id="contr_return">
+				<ru descr="&#x412;&#x43E;&#x437;&#x432;&#x440;&#x430;&#x442; &#x43A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x430;"/>
+			</value>
+			<value id="contr_other">
+				<ru descr="&#x41F;&#x440;&#x43E;&#x447;&#x435;&#x435;"/>
 			</value>
 		</enum>
 	</enums>
@@ -901,6 +922,12 @@
 			<field id="base_applications_ref" dataType="JSON"/>
 			<field id="derived_applications_ref" dataType="JSON"/>
 			<field id="users_ref" dataType="JSON"/>
+			<field id="doc_folders" dataType="JSON"/>
+			<field id="work_start_date" dataType="Date"/>
+			<field id="contract_number" dataType="String"/>
+			<field id="contract_date" dataType="Date"/>
+			<field id="expertise_result_number" dataType="String"/>
+			<field id="expertise_result_date" dataType="Date"/>
 			<globalFilter id="user_id"/>
 		</model>
 		<model id="ApplicationList" parent="ModelSQL" dataTable="applications_list" virtual="TRUE" baseModelId="Application">
@@ -924,6 +951,9 @@
 			<field id="service_list" dataType="String"/>
 			<field id="unviewed_in_docs" dataType="JSON"/>
 			<field id="contract_number" dataType="String"/>
+			<field id="contract_date" dataType="String"/>
+			<field id="expertise_result_number" dataType="String"/>
+			<field id="expertise_result_date" dataType="Date"/>
 			<globalFilter id="user_id"/>
 		</model>
 		<model id="ApplicationClientList" parent="ModelSQL" dataTable="applications_client_list" virtual="TRUE">
@@ -978,6 +1008,13 @@
 				<field id="application_id"/>
 			</index>
 		</model>
+		<model id="ApplicationDocFolder" parent="ModelSQL" dataTable="application_doc_folders" virtual="FALSE">
+			<defaultOrder>
+				<field id="id"/>
+			</defaultOrder>
+			<field id="id" dataType="Int" required="FALSE" primaryKey="TRUE"/>
+			<field id="name" dataType="Text"/>
+		</model>
 		<model id="Contact" parent="ModelSQL" dataTable="contacts" virtual="FALSE">
 			<defaultOrder>
 				<field id="contact"/>
@@ -1030,6 +1067,7 @@
 			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE" required="FALSE"/>
 			<field id="name" dataType="String" length="200"/>
 			<field id="boss_employee_id" dataType="Int" refTable="employees" refField="id"/>
+			<field id="email" dataType="String" length="50"/>
 			<index unique="TRUE" id="departments_name_idx">
 				<expression>lower(name)</expression>
 			</index>
@@ -1037,6 +1075,7 @@
 		<model id="DepartmentDialog" parent="ModelSQL" dataTable="departments_dialog" virtual="TRUE" baseModelId="Department">
 			<field id="id" dataType="Int"/>
 			<field id="name" dataType="String"/>
+			<field id="email" dataType="String"/>
 			<field id="boss_employees_ref" dataType="JSON"/>
 		</model>
 		<model id="DepartmentList" parent="ModelSQL" dataTable="departments_list" virtual="TRUE" baseModelId="Department">
@@ -1046,6 +1085,7 @@
 			<field id="id" dataType="Int"/>
 			<field id="name" dataType="String"/>
 			<field id="boss_employees_ref" dataType="JSON"/>
+			<field id="email" dataType="String"/>
 		</model>
 		<model id="Post" parent="ModelSQL" dataTable="posts" virtual="FALSE">
 			<defaultOrder>
@@ -1120,7 +1160,7 @@
 				<predefinedItem alias="app_resp">
 					<id>2</id>
 					<num_prefix>&#x417;&#x432;-</num_prefix>
-					<name>&#x41F;&#x43E;&#x434;&#x43F;&#x438;&#x441;&#x430;&#x43D;&#x438;&#x435; &#x43A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x430; &#x43F;&#x43E; &#x437;&#x430;&#x44F;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x44E;</name>
+					<name>&#x41A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442; &#x43F;&#x43E; &#x437;&#x430;&#x44F;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x44E;</name>
 					<doc_flow_types_type_id>out</doc_flow_types_type_id>
 				</predefinedItem>
 				<predefinedItem alias="contr">
@@ -1132,7 +1172,7 @@
 				<predefinedItem alias="app_resp_return">
 					<id>8</id>
 					<num_prefix>&#x417;&#x432;-</num_prefix>
-					<name>&#x41E;&#x442;&#x43A;&#x430;&#x437; &#x43F;&#x43E; &#x437;&#x430;&#x44F;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x44E;</name>
+					<name>&#x412;&#x43E;&#x437;&#x432;&#x440;&#x430;&#x442; &#x431;&#x435;&#x437; &#x440;&#x430;&#x441;&#x441;&#x43C;&#x43E;&#x442;&#x440;&#x435;&#x43D;&#x438;&#x44F;</name>
 					<doc_flow_types_type_id>out</doc_flow_types_type_id>
 				</predefinedItem>
 				<predefinedItem alias="contr_close">
@@ -1144,14 +1184,20 @@
 				<predefinedItem alias="app_resp_correct">
 					<id>12</id>
 					<num_prefix>&#x417;&#x432;-</num_prefix>
-					<name>&#x412;&#x43E;&#x437;&#x432;&#x440;&#x430;&#x442; &#x437;&#x430;&#x44F;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x44F; &#x43D;&#x430; &#x438;&#x441;&#x43F;&#x440;&#x430;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x435;</name>
+					<name>&#x41E;&#x442;&#x43A;&#x430;&#x437; &#x441; &#x437;&#x430;&#x43C;&#x435;&#x447;&#x430;&#x43D;&#x438;&#x44F;&#x43C;&#x438;</name>
 					<doc_flow_types_type_id>out</doc_flow_types_type_id>
 				</predefinedItem>
 				<predefinedItem alias="contr_return">
 					<id>13</id>
 					<num_prefix>&#x418;&#x441;&#x445;-</num_prefix>
-					<name>&#x41E;&#x442;&#x437;&#x44B;&#x432; &#x43A;&#x43E;&#x43D;&#x442;&#x430;&#x43A;&#x442;&#x430;</name>
+					<name>&#x41E;&#x442;&#x437;&#x44B;&#x432; &#x43A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x430;</name>
 					<doc_flow_types_type_id>out</doc_flow_types_type_id>
+				</predefinedItem>
+				<predefinedItem alias="contr_paper_return">
+					<id>14</id>
+					<num_prefix>&#x412;&#x445;-</num_prefix>
+					<name>&#x412;&#x43E;&#x437;&#x432;&#x440;&#x430;&#x442; &#x43A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x430;</name>
+					<doc_flow_types_type_id>in</doc_flow_types_type_id>
 				</predefinedItem>
 			</predefinedItems>
 		</model>
@@ -1206,6 +1252,7 @@
 				<checkValues>
 					<checkValue>doc_flow_out</checkValue>
 					<checkValue>doc_flow_in</checkValue>
+					<checkValue>contracts</checkValue>
 				</checkValues>
 			</field>
 			<field id="doc_id" dataType="Int" refField="id"/>
@@ -1213,6 +1260,7 @@
 			<field id="file_size" dataType="Int"/>
 			<field id="file_signed" dataType="Bool"/>
 			<field id="file_date" dataType="DateTime" defaultValue="now()"/>
+			<field id="file_path" dataType="Text"/>
 			<index id="doc_flow_attachments_doc_idx" unique="FALSE">
 				<field id="doc_type"/>
 				<field id="doc_id"/>
@@ -1271,6 +1319,7 @@
 			<field id="to_addr_names" dataType="String"/>
 			<field id="to_applications_ref" dataType="JSON"/>
 			<field id="to_application_id" dataType="Int"/>
+			<field id="to_constr_name" dataType="String"/>
 			<field id="subject" dataType="Text"/>
 			<field id="reg_number" dataType="String" length="15"/>
 			<field id="doc_flow_types_ref" dataType="JSON"/>
@@ -1308,6 +1357,9 @@
 			<field id="state_register_doc" dataType="JSON"/>
 			<field id="doc_flow_out_processes_chain" dataType="JSON"/>
 			<field id="new_contract_number" dataType="Text"/>
+			<field id="expertise_result" dataType="String"/>
+			<field id="expertise_reject_types_ref" dataType="JSON"/>
+			<field id="expertise_reject_type_id" dataType="Int"/>
 		</model>
 		<model id="DocFlowOutProcess" parent="ModelSQL" dataTable="doc_flow_out_processes" virtual="FALSE">
 			<field id="doc_flow_out_id" dataType="Int" refTable="doc_flow_out" refField="id" required="TRUE" primaryKey="TRUE"/>
@@ -1762,6 +1814,7 @@
 			<field id="subject" dataType="Text"/>
 			<field id="content" dataType="Text"/>
 			<field id="sent" dataType="Bool" defaultValue="FALSE"/>
+			<field id="doc_flow_out_client_type" dataType="Enum" enumId="doc_flow_out_client_types"/>
 			<index id="doc_flow_out_client_date_time_idx">
 				<field id="date_time"/>
 			</index>
@@ -1796,6 +1849,9 @@
 			<field id="comment_text" dataType="Text"/>
 			<field id="content" dataType="Text"/>
 			<field id="sent" dataType="Bool"/>
+			<field id="contract_file" dataType="JSON"/>
+			<field id="doc_flow_out_client_type" dataType="String"/>
+			<field id="contract_files" dataType="JSON"/>
 			<globalFilter id="user_id"/>
 		</model>
 		<model id="DocFlowOutClientDocumentFile" parent="ModelSQL" dataTable="doc_flow_out_client_document_files" virtual="FALSE">
@@ -1824,6 +1880,8 @@
 			<field id="comment_text" dataType="Text"/>
 			<field id="files" dataType="JSONB"/>
 			<field id="viewed" dataType="Bool" defaultValue="FALSE"/>
+			<field id="doc_flow_type_id" dataType="Int" refTable="doc_flow_types" refField="id"/>
+			<field id="doc_flow_out_id" dataType="Int"/>
 			<index id="doc_flow_in_client_date_time_idx">
 				<field id="date_time"/>
 			</index>
@@ -1996,6 +2054,8 @@
 			<field id="cost_eval_validity_pd_order" dataType="Enum" enumId="cost_eval_validity_pd_orders"/>
 			<field id="work_start_date" dataType="Date"/>
 			<field id="work_end_date" dataType="Date"/>
+			<field id="expert_work_end_date" dataType="Date"/>
+			<field id="expert_work_day_count" dataType="Int"/>
 			<field id="expertise_day_count" dataType="Int"/>
 			<field id="akt_number" dataType="Text"/>
 			<field id="akt_date" dataType="Date" defaultValue="0"/>
@@ -2154,6 +2214,8 @@
 			<field id="argument_document" dataType="Text"/>
 			<field id="order_document" dataType="Text"/>
 			<field id="auth_letter" dataType="Text"/>
+			<field id="expert_work_day_count" dataType="Int"/>
+			<field id="doc_folders" dataType="JSON"/>
 		</model>
 		<model id="ExpertWork" parent="ModelSQL" dataTable="expert_works" virtual="FALSE">
 			<field id="id" dataType="Int" primaryKey="TRUE" required="FALSE" autoInc="TRUE"/>
@@ -2245,6 +2307,7 @@
 			<field id="name" dataType="String" length="50"/>
 			<field id="date_type" dataType="Enum" enumId="date_types"/>
 			<field id="work_day_count" dataType="Int"/>
+			<field id="expertise_day_count" dataType="Int"/>
 			<field id="contract_postf" dataType="String" length="5"/>
 			<predefinedItems>
 				<predefinedItem alias="expertise">
@@ -2685,8 +2748,14 @@
 			</publicMethod>
 		</controller>
 		<controller id="DocFlowOut" parentId="DocFlow_Controller" parentType="user" state="TRUE">
-			<publicMethod id="insert" modelId="DocFlowOut"/>
-			<publicMethod id="update" modelId="DocFlowOut"/>
+			<publicMethod id="insert" modelId="DocFlowOut">
+				<field id="expertise_result" dataType="Enum" enumId="expertise_results"/>
+				<field id="expertise_reject_type_id" dataType="Int" enumId="expertise_results"/>
+			</publicMethod>
+			<publicMethod id="update" modelId="DocFlowOut">
+				<field id="expertise_result" dataType="Enum" enumId="expertise_results"/>
+				<field id="expertise_reject_type_id" dataType="Int" enumId="expertise_results"/>
+			</publicMethod>
 			<publicMethod id="delete" modelId="DocFlowOut"/>
 			<publicMethod id="get_list" modelId="DocFlowOutList"/>
 			<publicMethod id="get_object" modelId="DocFlowOutDialog"/>
@@ -2695,6 +2764,10 @@
 				<field id="doc_id" dataType="Int" required="TRUE"/>
 			</publicMethod>
 			<publicMethod id="get_file">
+				<field id="file_id" dataType="String" length="36" required="TRUE"/>
+				<field id="doc_id" dataType="Int" required="TRUE"/>
+			</publicMethod>
+			<publicMethod id="get_file_sig">
 				<field id="file_id" dataType="String" length="36" required="TRUE"/>
 				<field id="doc_id" dataType="Int" required="TRUE"/>
 			</publicMethod>
@@ -2720,6 +2793,10 @@
 				<field id="doc_id" dataType="Int" required="TRUE"/>
 			</publicMethod>
 			<publicMethod id="get_file">
+				<field id="file_id" dataType="String" length="36" required="TRUE"/>
+				<field id="doc_id" dataType="Int" required="TRUE"/>
+			</publicMethod>
+			<publicMethod id="get_file_sig">
 				<field id="file_id" dataType="String" length="36" required="TRUE"/>
 				<field id="doc_id" dataType="Int" required="TRUE"/>
 			</publicMethod>
@@ -2889,8 +2966,12 @@
 			<publicMethod id="get_list" modelId="BuildType"/>
 		</controller>
 		<controller id="DocFlowOutClient" parentId="ControllerSQL">
-			<publicMethod id="insert" modelId="DocFlowOutClient"/>
-			<publicMethod id="update" modelId="DocFlowOutClient"/>
+			<publicMethod id="insert" modelId="DocFlowOutClient" encType="multipart" requestType="post">
+				<field id="contract_files" dataType="Text"/>
+			</publicMethod>
+			<publicMethod id="update" modelId="DocFlowOutClient" encType="multipart" requestType="post">
+				<field id="contract_files" dataType="Text"/>
+			</publicMethod>
 			<publicMethod id="delete" modelId="DocFlowOutClient"/>
 			<publicMethod id="get_object" modelId="DocFlowOutClientDialog"/>
 			<publicMethod id="get_list" modelId="DocFlowOutClientList"/>
@@ -2902,6 +2983,18 @@
 				<field id="application_id" dataType="Int" required="TRUE"/>
 				<field id="file_id" dataType="String" length="36" required="TRUE"/>
 			</publicMethod>
+			<publicMethod id="remove_contract_file">
+				<field id="id" dataType="Int" required="TRUE"/>
+				<field id="file_id" dataType="String" length="36" required="TRUE"/>
+			</publicMethod>
+			<publicMethod id="download_contract_file">
+				<field id="id" dataType="Int" required="TRUE"/>
+				<field id="file_id" dataType="String" length="36" required="TRUE"/>
+			</publicMethod>
+			<publicMethod id="download_contract_file_sig">
+				<field id="id" dataType="Int" required="TRUE"/>
+				<field id="file_id" dataType="String" length="36" required="TRUE"/>
+			</publicMethod>
 		</controller>
 		<controller id="DocFlowInClient" parentId="ControllerSQL">
 			<publicMethod id="update" modelId="DocFlowInClient">
@@ -2910,6 +3003,10 @@
 			<publicMethod id="get_object" modelId="DocFlowInClientDialog"/>
 			<publicMethod id="get_list" modelId="DocFlowInClientList"/>
 			<publicMethod id="get_file">
+				<field id="file_id" dataType="String" length="36" required="TRUE"/>
+				<field id="doc_id" dataType="Int" required="TRUE"/>
+			</publicMethod>
+			<publicMethod id="get_file_sig">
 				<field id="file_id" dataType="String" length="36" required="TRUE"/>
 				<field id="doc_id" dataType="Int" required="TRUE"/>
 			</publicMethod>
@@ -2982,6 +3079,7 @@
 				<field id="contract_id" dataType="Int" required="TRUE"/>
 				<field id="date_type" dataType="Enum" enumId="date_types" required="TRUE"/>
 				<field id="expertise_day_count" dataType="Int" required="TRUE"/>
+				<field id="expert_work_day_count" dataType="Int" required="TRUE"/>
 				<field id="work_start_date" dataType="Date" required="TRUE"/>
 			</publicMethod>
 		</controller>
@@ -3103,6 +3201,13 @@
 			<publicMethod id="get_object" modelId="Service"/>
 			<publicMethod id="get_list" modelId="Service"/>
 		</controller>
+		<controller id="ApplicationDocFolder" parentId="ControllerSQL">
+			<publicMethod id="insert" modelId="ApplicationDocFolder"/>
+			<publicMethod id="update" modelId="ApplicationDocFolder"/>
+			<publicMethod id="delete" modelId="ApplicationDocFolder"/>
+			<publicMethod id="get_object" modelId="ApplicationDocFolder"/>
+			<publicMethod id="get_list" modelId="ApplicationDocFolder"/>
+		</controller>
 	</controllers>
 	<permissions>
 		<permission type="allow" controllerId="all" methodId="all" roleId="admin"/>
@@ -3166,6 +3271,7 @@
 		<view id="10024" c="ExpertiseRejectType_Controller" t="ExpertiseRejectTypeList" f="get_list" section="&#x421;&#x43F;&#x440;&#x430;&#x432;&#x43E;&#x447;&#x43D;&#x438;&#x43A;&#x438;" descr="&#x412;&#x438;&#x434;&#x44B; &#x43E;&#x442;&#x440;&#x438;&#x446;&#x430;&#x442;&#x435;&#x43B;&#x44C;&#x43D;&#x44B;&#x445; &#x437;&#x430;&#x43A;&#x43B;&#x44E;&#x447;&#x435;&#x43D;&#x438;&#x439;"/>
 		<view id="10025" c="DocFlowApprovementTemplate_Controller" t="DocFlowApprovementTemplateList" f="get_list" section="&#x421;&#x43F;&#x440;&#x430;&#x432;&#x43E;&#x447;&#x43D;&#x438;&#x43A;&#x438;" descr="&#x428;&#x430;&#x431;&#x43B;&#x43E;&#x43D;&#x44B; &#x441;&#x43E;&#x433;&#x43B;&#x430;&#x441;&#x43E;&#x432;&#x430;&#x43D;&#x438;&#x439;"/>
 		<view id="10026" c="Service_Controller" t="ServiceList" f="get_list" section="&#x421;&#x43F;&#x440;&#x430;&#x432;&#x43E;&#x447;&#x43D;&#x438;&#x43A;&#x438;" descr="&#x423;&#x441;&#x43B;&#x443;&#x433;&#x438;"/>
+		<view id="10027" c="ApplicationDocFolder_Controller" t="ApplicationDocFolderList" f="get_list" section="&#x421;&#x43F;&#x440;&#x430;&#x432;&#x43E;&#x43A;&#x43D;&#x438;&#x43A;&#x438;" descr="&#x41F;&#x440;&#x43E;&#x447;&#x438;&#x435; &#x43F;&#x430;&#x43F;&#x43A;&#x438; &#x43F;&#x440;&#x43E;&#x435;&#x43A;&#x442;&#x430;"/>
 		<view id="20000" c="Application_Controller" t="ApplicationList" f="get_list" section="&#x414;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;" descr="&#x417;&#x430;&#x44F;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x44F;"/>
 		<view id="20001" c="DocFlowExamination_Controller" t="DocFlowExaminationList" f="get_list" section="&#x414;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;" descr="&#x420;&#x430;&#x441;&#x441;&#x43C;&#x43E;&#x442;&#x440;&#x435;&#x43D;&#x438;&#x44F;"/>
 		<view id="20002" c="DocFlowInClient_Controller" t="DocFlowInClientList" f="get_list" section="&#x414;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;" descr="&#x412;&#x445;&#x43E;&#x434;&#x44F;&#x449;&#x438;&#x435; &#x43A;&#x43B;&#x438;&#x435;&#x43D;&#x442;&#x430;"/>
@@ -3240,8 +3346,10 @@
 		<serverTemplate id="ClientPaymentList"/>
 		<serverTemplate id="ApplicationProcessList"/>
 		<serverTemplate id="ServiceList"/>
+		<serverTemplate id="ApplicationDocFolderList"/>
 	</serverTemplates>
 	<jsTemplates>
+		<jsTemplate id="FatalException" file="tmpl/FatalException.html"/>
 		<jsTemplate id="GridCmdContainerAjx" file="tmpl/GridCmdContainerAjx.html"/>
 		<jsTemplate id="ViewGridColManager" file="tmpl/ViewGridColManager.html"/>
 		<jsTemplate id="PopOver" file="controls/tmpl/PopOver.html"/>
@@ -3261,6 +3369,7 @@
 		<jsTemplate id="ApplicationContractor" file="tmpl/ApplicationContractor.html"/>
 		<jsTemplate id="ApplicationDocuments" file="tmpl/ApplicationDocuments.html"/>
 		<jsTemplate id="DocFlowAttachments" file="tmpl/DocFlowAttachments.html"/>
+		<jsTemplate id="DocFolderAttachments" file="tmpl/DocFolderAttachments.html"/>
 		<jsTemplate id="ApplicationFile" file="tmpl/ApplicationFile.html"/>
 		<jsTemplate id="MailAttachment" file="tmpl/MailAttachment.html"/>
 		<jsTemplate id="ApplicationClientContainer" file="tmpl/ApplicationClientContainer.html"/>
@@ -3326,6 +3435,7 @@
 		<jsScript file="core/DOMHelper.js"/>
 		<jsScript file="core/DateHelper.js" jsDoc="FALSE"/>
 		<jsScript file="core/EventHelper.js"/>
+		<jsScript file="core/FatalException.js"/>
 		<jsScript file="core/ConstantManager.js"/>
 		<jsScript file="core/ServConnector.js"/>
 		<jsScript file="core/Response.js"/>
@@ -3703,7 +3813,7 @@
 		<jsScript file="views/ApplicationDialog_View.js"/>
 		<jsScript file="views/rs/ApplicationDialog_View.rs_ru.js"/>
 		<jsScript file="views/ViewBankAcc.js"/>
-		<jsScript file="views/ViewRespPerson.js"/>
+		<!--<jsScript file="views/ViewRespPerson.js"/>-->
 		<jsScript file="views/ViewPersonIdPaper.js"/>
 		<jsScript file="views/ViewPersonRegistrPaper.js"/>
 		<jsScript file="views/ViewKladr.js"/>
@@ -3770,6 +3880,8 @@
 		<jsScript file="views/ApplicationProcessList_View.js"/>
 		<jsScript file="views/ProjectManager_View.js"/>
 		<jsScript file="views/ServiceList_View.js"/>
+		<jsScript file="views/ApplicationDocFolderList_View.js"/>
+		<jsScript file="views/DocFolder_View.js"/>
 		<jsScript file="tmpl/App.templates.js" compressed="FALSE" standalone="FALSE"/>
 		<jsScript file="custom_controls/App.enums.js"/>
 		<jsScript file="custom_controls/App.predefinedItems.js"/>
@@ -3803,6 +3915,7 @@
 		<jsScript file="custom_controls/DocFlowTypeSelect.js"/>
 		<jsScript file="custom_controls/EmployeeEditRef.js"/>
 		<jsScript file="custom_controls/DepartmentSelect.js"/>
+		<jsScript file="custom_controls/ApplicationDocFolderSelect.js"/>
 		<jsScript file="custom_controls/DepartmentEditRef.js"/>
 		<jsScript file="custom_controls/ConstructionTypeSelect.js"/>
 		<jsScript file="custom_controls/FundSourceSelect.js"/>
@@ -4106,6 +4219,10 @@
 		<jsScript file="models/ApplicationProcessList_Model.js"/>
 		<jsScript file="controllers/Service_Controller.js"/>
 		<jsScript file="models/Service_Model.js"/>
+		<jsScript file="enum_controls/Enum_doc_flow_out_client_types.js"/>
+		<jsScript file="enum_controls/EnumGridColumn_doc_flow_out_client_types.js"/>
+		<jsScript file="models/ApplicationDocFolder_Model.js"/>
+		<jsScript file="controllers/ApplicationDocFolder_Controller.js"/>
 	</jsScripts>
 	<cssScripts>
 		<cssScript file="assets/css/icons/icomoon/styles.css" compressed="TRUE" standalone="TRUE"/>

@@ -103,6 +103,22 @@ function DocFlowInClientList_Model(options){
 	filed_options.autoInc = false;	
 	
 	options.fields.viewed = new FieldBool("viewed",filed_options);
+		
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.doc_flow_type_id = new FieldInt("doc_flow_type_id",filed_options);
+		
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.doc_flow_out_id = new FieldInt("doc_flow_out_id",filed_options);
 	
 			
 			

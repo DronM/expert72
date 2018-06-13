@@ -163,6 +163,7 @@ function ApplicationList_View(id,options){
 				],
 				"sortable":true
 		}),
+		/*
 		new GridCellHead(id+":grid:head:office",{
 			"value":this.COL_CAP_office,
 			"columns":[
@@ -178,11 +179,25 @@ function ApplicationList_View(id,options){
 			],
 			"sortable":true
 		}),
+		*/
 		new GridCellHead(id+":grid:head:contract_number",{
 			"value":"Контракт",
 			"columns":[
 				new GridColumn({
-					"field":model.getField("contract_number")
+					"field":model.getField("contract_number"),
+					"formatFunction":function(fields){
+						var res = "";
+						var num = fields.contract_number.getValue();
+						if (num){
+							res = "№"+num+
+								" от "+DateHelper.format(fields.contract_date.getValue(),"d/m/y")+
+								", закл.№"+fields.expertise_result_number.getValue();
+							if (fields.expertise_result_date.getValue()){
+								res+=" от "+DateHelper.format(fields.expertise_result_date.getValue(),"d/m/y");
+							}
+						}
+						return res;
+					}
 				})
 			]
 		})

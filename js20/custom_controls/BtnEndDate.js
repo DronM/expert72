@@ -43,6 +43,7 @@ BtnEndDate.prototype.getNextNum = function(){
 	pm.setFieldValue("date_type", this.m_view.getElement("date_type").getValue());
 	pm.setFieldValue("work_start_date", this.m_view.getElement("work_start_date").getValue());
 	pm.setFieldValue("expertise_day_count", this.m_view.getElement("expertise_day_count").getValue());
+	pm.setFieldValue("expert_work_day_count", this.m_view.getElement("expert_work_day_count").getValue());
 	var self = this.m_view;
 	pm.run({
 		"ok":function(resp){
@@ -52,7 +53,8 @@ BtnEndDate.prototype.getNextNum = function(){
 				"data":resp.getModelData("Date_Model")
 			});
 			if (m.getNextRow()){
-				self.getElement("work_end_date").setValue(m.getFieldValue("dt"));
+				self.getElement("work_end_date").setValue(m.getFieldValue("end_dt"));
+				self.getElement("expert_work_end_date").setValue(m.getFieldValue("work_end_dt"));
 			}
 		}
 	})

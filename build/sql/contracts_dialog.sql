@@ -137,7 +137,12 @@ CREATE OR REPLACE VIEW contracts_dialog AS
 		t.date_type,
 		t.argument_document,
 		t.order_document,
-		app.auth_letter		
+		app.auth_letter,
+		
+		t.expert_work_day_count,
+		t.expert_work_end_date,
+		
+		app.doc_folders
 		
 	FROM contracts t
 	LEFT JOIN applications_dialog AS app ON app.id=t.application_id

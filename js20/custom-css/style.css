@@ -189,6 +189,15 @@ tr.grid_foot{
 	min-height: 220px;
 	font-size:70%;
 }
+.service-type-en{
+}
+.service-type-dis{
+	color: transparent;
+	text-shadow: 0 0 5px rgba(0,0,0,0.2);
+	cursor:not-allowed;
+	background-color:#ddd4d4;
+}
+
 .service-type-selected{
 	border:2px solid black;
 	font-size:120%;
@@ -196,11 +205,6 @@ tr.grid_foot{
 
 .custom-edit-cont{
 }
-/*
-[percentcalc="true"]{
-	border:1px solid red;
-}
-*/
 label.percentcalc:before {
 	content: "*";
 	/*font-weight:bolder;
@@ -290,3 +294,22 @@ h2 div.btn{
 .workHoursEdit-day{
 	width:100px;
 }
+
+.uploadedAfterPost{
+	background:yellow;
+}
+.uploadedByThis{
+	background:#8ff442;
+}
+.appFileDeleted{
+	text-decoration: line-through;
+}
+li.appFileItem{
+	list-style: none;	
+}
+/*
+.appState{
+	background:#41f4f1;
+	width:200px;
+}
+*/

@@ -264,7 +264,7 @@ class DocFlowExamination_Controller extends ControllerSQL{
 			$examinationIdForDb
 			));
 			
-			if($applicationResolutionStateForDb=="'returned'"){
+			if($applicationResolutionStateForDb=="'filling'"){
 				
 				$subject_doc = json_decode($ar['subject_doc']);
 				if ($subject_doc && $subject_doc->dataType=='doc_flow_in'){
@@ -298,6 +298,18 @@ class DocFlowExamination_Controller extends ControllerSQL{
 						){
 							rrmdir($dir);
 						}	
+						$ar = $this->getDbLinkMaster()->query(sprintf(
+						"UPDATE applications
+						SET
+							filled_percent = 92,
+							app_print_expertise = NULL,
+							app_print_cost_eval = NULL,
+							app_print_modification = NULL,
+							app_print_audit = NULL,
+							cost_eval_validity_simult = CASE WHEN cost_eval_validity_simult IS NULL THEN NULL ELSE FALSE END
+						WHERE id=%d",
+						$ar['application_id']
+						));
 						
 					}
 				}
@@ -343,7 +355,7 @@ class DocFlowExamination_Controller extends ControllerSQL{
 			$this->getExtDbVal($pm,'id')
 			));
 			
-			if($pm->getParamValue('application_resolution_state')=='returned'){
+			if($pm->getParamValue('application_resolution_state')=='filling'){
 				
 				$subject_doc = json_decode($ar['subject_doc']);
 				if ($subject_doc && $subject_doc->dataType=='doc_flow_in'){

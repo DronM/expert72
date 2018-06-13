@@ -48,6 +48,15 @@ class DepartmentList_Model extends ModelSQL{
 		$this->addField($f_boss_employee_id);
 		//********************
 		
+		//*** Field email ***
+		$f_opts = array();
+		$f_opts['length']=50;
+		$f_opts['id']="email";
+				
+		$f_email=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"email",$f_opts);
+		$this->addField($f_email);
+		//********************
+		
 		//*** Field boss_employees_ref ***
 		$f_opts = array();
 		$f_opts['id']="boss_employees_ref";

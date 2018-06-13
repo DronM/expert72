@@ -28,6 +28,14 @@ function LinkedContractListGrid(id,options){
 		})
 	];
 
+	var commands;
+	if (options.enabled){
+		commands = new GridCmdContainerAjx(id+":cmd",{
+				"cmdSearch":false,
+				"cmdExport":false
+		});
+	}
+
 	options = {
 		"showHead":false,
 		"model":model,
@@ -36,10 +44,7 @@ function LinkedContractListGrid(id,options){
 		"editInline":true,
 		"editWinClass":null,
 		"popUpMenu":new PopUpMenu(),
-		"commands":new GridCmdContainerAjx(id+":cmd",{
-			"cmdSearch":false,
-			"cmdExport":false
-		}),
+		"commands":commands,
 		"head":new GridHead(id+":head",{
 			"elements":[
 				new GridRow(id+":head:row0",{

@@ -44,47 +44,54 @@ Edit template instead.
 				<li id="{{{{id}}}}:tab-cost_eval_validity" class=""><a href="#documents_cost_eval_validity" data-toggle="tab" aria-expanded="false">Достоверность</a></li>
 				<li id="{{{{id}}}}:tab-modification" class=""><a href="#documents_modification" data-toggle="tab" aria-expanded="false">Модификация</a></li>
 				<li id="{{{{id}}}}:tab-audit" class=""><a href="#documents_audit" data-toggle="tab" aria-expanded="false">Аудит</a></li>
-				<li id="{{{{id}}}}:tab-doc_flow_in" class=""><a href="#doc_flow_in" data-toggle="tab" aria-expanded="false">Входящие письма</a></li>
-				<li id="{{{{id}}}}:tab-doc_flow_out" class=""><a href="#doc_flow_out" data-toggle="tab" aria-expanded="false">Исходящие письма</a></li>				
+				<li id="{{{{id}}}}:tab-doc_folders" class="hidden"><a href="#doc_folders" data-toggle="tab" aria-expanded="false">Документы</a></li>
+				<li id="{{{{id}}}}:tab-doc_flow_in" class="hidden"><a href="#doc_flow_in" data-toggle="tab" aria-expanded="false">Входящие письма</a></li>
+				<li id="{{{{id}}}}:tab-doc_flow_out" class="hidden"><a href="#doc_flow_out" data-toggle="tab" aria-expanded="false">Исходящие письма</a></li>				
 			</ul>
 			
 			<div class="tab-content">
 				<div class="tab-pane fade in active" id="aplication">
-					<div id="{{{{id}}}}:inf_sent" class="hidden">
+					<div id="{{{{id}}}}:inf_sent" class="hidden appState">
 					<h5 class="no-margin text-semibold text-danger">Заявление отправлено на проверку.</h5>
 					<h5 class="no-margin text-semibold text-danger">Редактирование запрещено.</h5>
 					</div>
-					<div id="{{{{id}}}}:inf_checking" class="hidden">
+					<div id="{{{{id}}}}:inf_checking" class="hidden appState">
 					<h5 class="no-margin text-semibold text-danger">Заявление на рассмотрении до <span id="{{{{id}}}}:application_state_end_date" class="label label-primary label-rounded"></span>.</h5>
 					<h5 class="no-margin text-semibold text-danger">Редактирование запрещено.</h5>
 					</div>					
-					<div id="{{{{id}}}}:inf_filling" class="hidden">
+					<div id="{{{{id}}}}:inf_filling" class="hidden appState">
 					<h5 class="no-margin text-semibold">Для подачи необходимо заполнить заявление на 100%.</h5>
 					<h5 class="no-margin text-semibold">Все поля, отмеченные звездочкой, обязательны для заполнения.</h5>
 					<!--  При отсутствии данных, необходимо указать <u class="text-bold">«Отсутствует»</u> или <u class="text-bold">«Не требуется»</u>, для числовых полей <u class="text-bold">«0»</u>. -->
 					</div>
-					<div id="{{{{id}}}}:inf_closed" class="hidden">
-					<h5 class="no-margin text-semibold">Заявление закрыто.</h5>
+					<div id="{{{{id}}}}:inf_closed" class="hidden appState">
+					<h5 class="no-margin text-semibold">Отправлено заключение.</h5>
 					</div>
-					<div id="{{{{id}}}}:inf_closed_no_expertise" class="hidden">
+					<div id="{{{{id}}}}:inf_closed_no_expertise" class="hidden appState">
 					<h5 class="no-margin text-semibold">Заявление закрыто без проведения экспертизы.</h5>
 					</div>					
-					<div id="{{{{id}}}}:inf_returned" class="hidden">
+					<div id="{{{{id}}}}:inf_returned" class="hidden appState">
 					<h5 class="no-margin text-semibold">Отказ по заявлению. Файлы будут храниться в течении трех месяцев.</h5>
 					</div>
-					<div id="{{{{id}}}}:inf_waiting_for_pay" class="hidden">
+					<div id="{{{{id}}}}:inf_waiting_for_pay" class="hidden appState">
 					<h5 class="no-margin text-semibold">Ожидание оплаты.</h5>
 					</div>
-					<div id="{{{{id}}}}:inf_waiting_for_contract" class="hidden">
+					<div id="{{{{id}}}}:inf_waiting_for_contract" class="hidden appState">
 					<h5 class="no-margin text-semibold">Ожидание подписания контракта.</h5>
 					</div>
-					<div id="{{{{id}}}}:inf_returned" class="hidden">
-					<h5 class="no-margin text-semibold">Заявление возвращено на доработку.</h5>
-					<h5 class="no-margin text-semibold">Создайте новое заявление, исправив ошибки.</h5>
-					<h5 class="no-margin text-semibold">Загруженные файлы по данному заявлению будут храниться три месяца.</h5>
+					<div id="{{{{id}}}}:inf_expertise" class="hidden appState">
+					<h5 class="no-margin text-semibold">Проведение экспертизы проекта.</h5>
 					</div>
+										
+					{{#contractExists}}					
+					<h4>Заключение № <u>{{expertiseResultNumber}}</u>{{#expertiseResultExists}}{{expertiseResultDate}}{{/expertiseResultExists}}</h4>
+					<h4>Контракт № <u>{{contractNumber}}</u> от <u>{{contractDate}}</u> </h4>
+					<h4>Заявление № <u id="{{{{id}}}}:id"/> от <u id="{{{{id}}}}:create_dt"/> </h4>
+					{{/contractExists}}
 					
+					{{#contractNotExists}}
 					<h2>Заявление № <u id="{{{{id}}}}:id"/> от <u id="{{{{id}}}}:create_dt"/> </h2>
+					{{/contractNotExists}}
 					
 					<div class="tabbable nav-tabs-vertical nav-tabs-left">
 						<ul class="nav nav-tabs nav-tabs-highlight">
@@ -210,6 +217,9 @@ Edit template instead.
 				<div class="tab-pane fade" id="documents_audit">
 					<div id="{{{{id}}}}:documents_audit"/>
 				</div>
+				<div class="tab-pane fade" id="doc_folders">
+					<div id="{{{{id}}}}:doc_folders"/>
+				</div>
 				
 				<div class="tab-pane fade" id="doc_flow_in">
 					<div id="{{{{id}}}}:doc_flow_in"/>
@@ -222,9 +232,9 @@ Edit template instead.
 		</div>
 	</div>
 	
-	{{{#is_admin}}}
+	{{#is_admin}}
 	<div id="{{{{id}}}}:users_ref"/>
-	{{{/is_admin}}}
+	{{/is_admin}}
 	
 </div>
 

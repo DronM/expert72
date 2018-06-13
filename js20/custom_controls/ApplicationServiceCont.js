@@ -11,6 +11,21 @@
  * @param {Object} options
  * @param {string} options.className
  */
+ 
+function ServiceCheckBox(id,options){	
+	ServiceCheckBox.superclass.constructor.call(this,id,options);
+}
+extend(ServiceCheckBox,EditCheckBox); 
+
+ServiceCheckBox.prototype.setEnabled = function(enable){
+	DOMHelper.swapClasses(
+		document.getElementById(this.getId()+"-panel"),
+		enable? "service-type-en" : "service-type-dis",
+		!enable? "service-type-en" : "service-type-dis"
+	);	
+	ServiceCheckBox.superclass.setEnabled.call(this,enable);
+}
+ 
 function ApplicationServiceCont(id,options){
 	options = options || {};	
 	
@@ -21,12 +36,17 @@ function ApplicationServiceCont(id,options){
 	var self = this;
 	options.addElement = function(){
 		
-		this.addElement(new EditCheckBox(id+":do_expertise",{
+		this.addElement(new ServiceCheckBox(id+":expertise",{
 			"inline":true,
 			"labelCaption":"Государственная экспертиза",
 			"labelAlign":"right",
 			"labelClassName":"",			
 			"events":{
+				"click":function(e){
+					this.switchValue();
+					e.stopPropagation();
+					return false;
+				},
 				"change":function(){
 					var cur_val = this.getValue();
 					
@@ -41,7 +61,13 @@ function ApplicationServiceCont(id,options){
 						self.onChangeExpertiseType();
 					}
 					self.m_mainView.getElement("app_print_expertise").setActive(cur_val);
-					self.toggleService("service-expertise",cur_val);
+					self.toggleService("expertise",cur_val);
+					
+					var sim_en = (self.getElement("cost_eval_validity").getValue()&&cur_val);
+					self.getElement("cost_eval_validity_simult").setEnabled(sim_en);
+					if (!sim_en&&self.getElement("cost_eval_validity_simult").getValue()){
+						self.getElement("cost_eval_validity_simult").setValue(false);
+					}
 				}
 			}
 		})
@@ -103,7 +129,7 @@ function ApplicationServiceCont(id,options){
 		})
 		);
 		
-		this.addElement(new EditCheckBox(id+":cost_eval_validity",{
+		this.addElement(new ServiceCheckBox(id+":cost_eval_validity",{
 			"inline":true,
 			"labelCaption":"Достоверность",
 			"labelAlign":"right",
@@ -130,7 +156,7 @@ function ApplicationServiceCont(id,options){
 						function(){
 							var sim_ctrl = self.getElement("cost_eval_validity_simult");
 							if (cur_val){
-								sim_ctrl.setEnabled(true);
+								sim_ctrl.setEnabled(self.getElement("expertise").getValue());
 							}
 							else{
 								sim_ctrl.setValue(false);
@@ -138,12 +164,13 @@ function ApplicationServiceCont(id,options){
 							}
 							
 							//other services
-							self.getElement("audit").setEnabled( (!cur_val && !self.getElement("do_expertise").getValue() && !self.getElement("modification").getValue()) );
+							self.getElement("audit").setEnabled( (!cur_val && !self.getElement("expertise").getValue() && !self.getElement("modification").getValue()) );
 							
 							self.m_mainView.getElement("app_print_cost_eval").setActive(cur_val);
 													
-							self.toggleService("service-cost_eval_validity",cur_val);
+							self.toggleService("cost_eval_validity",cur_val);
 							self.m_mainView.toggleDocTypeVis();
+							
 						},
 						function(){
 							//set back old value
@@ -162,7 +189,7 @@ function ApplicationServiceCont(id,options){
 			"labelCaption":"Одновременно с ПД"
 		}));	
 
-		this.addElement(new EditCheckBox(id+":modification",{
+		this.addElement(new ServiceCheckBox(id+":modification",{
 			"inline":true,
 			"labelCaption":"Модификация",
 			"labelAlign":"right",
@@ -193,12 +220,12 @@ function ApplicationServiceCont(id,options){
 							}
 							
 							//other services
-							self.getElement("do_expertise").setEnabled(!cur_val);
+							self.getElement("expertise").setEnabled(!cur_val);
 							self.getElement("audit").setEnabled( (!cur_val && !self.getElement("cost_eval_validity").getValue()) );
 							
 							self.m_mainView.getElement("app_print_modification").setActive(cur_val);
 													
-							self.toggleService("service-modification",cur_val);
+							self.toggleService("modification",cur_val);
 							self.m_mainView.toggleDocTypeVis();
 						},
 						function(){
@@ -218,7 +245,7 @@ function ApplicationServiceCont(id,options){
 			"mainView":options.mainView
 		}));
 		
-		this.addElement(new EditCheckBox(id+":audit",{
+		this.addElement(new ServiceCheckBox(id+":audit",{
 			"inline":true,
 			"labelCaption":"Аудит",
 			"labelAlign":"right",
@@ -228,9 +255,9 @@ function ApplicationServiceCont(id,options){
 				"change":function(){
 					var cur_val = this.getValue();
 					
-					self.toggleService("service-audit",cur_val);
+					self.toggleService("audit",cur_val);
 					
-					var exp_ctrl = self.getElement("do_expertise");
+					var exp_ctrl = self.getElement("expertise");
 					var mofid_ctrl = self.getElement("modification");
 					var ev_ctrl = self.getElement("cost_eval_validity");
 					
@@ -246,7 +273,7 @@ function ApplicationServiceCont(id,options){
 						self.m_mainView.removeDocumentTypeWithWarn(doc_types_for_remove,
 							function(){
 								//other services
-								self.getElement("do_expertise").setEnabled(!cur_val);
+								self.getElement("expertise").setEnabled(!cur_val);
 								self.getElement("cost_eval_validity").setEnabled(!cur_val);
 								self.getElement("modification").setEnabled(!cur_val);
 							
@@ -254,14 +281,14 @@ function ApplicationServiceCont(id,options){
 							},
 							function(){
 								//set back old value
-								self.toggleService("service-audit",true);				
+								self.toggleService("audit",true);				
 								this_cont.setValue(true);
 							}
 						);												
 					}
 					else if (this.m_started && cur_val){
 						//other services
-						self.getElement("do_expertise").setEnabled(!cur_val);
+						self.getElement("expertise").setEnabled(!cur_val);
 						self.getElement("cost_eval_validity").setEnabled(!cur_val);
 						self.getElement("modification").setEnabled(!cur_val);
 					
@@ -274,10 +301,9 @@ function ApplicationServiceCont(id,options){
 			}
 		})
 		);
-		
 	}
 		
-	ApplicationServiceCont.superclass.constructor.call(this,id,"DIV",options);
+	ApplicationServiceCont.superclass.constructor.call(this,id,"TEMPLATE",options);
 	
 	this.tabId = "common_inf-tab";
 	this.setAttr("percentcalc","true");
@@ -294,6 +320,28 @@ function ApplicationServiceCont(id,options){
 		}
 		return perc;	
 	}
+	/*
+	EventHelper.add(document.getElementById(id+":service-expertise"), "click", function(){
+		//self.getElement("expertise").switchValue();
+		//console.log("!!!")
+		var cur_val = DOMHelper.hasClass(document.getElementById(self.getId()+":service-expertise"),self.serviceSelectedClass);
+		//var cur_val = this.getValue();
+		
+		//other services
+		self.getElement("modification").setEnabled(!cur_val);
+		self.getElement("audit").setEnabled( (!cur_val && !self.getElement("cost_eval_validity").getValue()) );
+		
+		var ctrl = self.getElement("expertise_type");
+		ctrl.setEnabled(cur_val);
+		if (!cur_val){
+			ctrl.setValue(null);
+			self.onChangeExpertiseType();
+		}
+		self.m_mainView.getElement("app_print_expertise").setActive(cur_val);
+		self.toggleService("expertise",cur_val);
+		
+	}, false);
+	*/
 }
 extend(ApplicationServiceCont,ControlContainer);
 
@@ -345,7 +393,7 @@ ApplicationServiceCont.prototype.onChangeExpertiseType = function(){
 ApplicationServiceCont.prototype.isNull = function(){
 	var r = 
 		(
-			!this.getElement("do_expertise").getValue()
+			!this.getElement("expertise").getValue()
 			&& !this.getElement("cost_eval_validity").getValue()
 			&& !this.getElement("modification").getValue()
 			&& !this.getElement("audit").getValue()
@@ -353,8 +401,23 @@ ApplicationServiceCont.prototype.isNull = function(){
 	return r;
 }
 
-ApplicationServiceCont.prototype.toggleService = function(serviceId,enable){
+ApplicationServiceCont.prototype.toggleService = function(serviceId,enable){	
+	DOMHelper.swapClasses(
+		document.getElementById(this.getId()+":"+serviceId+"-panel"),
+		enable? this.serviceSelectedClass : this.serviceNotSelectedClass,
+		!enable? this.serviceSelectedClass : this.serviceNotSelectedClass
+	);
+	
+	/*
+	DOMHelper.swapClasses(
+		this.getElement(serviceId).getNode(),
+		enable? this.serviceSelectedClass : this.serviceNotSelectedClass,
+		!enable? this.serviceSelectedClass : this.serviceNotSelectedClass
+	);
+	*/
+	/*
 	var d = $("#"+serviceId);
 	d.toggleClass(!enable? this.serviceSelectedClass : this.serviceNotSelectedClass,false);
 	d.toggleClass(enable? this.serviceSelectedClass : this.serviceNotSelectedClass,true);					
+	*/
 }

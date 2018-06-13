@@ -26,6 +26,7 @@
 		<script>
 			function pageLoad(){				
 				<xsl:call-template name="initApp"/>
+				<xsl:call-template name="initReminder"/>
 				
 				<xsl:call-template name="checkForError"/>
 				
@@ -137,6 +138,9 @@
 	}
 	</xsl:if>
 	
+</xsl:template>
+
+<xsl:template name="initReminder">
 	<xsl:variable name="role_id" select="/document/model[@id='ModelVars']/row/role_id"/>
 	<xsl:if test="$role_id != 'client' and $role_id != ''">
 		var constants = {"reminder_refresh_interval":null};
@@ -151,18 +155,6 @@
 		</xsl:if>
 		application.reminder.start();
 	</xsl:if>
-	<!--
-	<xsl:if test="$role_id = 'client'">
-		(new DocFlowInClient_Controller()).getPublicMethod("get_unviewed_count").run({
-			"ok":function(resp){
-				var m = new ModelXML("UnviewedCount_Model",{"data":resp.getModelData()});
-				if (m.getNextRow()){
-					console.log("COUNT="+m.getFieldValue("cnt"));
-				}
-			}
-		})
-	</xsl:if>
-	-->
 </xsl:template>
 
 <!--************* Window instance ******************** -->
@@ -364,10 +356,9 @@
 			,"model":editViewOptions.models.VariantStorage_Model
 			</xsl:if>			
 		};	
-		
-		<!--var v_<xsl:value-of select="@templateId"/>-->
-		application.m_view = new <xsl:value-of select="@templateId"/>_View("<xsl:value-of select="@templateId"/>",v_opts);
-		application.m_view.toDOM(document.getElementById("windowData"));
+				
+		var v_<xsl:value-of select="@templateId"/> = new <xsl:value-of select="@templateId"/>_View("<xsl:value-of select="@templateId"/>",v_opts);
+		v_<xsl:value-of select="@templateId"/>.toDOM(document.getElementById("windowData"));
 	</xsl:for-each>
 </xsl:template>
 
@@ -417,10 +408,14 @@ throw Error(CommonHelper.longString(function () {/*
 	<xsl:choose>
 	<xsl:when test="$er_num='100' or $er_num='101' or $er_num='102'">
 		//window.location = window.getApp().getHost();
-		throw Error('Фатальная ошибка: <xsl:value-of select="/document/model[@id='ModelServResponse']/row/descr"/> Необходима повторная авторизация.');
+		//throw Error('Фатальная ошибка: <xsl:value-of select="/document/model[@id='ModelServResponse']/row/descr"/> Необходима повторная авторизация.');
+		throw new FatalException({
+			"code":<xsl:value-of select="$er_num"/>
+			,"message":'<xsl:value-of select="/document/model[@id='ModelServResponse']/row/descr"/>'
+		});
 	</xsl:when>
 	<xsl:when test="not($er_num='0')">
-		throw Error(CommonHelper.escapeDoubleQuotes(CommonHelper.longString(function () {/*
+		throw new Error(CommonHelper.escapeDoubleQuotes(CommonHelper.longString(function () {/*
 		<xsl:value-of select="/document/model[@id='ModelServResponse']/row/descr"/>
 		*/})));
 	</xsl:when>

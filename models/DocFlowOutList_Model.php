@@ -182,6 +182,14 @@ class DocFlowOutList_Model extends ModelSQL{
 		$this->addField($f_to_applications_ref);
 		//********************
 		
+		//*** Field to_constr_name ***
+		$f_opts = array();
+		$f_opts['id']="to_constr_name";
+				
+		$f_to_constr_name=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"to_constr_name",$f_opts);
+		$this->addField($f_to_constr_name);
+		//********************
+		
 		//*** Field doc_flow_types_ref ***
 		$f_opts = array();
 		$f_opts['id']="doc_flow_types_ref";

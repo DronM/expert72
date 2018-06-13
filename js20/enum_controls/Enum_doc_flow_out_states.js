@@ -21,7 +21,7 @@ function Enum_doc_flow_out_states(id,options){
 ,"ru_approved":"Согласован"
 ,"ru_confirming":"На утверждении"
 ,"ru_not_confirmed":"Не утвержден"
-,"ru_registered":"Зарегистрировано"
+,"ru_registered":"Отправлено"
 ,"ru_registering":"На регистрации"
 };
 	options.options = [{"value":"approving",

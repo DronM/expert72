@@ -75,16 +75,18 @@ BEGIN
 						WHEN app.cost_eval_validity THEN 'Достоверность'
 						WHEN app.modification THEN 'Модификация'
 						WHEN app.audit THEN 'Аудит'
-					END,
-					'Просим провести '||
+					END||', '||app.constr_name
+					,
+					app.applicant->>'name'||' просит провести '||
 					CASE
 						WHEN app.expertise_type='pd'::expertise_types THEN 'экспертизу проектной документации'
 						WHEN app.expertise_type='eng_survey'::expertise_types THEN 'экспертизу результатов инженерных изысканий'
 						WHEN app.expertise_type='pd_eng_survey'::expertise_types THEN 'экспертизу проектной документации и экспертизу результатов инженерных изысканий'
 						WHEN app.cost_eval_validity THEN 'проверку достоверности определения сметной стоимости'
-						WHEN app.modification THEN 'модификацию'
+						WHEN app.modification THEN 'модификацию.'
 						WHEN app.audit THEN 'аудит'
-					END,
+					END||' по объекту '||app.constr_name
+					,
 					TRUE
 					
 				FROM applications AS app
@@ -93,7 +95,8 @@ BEGIN
 				
 			END IF;
 			
-		ELSIF NEW.state='waiting_for_pay' OR NEW.state='expertise' THEN
+		ELSIF (NEW.state='waiting_for_pay' OR NEW.state='expertise')
+		AND (NOT const_client_lk_val() OR const_debug_val()) THEN
 			--письмо об изменении состояния
 			INSERT INTO mail_for_sending
 			(to_addr,to_name,body,subject,email_type)

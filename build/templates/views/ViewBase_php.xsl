@@ -81,7 +81,9 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->getVarModel()->addField(new Field('role_id',DT_STRING));
 		$this->getVarModel()->addField(new Field('user_name',DT_STRING));
 		if (isset($_SESSION['role_id']) &amp;&amp; $_SESSION['role_id']!='client'){
-			$this->getVarModel()->addField(new Field('employees_ref',DT_STRING));			
+			$this->getVarModel()->addField(new Field('employees_ref',DT_STRING));
+			$this->getVarModel()->addField(new Field('departments_ref',DT_STRING));
+			$this->getVarModel()->addField(new Field('department_boss',DT_STRING));												
 		}
 		if (isset($_SESSION['role_id'])){
 			$this->getVarModel()->addField(new Field('user_name_full',DT_STRING));
@@ -125,6 +127,8 @@ class ViewBase extends ViewHTMLXSLT {
 			
 			if ($_SESSION['role_id']!='client'){
 				$this->setVarValue('employees_ref',$_SESSION['employees_ref']);
+				$this->setVarValue('departments_ref',$_SESSION['departments_ref']);
+				$this->setVarValue('department_boss',$_SESSION['department_boss']);
 			}
 		}
 		

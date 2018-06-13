@@ -13,20 +13,9 @@
 function FileUploaderDocFlowOut_View(id,options){
 	options = options || {};	
 	
-	var constants = {"employee_download_file_types":null,"employee_download_file_max_size":null};
-	window.getApp().getConstantManager().get(constants);
-	var t_model = constants.employee_download_file_types.getValue();
-	this.m_fileTypes = [];
-	options.maxFileSize = constants.employee_download_file_max_size.getValue();
-	options.allowedFileExt = [];//Это для шаблона
-	if (!t_model.rows){
-		throw new Error("Не определены расширения для загрузки! Заполните константу!");
-	}
-	for (var i=0;i<t_model.rows.length;i++){
-		this.m_fileTypes.push(t_model.rows[i].fields.ext);
-		options.allowedFileExt.push({"ext":t_model.rows[i].fields.ext});
-	}
-	
+	options.constDownloadTypes = "employee_download_file_types";
+	options.constDownloadMaxSize = "employee_download_file_max_size";
+
 	this.m_mainView = options.mainView;
 	
 	options.templateOptions = options.templateOptions || {};
@@ -35,7 +24,7 @@ function FileUploaderDocFlowOut_View(id,options){
 	options.templateOptions.order1c = options.order1c;
 	
 	options.allowOnlySignedFiles = false;
-	options.separateSignature = false;
+	options.separateSignature = true;
 	options.filePicClass = "file-pic-doc";	
 	options.fileAddClass = "uploader-file-add-doc";
 	options.fileListClass = "uploader-file-list-doc";
@@ -44,6 +33,8 @@ function FileUploaderDocFlowOut_View(id,options){
 	options.fileTemplateOptions = {
 		"docType":"doc"
 	};
+	
+	options.customFolder = true;
 	
 	var self = this;
 	options.addElement = function(){
@@ -74,6 +65,29 @@ FileUploaderDocFlowOut_View.prototype.checkRequiredFiles = function(){
 	//NO required documents
 }
 
+FileUploaderDocFlowOut_View.prototype.upload = function(){
+	if (this.m_customFolder){
+		//один раздел
+		var file_ctrls = this.getElement("file-list_doc").getElements();	
+		var er = false;
+		for (var id in file_ctrls){
+			if (file_ctrls[id]
+			&& file_ctrls[id].getAttr("file_uploaded")!="true"
+			&& file_ctrls[id].includeCont
+			&& file_ctrls[id].includeCont.getElement("check").getValue()){
+				var folder_v = file_ctrls[id].includeCont.getElement("folder").getValue();
+				if (!folder_v || folder_v.isNull()){
+					var mes = "Не выбрана папка проекта!";
+					file_ctrls[id].includeCont.getElement("folder").setNotValid(mes);					
+					er = true;
+				}
+			}
+		}
+		if (er)throw new Error("Есть ошибки!");
+	}
+	FileUploaderDocFlowOut_View.superclass.upload.call(this);
+}
+
 FileUploaderDocFlowOut_View.prototype.deleteFileFromServer = function(fileId,itemId){
 	var self = this;
 	
@@ -99,15 +113,32 @@ FileUploaderDocFlowOut_View.prototype.downloadFile = function(btnCtrl){
 	pm.setFieldValue("file_id",btnCtrl.getAttr("file_id"));
 	pm.setFieldValue("doc_id",this.m_mainView.getElement("id").getValue());
 	pm.download();
+	if (btnCtrl.getAttr("file_signed")=="true"){
+		var pm_sig = contr.getPublicMethod("get_file_sig");
+		pm_sig.setFieldValue("file_id",btnCtrl.getAttr("file_id"));
+		pm_sig.setFieldValue("doc_id",this.m_mainView.getElement("id").getValue());
+		pm_sig.download(null,1);
+	}	
 }
 
 FileUploaderDocFlowOut_View.prototype.getQuerySruc = function(file){
-	return {
+	var res = {
 		"f":"doc_flow_file_upload",
 		"file_id":file.file_id,
 		"doc_flow_id":this.m_mainView.getElement("id").getValue(),
-		"doc_type":"out"
+		"doc_type":"out",
+		"file_signed":file.file_signed,
+		"signature":file.signature
 	};
+	if (this.m_customFolder){
+		//один раздел
+		var file_ctrl = this.getElement("file-list_doc").getElement("file_"+file.file_id);	
+		if (file_ctrl.includeCont.getElement("check").getValue()){
+			//все проверено уже
+			res.file_path = file_ctrl.includeCont.getElement("folder").getValue().getDescr();
+		}		
+	}
+	return res;
 }
 
 FileUploaderDocFlowOut_View.prototype.uploadAll = function(){

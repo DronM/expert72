@@ -52,6 +52,12 @@ function NewOrder_View(id,options){
 				);				
 			}
 		}));
+		this.addElement(new ButtonCmd(id+":cancel",{
+			"caption":"Отмена",
+			"onClick":function(){
+				self.m_onNewOrderCreated();
+			}
+		}));
 		
 	}
 		

@@ -19,7 +19,10 @@ function ApplicationClientContainer(id,options){
 	
 	this.m_mainView = options.elementOptions.mainView;
 	
+	this.m_readOnly = options.readOnly;
+
 	options.template = window.getApp().getTemplate("ApplicationClientContainer");
+	options.template.templateOptions = {"readOnly":options.readOnly};
 	
 	var self = this;
 	options.addElement = function(){
@@ -75,6 +78,7 @@ ApplicationClientContainer.prototype.createNewElement = function(){
 	var ind = this.m_container.getCount();
 	var id = this.getId()+":container:"+ind;
 	opts.cmdClose = true;
+	
 	self = this;	
 	opts.onCloseContractor = function(){
 		self.m_container.delElement(this.getName());
@@ -82,7 +86,8 @@ ApplicationClientContainer.prototype.createNewElement = function(){
 		self.m_mainView.calcFillPercent();
 	}
 	opts.templateOptions = {
-		"IND":(ind+1)
+		"IND":(ind+1),
+		"cmdClose":!this.m_readOnly
 	};
 	var new_elem = new this.m_elementClass(id,opts);
 	

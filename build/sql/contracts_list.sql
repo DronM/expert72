@@ -31,6 +31,7 @@ CREATE OR REPLACE VIEW contracts_list AS
 		
 		t.permission_ar,
 		t.main_expert_id,
+		t.main_department_id,
 		m_exp.name AS main_expert_descr,
 		--employees_ref(m_exp) AS main_experts_ref,
 		

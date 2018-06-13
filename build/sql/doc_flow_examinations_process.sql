@@ -31,6 +31,7 @@ DECLARE
 	v_expertise_result_number text;
 	v_date_type date_types;
 	v_work_day_count int;
+	v_expert_work_day_count int;
 	v_office_id int;
 	v_new_contract_id int;
 BEGIN
@@ -195,7 +196,7 @@ BEGIN
 					v_app_process_dt,
 					CASE WHEN NEW.closed THEN NEW.application_resolution_state ELSE 'checking'::application_states END,
 					(SELECT user_id FROM employees WHERE id=NEW.employee_id),
-					NEW.end_date_time
+					CASE WHEN NEW.closed THEN NULL ELSE NEW.end_date_time END					
 				);			
 			END IF;
 			
@@ -340,16 +341,18 @@ BEGIN
 				--Дни проверки
 				SELECT
 					services.date_type,
-					services.work_day_count
+					services.work_day_count,
+					services.expertise_day_count
 				INTO
 					v_date_type,
-					v_work_day_count
+					v_work_day_count,
+					v_expert_work_day_count
 				FROM services
 				WHERE services.id=
 				((
 					CASE
 						WHEN v_document_type='pd' THEN pdfn_services_expertise()
-						WHEN v_document_type='cost_eval_validity' THEN pdfn_services_eng_survey()
+						WHEN v_document_type='cost_eval_validity' THEN pdfn_services_cost_eval_validity()
 						WHEN v_document_type='modification' THEN pdfn_services_modification()
 						WHEN v_document_type='audit' THEN pdfn_services_audit()
 						ELSE NULL
@@ -375,7 +378,9 @@ BEGIN
 					contract_date,					
 					date_type,
 					expertise_day_count,
+					expert_work_day_count,
 					work_end_date,
+					expert_work_end_date,
 					permissions,
 					user_id)
 				VALUES (
@@ -415,10 +420,12 @@ BEGIN
 					
 					v_date_type,
 					v_work_day_count,
+					v_expert_work_day_count,
 					
 					--ПРИ ОПЛАТЕ client_payments_process()
 					--ставятся work_start_date&&work_end_date
 					--contracts_work_end_date(v_office_id, v_date_type, now(), v_work_day_count),
+					NULL,
 					NULL,					
 					
 					'{"id":"AccessPermission_Model","rows":[]}'::jsonb,

@@ -177,6 +177,22 @@ class ContractList_Model extends ModelSQL{
 		$this->addField($f_work_end_date);
 		//********************
 		
+		//*** Field expert_work_end_date ***
+		$f_opts = array();
+		$f_opts['id']="expert_work_end_date";
+				
+		$f_expert_work_end_date=new FieldSQLDate($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expert_work_end_date",$f_opts);
+		$this->addField($f_expert_work_end_date);
+		//********************
+		
+		//*** Field expert_work_day_count ***
+		$f_opts = array();
+		$f_opts['id']="expert_work_day_count";
+				
+		$f_expert_work_day_count=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expert_work_day_count",$f_opts);
+		$this->addField($f_expert_work_day_count);
+		//********************
+		
 		//*** Field expertise_day_count ***
 		$f_opts = array();
 		$f_opts['id']="expertise_day_count";

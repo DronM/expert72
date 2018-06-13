@@ -1,0 +1,26 @@
+<div id="{{id}}">
+	<div class="panel-group panel-group-control content-group-lg">	
+		{{#items}}
+		<div class="panel">
+			<div class="panel-heading bg-info">
+				<h6 class="panel-title">
+					<a data-toggle="collapse" href="#collapsible-control-group_{{fields.id}}" aria-expanded="false" class="collapsed file_section">
+					<span id="{{id}}:total_item_files_{{fields.id}}" class="badge badge-danger" title="Количество файлов в разделе">{{files.length}}</span> {{fields.descr}}</a>
+				</h6>
+			</div>
+			<div id="collapsible-control-group_{{fields.id}}" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+				<div class="panel-body">				
+					<div class="uploader-file-list" item_id="{{fields.id}}">						
+						<ul id="{{id}}:file-list_{{fields.id}}">
+						{{#files}}
+							<li id="{{id}}:file_{{file_id}}">
+							</li>
+						{{/files}}
+						</ul>
+					</div>					
+				</div>
+			</div>
+		</div>
+		{{/items}}
+	</div>
+</div>	
