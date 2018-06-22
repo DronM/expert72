@@ -166,6 +166,15 @@ Edit template instead.
 									</div>
 									<div class="panel-body">
 										<div id="{{{{id}}}}:constr_technical_features"/>
+										
+										<div class="panel">
+											<div class="panel-heading">
+												<h6 class="panel-title">Сведения о зданиях, сооружениях, входящих в состав сложного объекта (имущественного комплекса)</h6>
+											</div>	
+											<div class="panel-body">
+												<div id="{{{{id}}}}:constr_technical_features_in_compound_obj"/>
+											</div>
+										</div>
 									</div>	
 								</div>
 							</div>

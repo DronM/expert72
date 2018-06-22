@@ -22,7 +22,7 @@ function ClientResponsablePersonEdit(id,options){
 		if (!options.clientTypePerson){
 			this.addElement(new EditString(id+":dep",{
 				"labelCaption":"Отдел:",
-				"attrs":{"autofocus":true},
+				"attrs":{"autofocus":!options.calcPercent},
 				"maxLength":"150",
 				"autofocus":true
 			}));
@@ -31,6 +31,7 @@ function ClientResponsablePersonEdit(id,options){
 		this.addElement(new EditString(id+":name",{
 			"labelClassName":"control-label "+bs+( options.calcPercent? " percentcalc":""),
 			"labelCaption":"ФИО:",
+			"attrs":{"autofocus":options.calcPercent},
 			"maxLength":"150",
 			"autofocus":(options.clientTypePerson===true)
 		}));
@@ -53,7 +54,7 @@ function ClientResponsablePersonEdit(id,options){
 			"labelCaption":"Эл.почта:"
 		}));
 
-		if (!options.clientTypePerson){
+		if (!options.clientTypePerson && !options.calcPercent){
 			this.addElement(new Enum_responsable_person_types(id+":person_type",{
 				"labelCaption":"Вид должн.лица:"
 			}));

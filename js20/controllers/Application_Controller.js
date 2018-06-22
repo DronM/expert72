@@ -172,6 +172,12 @@ extend(Application_Controller,ControllerObjServer);
 	
 	var options = {};
 	
+	var field = new FieldJSONB("constr_technical_features_in_compound_obj",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
 	var field = new FieldFloat("total_cost_eval",options);
 	
 	pm.addField(field);
@@ -424,6 +430,12 @@ extend(Application_Controller,ControllerObjServer);
 	
 	var options = {};
 	
+	var field = new FieldJSONB("constr_technical_features_in_compound_obj",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
 	var field = new FieldFloat("total_cost_eval",options);
 	
 	pm.addField(field);
@@ -576,8 +588,7 @@ extend(Application_Controller,ControllerObjServer);
 }
 
 			Application_Controller.prototype.add_get_print = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('get_print',opts);
 	
 				
@@ -680,6 +691,9 @@ extend(Application_Controller,ControllerObjServer);
 	pm.addField(new FieldJSONB("constr_technical_features",f_opts));
 	var f_opts = {};
 	
+	pm.addField(new FieldJSONB("constr_technical_features_in_compound_obj",f_opts));
+	var f_opts = {};
+	
 	pm.addField(new FieldFloat("total_cost_eval",f_opts));
 	var f_opts = {};
 	
@@ -747,16 +761,14 @@ extend(Application_Controller,ControllerObjServer);
 }
 
 			Application_Controller.prototype.add_get_client_list = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('get_client_list',opts);
 	
 	this.addPublicMethod(pm);
 }
 
 			Application_Controller.prototype.add_remove_file = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('remove_file',opts);
 	
 				
@@ -774,8 +786,7 @@ extend(Application_Controller,ControllerObjServer);
 }
 
 			Application_Controller.prototype.add_get_file = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('get_file',opts);
 	
 				
@@ -793,8 +804,7 @@ extend(Application_Controller,ControllerObjServer);
 }
 
 			Application_Controller.prototype.add_get_file_sig = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('get_file_sig',opts);
 	
 				
@@ -812,8 +822,7 @@ extend(Application_Controller,ControllerObjServer);
 }
 
 			Application_Controller.prototype.add_zip_all = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('zip_all',opts);
 	
 				
@@ -829,16 +838,14 @@ extend(Application_Controller,ControllerObjServer);
 }
 
 			Application_Controller.prototype.add_get_document_templates = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('get_document_templates',opts);
 	
 	this.addPublicMethod(pm);
 }
 
 			Application_Controller.prototype.add_remove_document_types = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('remove_document_types',opts);
 	
 				
@@ -862,8 +869,7 @@ extend(Application_Controller,ControllerObjServer);
 }
 
 			Application_Controller.prototype.add_download_app_print_expertise = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('download_app_print_expertise',opts);
 	
 				
@@ -879,8 +885,7 @@ extend(Application_Controller,ControllerObjServer);
 }
 
 			Application_Controller.prototype.add_download_app_print_expertise_sig = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('download_app_print_expertise_sig',opts);
 	
 				
@@ -896,8 +901,7 @@ extend(Application_Controller,ControllerObjServer);
 }
 
 			Application_Controller.prototype.add_delete_app_print_expertise = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('delete_app_print_expertise',opts);
 	
 				
@@ -913,8 +917,7 @@ extend(Application_Controller,ControllerObjServer);
 }
 
 			Application_Controller.prototype.add_download_app_print_modification = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('download_app_print_modification',opts);
 	
 				
@@ -930,8 +933,7 @@ extend(Application_Controller,ControllerObjServer);
 }
 
 			Application_Controller.prototype.add_download_app_print_modification_sig = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('download_app_print_modification_sig',opts);
 	
 				
@@ -947,8 +949,7 @@ extend(Application_Controller,ControllerObjServer);
 }
 
 			Application_Controller.prototype.add_delete_app_print_modification = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('delete_app_print_modification',opts);
 	
 				
@@ -964,8 +965,7 @@ extend(Application_Controller,ControllerObjServer);
 }
 
 			Application_Controller.prototype.add_download_app_print_audit = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('download_app_print_audit',opts);
 	
 				
@@ -981,8 +981,7 @@ extend(Application_Controller,ControllerObjServer);
 }
 
 			Application_Controller.prototype.add_download_app_print_audit_sig = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('download_app_print_audit_sig',opts);
 	
 				
@@ -998,8 +997,7 @@ extend(Application_Controller,ControllerObjServer);
 }
 
 			Application_Controller.prototype.add_delete_app_print_audit = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('delete_app_print_audit',opts);
 	
 				
@@ -1015,8 +1013,7 @@ extend(Application_Controller,ControllerObjServer);
 }
 
 			Application_Controller.prototype.add_download_app_print_cost_eval = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('download_app_print_cost_eval',opts);
 	
 				
@@ -1032,8 +1029,7 @@ extend(Application_Controller,ControllerObjServer);
 }
 
 			Application_Controller.prototype.add_download_app_print_cost_eval_sig = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('download_app_print_cost_eval_sig',opts);
 	
 				
@@ -1049,8 +1045,7 @@ extend(Application_Controller,ControllerObjServer);
 }
 
 			Application_Controller.prototype.add_delete_app_print_cost_eval = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('delete_app_print_cost_eval',opts);
 	
 				
@@ -1066,8 +1061,7 @@ extend(Application_Controller,ControllerObjServer);
 }
 
 			Application_Controller.prototype.add_set_user = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('set_user',opts);
 	
 				
@@ -1091,8 +1085,7 @@ extend(Application_Controller,ControllerObjServer);
 }
 
 			Application_Controller.prototype.add_download_auth_letter_file = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('download_auth_letter_file',opts);
 	
 				
@@ -1108,8 +1101,7 @@ extend(Application_Controller,ControllerObjServer);
 }
 
 			Application_Controller.prototype.add_download_auth_letter_file_sig = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('download_auth_letter_file_sig',opts);
 	
 				
@@ -1125,8 +1117,7 @@ extend(Application_Controller,ControllerObjServer);
 }
 
 			Application_Controller.prototype.add_delete_auth_letter_file = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('delete_auth_letter_file',opts);
 	
 				

@@ -51,7 +51,7 @@ function ShortMessage_Model(options){
 	
 	filed_options.autoInc = false;	
 	
-	options.fields.parent_chat_message_id = new FieldInt("parent_chat_message_id",filed_options);
+	options.fields.recipient_id = new FieldInt("recipient_id",filed_options);
 	
 				
 	
@@ -60,7 +60,7 @@ function ShortMessage_Model(options){
 	
 	filed_options.autoInc = false;	
 	
-	options.fields.employee_id = new FieldInt("employee_id",filed_options);
+	options.fields.to_recipient_id = new FieldInt("to_recipient_id",filed_options);
 	
 				
 	
@@ -69,37 +69,10 @@ function ShortMessage_Model(options){
 	
 	filed_options.autoInc = false;	
 	
-	options.fields.to_employee_id = new FieldInt("to_employee_id",filed_options);
-	options.fields.to_employee_id.getValidator().setRequired(true);
+	options.fields.reminder_id = new FieldInt("reminder_id",filed_options);
+	options.fields.reminder_id.getValidator().setRequired(true);
 	
-				
-	
-	var filed_options = {};
-	filed_options.primaryKey = false;	
-	
-	filed_options.autoInc = false;	
-	
-	options.fields.doc_flow_importance_type_id = new FieldInt("doc_flow_importance_type_id",filed_options);
-	options.fields.doc_flow_importance_type_id.getValidator().setRequired(true);
-	
-				
-	
-	var filed_options = {};
-	filed_options.primaryKey = false;	
-	
-	filed_options.autoInc = false;	
-	
-	options.fields.content = new FieldText("content",filed_options);
-	
-				
-	
-	var filed_options = {};
-	filed_options.primaryKey = false;	
-	
-	filed_options.autoInc = false;	
-	
-	options.fields.docs_ref = new FieldJSONB("docs_ref",filed_options);
-	
+			
 			
 		ShortMessage_Model.superclass.constructor.call(this,id,options);
 }

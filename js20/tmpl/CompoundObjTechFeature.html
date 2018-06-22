@@ -1,0 +1,26 @@
+<div id="{{id}}" class="{{panelClass}}">
+	<div class="panel-heading">
+		<!--  {{IND}} -->
+		<h6 class="panel-title">
+			<span class="text-semibold">{{IND}}) Сведения о здании, сооружении в составе сложного</span>
+			<a class="heading-elements-toggle">
+				<i class="icon-more"></i>
+			</a>
+		</h6>				
+		<div class="heading-elements">
+			<ul class="icons-list">
+				<li><a id="{{id}}:cmdToggle" data-action="collapse" class=""></a></li>
+				{{#cmdClose}}
+				<li><a id="{{id}}:cmdClose" data-action="close" ind="{{IND}}"></a></li>
+				{{/cmdClose}}
+			</ul>
+		</div>
+	</div>
+	
+	<div class="panel-body" style="display: block;">	
+	
+		<div id="{{id}}:grid">
+		</div>	
+	</div>
+</div>
+

@@ -28,8 +28,7 @@ function DocFlow_Controller(options){
 extend(DocFlow_Controller,ControllerObjServer);
 
 			DocFlow_Controller.prototype.add_remove_file = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('remove_file',opts);
 	
 				

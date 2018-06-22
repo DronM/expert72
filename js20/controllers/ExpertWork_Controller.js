@@ -216,8 +216,7 @@ extend(ExpertWork_Controller,ControllerObjServer);
 }
 
 			ExpertWork_Controller.prototype.add_download_file = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('download_file',opts);
 	
 				
@@ -259,8 +258,7 @@ extend(ExpertWork_Controller,ControllerObjServer);
 }
 
 			ExpertWork_Controller.prototype.add_delete_file = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('delete_file',opts);
 	
 				

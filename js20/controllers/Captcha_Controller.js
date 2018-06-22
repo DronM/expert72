@@ -28,8 +28,7 @@ function Captcha_Controller(options){
 extend(Captcha_Controller,ControllerObjServer);
 
 			Captcha_Controller.prototype.add_get = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('get',opts);
 	
 	this.addPublicMethod(pm);

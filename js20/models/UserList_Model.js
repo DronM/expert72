@@ -74,6 +74,16 @@ function UserList_Model(options){
 	options.fields.phone_cel = new FieldString("phone_cel",filed_options);
 	options.fields.phone_cel.getValidator().setMaxLength('50');
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.role_id = new FieldEnum("role_id",filed_options);
+	filed_options.enumValues = 'admin,client,lawyer,expert,boss,accountant';
+	
 		UserList_Model.superclass.constructor.call(this,id,options);
 }
 extend(UserList_Model,ModelXML);

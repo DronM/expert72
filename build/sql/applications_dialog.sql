@@ -23,7 +23,10 @@ CREATE OR REPLACE VIEW applications_dialog AS
 		d.developer,
 		coalesce(contr.constr_name,d.constr_name) AS constr_name,
 		coalesce(contr.constr_address,d.constr_address) AS constr_address,
+		
 		coalesce(contr.constr_technical_features,d.constr_technical_features) As constr_technical_features,
+		coalesce(contr.constr_technical_features_in_compound_obj,d.constr_technical_features_in_compound_obj) AS constr_technical_features_in_compound_obj,
+		
 		d.total_cost_eval,
 		d.limit_cost_eval,
 		offices_ref(offices) AS offices_ref,
@@ -84,18 +87,6 @@ CREATE OR REPLACE VIEW applications_dialog AS
 		d.auth_letter,
 		d.auth_letter_file,
 		
-		/*
-		CASE WHEN folders.files IS NOT NULL THEN
-			json_agg(
-				json_build_object(
-					'fields',json_build_object('id',folders.folder_id,'descr',folders.folder_descr),
-					'parent_id',NULL,
-					'files',folders.files
-				)
-			)
-		ELSE NULL
-		END AS doc_folders,
-		*/
 		folders.files AS doc_folders,
 		
 		contr.work_start_date,

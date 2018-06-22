@@ -39,8 +39,7 @@ function ProjectManager_Controller(options){
 extend(ProjectManager_Controller,ControllerObjServer);
 
 			ProjectManager_Controller.prototype.add_open_version = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('open_version',opts);
 	
 				
@@ -56,8 +55,7 @@ extend(ProjectManager_Controller,ControllerObjServer);
 }
 
 			ProjectManager_Controller.prototype.add_close_version = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('close_version',opts);
 	
 				
@@ -71,40 +69,35 @@ extend(ProjectManager_Controller,ControllerObjServer);
 }
 
 			ProjectManager_Controller.prototype.add_minify_js = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('minify_js',opts);
 	
 	this.addPublicMethod(pm);
 }
 
 			ProjectManager_Controller.prototype.add_build_all = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('build_all',opts);
 	
 	this.addPublicMethod(pm);
 }
 
 			ProjectManager_Controller.prototype.add_create_symlinks = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('create_symlinks',opts);
 	
 	this.addPublicMethod(pm);
 }
 
 			ProjectManager_Controller.prototype.add_pull = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('pull',opts);
 	
 	this.addPublicMethod(pm);
 }
 
 			ProjectManager_Controller.prototype.add_push = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('push',opts);
 	
 				
@@ -118,40 +111,35 @@ extend(ProjectManager_Controller,ControllerObjServer);
 }
 
 			ProjectManager_Controller.prototype.add_zip_project = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('zip_project',opts);
 	
 	this.addPublicMethod(pm);
 }
 
 			ProjectManager_Controller.prototype.add_zip_db = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('zip_db',opts);
 	
 	this.addPublicMethod(pm);
 }
 
 			ProjectManager_Controller.prototype.add_get_version = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('get_version',opts);
 	
 	this.addPublicMethod(pm);
 }
 
 			ProjectManager_Controller.prototype.add_apply_patch = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('apply_patch',opts);
 	
 	this.addPublicMethod(pm);
 }
 
 			ProjectManager_Controller.prototype.add_apply_sql = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('apply_sql',opts);
 	
 	this.addPublicMethod(pm);

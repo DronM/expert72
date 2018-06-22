@@ -30,8 +30,7 @@ function Contact_Controller(options){
 extend(Contact_Controller,ControllerObjServer);
 
 			Contact_Controller.prototype.add_get_complete_list = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('get_complete_list',opts);
 	
 				

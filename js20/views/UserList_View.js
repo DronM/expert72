@@ -48,6 +48,22 @@ function UserList_View(id,options){
 							],
 							"sortable":true
 						})
+						,new GridCellHead(id+":grid:head:role_id",{
+							"value":"Роль",
+							"columns":[
+								new EnumGridColumn_role_types({
+									"field":model.getField("role_id"),
+									"ctrlClass":Enum_role_types,
+									"searchOptions":{
+										"searchType":"on_match",
+										"typeChange":false
+									},
+									
+								})
+							],
+							"sortable":true
+						})
+						
 					]
 				})
 			]

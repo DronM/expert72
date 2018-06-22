@@ -20,13 +20,6 @@ function DocFlowOutDialog_View(id,options){
 	options.controller = new DocFlowOut_Controller();
 	options.model = options.models.DocFlowOutDialog_Model;
 
-	options.cmdSave = false;
-
-	options.templateOptions = {
-		"colorClass":window.getApp().getColorClass(),
-		"bsCol":window.getBsCol()
-	};	
-	
 	var self = this;
 	
 	this.m_dataType = "doc_flow_out";
@@ -318,10 +311,6 @@ function DocFlowOutDialog_View(id,options){
 extend(DocFlowOutDialog_View,DocFlowBaseDialog_View);
 
 
-DocFlowOutDialog_View.prototype.m_fileTypes;
-DocFlowOutDialog_View.prototype.m_maxFileSize;
-DocFlowOutDialog_View.prototype.m_allowedFileExt;
-
 DocFlowOutDialog_View.prototype.setDocVis = function(){
 	var v = this.getElement("doc_flow_types_ref").getValue();
 	var app_vis = false;
@@ -415,21 +404,6 @@ DocFlowOutDialog_View.prototype.onGetData = function(resp,cmd){
 	}		
 }
 
-DocFlowOutDialog_View.prototype.checkForUploadFileCount = function(){
-	if (this.getElement("attachments").getForUploadFileCount()){
-		throw new Error("Есть незагруженные вложения");
-	}
-}
-
-DocFlowOutDialog_View.prototype.checkDocFlowType = function(){
-	var tp = this.getElement("doc_flow_types_ref");
-	if (tp.isNull()){
-		tp.setNotValid("Значение не выбрано");
-		throw new Error("Есть ошибки!");
-	}
-	return tp.getValue().getKey();
-}
-
 DocFlowOutDialog_View.prototype.passToRegister = function(){
 	
 	if (!this.getElement("reg_number").getValue()){
@@ -483,8 +457,6 @@ DocFlowOutDialog_View.prototype.passToApprove = function(){
 		
 	model.setFieldValue("subject","Согласовать "+doc_descr);
 	
-	model.setFieldValue("doc_flow_importance_types_ref", window.getApp().getPredefinedItem("doc_flow_importance_types","common"));
-	
 	model.setFieldValue("subject_docs_ref",new RefType(
 			{
 				"keys":{"id":this.getElement("id").getValue()},
@@ -492,22 +464,45 @@ DocFlowOutDialog_View.prototype.passToApprove = function(){
 				"dataType":"doc_flow_out"
 			})
 	);
-	model.recInsert();
 	
-	this.m_docForm = new DocFlowApprovement_Form({
-		"id":CommonHelper.uniqid(),
-		"onClose":function(res){
-			self.m_docForm.close({"updated":true});
-			self.m_editResult.updated = true;
-			self.close({"updated":true});
-		},
-		"keys":{},
-		"params":{
-			"cmd":"insert",
-			"editViewOptions":{"models":{"DocFlowApprovementDialog_Model":model}}
+	//определим конечную дату по важности
+	var imp_ref = window.getApp().getPredefinedItem("doc_flow_importance_types","common");
+	model.setFieldValue("doc_flow_importance_types_ref",imp_ref);
+	model.setFieldValue("subject_docs_ref",new RefType(
+			{
+				"keys":{"id":this.getElement("id").getValue()},
+				"descr":doc_descr,
+				"dataType":"doc_flow_out"
+			})
+	);
+	
+	var pm = (new DocFlowImportanceType_Controller()).getPublicMethod("get_object");
+	pm.setFieldValue("id",imp_ref.getKey("id"));
+	pm.run({
+		"ok":function(resp){
+			var imp_m = resp.getModel("DocFlowImportanceTypeDialog_Model");
+			if (imp_m.getNextRow()){
+				model.setFieldValue("end_date_time",new Date(Date.now()+DateHelper.timeToMS(imp_m.getFieldValue("approve_interval"))));	
+				model.recInsert();
+	
+				self.m_docForm = new DocFlowApprovement_Form({
+					"id":CommonHelper.uniqid(),
+					"onClose":function(res){
+						self.m_docForm.close({"updated":true});
+						self.m_editResult.updated = true;
+						self.close({"updated":true});
+					},
+					"keys":{},
+					"params":{
+						"cmd":"insert",
+						"editViewOptions":{"models":{"DocFlowApprovementDialog_Model":model}}
+					}
+				});
+				self.m_docForm.open();
+				
+			}
 		}
-	});
-	this.m_docForm.open();
+	});	
 }
 
 DocFlowOutDialog_View.prototype.showStateReport = function(){
@@ -521,68 +516,3 @@ DocFlowOutDialog_View.prototype.addProcessChainEvents = function(){
 	DocFlowOutDialog_View.superclass.addProcessChainEvents.call(this,"doc_flow_out_processes_chain");
 }
 
-DocFlowOutDialog_View.prototype.createFromTemplate = function(){
-	var win = (new ReportTemplateFileList_Form({
-		"id":this.getId()+":templSelForm",
-		"params":{
-			"filters":[]
-		}
-	
-	})).open();
-	var self = this;
-	win.onSelect = function(fields){
-		var templ_file_id = fields.id.getValue();
-		win.close();		
-		var pm = (new ReportTemplateFile_Controller()).getPublicMethod("get_object");
-		pm.setFieldValue("id",templ_file_id);
-		pm.run({
-			"ok":function(resp){
-				var m = resp.getModel("ReportTemplateFileDialog_Model");
-				if (m.getNextRow()){
-					var rows = m.getFieldValue("in_params").rows;
-					var template_id = m.getFieldValue("report_templates_ref").getKey();
-					var ctrl_classes = {};
-					for (var i=0;i<rows.length;i++){
-						ctrl_classes[rows[i].fields.editCtrlClass] = {"fields":rows[i].fields,"valSet":false};
-					}
-					var params = [];//for rendering
-					var list = self.getElements();
-					for (var id in list){
-						var form_ctrl = ctrl_classes[list[id].constructor.name];
-						if(form_ctrl && !list[id].isNull()){
-							form_ctrl.fields.editCtrlOptions = form_ctrl.fields.editCtrlOptions || {};
-							form_ctrl.fields.editCtrlOptions.value = list[id].getValue();
-							form_ctrl.valSet = true;
-							params.push({
-								"id":form_ctrl.fields.id,
-								"val":form_ctrl.fields.editCtrlOptions.value,
-								"cond":(form_ctrl.fields.cond===true)
-							});
-							
-						}
-					}
-					var all_set = true;
-					for (var id in form_ctrl){
-						if (!form_ctrl[id].valSet){
-							all_set = false;	
-							break;
-						}
-					}
-					if (!all_set){
-						(new ReportTemplateFileApplyCmd_Form(self.getId()+":applyForm",{
-							"inParams":rows,
-							"templateId":template_id
-						})).open();
-					}
-					else{
-						//render
-						var pm = (new ReportTemplateFile_Controller()).getPublicMethod("apply_template_file");
-						pm.setFieldValue("id",template_id);
-						pm.setFieldValue("params",CommonHelper.serialize(params));
-						pm.download("ViewXML");						
-					}					
-				}
-			}
-		})
-	}
-}

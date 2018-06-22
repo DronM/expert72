@@ -125,6 +125,7 @@ class <xsl:value-of select="@id"/>_Controller extends ControllerSQL{
 			$_SESSION['employees_ref'] = $ar['employees_ref'];
 			$_SESSION['departments_ref'] = $ar['departments_ref'];
 			$_SESSION['department_boss'] = ($ar['department_boss']=='t');
+			$_SESSION['recipient_states_ref'] = $ar['recipient_states_ref'];
 		}
 		
 		//global filters				
@@ -145,7 +146,25 @@ class <xsl:value-of select="@id"/>_Controller extends ControllerSQL{
 			$filter->addField($field,'=');
 			GlobalFilter::set('<xsl:value-of select="$model_id"/>',$filter);
 			</xsl:for-each>
-		}		
+		}
+		else{
+			$_SESSION['global_employee_id'] = json_decode($ar['employees_ref'])->keys->id;
+			<xsl:for-each select="/metadata/models/model/globalFilter[@id='employee_id']">
+			<xsl:variable name="model_id" select="concat(../@id,'_Model')"/>
+			<xsl:variable name="field_id">
+				<xsl:choose>
+					<xsl:when test="@fieldId">'<xsl:value-of select="@fieldId"/>'</xsl:when>
+					<xsl:otherwise>'employee_id'</xsl:otherwise>
+				</xsl:choose>
+			</xsl:variable>			
+			$model = new <xsl:value-of select="$model_id"/>($link);
+			$filter = new ModelWhereSQL();
+			$field = clone $model->getFieldById(<xsl:value-of select="$field_id"/>);
+			$field->setValue($_SESSION['global_employee_id']);
+			$filter->addField($field,'=');
+			GlobalFilter::set('<xsl:value-of select="$model_id"/>',$filter);
+			</xsl:for-each>
+		}
 		
 		$log_ar = $this->getDbLinkMaster()->query_first(
 			sprintf("SELECT pub_key FROM logins

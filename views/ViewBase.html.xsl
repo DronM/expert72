@@ -145,7 +145,8 @@
 	<xsl:if test="$role_id != 'client' and $role_id != ''">
 		var constants = {"reminder_refresh_interval":null};
 		application.getConstantManager().get(constants);
-		application.reminder = new Reminder(constants.reminder_refresh_interval.getValue());
+		application.shortMessage = new ShortMessage();
+		application.reminder = new Reminder(constants.reminder_refresh_interval.getValue(),application.shortMessage);
 		<xsl:if test="/document/model[@id='DocFlowTaskShortList_Model']">
 		var t_model = new DocFlowTaskShortList_Model({"data":CommonHelper.longString(function () {/*
 			<xsl:copy-of select="/document/model[@id='DocFlowTaskShortList_Model']"/>
@@ -406,14 +407,20 @@ throw Error(CommonHelper.longString(function () {/*
 <xsl:template name="checkForError">
 	<xsl:variable name="er_num" select="/document/model[@id='ModelServResponse']/row/result"/>
 	<xsl:choose>
-	<xsl:when test="$er_num='100' or $er_num='101' or $er_num='102'">
-		//window.location = window.getApp().getHost();
-		//throw Error('Фатальная ошибка: <xsl:value-of select="/document/model[@id='ModelServResponse']/row/descr"/> Необходима повторная авторизация.');
+	<!--$er_num='100' or -->
+	<xsl:when test="$er_num='101' or $er_num='102'">
 		throw new FatalException({
 			"code":<xsl:value-of select="$er_num"/>
 			,"message":'<xsl:value-of select="/document/model[@id='ModelServResponse']/row/descr"/>'
 		});
 	</xsl:when>
+	<xsl:when test="$er_num='105'">
+		throw new DbException({
+			"code":<xsl:value-of select="$er_num"/>
+			,"message":'<xsl:value-of select="/document/model[@id='ModelServResponse']/row/descr"/>'
+		});
+	</xsl:when>
+	
 	<xsl:when test="not($er_num='0')">
 		throw new Error(CommonHelper.escapeDoubleQuotes(CommonHelper.longString(function () {/*
 		<xsl:value-of select="/document/model[@id='ModelServResponse']/row/descr"/>
@@ -449,18 +456,28 @@ throw Error(CommonHelper.longString(function () {/*
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
 						<i class="icon-bell3"></i>
 						<span class="visible-xs-inline-block position-right">Мои задачи</span>
-						<span id="unclosed_task_cnt" class="badge bg-warning-400"></span>
+						<span id="unclosed_task_cnt" title="Невыполненные задачи" class="badge bg-warning-400"></span>
 					</a>
 					
 					<div id="DocFlowTaskActive" class="dropdown-menu dropdown-content"/>
 				</li>				
+				<li class="dropdown" title="Чат" id="ShortMessage-cont">
+					<!-- class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"
+					dropdown-menu dropdown-content
+					-->
+					<a href="#" id="ShortMessage-toggle">
+						<i class="icon-bubbles8"></i>
+						<span class="visible-xs-inline-block position-right">Чат</span>
+						<span id="ShortMessage-unviewd_cnt" title="Непрочитанные сообщения" class="badge bg-warning-400"></span>
+					</a>
+					
+				</li>				
+				<p class="navbar-text"><span class="label" id="ShortMessage-status" title="статус для чата" style="cursor:pointer;"></span></p>	
 				</xsl:if>
 			</ul>
 			
 			
 			<ul class="nav navbar-nav navbar-right">
-				<p class="navbar-text"><span class="label bg-success">В сети</span></p>		
-				
 				<!-- USER DATA -->
 				<li class="dropdown dropdown-user">
 					<a class="dropdown-toggle" data-toggle="dropdown">

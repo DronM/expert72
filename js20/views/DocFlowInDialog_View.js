@@ -20,13 +20,6 @@ function DocFlowInDialog_View(id,options){
 	options.controller = new DocFlowIn_Controller();
 	options.model = options.models.DocFlowInDialog_Model;
 
-	options.cmdSave = false;
-	
-	options.templateOptions = {
-		"colorClass":window.getApp().getColorClass(),
-		"bsCol":window.getBsCol()
-	};	
-	
 	var self = this;
 	
 	this.m_dataType = "doc_flow_in";

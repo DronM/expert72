@@ -5,12 +5,12 @@
  * @classdesc
  * @param {int} checkInterval in Seconds
  */
-function Reminder(checkInterval){
+function Reminder(checkInterval,shortMessage){
 	this.m_checkInterval = checkInterval || this.CHECK_INTERVAL;
 	
 	this.m_controller = new Reminder_Controller();
 	this.m_updMeth = this.m_controller.getPublicMethod("set_viewed");
-	
+	this.m_shortMessage = shortMessage;
 }
 
 Reminder.prototype.CHECK_INTERVAL = 30;
@@ -19,6 +19,7 @@ Reminder.prototype.m_checkInterval;
 Reminder.prototype.m_timerId;
 Reminder.prototype.m_controller;
 Reminder.prototype.m_updMeth;
+Reminder.prototype.m_shortMessage;
 
 Reminder.prototype.start = function(){
 	var self = this;
@@ -39,25 +40,60 @@ Reminder.prototype.check = function(){
 		"ok":function(resp){
 			var m = resp.getModel("ReminderUnviewedList_Model");				
 			while(m.getNextRow()){
+				var tp_ref = m.getFieldValue("doc_flow_importance_types_ref");
+				//common importance
+				var com_imp = (tp_ref.isNull()||tp_ref.getKey("id")==window.getApp().getPredefinedItem("doc_flow_importance_types","common").getKey("id"));
 				window.showMsg(
-					WindowMessage.prototype.TP_INFO,
-					{
-						"value":m.getFieldValue("content"),
-						"attrs":{
-							"style":"cursor:pointer;"
-							,"docs_ref":CommonHelper.serialize(m.getFieldValue("docs_ref"))
-						},
-						"events":{
-							"click":function(e){
-								e = EventHelper.fixMouseEvent(e);
-								var ref = e.target.getAttribute("docs_ref");
-								if (ref){
-									self.openDoc(CommonHelper.unserialize(ref));
-								}
+					com_imp? WindowMessage.prototype.TP_INFO : WindowMessage.prototype.TP_ER,
+					{"value":m.getFieldValue("content"),
+					/*
+					"addElement":function(){
+						if (!com_imp){
+							//header
+							this.addElement(new Control(null,"H4",{
+								"value":tp_ref.getDescr()
+							}));
+						}
+						this.addElement(new Control(null,"DIV",{
+							"value":m.getFieldValue("content")
+						}));
+						if (m.getField("files").isSet()){
+							//files exist
+							this.addElement(new Control(null,"DIV",{
+								"value":"Есть вложения."
+							}));
+							
+							
+							//this.addElement(new EditFile(CommonHelper.uniqid(),{							
+							//	"value":m.getFieldValue("files"),
+							//	"enabled":false,
+							//	"labelCaption":"Файлы:",
+							//	"labelClassName": "control-label "+window.getBsCol(2),
+							//	"onDownload":function(){
+							//		alert("Download file")
+							//	}
+							//}));
+						}
+					},
+					*/
+					"attrs":{
+						"style":"cursor:pointer;"
+						,"docs_ref":CommonHelper.serialize(m.getFieldValue("docs_ref"))
+					},
+					"events":{
+						"click":function(e){
+							e = EventHelper.fixMouseEvent(e);
+							var el = e.target;
+							while(!el.attributes||!el.attributes.docs_ref){
+								el = el.parentNode;
+							}
+							var ref = el.getAttribute("docs_ref");
+							if (ref){
+								self.openDoc(CommonHelper.unserialize(ref));
 							}
 						}
 					}
-				);		
+				});		
 				self.m_updMeth.setFieldValue("id",m.getFieldValue("id"));
 				self.m_updMeth.run({"async":false});		
 			}
@@ -65,12 +101,17 @@ Reminder.prototype.check = function(){
 			if (m){
 				self.updateTaskList(m);
 			}
+			/*
+			if (self.m_shortMessage && resp.modelExists("ShortMessageUnviewedCount_Model")){
+				self.m_shortMessage.updateCount(resp);
+			}
+			*/
 		}
 	});
 }
 
 Reminder.prototype.updateTaskList = function(model){
-	if (document.getElementById("DocFlowTaskActive")){
+	if (document.getElementById("DocFlowTaskActive")){		
 		var cnt = model.getRowCount();
 		$("#unclosed_task_cnt").text( ((cnt==0)? "":cnt) );
 		//update list

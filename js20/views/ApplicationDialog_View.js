@@ -84,10 +84,11 @@ function ApplicationDialog_View(id,options){
 			"labelCaption":this.FIELD_CAP_office
 			,"events":{
 				"change":function(){
-					//this.callOnSelect();
-					self.calcFillPercent();					
+					self.calcFillPercent();
 				}
 			}
+			,"addNotSelected":false
+			//"value":new RefType({"keys":{"office_id":1}})
 		}));	
 
 		this.addElement(new ApplicationPrimaryCont(id+":primary_application",{
@@ -163,6 +164,20 @@ function ApplicationDialog_View(id,options){
 		
 		//******** technical feature grid ********************	
 		this.addElement(new ConstrTechnicalFeatureGrid(id+":constr_technical_features"));
+		//****************************************************
+
+		//******** technical feature in compond object grids ********************	
+		this.addElement(new CompoundObjTechFeatureCont(id+":constr_technical_features_in_compound_obj",{
+			"readOnly":options.readOnly,
+			"elementClass":ConstrTechnicalFeature_View,
+			"templateOptions":{"isClient":true},
+			"elementOptions":{
+				"mainView":this,
+				"readOnly":options.readOnly,
+				"template":window.getApp().getTemplate("CompoundObjTechFeature"),
+				"templateOptions":{"isClient":true,"cmdClose":false}
+			}		
+		}));
 		//****************************************************
 	
 		this.addElement(new ConstructionTypeSelect(id+":construction_types_ref",{
@@ -518,6 +533,7 @@ function ApplicationDialog_View(id,options){
 		,new DataBinding({"control":this.getElement("constr_name")})
 		,new DataBinding({"control":this.getElement("constr_address")})
 		,new DataBinding({"control":this.getElement("constr_technical_features")})
+		,new DataBinding({"control":this.getElement("constr_technical_features_in_compound_obj")})
 		,new DataBinding({"control":this.getElement("total_cost_eval")})
 		,new DataBinding({"control":this.getElement("limit_cost_eval")})
 		,new DataBinding({"control":this.getElement("pd_usage_info")})
@@ -555,6 +571,7 @@ function ApplicationDialog_View(id,options){
 		,new CommandBinding({"control":this.getElement("constr_name")})
 		,new CommandBinding({"control":this.getElement("constr_address")})
 		,new CommandBinding({"control":this.getElement("constr_technical_features"),"fieldId":"constr_technical_features"})
+		,new CommandBinding({"control":this.getElement("constr_technical_features_in_compound_obj"),"fieldId":"constr_technical_features_in_compound_obj"})
 		,new CommandBinding({"control":this.getElement("total_cost_eval")})
 		,new CommandBinding({"control":this.getElement("limit_cost_eval")})
 		,new CommandBinding({"control":this.getElement("pd_usage_info")})
@@ -799,6 +816,11 @@ ApplicationDialog_View.prototype.onGetData = function(resp,cmd){
 	DOMHelper.delClass(document.getElementById(this.getId()+":"+mes_id),"hidden");
 	
 	this.getElement("applicant").setAuthLetterRequired(true);
+	/*
+	if (cmd=="insert"||cmd=="copy"){
+		this.calcFillPercent();
+	}
+	*/
 }
 
 ApplicationDialog_View.prototype.setCmdEnabled = function(){

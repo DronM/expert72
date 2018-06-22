@@ -8,10 +8,12 @@ function ViewPersonIdPaper(id,options){
 	
 	options.addElement = function(){
 		this.addElement(new PersonIdPaperSelect(id+":paper",{
-			"labelCaption":"Вид документа:"
+			"labelCaption":"Вид документа:",
+			"addNotSelected":false
 		}));
 	
 		this.addElement(new EditString(id+":series",{
+			"attrs":{"autofocus":true},
 			"labelCaption":"Серия документа:",
 			"maxLength":"20"
 		}));

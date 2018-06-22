@@ -33,8 +33,7 @@ function Kladr_Controller(options){
 extend(Kladr_Controller,ControllerObjServer);
 
 			Kladr_Controller.prototype.add_get_region_list = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('get_region_list',opts);
 	
 				
@@ -62,8 +61,7 @@ extend(Kladr_Controller,ControllerObjServer);
 }
 
 			Kladr_Controller.prototype.add_get_raion_list = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('get_raion_list',opts);
 	
 				
@@ -99,8 +97,7 @@ extend(Kladr_Controller,ControllerObjServer);
 }
 
 			Kladr_Controller.prototype.add_get_naspunkt_list = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('get_naspunkt_list',opts);
 	
 				
@@ -142,8 +139,7 @@ extend(Kladr_Controller,ControllerObjServer);
 }
 
 			Kladr_Controller.prototype.add_get_gorod_list = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('get_gorod_list',opts);
 	
 				
@@ -185,8 +181,7 @@ extend(Kladr_Controller,ControllerObjServer);
 }
 
 			Kladr_Controller.prototype.add_get_ulitsa_list = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('get_ulitsa_list',opts);
 	
 				
@@ -240,8 +235,7 @@ extend(Kladr_Controller,ControllerObjServer);
 }
 
 			Kladr_Controller.prototype.add_get_from_naspunkt = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('get_from_naspunkt',opts);
 	
 				

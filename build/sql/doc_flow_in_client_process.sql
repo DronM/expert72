@@ -9,12 +9,15 @@ BEGIN
 	IF (TG_WHEN='BEFORE' AND TG_OP='INSERT') THEN		
 		IF const_client_lk_val() OR const_debug_val() THEN
 			--Если это достоверность одновременно с ПД - сделать не одновременно
+			--это при возврате заявления без рассмотрения
 			UPDATE applications AS app
 			SET cost_eval_validity_simult = FALSE
 			FROM (
 				SELECT t.id
 				FROM applications t
-				WHERE t.id=NEW.application_id AND coalesce(t.cost_eval_validity,FALSE) AND coalesce(t.cost_eval_validity_simult,FALSE)
+				WHERE t.id=NEW.application_id
+				AND coalesce(t.cost_eval_validity,FALSE) AND coalesce(t.cost_eval_validity_simult,FALSE)
+				AND NEW.doc_flow_type_id=(pdfn_doc_flow_types_app_resp_return()->'keys'->>'id')::int
 			) AS base
 			WHERE app.id=base.id;
 		END IF;

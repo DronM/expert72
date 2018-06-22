@@ -170,6 +170,14 @@ class ApplicationDialog_Model extends ModelSQL{
 		$this->addField($f_constr_technical_features);
 		//********************
 		
+		//*** Field constr_technical_features_in_compound_obj ***
+		$f_opts = array();
+		$f_opts['id']="constr_technical_features_in_compound_obj";
+				
+		$f_constr_technical_features_in_compound_obj=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"constr_technical_features_in_compound_obj",$f_opts);
+		$this->addField($f_constr_technical_features_in_compound_obj);
+		//********************
+		
 		//*** Field total_cost_eval ***
 		$f_opts = array();
 		$f_opts['length']=15;

@@ -356,8 +356,7 @@ extend(DocFlowOut_Controller,ControllerObjServer);
 }
 
 			DocFlowOut_Controller.prototype.add_remove_file = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('remove_file',opts);
 	
 				
@@ -383,8 +382,7 @@ extend(DocFlowOut_Controller,ControllerObjServer);
 }
 
 			DocFlowOut_Controller.prototype.add_get_file = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('get_file',opts);
 	
 				
@@ -410,8 +408,7 @@ extend(DocFlowOut_Controller,ControllerObjServer);
 }
 
 			DocFlowOut_Controller.prototype.add_get_file_sig = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('get_file_sig',opts);
 	
 				
@@ -437,8 +434,7 @@ extend(DocFlowOut_Controller,ControllerObjServer);
 }
 
 			DocFlowOut_Controller.prototype.add_get_next_num = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('get_next_num',opts);
 	
 				
@@ -464,8 +460,7 @@ extend(DocFlowOut_Controller,ControllerObjServer);
 }
 
 			DocFlowOut_Controller.prototype.add_get_app_state = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('get_app_state',opts);
 	
 				
@@ -481,8 +476,7 @@ extend(DocFlowOut_Controller,ControllerObjServer);
 }
 
 			DocFlowOut_Controller.prototype.add_get_next_contract_number = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('get_next_contract_number',opts);
 	
 				

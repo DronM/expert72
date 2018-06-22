@@ -99,6 +99,24 @@ function Reminder_Model(options){
 	
 	options.fields.docs_ref = new FieldJSONB("docs_ref",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.files = new FieldJSONB("files",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.doc_flow_importance_type_id = new FieldInt("doc_flow_importance_type_id",filed_options);
+	
 			
 			
 			

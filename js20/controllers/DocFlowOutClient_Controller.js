@@ -265,8 +265,7 @@ extend(DocFlowOutClient_Controller,ControllerObjServer);
 }
 
 			DocFlowOutClient_Controller.prototype.add_get_application_dialog = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('get_application_dialog',opts);
 	
 				
@@ -288,8 +287,7 @@ extend(DocFlowOutClient_Controller,ControllerObjServer);
 }
 
 			DocFlowOutClient_Controller.prototype.add_remove_file = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('remove_file',opts);
 	
 				
@@ -315,8 +313,7 @@ extend(DocFlowOutClient_Controller,ControllerObjServer);
 }
 
 			DocFlowOutClient_Controller.prototype.add_remove_contract_file = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('remove_contract_file',opts);
 	
 				
@@ -342,8 +339,7 @@ extend(DocFlowOutClient_Controller,ControllerObjServer);
 }
 
 			DocFlowOutClient_Controller.prototype.add_download_contract_file = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('download_contract_file',opts);
 	
 				
@@ -369,8 +365,7 @@ extend(DocFlowOutClient_Controller,ControllerObjServer);
 }
 
 			DocFlowOutClient_Controller.prototype.add_download_contract_file_sig = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('download_contract_file_sig',opts);
 	
 				

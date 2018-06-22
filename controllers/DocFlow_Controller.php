@@ -54,7 +54,20 @@ class DocFlow_Controller extends ControllerSQL{
 	
 
 	public static function getDefAppDir($type){
-		return ($type=='out')? 'Исходящие':'Входящие';
+		$res = NULL;
+		if ($type=='out'){
+			$res = 'Исходящие';
+		}
+		else if ($type=='in'){
+			$res = 'Входящие';
+		}
+		else if ($type=='inside'){
+			$res = 'Внутренние';
+		}
+		else{
+			$res = 'UndefinedType';
+		}
+		return $res;
 	}
 
 	public function delete_attachments($pm,$type){
@@ -67,19 +80,45 @@ class DocFlow_Controller extends ControllerSQL{
 			$this->getDbLinkMaster()->query("BEGIN");
 		
 			//**************
-			$q_id = $this->getDbLink()->query(sprintf(
-				"SELECT
-					at.file_id,
-					at.file_signed,
-					at.file_path,
-					out.to_application_id
-				FROM doc_flow_attachments AS at
-				LEFT JOIN doc_flow_out AS out ON at.doc_type='doc_flow_out' AND at.doc_id=out.id
-				WHERE doc_id=%d AND doc_type='doc_flow_%s'::data_types",
-				$this->getExtDbVal($pm,'id'),
-				$type
-			));
-		
+			if ($type=='inside'){
+				$q_id = $this->getDbLink()->query(sprintf(
+					"SELECT
+						at.file_id,
+						at.file_signed,
+						at.file_path,
+						ct.application_id AS to_application_id
+					FROM doc_flow_attachments AS at
+					LEFT JOIN doc_flow_inside AS ins ON at.doc_type='doc_flow_inside' AND at.doc_id=ins.id
+					LEFT JOIN contracts AS ct ON ct.id=ins.contract_id
+					WHERE doc_id=%d AND doc_type='doc_flow_inside'::data_types",
+					$this->getExtDbVal($pm,'id')
+				));
+			}
+			else if ($type=='out'){
+				$q_id = $this->getDbLink()->query(sprintf(
+					"SELECT
+						at.file_id,
+						at.file_signed,
+						at.file_path,
+						out.to_application_id
+					FROM doc_flow_attachments AS at
+					LEFT JOIN doc_flow_out AS out ON at.doc_type='doc_flow_out' AND at.doc_id=out.id
+					WHERE doc_id=%d AND doc_type='doc_flow_out'::data_types",
+					$this->getExtDbVal($pm,'id')
+				));
+			}		
+			else{
+				$q_id = $this->getDbLink()->query(sprintf(
+					"SELECT
+						at.file_id,
+						at.file_signed,
+						at.file_path,
+						NULL AS to_application_id
+					FROM doc_flow_attachments AS at
+					WHERE doc_id=%d AND doc_type='doc_flow_in'::data_types",
+					$this->getExtDbVal($pm,'id')
+				));
+			}		
 			while($ar = $this->getDbLink()->fetch_array()){
 				$fl = NULL;
 				if ($ar['to_application_id']){
@@ -136,17 +175,33 @@ class DocFlow_Controller extends ControllerSQL{
 				$this->getExtDbVal($pm,'file_id')
 			));
 			if (!count($ar)){
-				throw new Exception(ER_NOT_FOUND);
+				throw new Exception(self::ER_STORAGE_FILE_NOT_FOUND);
 			}
 			
 			$fl = NULL;
-			if ($type=='out' && $ar['doc_type']=='doc_flow_out'){
-				$app_ar = $this->getDbLink()->query_first(sprintf(
-					"SELECT to_application_id
-					FROM doc_flow_out
-					WHERE id=%d",
-					$this->getExtDbVal($pm,'doc_id')
-				));
+			if (
+			($type=='out' && $ar['doc_type']=='doc_flow_out')
+			||($type=='inside' && $ar['doc_type']=='doc_flow_inside')
+			){
+				$q = '';
+				if ($type=='out'){
+					$q = sprintf(
+						"SELECT to_application_id
+						FROM doc_flow_out
+						WHERE id=%d",
+						$this->getExtDbVal($pm,'doc_id')
+					);
+				}
+				else{
+					$q = sprintf(
+						"SELECT ct.application_id AS to_application_id
+						FROM doc_flow_inside AS ins
+						LEFT JOIN contracts AS ct ON ct.id=ins.contract_id
+						WHERE ins.id=%d",
+						$this->getExtDbVal($pm,'doc_id')
+					);
+				}
+				$app_ar = $this->getDbLink()->query_first($q);
 				if (count($app_ar) && $app_ar['to_application_id']){
 					$fl = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
 						Application_Controller::APP_DIR_PREF.$app_ar['to_application_id'].DIRECTORY_SEPARATOR.
@@ -190,43 +245,59 @@ class DocFlow_Controller extends ControllerSQL{
 	}
 
 	private function get_afile($pm,$sigFile){
-		$posf = $sigFile? '.sig':'';
-		$ar = $this->getDbLink()->query_first(sprintf(
-			"SELECT
-				at.file_name,
-				at.file_path,
-				out.to_application_id
-			FROM doc_flow_attachments AS at
-			LEFT JOIN doc_flow_out AS out ON at.doc_type='doc_flow_out' AND at.doc_id=out.id
-			WHERE at.file_id=%s AND at.doc_id=%d",
-			$this->getExtDbVal($pm,'file_id'),
-			$this->getExtDbVal($pm,'doc_id')
-		));
+		try{
+			$er_st = 500;
+			
+			$posf = $sigFile? '.sig':'';
+			$ar = $this->getDbLink()->query_first(sprintf(
+				"SELECT
+					at.file_name,
+					at.file_path,
+					CASE
+						WHEN at.doc_type='doc_flow_out' THEN out.to_application_id
+						WHEN at.doc_type='doc_flow_inside' THEN ct.application_id
+						ELSE NULL
+					END AS to_application_id
+				FROM doc_flow_attachments AS at
+				LEFT JOIN doc_flow_out AS out ON at.doc_type='doc_flow_out' AND at.doc_id=out.id
+				LEFT JOIN doc_flow_inside AS ins ON at.doc_type='doc_flow_inside' AND at.doc_id=ins.id
+				LEFT JOIN contracts AS ct ON ct.id=ins.contract_id
+				WHERE at.file_id=%s AND at.doc_id=%d",
+				$this->getExtDbVal($pm,'file_id'),
+				$this->getExtDbVal($pm,'doc_id')
+			));
 		
-		if (!count($ar)){
-			throw new Exception(ER_NOT_FOUND);
-		}
+			if (!count($ar)){
+				$er_st = 404;
+				throw new Exception(self::ER_STORAGE_FILE_NOT_FOUND);
+			}
 		
-		$fl = NULL;
-		if ($ar['to_application_id']){
-			//Файл из папки заявления
-			$fl = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
-				Application_Controller::APP_DIR_PREF.$ar['to_application_id'].DIRECTORY_SEPARATOR.
-				$ar['file_path'];
-		}
-		else{
-			//Общий документооборот
-			$fl = DOC_FLOW_FILE_STORAGE_DIR;
-		}
-		$fl.= DIRECTORY_SEPARATOR.$this->getExtVal($pm,'file_id').$posf;
+			$fl = NULL;
+			if ($ar['to_application_id']){
+				//Файл из папки заявления
+				$fl = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
+					Application_Controller::APP_DIR_PREF.$ar['to_application_id'].DIRECTORY_SEPARATOR.
+					$ar['file_path'];
+			}
+			else{
+				//Общий документооборот
+				$fl = DOC_FLOW_FILE_STORAGE_DIR;
+			}
+			$fl.= DIRECTORY_SEPARATOR.$this->getExtVal($pm,'file_id').$posf;
 		
-		if (!file_exists($fl)){
-			throw new Exception(self::ER_STORAGE_FILE_NOT_FOUND);
-		}
+			if (!file_exists($fl)){
+				$er_st = 404;
+				throw new Exception(self::ER_STORAGE_FILE_NOT_FOUND);
+			}
 	
-		ob_clean();
-		downloadFile($fl, 'application/octet-stream','attachment;',$ar['file_name'].$posf);
-		return TRUE;	
+			ob_clean();
+			downloadFile($fl, 'application/octet-stream','attachment;',$ar['file_name'].$posf);
+			return TRUE;	
+		}
+		catch(Exception $e){
+			$this->setHeaderStatus($er_st);
+			throw $e;
+		}	
 	}
 	
 	public function get_file($pm){

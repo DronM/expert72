@@ -124,15 +124,16 @@ function DocFlowExamination_View(id,options){
 			"required":true
 		}));
 
+		var app = window.getApp();
 		this.addElement(new EditSelect(id+":application_resolution_state",{
 			"editContClassName":editContClassName,
 			"labelClassName":labelClassName,			
 			"labelCaption":"Новый статус заявления:",		
 			"addNotSelected":false,
 			"options":[
-				{"value":"waiting_for_contract","descr":"Контракт по заявлению","checked":true}				
-				,{"value":"filling","descr":"Отказ с замечаниями"}
-				,{"value":"returned","descr":"Возврат без рассмотрения"}
+				{"value":"waiting_for_contract","descr":app.getPredefinedItem("doc_flow_types","app_resp").getDescr(),"checked":true}				
+				,{"value":"filling","descr":app.getPredefinedItem("doc_flow_types","app_resp_correct").getDescr()}
+				,{"value":"returned","descr":app.getPredefinedItem("doc_flow_types","app_resp_return").getDescr()}
 			]
 		}));
 		

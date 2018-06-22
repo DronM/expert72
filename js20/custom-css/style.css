@@ -307,9 +307,32 @@ h2 div.btn{
 li.appFileItem{
 	list-style: none;	
 }
-/*
-.appState{
-	background:#41f4f1;
-	width:200px;
+#ShortMessage-form{
+	max-height:500px;
+	overflow-y: auto;
 }
-*/
+tr.recipientUnavail{
+	color: transparent;
+	text-shadow: 0 0 0px rgba(0,0,0,0.2);
+	/*cursor:not-allowed;*/
+}
+tr.recipient{
+	cursor:pointer;
+}
+table.noBorder{
+	border-collapse: collapse;
+}
+table,tr,td.noBorder{
+	border: none;
+}
+.mesRecipient{
+	text-decoration:underline;
+	text-weight:bolder;
+	font-size:120%;
+}
+.panel-even{
+	background-color:#f7f7f7;
+}
+.panel-odd{
+	background-color:#f7e8e8;
+}

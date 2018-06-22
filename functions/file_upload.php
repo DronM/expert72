@@ -181,7 +181,7 @@ try{
 		&& isset($_REQUEST['f']) &&  $_REQUEST['f']=='doc_flow_file_upload'
 		&& isset($_REQUEST['doc_flow_id'])
 		&& isset($_REQUEST['file_id'])
-		&& isset($_REQUEST['doc_type']) && ($_REQUEST['doc_type']=='in' || $_REQUEST['doc_type']=='out')
+		&& isset($_REQUEST['doc_type']) && ($_REQUEST['doc_type']=='in' || $_REQUEST['doc_type']=='out' || $_REQUEST['doc_type']=='inside')
 	){
 		prolongate_session();
 	
@@ -190,9 +190,25 @@ try{
 	
 		$file_path = (isset($_REQUEST['file_path']))? $_REQUEST['file_path'] : DocFlow_Controller::getDefAppDir($_REQUEST['doc_type']);
 	
+		$db_id = NULL;
+		FieldSQLInt::formatForDb($_REQUEST['doc_flow_id'],$db_id);
+		
 		//Определим куда поместить файл в заявление или отдельно
-		if ($_REQUEST['doc_type']=='out'){
-			$ar = $dbLink->query_first(sprintf("SELECT to_application_id FROM doc_flow_out WHERE id=%d",$_REQUEST['doc_flow_id']));
+		if ($_REQUEST['doc_type']=='out'||$_REQUEST['doc_type']=='inside'){
+			if ($_REQUEST['doc_type']=='out'){
+				$ar_q = sprintf("SELECT to_application_id FROM doc_flow_out WHERE id=%d",$db_id);
+			}
+			else{
+				$ar_q = sprintf(
+				"SELECT ct.application_id AS to_application_id
+				FROM doc_flow_inside AS ins
+				LEFT JOIN contracts AS ct ON ct.id=ins.contract_id
+				WHERE ins.id=%d",
+				$db_id
+				);
+			}
+			
+			$ar = $dbLink->query_first($ar_q);
 			if (!count($ar)){
 				throw new Exception(DocFlow_Controller::ER_NOT_FOUND);
 			}
@@ -238,15 +254,24 @@ try{
 				$is_sig = (isset($_REQUEST['signature']) && $_REQUEST['signature']=='true');
 			
 				if (!$is_sig){
-					$db_id = NULL;
+					
 					$db_file_id = NULL;
 					$db_file_name = NULL;
 					$db_file_path = NULL;
-	
-					FieldSQLInt::formatForDb($_REQUEST['doc_flow_id'],$db_id);
+						
 					FieldSQLString::formatForDb($dbLink,$_REQUEST['file_id'],$db_file_id);
 					FieldSQLString::formatForDb($dbLink,$_REQUEST['resumableFilename'],$db_file_name);
 					FieldSQLString::formatForDb($dbLink,$file_path,$db_file_path);
+
+					if ($_REQUEST['doc_type']=='in'){
+						$doc_type = "doc_flow_in";
+					}
+					else if ($_REQUEST['doc_type']=='out'){
+						$doc_type = "doc_flow_out";
+					}
+					else if ($_REQUEST['doc_type']=='inside'){
+						$doc_type = "doc_flow_inside";
+					}
 	
 					$dbLink->query(sprintf(
 					"INSERT INTO doc_flow_attachments
@@ -254,7 +279,7 @@ try{
 					VALUES
 					(%s,'%s'::data_types,%d,%s,%s,%s,%s)",
 						$db_file_id,
-						($_REQUEST['doc_type']=='in')? "doc_flow_in":"doc_flow_out",
+						$doc_type,
 						$db_id,			
 						filesize($orig_file),
 						$db_file_name,
@@ -273,6 +298,9 @@ try{
 			}		
 		}
 
+	}
+	else{
+		throw 'Unknown document type!';
 	}
 }
 catch(Exception $e){

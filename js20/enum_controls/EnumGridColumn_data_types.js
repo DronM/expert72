@@ -59,6 +59,8 @@ function EnumGridColumn_data_types(options){
 	options.multyLangValues["ru"]["services"] = "Услуги";
 
 	options.multyLangValues["ru"]["contracts"] = "Контракты";
+
+	options.multyLangValues["ru"]["short_messages"] = "Сообщения чата";
 EnumGridColumn_data_types.superclass.constructor.call(this,options);
 	
 }

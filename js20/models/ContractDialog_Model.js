@@ -435,6 +435,14 @@ function ContractDialog_Model(options){
 	filed_options.autoInc = false;	
 	
 	options.fields.constr_technical_features = new FieldJSONB("constr_technical_features",filed_options);
+		
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.constr_technical_features_in_compound_obj = new FieldJSONB("constr_technical_features_in_compound_obj",filed_options);
 	
 			
 			
@@ -511,6 +519,7 @@ function ContractDialog_Model(options){
 	
 	options.fields.build_types_ref = new FieldJSON("build_types_ref",filed_options);
 	
+			
 			
 			
 			

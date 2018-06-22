@@ -17,6 +17,8 @@ function ContractDialog_View(id,options){
 	options.model = options.models.ContractDialog_Model;
 	options.controller = options.controller || new Contract_Controller();
 	
+	options.dataType = "contracts";
+	
 	var self = this;
 	
 	//options.cmdSave = false;
@@ -433,17 +435,16 @@ function ContractDialog_View(id,options){
 			"readOnly":!options.templateOptions.setAccess
 		});
 		this.addElement(tab_out);
-		var contr_descr = "Контракт №"+options.model.getFieldValue("expertise_result_number")+" от "+DateHelper.format(options.model.getFieldValue("date_time"),"d/m/Y");
+		var this_ref = new RefType(
+		{
+			"keys":{"id":options.model.getFieldValue("id")},
+			"descr":"Контракт №"+options.model.getFieldValue("expertise_result_number")+" от "+DateHelper.format(options.model.getFieldValue("date_time"),"d/m/Y"),
+			"dataType":"contract"
+		});
 		var dlg_m = new DocFlowOutDialog_Model();
-		dlg_m.setFieldValue("to_contracts_ref",new RefType(
-				{
-					"keys":{"id":options.model.getFieldValue("id")},
-					"descr":contr_descr,
-					"dataType":"contract"
-				})
-		);
+		dlg_m.setFieldValue("to_contracts_ref",this_ref);
 		
-		dlg_m.setFieldValue("subject","Замечания по "+contr_descr);
+		dlg_m.setFieldValue("subject","Замечания по "+this_ref.getDescr());
 		dlg_m.setFieldValue("doc_flow_types_ref", window.getApp().getPredefinedItem("doc_flow_types","contr"));
 		dlg_m.setFieldValue("employees_ref", CommonHelper.unserialize(window.getApp().getServVar("employees_ref")) );
 		dlg_m.setFieldValue("signed_by_employees_ref",null);
@@ -464,6 +465,31 @@ function ContractDialog_View(id,options){
 				"val":app_key
 			}]
 		}));
+		
+		//*** INSIDE ****
+		var tab_inside = new DocFlowInsideList_View(id+":doc_flow_inside_list",{
+			"fromApp":true,
+			"autoRefresh":true,
+			"filters":[{
+				"field":"contract_id",
+				"sign":"e",
+				"val":options.model.getFieldValue("id")
+			}],
+			"readOnly":false
+		});
+		this.addElement(tab_inside);
+		var dlg_m = new DocFlowInsideDialog_Model();
+		dlg_m.setFieldValue("contracts_ref",this_ref);
+		dlg_m.setFieldValue("subject","По контракту "+this_ref.getDescr());
+		dlg_m.setFieldValue("doc_flow_importance_types_ref", window.getApp().getPredefinedItem("doc_flow_importance_types","common"));
+		dlg_m.setFieldValue("contracts_ref", );
+		dlg_m.setFieldValue("employees_ref", CommonHelper.unserialize(window.getApp().getServVar("employees_ref")) );
+		dlg_m.recInsert();
+		tab_inside.getElement("grid").setInsertViewOptions({
+			"models":{
+				"DocFlowInsideDialog_Model": dlg_m
+			}
+		});
 		
 	};
 		

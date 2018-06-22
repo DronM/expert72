@@ -28,8 +28,8 @@ function DocFlowInEditRef(id,options){
 	options.editWinClass = DocFlowInDialog_Form;
 	
 	options.acMinLengthForQuery = 1;
-	options.acController = new DocFlowOut_Controller();
-	options.acModel = new DocFlowOutList_Model();
+	options.acController = new DocFlowIn_Controller();
+	options.acModel = new DocFlowInList_Model();
 	options.acPatternFieldId = options.acPatternFieldId || "reg_number";
 	options.acKeyFields = options.acKeyFields || [options.acModel.getField("id")];
 	options.acDescrFunction = this.m_descrFunc;

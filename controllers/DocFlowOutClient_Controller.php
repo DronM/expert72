@@ -28,7 +28,7 @@ require_once('common/file_func.php');
 
 class DocFlowOutClient_Controller extends ControllerSQL{
 	
-	const CONTRACT_FOLDER = 'Контракт';
+	const CONTRACT_FOLDER = 'Договорные документы';
 	const ER_NO_CONTRACT_SIG = 'Нет файла эцп с контрактом!';
 	const ER_NO_DOC = 'Document not found!';
 
@@ -557,6 +557,7 @@ class DocFlowOutClient_Controller extends ControllerSQL{
 			}
 			
 			if (!is_null($docId)){
+				/*
 				$files_q_id = $this->getDbLink()->query(sprintf(
 					"SELECT
 						fl.*,
@@ -570,7 +571,14 @@ class DocFlowOutClient_Controller extends ControllerSQL{
 					WHERE fl.application_id=%d AND NOT fl.deleted
 					ORDER BY document_type,document_id,file_name,deleted_dt ASC NULLS LAST",
 				$applicationId
-				));		
+				));
+				*/
+				$files_q_id = Application_Controller::attachmentsQuery(
+					$this->getDbLink(),
+					$applicationId,
+					'AND coalesce(adf.deleted,FALSE)=FALSE'
+				);
+						
 				//fl.file_id IN (SELECT ofl.file_id FROM doc_flow_out_client_document_files AS ofl WHERE ofl.doc_flow_out_client_id=%d)	
 			}
 						

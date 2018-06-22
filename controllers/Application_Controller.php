@@ -106,6 +106,9 @@ class Application_Controller extends ControllerSQL{
 		$param = new FieldExtJSONB('constr_technical_features'
 				,array());
 		$pm->addParam($param);
+		$param = new FieldExtJSONB('constr_technical_features_in_compound_obj'
+				,array());
+		$pm->addParam($param);
 		$param = new FieldExtFloat('total_cost_eval'
 				,array());
 		$pm->addParam($param);
@@ -270,6 +273,10 @@ class Application_Controller extends ControllerSQL{
 			));
 			$pm->addParam($param);
 		$param = new FieldExtJSONB('constr_technical_features'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtJSONB('constr_technical_features_in_compound_obj'
 				,array(
 			));
 			$pm->addParam($param);
@@ -986,6 +993,24 @@ class Application_Controller extends ControllerSQL{
 		return $this->delete_print($this->getExtDbVal($pm,'id'),'auth_letter_file');
 	}
 
+	public static function attachmentsQuery($dbLink,$appId,$deletedCond){
+		return $dbLink->query(sprintf(
+			"SELECT
+				adf.*,
+				mdf.doc_flow_out_client_id,
+				m.date_time AS doc_flow_out_date_time,
+				reg.reg_number AS doc_flow_out_reg_number
+			FROM application_document_files AS adf
+			LEFT JOIN doc_flow_out_client_document_files AS mdf ON mdf.file_id=adf.file_id
+			LEFT JOIN doc_flow_out_client AS m ON m.id=mdf.doc_flow_out_client_id
+			LEFT JOIN doc_flow_out_client_reg_numbers AS reg ON reg.doc_flow_out_client_id=m.id
+			WHERE adf.application_id=%d %s
+			ORDER BY adf.document_type,adf.document_id,adf.file_name,adf.deleted_dt ASC NULLS LAST",
+		$appId,
+		$deletedCond
+		));				
+	}
+
 	public function get_object($pm){
 		if (!is_null($pm->getParamValue("id"))){		
 		
@@ -1005,7 +1030,7 @@ class Application_Controller extends ControllerSQL{
 			
 			}
 			
-			$deleted_cond = ($_SESSION['role_id']=='client')? "AND deleted=FALSE":"";
+			$deleted_cond = ($_SESSION['role_id']=='client')? "AND coalesce(adf.deleted,FALSE)=FALSE":"";
 			
 			//Если вернули - никаких заявлений
 			/*
@@ -1019,21 +1044,11 @@ class Application_Controller extends ControllerSQL{
 			
 			//On copy - no files, no links!
 			if ($pm->getParamValue('mode')!='copy'){
-				$files_q_id = $this->getDbLink()->query(sprintf(
-					"SELECT
-						adf.*,
-						mdf.doc_flow_out_client_id,
-						m.date_time AS doc_flow_out_date_time,
-						reg.reg_number AS doc_flow_out_reg_number
-					FROM application_document_files AS adf
-					LEFT JOIN doc_flow_out_client_document_files AS mdf ON mdf.file_id=adf.file_id
-					LEFT JOIN doc_flow_out_client AS m ON m.id=mdf.doc_flow_out_client_id
-					LEFT JOIN doc_flow_out_client_reg_numbers AS reg ON reg.doc_flow_out_client_id=m.id
-					WHERE adf.application_id=%d %s
-					ORDER BY adf.document_type,adf.document_id,adf.file_name,adf.deleted_dt ASC NULLS LAST",
-				$this->getExtDbVal($pm,'id'),
-				$deleted_cond
-				));			
+				$files_q_id = self::attachmentsQuery(
+					$this->getDbLink(),
+					$this->getExtDbVal($pm,'id'),
+					$deleted_cond
+				);
 			}
 			else{
 				//Copy mode!!!
@@ -1068,6 +1083,7 @@ class Application_Controller extends ControllerSQL{
 				NULL AS constr_name,
 				NULL AS constr_address,
 				NULL AS constr_technical_features,
+				NULL AS constr_technical_features_in_compound_obj,
 				NULL AS constr_construction_type,
 				NULL AS total_cost_eval,
 				NULL AS limit_cost_eval,
@@ -1113,13 +1129,17 @@ class Application_Controller extends ControllerSQL{
 			foreach($documents_json as $doc){
 				self::addDocumentFiles($doc->document,$this->getDbLink(),$doc->document_type,$files_q_id);
 			}
-			$documents = json_encode($documents_json);
+			$ar_obj['documents'] = json_encode($documents_json);
 		}
-				
+		$obj_vals = array();
+		foreach($ar_obj as $obj_f_id=>$obj_f){
+			array_push($obj_vals,new Field($obj_f_id,DT_STRING,array('value'=>$obj_f)));
+		}
 		$this->addModel(new ModelVars(
 			array('name'=>'Vars',
 				'id'=>'ApplicationDialog_Model',
-				'values'=>array(
+				'values'=>$obj_vals
+				/*array(
 					new Field('id',DT_STRING,array('value'=>$ar_obj['id'])),
 					new Field('create_dt',DT_STRING,array('value'=>$ar_obj['create_dt'])),					
 					new Field('expertise_type',DT_STRING,array('value'=>$ar_obj['expertise_type'])),
@@ -1163,7 +1183,7 @@ class Application_Controller extends ControllerSQL{
 					new Field('expertise_result_date',DT_DATE,array('value'=>$ar_obj['expertise_result_date'])),
 					new Field('contract_number',DT_DATE,array('value'=>$ar_obj['contract_number'])),
 					new Field('contract_date',DT_DATE,array('value'=>$ar_obj['contract_date']))
-					)
+					)*/
 				)
 			)
 		);		

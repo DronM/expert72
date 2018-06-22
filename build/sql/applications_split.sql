@@ -36,6 +36,8 @@ BEGIN
 		app_print_modification, 
 		app_print_audit,
 		limit_cost_eval,
+		auth_letter,
+		auth_letter_file,
 		base_application_id
 	)
 	(SELECT
@@ -58,6 +60,8 @@ BEGIN
 		CASE WHEN in_document_type='modification' THEN app.app_print_modification ELSE NULL END,
 		CASE WHEN in_document_type='audit' THEN app.app_print_audit ELSE NULL END,
 		CASE WHEN in_document_type='cost_eval_validity' THEN app.limit_cost_eval ELSE NULL END,
+		app.auth_letter,
+		app.auth_letter_file,
 		in_application_id
 		
 	FROM applications AS app WHERE app.id=in_application_id

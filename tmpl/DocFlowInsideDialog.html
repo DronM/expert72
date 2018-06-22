@@ -1,0 +1,44 @@
+<div id="{{id}}" class="panel panel-flat">
+	<div id="{{id}}:cmd-cont">
+		<div id="{{id}}:cmdOk" options="{'glyph':'glyphicon-ok','caption':'ОК '}" title="Записать документ и закрыть форму"/>
+		<div id="{{id}}:cmdSave" options="{'glyph':'glyphicon-pencil','caption':'Записать '}" title="Записать документ"/>								
+		<div id="{{id}}:cmdApprove" options="{'glyph':'glyphicon-send','caption':'На согласование '}" title="Отправить документ на согласование"/>
+		<!--
+		<div id="{{id}}:cmdConfirm" options="{'glyph':'glyphicon-envelope','caption':'На утверждение '}" title="Отправить письмо на утверждение"/>				
+		-->
+		<div id="{{id}}:cmdCancel"/>
+	</div>
+
+	<div class="panel-heading">
+		<h2 class="panel-title">Внутренний документ №<span id="{{id}}:id"/> от <span id="{{id}}:date_time"/></h2>
+		<div id="{{id}}:state_descr" class="hidden text-info"/>
+	</div>
+	
+	<div class="steps-basic wizard clearfix">
+		<div class="steps clearfix">
+			<ul role="tablist">
+				{{#chain}}
+				<li role="tab" class="{{tab-class}}" aria-disabled="false" aria-selected="{{aria-selected}}">
+					<a id="{{id}}:step{{step}}" href="#">
+						<span class="number">{{step}}</span> {{doc_descr}} {{state_descr}}
+					</a>
+				</li>
+				{{/chain}}
+			</ul>
+		</div>
+	</div>			
+	
+	<a id="{{id}}:state_descr" class="hidden" href="#"/>
+	
+	<div id="{{id}}:employees_ref"/>	
+	<div id="{{id}}:doc_flow_importance_types_ref"/>
+	<div id="{{id}}:contracts_ref"/>
+	
+	<div id="{{id}}:subject"/>	
+	<div id="{{id}}:content"/>
+	
+	<div id="{{id}}:attachments"/>
+	
+	<div id="{{id}}:comment_text"/>
+		
+</div>

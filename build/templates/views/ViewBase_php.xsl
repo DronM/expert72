@@ -43,8 +43,13 @@ class ViewBase extends ViewHTMLXSLT {
 			$this->dbLink->appname = APP_NAME;
 			$this->dbLink->technicalemail = TECH_EMAIL;
 			$this->dbLink->reporterror = DEBUG;
-			$this->dbLink->database= DB_NAME;			
-			$this->dbLink->connect(DB_SERVER,DB_USER,DB_PASSWORD,(defined('DB_PORT'))? DB_PORT:NULL);
+			$this->dbLink->database= DB_NAME;
+			try{			
+				$this->dbLink->connect(DB_SERVER,DB_USER,DB_PASSWORD,(defined('DB_PORT'))? DB_PORT:NULL);
+			}
+			catch (Exception $e){
+				//do nothing
+			}
 		}	
 	}
 	
@@ -52,10 +57,11 @@ class ViewBase extends ViewHTMLXSLT {
 		if (isset($_SESSION['role_id'])){
 			$this->initDbLink();
 		
-			$contr = new Constant_Controller($this->dbLink);
-			$list = array(<xsl:apply-templates select="/metadata/constants/constant[@autoload='TRUE']"/>);
-			$models['ConstantValueList_Model'] = $contr->getConstantValueModel($list);						
-			
+			if ($this->dbLink){
+				$contr = new Constant_Controller($this->dbLink);
+				$list = array(<xsl:apply-templates select="/metadata/constants/constant[@autoload='TRUE']"/>);
+				$models['ConstantValueList_Model'] = $contr->getConstantValueModel($list);						
+			}
 		}	
 	}
 
@@ -84,6 +90,7 @@ class ViewBase extends ViewHTMLXSLT {
 			$this->getVarModel()->addField(new Field('employees_ref',DT_STRING));
 			$this->getVarModel()->addField(new Field('departments_ref',DT_STRING));
 			$this->getVarModel()->addField(new Field('department_boss',DT_STRING));												
+			$this->getVarModel()->addField(new Field('recipient_states_ref',DT_STRING));
 		}
 		if (isset($_SESSION['role_id'])){
 			$this->getVarModel()->addField(new Field('user_name_full',DT_STRING));
@@ -129,6 +136,7 @@ class ViewBase extends ViewHTMLXSLT {
 				$this->setVarValue('employees_ref',$_SESSION['employees_ref']);
 				$this->setVarValue('departments_ref',$_SESSION['departments_ref']);
 				$this->setVarValue('department_boss',$_SESSION['department_boss']);
+				$this->setVarValue('recipient_states_ref',$_SESSION['recipient_states_ref']);
 			}
 		}
 		
@@ -164,10 +172,10 @@ class ViewBase extends ViewHTMLXSLT {
 			)
 		));
 		
-		if (isset($_SESSION['role_id']) &amp;&amp; $_SESSION['role_id']!='client'){
+		if (isset($_SESSION['role_id']) &amp;&amp; $_SESSION['role_id']!='client' &amp;&amp; $this->dbLink){
 			$models->append(DocFlowTask_Controller::get_short_list_model($this->dbLink));
 		}
-		else if (isset($_SESSION['role_id']) &amp;&amp; $_SESSION['role_id']=='client'){
+		else if (isset($_SESSION['role_id']) &amp;&amp; $_SESSION['role_id']=='client' &amp;&amp; $this->dbLink){
 			$models->append(DocFlowInClient_Controller::get_unviwed_count_model($this->dbLink));
 		}
 		

@@ -489,6 +489,15 @@ function Contract_Model(options){
 	
 	options.fields.constr_technical_features = new FieldJSONB("constr_technical_features",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.constr_technical_features_in_compound_obj = new FieldJSONB("constr_technical_features_in_compound_obj",filed_options);
+	
 			
 			
 			

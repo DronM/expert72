@@ -188,6 +188,9 @@ class Contract_Controller extends ControllerSQL{
 		$param = new FieldExtJSONB('constr_technical_features'
 				,array());
 		$pm->addParam($param);
+		$param = new FieldExtJSONB('constr_technical_features_in_compound_obj'
+				,array());
+		$pm->addParam($param);
 		
 		$pm->addParam(new FieldExtInt('ret_id'));
 		
@@ -404,6 +407,10 @@ class Contract_Controller extends ControllerSQL{
 			));
 			$pm->addParam($param);
 		$param = new FieldExtJSONB('constr_technical_features'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtJSONB('constr_technical_features_in_compound_obj'
 				,array(
 			));
 			$pm->addParam($param);

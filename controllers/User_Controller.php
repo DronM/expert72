@@ -487,6 +487,7 @@ class User_Controller extends ControllerSQL{
 			$_SESSION['employees_ref'] = $ar['employees_ref'];
 			$_SESSION['departments_ref'] = $ar['departments_ref'];
 			$_SESSION['department_boss'] = ($ar['department_boss']=='t');
+			$_SESSION['recipient_states_ref'] = $ar['recipient_states_ref'];
 		}
 		
 		//global filters				
@@ -563,7 +564,18 @@ class User_Controller extends ControllerSQL{
 			$filter->addField($field,'=');
 			GlobalFilter::set('DocFlowInClientDialog_Model',$filter);
 			
-		}		
+		}
+		else{
+			$_SESSION['global_employee_id'] = json_decode($ar['employees_ref'])->keys->id;
+						
+			$model = new Reminder_Model($link);
+			$filter = new ModelWhereSQL();
+			$field = clone $model->getFieldById('recipient_employee_id');
+			$field->setValue($_SESSION['global_employee_id']);
+			$filter->addField($field,'=');
+			GlobalFilter::set('Reminder_Model',$filter);
+			
+		}
 		
 		$log_ar = $this->getDbLinkMaster()->query_first(
 			sprintf("SELECT pub_key FROM logins

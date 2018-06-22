@@ -40,6 +40,12 @@ function AppExpert(options){
 			"ctrlOptions":{"keyIds":["id"]},
 			"dialogClass":DocFlowInDialog_Form
 		}
+		,"doc_flow_inside":{
+			"dataTypeDescrLoc":"Внутренний документ",
+			"ctrlClass":DocFlowInsideEditRef,
+			"ctrlOptions":{"keyIds":["id"]},
+			"dialogClass":DocFlowInsideDialog_Form
+		}		
 		,"applications":{
 			"dataTypeDescrLoc":"Заявление",
 			"ctrlClass":ApplicationEditRef,
@@ -52,7 +58,13 @@ function AppExpert(options){
 			"ctrlOptions":{"keyIds":["id"]},
 			"dialogClass":ContractDialog_Form
 		}
+		,"short_messages":{
+			"dataTypeDescrLoc":"Сообщение чата",
+			"ctrlClass":null,
+			"ctrlOptions":{"keyIds":["id"]},
+			"dialogClass":ShortMessage_Form
 		
+		}
 	});
 	
 	AppExpert.superclass.constructor.call(this,"Expert72",options);

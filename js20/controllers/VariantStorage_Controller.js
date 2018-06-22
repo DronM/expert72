@@ -91,8 +91,7 @@ extend(VariantStorage_Controller,ControllerObjServer);
 }
 
 			VariantStorage_Controller.prototype.add_upsert_filter_data = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('upsert_filter_data',opts);
 	
 				
@@ -132,8 +131,7 @@ extend(VariantStorage_Controller,ControllerObjServer);
 }
 
 			VariantStorage_Controller.prototype.add_upsert_col_visib_data = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('upsert_col_visib_data',opts);
 	
 				
@@ -173,8 +171,7 @@ extend(VariantStorage_Controller,ControllerObjServer);
 }
 
 			VariantStorage_Controller.prototype.add_upsert_col_order_data = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('upsert_col_order_data',opts);
 	
 				
@@ -214,8 +211,7 @@ extend(VariantStorage_Controller,ControllerObjServer);
 }
 
 			VariantStorage_Controller.prototype.add_upsert_all_data = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('upsert_all_data',opts);
 	
 				
@@ -372,8 +368,7 @@ extend(VariantStorage_Controller,ControllerObjServer);
 }
 
 			VariantStorage_Controller.prototype.add_get_filter_data = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('get_filter_data',opts);
 	
 				
@@ -395,8 +390,7 @@ extend(VariantStorage_Controller,ControllerObjServer);
 }
 
 			VariantStorage_Controller.prototype.add_get_col_visib_data = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('get_col_visib_data',opts);
 	
 				
@@ -418,8 +412,7 @@ extend(VariantStorage_Controller,ControllerObjServer);
 }
 
 			VariantStorage_Controller.prototype.add_get_col_order_data = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('get_col_order_data',opts);
 	
 				
@@ -441,8 +434,7 @@ extend(VariantStorage_Controller,ControllerObjServer);
 }
 
 			VariantStorage_Controller.prototype.add_get_all_data = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('get_all_data',opts);
 	
 				

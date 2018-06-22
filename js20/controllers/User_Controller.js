@@ -303,6 +303,9 @@ extend(User_Controller,ControllerObjServer);
 	var f_opts = {};
 	f_opts.alias = "Телефон";
 	pm.addField(new FieldString("phone_cel",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldEnum("role_id",f_opts));
 }
 
 			User_Controller.prototype.addGetObject = function(){
@@ -326,16 +329,14 @@ extend(User_Controller,ControllerObjServer);
 }
 
 			User_Controller.prototype.add_get_profile = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('get_profile',opts);
 	
 	this.addPublicMethod(pm);
 }
 
 			User_Controller.prototype.add_password_recover = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('password_recover',opts);
 	
 				
@@ -363,11 +364,10 @@ extend(User_Controller,ControllerObjServer);
 }
 
 			User_Controller.prototype.add_register = function(){
-	var opts = {"controller":this};
-	
-	opts.requestType = 'post';
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('register',opts);
+	
+	pm.setRequestType('post');
 	
 				
 	
@@ -432,8 +432,7 @@ extend(User_Controller,ControllerObjServer);
 }
 
 			User_Controller.prototype.add_name_check = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('name_check',opts);
 	
 				
@@ -451,8 +450,7 @@ extend(User_Controller,ControllerObjServer);
 }
 
 			User_Controller.prototype.add_login = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('login',opts);
 	
 				
@@ -486,24 +484,21 @@ extend(User_Controller,ControllerObjServer);
 
 			
 			User_Controller.prototype.add_logout = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('logout',opts);
 	
 	this.addPublicMethod(pm);
 }
 
 			User_Controller.prototype.add_logout_html = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('logout_html',opts);
 	
 	this.addPublicMethod(pm);
 }
 
 			User_Controller.prototype.add_email_confirm = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('email_confirm',opts);
 	
 				
@@ -521,8 +516,7 @@ extend(User_Controller,ControllerObjServer);
 }
 
 			User_Controller.prototype.add_hide = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('hide',opts);
 	
 				

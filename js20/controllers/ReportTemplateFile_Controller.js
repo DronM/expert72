@@ -259,8 +259,7 @@ extend(ReportTemplateFile_Controller,ControllerObjServer);
 }
 
 			ReportTemplateFile_Controller.prototype.add_download_file = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('download_file',opts);
 	
 				
@@ -274,8 +273,7 @@ extend(ReportTemplateFile_Controller,ControllerObjServer);
 }
 
 			ReportTemplateFile_Controller.prototype.add_delete_file = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('delete_file',opts);
 	
 				
@@ -289,8 +287,7 @@ extend(ReportTemplateFile_Controller,ControllerObjServer);
 }
 
 			ReportTemplateFile_Controller.prototype.add_apply_template_file = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('apply_template_file',opts);
 	
 				

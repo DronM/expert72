@@ -10,7 +10,7 @@ require_once(FRAME_WORK_PATH.'basic_classes/.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLInt.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLText.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLDateTimeTZ.php');
-require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLJSONB.php');
+require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLJSON.php');
  
 class ReminderUnviewedList_Model extends {
 	
@@ -50,8 +50,24 @@ class ReminderUnviewedList_Model extends {
 		$f_opts = array();
 		$f_opts['id']="docs_ref";
 				
-		$f_docs_ref=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"docs_ref",$f_opts);
+		$f_docs_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"docs_ref",$f_opts);
 		$this->addField($f_docs_ref);
+		//********************
+		
+		//*** Field doc_flow_importance_types_ref ***
+		$f_opts = array();
+		$f_opts['id']="doc_flow_importance_types_ref";
+				
+		$f_doc_flow_importance_types_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"doc_flow_importance_types_ref",$f_opts);
+		$this->addField($f_doc_flow_importance_types_ref);
+		//********************
+		
+		//*** Field files ***
+		$f_opts = array();
+		$f_opts['id']="files";
+				
+		$f_files=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"files",$f_opts);
+		$this->addField($f_files);
 		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}

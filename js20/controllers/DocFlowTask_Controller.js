@@ -98,24 +98,21 @@ extend(DocFlowTask_Controller,ControllerObjServer);
 }
 
 			DocFlowTask_Controller.prototype.add_get_short_list = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('get_short_list',opts);
 	
 	this.addPublicMethod(pm);
 }
 
 			DocFlowTask_Controller.prototype.add_get_unviewed_task_list = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('get_unviewed_task_list',opts);
 	
 	this.addPublicMethod(pm);
 }
 
 			DocFlowTask_Controller.prototype.add_set_task_viewed = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('set_task_viewed',opts);
 	
 				

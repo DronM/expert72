@@ -322,8 +322,7 @@ extend(DocFlowApprovement_Controller,ControllerObjServer);
 }
 
 			DocFlowApprovement_Controller.prototype.add_set_approved = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('set_approved',opts);
 	
 				
@@ -345,8 +344,7 @@ extend(DocFlowApprovement_Controller,ControllerObjServer);
 }
 
 			DocFlowApprovement_Controller.prototype.add_set_approved_with_remarks = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('set_approved_with_remarks',opts);
 	
 				
@@ -368,8 +366,7 @@ extend(DocFlowApprovement_Controller,ControllerObjServer);
 }
 
 			DocFlowApprovement_Controller.prototype.add_set_disapproved = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('set_disapproved',opts);
 	
 				
@@ -391,8 +388,7 @@ extend(DocFlowApprovement_Controller,ControllerObjServer);
 }
 
 			DocFlowApprovement_Controller.prototype.add_set_closed = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('set_closed',opts);
 	
 				

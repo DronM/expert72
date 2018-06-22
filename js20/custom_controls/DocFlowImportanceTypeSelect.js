@@ -14,7 +14,7 @@ function DocFlowImportanceTypeSelect(id,options){
 	if (options.labelCaption!=""){
 		options.labelCaption = options.labelCaption || "Важность:";
 	}
-	
+		
 	options.keyIds = options.keyIds || ["id"];
 	options.modelKeyFields = [options.model.getField("id")];
 	options.modelDescrFields = [options.model.getField("name")];

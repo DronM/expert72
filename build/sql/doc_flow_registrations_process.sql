@@ -85,7 +85,8 @@ BEGIN
 								'file_signed',at.file_signed,
 								'file_uploaded',true,
 								'file_path',at.file_path,
-								'deleted',false
+								'deleted',false,
+								'date_time',at.file_date
 							)
 							)
 					FROM doc_flow_attachments AS at WHERE at.doc_type='doc_flow_out' AND at.doc_id=t.id
@@ -148,7 +149,11 @@ BEGIN
 				
 			FROM doc_flow_attachments AS at
 			LEFT JOIN doc_flow_out out ON out.id=(NEW.subject_doc->'keys'->>'id')::int
-			WHERE at.doc_type='doc_flow_out' AND at.doc_id=(NEW.subject_doc->'keys'->>'id')::int
+			WHERE
+				at.doc_type='doc_flow_out'
+				AND at.doc_id=(NEW.subject_doc->'keys'->>'id')::int
+				AND at.file_path!='Исходящие'
+			--Все кроме исходящих
 			;
 		END IF;
 				

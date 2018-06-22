@@ -368,6 +368,8 @@ $permissions = array();
 				
 					$permissions['DocFlowIn_Controller_get_object']=TRUE;
 				
+					$permissions['DocFlowIn_Controller_complete']=TRUE;
+				
 					$permissions['DocFlowIn_Controller_remove_file']=TRUE;
 				
 					$permissions['DocFlowIn_Controller_get_file']=TRUE;
@@ -375,6 +377,24 @@ $permissions = array();
 					$permissions['DocFlowIn_Controller_get_file_sig']=TRUE;
 				
 					$permissions['DocFlowIn_Controller_get_next_num']=TRUE;
+				
+					$permissions['DocFlowInside_Controller_insert']=TRUE;
+				
+					$permissions['DocFlowInside_Controller_update']=TRUE;
+				
+					$permissions['DocFlowInside_Controller_delete']=TRUE;
+				
+					$permissions['DocFlowInside_Controller_get_object']=TRUE;
+				
+					$permissions['DocFlowInside_Controller_get_list']=TRUE;
+				
+					$permissions['DocFlowInside_Controller_complete']=TRUE;
+				
+					$permissions['DocFlowInside_Controller_remove_file']=TRUE;
+				
+					$permissions['DocFlowInside_Controller_get_file']=TRUE;
+				
+					$permissions['DocFlowInside_Controller_get_file_sig']=TRUE;
 				
 					$permissions['DocFlowImportanceType_Controller_insert']=TRUE;
 				
@@ -805,6 +825,30 @@ $permissions = array();
 					$permissions['ApplicationDocFolder_Controller_get_object']=TRUE;
 				
 					$permissions['ApplicationDocFolder_Controller_get_list']=TRUE;
+				
+					$permissions['ShortMessageRecipientState_Controller_insert']=TRUE;
+				
+					$permissions['ShortMessageRecipientState_Controller_update']=TRUE;
+				
+					$permissions['ShortMessageRecipientState_Controller_delete']=TRUE;
+				
+					$permissions['ShortMessageRecipientState_Controller_get_object']=TRUE;
+				
+					$permissions['ShortMessageRecipientState_Controller_get_list']=TRUE;
+				
+					$permissions['ShortMessage_Controller_send_message']=TRUE;
+				
+					$permissions['ShortMessage_Controller_get_object']=TRUE;
+				
+					$permissions['ShortMessage_Controller_get_list']=TRUE;
+				
+					$permissions['ShortMessage_Controller_get_recipient_list']=TRUE;
+				
+					$permissions['ShortMessage_Controller_get_unviewed_list']=TRUE;
+				
+					$permissions['ShortMessage_Controller_set_recipient_state']=TRUE;
+				
+					$permissions['ShortMessage_Controller_get_recipient_state']=TRUE;
 				
 return array_key_exists($contrId.'_'.$methId,$permissions);
 }

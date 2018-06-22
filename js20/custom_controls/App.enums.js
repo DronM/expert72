@@ -6,7 +6,12 @@ DO NOT MODIFY IT!!!
 */
 App.prototype.m_enums = {
 	"locales":{"ru":"ru_Русский"},
-	"role_types":{"ru_admin":"Администратор","ru_client":"Клиент","ru_lawyer":"Юрист отдела приема"},
+	"role_types":{"ru_admin":"Администратор","ru_client":"Клиент",
+		"ru_lawyer":"Юрист отдела приема"
+		,"ru_expert":"Эксперт"
+		,"ru_boss":"Руководитель"
+		,"ru_accountant":"Бухгалтер"
+	},
 	"email_types":{"ru_new_account":"Новый акаунт","ru_reset_pwd":"Установка пароля","ru_user_email_conf":"Подтверждение пароля","ru_out_mail":"Исходящее письмо"},
 	"application_states":{"ru_filling":"Заполнение анкеты","ru_sent":"Анкета отправлена на проверку","ru_checking":"Проверка анкеты",
 		"ru_returned":"Анкета возвращена на доработку","ru_closed_no_expertise":"Возврат без рассмотрения",
@@ -55,4 +60,20 @@ App.prototype.m_enums = {
 		"ru_not_approved":"Не согласовано",
 		"ru_approved_with_notes":"Согласовано с замечаниями"
 	}
+	,"doc_flow_inside_states":{
+		"ru_approving":"На согласовании"
+		,"ru_not_approved":"Не согласован"
+		,"ru_approved_with_notes":"Согласован с замечаниями"
+		,"ru_approved":"Согласован"
+		,"ru_confirming":"На утверждении"
+		,"ru_not_confirmed":"Не утвержден"
+		,"ru_confirmed":"Утвержден"
+		,"ru_examining":"На рассмотрении"
+		,"ru_examined":"Рассмотрен"
+		,"ru_fulfilling":"На исполнении"
+		,"ru_fulfilled":"Исполнен"
+		,"ru_acquainting":"На ознакомлении"
+		,"ru_acquainted":"Ознакомлен"
+	}
+	
 };

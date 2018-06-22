@@ -43,8 +43,13 @@ class ViewBase extends ViewHTMLXSLT {
 			$this->dbLink->appname = APP_NAME;
 			$this->dbLink->technicalemail = TECH_EMAIL;
 			$this->dbLink->reporterror = DEBUG;
-			$this->dbLink->database= DB_NAME;			
-			$this->dbLink->connect(DB_SERVER,DB_USER,DB_PASSWORD,(defined('DB_PORT'))? DB_PORT:NULL);
+			$this->dbLink->database= DB_NAME;
+			try{			
+				$this->dbLink->connect(DB_SERVER,DB_USER,DB_PASSWORD,(defined('DB_PORT'))? DB_PORT:NULL);
+			}
+			catch (Exception $e){
+				//do nothing
+			}
 		}	
 	}
 	
@@ -52,10 +57,11 @@ class ViewBase extends ViewHTMLXSLT {
 		if (isset($_SESSION['role_id'])){
 			$this->initDbLink();
 		
-			$contr = new Constant_Controller($this->dbLink);
-			$list = array('doc_per_page_count','grid_refresh_interval','application_check_days','reminder_refresh_interval');
-			$models['ConstantValueList_Model'] = $contr->getConstantValueModel($list);						
-			
+			if ($this->dbLink){
+				$contr = new Constant_Controller($this->dbLink);
+				$list = array('doc_per_page_count','grid_refresh_interval','application_check_days','reminder_refresh_interval');
+				$models['ConstantValueList_Model'] = $contr->getConstantValueModel($list);						
+			}
 		}	
 	}
 
@@ -113,6 +119,7 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'core/DateHelper.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'core/EventHelper.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'core/FatalException.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'core/DbException.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'core/ConstantManager.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'core/ServConnector.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'core/Response.js'));
@@ -1036,6 +1043,8 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/DocFlowOutDialog_Form.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/DocFlowOutList_Form.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/DocFlowInList_Form.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/DocFlowInsideList_Form.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/DocFlowInsideDialog_Form.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/DepartmentDialog_Form.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/EmployeeDialog_Form.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/EmployeeList_Form.js'));
@@ -1059,6 +1068,7 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/ReportTemplateFileList_Form.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/DocFlowApprovementTemplate_Form.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/DocFlowApprovementTemplateList_Form.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/ShortMessage_Form.js'));
 		
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/UserDialog_Form.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/Login_View.js'));
@@ -1116,6 +1126,7 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/OfficeList_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/FileUploaderApplication_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/FileUploaderDocFlowOut_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/FileUploaderDocFlowInside_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/FileUploaderDocFlowIn_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/FileUploaderDocFlowOutClient_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/FileUploaderDocFlowInClient_View.js'));
@@ -1124,6 +1135,7 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/DocFlowBaseDialog_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ApplicationList_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/rs/ApplicationList_View.rs_ru.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ConstrTechnicalFeature_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ApplicationDialog_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/rs/ApplicationDialog_View.rs_ru.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ViewBankAcc.js'));
@@ -1149,6 +1161,8 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/DocFlowOutDialog_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/DocFlowInList_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/DocFlowInDialog_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/DocFlowInsideList_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/DocFlowInsideDialog_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/DepartmentList_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/rs/DepartmentList_View.rs_ru.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/DepartmentDialog_View.js'));
@@ -1204,6 +1218,8 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ServiceList_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ApplicationDocFolderList_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/DocFolder_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ShortMessage_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ShortMessageList_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'tmpl/App.templates.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/App.enums.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/App.predefinedItems.js'));
@@ -1225,7 +1241,9 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ClientEditRef.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/EditRespPerson.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ApplicationClientEdit.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/BaseContainer.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ApplicationClientContainer.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/CompoundObjTechFeatureCont.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/EditBankAcc.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/EditOGRN.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/EditINN.js'));
@@ -1257,10 +1275,12 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ReportTemplateFileApplyCmd.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/DocFlowOutEditRef.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/DocFlowInEditRef.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/DocFlowInsideEditRef.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/DocFlowRecipientRef.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/EditContactList.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/EditContact.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Reminder.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ShortMessage.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/EditColorPalette.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/BtnNextNum.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/BtnNextContractNum.js'));
@@ -1286,6 +1306,7 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/LinkedContractListGrid.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ContractorListGrid.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ClientResponsablePersonEdit.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ShortMessageRecipientGrid.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/Enum_role_types.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/rs_ru.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/rs_common_ru.js'));
@@ -1545,6 +1566,20 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/EnumGridColumn_doc_flow_out_client_types.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ApplicationDocFolder_Model.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/ApplicationDocFolder_Controller.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/ShortMessageRecipientState_Controller.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/ShortMessage_Controller.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ShortMessageRecipientState_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ShortMessageRecipientList_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ShortMessageRecipientCurrentState_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ShortMessageList_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ShortMessageView_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowInside_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/DocFlowInside_Controller.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowInsideDialog_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowInsideList_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/Enum_doc_flow_inside_states.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/EnumGridColumn_doc_flow_inside_states.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowInsideProcess_Model.js'));
 	
 			if (isset($_SESSION['scriptId'])){
 				$script_id = $_SESSION['scriptId'];
@@ -1560,6 +1595,7 @@ class ViewBase extends ViewHTMLXSLT {
 			$this->getVarModel()->addField(new Field('employees_ref',DT_STRING));
 			$this->getVarModel()->addField(new Field('departments_ref',DT_STRING));
 			$this->getVarModel()->addField(new Field('department_boss',DT_STRING));												
+			$this->getVarModel()->addField(new Field('recipient_states_ref',DT_STRING));
 		}
 		if (isset($_SESSION['role_id'])){
 			$this->getVarModel()->addField(new Field('user_name_full',DT_STRING));
@@ -1605,6 +1641,7 @@ class ViewBase extends ViewHTMLXSLT {
 				$this->setVarValue('employees_ref',$_SESSION['employees_ref']);
 				$this->setVarValue('departments_ref',$_SESSION['departments_ref']);
 				$this->setVarValue('department_boss',$_SESSION['department_boss']);
+				$this->setVarValue('recipient_states_ref',$_SESSION['recipient_states_ref']);
 			}
 		}
 		
@@ -1633,10 +1670,10 @@ class ViewBase extends ViewHTMLXSLT {
 			)
 		));
 		
-		if (isset($_SESSION['role_id']) && $_SESSION['role_id']!='client'){
+		if (isset($_SESSION['role_id']) && $_SESSION['role_id']!='client' && $this->dbLink){
 			$models->append(DocFlowTask_Controller::get_short_list_model($this->dbLink));
 		}
-		else if (isset($_SESSION['role_id']) && $_SESSION['role_id']=='client'){
+		else if (isset($_SESSION['role_id']) && $_SESSION['role_id']=='client' && $this->dbLink){
 			$models->append(DocFlowInClient_Controller::get_unviwed_count_model($this->dbLink));
 		}
 		

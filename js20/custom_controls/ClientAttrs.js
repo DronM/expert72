@@ -41,6 +41,16 @@ function ClientOGRN(id,options){
 }
 extend(ClientOGRN,EditOGRN);
 
+function ClientSNILS(id,options){
+	options = options || {};
+	options.maxLength = "14";
+	options.labelCaption = "СНИЛС:";
+	options.placeholder = "СНИЛС физ.лица";	
+	options.editMask = "999-999-999 99";
+	ClientSNILS.superclass.constructor.call(this,id,options);	
+}
+extend(ClientSNILS,EditString);
+
 function ClientOKPO(id,options){
 	options = options || {};
 	options.maxLength = "20";
@@ -76,17 +86,17 @@ function ClientType(id,options){
 	this.m_clientTypeLabels = {
 		"name":{
 			"labelCaption":{
-				"enterprise":"Наименование:"
+				"enterprise":"Краткое наименование:"
 			},
 			"placeholder":{
-				"enterprise":"Краткое наименование контрагента"
+				"enterprise":"Сокращенное наименование контрагента"
 			},
 			"visible":{"enterprise":true,"person":false,"pboul":false},
 			"percentcalc":true
 		},
 		"name_full":{
 			"labelCaption":{
-				"enterprise":"Официальное наименование:",
+				"enterprise":"Полное наименование:",
 				"person":"ФИО:",
 				"pboul":"ФИО:"				
 			},
@@ -170,7 +180,19 @@ function ClientType(id,options){
 		,"responsable_persons":{
 			"setClientType":true,
 			"percentcalc":!options.minInf
-		}						
+		}
+		,"snils":{
+			"visible":{"enterprise":false,"pboul":false,"person":true},
+			"percentcalc":!options.minInf
+		}
+		,"corp_email":{
+			"placeholder":{
+				"enterprise":"Электронная почта организации",
+				"pboul":"Электронная почта предпринимателя",
+				"person":"Электронная почта физического лица"			
+			}
+		}
+								
 	};
 	
 	this.m_mainView = options.mainView;

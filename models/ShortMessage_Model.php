@@ -8,10 +8,8 @@
 
 require_once(FRAME_WORK_PATH.'basic_classes/ModelSQL.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLInt.php');
-require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLText.php');
 require_once(FRAME_WORK_PATH.'basic_classes/ModelOrderSQL.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLDateTimeTZ.php');
-require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLJSONB.php');
  
 class ShortMessage_Model extends ModelSQL{
 	
@@ -41,57 +39,33 @@ class ShortMessage_Model extends ModelSQL{
 		$this->addField($f_date_time);
 		//********************
 		
-		//*** Field parent_chat_message_id ***
+		//*** Field recipient_id ***
 		$f_opts = array();
-		$f_opts['id']="parent_chat_message_id";
+		$f_opts['id']="recipient_id";
 				
-		$f_parent_chat_message_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"parent_chat_message_id",$f_opts);
-		$this->addField($f_parent_chat_message_id);
+		$f_recipient_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"recipient_id",$f_opts);
+		$this->addField($f_recipient_id);
 		//********************
 		
-		//*** Field employee_id ***
+		//*** Field to_recipient_id ***
 		$f_opts = array();
-		$f_opts['id']="employee_id";
+		$f_opts['id']="to_recipient_id";
 				
-		$f_employee_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"employee_id",$f_opts);
-		$this->addField($f_employee_id);
+		$f_to_recipient_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"to_recipient_id",$f_opts);
+		$this->addField($f_to_recipient_id);
 		//********************
 		
-		//*** Field to_employee_id ***
+		//*** Field reminder_id ***
 		$f_opts = array();
-		$f_opts['id']="to_employee_id";
+		$f_opts['id']="reminder_id";
 				
-		$f_to_employee_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"to_employee_id",$f_opts);
-		$this->addField($f_to_employee_id);
-		//********************
-		
-		//*** Field doc_flow_importance_type_id ***
-		$f_opts = array();
-		$f_opts['id']="doc_flow_importance_type_id";
-				
-		$f_doc_flow_importance_type_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"doc_flow_importance_type_id",$f_opts);
-		$this->addField($f_doc_flow_importance_type_id);
-		//********************
-		
-		//*** Field content ***
-		$f_opts = array();
-		$f_opts['id']="content";
-				
-		$f_content=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"content",$f_opts);
-		$this->addField($f_content);
-		//********************
-		
-		//*** Field docs_ref ***
-		$f_opts = array();
-		$f_opts['id']="docs_ref";
-				
-		$f_docs_ref=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"docs_ref",$f_opts);
-		$this->addField($f_docs_ref);
+		$f_reminder_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"reminder_id",$f_opts);
+		$this->addField($f_reminder_id);
 		//********************
 	
 		$order = new ModelOrderSQL();		
 		$this->setDefaultModelOrder($order);		
-		$direct = 'DESC';
+		$direct = 'ASC';
 		$order->addField($f_date_time,$direct);
 $this->setLimitConstant('doc_per_page_count');
 	}

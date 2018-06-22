@@ -57,7 +57,25 @@ function ReminderUnviewedList_Model(options){
 	
 	filed_options.autoInc = false;	
 	
-	options.fields.docs_ref = new FieldJSONB("docs_ref",filed_options);
+	options.fields.docs_ref = new FieldJSON("docs_ref",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.doc_flow_importance_types_ref = new FieldJSON("doc_flow_importance_types_ref",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.files = new FieldJSON("files",filed_options);
 	
 		ReminderUnviewedList_Model.superclass.constructor.call(this,id,options);
 }

@@ -188,6 +188,15 @@ function Application_Model(options){
 	
 	filed_options.autoInc = false;	
 	
+	options.fields.constr_technical_features_in_compound_obj = new FieldJSONB("constr_technical_features_in_compound_obj",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
 	options.fields.total_cost_eval = new FieldFloat("total_cost_eval",filed_options);
 	options.fields.total_cost_eval.getValidator().setMaxLength('15');
 	

@@ -137,7 +137,22 @@ function ApplicationClientEdit(id,options){
 				}
 			}									
 		}));	
+
+		this.addElement(new ClientSNILS(id+":snils",{
+			"attrs":{"percentcalc":!options.minInf},
+			"labelClassName": !options.minInf? ("control-label percentcalc "+bs) : undefined,
+			"events":{
+				"blur":function(){					
+					self.m_mainView.calcFillPercent();
+				}
+			}									
+		}));	
 		
+		this.addElement(new EditEmail(id+":corp_email",{
+			//"attrs":{"percentcalc":!options.minInf},
+			"labelCaption":"Электронная почта:",
+			"labelClassName": "control-label "+bs
+		}));	
 
 		this.addElement(new ClientPostAddressEdit(id+":post_address",{
 			"enabled":options.enabled,
@@ -245,9 +260,17 @@ function ApplicationClientEdit(id,options){
 		if (options.cmdClose){
 			this.addElement(new Control(id+":cmdClose","A",{
 				"title":"Удалить исполнителя",
-				"events":{
+				"events":{				
 					"click":function(){
-						options.onCloseContractor.call(self);
+						WindowQuestion.show({
+							"text":"Удалить исполнителя?",
+							"cancel":false,
+							"callBack":function(res){			
+								if (res==WindowQuestion.RES_YES){
+									options.onClosePanel.call(self);
+								}
+							}
+						});
 					}
 				}
 			}));

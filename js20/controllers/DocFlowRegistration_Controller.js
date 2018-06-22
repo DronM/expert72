@@ -123,8 +123,7 @@ extend(DocFlowRegistration_Controller,ControllerObjServer);
 }
 
 			DocFlowRegistration_Controller.prototype.add_register = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('register',opts);
 	
 				

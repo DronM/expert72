@@ -33,8 +33,7 @@ function Constant_Controller(options){
 extend(Constant_Controller,ControllerObjServer);
 
 			Constant_Controller.prototype.add_set_value = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('set_value',opts);
 	
 				
@@ -114,8 +113,7 @@ extend(Constant_Controller,ControllerObjServer);
 }
 
 			Constant_Controller.prototype.add_get_values = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('get_values',opts);
 	
 				

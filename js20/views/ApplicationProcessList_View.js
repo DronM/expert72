@@ -139,8 +139,9 @@ function ApplicationProcessList_View(id,options){
 		new GridCellHead(id+":grid:head:date_time",{
 				"value":"Дата",
 				"columns":[
-					new GridColumnDate({
+					new GridColumnDateTime({
 						"field":model.getField("date_time"),
+						"dateFormat":"d/m/Y H:i",
 						"ctrlClass":EditDateTime,
 						"ctrlOptions":{
 							"cmdClear":false
@@ -170,16 +171,17 @@ function ApplicationProcessList_View(id,options){
 		new GridCellHead(id+":grid:head:end_date_time",{
 			"value":"Дата окончания",
 			"columns":[
-				new GridColumnDate({
+				new GridColumnDateTime({
 					"field":model.getField("end_date_time"),
-						"ctrlClass":EditDateTime,
-						"ctrlOptions":{
-							"cmdClear":false
-						},
-						"searchOptions":{
-							"field":new FieldDate("end_date_time"),
-							"searchType":"on_beg"
-						}											
+					"ctrlClass":EditDateTime,
+					"ctrlOptions":{
+						"cmdClear":false
+					},
+					"searchOptions":{
+						"field":new FieldDate("end_date_time"),
+						"searchType":"on_beg"
+					},
+					"dateFormat":"d/m/Y H:i"											
 				})
 			]
 		})					

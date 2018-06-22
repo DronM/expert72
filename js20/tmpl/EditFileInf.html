@@ -1,13 +1,20 @@
 <span id="{{id}}">
-	{{#separateSignature}}		
-		{{#file_signed}}
-		<i id="{{id}}_sig" class="icon-file-locked" title="Файл подписан ЭЦП"></i>	
-		{{/file_signed}}
 	
-		{{#file_not_signed}}
-		<i id="{{id}}_sig" class="icon-file-minus" title="Необходимо загрузить файл ЭЦП"></i>	
-		{{/file_not_signed}}		
-	{{/separateSignature}}
+	{{#file_signed}}
+	<i id="{{id}}_sig" class="icon-file-locked" title="Файл подписан ЭЦП"></i>	
+	{{/file_signed}}
+
+	{{#file_not_signed}}
+	{{#allowOnlySignedFiles}}	
+	<i id="{{id}}_sig" class="icon-file-minus" title="Необходимо загрузить файл ЭЦП"></i>	
+	{{/allowOnlySignedFiles}}
+	
+	{{#allowNotOnlySignedFiles}}	
+	<i id="{{id}}_sig" class="icon-file-empty" title="Файл с данными"></i>	
+	{{/allowNotOnlySignedFiles}}
+	
+	{{/file_not_signed}}		
+	
 
 	<a id="{{id}}-href" file_id="{{id}}" href="#" title="Скачать файл" file_uploaded="{{file_uploaded}}" class="uploadedFile">
 		{{name}}({{file_size_formatted}})

@@ -209,8 +209,7 @@ extend(ClientPayment_Controller,ControllerObjServer);
 }
 
 			ClientPayment_Controller.prototype.add_get_from_1c = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('get_from_1c',opts);
 	
 				

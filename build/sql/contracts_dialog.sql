@@ -46,6 +46,7 @@ CREATE OR REPLACE VIEW contracts_dialog AS
 		--kladr_parse_addr(t.constr_address) AS constr_address,
 		t.constr_address,
 		t.constr_technical_features,
+		t.constr_technical_features_in_compound_obj,
 		app.total_cost_eval,
 		app.limit_cost_eval,
 		app.build_types_ref,

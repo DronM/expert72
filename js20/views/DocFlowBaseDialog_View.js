@@ -17,6 +17,15 @@ function DocFlowBaseDialog_View(id,options){
 
 	options = options || {};
 	
+	options.cmdSave = (options.cmdSave!=undefined)? options.cmdSave:false;
+	
+	options.templateOptions = options.templateOptions || {};
+	
+	CommonHelper.merge(options.templateOptions,{
+		"colorClass":window.getApp().getColorClass(),
+		"bsCol":window.getBsCol()
+	});	
+		
 	DocFlowBaseDialog_View.superclass.constructor.call(this,id,options);
 }
 extend(DocFlowBaseDialog_View,ViewObjectAjx);
@@ -40,6 +49,7 @@ DocFlowBaseDialog_View.prototype.addProcessChain = function(options,fieldId){
 				chain[i].state_descr = chain[i].state_descr? (","+chain[i].state_descr) : "";
 			
 			}
+			options.templateOptions = options.templateOptions || {};
 			options.templateOptions.chain = chain;
 		}
 	}
@@ -74,3 +84,86 @@ DocFlowBaseDialog_View.prototype.onGetData = function(resp,cmd){
 	
 	this.addProcessChainEvents();
 }
+
+DocFlowBaseDialog_View.prototype.createFromTemplate = function(){
+	var win = (new ReportTemplateFileList_Form({
+		"id":this.getId()+":templSelForm",
+		"params":{
+			"filters":[]
+		}
+	
+	})).open();
+	var self = this;
+	win.onSelect = function(fields){
+		var templ_file_id = fields.id.getValue();
+		win.close();		
+		var pm = (new ReportTemplateFile_Controller()).getPublicMethod("get_object");
+		pm.setFieldValue("id",templ_file_id);
+		pm.run({
+			"ok":function(resp){
+				var m = resp.getModel("ReportTemplateFileDialog_Model");
+				if (m.getNextRow()){
+					var rows = m.getFieldValue("in_params").rows;
+					var template_id = m.getFieldValue("report_templates_ref").getKey();
+					var ctrl_classes = {};
+					for (var i=0;i<rows.length;i++){
+						ctrl_classes[rows[i].fields.editCtrlClass] = {"fields":rows[i].fields,"valSet":false};
+					}
+					var params = [];//for rendering
+					var list = self.getElements();
+					for (var id in list){
+						var form_ctrl = ctrl_classes[list[id].constructor.name];
+						if(form_ctrl && !list[id].isNull()){
+							form_ctrl.fields.editCtrlOptions = form_ctrl.fields.editCtrlOptions || {};
+							form_ctrl.fields.editCtrlOptions.value = list[id].getValue();
+							form_ctrl.valSet = true;
+							params.push({
+								"id":form_ctrl.fields.id,
+								"val":form_ctrl.fields.editCtrlOptions.value,
+								"cond":(form_ctrl.fields.cond===true)
+							});
+							
+						}
+					}
+					var all_set = true;
+					for (var id in form_ctrl){
+						if (!form_ctrl[id].valSet){
+							all_set = false;	
+							break;
+						}
+					}
+					if (!all_set){
+						(new ReportTemplateFileApplyCmd_Form(self.getId()+":applyForm",{
+							"inParams":rows,
+							"templateId":template_id
+						})).open();
+					}
+					else{
+						//render
+						var pm = (new ReportTemplateFile_Controller()).getPublicMethod("apply_template_file");
+						pm.setFieldValue("id",template_id);
+						pm.setFieldValue("params",CommonHelper.serialize(params));
+						pm.download("ViewXML");						
+					}					
+				}
+			}
+		})
+	}
+}
+
+DocFlowBaseDialog_View.prototype.checkForUploadFileCount = function(){
+	if (this.getElement("attachments").getForUploadFileCount()){
+		throw new Error("Есть незагруженные вложения");
+	}
+}
+
+DocFlowBaseDialog_View.prototype.checkDocFlowType = function(){
+	var tp = this.getElement("doc_flow_types_ref");
+	if (tp.isNull()){
+		tp.setNotValid("Значение не выбрано");
+		throw new Error("Есть ошибки!");
+	}
+	return tp.getValue().getKey();
+}
+
+

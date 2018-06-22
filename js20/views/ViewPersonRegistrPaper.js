@@ -8,6 +8,7 @@ function ViewPersonRegistrPaper(id,options){
 	
 	options.addElement = function(){
 		this.addElement(new EditString(id+":id",{
+			"attrs":{"autofocus":true},
 			"labelCaption":"Серия, №:",
 			"placeholder":"Серия и номер свителельства",
 			"maxLength":"200"

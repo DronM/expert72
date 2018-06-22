@@ -7,7 +7,12 @@ CREATE OR REPLACE VIEW doc_flow_approvements_dialog AS
 		t.id,
 		t.date_time,
 		t.subject,
-		doc_flow_out_ref(doc_flow_out) subject_docs_ref,
+		
+		CASE
+			WHEN doc_flow_out.id IS NOT NULL THEN doc_flow_out_ref(doc_flow_out)
+			WHEN doc_flow_inside.id IS NOT NULL THEN doc_flow_inside_ref(doc_flow_inside)
+			ELSE NULL
+		END AS subject_docs_ref,
 		
 		t.description,
 		
@@ -28,7 +33,12 @@ CREATE OR REPLACE VIEW doc_flow_approvements_dialog AS
 		st.date_time AS state_dt,
 		st.end_date_time AS state_end_dt,
 		
-		doc_flow_out_processes_chain(doc_flow_out.id) AS doc_flow_out_processes_chain,
+		CASE
+			WHEN doc_flow_out.id IS NOT NULL THEN doc_flow_out_processes_chain(doc_flow_out.id)
+			WHEN doc_flow_inside.id IS NOT NULL THEN doc_flow_inside_processes_chain(doc_flow_inside.id)  
+			ELSE NULL
+		END AS doc_flow_out_processes_chain,
+		
 		
 		t.step_count,
 		t.current_step
@@ -36,7 +46,7 @@ CREATE OR REPLACE VIEW doc_flow_approvements_dialog AS
 		
 	FROM doc_flow_approvements AS t
 	LEFT JOIN doc_flow_out ON doc_flow_out.id = (t.subject_doc->'keys'->>'id')::int AND t.subject_doc->>'dataType'='doc_flow_out'
-	--LEFT JOIN doc_flow_inside ON doc_flow_in.id = t.subject_doc_id AND t.subject_doc_type='doc_flow_inside'::data_types
+	LEFT JOIN doc_flow_inside ON doc_flow_inside.id = (t.subject_doc->'keys'->>'id')::int AND t.subject_doc->>'dataType'='doc_flow_inside'
 	LEFT JOIN doc_flow_importance_types ON doc_flow_importance_types.id=t.doc_flow_importance_type_id
 	LEFT JOIN employees ON employees.id=t.employee_id
 	

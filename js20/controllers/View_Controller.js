@@ -83,8 +83,7 @@ extend(View_Controller,ControllerObjServer);
 }
 
 			View_Controller.prototype.add_get_section_list = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('get_section_list',opts);
 	
 	this.addPublicMethod(pm);

@@ -357,6 +357,12 @@ extend(Contract_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	
+	var field = new FieldJSONB("constr_technical_features_in_compound_obj",options);
+	
+	pm.addField(field);
+	
 	pm.addField(new FieldInt("ret_id",{}));
 	
 	
@@ -679,6 +685,12 @@ extend(Contract_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	
+	var field = new FieldJSONB("constr_technical_features_in_compound_obj",options);
+	
+	pm.addField(field);
+	
 	
 }
 
@@ -867,6 +879,9 @@ extend(Contract_Controller,ControllerObjServer);
 	var f_opts = {};
 	
 	pm.addField(new FieldJSONB("constr_technical_features",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldJSONB("constr_technical_features_in_compound_obj",f_opts));
 	pm.getField(this.PARAM_ORD_FIELDS).setValue("date_time");
 	
 }
@@ -882,8 +897,7 @@ extend(Contract_Controller,ControllerObjServer);
 }
 
 			Contract_Controller.prototype.add_get_pd_list = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('get_pd_list',opts);
 	
 	pm.addField(new FieldInt(this.PARAM_COUNT));
@@ -900,8 +914,7 @@ extend(Contract_Controller,ControllerObjServer);
 }
 
 			Contract_Controller.prototype.add_get_eng_survey_list = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('get_eng_survey_list',opts);
 	
 	pm.addField(new FieldInt(this.PARAM_COUNT));
@@ -918,8 +931,7 @@ extend(Contract_Controller,ControllerObjServer);
 }
 
 			Contract_Controller.prototype.add_get_cost_eval_validity_list = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('get_cost_eval_validity_list',opts);
 	
 	pm.addField(new FieldInt(this.PARAM_COUNT));
@@ -936,8 +948,7 @@ extend(Contract_Controller,ControllerObjServer);
 }
 
 			Contract_Controller.prototype.add_get_modification_list = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('get_modification_list',opts);
 	
 	pm.addField(new FieldInt(this.PARAM_COUNT));
@@ -954,8 +965,7 @@ extend(Contract_Controller,ControllerObjServer);
 }
 
 			Contract_Controller.prototype.add_get_audit_list = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('get_audit_list',opts);
 	
 	pm.addField(new FieldInt(this.PARAM_COUNT));
@@ -972,8 +982,7 @@ extend(Contract_Controller,ControllerObjServer);
 }
 
 			Contract_Controller.prototype.add_print_order = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('print_order',opts);
 	
 				
@@ -999,8 +1008,7 @@ extend(Contract_Controller,ControllerObjServer);
 }
 
 			Contract_Controller.prototype.add_get_order_list = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('get_order_list',opts);
 	
 				
@@ -1016,8 +1024,7 @@ extend(Contract_Controller,ControllerObjServer);
 }
 
 			Contract_Controller.prototype.add_make_order = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('make_order',opts);
 	
 				
@@ -1043,8 +1050,7 @@ extend(Contract_Controller,ControllerObjServer);
 }
 
 			Contract_Controller.prototype.add_print_akt = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('print_akt',opts);
 	
 				
@@ -1060,8 +1066,7 @@ extend(Contract_Controller,ControllerObjServer);
 }
 
 			Contract_Controller.prototype.add_print_invoice = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('print_invoice',opts);
 	
 				
@@ -1077,8 +1082,7 @@ extend(Contract_Controller,ControllerObjServer);
 }
 
 			Contract_Controller.prototype.add_make_akt = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('make_akt',opts);
 	
 				
@@ -1094,8 +1098,7 @@ extend(Contract_Controller,ControllerObjServer);
 }
 
 			Contract_Controller.prototype.add_get_ext_data = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('get_ext_data',opts);
 	
 				
@@ -1111,8 +1114,7 @@ extend(Contract_Controller,ControllerObjServer);
 }
 
 			Contract_Controller.prototype.add_get_work_end_date = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('get_work_end_date',opts);
 	
 				

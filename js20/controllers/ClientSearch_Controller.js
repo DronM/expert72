@@ -28,8 +28,7 @@ function ClientSearch_Controller(options){
 extend(ClientSearch_Controller,ControllerObjServer);
 
 			ClientSearch_Controller.prototype.add_search = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('search',opts);
 	
 				

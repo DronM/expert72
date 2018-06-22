@@ -28,8 +28,7 @@ function Enum_Controller(options){
 extend(Enum_Controller,ControllerObjServer);
 
 			Enum_Controller.prototype.add_get_enum_list = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('get_enum_list',opts);
 	
 				

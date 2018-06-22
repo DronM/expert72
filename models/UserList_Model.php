@@ -9,6 +9,7 @@
 require_once(FRAME_WORK_PATH.'basic_classes/ModelSQL.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLInt.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLString.php');
+require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLEnum.php');
  
 class UserList_Model extends ModelSQL{
 	
@@ -63,6 +64,14 @@ class UserList_Model extends ModelSQL{
 				
 		$f_phone_cel=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"phone_cel",$f_opts);
 		$this->addField($f_phone_cel);
+		//********************
+		
+		//*** Field role_id ***
+		$f_opts = array();
+		$f_opts['id']="role_id";
+				
+		$f_role_id=new FieldSQLEnum($this->getDbLink(),$this->getDbName(),$this->getTableName(),"role_id",$f_opts);
+		$this->addField($f_role_id);
 		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}

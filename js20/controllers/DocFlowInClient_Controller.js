@@ -186,8 +186,7 @@ extend(DocFlowInClient_Controller,ControllerObjServer);
 }
 
 			DocFlowInClient_Controller.prototype.add_get_file = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('get_file',opts);
 	
 				
@@ -213,8 +212,7 @@ extend(DocFlowInClient_Controller,ControllerObjServer);
 }
 
 			DocFlowInClient_Controller.prototype.add_get_file_sig = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('get_file_sig',opts);
 	
 				
@@ -240,8 +238,7 @@ extend(DocFlowInClient_Controller,ControllerObjServer);
 }
 
 			DocFlowInClient_Controller.prototype.add_set_viewed = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('set_viewed',opts);
 	
 				

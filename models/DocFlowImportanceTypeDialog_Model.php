@@ -9,6 +9,7 @@
 require_once(FRAME_WORK_PATH.'basic_classes/ModelSQL.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLInt.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLString.php');
+require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLInterval.php');
  
 class DocFlowImportanceTypeDialog_Model extends ModelSQL{
 	
@@ -36,6 +37,14 @@ class DocFlowImportanceTypeDialog_Model extends ModelSQL{
 				
 		$f_name=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"name",$f_opts);
 		$this->addField($f_name);
+		//********************
+		
+		//*** Field approve_interval ***
+		$f_opts = array();
+		$f_opts['id']="approve_interval";
+				
+		$f_approve_interval=new FieldSQLInterval($this->getDbLink(),$this->getDbName(),$this->getTableName(),"approve_interval",$f_opts);
+		$this->addField($f_approve_interval);
 		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}

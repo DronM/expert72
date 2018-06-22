@@ -2,7 +2,7 @@
 <metadata owner="expert72">
 	<versions>
 		<version dateOpen="2017-09-27 12:09:48" dateClose="2017-12-08 10:12:08">1.001 
-		<lastBuild>2018-06-13 10:09:51</lastBuild></version>
+		<lastBuild>2018-06-22 11:45:28</lastBuild></version>
 		<version dateOpen="2017-12-08 11:12:01" dateClose="2017-12-08 11:12:04">1.002</version>
 		<version dateOpen="2017-12-08 11:12:20" dateClose="2017-12-08 11:12:20">1.0.3</version>
 		<version dateOpen="2017-12-12 11:12:07" dateClose="2017-12-12 11:12:07">1.0.4</version>
@@ -43,10 +43,11 @@
 		<version dateOpen="2018-05-29 05:05:46" dateClose="2018-05-31 11:05:43">1.0.39</version>
 		<version dateOpen="2018-05-31 12:05:41" dateClose="2018-05-31 12:05:42">1.0.40</version>
 		<version dateOpen="2018-06-13 11:06:03" dateClose="2018-06-13 11:06:04">1.0.41</version>
+		<version dateOpen="2018-06-22 11:06:17" dateClose="2018-06-22 11:06:45">1.0.42</version>
 	</versions>
 	<globalFilters>
 		<field id="user_id"/>
-		<field id="client_id"/>
+		<field id="employee_id"/>
 	</globalFilters>
 	<enums>
 		<enum id="locales" descr="&#x42F;&#x437;&#x44B;&#x43A;&#x438;">
@@ -217,6 +218,44 @@
 				<ru descr="&#x41D;&#x430; &#x440;&#x435;&#x433;&#x438;&#x441;&#x442;&#x440;&#x430;&#x446;&#x438;&#x438;"/>
 			</value>
 		</enum>
+		<enum id="doc_flow_inside_states" descr="&#x421;&#x442;&#x430;&#x442;&#x443;&#x441;&#x44B; &#x432;&#x43D;&#x443;&#x442;&#x440;&#x435;&#x43D;&#x43D;&#x435;&#x433;&#x43E; &#x434;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x430;">
+			<value id="approving">
+				<ru descr="&#x41D;&#x430; &#x441;&#x43E;&#x433;&#x43B;&#x430;&#x441;&#x43E;&#x432;&#x430;&#x43D;&#x438;&#x438;"/>
+			</value>
+			<value id="not_approved">
+				<ru descr="&#x41D;&#x435; &#x441;&#x43E;&#x433;&#x43B;&#x430;&#x441;&#x43E;&#x432;&#x430;&#x43D;"/>
+			</value>
+			<value id="approved_with_notes">
+				<ru descr="&#x421;&#x43E;&#x433;&#x43B;&#x430;&#x441;&#x43E;&#x432;&#x430;&#x43D; &#x441; &#x437;&#x430;&#x43C;&#x435;&#x447;&#x430;&#x43D;&#x438;&#x44F;&#x43C;&#x438;"/>
+			</value>
+			<value id="approved">
+				<ru descr="&#x421;&#x43E;&#x433;&#x43B;&#x430;&#x441;&#x43E;&#x432;&#x430;&#x43D;"/>
+			</value>
+			<value id="confirming">
+				<ru descr="&#x41D;&#x430; &#x443;&#x442;&#x432;&#x435;&#x440;&#x436;&#x434;&#x435;&#x43D;&#x438;&#x438;"/>
+			</value>
+			<value id="not_confirmed">
+				<ru descr="&#x41D;&#x435; &#x443;&#x442;&#x432;&#x435;&#x440;&#x436;&#x434;&#x435;&#x43D;"/>
+			</value>
+			<value id="examining">
+				<ru descr="&#x41D;&#x430; &#x440;&#x430;&#x441;&#x441;&#x43C;&#x43E;&#x442;&#x440;&#x435;&#x43D;&#x438;&#x438;"/>
+			</value>
+			<value id="examined">
+				<ru descr="&#x420;&#x430;&#x441;&#x441;&#x43C;&#x43E;&#x442;&#x440;&#x435;&#x43D;"/>
+			</value>
+			<value id="fulfilling">
+				<ru descr="&#x41D;&#x430; &#x438;&#x441;&#x43F;&#x43E;&#x43B;&#x43D;&#x435;&#x43D;&#x438;&#x438;"/>
+			</value>
+			<value id="fulfilled">
+				<ru descr="&#x418;&#x441;&#x43F;&#x43E;&#x43B;&#x43D;&#x435;&#x43D;"/>
+			</value>
+			<value id="acquainting">
+				<ru descr="&#x41D;&#x430; &#x43E;&#x437;&#x43D;&#x430;&#x43A;&#x43E;&#x43C;&#x43B;&#x435;&#x43D;&#x438;&#x438;"/>
+			</value>
+			<value id="acquainted">
+				<ru descr="&#x41E;&#x437;&#x43D;&#x430;&#x43A;&#x43E;&#x43C;&#x43B;&#x435;&#x43D;"/>
+			</value>
+		</enum>
 		<enum id="data_types" descr="&#x422;&#x438;&#x43F;&#x44B; &#x434;&#x430;&#x43D;&#x43D;&#x44B;&#x445;">
 			<value id="users">
 				<ru descr="&#x41F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x435;&#x43B;&#x438;"/>
@@ -280,6 +319,9 @@
 			</value>
 			<value id="contracts">
 				<ru descr="&#x41A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x44B;"/>
+			</value>
+			<value id="short_messages">
+				<ru descr="&#x421;&#x43E;&#x43E;&#x431;&#x449;&#x435;&#x43D;&#x438;&#x44F; &#x447;&#x430;&#x442;&#x430;"/>
 			</value>
 		</enum>
 		<enum id="document_types" descr="&#x412;&#x438;&#x434;&#x44B; &#x432;&#x43A;&#x43B;&#x430;&#x434;&#x43E;&#x43A; &#x441; &#x434;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x430;&#x446;&#x438;&#x435;&#x439;">
@@ -567,6 +609,9 @@
 			<index unique="TRUE" id="users_email_idx">
 				<expression>lower(email)</expression>
 			</index>
+			<index id="users_role_id_idx">
+				<field id="role_id"/>
+			</index>
 		</model>
 		<model id="UserList" parent="ModelSQL" dataTable="user_list" virtual="TRUE">
 			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE" required="TRUE" alias="&#x41A;&#x43E;&#x434;"/>
@@ -574,6 +619,7 @@
 			<field id="name_full" dataType="String" required="TRUE" length="250" alias="&#x424;&#x418;&#x41E;"/>
 			<field id="email" dataType="String" length="50" alias="Email"/>
 			<field id="phone_cel" dataType="String" length="50" alias="&#x422;&#x435;&#x43B;&#x435;&#x444;&#x43E;&#x43D;"/>
+			<field id="role_id" dataType="Enum" enumId="role_types"/>
 		</model>
 		<model id="UserDialog" parent="ModelSQL" dataTable="user_dialog" virtual="TRUE">
 			<field id="id" dataType="Int" primaryKey="TRUE" alias="&#x41A;&#x43E;&#x434;"/>
@@ -851,6 +897,7 @@
 			<field id="constr_name" dataType="Text"/>
 			<field id="constr_address" dataType="JSONB"/>
 			<field id="constr_technical_features" dataType="JSONB"/>
+			<field id="constr_technical_features_in_compound_obj" dataType="JSONB"/>
 			<field id="total_cost_eval" dataType="Float" length="15" precision="2"/>
 			<field id="limit_cost_eval" dataType="Float" length="15" precision="2"/>
 			<field id="filled_percent" dataType="Int"/>
@@ -904,6 +951,7 @@
 			<field id="constr_name" dataType="Text"/>
 			<field id="constr_address" dataType="JSON"/>
 			<field id="constr_technical_features" dataType="JSONB"/>
+			<field id="constr_technical_features_in_compound_obj" dataType="JSONB"/>
 			<field id="total_cost_eval" dataType="Float" length="15" precision="2"/>
 			<field id="limit_cost_eval" dataType="Float" length="15" precision="2"/>
 			<field id="application_state" dataType="String"/>
@@ -1165,32 +1213,32 @@
 				</predefinedItem>
 				<predefinedItem alias="contr">
 					<id>7</id>
-					<name>&#x417;&#x430;&#x43C;&#x435;&#x447;&#x430;&#x43D;&#x438;&#x44F; &#x43F;&#x43E; &#x43A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x443;</name>
+					<name>&#x417;&#x430;&#x43C;&#x435;&#x447;&#x430;&#x43D;&#x438;&#x44F; &#x44D;&#x43A;&#x441;&#x43F;&#x435;&#x440;&#x442;&#x438;&#x437;&#x44B;</name>
 					<num_prefix>&#x417;&#x43C;-</num_prefix>
 					<doc_flow_types_type_id>out</doc_flow_types_type_id>
 				</predefinedItem>
 				<predefinedItem alias="app_resp_return">
 					<id>8</id>
 					<num_prefix>&#x417;&#x432;-</num_prefix>
-					<name>&#x412;&#x43E;&#x437;&#x432;&#x440;&#x430;&#x442; &#x431;&#x435;&#x437; &#x440;&#x430;&#x441;&#x441;&#x43C;&#x43E;&#x442;&#x440;&#x435;&#x43D;&#x438;&#x44F;</name>
+					<name>&#x412;&#x43E;&#x437;&#x432;&#x440;&#x430;&#x442; &#x431;&#x435;&#x437; &#x440;&#x430;&#x441;&#x441;&#x43C;&#x43E;&#x442;&#x440;&#x435;&#x43D;&#x438;&#x44F; &#x43D;&#x430; &#x441;&#x442;&#x430;&#x434;&#x438;&#x438; &#x43F;&#x440;&#x438;&#x435;&#x43C;&#x430;</name>
 					<doc_flow_types_type_id>out</doc_flow_types_type_id>
 				</predefinedItem>
 				<predefinedItem alias="contr_close">
 					<id>9</id>
 					<num_prefix>&#x418;&#x441;&#x445;-</num_prefix>
-					<name>&#x417;&#x430;&#x43A;&#x43B;&#x44E;&#x447;&#x435;&#x43D;&#x438;&#x435; &#x43F;&#x43E; &#x43A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x443;</name>
+					<name>&#x417;&#x430;&#x43A;&#x43B;&#x44E;&#x447;&#x435;&#x43D;&#x438;&#x435; &#x44D;&#x43A;&#x441;&#x43F;&#x435;&#x440;&#x442;&#x438;&#x437;&#x44B;</name>
 					<doc_flow_types_type_id>out</doc_flow_types_type_id>
 				</predefinedItem>
 				<predefinedItem alias="app_resp_correct">
 					<id>12</id>
 					<num_prefix>&#x417;&#x432;-</num_prefix>
-					<name>&#x41E;&#x442;&#x43A;&#x430;&#x437; &#x441; &#x437;&#x430;&#x43C;&#x435;&#x447;&#x430;&#x43D;&#x438;&#x44F;&#x43C;&#x438;</name>
+					<name>&#x420;&#x430;&#x437;&#x440;&#x435;&#x448;&#x435;&#x43D;&#x438;&#x435; &#x43D;&#x430; &#x440;&#x435;&#x434;&#x430;&#x43A;&#x442;&#x438;&#x440;&#x43E;&#x432;&#x430;&#x43D;&#x438;&#x435;</name>
 					<doc_flow_types_type_id>out</doc_flow_types_type_id>
 				</predefinedItem>
 				<predefinedItem alias="contr_return">
 					<id>13</id>
 					<num_prefix>&#x418;&#x441;&#x445;-</num_prefix>
-					<name>&#x41E;&#x442;&#x437;&#x44B;&#x432; &#x43A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x430;</name>
+					<name>&#x41E;&#x442;&#x437;&#x44B;&#x432; (&#x432;&#x43E;&#x437;&#x432;&#x440;&#x430;&#x442;) &#x432; &#x445;&#x43E;&#x434;&#x435; &#x44D;&#x43A;&#x441;&#x43F;&#x435;&#x440;&#x442;&#x438;&#x437;&#x44B;</name>
 					<doc_flow_types_type_id>out</doc_flow_types_type_id>
 				</predefinedItem>
 				<predefinedItem alias="contr_paper_return">
@@ -1245,6 +1293,7 @@
 		<model id="DocFlowImportanceTypeDialog" parent="ModelSQL" dataTable="doc_flow_importance_types_dialog" virtual="FALSE">
 			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE" required="FALSE"/>
 			<field id="name" dataType="String" length="250"/>
+			<field id="approve_interval" dataType="Interval"/>
 		</model>
 		<model id="DocFlowAttachment" parent="ModelSQL" dataTable="doc_flow_attachments" virtual="FALSE">
 			<field id="file_id" dataType="String" length="36" required="TRUE" primaryKey="TRUE"/>
@@ -1253,6 +1302,7 @@
 					<checkValue>doc_flow_out</checkValue>
 					<checkValue>doc_flow_in</checkValue>
 					<checkValue>contracts</checkValue>
+					<checkValue>doc_flow_inside</checkValue>
 				</checkValues>
 			</field>
 			<field id="doc_id" dataType="Int" refField="id"/>
@@ -1472,6 +1522,72 @@
 			</index>
 			<constraint id="doc_flow_in_processes_register_doc_check" expression="check_ref_existance(register_doc,ARRAY['doc_flow_acqaintances'::data_types,'doc_flow_fulfilments'::data_types,'doc_flow_examinations'::data_types,'doc_flow_in'::data_types,'doc_flow_registrations'::data_types])"/>
 		</model>
+		<model id="DocFlowInside" parent="ModelSQL" dataTable="doc_flow_inside" virtual="FALSE">
+			<defaultOrder>
+				<field id="date_time" sortDirect="DESC"/>
+			</defaultOrder>
+			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE" required="FALSE"/>
+			<field id="date_time" dataType="DateTimeTZ" retAfterInsert="TRUE" defaultValue="CURRENT_TIMESTAMP"/>
+			<field id="doc_flow_importance_type_id" dataType="Int" refTable="doc_flow_importance_types" refField="id"/>
+			<field id="employee_id" dataType="Int" refTable="employees" refField="id"/>
+			<field id="contract_id" dataType="Int" refTable="contracts" refField="id"/>
+			<field id="comment_text" dataType="Text"/>
+			<field id="subject" dataType="Text"/>
+			<field id="content" dataType="Text"/>
+			<index id="doc_flow_inside_date_time_idx">
+				<field id="date_time"/>
+			</index>
+			<index id="doc_flow_inside_employee_idx">
+				<field id="employee_id"/>
+			</index>
+			<index id="doc_flow_inside_contract_idx">
+				<field id="contract_id"/>
+			</index>
+		</model>
+		<model id="DocFlowInsideDialog" parent="ModelSQL" dataTable="doc_flow_inside_dialog" virtual="TRUE" baseModelId="DocFlowInside">
+			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE" required="FALSE"/>
+			<field id="date_time" dataType="DateTimeTZ" retAfterInsert="TRUE"/>
+			<field id="doc_flow_importance_types_ref" dataType="JSON"/>
+			<field id="employees_ref" dataType="JSON"/>
+			<field id="contracts_ref" dataType="JSON"/>
+			<field id="comment_text" dataType="Text"/>
+			<field id="subject" dataType="Text"/>
+			<field id="content" dataType="Text"/>
+			<field id="files" dataType="JSON"/>
+			<field id="state" dataType="String"/>
+			<field id="state_dt" dataType="DateTimeTZ"/>
+			<field id="state_end_dt" dataType="DateTimeTZ"/>
+			<field id="state_register_doc" dataType="JSON"/>
+			<field id="doc_flow_inside_processes_chain" dataType="JSON"/>
+		</model>
+		<model id="DocFlowInsideList" parent="ModelSQL" dataTable="doc_flow_inside_list" virtual="TRUE" baseModelId="DocFlowInside">
+			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE" required="FALSE"/>
+			<field id="date_time" dataType="DateTimeTZ" retAfterInsert="TRUE"/>
+			<field id="doc_flow_importance_types_ref" dataType="JSON"/>
+			<field id="doc_flow_importance_type_id" dataType="Int"/>
+			<field id="employees_ref" dataType="JSON"/>
+			<field id="employee_id" dataType="Int"/>
+			<field id="contracts_ref" dataType="JSON"/>
+			<field id="contract_id" dataType="Int"/>
+			<field id="subject" dataType="Text"/>
+			<field id="state" dataType="String"/>
+			<field id="state_dt" dataType="DateTimeTZ"/>
+			<field id="state_end_dt" dataType="DateTimeTZ"/>
+			<field id="state_register_doc" dataType="JSON"/>
+		</model>
+		<model id="DocFlowInsideProcess" parent="ModelSQL" dataTable="doc_flow_inside_processes" virtual="FALSE">
+			<field id="doc_flow_inside_id" dataType="Int" refTable="doc_flow_inside" refField="id" required="TRUE" primaryKey="TRUE"/>
+			<field id="date_time" dataType="DateTimeTZ" defaultValue="CURRENT_TIMESTAMP" required="TRUE" primaryKey="TRUE"/>
+			<field id="state" dataType="Enum" enumId="doc_flow_inside_states" required="TRUE"/>
+			<field id="register_doc" dataType="JSONB"/>
+			<field id="description" dataType="Text"/>
+			<field id="doc_flow_importance_type_id" dataType="Int" refTable="doc_flow_importance_types" refField="id"/>
+			<field id="end_date_time" dataType="DateTimeTZ"/>
+			<index id="doc_flow_inside_processes_register_doc_idx">
+				<expression>(register_doc-&gt;&gt;'dataType'),((register_doc-&gt;'keys'-&gt;&gt;'id')::int)</expression>
+			</index>
+			<constraint id="doc_flow_inside_processes_register_doc_check" expression="check_ref_existance(register_doc,ARRAY['doc_flow_approvements'::data_types,'doc_flow_examinations'::data_types])"/>
+		</model>
 		<model id="DocFlowTask" parent="ModelSQL" dataTable="doc_flow_tasks" virtual="FALSE">
 			<field id="id" dataType="Int" required="TRUE" primaryKey="TRUE" autoInc="TRUE"/>
 			<field id="register_doc" dataType="JSONB"/>
@@ -1532,6 +1648,8 @@
 			<field id="content" dataType="Text"/>
 			<field id="register_docs_ref" dataType="JSONB"/>
 			<field id="docs_ref" dataType="JSONB"/>
+			<field id="files" dataType="JSONB"/>
+			<field id="doc_flow_importance_type_id" dataType="Int" refTable="doc_flow_importance_types" refField="id"/>
 			<index id="reminders_employee_idx">
 				<field id="recipient_employee_id"/>
 				<field id="viewed"/>
@@ -1545,7 +1663,9 @@
 			<field id="id" dataType="Int" required="TRUE" primaryKey="TRUE"/>
 			<field id="date_time" dataType="DateTimeTZ"/>
 			<field id="content" dataType="Text"/>
-			<field id="docs_ref" dataType="JSONB"/>
+			<field id="docs_ref" dataType="JSON"/>
+			<field id="doc_flow_importance_types_ref" dataType="JSON"/>
+			<field id="files" dataType="JSON"/>
 		</model>
 		<model id="DocFlowAcqaintance" parent="ModelSQL" dataTable="&#x438;" virtual="FALSE">
 			<defaultOrder>
@@ -1926,22 +2046,66 @@
 			<field id="doc_flow_in_client_id" dataType="Int" required="TRUE" primaryKey="TRUE"/>
 			<field id="reg_number" dataType="String" length="30" required="TRUE"/>
 		</model>
+		<model id="ShortMessageRecipientState" parent="ModelSQL" dataTable="short_message_recipient_states" virtual="FALSE">
+			<defaultOrder>
+				<field id="name"/>
+			</defaultOrder>
+			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE" required="FALSE"/>
+			<field id="name" dataType="String" length="150"/>
+			<field id="bg_class" dataType="Text"/>
+			<predefinedItems>
+				<predefinedItem alias="free">
+					<id>1</id>
+					<name>&#x421;&#x432;&#x43E;&#x431;&#x43E;&#x434;&#x435;&#x43D;</name>
+					<bg_class>bg-success</bg_class>
+				</predefinedItem>
+			</predefinedItems>
+		</model>
+		<model id="ShortMessageRecipientCurrentState" parent="ModelSQL" dataTable="short_message_recipient_current_states" virtual="FALSE">
+			<field id="recipient_id" dataType="Int" refTable="employees" refField="id" required="TRUE" primaryKey="TRUE"/>
+			<field id="recipient_state_id" dataType="Int" refTable="short_message_recipient_states" refField="id" required="TRUE"/>
+		</model>
 		<model id="ShortMessage" parent="ModelSQL" dataTable="short_messages" virtual="FALSE">
 			<defaultOrder>
-				<field id="date_time" sortDirect="DESC"/>
+				<field id="date_time" sortDirect="ASC"/>
 			</defaultOrder>
 			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE" required="FALSE"/>
 			<field id="date_time" dataType="DateTimeTZ" defaultValue="CURRENT_TIMESTAMP"/>
-			<field id="parent_chat_message_id" dataType="Int" refTable="chat_messages" refField="id"/>
-			<field id="employee_id" dataType="Int" refTable="employees" refField="id"/>
-			<field id="to_employee_id" dataType="Int" refTable="employees" refField="id" required="TRUE"/>
-			<field id="doc_flow_importance_type_id" dataType="Int" refTable="doc_flow_importance_types" refField="id" required="TRUE"/>
-			<field id="content" dataType="Text"/>
-			<field id="docs_ref" dataType="JSONB"/>
-			<index id="short_messages_date_time_idx">
-				<field id="to_employee_id"/>
+			<field id="recipient_id" dataType="Int" refTable="employees" refField="id"/>
+			<field id="to_recipient_id" dataType="Int" refTable="employees" refField="id"/>
+			<field id="reminder_id" dataType="Int" refTable="reminders" refField="id" required="TRUE"/>
+			<index id="short_messages_to_recipient_idx">
+				<field id="to_recipient_id"/>
 				<field id="date_time"/>
 			</index>
+			<index id="short_messages_recipient_idx">
+				<field id="recipient_id"/>
+				<field id="date_time"/>
+			</index>
+		</model>
+		<model id="ShortMessageList" parent="ModelSQL" dataTable="short_messages_list" virtual="FALSE">
+			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE" required="FALSE"/>
+			<field id="date_time" dataType="DateTimeTZ" defaultValue="CURRENT_TIMESTAMP"/>
+			<field id="recipients_ref" dataType="JSON"/>
+			<field id="to_recipients_ref" dataType="JSON"/>
+			<field id="doc_flow_importance_types_ref" dataType="JSON"/>
+			<field id="content" dataType="Text"/>
+			<field id="files" dataType="JSON"/>
+			<field id="recipient_id" dataType="Int"/>
+			<field id="to_recipient_id" dataType="Int"/>
+			<field id="view_date_time" dataType="DateTimeTZ"/>
+			<field id="viewed" dataType="Bool"/>
+			<field id="doc_flow_importance_types_ref" dataType="JSON"/>
+		</model>
+		<model id="ShortMessageRecipientList" parent="ModelSQL" dataTable="short_message_recipient_list" virtual="TRUE">
+			<field id="recipient_id" dataType="Int"/>
+			<field id="recipient_descr" dataType="String"/>
+			<field id="recipients_ref" dataType="JSON"/>
+			<field id="departments_ref" dataType="JSON"/>
+			<field id="department_descr" dataType="String"/>
+			<field id="is_online" dataType="Bool"/>
+			<field id="recipient_states_ref" dataType="JSON"/>
+			<field id="recipient_init" dataType="String"/>
 		</model>
 		<model id="ReportTemplate" parent="ModelSQL" dataTable="report_templates" virtual="FALSE">
 			<field id="id" dataType="Int" primaryKey="TRUE" required="FALSE" autoInc="TRUE"/>
@@ -2086,6 +2250,7 @@
 			<field id="constr_name" dataType="Text"/>
 			<field id="constr_address" dataType="JSONB"/>
 			<field id="constr_technical_features" dataType="JSONB"/>
+			<field id="constr_technical_features_in_compound_obj" dataType="JSONB"/>
 			<index id="contracts_reg_number_idx" unique="TRUE">
 				<field id="reg_number"/>
 			</index>
@@ -2175,6 +2340,7 @@
 			<field id="constr_name" dataType="Text"/>
 			<field id="constr_address" dataType="Text"/>
 			<field id="constr_technical_features" dataType="JSONB"/>
+			<field id="constr_technical_features_in_compound_obj" dataType="JSONB"/>
 			<field id="construction_types_ref" dataType="JSON"/>
 			<field id="work_start_date" dataType="Date"/>
 			<field id="akt_number" dataType="Text"/>
@@ -2788,6 +2954,7 @@
 			<publicMethod id="delete" modelId="DocFlowIn"/>
 			<publicMethod id="get_list" modelId="DocFlowInList"/>
 			<publicMethod id="get_object" modelId="DocFlowInDialog"/>
+			<publicMethod id="complete" patternFieldId="reg_number" modelId="DocFlowInList"/>
 			<publicMethod id="remove_file">
 				<field id="file_id" dataType="String" length="36" required="TRUE"/>
 				<field id="doc_id" dataType="Int" required="TRUE"/>
@@ -2802,6 +2969,26 @@
 			</publicMethod>
 			<publicMethod id="get_next_num">
 				<field id="doc_flow_type_id" dataType="Int" required="TRUE"/>
+			</publicMethod>
+		</controller>
+		<controller id="DocFlowInside" parentId="DocFlow_Controller" parentType="user" state="TRUE">
+			<publicMethod id="insert" modelId="DocFlowInside"/>
+			<publicMethod id="update" modelId="DocFlowInside"/>
+			<publicMethod id="delete" modelId="DocFlowInside"/>
+			<publicMethod id="get_object" modelId="DocFlowInsideDialog"/>
+			<publicMethod id="get_list" modelId="DocFlowInsideList"/>
+			<publicMethod id="complete" patternFieldId="id" modelId="DocFlowInsideList"/>
+			<publicMethod id="remove_file">
+				<field id="file_id" dataType="String" length="36" required="TRUE"/>
+				<field id="doc_id" dataType="Int" required="TRUE"/>
+			</publicMethod>
+			<publicMethod id="get_file">
+				<field id="file_id" dataType="String" length="36" required="TRUE"/>
+				<field id="doc_id" dataType="Int" required="TRUE"/>
+			</publicMethod>
+			<publicMethod id="get_file_sig">
+				<field id="file_id" dataType="String" length="36" required="TRUE"/>
+				<field id="doc_id" dataType="Int" required="TRUE"/>
 			</publicMethod>
 		</controller>
 		<controller id="DocFlowImportanceType" parentId="ControllerSQL">
@@ -3208,6 +3395,31 @@
 			<publicMethod id="get_object" modelId="ApplicationDocFolder"/>
 			<publicMethod id="get_list" modelId="ApplicationDocFolder"/>
 		</controller>
+		<controller id="ShortMessageRecipientState" parentId="ControllerSQL">
+			<publicMethod id="insert" modelId="ShortMessageRecipientState"/>
+			<publicMethod id="update" modelId="ShortMessageRecipientState"/>
+			<publicMethod id="delete" modelId="ShortMessageRecipientState"/>
+			<publicMethod id="get_object" modelId="ShortMessageRecipientState"/>
+			<publicMethod id="get_list" modelId="ShortMessageRecipientState"/>
+		</controller>
+		<controller id="ShortMessage" parentId="ControllerSQL">
+			<publicMethod id="send_message" modelId="ShortMessage" encType="multipart" requestType="post">
+				<field id="content" dataType="Text" required="true"/>
+				<field id="files" dataType="Text"/>
+				<field id="recipient_ids" dataType="Text" required="true"/>
+				<field id="doc_flow_importance_type_id" dataType="Int" required="true"/>
+			</publicMethod>
+			<publicMethod id="get_object" modelId="ShortMessageList"/>
+			<publicMethod id="get_list" modelId="ShortMessageList">
+				<field id="to_recipient_id" dataType="Int" required="true"/>
+			</publicMethod>
+			<publicMethod id="get_recipient_list" modelId="ShortMessageRecipientList" condFields="TRUE"/>
+			<publicMethod id="get_unviewed_list" modelId="ShortMessageRecipientList" condFields="TRUE"/>
+			<publicMethod id="set_recipient_state">
+				<field id="recipient_state_id" dataType="Int"/>
+			</publicMethod>
+			<publicMethod id="get_recipient_state"/>
+		</controller>
 	</controllers>
 	<permissions>
 		<permission type="allow" controllerId="all" methodId="all" roleId="admin"/>
@@ -3271,7 +3483,8 @@
 		<view id="10024" c="ExpertiseRejectType_Controller" t="ExpertiseRejectTypeList" f="get_list" section="&#x421;&#x43F;&#x440;&#x430;&#x432;&#x43E;&#x447;&#x43D;&#x438;&#x43A;&#x438;" descr="&#x412;&#x438;&#x434;&#x44B; &#x43E;&#x442;&#x440;&#x438;&#x446;&#x430;&#x442;&#x435;&#x43B;&#x44C;&#x43D;&#x44B;&#x445; &#x437;&#x430;&#x43A;&#x43B;&#x44E;&#x447;&#x435;&#x43D;&#x438;&#x439;"/>
 		<view id="10025" c="DocFlowApprovementTemplate_Controller" t="DocFlowApprovementTemplateList" f="get_list" section="&#x421;&#x43F;&#x440;&#x430;&#x432;&#x43E;&#x447;&#x43D;&#x438;&#x43A;&#x438;" descr="&#x428;&#x430;&#x431;&#x43B;&#x43E;&#x43D;&#x44B; &#x441;&#x43E;&#x433;&#x43B;&#x430;&#x441;&#x43E;&#x432;&#x430;&#x43D;&#x438;&#x439;"/>
 		<view id="10026" c="Service_Controller" t="ServiceList" f="get_list" section="&#x421;&#x43F;&#x440;&#x430;&#x432;&#x43E;&#x447;&#x43D;&#x438;&#x43A;&#x438;" descr="&#x423;&#x441;&#x43B;&#x443;&#x433;&#x438;"/>
-		<view id="10027" c="ApplicationDocFolder_Controller" t="ApplicationDocFolderList" f="get_list" section="&#x421;&#x43F;&#x440;&#x430;&#x432;&#x43E;&#x43A;&#x43D;&#x438;&#x43A;&#x438;" descr="&#x41F;&#x440;&#x43E;&#x447;&#x438;&#x435; &#x43F;&#x430;&#x43F;&#x43A;&#x438; &#x43F;&#x440;&#x43E;&#x435;&#x43A;&#x442;&#x430;"/>
+		<view id="10027" c="ApplicationDocFolder_Controller" t="ApplicationDocFolderList" f="get_list" section="&#x421;&#x43F;&#x440;&#x430;&#x432;&#x43E;&#x447;&#x43D;&#x438;&#x43A;&#x438;" descr="&#x41F;&#x440;&#x43E;&#x447;&#x438;&#x435; &#x43F;&#x430;&#x43F;&#x43A;&#x438; &#x43F;&#x440;&#x43E;&#x435;&#x43A;&#x442;&#x430;"/>
+		<view id="10028" c="ShortMessageRecipientState_Controller" t="ShortMessageRecipientStateList" f="get_list" section="&#x421;&#x43F;&#x440;&#x430;&#x432;&#x43E;&#x447;&#x43D;&#x438;&#x43A;&#x438;" descr="&#x427;&#x430;&#x442;: &#x441;&#x442;&#x430;&#x442;&#x443;&#x441;&#x44B; &#x441;&#x43E;&#x442;&#x440;&#x443;&#x434;&#x43D;&#x438;&#x43A;&#x43E;&#x432;"/>
 		<view id="20000" c="Application_Controller" t="ApplicationList" f="get_list" section="&#x414;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;" descr="&#x417;&#x430;&#x44F;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x44F;"/>
 		<view id="20001" c="DocFlowExamination_Controller" t="DocFlowExaminationList" f="get_list" section="&#x414;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;" descr="&#x420;&#x430;&#x441;&#x441;&#x43C;&#x43E;&#x442;&#x440;&#x435;&#x43D;&#x438;&#x44F;"/>
 		<view id="20002" c="DocFlowInClient_Controller" t="DocFlowInClientList" f="get_list" section="&#x414;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;" descr="&#x412;&#x445;&#x43E;&#x434;&#x44F;&#x449;&#x438;&#x435; &#x43A;&#x43B;&#x438;&#x435;&#x43D;&#x442;&#x430;"/>
@@ -3286,6 +3499,7 @@
 		<view id="20011" c="Contract_Controller" t="ContractCostEvalValidityList" f="get_cost_eval_validity_list" section="&#x414;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;" descr="&#x41A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x44B; &#x414;&#x43E;&#x441;&#x442;&#x43E;&#x432;&#x435;&#x440;&#x43D;&#x43E;&#x441;&#x442;&#x44C;"/>
 		<view id="20012" c="Contract_Controller" t="ContractModificationList" f="get_modification_list" section="&#x414;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;" descr="&#x41A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x44B; &#x41C;&#x43E;&#x434;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x446;&#x438;&#x44F;"/>
 		<view id="20013" c="Contract_Controller" t="ContractAuditList" f="get_audit_list" section="&#x414;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;" descr="&#x41A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x44B; &#x410;&#x443;&#x434;&#x438;&#x442;"/>
+		<view id="20014" c="DocFlowInside_Controller" t="DocFlowInsideList" f="get_list" section="&#x414;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;" descr="&#x412;&#x43D;&#x443;&#x442;&#x440;&#x435;&#x43D;&#x43D;&#x438;&#x435; &#x434;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;"/>
 		<view id="50000" c="User_Controller" t="UserProfile" f="get_profile" section="&#x424;&#x43E;&#x440;&#x43C;&#x44B;" descr="&#x41F;&#x440;&#x43E;&#x444;&#x438;&#x43B;&#x44C; &#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x435;&#x43B;&#x44F;"/>
 		<view id="50001" c="Client_Controller" t="ClientSearch" section="&#x424;&#x43E;&#x440;&#x43C;&#x44B;" descr="&#x41F;&#x43E;&#x438;&#x441;&#x43A; &#x43A;&#x43B;&#x438;&#x435;&#x43D;&#x442;&#x43E;&#x432;"/>
 		<view id="50003" c="DocFlowTask_Controller" t="DocFlowTaskList" f="get_list" section="&#x424;&#x43E;&#x440;&#x43C;&#x44B;" descr="&#x417;&#x430;&#x434;&#x430;&#x447;&#x438; (&#x432;&#x441;&#x435;)"/>
@@ -3316,6 +3530,7 @@
 		<serverTemplate id="ApplicationInMailList"/>
 		<serverTemplate id="DocFlowOutList"/>
 		<serverTemplate id="DocFlowInList"/>
+		<serverTemplate id="DocFlowInsideList"/>
 		<serverTemplate id="DepartmentList"/>
 		<serverTemplate id="EmployeeList"/>
 		<serverTemplate id="DocFlowTypeList"/>
@@ -3347,9 +3562,11 @@
 		<serverTemplate id="ApplicationProcessList"/>
 		<serverTemplate id="ServiceList"/>
 		<serverTemplate id="ApplicationDocFolderList"/>
+		<serverTemplate id="ShortMessageRecipientStateList"/>
 	</serverTemplates>
 	<jsTemplates>
 		<jsTemplate id="FatalException" file="tmpl/FatalException.html"/>
+		<jsTemplate id="DbException" file="tmpl/DbException.html"/>
 		<jsTemplate id="GridCmdContainerAjx" file="tmpl/GridCmdContainerAjx.html"/>
 		<jsTemplate id="ViewGridColManager" file="tmpl/ViewGridColManager.html"/>
 		<jsTemplate id="PopOver" file="controls/tmpl/PopOver.html"/>
@@ -3373,6 +3590,8 @@
 		<jsTemplate id="ApplicationFile" file="tmpl/ApplicationFile.html"/>
 		<jsTemplate id="MailAttachment" file="tmpl/MailAttachment.html"/>
 		<jsTemplate id="ApplicationClientContainer" file="tmpl/ApplicationClientContainer.html"/>
+		<jsTemplate id="CompoundObjTechFeatureCont" file="tmpl/CompoundObjTechFeatureCont.html"/>
+		<jsTemplate id="CompoundObjTechFeature" file="tmpl/CompoundObjTechFeature.html"/>
 		<jsTemplate id="ApplicationPrimaryContTmpl" file="tmpl/ApplicationPrimaryCont.html"/>
 		<jsTemplate id="ApplicationServiceCont" file="tmpl/ApplicationServiceCont.html"/>
 		<jsTemplate id="IcomoonList" file="tmpl/IcomoonList.html"/>
@@ -3384,6 +3603,7 @@
 		<jsTemplate id="DocFlowApprovementRecipientEdit" file="tmpl/DocFlowApprovementRecipientEdit.html"/>
 		<jsTemplate id="WorkHoursEdit" file="tmpl/WorkHoursEdit.html"/>
 		<jsTemplate id="Doc1c" file="tmpl/Doc1c.html"/>
+		<jsTemplate id="ShortMessage" file="tmpl/ShortMessage.html"/>
 	</jsTemplates>
 	<packages>
 		<package id="Bank" version="1.0.0" author="Andrey Mikhalevich"/>
@@ -3436,6 +3656,7 @@
 		<jsScript file="core/DateHelper.js" jsDoc="FALSE"/>
 		<jsScript file="core/EventHelper.js"/>
 		<jsScript file="core/FatalException.js"/>
+		<jsScript file="core/DbException.js"/>
 		<jsScript file="core/ConstantManager.js"/>
 		<jsScript file="core/ServConnector.js"/>
 		<jsScript file="core/Response.js"/>
@@ -3746,6 +3967,8 @@
 		<jsScript file="forms/DocFlowOutDialog_Form.js"/>
 		<jsScript file="forms/DocFlowOutList_Form.js"/>
 		<jsScript file="forms/DocFlowInList_Form.js"/>
+		<jsScript file="forms/DocFlowInsideList_Form.js"/>
+		<jsScript file="forms/DocFlowInsideDialog_Form.js"/>
 		<jsScript file="forms/DepartmentDialog_Form.js"/>
 		<jsScript file="forms/EmployeeDialog_Form.js"/>
 		<jsScript file="forms/EmployeeList_Form.js"/>
@@ -3769,6 +3992,7 @@
 		<jsScript file="forms/ReportTemplateFileList_Form.js"/>
 		<jsScript file="forms/DocFlowApprovementTemplate_Form.js"/>
 		<jsScript file="forms/DocFlowApprovementTemplateList_Form.js"/>
+		<jsScript file="forms/ShortMessage_Form.js"/>
 		<!-- **** Views *** -->
 		<jsScript file="forms/UserDialog_Form.js"/>
 		<jsScript file="views/Login_View.js"/>
@@ -3802,6 +4026,7 @@
 		<jsScript file="views/OfficeList_View.js"/>
 		<jsScript file="views/FileUploaderApplication_View.js"/>
 		<jsScript file="views/FileUploaderDocFlowOut_View.js"/>
+		<jsScript file="views/FileUploaderDocFlowInside_View.js"/>
 		<jsScript file="views/FileUploaderDocFlowIn_View.js"/>
 		<jsScript file="views/FileUploaderDocFlowOutClient_View.js"/>
 		<jsScript file="views/FileUploaderDocFlowInClient_View.js"/>
@@ -3810,6 +4035,7 @@
 		<jsScript file="views/DocFlowBaseDialog_View.js"/>
 		<jsScript file="views/ApplicationList_View.js"/>
 		<jsScript file="views/rs/ApplicationList_View.rs_ru.js"/>
+		<jsScript file="views/ConstrTechnicalFeature_View.js"/>
 		<jsScript file="views/ApplicationDialog_View.js"/>
 		<jsScript file="views/rs/ApplicationDialog_View.rs_ru.js"/>
 		<jsScript file="views/ViewBankAcc.js"/>
@@ -3827,6 +4053,8 @@
 		<jsScript file="views/DocFlowOutDialog_View.js"/>
 		<jsScript file="views/DocFlowInList_View.js"/>
 		<jsScript file="views/DocFlowInDialog_View.js"/>
+		<jsScript file="views/DocFlowInsideList_View.js"/>
+		<jsScript file="views/DocFlowInsideDialog_View.js"/>
 		<jsScript file="views/DepartmentList_View.js"/>
 		<jsScript file="views/rs/DepartmentList_View.rs_ru.js"/>
 		<jsScript file="views/DepartmentDialog_View.js"/>
@@ -3882,6 +4110,8 @@
 		<jsScript file="views/ServiceList_View.js"/>
 		<jsScript file="views/ApplicationDocFolderList_View.js"/>
 		<jsScript file="views/DocFolder_View.js"/>
+		<jsScript file="views/ShortMessage_View.js"/>
+		<jsScript file="views/ShortMessageList_View.js"/>
 		<jsScript file="tmpl/App.templates.js" compressed="FALSE" standalone="FALSE"/>
 		<jsScript file="custom_controls/App.enums.js"/>
 		<jsScript file="custom_controls/App.predefinedItems.js"/>
@@ -3903,7 +4133,9 @@
 		<jsScript file="custom_controls/ClientEditRef.js"/>
 		<jsScript file="custom_controls/EditRespPerson.js"/>
 		<jsScript file="custom_controls/ApplicationClientEdit.js"/>
+		<jsScript file="custom_controls/BaseContainer.js"/>
 		<jsScript file="custom_controls/ApplicationClientContainer.js"/>
+		<jsScript file="custom_controls/CompoundObjTechFeatureCont.js"/>
 		<jsScript file="custom_controls/EditBankAcc.js"/>
 		<jsScript file="custom_controls/EditOGRN.js"/>
 		<jsScript file="custom_controls/EditINN.js"/>
@@ -3935,10 +4167,12 @@
 		<jsScript file="custom_controls/ReportTemplateFileApplyCmd.js"/>
 		<jsScript file="custom_controls/DocFlowOutEditRef.js"/>
 		<jsScript file="custom_controls/DocFlowInEditRef.js"/>
+		<jsScript file="custom_controls/DocFlowInsideEditRef.js"/>
 		<jsScript file="custom_controls/DocFlowRecipientRef.js"/>
 		<jsScript file="custom_controls/EditContactList.js"/>
 		<jsScript file="custom_controls/EditContact.js"/>
 		<jsScript file="custom_controls/Reminder.js"/>
+		<jsScript file="custom_controls/ShortMessage.js"/>
 		<jsScript file="custom_controls/EditColorPalette.js"/>
 		<jsScript file="custom_controls/BtnNextNum.js"/>
 		<jsScript file="custom_controls/BtnNextContractNum.js"/>
@@ -3964,6 +4198,7 @@
 		<jsScript file="custom_controls/LinkedContractListGrid.js"/>
 		<jsScript file="custom_controls/ContractorListGrid.js"/>
 		<jsScript file="custom_controls/ClientResponsablePersonEdit.js"/>
+		<jsScript file="custom_controls/ShortMessageRecipientGrid.js"/>
 		<jsScript file="enum_controls/Enum_role_types.js"/>
 		<jsScript file="views/rs_ru.js"/>
 		<jsScript file="views/rs_common_ru.js"/>
@@ -4223,6 +4458,20 @@
 		<jsScript file="enum_controls/EnumGridColumn_doc_flow_out_client_types.js"/>
 		<jsScript file="models/ApplicationDocFolder_Model.js"/>
 		<jsScript file="controllers/ApplicationDocFolder_Controller.js"/>
+		<jsScript file="controllers/ShortMessageRecipientState_Controller.js"/>
+		<jsScript file="controllers/ShortMessage_Controller.js"/>
+		<jsScript file="models/ShortMessageRecipientState_Model.js"/>
+		<jsScript file="models/ShortMessageRecipientList_Model.js"/>
+		<jsScript file="models/ShortMessageRecipientCurrentState_Model.js"/>
+		<jsScript file="models/ShortMessageList_Model.js"/>
+		<jsScript file="models/ShortMessageView_Model.js"/>
+		<jsScript file="models/DocFlowInside_Model.js"/>
+		<jsScript file="controllers/DocFlowInside_Controller.js"/>
+		<jsScript file="models/DocFlowInsideDialog_Model.js"/>
+		<jsScript file="models/DocFlowInsideList_Model.js"/>
+		<jsScript file="enum_controls/Enum_doc_flow_inside_states.js"/>
+		<jsScript file="enum_controls/EnumGridColumn_doc_flow_inside_states.js"/>
+		<jsScript file="models/DocFlowInsideProcess_Model.js"/>
 	</jsScripts>
 	<cssScripts>
 		<cssScript file="assets/css/icons/icomoon/styles.css" compressed="TRUE" standalone="TRUE"/>

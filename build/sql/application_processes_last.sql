@@ -9,7 +9,7 @@ $$
 		state
 	FROM application_processes
 	WHERE application_id=in_application_id
-	ORDER BY date_time
+	ORDER BY date_time DESC
 	LIMIT 1;
 $$
   LANGUAGE sql VOLATILE

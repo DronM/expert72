@@ -41,6 +41,15 @@ function DocFlowImportanceTypeDialog_Model(options){
 	options.fields.name = new FieldString("name",filed_options);
 	options.fields.name.getValidator().setMaxLength('250');
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.approve_interval = new FieldInterval("approve_interval",filed_options);
+	
 		DocFlowImportanceTypeDialog_Model.superclass.constructor.call(this,id,options);
 }
 extend(DocFlowImportanceTypeDialog_Model,ModelXML);

@@ -36,6 +36,7 @@ function Enum_data_types(id,options){
 ,"ru_expertise_reject_types":"Виды отрицательных заключений"
 ,"ru_services":"Услуги"
 ,"ru_contracts":"Контракты"
+,"ru_short_messages":"Сообщения чата"
 };
 	options.options = [{"value":"users",
 "descr":multy_lang_values[window.getApp().getLocale()+"_"+"users"],
@@ -100,6 +101,9 @@ checked:(options.defaultValue&&options.defaultValue=="services")}
 ,{"value":"contracts",
 "descr":multy_lang_values[window.getApp().getLocale()+"_"+"contracts"],
 checked:(options.defaultValue&&options.defaultValue=="contracts")}
+,{"value":"short_messages",
+"descr":multy_lang_values[window.getApp().getLocale()+"_"+"short_messages"],
+checked:(options.defaultValue&&options.defaultValue=="short_messages")}
 ];
 	
 	Enum_data_types.superclass.constructor.call(this,id,options);

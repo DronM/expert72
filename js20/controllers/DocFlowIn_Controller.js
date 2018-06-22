@@ -29,6 +29,7 @@ function DocFlowIn_Controller(options){
 	this.addDelete();
 	this.addGetList();
 	this.addGetObject();
+	this.addComplete();
 	this.add_remove_file();
 	this.add_get_file();
 	this.add_get_file_sig();
@@ -378,9 +379,18 @@ extend(DocFlowIn_Controller,ControllerObjServer);
 	pm.addField(new FieldString("mode"));
 }
 
-			DocFlowIn_Controller.prototype.add_remove_file = function(){
-	var opts = {"controller":this};
+			DocFlowIn_Controller.prototype.addComplete = function(){
+	DocFlowIn_Controller.superclass.addComplete.call(this);
 	
+	var f_opts = {};
+	
+	var pm = this.getComplete();
+	pm.addField(new FieldString("reg_number",f_opts));
+	pm.getField(this.PARAM_ORD_FIELDS).setValue("reg_number");	
+}
+
+			DocFlowIn_Controller.prototype.add_remove_file = function(){
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('remove_file',opts);
 	
 				
@@ -406,8 +416,7 @@ extend(DocFlowIn_Controller,ControllerObjServer);
 }
 
 			DocFlowIn_Controller.prototype.add_get_file = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('get_file',opts);
 	
 				
@@ -433,8 +442,7 @@ extend(DocFlowIn_Controller,ControllerObjServer);
 }
 
 			DocFlowIn_Controller.prototype.add_get_file_sig = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('get_file_sig',opts);
 	
 				
@@ -460,8 +468,7 @@ extend(DocFlowIn_Controller,ControllerObjServer);
 }
 
 			DocFlowIn_Controller.prototype.add_get_next_num = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('get_next_num',opts);
 	
 				

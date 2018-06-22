@@ -44,6 +44,7 @@
 <li><a href="#DocFlowImportanceType_Controller">DocFlowImportanceType_Controller</a></li>
 <li><a href="#DocFlowIn_Controller">DocFlowIn_Controller</a></li>
 <li><a href="#DocFlowInClient_Controller">DocFlowInClient_Controller</a></li>
+<li><a href="#DocFlowInside_Controller">DocFlowInside_Controller</a></li>
 <li><a href="#DocFlowOut_Controller">DocFlowOut_Controller</a></li>
 <li><a href="#DocFlowOutClient_Controller">DocFlowOutClient_Controller</a></li>
 <li><a href="#DocFlowRegistration_Controller">DocFlowRegistration_Controller</a></li>
@@ -75,6 +76,8 @@
 <li><a href="#ReportTemplateFile_Controller">ReportTemplateFile_Controller</a></li>
 <li><a href="#ReportTemplateInParam_Controller">ReportTemplateInParam_Controller</a></li>
 <li><a href="#Service_Controller">Service_Controller</a></li>
+<li><a href="#ShortMessage_Controller">ShortMessage_Controller</a></li>
+<li><a href="#ShortMessageRecipientState_Controller">ShortMessageRecipientState_Controller</a></li>
 <li><a href="#TechnicalFeature_Controller">TechnicalFeature_Controller</a></li>
 <li><a href="#TimeZoneLocale_Controller">TimeZoneLocale_Controller</a></li>
 <li><a href="#User_Controller">User_Controller</a></li>
@@ -165,6 +168,10 @@
 <li><a href="#DocFlowInList_Model">DocFlowInList_Model</a></li>
 <li><a href="#DocFlowInDialog_Model">DocFlowInDialog_Model</a></li>
 <li><a href="#DocFlowInProcess_Model">DocFlowInProcess_Model</a></li>
+<li><a href="#DocFlowInside_Model">DocFlowInside_Model</a></li>
+<li><a href="#DocFlowInsideDialog_Model">DocFlowInsideDialog_Model</a></li>
+<li><a href="#DocFlowInsideList_Model">DocFlowInsideList_Model</a></li>
+<li><a href="#DocFlowInsideProcess_Model">DocFlowInsideProcess_Model</a></li>
 <li><a href="#DocFlowTask_Model">DocFlowTask_Model</a></li>
 <li><a href="#DocFlowTaskList_Model">DocFlowTaskList_Model</a></li>
 <li><a href="#DocFlowTaskShortList_Model">DocFlowTaskShortList_Model</a></li>
@@ -193,7 +200,11 @@
 <li><a href="#DocFlowInClientList_Model">DocFlowInClientList_Model</a></li>
 <li><a href="#DocFlowInClientDialog_Model">DocFlowInClientDialog_Model</a></li>
 <li><a href="#DocFlowInClientRegNumber_Model">DocFlowInClientRegNumber_Model</a></li>
+<li><a href="#ShortMessageRecipientState_Model">ShortMessageRecipientState_Model</a></li>
+<li><a href="#ShortMessageRecipientCurrentState_Model">ShortMessageRecipientCurrentState_Model</a></li>
 <li><a href="#ShortMessage_Model">ShortMessage_Model</a></li>
+<li><a href="#ShortMessageList_Model">ShortMessageList_Model</a></li>
+<li><a href="#ShortMessageRecipientList_Model">ShortMessageRecipientList_Model</a></li>
 <li><a href="#ReportTemplate_Model">ReportTemplate_Model</a></li>
 <li><a href="#ReportTemplateDialog_Model">ReportTemplateDialog_Model</a></li>
 <li><a href="#ReportTemplateList_Model">ReportTemplateList_Model</a></li>
@@ -231,6 +242,7 @@
 <li><a href="#responsable_person_types">responsable_person_types</a></li>
 <li><a href="#doc_flow_out_states">doc_flow_out_states</a></li>
 <li><a href="#doc_flow_in_states">doc_flow_in_states</a></li>
+<li><a href="#doc_flow_inside_states">doc_flow_inside_states</a></li>
 <li><a href="#data_types">data_types</a></li>
 <li><a href="#document_types">document_types</a></li>
 <li><a href="#doc_flow_type_types">doc_flow_type_types</a></li>
@@ -1223,7 +1235,8 @@
 <a href="#DocFlowIn_Model">Model: DocFlowIn_Model</a><h2>delete</h2>
 <a href="#DocFlowIn_Model">Model: DocFlowIn_Model</a><h2>get_list</h2>
 <a href="#DocFlowInList_Model">Model: DocFlowInList_Model</a><h2>get_object</h2>
-<a href="#DocFlowInDialog_Model">Model: DocFlowInDialog_Model</a><h2>remove_file</h2>
+<a href="#DocFlowInDialog_Model">Model: DocFlowInDialog_Model</a><h2>complete</h2>
+<a href="#DocFlowInList_Model">Model: DocFlowInList_Model</a><h2>remove_file</h2>
 <p>Arguments:</p>
 <div class="content_item content_item2">
 <h3>file_id</h3>
@@ -1342,6 +1355,76 @@
 <h2>set_viewed</h2>
 <p>Arguments:</p>
 <div class="content_item content_item2">
+<h3>doc_id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Да</p>
+</div>
+</div>
+</div>
+</div>
+<div id="DocFlowInside_Controller" class="content_box">
+<h1>DocFlowInside_Controller</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Методы:</p>
+<h2>insert</h2>
+<a href="#DocFlowInside_Model">Model: DocFlowInside_Model</a><h2>update</h2>
+<a href="#DocFlowInside_Model">Model: DocFlowInside_Model</a><h2>delete</h2>
+<a href="#DocFlowInside_Model">Model: DocFlowInside_Model</a><h2>get_object</h2>
+<a href="#DocFlowInsideDialog_Model">Model: DocFlowInsideDialog_Model</a><h2>get_list</h2>
+<a href="#DocFlowInsideList_Model">Model: DocFlowInsideList_Model</a><h2>complete</h2>
+<a href="#DocFlowInsideList_Model">Model: DocFlowInsideList_Model</a><h2>remove_file</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>file_id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Да</p>
+<p>Length:36</p>
+</div>
+<h3>doc_id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Да</p>
+</div>
+</div>
+<h2>get_file</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>file_id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Да</p>
+<p>Length:36</p>
+</div>
+<h3>doc_id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Да</p>
+</div>
+</div>
+<h2>get_file_sig</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>file_id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Да</p>
+<p>Length:36</p>
+</div>
 <h3>doc_id</h3>
 <p></p>
 <div class="content_item content_item3">
@@ -2356,6 +2439,45 @@
 <a href="#Service_Model">Model: Service_Model</a>
 </div>
 </div>
+<div id="ShortMessage_Controller" class="content_box">
+<h1>ShortMessage_Controller</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Методы:</p>
+<h2>send_message</h2>
+<a href="#ShortMessage_Model">Model: ShortMessage_Model</a><h2>get_object</h2>
+<a href="#ShortMessageList_Model">Model: ShortMessageList_Model</a><h2>get_list</h2>
+<a href="#ShortMessageList_Model">Model: ShortMessageList_Model</a><h2>get_recipient_list</h2>
+<a href="#ShortMessageRecipientList_Model">Model: ShortMessageRecipientList_Model</a><h2>get_unviewed_list</h2>
+<a href="#ShortMessageRecipientList_Model">Model: ShortMessageRecipientList_Model</a><h2>set_recipient_state</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>recipient_state_id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Нет</p>
+</div>
+</div>
+<h2>get_recipient_state</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2"></div>
+</div>
+</div>
+<div id="ShortMessageRecipientState_Controller" class="content_box">
+<h1>ShortMessageRecipientState_Controller</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Методы:</p>
+<h2>insert</h2>
+<a href="#ShortMessageRecipientState_Model">Model: ShortMessageRecipientState_Model</a><h2>update</h2>
+<a href="#ShortMessageRecipientState_Model">Model: ShortMessageRecipientState_Model</a><h2>delete</h2>
+<a href="#ShortMessageRecipientState_Model">Model: ShortMessageRecipientState_Model</a><h2>get_object</h2>
+<a href="#ShortMessageRecipientState_Model">Model: ShortMessageRecipientState_Model</a><h2>get_list</h2>
+<a href="#ShortMessageRecipientState_Model">Model: ShortMessageRecipientState_Model</a>
+</div>
+</div>
 <div id="TechnicalFeature_Controller" class="content_box">
 <h1>TechnicalFeature_Controller</h1>
 <div class="content_item">
@@ -2753,6 +2875,12 @@
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
+<h2>constr_technical_features_in_compound_obj</h2>
+<div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
 <h2>total_cost_eval</h2>
 <div>Type:Float</div>
 <div>Primary key:</div>
@@ -3108,6 +3236,12 @@
 <div>Length:</div>
 <div>Precision:</div>
 <h2>constr_technical_features</h2>
+<div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>constr_technical_features_in_compound_obj</h2>
 <div>Type:JSONB</div>
 <div>Primary key:</div>
 <div>Required:</div>
@@ -4619,6 +4753,12 @@
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
+<h2>constr_technical_features_in_compound_obj</h2>
+<div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
 </div>
 </div>
 <div id="ContractDialog_Model" class="content_box">
@@ -4752,6 +4892,12 @@
 <div>Length:</div>
 <div>Precision:</div>
 <h2>constr_technical_features</h2>
+<div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>constr_technical_features_in_compound_obj</h2>
 <div>Type:JSONB</div>
 <div>Primary key:</div>
 <div>Required:</div>
@@ -6353,6 +6499,12 @@
 <div>Required:</div>
 <div>Length:250</div>
 <div>Precision:</div>
+<h2>approve_interval</h2>
+<div>Type:Interval</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
 </div>
 </div>
 <div id="DocFlowImportanceTypeList_Model" class="content_box">
@@ -6990,6 +7142,282 @@
 <div class="content_item">
 <p>Поля:</p>
 <h2>doc_flow_in_id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>date_time</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:TRUE</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>state</h2>
+<div>Type:Enum</div>
+<div>Primary key:</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>register_doc</h2>
+<div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>description</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>doc_flow_importance_type_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>end_date_time</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="DocFlowInside_Model" class="content_box">
+<h1>DocFlowInside_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:FALSE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>date_time</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>doc_flow_importance_type_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>employee_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>contract_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>comment_text</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>subject</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>content</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="DocFlowInsideDialog_Model" class="content_box">
+<h1>DocFlowInsideDialog_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:FALSE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>date_time</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>doc_flow_importance_types_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>employees_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>contracts_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>comment_text</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>subject</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>content</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>files</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>state</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>state_dt</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>state_end_dt</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>state_register_doc</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>doc_flow_inside_processes_chain</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="DocFlowInsideList_Model" class="content_box">
+<h1>DocFlowInsideList_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:FALSE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>date_time</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>doc_flow_importance_types_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>doc_flow_importance_type_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>employees_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>employee_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>contracts_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>contract_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>subject</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>state</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>state_dt</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>state_end_dt</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>state_register_doc</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="DocFlowInsideProcess_Model" class="content_box">
+<h1>DocFlowInsideProcess_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>doc_flow_inside_id</h2>
 <div>Type:Int</div>
 <div>Primary key:TRUE</div>
 <div>Required:TRUE</div>
@@ -9233,6 +9661,18 @@
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
+<h2>files</h2>
+<div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>doc_flow_importance_type_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
 </div>
 </div>
 <div id="ReminderUnviewedList_Model" class="content_box">
@@ -9258,7 +9698,19 @@
 <div>Length:</div>
 <div>Precision:</div>
 <h2>docs_ref</h2>
-<div>Type:JSONB</div>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>doc_flow_importance_types_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>files</h2>
+<div>Type:JSON</div>
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>
@@ -9647,28 +10099,58 @@
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
-<h2>parent_chat_message_id</h2>
+<h2>recipient_id</h2>
 <div>Type:Int</div>
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
-<h2>employee_id</h2>
+<h2>to_recipient_id</h2>
 <div>Type:Int</div>
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
-<h2>to_employee_id</h2>
+<h2>reminder_id</h2>
 <div>Type:Int</div>
 <div>Primary key:</div>
 <div>Required:TRUE</div>
 <div>Length:</div>
 <div>Precision:</div>
-<h2>doc_flow_importance_type_id</h2>
+</div>
+</div>
+<div id="ShortMessageList_Model" class="content_box">
+<h1>ShortMessageList_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
 <div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:FALSE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>date_time</h2>
+<div>Type:DateTimeTZ</div>
 <div>Primary key:</div>
-<div>Required:TRUE</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>recipients_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>to_recipients_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>doc_flow_importance_types_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
 <h2>content</h2>
@@ -9677,8 +10159,134 @@
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
-<h2>docs_ref</h2>
-<div>Type:JSONB</div>
+<h2>files</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>recipient_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>to_recipient_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>view_date_time</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>viewed</h2>
+<div>Type:Bool</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>doc_flow_importance_types_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="ShortMessageRecipientCurrentState_Model" class="content_box">
+<h1>ShortMessageRecipientCurrentState_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>recipient_id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>recipient_state_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="ShortMessageRecipientList_Model" class="content_box">
+<h1>ShortMessageRecipientList_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>recipient_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>recipient_descr</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>recipients_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>departments_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>department_descr</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>is_online</h2>
+<div>Type:Bool</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>recipient_states_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>recipient_init</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="ShortMessageRecipientState_Model" class="content_box">
+<h1>ShortMessageRecipientState_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:FALSE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:150</div>
+<div>Precision:</div>
+<h2>bg_class</h2>
+<div>Type:Text</div>
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>
@@ -9976,6 +10584,12 @@
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:50</div>
+<div>Precision:</div>
+<h2>role_id</h2>
+<div>Type:Enum</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
 <div>Precision:</div>
 </div>
 </div>
@@ -10329,6 +10943,8 @@
 <div>Description:</div>
 <h2>contracts</h2>
 <div>Description:</div>
+<h2>short_messages</h2>
+<div>Description:</div>
 </div>
 </div>
 <div id="date_types" class="content_box">
@@ -10399,6 +11015,37 @@
 <h2>registered</h2>
 <div>Description:</div>
 <h2>registering</h2>
+<div>Description:</div>
+</div>
+</div>
+<div id="doc_flow_inside_states" class="content_box">
+<h1>doc_flow_inside_states</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Values:</p>
+<h2>approving</h2>
+<div>Description:</div>
+<h2>not_approved</h2>
+<div>Description:</div>
+<h2>approved_with_notes</h2>
+<div>Description:</div>
+<h2>approved</h2>
+<div>Description:</div>
+<h2>confirming</h2>
+<div>Description:</div>
+<h2>not_confirmed</h2>
+<div>Description:</div>
+<h2>examining</h2>
+<div>Description:</div>
+<h2>examined</h2>
+<div>Description:</div>
+<h2>fulfilling</h2>
+<div>Description:</div>
+<h2>fulfilled</h2>
+<div>Description:</div>
+<h2>acquainting</h2>
+<div>Description:</div>
+<h2>acquainted</h2>
 <div>Description:</div>
 </div>
 </div>

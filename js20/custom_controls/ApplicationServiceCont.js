@@ -65,7 +65,7 @@ function ApplicationServiceCont(id,options){
 					
 					var sim_en = (self.getElement("cost_eval_validity").getValue()&&cur_val);
 					self.getElement("cost_eval_validity_simult").setEnabled(sim_en);
-					if (!sim_en&&self.getElement("cost_eval_validity_simult").getValue()){
+					if (!sim_en&&!self.getElement("cost_eval_validity").getValue()&&self.getElement("cost_eval_validity_simult").getValue()){
 						self.getElement("cost_eval_validity_simult").setValue(false);
 					}
 				}

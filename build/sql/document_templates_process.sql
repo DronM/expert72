@@ -9,11 +9,11 @@ BEGIN
 
 	IF (TG_WHEN='BEFORE') THEN
 		DELETE FROM expert_sections
-		WHERE document_type=NEW.document_type
-			AND construction_type_id=NEW.construction_type_id
-			AND create_date=NEW.create_date;
+		WHERE document_type=OLD.document_type
+			AND construction_type_id=OLD.construction_type_id
+			AND create_date=OLD.create_date;
 			
-		RETURN NEW;
+		RETURN OLD;
 	END IF;
 
 END;

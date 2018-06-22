@@ -88,6 +88,18 @@ extend(Reminder_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	
+	var field = new FieldJSONB("files",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldInt("doc_flow_importance_type_id",options);
+	
+	pm.addField(field);
+	
 	pm.addField(new FieldInt("ret_id",{}));
 	
 	
@@ -145,6 +157,18 @@ extend(Reminder_Controller,ControllerObjServer);
 	var options = {};
 	
 	var field = new FieldJSONB("docs_ref",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldJSONB("files",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldInt("doc_flow_importance_type_id",options);
 	
 	pm.addField(field);
 	
@@ -210,19 +234,23 @@ extend(Reminder_Controller,ControllerObjServer);
 	var f_opts = {};
 	
 	pm.addField(new FieldJSONB("docs_ref",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldJSONB("files",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldInt("doc_flow_importance_type_id",f_opts));
 }
 
 			Reminder_Controller.prototype.add_get_unviewed_list = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('get_unviewed_list',opts);
 	
 	this.addPublicMethod(pm);
 }
 
 			Reminder_Controller.prototype.add_set_viewed = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('set_viewed',opts);
 	
 				

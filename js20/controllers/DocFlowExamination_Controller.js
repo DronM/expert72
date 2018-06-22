@@ -303,8 +303,7 @@ extend(DocFlowExamination_Controller,ControllerObjServer);
 }
 
 			DocFlowExamination_Controller.prototype.add_resolve = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('resolve',opts);
 	
 				
@@ -344,8 +343,7 @@ extend(DocFlowExamination_Controller,ControllerObjServer);
 }
 
 			DocFlowExamination_Controller.prototype.add_unresolve = function(){
-	var opts = {"controller":this};
-	
+	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('unresolve',opts);
 	
 				

@@ -76,13 +76,6 @@ function DocFlowInList_View(id,options){
 					"field":new FieldString("state")
 				})		
 			}
-			,"mail_type":{
-				"binding":new CommandBinding({
-					"control":new DocFlowTypeSelect(id+":filter-ctrl-doc_flow_type",{"type_id":"out","contClassName":"form-group-filter"}),
-					"field":new FieldInt("doc_flow_type_id")
-				})
-			}
-		
 		};
 		commands = new GridCmdContainerAjx(id+":grid:cmd",{
 				"cmdFilter":true,

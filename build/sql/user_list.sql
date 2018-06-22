@@ -8,7 +8,8 @@ CREATE OR REPLACE VIEW user_list AS
 		users.name,
 		users.name_full,
 		users.email,
-		phone_cel
+		phone_cel,
+		users.role_id
 	FROM users
 	ORDER BY users.name
 	;

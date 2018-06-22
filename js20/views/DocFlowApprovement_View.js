@@ -102,7 +102,8 @@ function DocFlowApprovement_View(id,options){
 			"labelClassName":labelClassName,			
 			"labelCaption":"Документ:",		
 			"possibleDataTypes":{
-				"doc_flow_out":window.getApp().getDataType("doc_flow_out")
+				"doc_flow_out":window.getApp().getDataType("doc_flow_out"),
+				"doc_flow_inside":window.getApp().getDataType("doc_flow_inside")
 			},
 			"placeholder":"Введите номер документа"
 		}));

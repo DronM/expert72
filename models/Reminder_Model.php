@@ -89,6 +89,22 @@ class Reminder_Model extends ModelSQL{
 		$f_docs_ref=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"docs_ref",$f_opts);
 		$this->addField($f_docs_ref);
 		//********************
+		
+		//*** Field files ***
+		$f_opts = array();
+		$f_opts['id']="files";
+				
+		$f_files=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"files",$f_opts);
+		$this->addField($f_files);
+		//********************
+		
+		//*** Field doc_flow_importance_type_id ***
+		$f_opts = array();
+		$f_opts['id']="doc_flow_importance_type_id";
+				
+		$f_doc_flow_importance_type_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"doc_flow_importance_type_id",$f_opts);
+		$this->addField($f_doc_flow_importance_type_id);
+		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}
 
