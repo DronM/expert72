@@ -27,6 +27,8 @@ require_once('common/file_func.php');
 
 class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@parentId"/>{
 	
+	const MAX_FILE_LEN = 200;
+	
 	const ALL_DOC_ZIP_FILE = 'all.zip';
 	const SIG_EXT = '.sig';
 	
@@ -815,7 +817,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				$q = sprintf(
 					"DELETE FROM application_document_files
 					WHERE file_id=%s
-					RETURNING application_id,document_type,file_path,file_id,file_name,file_signed",
+					RETURNING application_id,document_type,document_id,file_id,file_name,file_signed",
 				$fileIdForDb
 				);
 			}
@@ -826,7 +828,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 						deleted = TRUE,
 						deleted_dt=now()
 					WHERE file_id=%s
-					RETURNING application_id,document_type,file_path,file_id,file_name,file_signed",
+					RETURNING application_id,document_type,document_id,file_id,file_name,file_signed",
 				$fileIdForDb
 				);
 			}
@@ -842,7 +844,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			
 			$rel_fl = self::APP_DIR_PREF.$ar['application_id'].DIRECTORY_SEPARATOR.
 				self::dirNameOnDocType($ar['document_type']).DIRECTORY_SEPARATOR.				
-				$ar['file_path'].DIRECTORY_SEPARATOR.
+				$ar['document_id'].DIRECTORY_SEPARATOR.
 				$ar['file_id'];
 				
 			if (file_exists($fl = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_fl)){
@@ -896,9 +898,9 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				"SELECT
 					af.application_id,
 					af.document_type,
+					af.document_id,
 					af.file_id,
 					af.file_name,
-					af.file_path,
 					af.deleted,
 					af.file_signed
 				FROM application_document_files AS af
@@ -913,9 +915,9 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				"SELECT
 					af.application_id,
 					af.document_type,
+					af.document_id,
 					af.file_id,
 					af.file_name,
-					af.file_path,
 					af.deleted,
 					af.file_signed
 				FROM application_document_files AS af
@@ -937,7 +939,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		else{
 			$rel_fl = self::APP_DIR_PREF.$ar['application_id'].DIRECTORY_SEPARATOR.
 				self::dirNameOnDocType($ar['document_type']).DIRECTORY_SEPARATOR.
-				$ar['file_path'].DIRECTORY_SEPARATOR.
+				$ar['document_id'].DIRECTORY_SEPARATOR.
 				$ar['file_id'].$fl_postf;		
 		}
 		
@@ -1022,25 +1024,44 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 					file_name,
 					file_path,
 					file_signed,
-					document_type
+					document_type,
+					document_id
 				FROM application_document_files
 				WHERE application_id=%s",
 				$this->getExtDbVal($pm,'application_id')
 			));			
 			while($file = $this->getDbLink()->fetch_array($qid)){
 				$rel_path = self::dirNameOnDocType($file['document_type']).DIRECTORY_SEPARATOR.
-						$file['file_path'].DIRECTORY_SEPARATOR;
+						$file['document_id'].DIRECTORY_SEPARATOR;
+						
+				if (mb_strlen($file['file_path'])>self::MAX_FILE_LEN){
+					$file_path_conc = mb_substr($file['file_path'],0,self::MAX_FILE_LEN).'...';
+				}
+				else{
+					$file_path_conc = $file['file_path'];
+				}
+
+				if (mb_strlen($file['file_name'])>self::MAX_FILE_LEN){
+					$file_name_conc = mb_substr($file['file_name'],0,self::MAX_FILE_LEN).'...';
+				}
+				else{
+					$file_name_conc = $file['file_name'];
+				}
+				
+				$rel_path_for_zip = self::dirNameOnDocType($file['document_type']).DIRECTORY_SEPARATOR.
+						$file_path_conc.DIRECTORY_SEPARATOR;
+						
 				if (file_exists($file_doc = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_dir_zip.DIRECTORY_SEPARATOR. $rel_path. $file['file_id'])
 				|| (defined('FILE_STORAGE_DIR_MAIN') &amp;&amp; file_exists($file_doc = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$rel_dir_zip.DIRECTORY_SEPARATOR. $rel_path. $file['file_id']) )
 				){
-					$zip->addFile($file_doc, $rel_path. $file['file_name']);
+					$zip->addFile($file_doc, $rel_path_for_zip. $file_name_conc);
 					$cnt++;				
 					
 					if ($file['file_signed']=='t'){
 						if (file_exists($file_doc = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_dir_zip.DIRECTORY_SEPARATOR.$rel_path.$file['file_id'].self::SIG_EXT)
 						|| (defined('FILE_STORAGE_DIR_MAIN') &amp;&amp; file_exists($file_doc = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$rel_dir_zip.DIRECTORY_SEPARATOR.$rel_path.$file['file_id'].self::SIG_EXT) )
 						){
-							$zip->addFile($file_doc,$rel_path.$file['file_name'].self::SIG_EXT);
+							$zip->addFile($file_doc,$rel_path_for_zip.$file_name_conc.self::SIG_EXT);
 							$cnt++;									
 						}
 					}					
@@ -1508,7 +1529,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				f.document_type
 			FROM application_document_files AS f
 			WHERE f.application_id=%d AND coalesce(f.deleted,FALSE)=FALSE AND (f.document_type='pd' OR f.document_type='eng_survey') %s
-			ORDER BY f.document_type,f.file_path,f.file_name",
+			ORDER BY f.document_type,f.document_id,f.file_name",
 		$this->getExtDbVal($pm,'id'),
 		($_SESSION['role_id']=='client')? (' AND (SELECT t.user_id FROM applications t WHERE t.id=f.application_id)='.$_SESSION['user_id']):''
 		));

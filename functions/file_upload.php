@@ -73,7 +73,7 @@ try{
 			FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
 			Application_Controller::APP_DIR_PREF.$_REQUEST['application_id'].DIRECTORY_SEPARATOR.
 			Application_Controller::dirNameOnDocType($_REQUEST['doc_type']).DIRECTORY_SEPARATOR.
-			$_REQUEST['file_path']
+			$_REQUEST['doc_id']
 			;			
 		mkdir_or_error($resumable->uploadFolder);
 	

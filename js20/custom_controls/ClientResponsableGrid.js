@@ -170,7 +170,7 @@ ClientResponsableGrid.prototype.edit = function(cmd){
 	}
 	
 	this.m_view = new ClientResponsablePersonEdit(this.getId()+":view:body:view",{
-		"calcPercent":true,
+		"calcPercent":(this.m_mainView!=undefined)? true:false,
 		"clientTypePerson":(this.m_clientType=="person"),
 		"valueJSON":{
 			"dep":(cmd=="edit" && this.m_clientType!="person")? this.getModel().getFieldValue("dep") : null
@@ -209,7 +209,7 @@ ClientResponsableGrid.prototype.edit = function(cmd){
 				"ok":function(){
 					self.closeSelect();
 					self.onRefresh(function(){
-						self.m_mainView.calcFillPercent();
+						if(self.m_mainView)self.m_mainView.calcFillPercent();
 					});
 				}
 			});

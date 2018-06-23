@@ -55,6 +55,7 @@ BEGIN
 		DELETE FROM client_payments WHERE contract_id = OLD.id;
 		DELETE FROM expert_works WHERE contract_id = OLD.id;
 		DELETE FROM doc_flow_out WHERE to_contract_id = OLD.id;
+		DELETE FROM doc_flow_inside WHERE contract_id = OLD.id;
 		
 		RETURN OLD;
 	END IF;

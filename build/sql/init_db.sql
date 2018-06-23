@@ -24,6 +24,7 @@ psql -U expert72 -d expert72 -f expert.dmp
 ИСПРАВИТЬ КПП "7203321348 КПП 7"
 psql -d expert72 -U expert72 -f /home/andrey/\!Экспертиза/ЛК/cl.sql
 
+DELETE from doc_flow_inside_processes;
 DELETE FROM contacts;
 delete from contracts;
 delete from applications;
@@ -35,6 +36,7 @@ DELETE FROM doc_flow_in;
 DELETE FROM doc_flow_out;
 DELETE FROM doc_flow_in_client;
 DELETE FROM doc_flow_out_client;
+DELETE from doc_flow_inside;
 
 DELETE FROM doc_flow_registrations;
 DELETE FROM doc_flow_tasks;
@@ -54,6 +56,20 @@ DELETE FROM user_email_confirmations;
 SELECT setval('contracts_id_seq', 1);
 SELECT setval('applications_id_seq', 1);
 SELECT setval('client_payments_id_seq', 1);
+SELECT setval('reminders_id_seq', 1);
+SELECT setval('applications_id_seq', 1);
+SELECT setval('doc_flow_approvements_id_seq', 1);
+SELECT setval('doc_flow_examinations_id_seq', 1);
+SELECT setval('doc_flow_in_id_seq', 1);
+SELECT setval('doc_flow_out_id_seq', 1);
+SELECT setval('doc_flow_in_client_id_seq', 1);
+SELECT setval('doc_flow_out_client_id_seq', 1);
+SELECT setval('doc_flow_inside_id_seq', 1);
+SELECT setval('doc_flow_registrations_id_seq', 1);
+SELECT setval('doc_flow_tasks_id_seq', 1);
+SELECT setval('mail_for_sending_id_seq', 1);
+SELECT setval('mail_for_sending_id_seq', 1);
+
 -- Trigger: contacts_before_trigger on public.contacts
 
 --*** УБРАТЬ ТРИГГЕР ПЕРЕД ЗАПУСКОМ ЗАГРУЗКИ *****
@@ -64,7 +80,12 @@ CREATE TRIGGER contacts_before_trigger
   FOR EACH ROW
   EXECUTE PROCEDURE public.contacts_process();
 
-
+DROP TRIGGER client_payments_after_trigger ON public.client_payments;
+CREATE TRIGGER client_payments_after_trigger
+  AFTER INSERT
+  ON public.client_payments
+  FOR EACH ROW
+  EXECUTE PROCEDURE public.client_payments_process();
 
 
 
@@ -204,7 +225,7 @@ GROUP BY contr1.id
 WHERE sel.id=contracts.id 
 
 
---*** ВРОДЕ НЕ НАДО *****
+--*** ТОЧНО НЕ НАДО *****
 /*
 update contracts
 set linked_contracts='{"id":"LinkedContractList_Model","rows":[]}'

@@ -13,9 +13,9 @@
 function FileUploaderContract_View(id,options){
 	options = options || {};	
 	
-	options.readOnly = true;
+	options.readOnly = false;
 	options.allowFileDeletion = false;
-	options.allowFileDownload = false;
+	options.allowFileDownload = true;
 	
 	FileUploaderContract_View.superclass.constructor.call(this,id,options);
 }

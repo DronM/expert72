@@ -1,3 +1,5 @@
+
+-- ******************* update 23/06/2018 09:59:55 ******************
 -- VIEW: clients_dialog
 
 --DROP VIEW clients_dialog;

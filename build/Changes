@@ -1,0 +1,13 @@
+1.0.44
+1) Ответственные лица, косяк к установке расчетпроцнта=true при открытии из диалога контрагента
+
+2) Перешел на коды папок вместо наименований Application_Controller->removeFile,Application_Controller->download_file,Application_Controller->zip_all
+все исправлено на коды. Максимум в константе 200 имволов
+FileUploader_View.js
+file_upload.php
+
+3) Сортировка файлов при формировании PDF
+get_print запрос к таблице application_document_files исправленасортировка с file_path на document_id
+
+4) Не скачивал файлы из контракта
+FileUploaderContract_View исправлено options.allowFileDownload = true;

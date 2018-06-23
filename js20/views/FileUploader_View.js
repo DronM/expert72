@@ -547,6 +547,7 @@ FileUploader_View.prototype.initDownload = function(){
 							self.m_uploader.files[i].file_id = CommonHelper.uniqid();
 						}
 						file.file_id = self.m_uploader.files[i].file_id;
+						file.doc_id = self.m_uploader.files[i].doc_id;
 						file.signature = true;
 						self.m_uploader.files[i].file_signed = true;
 						
