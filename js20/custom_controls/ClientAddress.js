@@ -1,4 +1,4 @@
-/** Copyright (c) 2017
+/** Copyright (c) 2018
 	Andrey Mikhalevich, Katren ltd.
  */
 function ClientPostAddressEdit(id,options){
@@ -14,6 +14,7 @@ function ClientPostAddressEdit(id,options){
 	});
 	options.labelCaption = "Почтовый адрес:";
 	
+	this.m_legalAddress = options.legalAddress;
 	this.m_view = options.view;
 	this.m_mainView = options.mainView;	
 	
@@ -22,7 +23,8 @@ function ClientPostAddressEdit(id,options){
 extend(ClientPostAddressEdit,EditAddress);
 
 ClientPostAddressEdit.prototype.copyFromLegal = function(){
-	if(this.m_view)this.setValue(this.m_view.getElement("legal_address").getValue());	
+	//if(this.m_view)this.setValue(this.m_view.getElement("legal_address").getValue());	
+	if(this.m_legalAddress)this.setValue(this.m_legalAddress.getValue());	
 	
 	if (this.m_mainView && this.m_mainView.calcFillPercent){
 		this.m_mainView.calcFillPercent();

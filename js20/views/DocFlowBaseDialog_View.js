@@ -40,10 +40,13 @@ DocFlowBaseDialog_View.prototype.addProcessChain = function(options,fieldId){
 			for (var i=0;i<chain.length;i++){
 				chain[i].step = (i+1);
 				chain[i]["tab-class"] = (i==0)? "first" : ( (i==chain.length-1)? "last":"" );
+				
 				if (chain[i].doc && chain[i].doc.getDataType()==this_dt && chain[i].doc.getKey()==this_key){
-					chain[i]["tab-class"]+= (chain[i]["tab-class"]=="")? "":" ";
-					chain[i]["tab-class"]+= "current";
+					//chain[i]["tab-class"]+= (chain[i]["tab-class"]=="")? "":" ";
+					//chain[i]["tab-class"]+= "current";
+					chain[i].current = true;
 				}
+				
 				chain[i]["aria-selected"] = (i==0)? "true":"false";
 				chain[i].doc_descr = chain[i].doc? chain[i].doc.getDescr() : "";
 				chain[i].state_descr = chain[i].state_descr? (","+chain[i].state_descr) : "";

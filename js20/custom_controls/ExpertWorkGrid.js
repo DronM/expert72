@@ -47,6 +47,7 @@ function ExpertWorkGrid(id,options){
 									"dateFormat":"d/m/Y H:i",
 									"ctrlClass":EditDateTime,
 									"ctrlOptions":{
+										"cmdClear":false,
 										"editMask":"99/99/9999 99:99",
 										"dateFormat":"d/m/Y H:i",
 										"enabled":(window.getApp().getServVar("role_id")=="admin"),
@@ -65,6 +66,8 @@ function ExpertWorkGrid(id,options){
 									"ctrlClass":EmployeeEditRef,
 									"ctrlBindFieldId":"expert_id",
 									"ctrlOptions":{
+										"cmdOpen":false,
+										"cmdClear":false,
 										"labelCaption":"",
 										"value":CommonHelper.unserialize(window.getApp().getServVar("employees_ref")),
 										"enabled":(window.getApp().getServVar("role_id")=="admin"),
@@ -79,7 +82,10 @@ function ExpertWorkGrid(id,options){
 							"columns":[
 								new GridColumn({
 									"field":model.getField("comment_text"),
-									"ctrlClass":EditText
+									"ctrlClass":EditText,
+									"ctrlOptions":{
+										"attrs":{"autofocus":"autofocus"}
+									}
 								})
 							]
 						})					

@@ -27,16 +27,17 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 </xsl:template>
 
 <xsl:template name="extra_methods">
-	private function add_sections($items,$documentType,$constructionTypeId,$createDate,&amp;$queryStr,&amp;$ind){
+	private function add_sections($items,$documentType,$constructionTypeId,$createDate,$parentDescr,&amp;$queryStr,&amp;$ind){
 		foreach($items as $item){
 			if (isset($item->items)){
-				$this->add_sections($item->items,$documentType,$constructionTypeId,$createDate,$queryStr,$ind);
+				$this->add_sections($item->items,$documentType,$constructionTypeId,$createDate,$item->fields->descr,$queryStr,$ind);
 			}
 			else{
 				$queryStr.= ($queryStr=='')? '':',';
 				$queryStr.= sprintf("(%s,%d,%s,%d,'%s',%d)",
 				$documentType,$constructionTypeId,$createDate,
-				intval($item->fields->id),$item->fields->descr,
+				intval($item->fields->id),
+				(mb_strlen($parentDescr)? $parentDescr.'/':'').$item->fields->descr,
 				$ind
 				);
 				$ind++;
@@ -57,7 +58,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			
 			$queryStr = '';
 			$ind = 0;
-			$this->add_sections($cont->items,$document_type,$construction_type_id,$create_date,$queryStr,$ind);
+			$this->add_sections($cont->items,$document_type,$construction_type_id,$create_date,'',$queryStr,$ind);
 			if (strlen($queryStr))
 				$this->getDbLinkMaster()->query('INSERT INTO expert_sections
 				(document_type,construction_type_id,create_date,section_id,section_name,section_index)
@@ -87,6 +88,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 					"'".$ar['document_type']."'",
 					$ar['construction_type_id'],
 					"'".$ar['create_date']."'",
+					'',
 					$queryStr,
 					$ind
 				);

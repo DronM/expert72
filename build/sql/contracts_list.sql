@@ -12,6 +12,8 @@ CREATE OR REPLACE VIEW contracts_list AS
 		t.client_id,
 		clients.name AS client_descr,
 		--clients_ref(clients) AS clients_ref,
+		coalesce(t.constr_name,applications.constr_name) AS constr_name,
+		
 		t.akt_number,
 		t.akt_date,
 		coalesce(t.akt_total,0) As akt_total,

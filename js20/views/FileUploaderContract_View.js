@@ -13,7 +13,7 @@
 function FileUploaderContract_View(id,options){
 	options = options || {};	
 	
-	options.readOnly = false;
+	options.readOnly = true;
 	options.allowFileDeletion = false;
 	options.allowFileDownload = true;
 	

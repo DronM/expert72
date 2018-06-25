@@ -8,7 +8,7 @@ $$
 	WITH base_doc AS (
 		SELECT
 			doc_flow_in_ref(doc_flow_in)::jsonb AS doc,
-			date_time,
+			doc_flow_in.date_time,
 			CASE WHEN from_application_id IS NOT NULL THEN
 				applications_ref((SELECT applications FROM applications WHERE applications.id=doc_flow_in.from_application_id))::jsonb
 			ELSE NULL
@@ -17,11 +17,17 @@ $$
 			CASE WHEN from_application_id IS NOT NULL THEN
 				(SELECT applicant->>'name' FROM applications WHERE applications.id=doc_flow_in.from_application_id)
 			ELSE NULL
-			END AS app_descr
+			END AS doc_descr,
+
+			CASE WHEN contracts.id IS NOT NULL THEN
+				contracts_ref(contracts)::jsonb
+			ELSE NULL
+			END AS contr
 			
 		
 		FROM doc_flow_in
-		WHERE id=$1
+		LEFT JOIN contracts ON contracts.application_id=doc_flow_in.from_application_id
+		WHERE doc_flow_in.id=$1
 	)
 	SELECT
 		json_agg(json_build_object(
@@ -32,14 +38,14 @@ $$
 	
 		(SELECT
 			register_doc AS doc,
-			3 AS step,
+			4 AS step,
 			date_time,
 			enum_doc_flow_in_states_val(state,'ru') AS state_descr
 		FROM doc_flow_in_processes WHERE doc_flow_in_id=$1 ORDER BY date_time ASC)
 		UNION
 		(SELECT
 			doc,
-			2 AS step,date_time,
+			3 AS step,date_time,
 			''  AS state_descr
 		FROM base_doc)
 		UNION
@@ -47,8 +53,16 @@ $$
 			app,
 			1 AS step,
 			date_time,
-			app_descr  AS state_descr
+			doc_descr  AS state_descr
 		FROM base_doc)
+		UNION
+		(SELECT
+			contr,
+			2 AS step,
+			date_time,
+			doc_descr  AS state_descr
+		FROM base_doc WHERE contr IS NOT NULL)
+		
 		ORDER BY step,date_time
 	) AS sub
 	;

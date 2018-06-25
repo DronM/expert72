@@ -34,7 +34,15 @@ CREATE OR REPLACE VIEW doc_flow_approvements_list AS
 		t.step_count,
 		t.current_step,
 		
-		t.close_result
+		t.close_result,
+		
+		ARRAY(
+			SELECT
+			(jsonb_array_elements(t1.recipient_list->'rows')->'fields'->'employee'->'keys'->>'id')::int
+			FROM doc_flow_approvements AS t1 WHERE t1.id=t.id
+		) AS recipient_employee_id_list,
+		
+		t.employee_id
 		
 		
 	FROM doc_flow_approvements AS t

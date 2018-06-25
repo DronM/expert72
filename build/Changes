@@ -11,3 +11,25 @@ get_print запрос к таблице application_document_files исправ
 
 4) Не скачивал файлы из контракта
 FileUploaderContract_View исправлено options.allowFileDownload = true;
+
+1.0.45
+1)ContractDialog Главный эксперт убрал disabled
+
+2) BaseView.xslt cmd по умолчанию всегда=edit, даже если параметр не задан явно
+
+3) ExpertWork_Controller поля date_time expert_id сели не админ и не главный эксперт всегда значения по-умолчанию
+
+4)EditDate кнопка очистки значения disabled если контрол disabled
+
+5)Фокусирование фрмы редактирования грида
+
+6)doc_flow_out_processes_chain
+
+7)DocFlowApprovement список виден только автору или дному из согласующих.
+Перекрыта функция DocFlowApprovement_Controller->get_list
+
+8)Вложенные разделы для экспертов
+
+9)вкладка эксперта по умолчанию не отркывалась
+
+10)actb закрытие автоподстановок при уничтжении контрола edit

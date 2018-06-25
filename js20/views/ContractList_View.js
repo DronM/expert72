@@ -84,6 +84,16 @@ ContractList_View.prototype.addGrid = function(options){
 			}),
 			"sign":"e"
 		}
+		,"constr_name":{
+			"binding":new CommandBinding({
+				"control":new EditString(id+":filter-ctrl-constr_name",{"labelCaption":"Объект:","contClassName":"form-group-filter"}),
+				"field":new FieldString("constr_name")
+			}),
+			"sign":"lk",
+			"icase":true,
+			"lwcards":true,
+			"rwcards":true
+		}
 		
 	};
 	if (this.GRID_ALL){
@@ -123,6 +133,7 @@ ContractList_View.prototype.addGrid = function(options){
 			"sortable":true							
 		})
 	);
+	/*
 	fields.push(					
 		new GridCellHead(id+":grid:head:date_time",{
 			"value":"Дата",
@@ -149,6 +160,7 @@ ContractList_View.prototype.addGrid = function(options){
 			"sortable":true							
 		})
 	);
+	*/
 	fields.push(
 		new GridCellHead(id+":grid:head:contract_date",{
 			"value":"Дата контракта",
@@ -177,6 +189,18 @@ ContractList_View.prototype.addGrid = function(options){
 			"sortable":true
 		})
 	);
+	fields.push(
+		new GridCellHead(id+":grid:head:constr_name",{
+			"value":"Объект",
+			"columns":[
+				new GridColumn({
+					"field":model.getField("constr_name")
+				})
+			],
+			"sortable":true
+		})
+	);
+	
 	fields.push(
 		new GridCellHead(id+":grid:head:reg_number",{
 			"value":"Рег.номер",

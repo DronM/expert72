@@ -335,6 +335,7 @@
 			}
 		}
 	}
+	editViewOptions.cmd = editViewOptions.cmd || "edit";
 	editViewOptions.models = editViewOptions.models || {};
 	<xsl:for-each select="model[not(@sysModel='1')]">
 	<xsl:variable name="m_id" select="@id"/>

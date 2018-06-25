@@ -18,9 +18,15 @@ function EditKPP(id,options){
 	options.type = "text";	
 	options.cmdSelect = false;
 	options.maxLength =  this.LEN;
-	options.editMask = "99999999999999999999".substr(0,options.maxLength);
+	//options.editMask = "99999999999999999999".substr(0,options.maxLength);
+	options.regExpression = /^[0-9]+$/;
 	options.fixLength = true;
 	options.events = options.events || {};
+	
+	var self = this;
+	options.events.change = function(){
+		self.validate();
+	}
 	
 	EditKPP.superclass.constructor.call(this,id,options);
 }
@@ -36,3 +42,14 @@ EditKPP.prototype.LEN = 9;
 
 
 /* public methods */
+/*
+EditKPP.prototype.validate = function(){
+	var v = this.getValue();
+	if (v && v.length && !/^[0-9]+$/.test(v)){
+		this.setNotValid("Неверное значение!");
+	}
+	else{
+		this.setValid();
+	}
+}
+*/

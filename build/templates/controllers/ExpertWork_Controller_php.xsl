@@ -87,13 +87,55 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		}
 	}
 
+	private function set_def_params(&amp;$pm){
+		//admin can do everything
+		if ($_SESSION['role_id']!='admin'){			
+			$emp_id = json_decode($_SESSION['employees_ref'])->keys->id;
+			$is_main_expert = FALSE;
+			if ($_SESSION['role_id']=='expert'){
+				//can be main expert
+				//contract_id||old_id must be present!
+				if ($pm->getParamValue('contract_id')){
+					$ar = $this->getDbLink()->query_first(sprintf(
+					"SELECT main_expert_id
+					FROM contracts
+					WHERE id=%d",
+					$this->getExtDbVal($pm,'contract_id')
+					));
+				
+				}
+				else{
+					$ar = $this->getDbLink()->query_first(sprintf(
+					"SELECT main_expert_id
+					FROM contracts
+					WHERE id=(SELECT ew.contract_id FROM expert_works ew WHERE ew.id=%d)",
+					$this->getExtDbVal($pm,'old_id')
+					));
+				}
+				$is_main_expert = ($ar['main_expert_id']==$emp_id);
+			}
+			if (!$is_main_expert){
+				//date_time and expert_id = only default values
+				if ($pm->getParamValue('date_time')){
+					$pm->setParamValue('date_time',date('Y-m-d H:i:s'));
+				}
+				if ($pm->getParamValue('expert_id')){
+					$pm->setParamValue('expert_id',$emp_id);
+				}
+				
+			}
+		}
+	}
+
 	public function insert($pm){
 		$this->upload_file($pm);
+		$this->set_def_params($pm);
 		parent::insert($pm);
 	}
 	
 	public function update($pm){
 		$this->upload_file($pm);
+		$this->set_def_params($pm);
 		parent::update($pm);
 	}
 

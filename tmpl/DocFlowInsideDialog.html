@@ -19,8 +19,8 @@
 			<ul role="tablist">
 				{{#chain}}
 				<li role="tab" class="{{tab-class}}" aria-disabled="false" aria-selected="{{aria-selected}}">
-					<a id="{{id}}:step{{step}}" href="#">
-						<span class="number">{{step}}</span> {{doc_descr}} {{state_descr}}
+					<a id="{{id}}:step{{step}}" href="#" class="chainDoc">
+						<span class="number{{#current}} chainDocCurrent{{/current}}">{{step}}</span>{{doc_descr}} {{state_descr}}
 					</a>
 				</li>
 				{{/chain}}

@@ -20,6 +20,7 @@
 <xsl:call-template name="add_requirements"/>
 
 require_once(FRAME_WORK_PATH.'basic_classes/ModelVars.php');
+require_once(USER_CONTROLLERS_PATH.'DocFlowTask_Controller.php');
 
 class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@parentId"/>{
 
@@ -270,6 +271,34 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		));		
 	}
 	*/
+	
+	public function get_list($pm){
+		if ($_SESSION['role_id']=='admin'){
+			parent::get_list($pm);
+		}
+		else{
+			//permissions
+			$list_model = $this->getListModelId();
+			$model = new $list_model($this->getDbLink());
+			
+			$where = new ModelWhereSQL();
+			DocFlowTask_Controller::set_employee_id($this->getDbLink());
+			
+			$where->addExpression('permission',
+				sprintf(
+				"employee_id=%d OR %d=ANY(recipient_employee_id_list)",
+				$_SESSION['employee_id'],				
+				$_SESSION['employee_id']
+				)
+			);
+			$model->select(FALSE,$where,NULL,
+				NULL,NULL,NULL,NULL,
+				NULL,TRUE
+			);
+			$this->addModel($model);
+		}
+	}
+	
 	
 </xsl:template>
 

@@ -336,3 +336,10 @@ table,tr,td.noBorder{
 .panel-odd{
 	background-color:#f7e8e8;
 }
+
+.chainDocCurrent{
+	background-color:yellow;
+}
+.chainDoc{
+	max-width:120px;
+}

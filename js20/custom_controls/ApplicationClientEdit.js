@@ -154,18 +154,19 @@ function ApplicationClientEdit(id,options){
 			"labelClassName": "control-label "+bs
 		}));	
 
+		var leg_addr = new ClientLegalAddressEdit(id+":legal_address",{
+			"attrs":{"percentcalc":!options.minInf},
+			"labelClassName": !options.minInf? ("control-label percentcalc "+bs) : undefined,
+			"mainView":this.m_mainView
+		});
+		this.addElement(leg_addr);	
 		this.addElement(new ClientPostAddressEdit(id+":post_address",{
 			"enabled":options.enabled,
 			"attrs":{"percentcalc":!options.minInf},
 			"labelClassName": !options.minInf? ("control-label percentcalc "+bs) : undefined,
 			"mainView":this.m_mainView,
-			"view":this
-		}));	
-
-		this.addElement(new ClientLegalAddressEdit(id+":legal_address",{
-			"attrs":{"percentcalc":!options.minInf},
-			"labelClassName": !options.minInf? ("control-label percentcalc "+bs) : undefined,
-			"mainView":this.m_mainView
+			"view":this,
+			"legalAddress":leg_addr
 		}));	
 		
 

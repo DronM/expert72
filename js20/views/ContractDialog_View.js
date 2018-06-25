@@ -346,8 +346,8 @@ function ContractDialog_View(id,options){
 			this.addElement(new EmployeeEditRef(id+":main_experts_ref",{
 				"labelCaption":"Главный эксперт:",
 				"editContClassName":editContClassName,
-				"labelClassName":labelClassName,
-				"enabled":(role=="expert")
+				"labelClassName":labelClassName
+				//"enabled":(role=="expert")
 			}));	
 		
 		
