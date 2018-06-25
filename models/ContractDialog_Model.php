@@ -324,6 +324,15 @@ class ContractDialog_Model extends ModelSQL{
 		$this->addField($f_permission_ar);
 		//********************
 		
+		//*** Field for_all_employees ***
+		$f_opts = array();
+		$f_opts['defaultValue']='FALSE';
+		$f_opts['id']="for_all_employees";
+				
+		$f_for_all_employees=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"for_all_employees",$f_opts);
+		$this->addField($f_for_all_employees);
+		//********************
+		
 		//*** Field primary_contract_id ***
 		$f_opts = array();
 		$f_opts['id']="primary_contract_id";

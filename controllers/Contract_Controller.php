@@ -145,6 +145,9 @@ class Contract_Controller extends ControllerSQL{
 		$param = new FieldExtArray('permission_ar'
 				,array());
 		$pm->addParam($param);
+		$param = new FieldExtBool('for_all_employees'
+				,array());
+		$pm->addParam($param);
 		$param = new FieldExtInt('primary_contract_id'
 				,array());
 		$pm->addParam($param);
@@ -350,6 +353,10 @@ class Contract_Controller extends ControllerSQL{
 			));
 			$pm->addParam($param);
 		$param = new FieldExtArray('permission_ar'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtBool('for_all_employees'
 				,array(
 			));
 			$pm->addParam($param);
@@ -752,9 +759,10 @@ class Contract_Controller extends ControllerSQL{
 			DocFlowTask_Controller::set_employee_id($this->getDbLink());
 			$where->addExpression('permission_ar',
 				sprintf(
-				"main_expert_id=%d OR 'employees%s' =ANY (permission_ar) OR 'departments%s' =ANY (permission_ar)
-				OR ( %s AND main_department_id=%d )
-				",
+				"for_all_employees
+				OR ( main_expert_id=%d OR 'employees%s' =ANY (permission_ar) OR 'departments%s' =ANY (permission_ar)
+					OR ( %s AND main_department_id=%d )
+				)",
 				$_SESSION['employee_id'],
 				$_SESSION['employee_id'],
 				$_SESSION['department_id'],

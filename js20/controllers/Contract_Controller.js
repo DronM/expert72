@@ -274,6 +274,12 @@ extend(Contract_Controller,ControllerObjServer);
 	
 	var options = {};
 	
+	var field = new FieldBool("for_all_employees",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
 	var field = new FieldInt("primary_contract_id",options);
 	
 	pm.addField(field);
@@ -601,6 +607,12 @@ extend(Contract_Controller,ControllerObjServer);
 	
 	var options = {};
 	
+	var field = new FieldBool("for_all_employees",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
 	var field = new FieldInt("primary_contract_id",options);
 	
 	pm.addField(field);
@@ -837,6 +849,9 @@ extend(Contract_Controller,ControllerObjServer);
 	var f_opts = {};
 	
 	pm.addField(new FieldArray("permission_ar",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldBool("for_all_employees",f_opts));
 	var f_opts = {};
 	
 	pm.addField(new FieldInt("primary_contract_id",f_opts));

@@ -355,6 +355,12 @@ function ContractDialog_View(id,options){
 			this.addElement(new AccessPermissionGrid(id+":permissions",{
 				"enabled":(role=="expert")
 			}));		
+			
+			this.addElement(new EditCheckBox(id+":for_all_employees",{
+				"labelCaption":"Контракт доступен всем:",
+				"enabled":(role=="expert")
+			}));		
+			
 		}
 		
 		this.addElement(new EmployeeEditRef(id+":employees_ref",{			
@@ -551,6 +557,7 @@ function ContractDialog_View(id,options){
 		read_b.push(new DataBinding({"control":this.getElement("main_departments_ref")}));
 		read_b.push(new DataBinding({"control":this.getElement("main_experts_ref")}));
 		read_b.push(new DataBinding({"control":this.getElement("permissions")}));
+		read_b.push(new DataBinding({"control":this.getElement("for_all_employees")}));
 	}
 	
 	if (options.templateOptions.primaryContractExists){
@@ -614,6 +621,7 @@ function ContractDialog_View(id,options){
 		write_b.push(new CommandBinding({"control":this.getElement("main_departments_ref"),"fieldId":"main_department_id"}));
 		write_b.push(new CommandBinding({"control":this.getElement("main_experts_ref"),"fieldId":"main_expert_id"}));
 		write_b.push(new CommandBinding({"control":this.getElement("permissions"),"fieldId":"permissions"}));
+		write_b.push(new CommandBinding({"control":this.getElement("for_all_employees"),"fieldId":"for_all_employees"}));
 	}
 	this.setWriteBindings(write_b);
 	

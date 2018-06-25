@@ -323,6 +323,15 @@ function ContractList_Model(options){
 	
 	var filed_options = {};
 	filed_options.primaryKey = false;	
+	filed_options.defValue = true;
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.for_all_employees = new FieldBool("for_all_employees",filed_options);
+		
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
 	
 	filed_options.autoInc = false;	
 	
@@ -471,6 +480,7 @@ function ContractList_Model(options){
 	
 			
 			
+			
 				
 	
 	var filed_options = {};
@@ -541,6 +551,7 @@ function ContractList_Model(options){
 	
 	options.fields.state_end_date = new FieldDate("state_end_date",filed_options);
 	
+			
 		ContractList_Model.superclass.constructor.call(this,id,options);
 }
 extend(ContractList_Model,ModelXML);

@@ -1,6 +1,6 @@
 -- VIEW: contracts_list
 
-DROP VIEW contracts_list;
+--DROP VIEW contracts_list;
 
 CREATE OR REPLACE VIEW contracts_list AS
 	SELECT
@@ -45,7 +45,9 @@ CREATE OR REPLACE VIEW contracts_list AS
 		
 		st.state AS state,
 		st.date_time AS state_dt,
-		st.end_date_time AS state_end_date
+		st.end_date_time AS state_end_date,
+		
+		t.for_all_employees
 		
 		
 	FROM contracts AS t

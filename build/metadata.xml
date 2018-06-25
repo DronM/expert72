@@ -2,7 +2,7 @@
 <metadata owner="expert72">
 	<versions>
 		<version dateOpen="2017-09-27 12:09:48" dateClose="2017-12-08 10:12:08">1.001 
-		<lastBuild>2018-06-24 09:04:15</lastBuild></version>
+		<lastBuild>2018-06-25 13:51:18</lastBuild></version>
 		<version dateOpen="2017-12-08 11:12:01" dateClose="2017-12-08 11:12:04">1.002</version>
 		<version dateOpen="2017-12-08 11:12:20" dateClose="2017-12-08 11:12:20">1.0.3</version>
 		<version dateOpen="2017-12-12 11:12:07" dateClose="2017-12-12 11:12:07">1.0.4</version>
@@ -47,6 +47,7 @@
 		<version dateOpen="2018-06-22 13:06:38" dateClose="2018-06-22 13:06:39">1.0.43</version>
 		<version dateOpen="2018-06-23 09:06:59" dateClose="2018-06-23 11:06:27">1.0.44</version>
 		<version dateOpen="2018-06-25 08:06:06" dateClose="2018-06-25 08:06:06">1.0.45</version>
+		<version dateOpen="2018-06-25 08:06:14" dateClose="2018-06-25 13:06:51">1.0.46</version>
 	</versions>
 	<globalFilters>
 		<field id="user_id"/>
@@ -2239,6 +2240,7 @@
 			<field id="main_expert_id" dataType="Int" refTable="employees" refField="id"/>
 			<field id="permissions" dataType="JSONB"/>
 			<field id="permission_ar" dataType="Array"/>
+			<field id="for_all_employees" dataType="Bool" defaultValue="FALSE"/>
 			<field id="primary_contract_id" dataType="Int" refTable="contracts" refField="id"/>
 			<field id="modif_primary_contract_id" dataType="Int" refTable="contracts" refField="id"/>
 			<field id="contract_ext_id" dataType="String" length="36"/>
@@ -2320,6 +2322,7 @@
 			<field id="state" dataType="String"/>
 			<field id="state_dt" dataType="DateTimeTZ"/>
 			<field id="state_end_date" dataType="Date"/>
+			<field id="for_all_employees" dataType="Bool"/>
 		</model>
 		<model id="ContractDialog" parent="ModelSQL" dataTable="contracts_dialog" virtual="TRUE" baseModelId="Contract">
 			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE" required="FALSE"/>
@@ -2386,6 +2389,7 @@
 			<field id="auth_letter" dataType="Text"/>
 			<field id="expert_work_day_count" dataType="Int"/>
 			<field id="doc_folders" dataType="JSON"/>
+			<field id="for_all_employees" dataType="Bool"/>
 		</model>
 		<model id="ExpertWork" parent="ModelSQL" dataTable="expert_works" virtual="FALSE">
 			<field id="id" dataType="Int" primaryKey="TRUE" required="FALSE" autoInc="TRUE"/>

@@ -323,6 +323,15 @@ function ContractDialog_Model(options){
 	
 	var filed_options = {};
 	filed_options.primaryKey = false;	
+	filed_options.defValue = true;
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.for_all_employees = new FieldBool("for_all_employees",filed_options);
+		
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
 	
 	filed_options.autoInc = false;	
 	
@@ -724,6 +733,7 @@ function ContractDialog_Model(options){
 	
 	options.fields.doc_folders = new FieldJSON("doc_folders",filed_options);
 	
+			
 		ContractDialog_Model.superclass.constructor.call(this,id,options);
 }
 extend(ContractDialog_Model,ModelXML);
