@@ -2,7 +2,7 @@
 <metadata owner="expert72">
 	<versions>
 		<version dateOpen="2017-09-27 12:09:48" dateClose="2017-12-08 10:12:08">1.001 
-		<lastBuild>2018-06-25 13:51:18</lastBuild></version>
+		<lastBuild>2018-06-26 08:40:24</lastBuild></version>
 		<version dateOpen="2017-12-08 11:12:01" dateClose="2017-12-08 11:12:04">1.002</version>
 		<version dateOpen="2017-12-08 11:12:20" dateClose="2017-12-08 11:12:20">1.0.3</version>
 		<version dateOpen="2017-12-12 11:12:07" dateClose="2017-12-12 11:12:07">1.0.4</version>
@@ -48,6 +48,7 @@
 		<version dateOpen="2018-06-23 09:06:59" dateClose="2018-06-23 11:06:27">1.0.44</version>
 		<version dateOpen="2018-06-25 08:06:06" dateClose="2018-06-25 08:06:06">1.0.45</version>
 		<version dateOpen="2018-06-25 08:06:14" dateClose="2018-06-25 13:06:51">1.0.46</version>
+		<version dateOpen="2018-06-25 13:06:54" dateClose="2018-06-26 08:06:40">1.0.47</version>
 	</versions>
 	<globalFilters>
 		<field id="user_id"/>
@@ -2256,6 +2257,10 @@
 			<field id="constr_address" dataType="JSONB"/>
 			<field id="constr_technical_features" dataType="JSONB"/>
 			<field id="constr_technical_features_in_compound_obj" dataType="JSONB"/>
+			<field id="in_estim_cost" dataType="Float" length="15" precision="2"/>
+			<field id="in_estim_cost_recommend" dataType="Float" length="15" precision="2"/>
+			<field id="cur_estim_cost" dataType="Float" length="15" precision="2"/>
+			<field id="cur_estim_cost_recommend" dataType="Float" length="15" precision="2"/>
 			<index id="contracts_reg_number_idx" unique="TRUE">
 				<field id="reg_number"/>
 			</index>
@@ -2390,6 +2395,10 @@
 			<field id="expert_work_day_count" dataType="Int"/>
 			<field id="doc_folders" dataType="JSON"/>
 			<field id="for_all_employees" dataType="Bool"/>
+			<field id="in_estim_cost" dataType="Float" length="15" precision="2"/>
+			<field id="in_estim_cost_recommend" dataType="Float" length="15" precision="2"/>
+			<field id="cur_estim_cost" dataType="Float" length="15" precision="2"/>
+			<field id="cur_estim_cost_recommend" dataType="Float" length="15" precision="2"/>
 		</model>
 		<model id="ExpertWork" parent="ModelSQL" dataTable="expert_works" virtual="FALSE">
 			<field id="id" dataType="Int" primaryKey="TRUE" required="FALSE" autoInc="TRUE"/>
@@ -2628,9 +2637,9 @@
 				<field id="captcha_key" dataType="String" required="TRUE" length="10"/>
 			</publicMethod>
 			<publicMethod id="register" requestType="post">
-				<field id="name" dataType="String" required="TRUE" length="100"/>
+				<field id="name" dataType="String" required="TRUE" length="50"/>
 				<field id="name_full" dataType="String" required="TRUE" length="250"/>
-				<field id="pwd" dataType="String" required="TRUE" length="100"/>
+				<field id="pwd" dataType="String" required="TRUE" length="50"/>
 				<field id="email" dataType="String" required="TRUE" length="100"/>
 				<field id="pers_data_proc_agreement" dataType="Bool" defaultValue="FALSE" required="TRUE"/>
 				<field id="captcha_key" dataType="String" required="TRUE" length="10"/>
@@ -2640,7 +2649,7 @@
 			</publicMethod>
 			<publicMethod id="login">
 				<field id="name" dataType="String" alias="&#x418;&#x43C;&#x44F; &#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x435;&#x43B;&#x44F;" length="50" required="TRUE"/>
-				<field id="pwd" dataType="Password" alias="&#x41F;&#x430;&#x440;&#x43E;&#x43B;&#x44C;" length="20" required="TRUE"/>
+				<field id="pwd" dataType="Password" alias="&#x41F;&#x430;&#x440;&#x43E;&#x43B;&#x44C;" length="50" required="TRUE"/>
 				<!--<field id="rememberMe" dataType="Bool" alias="Запомнить меня" defaultValue="FALSE" />-->
 			</publicMethod>
 			<!--

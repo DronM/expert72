@@ -452,6 +452,42 @@ function ContractDialog_Model(options){
 	filed_options.autoInc = false;	
 	
 	options.fields.constr_technical_features_in_compound_obj = new FieldJSONB("constr_technical_features_in_compound_obj",filed_options);
+		
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.in_estim_cost = new FieldFloat("in_estim_cost",filed_options);
+	options.fields.in_estim_cost.getValidator().setMaxLength('15');
+		
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.in_estim_cost_recommend = new FieldFloat("in_estim_cost_recommend",filed_options);
+	options.fields.in_estim_cost_recommend.getValidator().setMaxLength('15');
+		
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.cur_estim_cost = new FieldFloat("cur_estim_cost",filed_options);
+	options.fields.cur_estim_cost.getValidator().setMaxLength('15');
+		
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.cur_estim_cost_recommend = new FieldFloat("cur_estim_cost_recommend",filed_options);
+	options.fields.cur_estim_cost_recommend.getValidator().setMaxLength('15');
 	
 			
 			
@@ -733,6 +769,10 @@ function ContractDialog_Model(options){
 	
 	options.fields.doc_folders = new FieldJSON("doc_folders",filed_options);
 	
+			
+			
+			
+			
 			
 		ContractDialog_Model.superclass.constructor.call(this,id,options);
 }

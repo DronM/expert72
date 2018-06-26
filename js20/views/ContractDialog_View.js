@@ -311,6 +311,34 @@ function ContractDialog_View(id,options){
 				"enabled":options.templateOptions.notExpert
 			}));	
 		
+			if (options.templateOptions.costEvalValidity && options.templateOptions.notExpert){
+				this.addElement(new EditMoney(id+":in_estim_cost",{			
+					"labelCaption":"Входящая сметная стоимость (тыс.руб.):",
+					"editContClassName":editContClassName,
+					"labelClassName":labelClassName,
+					"enabled":options.templateOptions.notExpert			
+				}));	
+				this.addElement(new EditMoney(id+":in_estim_cost_recommend",{			
+					"labelCaption":"Рекомендованнная сметная стоимость (тыс.руб.):",
+					"editContClassName":editContClassName,
+					"labelClassName":labelClassName,
+					"enabled":options.templateOptions.notExpert			
+				}));	
+				this.addElement(new EditMoney(id+":cur_estim_cost",{			
+					"labelCaption":"Текущая сметная стоимость (тыс.руб.):",
+					"editContClassName":editContClassName,
+					"labelClassName":labelClassName,
+					"enabled":options.templateOptions.notExpert			
+				}));	
+				this.addElement(new EditMoney(id+":cur_estim_cost_recommend",{			
+					"labelCaption":"Текущая рекомендованнная сметная стоимость (тыс.руб.):",
+					"editContClassName":editContClassName,
+					"labelClassName":labelClassName,
+					"enabled":options.templateOptions.notExpert			
+				}));	
+				
+			}
+					
 			this.addElement(new EditString(id+":argument_document",{
 				"maxLength":"150",
 				"labelCaption":"Акт оспаривания:",
@@ -527,6 +555,13 @@ function ContractDialog_View(id,options){
 		
 	];
 	
+	if (options.templateOptions.costEvalValidity && options.templateOptions.notExpert){
+		read_b.push(new DataBinding({"control":this.getElement("in_estim_cost")}));
+		read_b.push(new DataBinding({"control":this.getElement("in_estim_cost_recommend")}));
+		read_b.push(new DataBinding({"control":this.getElement("cur_estim_cost")}));
+		read_b.push(new DataBinding({"control":this.getElement("cur_estim_cost_recommend")}));
+	}
+	
 	if (options.templateOptions.notExpert){
 		read_b.push(new DataBinding({"control":this.getElement("document_type")}));
 		read_b.push(new DataBinding({"control":this.getElement("kadastr_number")}));
@@ -615,6 +650,13 @@ function ContractDialog_View(id,options){
 	else{
 		//no write
 		write_b = [];
+	}
+	
+	if (options.templateOptions.costEvalValidity && options.templateOptions.notExpert){
+		write_b.push(new CommandBinding({"control":this.getElement("in_estim_cost")}));
+		write_b.push(new CommandBinding({"control":this.getElement("in_estim_cost_recommend")}));
+		write_b.push(new CommandBinding({"control":this.getElement("cur_estim_cost")}));
+		write_b.push(new CommandBinding({"control":this.getElement("cur_estim_cost_recommend")}));
 	}
 	
 	if (options.templateOptions.setAccess){

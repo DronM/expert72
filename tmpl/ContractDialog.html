@@ -58,11 +58,11 @@
 				<div id="{{id}}:contractors_list"/>
 			</div>
 			<div class="row">
-				<div class="{{bsCol}}5">			
+				<div class="{{bsCol}}6">			
 					<div id="{{id}}:document_type"/>
 				</div>	
 				{{#pd}}
-				<div class="{{bsCol}}5">			
+				<div class="{{bsCol}}6">			
 					<div id="{{id}}:expertise_type"/>
 				</div>
 				{{/pd}}
@@ -70,10 +70,10 @@
 					
 			{{#costEvalValidity}}
 			<div class="row">
-				<div class="{{bsCol}}5">			
+				<div class="{{bsCol}}6">			
 					<div id="{{id}}:cost_eval_validity_pd_order"/>
 				</div>
-				<div class="{{bsCol}}5">				
+				<div class="{{bsCol}}6">				
 					<div id="{{id}}:order_document"/>
 				</div>
 			</div>	
@@ -200,6 +200,25 @@
 			<div id="{{id}}:expertise_result"/>
 			<div id="{{id}}:expertise_result_date"/>
 			<div id="{{id}}:expertise_reject_types_ref"/>
+			{{#costEvalValidity}}
+			<div class="row">
+				<div class="{{bsCol}}6">			
+					<div id="{{id}}:in_estim_cost"/>
+				</div>
+				<div class="{{bsCol}}6">				
+					<div id="{{id}}:in_estim_cost_recommend"/>
+				</div>
+			</div>	
+			<div class="row">
+				<div class="{{bsCol}}6">			
+					<div id="{{id}}:cur_estim_cost"/>
+				</div>
+				<div class="{{bsCol}}6">				
+					<div id="{{id}}:cur_estim_cost_recommend"/>
+				</div>
+			</div>	
+			
+			{{/costEvalValidity}}			
 		</div>
 		{{/notExpert}}		
 		

@@ -1,82 +1,222 @@
--- ******************* update 25/06/2018 13:41:08 ******************
+-- ******************* update 25/06/2018 14:44:44 ******************
 
-		ALTER TABLE contracts ADD COLUMN for_all_employees bool
-			DEFAULT TRUE;
-
-
--- ******************* update 25/06/2018 13:43:03 ******************
--- VIEW: contracts_list
-
---DROP VIEW contracts_list;
-
-CREATE OR REPLACE VIEW contracts_list AS
-	SELECT
-		t.id,
-		t.date_time,
-		t.application_id,
-		applications_ref(applications) AS applications_ref,
-		
-		t.client_id,
-		clients.name AS client_descr,
-		--clients_ref(clients) AS clients_ref,
-		coalesce(t.constr_name,applications.constr_name) AS constr_name,
-		
-		t.akt_number,
-		t.akt_date,
-		coalesce(t.akt_total,0) As akt_total,
-		t.akt_ext_id,
-		t.invoice_date,
-		t.invoice_number,
-		t.invoice_ext_id,
-
-		t.employee_id,
-		employees_ref(employees) AS employees_ref,
-		
-		t.reg_number,
-		t.expertise_type,
-		t.document_type,
-		
-		contracts_ref(t) AS self_ref,
-		
-		t.permission_ar,
-		t.main_expert_id,
-		t.main_department_id,
-		m_exp.name AS main_expert_descr,
-		--employees_ref(m_exp) AS main_experts_ref,
-		
-		t.contract_number,
-		t.contract_date,
-		t.expertise_result_number,
-		
-		t.comment_text,
-		
-		st.state AS state,
-		st.date_time AS state_dt,
-		st.end_date_time AS state_end_date,
-		
-		t.for_all_employees
-		
-		
-	FROM contracts AS t
-	LEFT JOIN applications ON applications.id=t.application_id
-	LEFT JOIN employees ON employees.id=t.employee_id
-	LEFT JOIN employees AS m_exp ON m_exp.id=t.main_expert_id
-	LEFT JOIN clients ON clients.id=t.client_id
-	LEFT JOIN (
-		SELECT
-			t.application_id,
-			max(t.date_time) AS date_time
-		FROM application_processes t
-		GROUP BY t.application_id
-	) AS h_max ON h_max.application_id=t.application_id
-	LEFT JOIN application_processes st
-		ON st.application_id=h_max.application_id AND st.date_time = h_max.date_time
+		UPDATE views SET
+			c='ExpertiseRejectType_Controller',
+			f='get_list',
+			t='ExpertiseRejectTypeList',
+			section='Справочники',
+			descr='Виды отрицательных заключений',
+			limited=FALSE
+		WHERE id='10024';
 	
-	;
-	
-ALTER VIEW contracts_list OWNER TO expert72;
+-- ******************* update 25/06/2018 16:41:25 ******************
+-- Function: client_payments_process()
 
--- ******************* update 25/06/2018 13:44:05 ******************
+-- DROP FUNCTION client_payments_process();
+
+CREATE OR REPLACE FUNCTION client_payments_process()
+  RETURNS trigger AS
+$BODY$
+DECLARE
+	v_pay_cnt int;
+	v_work_end_date timestampTZ;
+	v_expert_work_end_date timestampTZ;
+	v_application_id int;
+	v_user_id int;
+	v_simult_contr_id int;
+	v_simult_contr_work_end_date timestampTZ;
+	v_simult_app_id int;
+	v_cost_eval_simult bool;
+BEGIN
+
+	IF (TG_WHEN='AFTER' AND TG_OP='INSERT') THEN		
+		
+		--ПРИ ПЕРВОЙ ОПЛАТЕ УСТАНОВИМ ДАТУ ДАЧАЛА/ОКОНЧАНИЯ РАБОТ
+		SELECT count(*) INTO v_pay_cnt FROM client_payments WHERE contract_id=NEW.contract_id;
+
+		IF v_pay_cnt = 1 THEN
+			SELECT
+				t.application_id,
+				contracts_work_end_date(applications.office_id, t.date_type, NEW.pay_date::timestampTZ, t.expertise_day_count),
+				contracts_work_end_date(applications.office_id, t.date_type, NEW.pay_date::timestampTZ, t.expert_work_day_count),
+				simult_contr.id,
+				CASE WHEN simult_contr.id IS NOT NULL THEN
+					contracts_work_end_date(cost_eval_app.office_id, simult_contr.date_type, NEW.pay_date::timestampTZ, simult_contr.expertise_day_count)
+				ELSE NULL
+				END,
+				cost_eval_app.id,
+				(t.document_type='cost_eval_validity' AND applications.cost_eval_validity_simult)
+			INTO
+				v_application_id,
+				v_work_end_date,
+				v_expert_work_end_date,
+				v_simult_contr_id,
+				v_simult_contr_work_end_date,
+				v_simult_app_id,
+				v_cost_eval_simult
+			FROM contracts t
+			LEFT JOIN applications ON applications.id=t.application_id
+			LEFT JOIN applications AS cost_eval_app ON
+				cost_eval_app.id=applications.derived_application_id AND coalesce(cost_eval_app.cost_eval_validity_simult,FALSE)
+			LEFT JOIN contracts AS simult_contr ON simult_contr.application_id=cost_eval_app.id
+			WHERE t.id=NEW.contract_id;
+			
+			--ВСЕ кроме достоверености, которая вместе с ПД, там все через достоверность
+			IF coalesce(v_cost_eval_simult,FALSE)=FALSE THEN
+				UPDATE contracts
+				SET
+					work_start_date = NEW.pay_date,
+					work_end_date = v_work_end_date,
+					expert_work_end_date = v_expert_work_end_date
+				WHERE id=NEW.contract_id;
+			
+				IF NEW.employee_id IS NOT NULL THEN
+					SELECT user_id INTO v_user_id FROM employees WHERE id=NEW.employee_id;
+				END IF;
+			
+				IF v_user_id IS NULL THEN
+					SELECT id INTO v_user_id FROM users WHERE role_id='admin' LIMIT 1;
+				END IF;
+			
+				--Начало работ - статус
+				--Устанавливается автоматически из загрузки оплат
+				INSERT INTO application_processes
+				(application_id, date_time, state, user_id, end_date_time)
+				VALUES (v_application_id, NEW.pay_date::timestampTZ, 'expertise'::application_states, v_user_id, v_work_end_date);
+			
+				--А если это ПД и есть связная достоверность ОДНОВРЕМЕННО - сменить там тоже
+				IF v_simult_contr_id IS NOT NULL THEN
+					UPDATE contracts
+					SET
+						work_start_date = NEW.pay_date,
+						work_end_date = v_simult_contr_work_end_date,
+						expert_work_end_date = v_expert_work_end_date
+					WHERE id=v_simult_contr_id;
+				
+					INSERT INTO application_processes
+					(application_id, date_time, state, user_id, end_date_time)
+					VALUES (v_simult_app_id, NEW.pay_date::timestampTZ, 'expertise'::application_states, v_user_id, v_work_end_date);
+				
+				END IF;
+			END IF;	
+		END IF;
+				
+		RETURN NEW;
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION client_payments_process() OWNER TO expert72;
+
+
+-- ******************* update 25/06/2018 16:42:47 ******************
+-- Function: client_payments_process()
+
+-- DROP FUNCTION client_payments_process();
+
+CREATE OR REPLACE FUNCTION client_payments_process()
+  RETURNS trigger AS
+$BODY$
+DECLARE
+	v_pay_cnt int;
+	v_work_end_date timestampTZ;
+	v_expert_work_end_date timestampTZ;
+	v_application_id int;
+	v_user_id int;
+	v_simult_contr_id int;
+	v_simult_contr_work_end_date timestampTZ;
+	v_simult_app_id int;
+	v_cost_eval_simult bool;
+BEGIN
+
+	IF (TG_WHEN='AFTER' AND TG_OP='INSERT') THEN		
+		
+		--ПРИ ПЕРВОЙ ОПЛАТЕ УСТАНОВИМ ДАТУ ДАЧАЛА/ОКОНЧАНИЯ РАБОТ
+		SELECT count(*) INTO v_pay_cnt FROM client_payments WHERE contract_id=NEW.contract_id;
+
+		IF v_pay_cnt = 1 THEN
+			SELECT
+				t.application_id,
+				contracts_work_end_date(applications.office_id, t.date_type, NEW.pay_date::timestampTZ, t.expertise_day_count),
+				contracts_work_end_date(applications.office_id, t.date_type, NEW.pay_date::timestampTZ, t.expert_work_day_count),
+				simult_contr.id,
+				CASE WHEN simult_contr.id IS NOT NULL THEN
+					contracts_work_end_date(cost_eval_app.office_id, simult_contr.date_type, NEW.pay_date::timestampTZ, simult_contr.expertise_day_count)
+				ELSE NULL
+				END,
+				cost_eval_app.id,
+				(t.document_type='cost_eval_validity' AND applications.cost_eval_validity_simult)
+			INTO
+				v_application_id,
+				v_work_end_date,
+				v_expert_work_end_date,
+				v_simult_contr_id,
+				v_simult_contr_work_end_date,
+				v_simult_app_id,
+				v_cost_eval_simult
+			FROM contracts t
+			LEFT JOIN applications ON applications.id=t.application_id
+			LEFT JOIN applications AS cost_eval_app ON
+				cost_eval_app.id=applications.derived_application_id AND coalesce(cost_eval_app.cost_eval_validity_simult,FALSE)
+			LEFT JOIN contracts AS simult_contr ON simult_contr.application_id=cost_eval_app.id
+			WHERE t.id=NEW.contract_id;
+			
+			--ВСЕ кроме достоверености, которая вместе с ПД, там все через достоверность
+			IF coalesce(v_cost_eval_simult,FALSE)=FALSE THEN
+				UPDATE contracts
+				SET
+					work_start_date = NEW.pay_date,
+					work_end_date = v_work_end_date,
+					expert_work_end_date = v_expert_work_end_date
+				WHERE id=NEW.contract_id;
+			
+				IF NEW.employee_id IS NOT NULL THEN
+					SELECT user_id INTO v_user_id FROM employees WHERE id=NEW.employee_id;
+				END IF;
+			
+				IF v_user_id IS NULL THEN
+					SELECT id INTO v_user_id FROM users WHERE role_id='admin' LIMIT 1;
+				END IF;
+			
+				--Начало работ - статус
+				--Устанавливается автоматически из загрузки оплат
+				INSERT INTO application_processes
+				(application_id, date_time, state, user_id, end_date_time)
+				VALUES (v_application_id, NEW.pay_date::timestampTZ, 'expertise'::application_states, v_user_id, v_work_end_date);
+			
+				--А если это ПД и есть связная достоверность ОДНОВРЕМЕННО - сменить там тоже
+				IF v_simult_contr_id IS NOT NULL THEN
+					UPDATE contracts
+					SET
+						work_start_date = NEW.pay_date,
+						work_end_date = v_simult_contr_work_end_date,
+						expert_work_end_date = v_expert_work_end_date
+					WHERE id=v_simult_contr_id;
+				
+					INSERT INTO application_processes
+					(application_id, date_time, state, user_id, end_date_time)
+					VALUES (v_simult_app_id, NEW.pay_date::timestampTZ, 'expertise'::application_states, v_user_id, v_work_end_date);
+				
+				END IF;
+			END IF;	
+		END IF;
+				
+		RETURN NEW;
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION client_payments_process() OWNER TO expert72;
+
+
+-- ******************* update 25/06/2018 17:17:53 ******************
+
+		ALTER TABLE contracts ADD COLUMN in_estim_cost  numeric(15,2),ADD COLUMN in_estim_cost_recommend  numeric(15,2),ADD COLUMN cur_estim_cost  numeric(15,2),ADD COLUMN cur_estim_cost_recommend  numeric(15,2);
+
+
+-- ******************* update 25/06/2018 17:19:20 ******************
 -- VIEW: contracts_dialog
 
 --DROP VIEW contracts_dialog;
@@ -224,7 +364,11 @@ CREATE OR REPLACE VIEW contracts_dialog AS
 		
 		app.doc_folders,
 		
-		t.for_all_employees
+		t.for_all_employees,
+		t.in_estim_cost,
+		t.in_estim_cost_recommend,
+		t.cur_estim_cost,
+		t.cur_estim_cost_recommend
 		
 	FROM contracts t
 	LEFT JOIN applications_dialog AS app ON app.id=t.application_id

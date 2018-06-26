@@ -369,6 +369,30 @@ extend(Contract_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	
+	var field = new FieldFloat("in_estim_cost",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldFloat("in_estim_cost_recommend",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldFloat("cur_estim_cost",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldFloat("cur_estim_cost_recommend",options);
+	
+	pm.addField(field);
+	
 	pm.addField(new FieldInt("ret_id",{}));
 	
 	
@@ -703,6 +727,30 @@ extend(Contract_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	
+	var field = new FieldFloat("in_estim_cost",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldFloat("in_estim_cost_recommend",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldFloat("cur_estim_cost",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldFloat("cur_estim_cost_recommend",options);
+	
+	pm.addField(field);
+	
 	
 }
 
@@ -897,6 +945,18 @@ extend(Contract_Controller,ControllerObjServer);
 	var f_opts = {};
 	
 	pm.addField(new FieldJSONB("constr_technical_features_in_compound_obj",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldFloat("in_estim_cost",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldFloat("in_estim_cost_recommend",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldFloat("cur_estim_cost",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldFloat("cur_estim_cost_recommend",f_opts));
 	pm.getField(this.PARAM_ORD_FIELDS).setValue("date_time");
 	
 }

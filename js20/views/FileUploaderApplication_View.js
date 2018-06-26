@@ -77,13 +77,14 @@ FileUploaderApplication_View.prototype.uploadAll = function(){
 		//проверка на записанность
 		if (this.m_mainView.getElement("id").isNull()){
 			var self = this;
-			this.m_mainView.onSave(function(){
-				self.upload();
-			});
+			this.m_mainView.getCommand(this.m_mainView.CMD_OK).setAsync(false);
+			this.m_mainView.onSave();
+			/*function(){
+				//self.upload();
+			});*/
+			this.m_mainView.getCommand(this.m_mainView.CMD_OK).setAsync(true);
 		}
-		else{
-			this.upload();
-		}
+		this.upload();
 	}
 }
 FileUploaderApplication_View.prototype.deleteFileFromServer = function(fileId,itemId){

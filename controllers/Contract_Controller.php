@@ -194,6 +194,18 @@ class Contract_Controller extends ControllerSQL{
 		$param = new FieldExtJSONB('constr_technical_features_in_compound_obj'
 				,array());
 		$pm->addParam($param);
+		$param = new FieldExtFloat('in_estim_cost'
+				,array());
+		$pm->addParam($param);
+		$param = new FieldExtFloat('in_estim_cost_recommend'
+				,array());
+		$pm->addParam($param);
+		$param = new FieldExtFloat('cur_estim_cost'
+				,array());
+		$pm->addParam($param);
+		$param = new FieldExtFloat('cur_estim_cost_recommend'
+				,array());
+		$pm->addParam($param);
 		
 		$pm->addParam(new FieldExtInt('ret_id'));
 		
@@ -418,6 +430,22 @@ class Contract_Controller extends ControllerSQL{
 			));
 			$pm->addParam($param);
 		$param = new FieldExtJSONB('constr_technical_features_in_compound_obj'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtFloat('in_estim_cost'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtFloat('in_estim_cost_recommend'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtFloat('cur_estim_cost'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtFloat('cur_estim_cost_recommend'
 				,array(
 			));
 			$pm->addParam($param);
@@ -755,14 +783,17 @@ class Contract_Controller extends ControllerSQL{
 			$list_model = $this->getListModelId();
 			$model = new $list_model($this->getDbLink());
 			
-			$where = new ModelWhereSQL();
+			$where = $this->conditionFromParams($pm,$model);
+			if (!$where){
+				$where = new ModelWhereSQL();
+			}
 			DocFlowTask_Controller::set_employee_id($this->getDbLink());
 			$where->addExpression('permission_ar',
 				sprintf(
-				"for_all_employees
+				"(for_all_employees
 				OR ( main_expert_id=%d OR 'employees%s' =ANY (permission_ar) OR 'departments%s' =ANY (permission_ar)
 					OR ( %s AND main_department_id=%d )
-				)",
+				))",
 				$_SESSION['employee_id'],
 				$_SESSION['employee_id'],
 				$_SESSION['department_id'],
@@ -1087,11 +1118,11 @@ class Contract_Controller extends ControllerSQL{
 	public function get_work_end_date($pm){
 		$this->addNewModel(
 			sprintf(
-			"WITH (SELECT app.office_id AS office_id
+			"WITH contr AS (SELECT app.office_id AS office_id
 				FROM contracts AS contr
 				LEFT JOIN applications AS app ON app.id=contr.application_id
 				WHERE contr.id=%d
-			) AS contr
+			)
 			SELECT
 				contracts_work_end_date(
 					(SELECT office_id FROM contr),

@@ -375,7 +375,7 @@ extend(User_Controller,ControllerObjServer);
 	
 		options.required = true;
 	
-		options.maxlength = "100";
+		options.maxlength = "50";
 	
 		pm.addField(new FieldString("name",options));
 	
@@ -395,7 +395,7 @@ extend(User_Controller,ControllerObjServer);
 	
 		options.required = true;
 	
-		options.maxlength = "100";
+		options.maxlength = "50";
 	
 		pm.addField(new FieldString("pwd",options));
 	
@@ -473,7 +473,7 @@ extend(User_Controller,ControllerObjServer);
 	
 		options.required = true;
 	
-		options.maxlength = "20";
+		options.maxlength = "50";
 	
 		pm.addField(new FieldPassword("pwd",options));
 	

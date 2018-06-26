@@ -145,7 +145,11 @@ CREATE OR REPLACE VIEW contracts_dialog AS
 		
 		app.doc_folders,
 		
-		t.for_all_employees
+		t.for_all_employees,
+		t.in_estim_cost,
+		t.in_estim_cost_recommend,
+		t.cur_estim_cost,
+		t.cur_estim_cost_recommend
 		
 	FROM contracts t
 	LEFT JOIN applications_dialog AS app ON app.id=t.application_id

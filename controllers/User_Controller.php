@@ -294,7 +294,7 @@ class User_Controller extends ControllerSQL{
 				
 	$opts=array();
 	
-		$opts['length']=100;
+		$opts['length']=50;
 		$opts['required']=TRUE;				
 		$pm->addParam(new FieldExtString('name',$opts));
 	
@@ -308,7 +308,7 @@ class User_Controller extends ControllerSQL{
 				
 	$opts=array();
 	
-		$opts['length']=100;
+		$opts['length']=50;
 		$opts['required']=TRUE;				
 		$pm->addParam(new FieldExtString('pwd',$opts));
 	
@@ -364,7 +364,7 @@ class User_Controller extends ControllerSQL{
 	$opts=array();
 	
 		$opts['alias']='Пароль';
-		$opts['length']=20;
+		$opts['length']=50;
 		$opts['required']=TRUE;				
 		$pm->addParam(new FieldExtPassword('pwd',$opts));
 	

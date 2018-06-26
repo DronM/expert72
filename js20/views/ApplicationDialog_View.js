@@ -633,6 +633,7 @@ function ApplicationDialog_View(id,options){
 extend(ApplicationDialog_View, DocumentDialog_View);//ViewObjectAjx
 
 ApplicationDialog_View.prototype.NEW_TAB_FLASH_TIME = 3000;
+ApplicationDialog_View.prototype.FORM_SAVE_INTERVAL = 1*60*1000;
 
 ApplicationDialog_View.prototype.m_totalFilledPercent;
 ApplicationDialog_View.prototype.m_technicalFeatures;
@@ -1134,6 +1135,26 @@ ApplicationDialog_View.prototype.getModified = function(){
 	return ApplicationDialog_View.superclass.getModified.call(this);
 }
 
+ApplicationDialog_View.prototype.toDOM = function(parent){
+	ApplicationDialog_View.superclass.toDOM.call(this,parent);
+	
+	var self = this;
+	this.m_mainSave = setInterval(function() {
+		self.onSave();
+	}, this.FORM_SAVE_INTERVAL);	
+}
+
+ApplicationDialog_View.prototype.delDOM = function(){
+	clearInterval(this.m_mainSave);
+	
+	ApplicationDialog_View.superclass.delDOM.call(this);
+}
+
+/* В этой форме сообщение о записи не нужно! */
+ApplicationDialog_View.prototype.onSaveOk = function(resp){
+
+	this.updateControlsFromResponse(resp);
+}
 
 /*
 ApplicationDialog_View.prototype.checkForServices = function(){

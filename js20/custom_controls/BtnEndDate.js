@@ -49,7 +49,7 @@ BtnEndDate.prototype.getNextNum = function(){
 		"ok":function(resp){
 			//console.dir(resp)
 			var m = new ModelXML("Date_Model",{
-				"fields":["dt"],
+				"fields":["end_dt","work_end_dt"],
 				"data":resp.getModelData("Date_Model")
 			});
 			if (m.getNextRow()){

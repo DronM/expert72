@@ -456,6 +456,42 @@ class ContractDialog_Model extends ModelSQL{
 		$this->addField($f_constr_technical_features_in_compound_obj);
 		//********************
 		
+		//*** Field in_estim_cost ***
+		$f_opts = array();
+		$f_opts['length']=15;
+		$f_opts['id']="in_estim_cost";
+				
+		$f_in_estim_cost=new FieldSQLFloat($this->getDbLink(),$this->getDbName(),$this->getTableName(),"in_estim_cost",$f_opts);
+		$this->addField($f_in_estim_cost);
+		//********************
+		
+		//*** Field in_estim_cost_recommend ***
+		$f_opts = array();
+		$f_opts['length']=15;
+		$f_opts['id']="in_estim_cost_recommend";
+				
+		$f_in_estim_cost_recommend=new FieldSQLFloat($this->getDbLink(),$this->getDbName(),$this->getTableName(),"in_estim_cost_recommend",$f_opts);
+		$this->addField($f_in_estim_cost_recommend);
+		//********************
+		
+		//*** Field cur_estim_cost ***
+		$f_opts = array();
+		$f_opts['length']=15;
+		$f_opts['id']="cur_estim_cost";
+				
+		$f_cur_estim_cost=new FieldSQLFloat($this->getDbLink(),$this->getDbName(),$this->getTableName(),"cur_estim_cost",$f_opts);
+		$this->addField($f_cur_estim_cost);
+		//********************
+		
+		//*** Field cur_estim_cost_recommend ***
+		$f_opts = array();
+		$f_opts['length']=15;
+		$f_opts['id']="cur_estim_cost_recommend";
+				
+		$f_cur_estim_cost_recommend=new FieldSQLFloat($this->getDbLink(),$this->getDbName(),$this->getTableName(),"cur_estim_cost_recommend",$f_opts);
+		$this->addField($f_cur_estim_cost_recommend);
+		//********************
+		
 		//*** Field applications_ref ***
 		$f_opts = array();
 		$f_opts['id']="applications_ref";
