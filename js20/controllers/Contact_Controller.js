@@ -91,7 +91,7 @@ extend(Contact_Controller,ControllerObjServer);
 	pm.addField(new FieldString("dep",f_opts));
 	var f_opts = {};
 	
-	pm.addField(new FieldString("post",f_opts));
+	pm.addField(new FieldText("post",f_opts));
 	var f_opts = {};
 	
 	pm.addField(new FieldEnum("person_type",f_opts));
@@ -100,7 +100,7 @@ extend(Contact_Controller,ControllerObjServer);
 	pm.addField(new FieldString("name",f_opts));
 	var f_opts = {};
 	
-	pm.addField(new FieldString("email",f_opts));
+	pm.addField(new FieldText("email",f_opts));
 	var f_opts = {};
 	
 	pm.addField(new FieldString("tel",f_opts));

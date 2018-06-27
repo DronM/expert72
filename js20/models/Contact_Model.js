@@ -83,8 +83,7 @@ function Contact_Model(options){
 	
 	filed_options.autoInc = false;	
 	
-	options.fields.post = new FieldString("post",filed_options);
-	options.fields.post.getValidator().setMaxLength('50');
+	options.fields.post = new FieldText("post",filed_options);
 	
 				
 	
@@ -113,8 +112,7 @@ function Contact_Model(options){
 	
 	filed_options.autoInc = false;	
 	
-	options.fields.email = new FieldString("email",filed_options);
-	options.fields.email.getValidator().setMaxLength('50');
+	options.fields.email = new FieldText("email",filed_options);
 	
 				
 	

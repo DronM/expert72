@@ -43,3 +43,17 @@ FileUploaderContract_View исправлено options.allowFileDownload = true;
 6) Убрал Uncaught Error: при генерации ошибки
 7) Переодическое сохранение формы заявления
 8) Убрал note после сохранения заяваления
+
+1.0.48
+1) Заголовок Access-Alow-Origin в локальном index.php
+2) Application_View.js автосохранение обернуто во try-catch
+3) FieUploader_View косяк в maxFileSizeErrorCallback Ошибка $h undefined у пользователя
+4) Ошибка при загрузке -УЛ пробел в имени перед расширением
+5) Кастомный сервер для upload ServerVariable custom_app_upload_server берется из настройки CUSTOM_APP_UPLOAD_SERVER из файла Config.php
+если есть такая настройка. FileUploader_View добавлен параметр конструктора customUploadServer FileUploaderApplication_View этот
+параметр устанавливает в зн-ие серверной переменной custom_app_upload_server
+
+6)Таблица contacts, поля email post сделал типом Text, а то не помещалось длинное значение
+
+7) Кнопка поиск контрагентов по ЕГРЮЛ добавлен title и файл локали
+

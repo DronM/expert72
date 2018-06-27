@@ -2,7 +2,7 @@
 <metadata owner="expert72">
 	<versions>
 		<version dateOpen="2017-09-27 12:09:48" dateClose="2017-12-08 10:12:08">1.001 
-		<lastBuild>2018-06-26 08:40:24</lastBuild></version>
+		<lastBuild>2018-06-27 08:00:58</lastBuild></version>
 		<version dateOpen="2017-12-08 11:12:01" dateClose="2017-12-08 11:12:04">1.002</version>
 		<version dateOpen="2017-12-08 11:12:20" dateClose="2017-12-08 11:12:20">1.0.3</version>
 		<version dateOpen="2017-12-12 11:12:07" dateClose="2017-12-12 11:12:07">1.0.4</version>
@@ -49,6 +49,7 @@
 		<version dateOpen="2018-06-25 08:06:06" dateClose="2018-06-25 08:06:06">1.0.45</version>
 		<version dateOpen="2018-06-25 08:06:14" dateClose="2018-06-25 13:06:51">1.0.46</version>
 		<version dateOpen="2018-06-25 13:06:54" dateClose="2018-06-26 08:06:40">1.0.47</version>
+		<version dateOpen="2018-06-26 08:06:48" dateClose="2018-06-27 08:06:01">1.0.48</version>
 	</versions>
 	<globalFilters>
 		<field id="user_id"/>
@@ -1077,10 +1078,10 @@
 			<field id="parent_ind" primaryKey="TRUE" required="TRUE" dataType="Int"/>
 			<field id="firm_name" dataType="String" length="250"/>
 			<field id="dep" dataType="String" length="250"/>
-			<field id="post" dataType="String" length="50"/>
+			<field id="post" dataType="Text"/>
 			<field id="person_type" dataType="Enum" enumId="responsable_person_types"/>
 			<field id="name" dataType="String" length="200"/>
-			<field id="email" dataType="String" length="50"/>
+			<field id="email" dataType="Text"/>
 			<field id="tel" dataType="String" length="15"/>
 			<field id="contact" dataType="Text"/>
 			<index id="contacts_contact_idx" type="btree" unique="TRUE">
@@ -3961,6 +3962,7 @@
 		<jsScript file="controls/MainMenuTree.js"/>
 		<jsScript file="controls/rs/MainMenuTree.rs_ru.js" resource="ru"/>
 		<jsScript file="controls/ButtonOrgSearch.js"/>
+		<jsScript file="controls/rs/ButtonOrgSearch.rs_ru.js" resource="ru"/>
 		<jsScript file="controls/ConstantGrid.js"/>
 		<jsScript file="controls/rs/ConstantGrid.rs_ru.js" resource="ru"/>
 		<jsScript file="controls/Captcha.js"/>

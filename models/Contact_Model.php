@@ -69,10 +69,9 @@ class Contact_Model extends ModelSQL{
 		
 		//*** Field post ***
 		$f_opts = array();
-		$f_opts['length']=50;
 		$f_opts['id']="post";
 				
-		$f_post=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"post",$f_opts);
+		$f_post=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"post",$f_opts);
 		$this->addField($f_post);
 		//********************
 		
@@ -95,10 +94,9 @@ class Contact_Model extends ModelSQL{
 		
 		//*** Field email ***
 		$f_opts = array();
-		$f_opts['length']=50;
 		$f_opts['id']="email";
 				
-		$f_email=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"email",$f_opts);
+		$f_email=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"email",$f_opts);
 		$this->addField($f_email);
 		//********************
 		

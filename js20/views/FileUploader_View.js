@@ -88,6 +88,8 @@ function FileUploader_View(id,options){
 		}))
 	}
 	
+	this.setCustomUploadServer(options.customUploadServer);
+	
 	FileUploader_View.superclass.constructor.call(this,id,"DIV",options);
 }
 extend(FileUploader_View,ControlContainer);
@@ -113,6 +115,7 @@ FileUploader_View.prototype.m_allowIdList;
 FileUploader_View.prototype.m_separateSignature;
 FileUploader_View.prototype.allowFileDeletion;
 FileUploader_View.prototype.allowFileDownload;
+FileUploader_View.prototype.m_customUploadServer;
 
 /* protected*/
 
@@ -165,8 +168,10 @@ FileUploader_View.prototype.upload = function(){
 						//console.dir(idlist_a);
 						is_idlist = (nm.substring(nm.length-this.IDLIST_MARK.length).toUpperCase()==this.IDLIST_MARK);
 						if (is_idlist){
-							//реальное имя
-							file_parts[file_parts.length-2] = nm.substring(0,nm.length-this.IDLIST_MARK.length); 
+							//реальное имя без пробелов в конце перед расширением
+							file_parts[file_parts.length-2] = nm.substring(0,nm.length-this.IDLIST_MARK.length).trim(); 
+							//расширение без пробелов в конце
+							file_parts[file_parts.length-1] = file_parts[file_parts.length-1].trim();
 						}
 					}
 					if (is_idlist && !this.m_uploader.files[i].file_signed){
@@ -174,13 +179,17 @@ FileUploader_View.prototype.upload = function(){
 						no_sig_idlists.push(this.m_uploader.files[i].file_path + this.FILE_DIR_SEP + this.m_uploader.files[i].fileName);
 					}
 					else if (is_idlist){
-						//подписанный ИУЛ без маркера, только имя
+						//подписанный ИУЛ без маркера(-УЛ), только имя без пробелов между имя.расширение
 						signed_idlists[file_parts.join(".")] = true;
 					}
 					else if (!this.m_uploader.files[i].file_signed){
-						//НЕ подписанный файл
-						no_sig_file_paths[this.m_uploader.files[i].fileName] = this.m_uploader.files[i].file_path;
-						no_sig_files.push(this.m_uploader.files[i].fileName);
+						//НЕ подписанный файл						
+						//могут быть пробелы между имя.расширение
+						file_parts[file_parts.length-2] = file_parts[file_parts.length-2].trim();
+						file_parts[file_parts.length-1] = file_parts[file_parts.length-1].trim();
+						var nm_no_spaces = file_parts.join(".");
+						no_sig_files.push(nm_no_spaces);
+						no_sig_file_paths[nm_no_spaces] = this.m_uploader.files[i].file_path;
 					}
 				}
 			}
@@ -466,14 +475,14 @@ FileUploader_View.prototype.initDownload = function(){
 	var self = this;
 	//resumable	
 	this.m_uploader = new Resumable({
-		"target": "functions/file_upload.php",
+		"target": (this.m_customUploadServer? this.m_customUploadServer:"") + "functions/file_upload.php",
 		"testChunks": true,
 		"fileType":this.m_fileTypes,
 		"maxFileSize":this.m_maxFileSize,
 		"maxFileSizeErrorCallback":function(file, errorCount){
 			var f_name = file.fileName||file.name;
-			var sz = $h.formatSize(self.m_uploader.getOpt('maxFileSize'));
-			window.showError(CommonHelper.format(self.ER_MAX_FILE_SIZE,[f_name,sz]));
+			//var sz = $h.formatSize(self.m_uploader.getOpt('maxFileSize'));
+			window.showError(CommonHelper.format(self.ER_MAX_FILE_SIZE,[f_name,sef.m_maxFileSize]));
 		},
 		"fileTypeErrorCallback":function(file, errorCount){
 			var f_name = file.fileName||file.name;
@@ -534,8 +543,13 @@ FileUploader_View.prototype.initDownload = function(){
 				}					
 			}
 			var sig_file_ext = "."+self.SIGN_EXT;			
-			if (file.fileName.substring(file.fileName.length-sig_file_ext.length)==sig_file_ext){
+			//if (file.fileName.substring(file.fileName.length-sig_file_ext.length)==sig_file_ext){
+			if ((new RegExp("^.+\."+self.SIGN_EXT+" *$")).test(file.fileName.toLowerCase())) {
 				//signature
+				/*var orig_name_ar = file.fileName.split(".");
+				orig_name_ar.splice(orig_name_ar.length-1,1);
+				var orig_name = orig_name_ar.join(".");
+				*/
 				var orig_name = file.fileName.substring(0,file.fileName.length-sig_file_ext.length);
 				var found = false;
 				for (var i=0;i<self.m_uploader.files.length;i++){					
@@ -709,3 +723,13 @@ FileUploader_View.prototype.getQuerySruc = function(file){
 	
 	return struc;
 }	
+
+FileUploader_View.prototype.setCustomUploadServer = function(v){
+	if (v){
+		this.m_customUploadServer = v.trim();
+		if (this.m_customUploadServer.substring(this.m_customUploadServer.length-1)!="/"){
+			this.m_customUploadServer+="/";
+		}
+	}
+}
+

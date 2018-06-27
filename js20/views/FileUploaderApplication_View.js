@@ -43,6 +43,8 @@ function FileUploaderApplication_View(id,options){
 		self.setFileOptions(fileOpts,file);
 	}
 	
+	options.customUploadServer = window.getApp().getServVar("custom_app_upload_server");
+	
 	FileUploaderApplication_View.superclass.constructor.call(this,id,options);
 }
 extend(FileUploaderApplication_View,FileUploader_View);

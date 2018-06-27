@@ -1140,7 +1140,12 @@ ApplicationDialog_View.prototype.toDOM = function(parent){
 	
 	var self = this;
 	this.m_mainSave = setInterval(function() {
-		self.onSave();
+		try{
+			self.onSave();
+		}
+		catch(e){
+			//do nothing
+		}
 	}, this.FORM_SAVE_INTERVAL);	
 }
 

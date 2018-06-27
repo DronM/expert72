@@ -175,12 +175,9 @@ BEGIN
 					NEW.content,
 					(pdfn_doc_flow_importance_types_common()->'keys'->>'id')::int,
 					v_end_date_time,
-					(SELECT
-						employees.id
-					FROM employees
-					WHERE 
-						department_id = (const_app_recipient_department_val()->'keys'->>'id')::int
-						AND post_id=(pdfn_posts_dep_boss()->'keys'->>'id')::int
+					(SELECT boss_employee_id
+					FROM departments
+					WHERE id=(const_app_recipient_department_val()->'keys'->>'id')::int
 					),
 					doc_flow_in_ref( (SELECT doc_flow_in FROM doc_flow_in WHERE id=v_doc_flow_in_id) ),
 					v_recipient				

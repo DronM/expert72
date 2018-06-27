@@ -97,6 +97,9 @@ class ViewBase extends ViewHTMLXSLT {
 			$this->getVarModel()->addField(new Field('temp_doc_storage',DT_STRING));
 			$this->getVarModel()->addField(new Field('temp_doc_storage_hours',DT_INT));
 			$this->getVarModel()->addField(new Field('color_palette',DT_STRING));				
+			if (defined('CUSTOM_APP_UPLOAD_SERVER')){
+				$this->getVarModel()->addField(new Field('custom_app_upload_server',DT_STRING));
+			}
 		}
 		
 		<!-- custom vars-->
@@ -131,6 +134,11 @@ class ViewBase extends ViewHTMLXSLT {
 			$this->setVarValue('curDate',round(microtime(true) * 1000));
 			//$this->setVarValue('token',$_SESSION['token']);
 			//$this->setVarValue('tokenr',$_SESSION['tokenr']);
+			
+			if (defined('CUSTOM_APP_UPLOAD_SERVER')){
+				$this->getVarModel()->addField(new Field('custom_app_upload_server',DT_STRING));
+				$this->setVarValue('custom_app_upload_server',CUSTOM_APP_UPLOAD_SERVER);
+			}
 			
 			if ($_SESSION['role_id']!='client'){
 				$this->setVarValue('employees_ref',$_SESSION['employees_ref']);
