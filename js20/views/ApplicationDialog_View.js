@@ -1137,20 +1137,27 @@ ApplicationDialog_View.prototype.getModified = function(){
 
 ApplicationDialog_View.prototype.toDOM = function(parent){
 	ApplicationDialog_View.superclass.toDOM.call(this,parent);
-	
-	var self = this;
-	this.m_mainSave = setInterval(function() {
-		try{
-			self.onSave();
-		}
-		catch(e){
-			//do nothing
-		}
-	}, this.FORM_SAVE_INTERVAL);	
+	/*
+	if (window.getApp().getServVar("role_id")=="client"){
+		var self = this;
+		this.m_mainSave = setInterval(function() {
+			try{
+				if (self.getModified()){
+					var meth = self.getElement("id").getValue()? "update":"insert";
+					self.m_controller.getPublicMethod(meth).setFieldValue("filled_percent",self.m_totalFilledPercent);
+					self.onSave();
+				}
+			}
+			catch(e){
+				//do nothing
+			}
+		}, this.FORM_SAVE_INTERVAL);	
+	}
+	*/
 }
 
 ApplicationDialog_View.prototype.delDOM = function(){
-	clearInterval(this.m_mainSave);
+	if(this.m_mainSave)clearInterval(this.m_mainSave);
 	
 	ApplicationDialog_View.superclass.delDOM.call(this);
 }
