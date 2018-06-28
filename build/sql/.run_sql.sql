@@ -1,347 +1,119 @@
--- Function: doc_flow_out_client_process()
+﻿-- Function: applications_split(in_application_id int, in_document_type document_types)
 
--- DROP FUNCTION doc_flow_out_client_process();
+-- DROP FUNCTION applications_split(in_application_id int, in_document_type document_types);
 
-CREATE OR REPLACE FUNCTION doc_flow_out_client_process()
-  RETURNS trigger AS
+/**
+ * @param{int} in_application_id Ид заявления от которого надо отщипнуть услугу
+ * @param{document_types} in_document_type услуга, которую надо отшипнуть
+ * Отщипляет услугу от заявления, создает новое завление, как копию, оставляю новую услугу, новая услуга выбирается из старого заявления
+ * все файлы также переносятся
+ */
+CREATE OR REPLACE FUNCTION applications_split(in_application_id int, in_document_type document_types)
+  RETURNS bigint AS
 $BODY$
 DECLARE
-	v_email_type email_types;
-	v_doc_flow_in_id int;
-	v_applicant json;
-	v_constr_name text;
-	v_office_id int;
-	v_from_date_time timestampTZ;
-	v_end_date_time timestampTZ;
-	v_recipient jsonb;
-	v_contract_id int;
-	v_main_department_id int;
-	v_main_expert_id int;
-	v_reg_number text;
-	v_dep_email text;
-	v_recip_department_id int;
-	v_application_state application_states;
+	v_new_app_id int;
+	v_user_id int;
 BEGIN
-	IF (TG_WHEN='BEFORE' AND TG_OP='DELETE') THEN		
-		DELETE FROM doc_flow_out_client_document_files WHERE doc_flow_out_client_id=OLD.id;
-		RETURN OLD;
+	-- new service
+	INSERT INTO applications(
+		user_id, create_dt,
+		expertise_type,
+		contractors, applicant, 
+		customer, constr_name, constr_address, constr_technical_features, 
+		total_cost_eval, filled_percent, office_id, fund_source_id, construction_type_id, 
+		cost_eval_validity,
+		cost_eval_validity_simult,
+		primary_application_id, 
+		primary_application_reg_number, build_type_id,
+		modification, 
+		audit,
+		modif_primary_application_id,
+		modif_primary_application_reg_number, 
+		developer,
+		app_print_expertise,
+		app_print_cost_eval,
+		app_print_modification, 
+		app_print_audit,
+		limit_cost_eval,
+		auth_letter,
+		auth_letter_file,
+		base_application_id
+	)
+	(SELECT
+		app.user_id, now(),
+		NULL,
+		app.contractors, app.applicant, 
+		app.customer, app.constr_name, app.constr_address, app.constr_technical_features, 
+		app.total_cost_eval, app.filled_percent, app.office_id, app.fund_source_id, app.construction_type_id, 
+		CASE WHEN in_document_type='cost_eval_validity' THEN app.cost_eval_validity ELSE FALSE END,
+		CASE WHEN in_document_type='cost_eval_validity' THEN app.cost_eval_validity_simult ELSE NULL END,
+		app.primary_application_id, 
+		app.primary_application_reg_number, app.build_type_id,
+		CASE WHEN in_document_type='modification' THEN app.modification ELSE FALSE END,
+		CASE WHEN in_document_type='audit' THEN app.audit ELSE FALSE END,
+		CASE WHEN in_document_type='modification' THEN app.modif_primary_application_id ELSE NULL END,
+		CASE WHEN in_document_type='modification' THEN app.modif_primary_application_reg_number ELSE NULL END,
+		app.developer,
+		NULL,
+		CASE WHEN in_document_type='cost_eval_validity' THEN app.app_print_cost_eval ELSE NULL END,
+		CASE WHEN in_document_type='modification' THEN app.app_print_modification ELSE NULL END,
+		CASE WHEN in_document_type='audit' THEN app.app_print_audit ELSE NULL END,
+		CASE WHEN in_document_type='cost_eval_validity' THEN app.limit_cost_eval ELSE NULL END,
+		app.auth_letter,
+		app.auth_letter_file,
+		in_application_id
 		
-	ELSIF (TG_WHEN='AFTER' AND (TG_OP='INSERT' OR TG_OP='UPDATE')) THEN			
-		IF
-		( (TG_OP='INSERT' AND NEW.sent) OR (TG_OP='UPDATE' AND NEW.sent AND NOT OLD.sent) )
-		AND (NOT const_client_lk_val() OR const_debug_val()) THEN
-			--main programm
-			--*********** Исходные данные *************************
-			SELECT
-				app.applicant,
-				app.constr_name::text,
-				app.office_id,
-				contracts.id,
-				contracts.main_department_id,
-				contracts.main_expert_id,
-				dep.email,
-				st.state
-			INTO
-				v_applicant,
-				v_constr_name,
-				v_office_id,
-				v_contract_id,
-				v_main_department_id,
-				v_main_expert_id,
-				v_dep_email,
-				v_application_state
-			FROM applications AS app
-			LEFT JOIN contracts ON contracts.application_id=app.id
-				AND (
-					(contracts.expertise_type IS NOT NULL AND contracts.expertise_type = app.expertise_type)
-					OR (contracts.document_type='cost_eval_validity'::document_types AND app.cost_eval_validity)
-					OR (contracts.document_type='modification'::document_types AND app.modification)
-					OR (contracts.document_type='audit'::document_types AND app.audit)
-				)
-			LEFT JOIN departments As dep ON dep.id=contracts.main_department_id
-			--тек.статус
-			LEFT JOIN (
-				SELECT
-					t.application_id,
-					max(t.date_time) AS date_time
-				FROM application_processes t
-				GROUP BY t.application_id
-			) AS h_max ON h_max.application_id=app.id
-			LEFT JOIN application_processes st
-				ON st.application_id=h_max.application_id AND st.date_time = h_max.date_time
-			
-			WHERE app.id = NEW.application_id;
-			
-			SELECT
-				d_from,d_to
-			INTO v_from_date_time,v_end_date_time
-			FROM applications_check_period(v_office_id,now(),const_application_check_days_val()) AS (d_from timestampTZ,d_to timestampTZ);
-			--*******************************************************************
-			
-			
-			--Исходящее письмо клиента может быть:
-			--	1) По новому заявлению, контракта нет
-			--		Действия:
-			--			Создать входящее письмо на отдел приема
-			--			Создать рассмотрение на отдел приема
-			--			Напоминание&&email боссу
-			--			Напоминание&&email admin
-			
-			--	2) По замечаниям, когда уже есть контракт
-			--		Действия:
-			--			Создать входящее письмо на главный отдел контракта			
-			--			Напоминание&&email главному эксперту
-			--			email на главный отдел
-			--			Напоминание&&email admin
-			
-			--	3) Возврат контракта
-			--		Действия:
-			--			Создать входящее письмо на отдел приема
-			--			email на отдел приема
-			--			Напоминание&&email admin
-			--			Отметить возврат контракта в контракте
-			--			Перевести статус контракта в ожидание оплаты, только тек.статус=ожидание контракта
-			
-			--************* Входящее письмо НАШЕ ***********************************
-			--Либо отделу приема
-			--Либо главному отделу контракта
-			IF (v_main_department_id IS NULL)
-			OR (NEW.doc_flow_out_client_type='contr_return'::doc_flow_out_client_types) THEN
-				v_recip_department_id = (SELECT const_app_recipient_department_val()->'keys'->>'id')::int;				
-			ELSE
-				v_recip_department_id = v_main_department_id;				
-			END IF;
-			
-			--Новое письмо всегда			
-			INSERT INTO doc_flow_in (
-				date_time,
-				from_user_id,
-				from_addr_name,from_client_signed_by,from_client_date,
-				from_application_id,
-				doc_flow_type_id,
-				end_date_time,
-				subject,content,
-				recipient,
-				from_doc_flow_out_client_id,
-				from_client_app				
-			)
-			VALUES (
-				v_from_date_time,
-				NEW.user_id,
-				v_applicant->>'name', (v_applicant->>'responsable_person_head')::json->>'name',now()::date,
-				NEW.application_id,
-				
-				CASE
-					WHEN NEW.doc_flow_out_client_type='contr_return'::doc_flow_out_client_types THEN
-						(pdfn_doc_flow_types_contr_paper_return()->'keys'->>'id')::int
-					WHEN NEW.doc_flow_out_client_type='contr_resp'::doc_flow_out_client_types THEN
-						(pdfn_doc_flow_types_contr_resp()->'keys'->>'id')::int
-					ELSE (pdfn_doc_flow_types_app()->'keys'->>'id')::int
-				END,
-				
-				v_end_date_time,
-				NEW.subject,
-				NEW.content,
-				(SELECT departments_ref(departments) FROM departments WHERE id=v_recip_department_id),
-				NEW.id,
-				TRUE
-			)
-			RETURNING id,recipient,reg_number
-			INTO v_doc_flow_in_id,v_recipient,v_reg_number;
-			--**********************************************************
-			
-			--************** Рег номер наш - клиенту ******************************
-			INSERT INTO doc_flow_out_client_reg_numbers
-			(doc_flow_out_client_id,application_id,reg_number)
-			VALUES (NEW.id,NEW.application_id,v_reg_number);
-			--*********************************************************************
-			
-			
-			IF v_contract_id IS NULL THEN
-				--НЕТ контракта - Передача на рассмотрение, видимо в отдел приема
-				INSERT INTO doc_flow_examinations (
-					date_time,
-					subject,
-					description,
-					doc_flow_importance_type_id,
-					end_date_time,
-					employee_id,
-					subject_doc,
-					recipient
-				)
-				VALUES (
-					v_from_date_time+'1 second'::interval,
-					NEW.subject,
-					NEW.content,
-					(pdfn_doc_flow_importance_types_common()->'keys'->>'id')::int,
-					v_end_date_time,
-					(SELECT boss_employee_id
-					FROM departments
-					WHERE id=(const_app_recipient_department_val()->'keys'->>'id')::int
-					),
-					doc_flow_in_ref( (SELECT doc_flow_in FROM doc_flow_in WHERE id=v_doc_flow_in_id) ),
-					v_recipient				
-				);
-						
-				--reminder&&email boss о новых заявлениях
-				INSERT INTO reminders
-				(register_docs_ref,recipient_employee_id,content,docs_ref)
-				(SELECT
-					applications_ref((SELECT applications
-								FROM applications
-								WHERE id = NEW.application_id
-					)),
-					employees.id,
-					NEW.subject,
-					doc_flow_in_ref((SELECT doc_flow_in
-								FROM doc_flow_in
-								WHERE id = v_doc_flow_in_id
-					))
-				FROM employees
-				WHERE
-					employees.user_id IN (SELECT id FROM users WHERE role_id='boss')
-				);
-				
-			ELSIF v_main_expert_id IS NOT NULL THEN
-				--ЕСТЬ Контракт и есть Гл.эксперт - напоминание&&email ему
-				INSERT INTO reminders (register_docs_ref,recipient_employee_id,content,docs_ref)
-				VALUES(
-					applications_ref((SELECT applications
-								FROM applications
-								WHERE id = NEW.application_id
-					)),
-					v_main_expert_id,
-					NEW.subject,
-					doc_flow_in_ref((SELECT doc_flow_in
-								FROM doc_flow_in
-								WHERE id = v_doc_flow_in_id
-					))					
-				);
-				
-			END IF;
-			
-			
-			--Отметка даты возврата контракта && смена статуса
-			IF NEW.doc_flow_out_client_type='contr_return'::doc_flow_out_client_types THEN
-				UPDATE contracts
-				SET contract_return_date = NEW.date_time::date
-				WHERE id=v_contract_id;
-				
-				IF v_application_state='waiting_for_contract' THEN
-					INSERT INTO application_processes (
-						application_id,
-						date_time,
-						state,
-						user_id,
-						end_date_time
-					)
-					VALUES (
-						NEW.application_id,
-						NEW.date_time,
-						'waiting_for_pay'::application_states,
-						NEW.user_id,
-						NULL
-					);			
-				END IF;
-			END IF;
-			
-			--Email либо отделу приема/либо главному отделу
-			INSERT INTO mail_for_sending
-			(to_addr,to_name,body,subject,email_type)
-			(WITH 
-				templ AS (
-				SELECT t.template AS v,t.mes_subject AS s
-				FROM email_templates t
-				WHERE t.email_type='app_change'
-				)
-			SELECT
-			departments.email,
-			departments.name,
-			sms_templates_text(
-				ARRAY[
-					ROW('applicant', (v_applicant->>'name')::text)::template_value,
-					ROW('constr_name',v_constr_name)::template_value,
-					ROW('id',NEW.application_id)::template_value
-				],
-				(SELECT v FROM templ)
-			) AS mes_body,		
-			NEW.subject||' от ' || (v_applicant->>'name')::text,
-			'app_change'
-			FROM departments
-			WHERE
-				departments.id = v_recip_department_id
-				AND departments.email IS NOT NULL
-			);								
-			
-			--Напоминание&&email админу - всегда
-			INSERT INTO reminders
-			(register_docs_ref,recipient_employee_id,content,docs_ref)
-			(SELECT
-				applications_ref((SELECT applications
-							FROM applications
-							WHERE id = NEW.application_id
-				)),
-				employees.id,
-				NEW.subject,
-				doc_flow_in_ref((SELECT doc_flow_in
-							FROM doc_flow_in
-							WHERE id = v_doc_flow_in_id
-				))
-			FROM employees
-			WHERE
-				employees.user_id IN (SELECT id FROM users WHERE role_id='admin')
-			);
-			
-			
-			--************email to admin(ВСЕГДА!!!)
-			/*
-			IF v_contract_id IS NOT NULL THEN
-				v_email_type = 'app_change';
-			ELSE
-				v_email_type = 'new_app';
-			END IF;
-			
-			
-			INSERT INTO mail_for_sending
-			(to_addr,to_name,body,subject,email_type)
-			(WITH 
-				templ AS (
-				SELECT t.template AS v,t.mes_subject AS s
-				FROM email_templates t
-				WHERE t.email_type=v_email_type
-				)
-			SELECT
-			users.email,
-			employees.name,
-			sms_templates_text(
-				ARRAY[
-					ROW('applicant', (v_applicant->>'name')::text)::template_value,
-					ROW('constr_name',v_constr_name)::template_value,
-					ROW('id',NEW.application_id)::template_value
-				],
-				(SELECT v FROM templ)
-			) AS mes_body,		
-			NEW.subject||' от ' || (v_applicant->>'name')::text,
-			v_email_type
-			FROM employees
-			LEFT JOIN users ON users.id=employees.user_id
-			WHERE
-				(
-				employees.user_id IN (SELECT id FROM users WHERE role_id='admin')
-				)
-				AND users.email IS NOT NULL
-				--AND users.email_confirmed					
-				--OR (role_id='boss' AND v_email_type = 'new_app')
-			);
-			*/				
-		
-		END IF;
+	FROM applications AS app WHERE app.id=in_application_id
+	)
+	RETURNING id,user_id
+	INTO v_new_app_id,v_user_id;
 	
-		RETURN NEW;
-	END IF;
+	--Add new app files modify original files
+	UPDATE application_document_files
+	SET application_id=v_new_app_id
+	WHERE application_id=in_application_id AND document_type=in_document_type;
+	/*
+	INSERT INTO application_document_files (
+		file_id, application_id, document_id, document_type, date_time, 
+            file_name, file_path, file_signed, deleted, deleted_dt, file_size
+	)
+	(SELECT
+		app_f.file_id,--md5(app_f.file_name||app_f.date_time::text),
+		v_new_app_id,
+		app_f.document_id,
+		app_f.document_type,
+		app_f.date_time, 
+		app_f.file_name, app_f.file_path, app_f.file_signed, app_f.deleted, app_f.deleted_dt, app_f.file_size
+	FROM application_document_files AS app_f
+	WHERE app_f.application_id=in_application_id AND app_f.document_type=in_document_type
+	);	
+	--remove original app files
+	DELETE FROM application_document_files WHERE application_id=in_application_id AND document_type=in_document_type;
+	*/
+	
+	--Изменение оригинального документа
+	UPDATE applications
+	SET
+		cost_eval_validity = CASE WHEN in_document_type='cost_eval_validity' THEN FALSE ELSE cost_eval_validity END,
+		cost_eval_validity_simult = CASE WHEN in_document_type='cost_eval_validity' THEN NULL ELSE cost_eval_validity_simult END,
+		modification = CASE WHEN in_document_type='modification' THEN FALSE ELSE modification END,
+		modif_primary_application_id = CASE WHEN in_document_type='modification' THEN NULL ELSE modif_primary_application_id END,
+		modif_primary_application_reg_number = CASE WHEN in_document_type='modification' THEN NULL ELSE modif_primary_application_reg_number END,
+		audit = CASE WHEN in_document_type='audit' THEN FALSE ELSE audit END,
+		app_print_modification = CASE WHEN in_document_type='modification' THEN NULL ELSE app_print_modification END,
+		app_print_audit = CASE WHEN in_document_type='audit' THEN NULL ELSE app_print_audit END,
+		app_print_cost_eval = CASE WHEN in_document_type='cost_eval_validity' THEN NULL ELSE app_print_cost_eval END,
+		limit_cost_eval = CASE WHEN in_document_type='cost_eval_validity' THEN NULL ELSE limit_cost_eval END,
+		derived_application_id = v_new_app_id
+	WHERE id=in_application_id;
+	
+	--pass new app to process
+	INSERT INTO application_processes (application_id,state,user_id) VALUES (v_new_app_id,'sent',v_user_id);
+	
+	RETURN v_new_app_id;
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
-ALTER FUNCTION doc_flow_out_client_process() OWNER TO expert72;
-
+ALTER FUNCTION applications_split(in_application_id int, in_document_type document_types) OWNER TO expert72;

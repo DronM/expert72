@@ -69,13 +69,17 @@ BEGIN
 	RETURNING id,user_id
 	INTO v_new_app_id,v_user_id;
 	
-	--Add new app files
+	--Add new app files modify original files
+	UPDATE application_document_files
+	SET application_id=v_new_app_id
+	WHERE application_id=in_application_id AND document_type=in_document_type;
+	/*
 	INSERT INTO application_document_files (
 		file_id, application_id, document_id, document_type, date_time, 
             file_name, file_path, file_signed, deleted, deleted_dt, file_size
 	)
 	(SELECT
-		md5(app_f.file_name||app_f.date_time::text),
+		app_f.file_id,--md5(app_f.file_name||app_f.date_time::text),
 		v_new_app_id,
 		app_f.document_id,
 		app_f.document_type,
@@ -83,10 +87,10 @@ BEGIN
 		app_f.file_name, app_f.file_path, app_f.file_signed, app_f.deleted, app_f.deleted_dt, app_f.file_size
 	FROM application_document_files AS app_f
 	WHERE app_f.application_id=in_application_id AND app_f.document_type=in_document_type
-	);
-	
+	);	
 	--remove original app files
 	DELETE FROM application_document_files WHERE application_id=in_application_id AND document_type=in_document_type;
+	*/
 	
 	--Изменение оригинального документа
 	UPDATE applications

@@ -546,6 +546,7 @@ FileUploader_View.prototype.initDownload = function(){
 			//if (file.fileName.substring(file.fileName.length-sig_file_ext.length)==sig_file_ext){
 			if ((new RegExp("^.+\."+self.SIGN_EXT+" *$")).test(file.fileName.toLowerCase())) {
 				//signature
+				
 				/*var orig_name_ar = file.fileName.split(".");
 				orig_name_ar.splice(orig_name_ar.length-1,1);
 				var orig_name = orig_name_ar.join(".");
@@ -559,6 +560,7 @@ FileUploader_View.prototype.initDownload = function(){
 						if (!self.m_uploader.files[i].file_id){
 							//signature comes first, data has no assigned id
 							self.m_uploader.files[i].file_id = CommonHelper.uniqid();
+							self.m_uploader.files[i].doc_id = doc_id;
 						}
 						file.file_id = self.m_uploader.files[i].file_id;
 						file.doc_id = self.m_uploader.files[i].doc_id;
@@ -585,7 +587,6 @@ FileUploader_View.prototype.initDownload = function(){
 				}				
 			}
 			else{
-			
 				//а сели уже есть загруженный с таким именем в этом разделе - не даем. В любом случае
 				//серевер побреет
 				var cont_files = file_cont.getElements();

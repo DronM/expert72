@@ -53,46 +53,41 @@ class MailForSending_Model extends ModelSQL{
 		
 		//*** Field from_name ***
 		$f_opts = array();
-		$f_opts['length']=255;
 		$f_opts['id']="from_name";
 				
-		$f_from_name=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"from_name",$f_opts);
+		$f_from_name=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"from_name",$f_opts);
 		$this->addField($f_from_name);
 		//********************
 		
 		//*** Field to_addr ***
 		$f_opts = array();
-		$f_opts['length']=50;
 		$f_opts['id']="to_addr";
 				
-		$f_to_addr=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"to_addr",$f_opts);
+		$f_to_addr=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"to_addr",$f_opts);
 		$this->addField($f_to_addr);
 		//********************
 		
 		//*** Field to_name ***
 		$f_opts = array();
-		$f_opts['length']=255;
 		$f_opts['id']="to_name";
 				
-		$f_to_name=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"to_name",$f_opts);
+		$f_to_name=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"to_name",$f_opts);
 		$this->addField($f_to_name);
 		//********************
 		
 		//*** Field reply_addr ***
 		$f_opts = array();
-		$f_opts['length']=50;
 		$f_opts['id']="reply_addr";
 				
-		$f_reply_addr=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"reply_addr",$f_opts);
+		$f_reply_addr=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"reply_addr",$f_opts);
 		$this->addField($f_reply_addr);
 		//********************
 		
 		//*** Field reply_name ***
 		$f_opts = array();
-		$f_opts['length']=255;
 		$f_opts['id']="reply_name";
 				
-		$f_reply_name=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"reply_name",$f_opts);
+		$f_reply_name=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"reply_name",$f_opts);
 		$this->addField($f_reply_name);
 		//********************
 		
@@ -106,19 +101,17 @@ class MailForSending_Model extends ModelSQL{
 		
 		//*** Field sender_addr ***
 		$f_opts = array();
-		$f_opts['length']=50;
 		$f_opts['id']="sender_addr";
 				
-		$f_sender_addr=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"sender_addr",$f_opts);
+		$f_sender_addr=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"sender_addr",$f_opts);
 		$this->addField($f_sender_addr);
 		//********************
 		
 		//*** Field subject ***
 		$f_opts = array();
-		$f_opts['length']=255;
 		$f_opts['id']="subject";
 				
-		$f_subject=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"subject",$f_opts);
+		$f_subject=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"subject",$f_opts);
 		$this->addField($f_subject);
 		//********************
 		

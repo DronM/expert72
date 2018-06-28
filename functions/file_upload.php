@@ -68,7 +68,7 @@ try{
 			//
 			throw new Exception('Max document depth exceeded!');
 		}
-	
+		
 		$resumable->uploadFolder =
 			FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
 			Application_Controller::APP_DIR_PREF.$_REQUEST['application_id'].DIRECTORY_SEPARATOR.

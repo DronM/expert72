@@ -19,8 +19,8 @@ BEGIN
 				WHERE t.email_type= 'new_remind'::email_types
 			)
 		SELECT
-			users.email,
-			employees.name,
+			users.email::text,
+			employees.name::text,
 			sms_templates_text(
 				ARRAY[
 					ROW('content', NEW.content)::template_value,

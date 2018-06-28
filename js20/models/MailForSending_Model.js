@@ -59,8 +59,7 @@ function MailForSending_Model(options){
 	
 	filed_options.autoInc = false;	
 	
-	options.fields.from_name = new FieldString("from_name",filed_options);
-	options.fields.from_name.getValidator().setMaxLength('255');
+	options.fields.from_name = new FieldText("from_name",filed_options);
 	
 				
 	
@@ -69,8 +68,7 @@ function MailForSending_Model(options){
 	
 	filed_options.autoInc = false;	
 	
-	options.fields.to_addr = new FieldString("to_addr",filed_options);
-	options.fields.to_addr.getValidator().setMaxLength('50');
+	options.fields.to_addr = new FieldText("to_addr",filed_options);
 	
 				
 	
@@ -79,8 +77,7 @@ function MailForSending_Model(options){
 	
 	filed_options.autoInc = false;	
 	
-	options.fields.to_name = new FieldString("to_name",filed_options);
-	options.fields.to_name.getValidator().setMaxLength('255');
+	options.fields.to_name = new FieldText("to_name",filed_options);
 	
 				
 	
@@ -89,8 +86,7 @@ function MailForSending_Model(options){
 	
 	filed_options.autoInc = false;	
 	
-	options.fields.reply_addr = new FieldString("reply_addr",filed_options);
-	options.fields.reply_addr.getValidator().setMaxLength('50');
+	options.fields.reply_addr = new FieldText("reply_addr",filed_options);
 	
 				
 	
@@ -99,8 +95,7 @@ function MailForSending_Model(options){
 	
 	filed_options.autoInc = false;	
 	
-	options.fields.reply_name = new FieldString("reply_name",filed_options);
-	options.fields.reply_name.getValidator().setMaxLength('255');
+	options.fields.reply_name = new FieldText("reply_name",filed_options);
 	
 				
 	
@@ -118,8 +113,7 @@ function MailForSending_Model(options){
 	
 	filed_options.autoInc = false;	
 	
-	options.fields.sender_addr = new FieldString("sender_addr",filed_options);
-	options.fields.sender_addr.getValidator().setMaxLength('50');
+	options.fields.sender_addr = new FieldText("sender_addr",filed_options);
 	
 				
 	
@@ -128,8 +122,7 @@ function MailForSending_Model(options){
 	
 	filed_options.autoInc = false;	
 	
-	options.fields.subject = new FieldString("subject",filed_options);
-	options.fields.subject.getValidator().setMaxLength('255');
+	options.fields.subject = new FieldText("subject",filed_options);
 	
 				
 	

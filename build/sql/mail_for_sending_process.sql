@@ -9,8 +9,8 @@ BEGIN
 	IF (TG_WHEN='BEFORE' AND TG_OP='INSERT') THEN		
 		IF NEW.from_addr IS NULL OR NEW.from_addr='' THEN
 			SELECT
-				const_outmail_data_val()->>'from_name',
-				const_outmail_data_val()->>'from_addr'
+				const_outmail_data_val()->>'from_name'::text,
+				const_outmail_data_val()->>'from_addr'::text
 			INTO
 				NEW.from_name,
 				NEW.from_addr
