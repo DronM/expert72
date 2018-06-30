@@ -8,7 +8,6 @@
 
 require_once(FRAME_WORK_PATH.'basic_classes/ModelSQL.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLInt.php');
-require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLString.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLText.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLEnum.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLBool.php');
@@ -46,10 +45,9 @@ class DocFlowExamination_Model extends ModelSQL{
 		
 		//*** Field subject ***
 		$f_opts = array();
-		$f_opts['length']=250;
 		$f_opts['id']="subject";
 				
-		$f_subject=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"subject",$f_opts);
+		$f_subject=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"subject",$f_opts);
 		$this->addField($f_subject);
 		//********************
 		

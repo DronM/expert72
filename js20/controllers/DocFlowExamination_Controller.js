@@ -31,6 +31,7 @@ function DocFlowExamination_Controller(options){
 	this.addGetList();
 	this.add_resolve();
 	this.add_unresolve();
+	this.add_return_app_to_correction();
 		
 }
 extend(DocFlowExamination_Controller,ControllerObjServer);
@@ -54,7 +55,7 @@ extend(DocFlowExamination_Controller,ControllerObjServer);
 	
 	var options = {};
 	options.required = true;
-	var field = new FieldString("subject",options);
+	var field = new FieldText("subject",options);
 	
 	pm.addField(field);
 	
@@ -120,7 +121,7 @@ extend(DocFlowExamination_Controller,ControllerObjServer);
 	
 	var options = {};
 		
-	options.enumValues = 'filling,sent,checking,returned,closed_no_expertise,waiting_for_contract,waiting_for_pay,expertise,closed';
+	options.enumValues = 'filling,correcting,sent,checking,returned,closed_no_expertise,waiting_for_contract,waiting_for_pay,expertise,closed';
 	var field = new FieldEnum("application_resolution_state",options);
 	
 	pm.addField(field);
@@ -151,7 +152,7 @@ extend(DocFlowExamination_Controller,ControllerObjServer);
 	
 	var options = {};
 	
-	var field = new FieldString("subject",options);
+	var field = new FieldText("subject",options);
 	
 	pm.addField(field);
 	
@@ -217,7 +218,7 @@ extend(DocFlowExamination_Controller,ControllerObjServer);
 	
 	var options = {};
 		
-	options.enumValues = 'filling,sent,checking,returned,closed_no_expertise,waiting_for_contract,waiting_for_pay,expertise,closed';
+	options.enumValues = 'filling,correcting,sent,checking,returned,closed_no_expertise,waiting_for_contract,waiting_for_pay,expertise,closed';
 	
 	var field = new FieldEnum("application_resolution_state",options);
 	
@@ -269,7 +270,7 @@ extend(DocFlowExamination_Controller,ControllerObjServer);
 	pm.addField(new FieldDateTimeTZ("date_time",f_opts));
 	var f_opts = {};
 	
-	pm.addField(new FieldString("subject",f_opts));
+	pm.addField(new FieldText("subject",f_opts));
 	var f_opts = {};
 	
 	pm.addField(new FieldJSON("subject_docs_ref",f_opts));
@@ -345,6 +346,22 @@ extend(DocFlowExamination_Controller,ControllerObjServer);
 			DocFlowExamination_Controller.prototype.add_unresolve = function(){
 	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('unresolve',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("id",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			DocFlowExamination_Controller.prototype.add_return_app_to_correction = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('return_app_to_correction',opts);
 	
 				
 	

@@ -66,8 +66,13 @@ function AppExpert(options){
 		
 		}
 	});
-	
+		
 	AppExpert.superclass.constructor.call(this,"Expert72",options);
+	
+	if (this.storageGet(this.getSidebarId())=="xs"){
+		$('body').toggleClass('sidebar-xs');
+	}
+	
 }
 extend(AppExpert,App);
 
@@ -98,6 +103,14 @@ AppExpert.prototype.showMenuItem = function(item,c,f,t,extra){
 
 
 /* public methods */
+AppExpert.prototype.getSidebarId = function(){
+	return this.getServVar("user_name")+"_"+"sidebar-xs";
+}
+AppExpert.prototype.toggleSidebar = function(){
+	var id = this.getSidebarId();
+	this.storageSet(id,(this.storageGet(id)=="xs")? "":"xs");
+}
+
 AppExpert.prototype.formatError = function(erCode,erStr){
 	return (erStr +( (erCode)? (", код:"+erCode):"" ) );
 }

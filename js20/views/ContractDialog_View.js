@@ -254,7 +254,7 @@ function ContractDialog_View(id,options){
 					"enabled":false
 				}));			
 				this.addElement(new EditString(id+":order_document",{
-					"maxLength":"150",
+					"maxLength":"300",
 					"labelCaption":"Распорядительный акт:",
 					"editContClassName":"input-group "+bs+"8",
 					"labelClassName":"control-label "+bs+"4"
@@ -310,6 +310,10 @@ function ContractDialog_View(id,options){
 				"labelCaption":"Вид отрицательного закл.:",
 				"enabled":options.templateOptions.notExpert
 			}));	
+
+			this.addElement(new EmployeeListGrid(id+":result_sign_expert_list",{
+				"notExpert":options.templateOptions.notExpert
+			}));		
 		
 			if (options.templateOptions.costEvalValidity && options.templateOptions.notExpert){
 				this.addElement(new EditMoney(id+":in_estim_cost",{			
@@ -542,7 +546,8 @@ function ContractDialog_View(id,options){
 		,new DataBinding({"control":this.getElement("constr_name")})
 		
 		,new DataBinding({"control":this.getElement("reg_number")})
-		,new DataBinding({"control":this.getElement("expertise_reject_types_ref")})		
+		,new DataBinding({"control":this.getElement("expertise_reject_types_ref")})
+		,new DataBinding({"control":this.getElement("result_sign_expert_list")})				
 		,new DataBinding({"control":this.getElement("expertise_day_count")})
 		,new DataBinding({"control":this.getElement("date_type"),"field":this.m_model.getField("date_type")})
 		,new DataBinding({"control":this.getElement("work_start_date")})
@@ -625,6 +630,7 @@ function ContractDialog_View(id,options){
 			,new CommandBinding({"control":this.getElement("expertise_result"),"fieldId":"expertise_result"})
 			,new CommandBinding({"control":this.getElement("expertise_result_date")})
 			,new CommandBinding({"control":this.getElement("expertise_reject_types_ref"),"fieldId":"expertise_reject_type_id"})
+			,new CommandBinding({"control":this.getElement("result_sign_expert_list"),"fieldId":"result_sign_expert_list"})
 			,new CommandBinding({"control":this.getElement("expertise_day_count")})
 			,new CommandBinding({"control":this.getElement("argument_document")})
 			,new CommandBinding({"control":this.getElement("date_type")})
@@ -642,6 +648,8 @@ function ContractDialog_View(id,options){
 			,new CommandBinding({"control":this.getElement("constr_name")})
 			,new CommandBinding({"control":this.getElement("constr_address"),"fieldId":"constr_address"})
 			,new CommandBinding({"control":this.getElement("constr_technical_features"),"fieldId":"constr_technical_features"})
+			,new CommandBinding({"control":this.getElement("expertise_cost_budget")})
+			,new CommandBinding({"control":this.getElement("expertise_cost_self_fund")})
 		];
 		if (options.templateOptions.costEvalValidity){
 			write_b.push(new CommandBinding({"control":this.getElement("order_document")}));

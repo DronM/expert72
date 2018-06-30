@@ -329,10 +329,12 @@ DocFlowOutDialog_View.prototype.setDocVis = function(){
 			app_vis = true;
 			doc_type = "app_resp_return";
 		}
+		/*
 		else if (v_key==window.getApp().getPredefinedItem("doc_flow_types","app_resp_correct").getKey()){
 			app_vis = true;
 			doc_type = "app_resp_correct";
 		}
+		*/
 		else if (v_key==window.getApp().getPredefinedItem("doc_flow_types","contr").getKey()){
 			contr_vis = true;
 			doc_type = "contr";

@@ -111,7 +111,11 @@ class ViewBase extends ViewHTMLXSLT {
 		$pathInfo = pathinfo($currentPath);
 		$hostName = $_SERVER['HTTP_HOST'];
 		$protocol = strtolower(substr($_SERVER["SERVER_PROTOCOL"],0,5))=='https://'?'https://':'http://';
-		$this->setVarValue('basePath', $protocol.$hostName.$pathInfo['dirname']."/");
+		$dir = $protocol.$hostName.$pathInfo['dirname'];
+		if (substr($dir,strlen($dir)-1,1)!='/'){
+			$dir.='/';
+		}
+		$this->setVarValue('basePath', $dir);
 		
 		$this->setVarValue('version',trim(VERSION));
 		$this->setVarValue('debug',DEBUG);

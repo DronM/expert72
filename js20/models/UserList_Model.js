@@ -84,6 +84,15 @@ function UserList_Model(options){
 	options.fields.role_id = new FieldEnum("role_id",filed_options);
 	filed_options.enumValues = 'admin,client,lawyer,expert,boss,accountant';
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.create_dt = new FieldDateTimeTZ("create_dt",filed_options);
+	
 		UserList_Model.superclass.constructor.call(this,id,options);
 }
 extend(UserList_Model,ModelXML);

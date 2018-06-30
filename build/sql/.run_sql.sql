@@ -1,119 +1,189 @@
-﻿-- Function: applications_split(in_application_id int, in_document_type document_types)
+-- Function: application_processes_process()
 
--- DROP FUNCTION applications_split(in_application_id int, in_document_type document_types);
+-- DROP FUNCTION application_processes_process();
 
-/**
- * @param{int} in_application_id Ид заявления от которого надо отщипнуть услугу
- * @param{document_types} in_document_type услуга, которую надо отшипнуть
- * Отщипляет услугу от заявления, создает новое завление, как копию, оставляю новую услугу, новая услуга выбирается из старого заявления
- * все файлы также переносятся
- */
-CREATE OR REPLACE FUNCTION applications_split(in_application_id int, in_document_type document_types)
-  RETURNS bigint AS
+CREATE OR REPLACE FUNCTION application_processes_process()
+  RETURNS trigger AS
 $BODY$
 DECLARE
-	v_new_app_id int;
-	v_user_id int;
+	i json;
+	ind int;
+	v_applicant json;
+	v_customer json;
+	v_contractors json;
+	v_application_state application_states;
+	v_application_state_dt timestampTZ;
 BEGIN
-	-- new service
-	INSERT INTO applications(
-		user_id, create_dt,
-		expertise_type,
-		contractors, applicant, 
-		customer, constr_name, constr_address, constr_technical_features, 
-		total_cost_eval, filled_percent, office_id, fund_source_id, construction_type_id, 
-		cost_eval_validity,
-		cost_eval_validity_simult,
-		primary_application_id, 
-		primary_application_reg_number, build_type_id,
-		modification, 
-		audit,
-		modif_primary_application_id,
-		modif_primary_application_reg_number, 
-		developer,
-		app_print_expertise,
-		app_print_cost_eval,
-		app_print_modification, 
-		app_print_audit,
-		limit_cost_eval,
-		auth_letter,
-		auth_letter_file,
-		base_application_id
-	)
-	(SELECT
-		app.user_id, now(),
-		NULL,
-		app.contractors, app.applicant, 
-		app.customer, app.constr_name, app.constr_address, app.constr_technical_features, 
-		app.total_cost_eval, app.filled_percent, app.office_id, app.fund_source_id, app.construction_type_id, 
-		CASE WHEN in_document_type='cost_eval_validity' THEN app.cost_eval_validity ELSE FALSE END,
-		CASE WHEN in_document_type='cost_eval_validity' THEN app.cost_eval_validity_simult ELSE NULL END,
-		app.primary_application_id, 
-		app.primary_application_reg_number, app.build_type_id,
-		CASE WHEN in_document_type='modification' THEN app.modification ELSE FALSE END,
-		CASE WHEN in_document_type='audit' THEN app.audit ELSE FALSE END,
-		CASE WHEN in_document_type='modification' THEN app.modif_primary_application_id ELSE NULL END,
-		CASE WHEN in_document_type='modification' THEN app.modif_primary_application_reg_number ELSE NULL END,
-		app.developer,
-		NULL,
-		CASE WHEN in_document_type='cost_eval_validity' THEN app.app_print_cost_eval ELSE NULL END,
-		CASE WHEN in_document_type='modification' THEN app.app_print_modification ELSE NULL END,
-		CASE WHEN in_document_type='audit' THEN app.app_print_audit ELSE NULL END,
-		CASE WHEN in_document_type='cost_eval_validity' THEN app.limit_cost_eval ELSE NULL END,
-		app.auth_letter,
-		app.auth_letter_file,
-		in_application_id
+
+	IF (TG_WHEN='AFTER' AND TG_OP='INSERT') THEN		
+		IF NEW.state='checking' AND (NOT const_client_lk_val() OR const_debug_val()) THEN
+			--Главный сервер 
+			SELECT
+				d.applicant,
+				d.customer,
+				d.contractors,
+				st.state,
+				st.date_time
+			INTO
+				v_applicant,
+				v_customer,
+				v_contractors,
+				v_application_state,
+				v_application_state_dt
+			FROM applications AS d
+			LEFT JOIN (
+				SELECT
+					t.application_id,
+					max(t.date_time) AS date_time
+				FROM application_processes t
+				WHERE t.application_id=NEW.application_id AND t.date_time<>NEW.date_time
+				GROUP BY t.application_id
+			) AS h_max ON h_max.application_id=d.id
+			LEFT JOIN application_processes st
+				ON st.application_id=h_max.application_id AND st.date_time = h_max.date_time							
+			WHERE d.id = NEW.application_id;
+	
+			--*** Contacts ***************
+			DELETE FROM contacts WHERE parent_id=NEW.application_id AND parent_type = 'application_applicants'::data_types;
+			DELETE FROM contacts WHERE parent_id=NEW.application_id AND parent_type = 'application_customers'::data_types;
+			DELETE FROM contacts WHERE parent_id=NEW.application_id AND parent_type = 'application_contractors'::data_types;
 		
-	FROM applications AS app WHERE app.id=in_application_id
-	)
-	RETURNING id,user_id
-	INTO v_new_app_id,v_user_id;
-	
-	--Add new app files modify original files
-	UPDATE application_document_files
-	SET application_id=v_new_app_id
-	WHERE application_id=in_application_id AND document_type=in_document_type;
-	/*
-	INSERT INTO application_document_files (
-		file_id, application_id, document_id, document_type, date_time, 
-            file_name, file_path, file_signed, deleted, deleted_dt, file_size
-	)
-	(SELECT
-		app_f.file_id,--md5(app_f.file_name||app_f.date_time::text),
-		v_new_app_id,
-		app_f.document_id,
-		app_f.document_type,
-		app_f.date_time, 
-		app_f.file_name, app_f.file_path, app_f.file_signed, app_f.deleted, app_f.deleted_dt, app_f.file_size
-	FROM application_document_files AS app_f
-	WHERE app_f.application_id=in_application_id AND app_f.document_type=in_document_type
-	);	
-	--remove original app files
-	DELETE FROM application_document_files WHERE application_id=in_application_id AND document_type=in_document_type;
-	*/
-	
-	--Изменение оригинального документа
-	UPDATE applications
-	SET
-		cost_eval_validity = CASE WHEN in_document_type='cost_eval_validity' THEN FALSE ELSE cost_eval_validity END,
-		cost_eval_validity_simult = CASE WHEN in_document_type='cost_eval_validity' THEN NULL ELSE cost_eval_validity_simult END,
-		modification = CASE WHEN in_document_type='modification' THEN FALSE ELSE modification END,
-		modif_primary_application_id = CASE WHEN in_document_type='modification' THEN NULL ELSE modif_primary_application_id END,
-		modif_primary_application_reg_number = CASE WHEN in_document_type='modification' THEN NULL ELSE modif_primary_application_reg_number END,
-		audit = CASE WHEN in_document_type='audit' THEN FALSE ELSE audit END,
-		app_print_modification = CASE WHEN in_document_type='modification' THEN NULL ELSE app_print_modification END,
-		app_print_audit = CASE WHEN in_document_type='audit' THEN NULL ELSE app_print_audit END,
-		app_print_cost_eval = CASE WHEN in_document_type='cost_eval_validity' THEN NULL ELSE app_print_cost_eval END,
-		limit_cost_eval = CASE WHEN in_document_type='cost_eval_validity' THEN NULL ELSE limit_cost_eval END,
-		derived_application_id = v_new_app_id
-	WHERE id=in_application_id;
-	
-	--pass new app to process
-	INSERT INTO application_processes (application_id,state,user_id) VALUES (v_new_app_id,'sent',v_user_id);
-	
-	RETURN v_new_app_id;
+			PERFORM contacts_add_persons(NEW.application_id,'application_applicants'::data_types,1,v_applicant);
+		
+			PERFORM contacts_add_persons(NEW.application_id,'application_customers'::data_types,1,v_customer);
+
+			ind = 0;
+			FOR i IN SELECT * FROM json_array_elements((SELECT v_contractors))
+			LOOP
+				PERFORM contacts_add_persons(NEW.application_id,'application_contractors'::data_types,ind*100,i);
+				ind = ind+ 1;
+			END LOOP;
+			--*** Contacts ***************
+		
+			-- Если отправка из статуса correcting то уведомление отедлу приема
+			--RAISE EXCEPTION 'main_lk STate=%',v_application_state;
+			IF v_application_state = 'correcting' THEN
+				--все поля из рассмотрения, которое должно быть с прошлой отправки
+				INSERT INTO doc_flow_tasks (
+					register_doc,
+					date_time,end_date_time,
+					doc_flow_importance_type_id,
+					employee_id,
+					recipient,
+					description
+				)
+				(SELECT
+					doc_flow_examinations_ref(ex),
+					now(),ex.end_date_time,
+					ex.doc_flow_importance_type_id,
+					ex.employee_id,
+					ex.recipient,
+					'Исправление по заявлению '||
+					CASE
+						WHEN app.expertise_type='pd'::expertise_types THEN 'ПД'
+						WHEN app.expertise_type='eng_survey'::expertise_types THEN 'РИИ'
+						WHEN app.expertise_type='pd_eng_survey'::expertise_types THEN 'ПД и РИИ'
+						WHEN app.cost_eval_validity THEN 'Достоверность'
+						WHEN app.modification THEN 'Модификация'
+						WHEN app.audit THEN 'Аудит'
+					END||', '||app.constr_name||' от '||to_char(v_application_state_dt,'DD/MM/YY')
+				FROM doc_flow_examinations ex
+				LEFT JOIN doc_flow_in ON doc_flow_in.id=(ex.subject_doc->'keys'->>'id')::int AND ex.subject_doc->>'dataType'='doc_flow_in'
+				LEFT JOIN applications AS app ON app.id=doc_flow_in.from_application_id
+				WHERE doc_flow_in.from_application_id=NEW.application_id
+				LIMIT 1
+				)
+				;
+			END IF;
+			
+		ELSIF NEW.state='sent' AND (const_client_lk_val() OR const_debug_val()) THEN
+			--client lk
+			--Делаем исх. письмо клиента.
+			--В заявлении только одна услуга
+			INSERT INTO doc_flow_out_client (
+				date_time,
+				user_id,
+				application_id,
+				subject,
+				content,
+				doc_flow_out_client_type,
+				sent
+			)
+			(SELECT 
+				now(),
+				app.user_id,
+				NEW.application_id,
+				'Новое заявление: '||
+				CASE
+					WHEN app.expertise_type='pd'::expertise_types THEN 'ПД'
+					WHEN app.expertise_type='eng_survey'::expertise_types THEN 'РИИ'
+					WHEN app.expertise_type='pd_eng_survey'::expertise_types THEN 'ПД и РИИ'
+					WHEN app.cost_eval_validity THEN 'Достоверность'
+					WHEN app.modification THEN 'Модификация'
+					WHEN app.audit THEN 'Аудит'
+				END||', '||app.constr_name
+				,
+				app.applicant->>'name'||' просит провести '||
+				CASE
+					WHEN app.expertise_type='pd'::expertise_types THEN 'экспертизу проектной документации'
+					WHEN app.expertise_type='eng_survey'::expertise_types THEN 'экспертизу результатов инженерных изысканий'
+					WHEN app.expertise_type='pd_eng_survey'::expertise_types THEN 'экспертизу проектной документации и экспертизу результатов инженерных изысканий'
+					WHEN app.cost_eval_validity THEN 'проверку достоверности определения сметной стоимости'
+					WHEN app.modification THEN 'модификацию.'
+					WHEN app.audit THEN 'аудит'
+				END||' по объекту '||app.constr_name
+				,
+				'app',
+				TRUE
+			
+			FROM applications AS app
+			WHERE app.id = NEW.application_id
+			LIMIT 1
+			--Вдруг как то пролезли 2 услуги???
+			);
+			
+		ELSIF (NEW.state='waiting_for_pay' OR NEW.state='expertise')
+		AND (NOT const_client_lk_val() OR const_debug_val()) THEN
+			--Главный сервер контракт или оплата
+			--письмо об изменении состояния
+			INSERT INTO mail_for_sending
+			(to_addr,to_name,body,subject,email_type)
+			(WITH 
+				templ AS (
+					SELECT
+						t.template AS v,
+						t.mes_subject AS s
+					FROM email_templates t
+					WHERE t.email_type= 'contract_state_change'::email_types
+				)
+			SELECT
+				users.email,
+				users.name_full,
+				sms_templates_text(
+					ARRAY[
+						ROW('contract_number', contr.contract_number)::template_value,
+						ROW('contract_date',to_char(contr.contract_date,'DD/MM/YY'))::template_value,
+						ROW('state',enum_application_states_val(NEW.state,'ru'))::template_value
+					],
+					(SELECT v FROM templ)
+				) AS mes_body,		
+				(SELECT s FROM templ),
+				'contract_state_change'::email_types
+			FROM contracts AS contr
+			LEFT JOIN applications AS app ON app.id=contr.application_id
+			LEFT JOIN users ON users.id=app.user_id
+			WHERE
+				contr.application_id=NEW.application_id
+				--email_confirmed					
+			);				
+			
+		END IF;
+				
+		RETURN NEW;
+	END IF;
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
-ALTER FUNCTION applications_split(in_application_id int, in_document_type document_types) OWNER TO expert72;
+ALTER FUNCTION application_processes_process() OWNER TO expert72;
+

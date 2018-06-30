@@ -2,7 +2,7 @@
 <metadata owner="expert72">
 	<versions>
 		<version dateOpen="2017-09-27 12:09:48" dateClose="2017-12-08 10:12:08">1.001 
-		<lastBuild>2018-06-28 07:34:47</lastBuild></version>
+		<lastBuild>2018-06-30 07:33:01</lastBuild></version>
 		<version dateOpen="2017-12-08 11:12:01" dateClose="2017-12-08 11:12:04">1.002</version>
 		<version dateOpen="2017-12-08 11:12:20" dateClose="2017-12-08 11:12:20">1.0.3</version>
 		<version dateOpen="2017-12-12 11:12:07" dateClose="2017-12-12 11:12:07">1.0.4</version>
@@ -52,6 +52,7 @@
 		<version dateOpen="2018-06-26 08:06:48" dateClose="2018-06-27 08:06:01">1.0.48</version>
 		<version dateOpen="2018-06-27 08:06:55" dateClose="2018-06-27 11:06:41">1.0.49</version>
 		<version dateOpen="2018-06-28 07:06:34" dateClose="2018-06-28 07:06:34">1.0.50</version>
+		<version dateOpen="2018-06-29 08:06:26" dateClose="2018-06-30 07:06:33">1.0.51</version>
 	</versions>
 	<globalFilters>
 		<field id="user_id"/>
@@ -137,6 +138,9 @@
 		<enum id="application_states" descr="&#x421;&#x442;&#x430;&#x442;&#x443;&#x441;&#x44B; &#x437;&#x430;&#x44F;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x44F;">
 			<value id="filling">
 				<ru descr="&#x417;&#x430;&#x43F;&#x43E;&#x43B;&#x43D;&#x435;&#x43D;&#x438;&#x435; &#x430;&#x43D;&#x43A;&#x435;&#x442;&#x44B;"/>
+			</value>
+			<value id="correcting">
+				<ru descr="&#x418;&#x441;&#x43F;&#x440;&#x430;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x435; &#x430;&#x43D;&#x43A;&#x435;&#x442;&#x44B;"/>
 			</value>
 			<value id="sent">
 				<ru descr="&#x410;&#x43D;&#x43A;&#x435;&#x442;&#x430; &#x43E;&#x442;&#x43F;&#x440;&#x430;&#x432;&#x43B;&#x435;&#x43D;&#x430; &#x43D;&#x430; &#x43F;&#x440;&#x43E;&#x432;&#x435;&#x440;&#x43A;&#x443;"/>
@@ -628,6 +632,7 @@
 			<field id="email" dataType="String" length="50" alias="Email"/>
 			<field id="phone_cel" dataType="String" length="50" alias="&#x422;&#x435;&#x43B;&#x435;&#x444;&#x43E;&#x43D;"/>
 			<field id="role_id" dataType="Enum" enumId="role_types"/>
+			<field id="create_dt" dataType="DateTimeTZ"/>
 		</model>
 		<model id="UserDialog" parent="ModelSQL" dataTable="user_dialog" virtual="TRUE">
 			<field id="id" dataType="Int" primaryKey="TRUE" alias="&#x41A;&#x43E;&#x434;"/>
@@ -1047,6 +1052,16 @@
 			<field id="applications_ref" dataType="JSON"/>
 			<field id="end_date_time" dataType="DateTimeTZ"/>
 			<field id="doc_flow_examination_id" dataType="Int"/>
+		</model>
+		<model id="ApplicationCorrection" parent="ModelSQL" dataTable="application_corrections" virtual="FALSE">
+			<field id="application_id" dataType="Int" refTable="applications" refField="id" required="TRUE" primaryKey="TRUE"/>
+			<field id="date_time" dataType="DateTimeTZ" defaultValue="now()" required="TRUE" primaryKey="TRUE"/>
+			<field id="user_id" dataType="Int" refTable="users" refField="id" required="TRUE"/>
+			<field id="end_date_time" dataType="DateTimeTZ"/>
+			<field id="doc_flow_examination_id" dataType="Int"/>
+			<index id="application_corrections_examination_idx">
+				<field id="doc_flow_examination_id"/>
+			</index>
 		</model>
 		<model id="ApplicationDocumentFile" parent="ModelSQL" dataTable="application_document_files" virtual="FALSE">
 			<field id="file_id" dataType="String" length="36" required="TRUE" primaryKey="TRUE"/>
@@ -1681,7 +1696,7 @@
 			</defaultOrder>
 			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE" required="FALSE"/>
 			<field id="date_time" dataType="DateTimeTZ"/>
-			<field id="subject" dataType="String" length="250"/>
+			<field id="subject" dataType="Text"/>
 			<field id="subject_doc_type" dataType="Enum" enumId="data_types">
 				<checkValues>
 					<checkValue>doc_flow_in</checkValue>
@@ -1705,7 +1720,7 @@
 			</defaultOrder>
 			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE" required="FALSE"/>
 			<field id="date_time" dataType="DateTimeTZ"/>
-			<field id="subject" dataType="String" length="250"/>
+			<field id="subject" dataType="Text"/>
 			<field id="subject_doc_type" dataType="Enum" enumId="data_types">
 				<checkValues>
 					<checkValue>doc_flow_in</checkValue>
@@ -1731,7 +1746,7 @@
 			</defaultOrder>
 			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE" required="FALSE"/>
 			<field id="date_time" dataType="DateTimeTZ" defaultValue="CURRENT_TIMESTAMP"/>
-			<field id="subject" dataType="String" length="250" required="TRUE"/>
+			<field id="subject" dataType="Text" required="TRUE"/>
 			<field id="subject_doc" dataType="JSONB" required="TRUE"/>
 			<field id="recipient" dataType="JSONB" required="TRUE"/>
 			<field id="description" dataType="Text" required="TRUE"/>
@@ -1761,7 +1776,7 @@
 		<model id="DocFlowExaminationList" parent="ModelSQL" dataTable="doc_flow_examinations_list" virtual="TRUE">
 			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE" required="FALSE"/>
 			<field id="date_time" dataType="DateTimeTZ"/>
-			<field id="subject" dataType="String"/>
+			<field id="subject" dataType="Text"/>
 			<field id="subject_docs_ref" dataType="JSON"/>
 			<field id="doc_flow_importance_types_ref" dataType="JSON"/>
 			<field id="end_date_time" dataType="DateTimeTZ"/>
@@ -1776,7 +1791,7 @@
 		<model id="DocFlowExaminationDialog" parent="ModelSQL" dataTable="doc_flow_examinations_dialog" virtual="TRUE">
 			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE" required="FALSE"/>
 			<field id="date_time" dataType="DateTimeTZ"/>
-			<field id="subject" dataType="String"/>
+			<field id="subject" dataType="Text"/>
 			<field id="subject_docs_ref" dataType="JSON"/>
 			<field id="description" dataType="Text"/>
 			<field id="doc_flow_importance_types_ref" dataType="JSON"/>
@@ -1805,7 +1820,7 @@
 			<field id="close_date_time" dataType="DateTimeTZ"/>
 			<field id="close_result" dataType="Enum" enumId="doc_flow_approvement_results"/>
 			<field id="closed" dataType="Bool"/>
-			<field id="subject" dataType="String" length="250" required="TRUE"/>
+			<field id="subject" dataType="Text"/>
 			<field id="subject_doc" dataType="JSONB" required="TRUE"/>
 			<field id="recipient_list" dataType="JSONB" required="TRUE"/>
 			<field id="description" dataType="Text"/>
@@ -1832,7 +1847,7 @@
 		<model id="DocFlowApprovementList" parent="ModelSQL" dataTable="doc_flow_approvements_list" virtual="TRUE">
 			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE" required="FALSE"/>
 			<field id="date_time" dataType="DateTimeTZ"/>
-			<field id="subject" dataType="String"/>
+			<field id="subject" dataType="Text"/>
 			<field id="subject_docs_ref" dataType="JSON"/>
 			<field id="doc_flow_importance_types_ref" dataType="JSON"/>
 			<field id="end_date_time" dataType="DateTimeTZ"/>
@@ -1847,7 +1862,7 @@
 		<model id="DocFlowApprovementDialog" parent="ModelSQL" dataTable="doc_flow_approvements_dialog" virtual="TRUE">
 			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE" required="FALSE"/>
 			<field id="date_time" dataType="DateTimeTZ"/>
-			<field id="subject" dataType="String"/>
+			<field id="subject" dataType="Text"/>
 			<field id="subject_docs_ref" dataType="JSON"/>
 			<field id="description" dataType="Text"/>
 			<field id="doc_flow_importance_types_ref" dataType="JSON"/>
@@ -2264,6 +2279,7 @@
 			<field id="in_estim_cost_recommend" dataType="Float" length="15" precision="2"/>
 			<field id="cur_estim_cost" dataType="Float" length="15" precision="2"/>
 			<field id="cur_estim_cost_recommend" dataType="Float" length="15" precision="2"/>
+			<field id="result_sign_expert_list" dataType="JSONB"/>
 			<index id="contracts_reg_number_idx" unique="TRUE">
 				<field id="reg_number"/>
 			</index>
@@ -2402,6 +2418,7 @@
 			<field id="in_estim_cost_recommend" dataType="Float" length="15" precision="2"/>
 			<field id="cur_estim_cost" dataType="Float" length="15" precision="2"/>
 			<field id="cur_estim_cost_recommend" dataType="Float" length="15" precision="2"/>
+			<field id="result_sign_expert_list" dataType="JSONB"/>
 		</model>
 		<model id="ExpertWork" parent="ModelSQL" dataTable="expert_works" virtual="FALSE">
 			<field id="id" dataType="Int" primaryKey="TRUE" required="FALSE" autoInc="TRUE"/>
@@ -2484,6 +2501,10 @@
 		</model>
 		<model id="ContractorList" parentJS="ModelJSON" virtual="TRUE" server="FALSE">
 			<field id="name" dataType="String" primaryKey="TRUE" autoInc="FALSE"/>
+		</model>
+		<model id="EmployeeLocalList" parentJS="ModelJSON" virtual="TRUE" server="FALSE">
+			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE"/>
+			<field id="employees_ref" dataType="JSON"/>
 		</model>
 		<model id="Service" parent="ModelSQL" dataTable="services" virtual="FALSE">
 			<defaultOrder>
@@ -3131,6 +3152,9 @@
 			<publicMethod id="unresolve">
 				<field id="id" dataType="Int" required="TRUE"/>
 			</publicMethod>
+			<publicMethod id="return_app_to_correction">
+				<field id="id" dataType="Int" required="TRUE"/>
+			</publicMethod>
 		</controller>
 		<controller id="DocFlowApprovement" parentId="ControllerSQL">
 			<publicMethod id="insert" modelId="DocFlowApprovement"/>
@@ -3400,6 +3424,13 @@
 		</controller>
 		<controller id="ContractorList" parentIdJS="ControllerObjClient" server="FALSE">
 			<publicMethod id="get_list" modelId="ContractorList"/>
+		</controller>
+		<controller id="EmployeeLocalList" parentIdJS="ControllerObjClient" server="FALSE">
+			<publicMethod id="insert" modelId="EmployeeLocalList"/>
+			<publicMethod id="update" modelId="EmployeeLocalList"/>
+			<publicMethod id="delete" modelId="EmployeeLocalList"/>
+			<publicMethod id="get_object" modelId="EmployeeLocalList"/>
+			<publicMethod id="get_list" modelId="EmployeeLocalList"/>
 		</controller>
 		<controller id="Service" parentId="ControllerSQL">
 			<publicMethod id="insert" modelId="Service"/>
@@ -4218,6 +4249,7 @@
 		<jsScript file="custom_controls/Doc1cAkt.js"/>
 		<jsScript file="custom_controls/LinkedContractListGrid.js"/>
 		<jsScript file="custom_controls/ContractorListGrid.js"/>
+		<jsScript file="custom_controls/EmployeeListGrid.js"/>
 		<jsScript file="custom_controls/ClientResponsablePersonEdit.js"/>
 		<jsScript file="custom_controls/ShortMessageRecipientGrid.js"/>
 		<jsScript file="enum_controls/Enum_role_types.js"/>
@@ -4493,6 +4525,9 @@
 		<jsScript file="enum_controls/Enum_doc_flow_inside_states.js"/>
 		<jsScript file="enum_controls/EnumGridColumn_doc_flow_inside_states.js"/>
 		<jsScript file="models/DocFlowInsideProcess_Model.js"/>
+		<jsScript file="controllers/EmployeeLocalList_Controller.js"/>
+		<jsScript file="models/EmployeeLocalList_Model.js"/>
+		<jsScript file="models/ApplicationCorrection_Model.js"/>
 	</jsScripts>
 	<cssScripts>
 		<cssScript file="assets/css/icons/icomoon/styles.css" compressed="TRUE" standalone="TRUE"/>

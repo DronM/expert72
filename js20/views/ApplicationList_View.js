@@ -140,7 +140,7 @@ function ApplicationList_View(id,options){
 							res+=" ";
 							res+= ((!fields.filled_percent.getValue())? 0:fields.filled_percent.getValue())+"%";
 						}
-						else if (val=="checking"){
+						else if (val=="checking"||val=="correcting"){
 							res+=" до ";
 							res+= DateHelper.format(fields.application_state_end_date.getValue(),"d/m/Y H:i");						
 						}

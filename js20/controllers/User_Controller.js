@@ -306,6 +306,9 @@ extend(User_Controller,ControllerObjServer);
 	var f_opts = {};
 	
 	pm.addField(new FieldEnum("role_id",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldDateTimeTZ("create_dt",f_opts));
 }
 
 			User_Controller.prototype.addGetObject = function(){

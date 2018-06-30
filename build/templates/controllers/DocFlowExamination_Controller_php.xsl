@@ -208,6 +208,25 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		$pm_obj->setParamValue('id',$pm->getParamValue('id'));
 		$this->get_object($pm_obj);
 	}
+
+	public function return_app_to_correction($pm){
+		$this->getDbLinkMaster()->query(sprintf(
+		"INSERT INTO application_corrections
+		(application_id, date_time, user_id, end_date_time, doc_flow_examination_id)
+		(SELECT
+			doc_flow_in.from_application_id,
+			now(),
+			%d,
+			ex.end_date_time,
+			ex.id
+		FROM doc_flow_examinations AS ex
+		LEFT JOIN doc_flow_in ON doc_flow_in.id=(ex.subject_doc->'keys'->>'id')::int AND ex.subject_doc->>'dataType'='doc_flow_in'
+		WHERE ex.id=%d
+		)",
+		$_SESSION['user_id'],
+		$this->getExtDbVal($pm,'id')
+		));
+	}
 	
 </xsl:template>
 

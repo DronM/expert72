@@ -18,7 +18,7 @@ function BtnEndDate(id,options){
 	
 	var self = this;
 	options.onClick = function(){
-		self.getNextNum();
+		self.calcDate();
 	}
 	
 	
@@ -37,7 +37,19 @@ extend(BtnEndDate,ButtonCtrl);
 
 
 /* public methods */
-BtnEndDate.prototype.getNextNum = function(){
+BtnEndDate.prototype.calcDate = function(){
+	er = false;
+	if (!this.m_view.getElement("expertise_day_count").getValue()){
+		this.m_view.getElement("expertise_day_count").setNotValid("Неверное значение");
+		er = true;
+	}
+	if (!this.m_view.getElement("expert_work_day_count").getValue()){
+		this.m_view.getElement("expert_work_day_count").setNotValid("Неверное значение");
+		er = true;
+	}
+	if (er){
+		throw Error("Неверные значения");
+	}
 	var pm = this.m_view.getController().getPublicMethod("get_work_end_date");
 	pm.setFieldValue("contract_id", this.m_view.getElement("id").getValue());
 	pm.setFieldValue("date_type", this.m_view.getElement("date_type").getValue());

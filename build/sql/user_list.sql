@@ -9,7 +9,8 @@ CREATE OR REPLACE VIEW user_list AS
 		users.name_full,
 		users.email,
 		phone_cel,
-		users.role_id
+		users.role_id,
+		users.create_dt
 	FROM users
 	ORDER BY users.name
 	;

@@ -23,6 +23,8 @@ require_once(FRAME_WORK_PATH.'basic_classes/FieldExtXML.php');
 
 
 
+require_once(USER_CONTROLLERS_PATH.'DocFlowOutClient_Controller.php');
+
 require_once('common/downloader.php');
 require_once(ABSOLUTE_PATH.'functions/Morpher.php');
 
@@ -905,7 +907,7 @@ class Application_Controller extends ControllerSQL{
 
 	public function delete_print($appId,$docType){
 		$state = self::checkSentState($this->getDbLink(),$appId,TRUE);
-		if ($_SESSION['role_id']!='admin' && $state!='filling'){
+		if ($_SESSION['role_id']!='admin' && $state!='filling' && $state!='correcting'){
 			throw new Exception(ER_DOC_SENT);
 		}
 		$fullPath = '';
@@ -1065,6 +1067,7 @@ class Application_Controller extends ControllerSQL{
 				$ar_obj['contract_number'] = NULL;
 				$ar_obj['expertise_result_number'] = NULL;
 				$ar_obj['expertise_result_date'] = NULL;
+				$ar_obj['application_state'] = 'filling';
 			}
 		}
 		else{
@@ -1097,7 +1100,6 @@ class Application_Controller extends ControllerSQL{
 				'filling' AS application_state,
 				NULL AS application_state_dt,
 				NULL AS application_state_end_date,
-				'filling' AS application_state,		
 				NULL AS documents,
 				NULL AS primary_application,
 				NULL AS select_descr,
@@ -1380,7 +1382,7 @@ class Application_Controller extends ControllerSQL{
 	}
 	
 	public function update($pm){
-		self::checkSentState($this->getDbLink(),$this->getExtDbVal($pm,'old_id'),TRUE);
+		$old_state = self::checkSentState($this->getDbLink(),$this->getExtDbVal($pm,'old_id'),TRUE);
 
 		if ($pm->getParamValue('user_id') && $_SESSION['role_id']!='admin'){
 			$pm->setParamValue('user_id', $_SESSION['user_id']);
@@ -1419,7 +1421,12 @@ class Application_Controller extends ControllerSQL{
 					$ar = $this->getDbLink()->query_first($q);
 				}
 				$resAr = [];
-				$this->set_state($this->getExtDbVal($pm,'old_id'),'sent',$ar,$resAr);
+				$this->set_state(
+					$this->getExtDbVal($pm,'old_id'),
+					($old_state=='correcting')? 'checking':'sent',
+					$ar,
+					$resAr
+				);
 				if (isset($resAr['new_app_id'])){
 					$this->move_files_to_new_app($resAr);
 				}
@@ -1506,7 +1513,7 @@ class Application_Controller extends ControllerSQL{
 			
 			//1) Mark in DB or delete
 			//|| $ar['state']=='returned'
-			if ($ar['state']=='filling'){
+			if ($ar['state']=='filling'||$ar['state']=='correcting'){
 				$q = sprintf(
 					"DELETE FROM application_document_files
 					WHERE file_id=%s
@@ -1591,7 +1598,9 @@ class Application_Controller extends ControllerSQL{
 				"SELECT
 					af.application_id,
 					af.document_type,
-					af.document_id,
+					CASE WHEN af.document_type='documents' THEN af.file_path
+						ELSE af.document_id::text
+					END AS document_id,
 					af.file_id,
 					af.file_name,
 					af.deleted,
@@ -1608,7 +1617,9 @@ class Application_Controller extends ControllerSQL{
 				"SELECT
 					af.application_id,
 					af.document_type,
-					af.document_id,
+					CASE WHEN af.document_type='documents' THEN af.file_path
+						ELSE af.document_id::text
+					END AS document_id,
 					af.file_id,
 					af.file_name,
 					af.deleted,
@@ -1841,7 +1852,7 @@ class Application_Controller extends ControllerSQL{
 	 * @param{array} resAr array of new_app_id,doc_type,doc_type_print
 	 */
 	private function set_state($id,$state,&$ar,&$resAr){
-		if ($state=='sent'){
+		if ($state=='sent'||$state=='checking'){
 			if (!is_null($ar['expertise_type']) && $ar['cost_eval_validity']=='t'){
 				//убрать Достоверность в другую заявку
 				$resAr['doc_type'] = 'cost_eval_validity';
@@ -1861,13 +1872,38 @@ class Application_Controller extends ControllerSQL{
 				$resAr['old_app_id'] = $id;
 			}
 		}
-		$this->getDbLinkMaster()->query(sprintf(
-			"INSERT INTO application_processes
-			(application_id,state,user_id)
-			VALUES (%d,'%s',%d)",
-			$id,$state,$_SESSION['user_id']
-		));
-		
+		$q = '';
+		if ($state=='sent'||$state=='filling'){
+			$q = sprintf(
+				"INSERT INTO application_processes
+				(application_id,state,user_id)
+				VALUES (%d,'%s',%d)",
+				$id,$state,$_SESSION['user_id']
+			);
+		}
+		else if ($state=='checking'){
+			$q = sprintf(
+				"INSERT INTO application_processes
+				(application_id,date_time,state,user_id,end_date_time,doc_flow_examination_id)
+				(SELECT
+					doc_flow_in.from_application_id,
+					now(),
+					'checking',
+					(SELECT user_id FROM employees WHERE id=ex.employee_id),
+					ex.end_date_time,
+					ex.id
+				FROM doc_flow_examinations ex
+				LEFT JOIN doc_flow_in ON doc_flow_in.id=(ex.subject_doc->'keys'->>'id')::int AND ex.subject_doc->>'dataType'='doc_flow_in'
+				LEFT JOIN applications AS app ON app.id=doc_flow_in.from_application_id
+				WHERE doc_flow_in.from_application_id=%d
+				LIMIT 1
+				)",
+				$id
+			);
+		}
+		if (strlen($q)){
+			$this->getDbLinkMaster()->query($q);
+		}
 	}
 	
 	private function get_person_data_on_type(&$jsonModel,$personType,&$personName,&$personPost){

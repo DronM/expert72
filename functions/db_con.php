@@ -5,7 +5,9 @@ require_once(FRAME_WORK_PATH.'db/db_pgsql.php');
 $dbLink = new DB_Sql();
 $dbLink->appname = APP_NAME;
 $dbLink->technicalemail = TECH_EMAIL;
-$dbLink->reporterror = DEBUG;
+$dbLink->reportError = DEBUG;
+$dbLink->productionConnectError = 'Ошибка подключения к серверу базы данных.@105';
+$dbLink->productionSQLError	= 'Ошибка при выполнении запроса к базе данных.@106';		
 
 /*conneсtion*/
 $dbLink->server		= DB_SERVER_MASTER;

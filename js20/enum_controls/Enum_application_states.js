@@ -16,6 +16,7 @@ function Enum_application_states(id,options){
 	options = options || {};
 	options.addNotSelected = (options.addNotSelected!=undefined)? options.addNotSelected:true;
 	var multy_lang_values = {"ru_filling":"Заполнение анкеты"
+,"ru_correcting":"Исправление анкеты"
 ,"ru_sent":"Анкета отправлена на проверку"
 ,"ru_checking":"Проверка анкеты"
 ,"ru_returned":"Возврат без рассмотрения"
@@ -28,6 +29,9 @@ function Enum_application_states(id,options){
 	options.options = [{"value":"filling",
 "descr":multy_lang_values[window.getApp().getLocale()+"_"+"filling"],
 checked:(options.defaultValue&&options.defaultValue=="filling")}
+,{"value":"correcting",
+"descr":multy_lang_values[window.getApp().getLocale()+"_"+"correcting"],
+checked:(options.defaultValue&&options.defaultValue=="correcting")}
 ,{"value":"sent",
 "descr":multy_lang_values[window.getApp().getLocale()+"_"+"sent"],
 checked:(options.defaultValue&&options.defaultValue=="sent")}

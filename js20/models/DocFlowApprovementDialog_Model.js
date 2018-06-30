@@ -47,7 +47,7 @@ function DocFlowApprovementDialog_Model(options){
 	
 	filed_options.autoInc = false;	
 	
-	options.fields.subject = new FieldString("subject",filed_options);
+	options.fields.subject = new FieldText("subject",filed_options);
 	
 				
 	

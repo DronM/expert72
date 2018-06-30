@@ -492,6 +492,14 @@ class ContractDialog_Model extends ModelSQL{
 		$this->addField($f_cur_estim_cost_recommend);
 		//********************
 		
+		//*** Field result_sign_expert_list ***
+		$f_opts = array();
+		$f_opts['id']="result_sign_expert_list";
+				
+		$f_result_sign_expert_list=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"result_sign_expert_list",$f_opts);
+		$this->addField($f_result_sign_expert_list);
+		//********************
+		
 		//*** Field applications_ref ***
 		$f_opts = array();
 		$f_opts['id']="applications_ref";

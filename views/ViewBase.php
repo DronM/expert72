@@ -1314,6 +1314,7 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Doc1cAkt.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/LinkedContractListGrid.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ContractorListGrid.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/EmployeeListGrid.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ClientResponsablePersonEdit.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ShortMessageRecipientGrid.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/Enum_role_types.js'));
@@ -1589,6 +1590,9 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/Enum_doc_flow_inside_states.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/EnumGridColumn_doc_flow_inside_states.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowInsideProcess_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/EmployeeLocalList_Controller.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/EmployeeLocalList_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ApplicationCorrection_Model.js'));
 	
 			if (isset($_SESSION['scriptId'])){
 				$script_id = $_SESSION['scriptId'];
@@ -1625,7 +1629,11 @@ class ViewBase extends ViewHTMLXSLT {
 		$pathInfo = pathinfo($currentPath);
 		$hostName = $_SERVER['HTTP_HOST'];
 		$protocol = strtolower(substr($_SERVER["SERVER_PROTOCOL"],0,5))=='https://'?'https://':'http://';
-		$this->setVarValue('basePath', $protocol.$hostName.$pathInfo['dirname']."/");
+		$dir = $protocol.$hostName.$pathInfo['dirname'];
+		if (substr($dir,strlen($dir)-1,1)!='/'){
+			$dir.='/';
+		}
+		$this->setVarValue('basePath', $dir);
 		
 		$this->setVarValue('version',trim(VERSION));
 		$this->setVarValue('debug',DEBUG);

@@ -10,6 +10,7 @@ require_once(FRAME_WORK_PATH.'basic_classes/ModelSQL.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLInt.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLString.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLEnum.php');
+require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLDateTimeTZ.php');
  
 class UserList_Model extends ModelSQL{
 	
@@ -72,6 +73,14 @@ class UserList_Model extends ModelSQL{
 				
 		$f_role_id=new FieldSQLEnum($this->getDbLink(),$this->getDbName(),$this->getTableName(),"role_id",$f_opts);
 		$this->addField($f_role_id);
+		//********************
+		
+		//*** Field create_dt ***
+		$f_opts = array();
+		$f_opts['id']="create_dt";
+				
+		$f_create_dt=new FieldSQLDateTimeTZ($this->getDbLink(),$this->getDbName(),$this->getTableName(),"create_dt",$f_opts);
+		$this->addField($f_create_dt);
 		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}

@@ -20,6 +20,8 @@ function EnumGridColumn_application_states(options){
 
 	options.multyLangValues["ru"]["filling"] = "Заполнение анкеты";
 
+	options.multyLangValues["ru"]["correcting"] = "Исправление анкеты";
+
 	options.multyLangValues["ru"]["sent"] = "Анкета отправлена на проверку";
 
 	options.multyLangValues["ru"]["checking"] = "Проверка анкеты";

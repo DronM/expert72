@@ -74,8 +74,8 @@ extend(DocFlowApprovement_Controller,ControllerObjServer);
 	pm.addField(field);
 	
 	var options = {};
-	options.required = true;
-	var field = new FieldString("subject",options);
+	
+	var field = new FieldText("subject",options);
 	
 	pm.addField(field);
 	
@@ -180,7 +180,7 @@ extend(DocFlowApprovement_Controller,ControllerObjServer);
 	
 	var options = {};
 	
-	var field = new FieldString("subject",options);
+	var field = new FieldText("subject",options);
 	
 	pm.addField(field);
 	
@@ -288,7 +288,7 @@ extend(DocFlowApprovement_Controller,ControllerObjServer);
 	pm.addField(new FieldDateTimeTZ("date_time",f_opts));
 	var f_opts = {};
 	
-	pm.addField(new FieldString("subject",f_opts));
+	pm.addField(new FieldText("subject",f_opts));
 	var f_opts = {};
 	
 	pm.addField(new FieldJSON("subject_docs_ref",f_opts));

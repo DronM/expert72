@@ -49,8 +49,8 @@ class DocFlowApprovement_Controller extends ControllerSQL{
 		$param = new FieldExtBool('closed'
 				,array());
 		$pm->addParam($param);
-		$param = new FieldExtString('subject'
-				,array('required'=>TRUE));
+		$param = new FieldExtText('subject'
+				,array());
 		$pm->addParam($param);
 		$param = new FieldExtJSONB('subject_doc'
 				,array('required'=>TRUE));
@@ -115,7 +115,7 @@ class DocFlowApprovement_Controller extends ControllerSQL{
 				,array(
 			));
 			$pm->addParam($param);
-		$param = new FieldExtString('subject'
+		$param = new FieldExtText('subject'
 				,array(
 			));
 			$pm->addParam($param);

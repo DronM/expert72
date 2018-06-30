@@ -36,7 +36,7 @@ class DocFlowExamination_Controller extends ControllerSQL{
 		$param = new FieldExtDateTimeTZ('date_time'
 				,array());
 		$pm->addParam($param);
-		$param = new FieldExtString('subject'
+		$param = new FieldExtText('subject'
 				,array('required'=>TRUE));
 		$pm->addParam($param);
 		$param = new FieldExtJSONB('subject_doc'
@@ -70,7 +70,7 @@ class DocFlowExamination_Controller extends ControllerSQL{
 				,array());
 		$pm->addParam($param);
 		
-				$param = new FieldExtEnum('application_resolution_state',',','filling,sent,checking,returned,closed_no_expertise,waiting_for_contract,waiting_for_pay,expertise,closed'
+				$param = new FieldExtEnum('application_resolution_state',',','filling,correcting,sent,checking,returned,closed_no_expertise,waiting_for_contract,waiting_for_pay,expertise,closed'
 				,array());
 		$pm->addParam($param);
 		
@@ -95,7 +95,7 @@ class DocFlowExamination_Controller extends ControllerSQL{
 				,array(
 			));
 			$pm->addParam($param);
-		$param = new FieldExtString('subject'
+		$param = new FieldExtText('subject'
 				,array(
 			));
 			$pm->addParam($param);
@@ -140,7 +140,7 @@ class DocFlowExamination_Controller extends ControllerSQL{
 			));
 			$pm->addParam($param);
 		
-				$param = new FieldExtEnum('application_resolution_state',',','filling,sent,checking,returned,closed_no_expertise,waiting_for_contract,waiting_for_pay,expertise,closed'
+				$param = new FieldExtEnum('application_resolution_state',',','filling,correcting,sent,checking,returned,closed_no_expertise,waiting_for_contract,waiting_for_pay,expertise,closed'
 				,array(
 			));
 			$pm->addParam($param);
@@ -228,6 +228,18 @@ class DocFlowExamination_Controller extends ControllerSQL{
 
 			
 		$pm = new PublicMethod('unresolve');
+		
+				
+	$opts=array();
+	
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtInt('id',$opts));
+	
+			
+		$this->addPublicMethod($pm);
+
+			
+		$pm = new PublicMethod('return_app_to_correction');
 		
 				
 	$opts=array();
@@ -417,6 +429,25 @@ class DocFlowExamination_Controller extends ControllerSQL{
 		$pm_obj = $this->getPublicMethod("get_object");
 		$pm_obj->setParamValue('id',$pm->getParamValue('id'));
 		$this->get_object($pm_obj);
+	}
+
+	public function return_app_to_correction($pm){
+		$this->getDbLinkMaster()->query(sprintf(
+		"INSERT INTO application_corrections
+		(application_id, date_time, user_id, end_date_time, doc_flow_examination_id)
+		(SELECT
+			doc_flow_in.from_application_id,
+			now(),
+			%d,
+			ex.end_date_time,
+			ex.id
+		FROM doc_flow_examinations AS ex
+		LEFT JOIN doc_flow_in ON doc_flow_in.id=(ex.subject_doc->'keys'->>'id')::int AND ex.subject_doc->>'dataType'='doc_flow_in'
+		WHERE ex.id=%d
+		)",
+		$_SESSION['user_id'],
+		$this->getExtDbVal($pm,'id')
+		));
 	}
 	
 

@@ -206,6 +206,9 @@ class Contract_Controller extends ControllerSQL{
 		$param = new FieldExtFloat('cur_estim_cost_recommend'
 				,array());
 		$pm->addParam($param);
+		$param = new FieldExtJSONB('result_sign_expert_list'
+				,array());
+		$pm->addParam($param);
 		
 		$pm->addParam(new FieldExtInt('ret_id'));
 		
@@ -446,6 +449,10 @@ class Contract_Controller extends ControllerSQL{
 			));
 			$pm->addParam($param);
 		$param = new FieldExtFloat('cur_estim_cost_recommend'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtJSONB('result_sign_expert_list'
 				,array(
 			));
 			$pm->addParam($param);
@@ -775,7 +782,7 @@ class Contract_Controller extends ControllerSQL{
 	}
 	
 	public function get_list($pm){
-		if ($_SESSION['role_id']=='admin' || $_SESSION['role_id']=='lawyer'){
+		if ($_SESSION['role_id']=='admin' || $_SESSION['role_id']=='lawyer' || $_SESSION['role_id']=='boss'){
 			parent::get_list($pm);
 		}
 		else{
@@ -801,9 +808,21 @@ class Contract_Controller extends ControllerSQL{
 				$_SESSION['department_id']
 				)
 			);
-			$model->select(FALSE,$where,NULL,
-				NULL,NULL,NULL,NULL,
-				NULL,TRUE
+			
+			$from = null; $count = null;
+			$limit = $this->limitFromParams($pm,$from,$count);
+			$calc_total = ($count>0);
+			if ($from){
+				$model->setListFrom($from);
+			}
+			if ($count){
+				$model->setRowsPerPage($count);
+			}		
+			$order = $this->orderFromParams($pm,$model);
+			$fields = $this->fieldsFromParams($pm);		
+			$model->select(FALSE,$where,$order,
+				$limit,$fields,NULL,NULL,
+				$calc_total,TRUE
 			);
 			$this->addModel($model);
 		}

@@ -87,7 +87,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 	}
 	
 	public function get_list($pm){
-		if ($_SESSION['role_id']=='admin' || $_SESSION['role_id']=='lawyer'){
+		if ($_SESSION['role_id']=='admin' || $_SESSION['role_id']=='lawyer' || $_SESSION['role_id']=='boss'){
 			parent::get_list($pm);
 		}
 		else{
@@ -113,9 +113,21 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				$_SESSION['department_id']
 				)
 			);
-			$model->select(FALSE,$where,NULL,
-				NULL,NULL,NULL,NULL,
-				NULL,TRUE
+			
+			$from = null; $count = null;
+			$limit = $this->limitFromParams($pm,$from,$count);
+			$calc_total = ($count>0);
+			if ($from){
+				$model->setListFrom($from);
+			}
+			if ($count){
+				$model->setRowsPerPage($count);
+			}		
+			$order = $this->orderFromParams($pm,$model);
+			$fields = $this->fieldsFromParams($pm);		
+			$model->select(FALSE,$where,$order,
+				$limit,$fields,NULL,NULL,
+				$calc_total,TRUE
 			);
 			$this->addModel($model);
 		}

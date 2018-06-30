@@ -371,6 +371,8 @@ $(function() {
 
         // Toggle min sidebar class
         $('body').toggleClass('sidebar-xs');
+        
+        window.getApp().toggleSidebar();
     });
 
 

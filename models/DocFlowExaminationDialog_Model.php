@@ -45,7 +45,7 @@ class DocFlowExaminationDialog_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['id']="subject";
 				
-		$f_subject=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"subject",$f_opts);
+		$f_subject=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"subject",$f_opts);
 		$this->addField($f_subject);
 		//********************
 		

@@ -34,7 +34,7 @@ function ApplicationDialog_View(id,options){
 	
 	if (options.model && (options.model.getRowIndex()>=0 || options.model.getNextRow()) ){			
 		options.templateOptions.is_admin = (window.getApp().getServVar("role_id")=="admin");
-		options.readOnly = (options.model.getField("application_state").isSet() && options.model.getFieldValue("application_state")!="filling");
+		options.readOnly = (options.model.getField("application_state").isSet() && options.model.getFieldValue("application_state")!="filling" && options.model.getFieldValue("application_state")!="correcting");
 		
 		options.templateOptions.contractExists = options.model.getField("contract_number").isSet();
 		if (options.templateOptions.contractExists){
@@ -773,7 +773,7 @@ ApplicationDialog_View.prototype.onGetData = function(resp,cmd){
 		}
 	}
 	
-	if ((st=="filling" ) && cmd!="copy"){
+	if ((st=="filling"||st=="correcting" ) && cmd!="copy"){
 		//doc flow files can be modified
 		for (var tab_name in this.m_documentTabs){
 			if (this.m_documentTabs[tab_name] && this.m_documentTabs[tab_name].control){
@@ -786,7 +786,10 @@ ApplicationDialog_View.prototype.onGetData = function(resp,cmd){
 	if (m.getField("application_state_end_date").isSet()){
 		var n = document.getElementById(this.getId()+":application_state_end_date");
 		var dt = m.getFieldValue("application_state_end_date");
+		console.log(dt)
+		console.dir(n)
 		n.textContent = DateHelper.format(dt,"d/m/Y");		
+		console.log(n.textContent)
 	}
 
 	//read only states
@@ -827,7 +830,7 @@ ApplicationDialog_View.prototype.onGetData = function(resp,cmd){
 ApplicationDialog_View.prototype.setCmdEnabled = function(){
 	var tot = this.getTotalFileCount();
 	var st = this.getModel().getFieldValue("application_state");
-	this.getElement("cmdSend").setEnabled( (this.m_totalFilledPercent==100 && tot>0 && (st=="filling")) );
+	this.getElement("cmdSend").setEnabled( (this.m_totalFilledPercent==100 && tot>0 && (st=="filling"||st=="correcting") ) );
 	//this.getElement("cmdPrintApp").setEnabled( (this.m_totalFilledPercent==100 && tot>0 && (st=="filling"||st=="returned")) );
 	this.getElement("cmdZipAll").setEnabled( (tot>0) );				
 }
@@ -983,7 +986,7 @@ ApplicationDialog_View.prototype.checkBeforePrint = function(){
 }
 
 ApplicationDialog_View.prototype.printApp = function(){
-	this.checkBeforePrint();
+	//this.checkBeforePrint();
 	this.printAppOnTempl("Application",0);
 	if (this.getElement("service_cont").getElement("cost_eval_validity").getValue()){
 		this.printAppOnTempl("ApplicationCostEvalValidity",50);

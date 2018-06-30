@@ -13,8 +13,8 @@ App.prototype.m_enums = {
 		,"ru_accountant":"Бухгалтер"
 	},
 	"email_types":{"ru_new_account":"Новый акаунт","ru_reset_pwd":"Установка пароля","ru_user_email_conf":"Подтверждение пароля","ru_out_mail":"Исходящее письмо"},
-	"application_states":{"ru_filling":"Заполнение анкеты","ru_sent":"Анкета отправлена на проверку","ru_checking":"Проверка анкеты",
-		"ru_returned":"Анкета возвращена на доработку","ru_closed_no_expertise":"Возврат без рассмотрения",
+	"application_states":{"ru_filling":"Заполнение анкеты","ru_correction":"Исправление анкеты","ru_sent":"Анкета отправлена на проверку","ru_checking":"Проверка анкеты",
+		"ru_returned":"Возврат без рассмотрения","ru_closed_no_expertise":"Возврат без экспертизы",
 		"ru_waiting_for_contract":"Подписание контракта",
 		"ru_waiting_for_pay":"Ожидание оплаты","ru_expertise":"Экспертиза проекта"},
 	"doc_flow_in_states":{"ru_examining":"Рассмотрение","ru_examined":"Рассмотрен","ru_fulfilling":"Исполнение"
@@ -74,6 +74,12 @@ App.prototype.m_enums = {
 		,"ru_fulfilled":"Исполнен"
 		,"ru_acquainting":"На ознакомлении"
 		,"ru_acquainted":"Ознакомлен"
+	}
+	,"doc_flow_out_client_types":{
+		"ru_app":"Заявление",
+		"ru_contr_resp":"Ответы на замечания по контракту",
+		"ru_contr_return":"Возврат контракта",
+		"contr_other":"Прочее"
 	}
 	
 };

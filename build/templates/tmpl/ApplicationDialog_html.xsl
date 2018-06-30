@@ -64,6 +64,11 @@ Edit template instead.
 					<h5 class="no-margin text-semibold">Все поля, отмеченные звездочкой, обязательны для заполнения.</h5>
 					<!--  При отсутствии данных, необходимо указать <u class="text-bold">«Отсутствует»</u> или <u class="text-bold">«Не требуется»</u>, для числовых полей <u class="text-bold">«0»</u>. -->
 					</div>
+					<div id="{{{{id}}}}:inf_correcting" class="hidden appState">
+					<h5 class="no-margin text-semibold">Для подачи необходимо заполнить заявление на 100%.</h5>
+					<h5 class="no-margin text-semibold">Все поля, отмеченные звездочкой, обязательны для заполнения.</h5>
+					<h5 class="no-margin text-semibold text-danger">Необходимо повторно отправить заявление до <span id="{{{{id}}}}:application_state_end_date" class="label label-primary label-rounded"></span>.</h5>
+					</div>
 					<div id="{{{{id}}}}:inf_closed" class="hidden appState">
 					<h5 class="no-margin text-semibold">Отправлено заключение.</h5>
 					</div>

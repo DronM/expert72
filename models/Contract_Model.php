@@ -492,6 +492,14 @@ class Contract_Model extends ModelSQL{
 		$f_cur_estim_cost_recommend=new FieldSQLFloat($this->getDbLink(),$this->getDbName(),$this->getTableName(),"cur_estim_cost_recommend",$f_opts);
 		$this->addField($f_cur_estim_cost_recommend);
 		//********************
+		
+		//*** Field result_sign_expert_list ***
+		$f_opts = array();
+		$f_opts['id']="result_sign_expert_list";
+				
+		$f_result_sign_expert_list=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"result_sign_expert_list",$f_opts);
+		$this->addField($f_result_sign_expert_list);
+		//********************
 	
 		$order = new ModelOrderSQL();		
 		$this->setDefaultModelOrder($order);		

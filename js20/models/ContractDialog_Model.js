@@ -488,6 +488,14 @@ function ContractDialog_Model(options){
 	
 	options.fields.cur_estim_cost_recommend = new FieldFloat("cur_estim_cost_recommend",filed_options);
 	options.fields.cur_estim_cost_recommend.getValidator().setMaxLength('15');
+		
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.result_sign_expert_list = new FieldJSONB("result_sign_expert_list",filed_options);
 	
 			
 			
@@ -769,6 +777,7 @@ function ContractDialog_Model(options){
 	
 	options.fields.doc_folders = new FieldJSON("doc_folders",filed_options);
 	
+			
 			
 			
 			

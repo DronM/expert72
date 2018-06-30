@@ -274,6 +274,9 @@ h2 div.btn{
 #ApplicationList\:grid td[state="returned"]{
 	background:#f4415e;
 }
+#ApplicationList\:grid td[state="correcting"]{
+	background:#f4415e;
+}
 #ApplicationList\:grid td[state="expertise"]{
 	background:#41d9f4;
 }

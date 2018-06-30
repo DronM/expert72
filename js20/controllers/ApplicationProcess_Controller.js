@@ -52,7 +52,7 @@ extend(ApplicationProcess_Controller,ControllerObjServer);
 	
 	var options = {};
 	options.required = true;	
-	options.enumValues = 'filling,sent,checking,returned,closed_no_expertise,waiting_for_contract,waiting_for_pay,expertise,closed';
+	options.enumValues = 'filling,correcting,sent,checking,returned,closed_no_expertise,waiting_for_contract,waiting_for_pay,expertise,closed';
 	var field = new FieldEnum("state",options);
 	
 	pm.addField(field);
@@ -102,7 +102,7 @@ extend(ApplicationProcess_Controller,ControllerObjServer);
 	
 	var options = {};
 		
-	options.enumValues = 'filling,sent,checking,returned,closed_no_expertise,waiting_for_contract,waiting_for_pay,expertise,closed';
+	options.enumValues = 'filling,correcting,sent,checking,returned,closed_no_expertise,waiting_for_contract,waiting_for_pay,expertise,closed';
 	options.enumValues+= (options.enumValues=='')? '':',';
 	options.enumValues+= 'null';
 	

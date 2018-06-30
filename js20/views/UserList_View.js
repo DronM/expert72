@@ -57,8 +57,21 @@ function UserList_View(id,options){
 									"searchOptions":{
 										"searchType":"on_match",
 										"typeChange":false
-									},
-									
+									}
+								})
+							],
+							"sortable":true
+						})
+						,new GridCellHead(id+":grid:head:create_dt",{
+							"value":"Дата создания",
+							"columns":[
+								new GridColumnDate({
+									"field":model.getField("create_dt"),
+									"ctrlClass":EditDate,
+									"searchOptions":{
+										"field":new FieldDate("create_dt"),
+										"searchType":"on_beg"
+									}
 								})
 							],
 							"sortable":true

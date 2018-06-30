@@ -540,6 +540,8 @@ $permissions = array();
 				
 					$permissions['DocFlowExamination_Controller_unresolve']=TRUE;
 				
+					$permissions['DocFlowExamination_Controller_return_app_to_correction']=TRUE;
+				
 					$permissions['DocFlowApprovement_Controller_insert']=TRUE;
 				
 					$permissions['DocFlowApprovement_Controller_update']=TRUE;
@@ -805,6 +807,16 @@ $permissions = array();
 					$permissions['LinkedContractList_Controller_get_object']=TRUE;
 				
 					$permissions['ContractorList_Controller_get_list']=TRUE;
+				
+					$permissions['EmployeeLocalList_Controller_insert']=TRUE;
+				
+					$permissions['EmployeeLocalList_Controller_update']=TRUE;
+				
+					$permissions['EmployeeLocalList_Controller_delete']=TRUE;
+				
+					$permissions['EmployeeLocalList_Controller_get_object']=TRUE;
+				
+					$permissions['EmployeeLocalList_Controller_get_list']=TRUE;
 				
 					$permissions['Service_Controller_insert']=TRUE;
 				

@@ -132,7 +132,7 @@ function DocFlowExamination_View(id,options){
 			"addNotSelected":false,
 			"options":[
 				{"value":"waiting_for_contract","descr":app.getPredefinedItem("doc_flow_types","app_resp").getDescr(),"checked":true}				
-				,{"value":"filling","descr":app.getPredefinedItem("doc_flow_types","app_resp_correct").getDescr()}
+				//,{"value":"filling","descr":app.getPredefinedItem("doc_flow_types","app_resp_correct").getDescr()}
 				,{"value":"returned","descr":app.getPredefinedItem("doc_flow_types","app_resp_return").getDescr()}
 			]
 		}));
@@ -178,6 +178,15 @@ function DocFlowExamination_View(id,options){
 					else{
 						self.createDocFlowOut();
 					}
+				}
+			})
+		);	
+		this.addElement(
+			new ButtonCmd(id+":cmdCorrect",{
+				"caption":"Разрешить редактирование",
+				"title":"Сделать заявление доступным для редактирования заказчику",
+				"onClick":function(){
+					self.returnAppToCorrection();
 				}
 			})
 		);	
@@ -304,6 +313,7 @@ DocFlowExamination_View.prototype.onGetData = function(resp,cmd){
 		this.getElement("cmdResolve").setEnabled(true);
 		this.getElement("cmdDocFlowOut").setEnabled(true);
 		this.getElement("cmdUnresolve").setEnabled(true);
+		this.getElement("cmdCorrect").setEnabled(true);
 		this.getElement("resolution").setEnabled(true);
 		this.getElement("application_resolution_state").setEnabled(true);
 		this.getElement("end_date_time").setEnabled(is_admin);
@@ -404,7 +414,7 @@ DocFlowExamination_View.prototype.resolve = function(){
 		"ok":function(resp){
 			self.close({"updated":true});
 		}
-	})
+	});
 }
 DocFlowExamination_View.prototype.unresolve = function(){
 	var pm = this.getController().getPublicMethod("unresolve");
@@ -422,4 +432,23 @@ DocFlowExamination_View.prototype.addProcessChain = function(options){
 }
 DocFlowExamination_View.prototype.addProcessChainEvents = function(){
 	DocFlowExamination_View.superclass.addProcessChainEvents.call(this,"doc_flow_in_processes_chain");
+}
+
+DocFlowExamination_View.prototype.returnAppToCorrection = function(){
+	var self = this;
+	WindowQuestion.show({
+		"text":"Сделать заявление доступным для редактирования?",
+		"cancel":false,
+		"callBack":function(res){
+			if (res==WindowQuestion.RES_YES){
+				var pm = self.getController().getPublicMethod("return_app_to_correction");
+				pm.setFieldValue("id",self.getElement("id").getValue());				
+				pm.run({
+					"ok":function(){
+						self.close({"updated":true});		
+					}
+				});
+			}
+		}
+	});
 }

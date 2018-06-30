@@ -89,16 +89,19 @@ function DocFlowOutClientDialog_View(id,options){
 			"placeholder":"Содержание письма"			
 		}));	
 		
+		var t_opts = [
+				{"value":"contr_resp","descr":this.m_subjects.contr_resp,"checked":true}				
+				,{"value":"contr_return","descr":this.m_subjects.contr_return}
+		];
+		if (options.readOnly){
+			t_opts.push({"value":"app","descr":window.getApp().getEnum("doc_flow_out_client_types","app")});
+		}
 		this.addElement(new EditSelect(id+":doc_flow_out_client_type",{
 			"editContClassName":editContClassName,
 			"labelClassName":labelClassName,			
 			"labelCaption":"Вид письма:",		
 			"addNotSelected":false,
-			"options":[
-				{"value":"contr_resp","descr":this.m_subjects.contr_resp,"checked":true}				
-				,{"value":"contr_return","descr":this.m_subjects.contr_return}
-				//,{"value":"contr_other","descr":"Прочее"}
-			],
+			"options":t_opts,
 			"events":{
 				"change":function(){
 					self.getElement("subject").setValue(self.m_subjects[this.getValue()]);
