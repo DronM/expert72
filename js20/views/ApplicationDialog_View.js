@@ -983,6 +983,16 @@ ApplicationDialog_View.prototype.checkBeforePrint = function(){
 			throw new Error("Закладка "+tab_values[id].alias+" не заполнена на 100%!");
 		}		
 	}
+	var no_files = true;
+	for (var tab_name in this.m_documentTabs){
+		if (this.m_documentTabs[tab_name].control && this.m_documentTabs[tab_name].control.getTotalFileCount()){
+			no_files = false;
+			break;
+		}
+	}
+	if (no_files){
+		throw new Error('Нет ни одного вложенного файла с документацией!');
+	}
 }
 
 ApplicationDialog_View.prototype.printApp = function(){

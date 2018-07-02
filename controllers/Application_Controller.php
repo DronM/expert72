@@ -1923,6 +1923,11 @@ class Application_Controller extends ControllerSQL{
 	}
 
 	public function get_print($pm){
+		if (!file_exists(FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.self::APP_DIR_PREF.$this->getExtDbVal($pm,'id'))){
+			//нет ни одного файла
+			$this->setHeaderStatus(400);
+			throw new Exception('Нет ни одного вложенного файла!');
+		}
 		$templ_name = $pm->getParamValue('templ');
 		$out_file = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
 			self::APP_DIR_PREF.$this->getExtDbVal($pm,'id').DIRECTORY_SEPARATOR.
@@ -1953,6 +1958,7 @@ class Application_Controller extends ControllerSQL{
 		$resp_m = json_decode($ar['office_responsable_persons'],TRUE);		
 		$this->get_person_data_on_type($resp_m,'boss',$boss_name,$boss_post);
 		if (!strlen($boss_name)){
+			$this->setHeaderStatus(400);
 			throw new Exception(self::ER_NO_BOSS);
 		}
 		try{
@@ -2345,7 +2351,8 @@ class Application_Controller extends ControllerSQL{
 				exec(sprintf(PDF_CMD_TEMPLATE,$xml_file, $xslt_file, $out_file_tmp));
 					
 				if (!file_exists($out_file_tmp)){
-					throw new Exception('Файл не найден!');
+					$this->setHeaderStatus(400);
+					throw new Exception('Ошибка формирования файла!');
 				}
 			
 				rename($out_file_tmp, $out_file);

@@ -7,6 +7,7 @@ require_once(FRAME_WORK_PATH.'basic_classes/ModelTemplate.php');
 require_once(USER_CONTROLLERS_PATH.'Constant_Controller.php');
 require_once(USER_CONTROLLERS_PATH.'DocFlowTask_Controller.php');
 require_once(USER_CONTROLLERS_PATH.'DocFlowInClient_Controller.php');
+require_once(USER_CONTROLLERS_PATH.'MainMenuConstructor_Controller.php');
 
 
 			require_once('models/MainMenu_Model_admin.php');
@@ -20,18 +21,35 @@ class ViewBase extends ViewHTMLXSLT {
 
 	private $dbLink;
 
+	protected static function getMenuClass(){
+		//USER_MODELS_PATH
+		$menu_class = NULL;
+		if (file_exists(OUTPUT_PATH.'MainMenu_Model_'.$_SESSION['user_id'].'.php')){
+			$menu_class = 'MainMenu_Model_'.$_SESSION['user_id'];
+		}
+		else if (file_exists(OUTPUT_PATH.'MainMenu_Model_'.$_SESSION['role_id'].'_'.$_SESSION['user_id'].'.php')){
+			$menu_class = 'MainMenu_Model_'.$_SESSION['role_id'].'_'.$_SESSION['user_id'];
+		}
+		else if (file_exists(OUTPUT_PATH.'MainMenu_Model_'.$_SESSION['role_id'].'.php')){
+			$menu_class = 'MainMenu_Model_'.$_SESSION['role_id'];
+		}
+		return $menu_class;
+	}
+
 	protected function addMenu(&$models){
 		if (isset($_SESSION['role_id'])){
-			if (file_exists(USER_MODELS_PATH.'MainMenu_Model_'.$_SESSION['user_id'].'.php')){
-				$menu_class = 'MainMenu_Model_'.$_SESSION['user_id'];
+			//USER_MODELS_PATH
+			$menu_class = self::getMenuClass();
+			if (is_null($menu_class)){
+				//no menu exists yet
+				$this->initDbLink();
+				$contr = new MainMenuConstructor_Controller($this->dbLink);
+				$contr->genMenuForUser($_SESSION['user_id'], $_SESSION['role_id']);
+				$menu_class = self::getMenuClass();
+				if (is_null($menu_class)){
+					throw new Exception('No menu found!');
+				}
 			}
-			else if (file_exists(USER_MODELS_PATH.'MainMenu_Model_'.$_SESSION['role_id'].'_'.$_SESSION['user_id'].'.php')){
-				$menu_class = 'MainMenu_Model_'.$_SESSION['role_id'].'_'.$_SESSION['user_id'];
-			}
-			else{
-				$menu_class = 'MainMenu_Model_'.$_SESSION['role_id'];
-			}
-			
 			$models['mainMenu'] = new $menu_class();
 		}	
 	}

@@ -1,189 +1,167 @@
--- Function: application_processes_process()
+-- VIEW: contracts_dialog
 
--- DROP FUNCTION application_processes_process();
+--DROP VIEW contracts_dialog;
 
-CREATE OR REPLACE FUNCTION application_processes_process()
-  RETURNS trigger AS
-$BODY$
-DECLARE
-	i json;
-	ind int;
-	v_applicant json;
-	v_customer json;
-	v_contractors json;
-	v_application_state application_states;
-	v_application_state_dt timestampTZ;
-BEGIN
-
-	IF (TG_WHEN='AFTER' AND TG_OP='INSERT') THEN		
-		IF NEW.state='checking' AND (NOT const_client_lk_val() OR const_debug_val()) THEN
-			--Главный сервер 
-			SELECT
-				d.applicant,
-				d.customer,
-				d.contractors,
-				st.state,
-				st.date_time
-			INTO
-				v_applicant,
-				v_customer,
-				v_contractors,
-				v_application_state,
-				v_application_state_dt
-			FROM applications AS d
-			LEFT JOIN (
-				SELECT
-					t.application_id,
-					max(t.date_time) AS date_time
-				FROM application_processes t
-				WHERE t.application_id=NEW.application_id AND t.date_time<>NEW.date_time
-				GROUP BY t.application_id
-			) AS h_max ON h_max.application_id=d.id
-			LEFT JOIN application_processes st
-				ON st.application_id=h_max.application_id AND st.date_time = h_max.date_time							
-			WHERE d.id = NEW.application_id;
-	
-			--*** Contacts ***************
-			DELETE FROM contacts WHERE parent_id=NEW.application_id AND parent_type = 'application_applicants'::data_types;
-			DELETE FROM contacts WHERE parent_id=NEW.application_id AND parent_type = 'application_customers'::data_types;
-			DELETE FROM contacts WHERE parent_id=NEW.application_id AND parent_type = 'application_contractors'::data_types;
+CREATE OR REPLACE VIEW contracts_dialog AS
+	SELECT
+		t.id,
+		t.date_time,		
+		employees_ref(employees) AS employees_ref,
+		t.reg_number,
+		t.expertise_type,
+		t.document_type,
+		t.expertise_result_number,
 		
-			PERFORM contacts_add_persons(NEW.application_id,'application_applicants'::data_types,1,v_applicant);
+		--applications
+		app.applications_ref,
+		applications_client_descr(app.applicant) AS applicant_descr,
+		applications_client_descr(app.customer) AS customer_descr,
+		applications_client_descr(app.developer) AS developer_descr,
 		
-			PERFORM contacts_add_persons(NEW.application_id,'application_customers'::data_types,1,v_customer);
-
-			ind = 0;
-			FOR i IN SELECT * FROM json_array_elements((SELECT v_contractors))
-			LOOP
-				PERFORM contacts_add_persons(NEW.application_id,'application_contractors'::data_types,ind*100,i);
-				ind = ind+ 1;
-			END LOOP;
-			--*** Contacts ***************
-		
-			-- Если отправка из статуса correcting то уведомление отедлу приема
-			--RAISE EXCEPTION 'main_lk STate=%',v_application_state;
-			IF v_application_state = 'correcting' THEN
-				--все поля из рассмотрения, которое должно быть с прошлой отправки
-				INSERT INTO doc_flow_tasks (
-					register_doc,
-					date_time,end_date_time,
-					doc_flow_importance_type_id,
-					employee_id,
-					recipient,
-					description
+		(SELECT
+			json_build_object(
+				'id','ContractorList_Model',
+				'rows',json_agg(
+					json_build_object(
+						'fields',
+						json_build_object(
+							'name',
+							sub.contractors->>'name'||
+							coalesce(' '||(sub.contractors->>'inn')::text,'')||
+							coalesce('/'||(sub.contractors->>'kpp')::text,'')
+						)
+					)
 				)
-				(SELECT
-					doc_flow_examinations_ref(ex),
-					now(),ex.end_date_time,
-					ex.doc_flow_importance_type_id,
-					ex.employee_id,
-					ex.recipient,
-					'Исправление по заявлению '||
-					CASE
-						WHEN app.expertise_type='pd'::expertise_types THEN 'ПД'
-						WHEN app.expertise_type='eng_survey'::expertise_types THEN 'РИИ'
-						WHEN app.expertise_type='pd_eng_survey'::expertise_types THEN 'ПД и РИИ'
-						WHEN app.cost_eval_validity THEN 'Достоверность'
-						WHEN app.modification THEN 'Модификация'
-						WHEN app.audit THEN 'Аудит'
-					END||', '||app.constr_name||' от '||to_char(v_application_state_dt,'DD/MM/YY')
-				FROM doc_flow_examinations ex
-				LEFT JOIN doc_flow_in ON doc_flow_in.id=(ex.subject_doc->'keys'->>'id')::int AND ex.subject_doc->>'dataType'='doc_flow_in'
-				LEFT JOIN applications AS app ON app.id=doc_flow_in.from_application_id
-				WHERE doc_flow_in.from_application_id=NEW.application_id
-				LIMIT 1
-				)
-				;
-			END IF;
-			
-		ELSIF NEW.state='sent' AND (const_client_lk_val() OR const_debug_val()) THEN
-			--client lk
-			--Делаем исх. письмо клиента.
-			--В заявлении только одна услуга
-			INSERT INTO doc_flow_out_client (
-				date_time,
-				user_id,
-				application_id,
-				subject,
-				content,
-				doc_flow_out_client_type,
-				sent
 			)
-			(SELECT 
-				now(),
-				app.user_id,
-				NEW.application_id,
-				'Новое заявление: '||
-				CASE
-					WHEN app.expertise_type='pd'::expertise_types THEN 'ПД'
-					WHEN app.expertise_type='eng_survey'::expertise_types THEN 'РИИ'
-					WHEN app.expertise_type='pd_eng_survey'::expertise_types THEN 'ПД и РИИ'
-					WHEN app.cost_eval_validity THEN 'Достоверность'
-					WHEN app.modification THEN 'Модификация'
-					WHEN app.audit THEN 'Аудит'
-				END||', '||app.constr_name
-				,
-				app.applicant->>'name'||' просит провести '||
-				CASE
-					WHEN app.expertise_type='pd'::expertise_types THEN 'экспертизу проектной документации'
-					WHEN app.expertise_type='eng_survey'::expertise_types THEN 'экспертизу результатов инженерных изысканий'
-					WHEN app.expertise_type='pd_eng_survey'::expertise_types THEN 'экспертизу проектной документации и экспертизу результатов инженерных изысканий'
-					WHEN app.cost_eval_validity THEN 'проверку достоверности определения сметной стоимости'
-					WHEN app.modification THEN 'модификацию.'
-					WHEN app.audit THEN 'аудит'
-				END||' по объекту '||app.constr_name
-				,
-				'app',
-				TRUE
-			
-			FROM applications AS app
-			WHERE app.id = NEW.application_id
-			LIMIT 1
-			--Вдруг как то пролезли 2 услуги???
-			);
-			
-		ELSIF (NEW.state='waiting_for_pay' OR NEW.state='expertise')
-		AND (NOT const_client_lk_val() OR const_debug_val()) THEN
-			--Главный сервер контракт или оплата
-			--письмо об изменении состояния
-			INSERT INTO mail_for_sending
-			(to_addr,to_name,body,subject,email_type)
-			(WITH 
-				templ AS (
-					SELECT
-						t.template AS v,
-						t.mes_subject AS s
-					FROM email_templates t
-					WHERE t.email_type= 'contract_state_change'::email_types
-				)
+		FROM (
 			SELECT
-				users.email,
-				users.name_full,
-				sms_templates_text(
-					ARRAY[
-						ROW('contract_number', contr.contract_number)::template_value,
-						ROW('contract_date',to_char(contr.contract_date,'DD/MM/YY'))::template_value,
-						ROW('state',enum_application_states_val(NEW.state,'ru'))::template_value
-					],
-					(SELECT v FROM templ)
-				) AS mes_body,		
-				(SELECT s FROM templ),
-				'contract_state_change'::email_types
-			FROM contracts AS contr
-			LEFT JOIN applications AS app ON app.id=contr.application_id
-			LEFT JOIN users ON users.id=app.user_id
-			WHERE
-				contr.application_id=NEW.application_id
-				--email_confirmed					
-			);				
-			
-		END IF;
-				
-		RETURN NEW;
-	END IF;
-END;
-$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-ALTER FUNCTION application_processes_process() OWNER TO expert72;
-
+				jsonb_array_elements(contractors) AS contractors
+			FROM applications app_contr WHERE app_contr.id=app.id
+		) AS sub		
+		)
+		AS contractors_list,
+		
+		app.construction_types_ref,
+		t.constr_name AS constr_name,
+		--kladr_parse_addr(t.constr_address) AS constr_address,
+		t.constr_address,
+		t.constr_technical_features,
+		t.constr_technical_features_in_compound_obj,
+		app.total_cost_eval,
+		app.limit_cost_eval,
+		app.build_types_ref,
+		app.cost_eval_validity_simult,
+		app.fund_sources_ref,
+		app.primary_application_reg_number AS primary_contract_reg_number,
+		app.modif_primary_application_reg_number AS modif_primary_contract_reg_number,
+		contracts_ref(prim_contr) AS primary_contracts_ref,
+		contracts_ref(modif_prim_contr) AS modif_primary_contracts_ref,
+		app.cost_eval_validity,
+		app.modification,
+		app.audit,
+		app.documents,
+		--***********************
+		
+		t.contract_number,
+		t.contract_date,		
+		t.expertise_cost_budget,
+		t.expertise_cost_self_fund,
+		
+		t.work_start_date,
+		t.work_end_date,
+		t.akt_number,
+		t.akt_date,
+		coalesce(t.akt_total,0) As akt_total,
+		t.akt_ext_id,
+		t.invoice_date,
+		t.invoice_number,
+		t.invoice_ext_id,
+		t.expertise_day_count,
+		t.kadastr_number,
+		t.grad_plan_number,
+		t.area_document,
+		t.expertise_result,
+		t.expertise_result_date,
+		
+		t.comment_text,
+		
+		expertise_reject_types_ref(rt) AS expertise_reject_types_ref,		
+		
+		departments_ref(dp) AS main_departments_ref,
+		employees_ref(exp_empl) AS main_experts_ref,
+		
+		t.permissions,
+		
+		(
+			SELECT
+				json_agg(sec_rows.sec_data)
+			FROM (
+				SELECT
+					json_build_object(
+						'section_id',sec.section_id,
+						'section_name',sec.section_name,
+						'experts_list',(
+							SELECT string_agg(sub.name||'('||
+								CASE WHEN EXTRACT(DAY FROM sub.d)<10 THEN '0'||EXTRACT(DAY FROM sub.d)::text ELSE EXTRACT(DAY FROM sub.d)::text END ||
+								'/'||
+								CASE WHEN EXTRACT(MONTH FROM sub.d)<10 THEN '0'||EXTRACT(MONTH FROM sub.d)::text ELSE EXTRACT(MONTH FROM sub.d)::text END ||	
+							')',',')
+							FROM (
+							SELECT person_init(employees.name,FALSE) AS name,max(expert_works.date_time)::date AS d
+							FROM expert_works
+							LEFT JOIN employees ON employees.id=expert_works.expert_id
+							WHERE contract_id=t.id AND section_id=sec.section_id
+							GROUP BY employees.name
+							) AS sub	
+						)
+					) AS sec_data
+				FROM expert_sections AS sec
+				WHERE sec.document_type=t.document_type AND construction_type_id=(app.construction_types_ref->'keys'->>'id')::int
+				AND sec.create_date=(
+					SELECT max(sec2.create_date)
+					FROM expert_sections AS sec2
+					WHERE sec2.document_type=t.document_type AND sec2.construction_type_id=(app.construction_types_ref->'keys'->>'id')::int
+				)
+				ORDER BY sec.section_index				
+			) AS sec_rows
+		) AS expertise_sections,
+		
+		t.application_id,
+		
+		t.contract_ext_id,
+		
+		t.contract_return_date,
+		
+		t.linked_contracts,
+		
+		t.cost_eval_validity_pd_order,
+		t.date_type,
+		t.argument_document,
+		t.order_document,
+		app.auth_letter,
+		
+		t.expert_work_day_count,
+		t.expert_work_end_date,
+		
+		app.doc_folders,
+		
+		t.for_all_employees,
+		t.in_estim_cost,
+		t.in_estim_cost_recommend,
+		t.cur_estim_cost,
+		t.cur_estim_cost_recommend,
+		
+		t.result_sign_expert_list
+		
+	FROM contracts t
+	LEFT JOIN applications_dialog AS app ON app.id=t.application_id
+	LEFT JOIN employees ON employees.id=t.employee_id
+	LEFT JOIN expertise_reject_types AS rt ON rt.id=t.expertise_reject_type_id
+	LEFT JOIN departments AS dp ON dp.id=t.main_department_id
+	LEFT JOIN employees AS exp_empl ON exp_empl.id=t.main_expert_id
+	LEFT JOIN contracts AS prim_contr ON prim_contr.id=t.primary_contract_id
+	LEFT JOIN contracts AS modif_prim_contr ON modif_prim_contr.id=t.modif_primary_contract_id
+	LEFT JOIN clients ON clients.id=t.client_id
+	;
+	
+ALTER VIEW contracts_dialog OWNER TO expert72;

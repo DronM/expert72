@@ -52,7 +52,8 @@ EditUserClientBankAcc.prototype.getFillPercent = function(){
 	var percent = (
 		this.m_minInf? 100 :
 		(
-			((this.m_valueJSON && this.m_valueJSON.bank && (this.m_valueJSON.bank.getDescr()&&this.m_valueJSON.bank.getDescr()!=""))? 50:0)
+			//((this.m_valueJSON && this.m_valueJSON.bank && (this.m_valueJSON.bank.getDescr()&&this.m_valueJSON.bank.getDescr()!=""))? 50:0)
+			((this.m_valueJSON && this.m_valueJSON.bank && !this.m_valueJSON.bank.isNull())? 50:0)
 			+((this.m_valueJSON && this.m_valueJSON.acc_number && this.m_valueJSON.acc_number!="")? 50:0)
 		)
 	);
@@ -68,6 +69,12 @@ EditUserClientBankAcc.prototype.getFillPercent = function(){
 }
 
 EditUserClientBankAcc.prototype.closeSelect = function(){
+/*
+if (this.m_valueJSON && this.m_valueJSON.bank && this.m_valueJSON.bank.isNull()){
+	this.m_view.getElement("bank").setNotValid("Значение не выбрано.");
+	return;
+}
+*/
 	if (this.m_mainView && this.m_mainView.calcFillPercent){
 		this.m_mainView.calcFillPercent();
 	}

@@ -21,7 +21,7 @@ CREATE OR REPLACE VIEW contracts_dialog AS
 		(SELECT
 			json_build_object(
 				'id','ContractorList_Model',
-				'rows',json_build_array(
+				'rows',json_agg(
 					json_build_object(
 						'fields',
 						json_build_object(

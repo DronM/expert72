@@ -7,6 +7,12 @@ function BankEditRef(id,options){
 		options.labelCaption = options.labelCaption || "Банк:";
 	}
 	
+	this.m_descrFunction = function(fields){
+		return fields["bik"].getValue()+", "+
+			fields["name"].getValue()+
+			(fields["korshet"].isSet()? (", к/с "+fields["korshet"].getValue()) : "")
+	};
+	
 	options.placeholder= "Введите БИК для поиска";
 	options.cmdInsert = (options.cmdInsert!=undefined)? options.cmdInsert:false;
 	
@@ -14,7 +20,8 @@ function BankEditRef(id,options){
 	
 	//форма выбора из списка
 	options.selectWinClass = BankList_Form;
-	options.selectDescrIds = options.selectDescrIds || ["name"];
+	//options.selectDescrIds = options.selectDescrIds || ["name"];
+	options.selectFormatFunction = this.m_descrFunction;
 	options.selectKeyIds = options.selectKeyIds || ["bik"];
 	
 	//форма редактирования элемента
@@ -25,7 +32,10 @@ function BankEditRef(id,options){
 	options.acModel = new BankList_Model();
 	options.acPatternFieldId = options.acPatternFieldId || "bik";
 	options.acKeyFields = options.acKeyFields || [options.acModel.getField("bik")];
-	options.acDescrFields = options.acDescrFields || [options.acModel.getField("name"),options.acModel.getField("bik")];
+	//options.acDescrFields = options.acDescrFields || [options.acModel.getField("name"),options.acModel.getField("bik"),options.acModel.getField("korshet")];
+	
+	options.acDescrFunction = this.m_descrFunction;
+	
 	options.acICase = options.acICase || "1";
 	options.acMid = options.acMid || "1";
 	
@@ -35,7 +45,7 @@ function BankEditRef(id,options){
 	
 	options.onSelect = options.onSelect || function(fields){
 		if (self.m_view){
-			self.m_view.m_bankDescr = fields["name"].getValue();
+			self.m_view.m_bankDescr = self.m_descrFunction(fields);//fields["name"].getValue();
 		}
 	}
 	

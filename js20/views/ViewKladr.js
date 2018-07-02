@@ -8,6 +8,7 @@ function KladrEditRef(id,options){
 	}
 	
 	options.title = this.TITLE;
+	options.placeholder = this.PLACEHOLDER;
 	
 	this.m_controller = options.controller;
 	
@@ -171,6 +172,7 @@ function ViewKladr(id,options){
 		this.addElement(new EditString(id+":dom",{
 			"labelCaption":self.DOM_LAB_CAPION,
 			"title":self.DOM_TITLE,
+			"placeholder":self.DOM_PLACEHOLDER,
 			"cmdSelect":false,
 			"cmdOpen":false,
 			"cmdOpen":false
@@ -180,6 +182,7 @@ function ViewKladr(id,options){
 		this.addElement(new EditString(id+":korpus",{
 			"labelCaption":self.KORPUS_LAB_CAPION,
 			"title":self.KORPUS_TITLE,
+			"placeholder":self.KORPUS_PLACEHOLDER,
 			"cmdSelect":false,
 			"cmdOpen":false
 			}
@@ -188,6 +191,7 @@ function ViewKladr(id,options){
 		this.addElement(new EditString(id+":kvartira",{
 			"labelCaption":self.KV_LAB_CAPION,
 			"title":self.KV_TITLE,
+			"placeholder":self.KV_PLACEHOLDER,
 			"cmdSelect":false,
 			"cmdOpen":false
 			}

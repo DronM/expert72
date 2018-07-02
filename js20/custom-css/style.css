@@ -119,6 +119,10 @@ tr.grid_foot{
 	border:1px solid black;
 }
 
+.acCurrent{
+	background:#E8F5E9;
+}
+
 /* view construct animation */
 .viewFadeOnConstruct {
     -webkit-animation: fadeIn 500ms ease-in-out;

@@ -13,6 +13,7 @@
  */
 function EmployeeListGrid(id,options){
 	var model = new EmployeeLocalList_Model({
+		"sequences":{"id":0}
 	});
 
 	var cells = [
@@ -34,7 +35,7 @@ function EmployeeListGrid(id,options){
 		"controller":new EmployeeLocalList_Controller({"clientModel":model}),
 		"editInline":true,
 		"editWinClass":null,
-		"popUpMenu":null,
+		"popUpMenu":new PopUpMenu(),
 		"commands":new GridCmdContainerAjx(id+":cmd",{
 			"cmdSearch":false,
 			"cmdExport":false,
