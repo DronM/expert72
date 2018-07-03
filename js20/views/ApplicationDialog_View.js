@@ -467,6 +467,7 @@ function ApplicationDialog_View(id,options){
 						"cancel":false,
 						"callBack":function(res){			
 							if (res==WindowQuestion.RES_YES){
+								self.getElement("cmdSend").setEnabled(false);
 								var frm_cmd = self.getCmd();
 								var pm = self.m_controller.getPublicMethod(
 									(frm_cmd=="insert"||frm_cmd=="copy")? self.m_controller.METH_INSERT:self.m_controller.METH_UPDATE

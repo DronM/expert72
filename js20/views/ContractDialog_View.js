@@ -366,23 +366,24 @@ function ContractDialog_View(id,options){
 			}));				
 		}
 		
-		//Право на вкладку access
-		if (options.templateOptions.setAccess){
-			this.addElement(new DepartmentSelect(id+":main_departments_ref",{
-				"labelCaption":"Главный отдел:",
-				"editContClassName":editContClassName,
-				"labelClassName":labelClassName,
-				"enabled":(role!="expert")
-			}));	
+		// **** есть у всех, но на разных вкладках ****
+		this.addElement(new DepartmentSelect(id+":main_departments_ref",{
+			"labelCaption":"Главный отдел:",
+			"editContClassName":editContClassName,
+			"labelClassName":labelClassName,
+			"enabled":options.templateOptions.setAccess
+		}));	
 
-			this.addElement(new EmployeeEditRef(id+":main_experts_ref",{
-				"labelCaption":"Главный эксперт:",
-				"editContClassName":editContClassName,
-				"labelClassName":labelClassName
-				//"enabled":(role=="expert")
-			}));	
+		this.addElement(new EmployeeEditRef(id+":main_experts_ref",{
+			"labelCaption":"Главный эксперт:",
+			"editContClassName":editContClassName,
+			"labelClassName":labelClassName,
+			"enabled":options.templateOptions.setAccess
+		}));	
+		//*******************************************
 		
-		
+		//Право на вкладку access
+		if (options.templateOptions.setAccess){				
 			//********* permissions grid ***********************
 			this.addElement(new AccessPermissionGrid(id+":permissions",{
 				"enabled":(role=="expert")
@@ -592,10 +593,11 @@ function ContractDialog_View(id,options){
 		read_b.push(new DataBinding({"control":this.getElement("akt_number")}));
 		read_b.push(new DataBinding({"control":this.getElement("akt_date")}));
 	}
+
+	read_b.push(new DataBinding({"control":this.getElement("main_departments_ref")}));
+	read_b.push(new DataBinding({"control":this.getElement("main_experts_ref")}));
 	
 	if (options.templateOptions.setAccess){
-		read_b.push(new DataBinding({"control":this.getElement("main_departments_ref")}));
-		read_b.push(new DataBinding({"control":this.getElement("main_experts_ref")}));
 		read_b.push(new DataBinding({"control":this.getElement("permissions")}));
 		read_b.push(new DataBinding({"control":this.getElement("for_all_employees")}));
 	}

@@ -24,14 +24,18 @@ class ViewBase extends ViewHTMLXSLT {
 	protected static function getMenuClass(){
 		//USER_MODELS_PATH
 		$menu_class = NULL;
-		if (file_exists(OUTPUT_PATH.'MainMenu_Model_'.$_SESSION['user_id'].'.php')){
+		$fl = NULL;
+		if (file_exists($fl = OUTPUT_PATH.'MainMenu_Model_'.$_SESSION['user_id'].'.php')){
 			$menu_class = 'MainMenu_Model_'.$_SESSION['user_id'];
 		}
-		else if (file_exists(OUTPUT_PATH.'MainMenu_Model_'.$_SESSION['role_id'].'_'.$_SESSION['user_id'].'.php')){
+		else if (file_exists($fl = OUTPUT_PATH.'MainMenu_Model_'.$_SESSION['role_id'].'_'.$_SESSION['user_id'].'.php')){
 			$menu_class = 'MainMenu_Model_'.$_SESSION['role_id'].'_'.$_SESSION['user_id'];
 		}
-		else if (file_exists(OUTPUT_PATH.'MainMenu_Model_'.$_SESSION['role_id'].'.php')){
+		else if (file_exists($fl = OUTPUT_PATH.'MainMenu_Model_'.$_SESSION['role_id'].'.php')){
 			$menu_class = 'MainMenu_Model_'.$_SESSION['role_id'];
+		}
+		if (!is_null($menu_class) &amp;&amp; !is_null($fl)){
+			require_once($fl);
 		}
 		return $menu_class;
 	}
@@ -48,7 +52,7 @@ class ViewBase extends ViewHTMLXSLT {
 				$menu_class = self::getMenuClass();
 				if (is_null($menu_class)){
 					throw new Exception('No menu found!');
-				}
+				}				
 			}
 			$models['mainMenu'] = new $menu_class();
 		}	
@@ -217,8 +221,10 @@ class ViewBase extends ViewHTMLXSLT {
 
 <xsl:template match="constants/constant[@autoload='TRUE']">
 <xsl:if test="position() &gt; 1">,</xsl:if>'<xsl:value-of select="@id"/>'</xsl:template>
-			
+
+<!--			
 <xsl:template match="enum/value">require_once('models/MainMenu_Model_<xsl:value-of select="@id"/>.php');</xsl:template>
+-->
 
 <xsl:template match="jsScripts/jsScript">
 <xsl:choose>

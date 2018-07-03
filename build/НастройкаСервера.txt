@@ -38,9 +38,9 @@ sudo apt-get install php7.0 php7.0-fpm php7.0-pgsql php7.0-gd php7.0-xsl php7.0-
 
 /etc/php7/fpm/php.ini
 short_open_tag=Off
-max_execution_time=30
-upload_max_filesize=20M
-post_max_size
+max_execution_time=30 ==>> 300
+upload_max_filesize=25M ==>> 85
+post_max_size=8 ==>> 85 
 
 /etc/php5/fpm/pool.d/www.conf
 listen=/tmp/php5-fpm.sock
@@ -78,7 +78,7 @@ rsync -az -e ssh /var/lib/postgresql/10/main/ postgres@expertiza72.ru:/var/lib/p
 На главном сервере
 sudo apt-get install sshfs
 sudo mkdir /media/rstorage
-sudo sshfs -o allow_other,reconnect,ServerAliveInterval=15,ServerAliveCountMax=4320 root@expertiza72.ru:/usr/share/client_files /media/rstorage
+sudo sshfs -o allow_other,reconnect,ServerAliveInterval=15,ServerAliveCountMax=4320 andrey@expertiza72.ru:/usr/share/client_files /media/rstorage
 Настроить скрипт!!!
 mv -f /media/rstorage/Documents/* /media/storage/Documents/
 

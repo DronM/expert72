@@ -24,7 +24,8 @@ $response = new SimpleResponse();
 
 function mkdir_or_error($dir){
 	if (!file_exists($dir)){
-		@mkdir($dir,0777,TRUE);
+		@mkdir($dir,0775,TRUE);
+		@chmod($dir, 0775);
 		//throw new Exception('Ошибка создания директории'.( ($_SESSION['role_id']=='admin')? ' '.$dir : '') );
 	}
 }
@@ -48,7 +49,7 @@ try{
 	 * Еще есть необязательный doc_flow_out_client_id
 	 */
 	if (
-		$_SESSION['LOGGED']
+		isset($_SESSION['LOGGED']) && $_SESSION['LOGGED']
 		&& isset($_REQUEST['f']) &&  $_REQUEST['f']=='app_file_upload'
 		&& isset($_REQUEST['application_id'])
 		&& isset($_REQUEST['file_id'])
@@ -164,11 +165,9 @@ try{
 						));
 					}				
 				}
-				rename(
-					$orig_file,
-					$resumable->uploadFolder.DIRECTORY_SEPARATOR.$_REQUEST['file_id'].($is_sig? '.sig':'')
-				);
-			
+				$new_name = $resumable->uploadFolder.DIRECTORY_SEPARATOR.$_REQUEST['file_id'].($is_sig? '.sig':'');
+				rename($orig_file,$new_name);
+				chmod($new_name, 0664);
 			}
 			catch(Exception $e){
 				unlink($orig_file);
@@ -177,7 +176,7 @@ try{
 		}
 	}
 	else if (
-		$_SESSION['LOGGED']
+		isset($_SESSION['LOGGED']) && $_SESSION['LOGGED']
 		&& isset($_REQUEST['f']) &&  $_REQUEST['f']=='doc_flow_file_upload'
 		&& isset($_REQUEST['doc_flow_id'])
 		&& isset($_REQUEST['file_id'])
@@ -287,10 +286,9 @@ try{
 						(isset($_REQUEST['file_signed']) && $_REQUEST['file_signed']=='true')? 'TRUE':'FALSE'
 					));
 				}
-				rename(
-					$orig_file,
-					$resumable->uploadFolder.DIRECTORY_SEPARATOR.$_REQUEST['file_id'].($is_sig? '.sig':'')
-				);			
+				$new_name = $resumable->uploadFolder.DIRECTORY_SEPARATOR.$_REQUEST['file_id'].($is_sig? '.sig':'');
+				rename($orig_file,$new_name);
+				chmod($new_name, 0664);			
 			}
 			catch(Exception $e){
 				unlink($orig_file);
@@ -300,7 +298,7 @@ try{
 
 	}
 	else{
-		throw 'Unknown document type!';
+		throw new Exception('Bad request.');
 	}
 }
 catch(Exception $e){

@@ -1364,7 +1364,7 @@ class Application_Controller extends ControllerSQL{
 			throw new Exception(self::ER_OTHER_USER_APP);
 		}
 		
-		if ($ar['state']=='sent'){
+		if ($ar['state']=='sent' || $ar['state']=='checking'){
 			throw new Exception(self::ER_DOC_SENT);
 		}
 		return $ar['state'];
@@ -1513,7 +1513,9 @@ class Application_Controller extends ControllerSQL{
 			
 			//1) Mark in DB or delete
 			//|| $ar['state']=='returned'
-			if ($ar['state']=='filling'||$ar['state']=='correcting'){
+			//В этом случае - непосредственное удаление, без копирования в Удаленные
+			$unlink_file = ($ar['state']=='filling' || $ar['state']=='correcting');
+			if ($unlink_file){
 				$q = sprintf(
 					"DELETE FROM application_document_files
 					WHERE file_id=%s
@@ -1557,22 +1559,38 @@ class Application_Controller extends ControllerSQL{
 			if (defined('FILE_STORAGE_DIR_MAIN') && file_exists($fl = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$rel_fl)){
 				if (!file_exists($dest = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$rel_dest)){
 					mkdir($dest,0777,TRUE);
-				}			
-				rename($fl, $dest.DIRECTORY_SEPARATOR.$ar['file_id']);
+				}
+				if ($unlink_file){
+					unlink($fl);
+				}
+				else{
+					rename($fl, $dest.DIRECTORY_SEPARATOR.$ar['file_id']);
+				}
+				
 			}
 			
 			if ($ar['file_signed']=='t'){
 				if (file_exists($fl = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_fl.self::SIG_EXT)){
 					if (!file_exists($dest = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_dest)){
 						mkdir($dest,0777,TRUE);
-					}				
-					rename($fl, $dest.DIRECTORY_SEPARATOR.$ar['file_id'].self::SIG_EXT);
+					}
+					if ($unlink_file){
+						unlink($fl);
+					}
+					else{				
+						rename($fl, $dest.DIRECTORY_SEPARATOR.$ar['file_id'].self::SIG_EXT);
+					}
 				}
 				if (defined('FILE_STORAGE_DIR_MAIN') && file_exists($fl = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$rel_fl.self::SIG_EXT)){
 					if (!file_exists($dest = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$rel_dest)){
 						mkdir($dest,0777,TRUE);
-					}				
-					rename($fl, $dest.DIRECTORY_SEPARATOR.$ar['file_id'].self::SIG_EXT);
+					}
+					if ($unlink_file){
+						unlink($fl);
+					}
+					else{				
+						rename($fl, $dest.DIRECTORY_SEPARATOR.$ar['file_id'].self::SIG_EXT);
+					}
 				}
 				
 			}

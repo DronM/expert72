@@ -494,70 +494,70 @@ class User_Controller extends ControllerSQL{
 		if ($ar['role_id']=='client'){
 			$_SESSION['global_user_id'] = $ar['id'];
 						
-			$model = new UserProfile_Model($link);
+			$model = new UserProfile_Model($this->getDbLink());
 			$filter = new ModelWhereSQL();
 			$field = clone $model->getFieldById('id');
 			$field->setValue($ar['id']);
 			$filter->addField($field,'=');
 			GlobalFilter::set('UserProfile_Model',$filter);
 						
-			$model = new Application_Model($link);
+			$model = new Application_Model($this->getDbLink());
 			$filter = new ModelWhereSQL();
 			$field = clone $model->getFieldById('user_id');
 			$field->setValue($ar['id']);
 			$filter->addField($field,'=');
 			GlobalFilter::set('Application_Model',$filter);
 						
-			$model = new ApplicationDialog_Model($link);
+			$model = new ApplicationDialog_Model($this->getDbLink());
 			$filter = new ModelWhereSQL();
 			$field = clone $model->getFieldById('user_id');
 			$field->setValue($ar['id']);
 			$filter->addField($field,'=');
 			GlobalFilter::set('ApplicationDialog_Model',$filter);
 						
-			$model = new ApplicationList_Model($link);
+			$model = new ApplicationList_Model($this->getDbLink());
 			$filter = new ModelWhereSQL();
 			$field = clone $model->getFieldById('user_id');
 			$field->setValue($ar['id']);
 			$filter->addField($field,'=');
 			GlobalFilter::set('ApplicationList_Model',$filter);
 						
-			$model = new DocFlowOutClient_Model($link);
+			$model = new DocFlowOutClient_Model($this->getDbLink());
 			$filter = new ModelWhereSQL();
 			$field = clone $model->getFieldById('user_id');
 			$field->setValue($ar['id']);
 			$filter->addField($field,'=');
 			GlobalFilter::set('DocFlowOutClient_Model',$filter);
 						
-			$model = new DocFlowOutClientList_Model($link);
+			$model = new DocFlowOutClientList_Model($this->getDbLink());
 			$filter = new ModelWhereSQL();
 			$field = clone $model->getFieldById('user_id');
 			$field->setValue($ar['id']);
 			$filter->addField($field,'=');
 			GlobalFilter::set('DocFlowOutClientList_Model',$filter);
 						
-			$model = new DocFlowOutClientDialog_Model($link);
+			$model = new DocFlowOutClientDialog_Model($this->getDbLink());
 			$filter = new ModelWhereSQL();
 			$field = clone $model->getFieldById('user_id');
 			$field->setValue($ar['id']);
 			$filter->addField($field,'=');
 			GlobalFilter::set('DocFlowOutClientDialog_Model',$filter);
 						
-			$model = new DocFlowInClient_Model($link);
+			$model = new DocFlowInClient_Model($this->getDbLink());
 			$filter = new ModelWhereSQL();
 			$field = clone $model->getFieldById('user_id');
 			$field->setValue($ar['id']);
 			$filter->addField($field,'=');
 			GlobalFilter::set('DocFlowInClient_Model',$filter);
 						
-			$model = new DocFlowInClientList_Model($link);
+			$model = new DocFlowInClientList_Model($this->getDbLink());
 			$filter = new ModelWhereSQL();
 			$field = clone $model->getFieldById('user_id');
 			$field->setValue($ar['id']);
 			$filter->addField($field,'=');
 			GlobalFilter::set('DocFlowInClientList_Model',$filter);
 						
-			$model = new DocFlowInClientDialog_Model($link);
+			$model = new DocFlowInClientDialog_Model($this->getDbLink());
 			$filter = new ModelWhereSQL();
 			$field = clone $model->getFieldById('user_id');
 			$field->setValue($ar['id']);
@@ -568,7 +568,7 @@ class User_Controller extends ControllerSQL{
 		else{
 			$_SESSION['global_employee_id'] = json_decode($ar['employees_ref'])->keys->id;
 						
-			$model = new Reminder_Model($link);
+			$model = new Reminder_Model($this->getDbLink());
 			$filter = new ModelWhereSQL();
 			$field = clone $model->getFieldById('recipient_employee_id');
 			$field->setValue($_SESSION['global_employee_id']);
@@ -643,9 +643,13 @@ class User_Controller extends ControllerSQL{
 		else if ($ar['banned']=='t'){
 			throw new Exception(self::ER_BANNED);
 		}
-		else{
+		else if (intval($ar['id'])){
 			$this->set_logged($ar);
 			
+		}
+		else{
+			//???
+			throw new Exception(self::ER_USER_NOT_DEFIND);
 		}
 	}
 	

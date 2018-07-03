@@ -1,1 +1,0 @@
-/usr/bin/fop/fop -c /usr/bin/fop/conf/conf.xml -q -xml /home/andrey/www/htdocs/expert72/output/5a39e0a0b3dfd.xml -xsl /home/andrey/www/htdocs/expert72/views/Application.pdf.xsl -pdf  /home/andrey/www/htdocs/expert72/client_files/admin/Заявление30/Application.pdf

@@ -139,7 +139,7 @@ class <xsl:value-of select="@id"/>_Controller extends ControllerSQL{
 					<xsl:otherwise>'user_id'</xsl:otherwise>
 				</xsl:choose>
 			</xsl:variable>			
-			$model = new <xsl:value-of select="$model_id"/>($link);
+			$model = new <xsl:value-of select="$model_id"/>($this->getDbLink());
 			$filter = new ModelWhereSQL();
 			$field = clone $model->getFieldById(<xsl:value-of select="$field_id"/>);
 			$field->setValue($ar['id']);
@@ -157,7 +157,7 @@ class <xsl:value-of select="@id"/>_Controller extends ControllerSQL{
 					<xsl:otherwise>'employee_id'</xsl:otherwise>
 				</xsl:choose>
 			</xsl:variable>			
-			$model = new <xsl:value-of select="$model_id"/>($link);
+			$model = new <xsl:value-of select="$model_id"/>($this->getDbLink());
 			$filter = new ModelWhereSQL();
 			$field = clone $model->getFieldById(<xsl:value-of select="$field_id"/>);
 			$field->setValue($_SESSION['global_employee_id']);
@@ -232,9 +232,13 @@ class <xsl:value-of select="@id"/>_Controller extends ControllerSQL{
 		else if ($ar['banned']=='t'){
 			throw new Exception(self::ER_BANNED);
 		}
-		else{
+		else if (intval($ar['id'])){
 			$this->set_logged($ar);
 			
+		}
+		else{
+			//???
+			throw new Exception(self::ER_USER_NOT_DEFIND);
 		}
 	}
 	

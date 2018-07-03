@@ -1,0 +1,10 @@
+sudo chown -R www-data:www-data /usr/share/client_files/Documents
+sudo chmod 775 $(find /usr/share/client_files/Documents -type d)
+sudo chmod 664 $(find /usr/share/client_files/Documents -type f)
+
+sudo chown -R www-data:www-data /media/storage/Documents
+sudo chmod 775 $(find /media/storage/Documents -type d)
+sudo chmod 664 $(find /media/storage/Documents -type f)
+
+
+sudo usermod -a -G groupName userName

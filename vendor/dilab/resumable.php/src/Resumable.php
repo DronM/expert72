@@ -181,8 +181,9 @@ class Resumable
             $chunkFile = $this->tmpChunkDir($identifier) . DIRECTORY_SEPARATOR . $this->tmpChunkFilename($filename, $chunkNumber);
             $this->moveUploadedFile($file['tmp_name'], $chunkFile);
         }
-
+	
         if ($this->isFileUploadComplete($filename, $identifier, $chunkSize, $totalSize)) {
+        $this->log("isUploadComplete=TRUE");
             $this->isUploadComplete = true;
             $this->createFileAndDeleteTmp($identifier, $filename);
         }
@@ -246,8 +247,10 @@ class Resumable
             return false;
         }
         $numOfChunks = intval($totalSize / $chunkSize) + ($totalSize % $chunkSize == 0 ? 0 : 1);
+        //$this->log("chunkSize=".$chunkSize.' totalSize='.$totalSize.' numOfChunks='.$numOfChunks.' checking for completion...');
         for ($i = 1; $i < $numOfChunks; $i++) {
             if (!$this->isChunkUploaded($identifier, $filename, $i)) {
+            	//$this->log("chunk i=".$i.' is NOT uploaded! identifier='.$identifier.' filename='.$filename);
                 return false;
             }
         }
@@ -256,8 +259,13 @@ class Resumable
 
     public function isChunkUploaded($identifier, $filename, $chunkNumber)
     {
+    	$file_name = $this->tmpChunkDir($identifier) . DIRECTORY_SEPARATOR . $this->tmpChunkFilename($filename, $chunkNumber);
+    	//$this->log('Checking for file '.$file_name);
+    	/*
         $file = new File($this->tmpChunkDir($identifier) . DIRECTORY_SEPARATOR . $this->tmpChunkFilename($filename, $chunkNumber));
         return $file->exists();
+        */
+        return file_exists($file_name);
     }
 
     public function tmpChunkDir($identifier)
@@ -320,6 +328,7 @@ class Resumable
     private function log($msg, $ctx = array())
     {
         if ($this->debug) {
+        	//file_put_contents('resumable.gbg',$msg,FILE_APPEND);
             $this->log->addDebug($msg, $ctx);
         }
     }
