@@ -476,6 +476,7 @@ function ApplicationDialog_View(id,options){
 								var f_fail = function(resp,errCode,errStr){
 									pm.setFieldValue("set_sent",false);
 									self.setError(window.getApp().formatError(errCode,errStr));
+									self.getElement("cmdSend").setEnabled(true);
 								}				
 								if (!self.getModified()){
 									pm.setFieldValue("old_id",self.getElement("id").getValue());
