@@ -5,6 +5,7 @@ function UserProfile_View(id,options){
 
 	options = options || {};
 	
+	options.cmdOkAsync = false;
 	options.cmdOk = false;
 	options.cmdCancel = false;
 	

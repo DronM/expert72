@@ -1248,19 +1248,30 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 	}
 
 	public function get_print($pm){
-		if (!file_exists(FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.self::APP_DIR_PREF.$this->getExtDbVal($pm,'id'))){
+		if (
+		!file_exists(FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.self::APP_DIR_PREF.$this->getExtDbVal($pm,'id'))
+		&amp;&amp; (defined('FILE_STORAGE_DIR_MAIN') &amp;&amp; !file_exists(FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.self::APP_DIR_PREF.$this->getExtDbVal($pm,'id')))
+		){
 			//нет ни одного файла
 			$this->setHeaderStatus(400);
 			throw new Exception('Нет ни одного вложенного файла!');
 		}
 		$templ_name = $pm->getParamValue('templ');
-		$out_file = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
-			self::APP_DIR_PREF.$this->getExtDbVal($pm,'id').DIRECTORY_SEPARATOR.
-			$templ_name.".pdf";
+		$rel_dir = self::APP_DIR_PREF.$this->getExtDbVal($pm,'id');
+		if (!file_exists($dir = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_dir)){
+			mkdir($dir,0775,TRUE);
+			chmod($dir, 0775);
+		}
+		
+		$rel_out_file = $rel_dir.DIRECTORY_SEPARATOR.$templ_name.".pdf";		
+		$out_file = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_out_file;
 			
-		if (file_exists($out_file)){
+		if (
+		file_exists($out_pdf=FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_out_file)
+		|| (defined('FILE_STORAGE_DIR_MAIN') &amp;&amp; file_exists($out_pdf=FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$rel_out_file))
+		){
 			downloadFile(
-				$out_file,
+				$out_pdf,
 				'application/pdf',
 				(isset($_REQUEST['inline']) &amp;&amp; $_REQUEST['inline']=='1')? 'inline;':'attachment;',
 				$templ_name.".pdf"
@@ -1679,7 +1690,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 					$this->setHeaderStatus(400);
 					throw new Exception('Ошибка формирования файла!');
 				}
-			
+				
 				rename($out_file_tmp, $out_file);
 				ob_clean();
 				downloadFile(

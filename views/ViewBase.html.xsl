@@ -63,6 +63,12 @@
 
 							<div class="windowMessage hidden">
 							</div>
+							<!--waiting  -->
+							<div id="waiting">
+								<div>Обработка...</div>
+								<img src="img/loading.gif"/>
+							</div>
+							
 						</div>
 						
 						<!-- Footer -->
@@ -101,6 +107,9 @@
 
 	<!--ALL js modules -->
 	<xsl:apply-templates select="model[@id='ModelJavaScript']/row"/>
+	<script>
+		$("#waiting").hide();
+	</script>
 	
 </xsl:template>
 

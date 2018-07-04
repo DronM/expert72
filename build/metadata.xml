@@ -2,7 +2,7 @@
 <metadata owner="expert72">
 	<versions>
 		<version dateOpen="2017-09-27 12:09:48" dateClose="2017-12-08 10:12:08">1.001 
-		<lastBuild>2018-07-03 17:01:34</lastBuild></version>
+		<lastBuild>2018-07-04 12:44:46</lastBuild></version>
 		<version dateOpen="2017-12-08 11:12:01" dateClose="2017-12-08 11:12:04">1.002</version>
 		<version dateOpen="2017-12-08 11:12:20" dateClose="2017-12-08 11:12:20">1.0.3</version>
 		<version dateOpen="2017-12-12 11:12:07" dateClose="2017-12-12 11:12:07">1.0.4</version>
@@ -56,6 +56,7 @@
 		<version dateOpen="2018-06-30 08:06:12" dateClose="2018-07-02 17:07:00">1.0.52</version>
 		<version dateOpen="2018-07-03 10:07:42" dateClose="2018-07-03 16:07:57">1.0.53</version>
 		<version dateOpen="2018-07-03 16:07:58" dateClose="2018-07-03 17:07:01">1.0.54</version>
+		<version dateOpen="2018-07-04 12:07:43" dateClose="2018-07-04 12:07:44">1.0.55</version>
 	</versions>
 	<globalFilters>
 		<field id="user_id"/>
@@ -3621,6 +3622,8 @@
 	<jsTemplates>
 		<jsTemplate id="FatalException" file="tmpl/FatalException.html"/>
 		<jsTemplate id="DbException" file="tmpl/DbException.html"/>
+		<jsTemplate id="VersException" file="tmpl/VersException.html"/>
+		<jsTemplate id="VersException" file="tmpl/VersException.html"/>
 		<jsTemplate id="GridCmdContainerAjx" file="tmpl/GridCmdContainerAjx.html"/>
 		<jsTemplate id="ViewGridColManager" file="tmpl/ViewGridColManager.html"/>
 		<jsTemplate id="PopOver" file="controls/tmpl/PopOver.html"/>
@@ -3666,7 +3669,7 @@
 	<sqlScripts/>
 	<jsScripts>
 		<!-- Core JS files -->
-		<jsScript file="assets/js/plugins/loaders/pace.min.js" compressed="TRUE" standalone="TRUE"/>
+		<!--<jsScript file="assets/js/plugins/loaders/pace.min.js" compressed="TRUE" standalone="TRUE" />-->
 		<jsScript file="assets/js/core/libraries/jquery.min.js" compressed="TRUE" standalone="TRUE"/>
 		<jsScript file="assets/js/core/libraries/bootstrap.min.js" compressed="TRUE" standalone="TRUE"/>
 		<jsScript file="assets/js/plugins/loaders/blockui.min.js" compressed="TRUE" standalone="TRUE"/>
@@ -3711,6 +3714,7 @@
 		<jsScript file="core/EventHelper.js"/>
 		<jsScript file="core/FatalException.js"/>
 		<jsScript file="core/DbException.js"/>
+		<jsScript file="core/VersException.js"/>
 		<jsScript file="core/ConstantManager.js"/>
 		<jsScript file="core/ServConnector.js"/>
 		<jsScript file="core/Response.js"/>

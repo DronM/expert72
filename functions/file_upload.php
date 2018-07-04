@@ -95,13 +95,18 @@ try{
 			$orig_file = $resumable->uploadFolder.DIRECTORY_SEPARATOR.$_REQUEST['resumableFilename'];
 		
 			try{
+				$orig_file_size = filesize($orig_file);
+				if (!$orig_file_size){
+					throw new Exception('Ошибка загрузки файла!');
+				}
+			
 				$db_app_id = NULL;
 				FieldSQLInt::formatForDb($_REQUEST['application_id'],$db_app_id);
 			
 				//application state
 				Application_Controller::checkSentState($dbLink,$db_app_id,TRUE);
 
-				if ($_SESSION['client_download_file_max_size']<filesize($orig_file)){
+				if ($_SESSION['client_download_file_max_size']<$orig_file_size){
 					throw new Exception("Превышение максимального размера файла!");
 				}
 		
@@ -145,7 +150,7 @@ try{
 						$db_app_id,
 						$db_doc_type,
 						$db_doc_id,				
-						filesize($orig_file),
+						$orig_file_size,
 						$db_fileName,
 						$db_file_path,
 						($_REQUEST['file_signed']=='true')? 'TRUE':'FALSE'
@@ -246,7 +251,12 @@ try{
 	
 			$orig_file = $resumable->uploadFolder.DIRECTORY_SEPARATOR.$_REQUEST['resumableFilename'];
 			try{
-				if ($_SESSION['employee_download_file_max_size']<filesize($orig_file)){
+				$orig_file_size = filesize($orig_file);
+				if (!$orig_file_size){
+					throw new Exception('Ошибка загрузки файла!');
+				}
+			
+				if ($_SESSION['employee_download_file_max_size']<$orig_file_size){
 					throw new Exception("Превышение максимального размера файла!");
 				}
 		
@@ -280,7 +290,7 @@ try{
 						$db_file_id,
 						$doc_type,
 						$db_id,			
-						filesize($orig_file),
+						$orig_file_size,
 						$db_file_name,
 						$db_file_path,
 						(isset($_REQUEST['file_signed']) && $_REQUEST['file_signed']=='true')? 'TRUE':'FALSE'

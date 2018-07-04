@@ -18,6 +18,7 @@ function DocFlowInClientDialog_View(id,options){
 	options.controller = new DocFlowInClient_Controller();
 	options.model = options.models.DocFlowInClientDialog_Model;
 	
+	options.cmdOkAsync = false;
 	options.cmdSave = true;
 	options.cmdOk = true;
 	

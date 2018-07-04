@@ -3,7 +3,7 @@
 	top:40%;
 	left:50%;
 	margin:0 0 0 -100px;
-	z-index=99999;
+	z-index:9999999;
 }
 span.grid-sort{
 	margin-left:5px;

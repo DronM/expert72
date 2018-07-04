@@ -116,14 +116,14 @@ class ViewBase extends ViewHTMLXSLT {
 			
 		
 		if (!DEBUG){			
-			$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/plugins/loaders/pace.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/core/libraries/jquery.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/core/libraries/bootstrap.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/plugins/loaders/blockui.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/core/app.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/bootstrap-datepicker/bootstrap-datepicker.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/bootstrap-datepicker/bootstrap-datepicker.ru.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/mustache/mustache.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/jshash-2.2/md5-min.js'));
+			$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/core/libraries/jquery.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/core/libraries/bootstrap.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/plugins/loaders/blockui.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/core/app.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/bootstrap-datepicker/bootstrap-datepicker.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/bootstrap-datepicker/bootstrap-datepicker.ru.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/mustache/mustache.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/jshash-2.2/md5-min.js'));
 			$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'lib.js'));
 			$script_id = VERSION;
 		}
 		else{		
 			
 		
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/plugins/loaders/pace.min.js'));
+		
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/core/libraries/jquery.min.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/core/libraries/bootstrap.min.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/plugins/loaders/blockui.min.js'));
@@ -154,6 +154,7 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'core/EventHelper.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'core/FatalException.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'core/DbException.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'core/VersException.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'core/ConstantManager.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'core/ServConnector.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'core/Response.js'));

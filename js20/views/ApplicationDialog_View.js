@@ -434,7 +434,7 @@ function ApplicationDialog_View(id,options){
 		options.controlOk = new ButtonOK(id+":cmdOk",{
 			"onClick":function(){
 				self.checkSaveExecute(function(){
-					self.onOK();
+					self.close({"updated":true});
 				},false,false);				
 			}
 		});		
@@ -461,39 +461,44 @@ function ApplicationDialog_View(id,options){
 		this.addElement(new ButtonCmd(id+":cmdSend",{			
 			"enabled":false,
 			"onClick":function(){
-				self.checkSaveExecute(function(){			
-					WindowQuestion.show({
-						"text":"Отправить заявление на проверку?",
-						"cancel":false,
-						"callBack":function(res){			
-							if (res==WindowQuestion.RES_YES){
-								self.getElement("cmdSend").setEnabled(false);
-								var frm_cmd = self.getCmd();
-								var pm = self.m_controller.getPublicMethod(
-									(frm_cmd=="insert"||frm_cmd=="copy")? self.m_controller.METH_INSERT:self.m_controller.METH_UPDATE
-								)
-								pm.setFieldValue("set_sent",true);
-								var f_fail = function(resp,errCode,errStr){
-									pm.setFieldValue("set_sent",false);
-									self.setError(window.getApp().formatError(errCode,errStr));
-									self.getElement("cmdSend").setEnabled(true);
-								}				
-								if (!self.getModified()){
-									pm.setFieldValue("old_id",self.getElement("id").getValue());
-									pm.run({
-										"ok":function(){
-											self.close({"updated":true});
-										},
-										"fail":f_fail
-									});
-								}
-								else{
-									self.onOK(f_fail);
-								}
-							}
+				self.checkRequiredFiles();
+				self.checkPrintFiles();
+							
+				WindowQuestion.show({
+					"text":"Отправить заявление на проверку?",
+					"cancel":false,
+					"callBack":function(res){			
+						if (res==WindowQuestion.RES_YES){
+							self.setTempDisabled(self.CMD_OK);
+							self.getElement("cmdSend").setEnabled(false);
+							var frm_cmd = self.getCmd();
+							var pm = self.m_controller.getPublicMethod(
+								(frm_cmd=="insert"||frm_cmd=="copy")? self.m_controller.METH_INSERT:self.m_controller.METH_UPDATE
+							)
+							pm.setFieldValue("set_sent",true);
+							var f_fail = function(resp,errCode,errStr){
+								pm.setFieldValue("set_sent",false);
+								self.setError(window.getApp().formatError(errCode,errStr));
+								self.setTempEnabled(self.CMD_OK);
+								self.getElement("cmdSend").setEnabled(true);
+								self.getControlOK().setEnabled(true);								
+							}				
+							//if (!self.getModified()){
+								pm.setFieldValue("old_id",self.getElement("id").getValue());
+								pm.run({
+									"async":false,
+									"ok":function(){
+										self.close({"updated":true});
+									},
+									"fail":f_fail
+								});
+							/*}
+							else{
+								self.onOK(f_fail);
+							}*/
 						}
-					});
-				},true,true);
+					}
+				});
 			}
 		}));
 
@@ -501,8 +506,14 @@ function ApplicationDialog_View(id,options){
 			"onClick":function(){	
 				self.checkSaveExecute(function(){
 					var contr = new Application_Controller();
-					contr.getPublicMethod("zip_all").setFieldValue("application_id",this.getElement("id").getValue());
-					contr.download("zip_all");
+					contr.getPublicMethod("zip_all").setFieldValue("application_id",self.getElement("id").getValue());
+					//self.getElement("cmdZipAll").setEnabled(false);
+					contr.download("zip_all",null,null,function(n,descr){
+						self.getElement("cmdZipAll").setEnabled(true);
+						if (n){
+							throw new Error(descr);
+						}
+					});
 				},true);
 			}
 		}));
@@ -788,10 +799,7 @@ ApplicationDialog_View.prototype.onGetData = function(resp,cmd){
 	if (m.getField("application_state_end_date").isSet()){
 		var n = document.getElementById(this.getId()+":application_state_end_date");
 		var dt = m.getFieldValue("application_state_end_date");
-		console.log(dt)
-		console.dir(n)
 		n.textContent = DateHelper.format(dt,"d/m/Y");		
-		console.log(n.textContent)
 	}
 
 	//read only states
@@ -968,10 +976,26 @@ ApplicationDialog_View.prototype.checkSaveExecute = function(func,checkReqFiles,
 		func.call(this);
 	}
 	else{
-		self = this;
+		var frm_cmd = this.getCmd();
+		var pm = this.m_controller.getPublicMethod(
+			(frm_cmd=="insert" || frm_cmd=="copy")? this.m_controller.METH_INSERT:this.m_controller.METH_UPDATE
+		);
+		pm.setFieldValue("filled_percent",this.m_totalFilledPercent);
+	
+		var self = this;
+		this.m_commands[this.CMD_OK].setAsync(false);
+		this.getControlOK().setEnabled(false);		
+		this.m_sendState = this.getElement("cmdSend").getEnabled();
+		if(this.m_sendState)this.getElement("cmdSend").setEnabled(false);
+		
 		this.onSave(
 			function(){
-				func.call(self);
+				if(func)func.call(self);
+			},
+			null,
+			function(){
+				self.getControlOK().setEnabled(true);		
+				if(self.m_sendState)self.getElement("cmdSend").setEnabled(true);
 			}
 		);			
 	}

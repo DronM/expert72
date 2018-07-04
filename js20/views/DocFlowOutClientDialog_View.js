@@ -22,6 +22,8 @@ function DocFlowOutClientDialog_View(id,options){
 	
 	options.uploaderClass = FileUploaderDocFlowOutClient_View;
 	
+	options.cmdOkAsync = false;
+	
 	var self = this;
 	
 	this.m_subjects = {
@@ -142,15 +144,13 @@ function DocFlowOutClientDialog_View(id,options){
 		options.controlOk = new ButtonOK(id+":cmdOk",{
 			"onClick":function(){
 				self.setSent(true);
-				self.onOK();
+				self.getControlSave().setEnabled(false);
+				self.onOK(function(){
+					self.getControlSave().setEnabled(true);
+				});
 			}
-		});		
-		options.controlSave = new ButtonOK(id+":cmdSave",{
-			"onClick":function(){
-				self.onSave();
-			}
-		});		
-
+		});
+		options.cmdSave = true;
 	}
 	
 	DocFlowOutClientDialog_View.superclass.constructor.call(this,id,options);

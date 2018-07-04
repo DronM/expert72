@@ -49,7 +49,7 @@
 				else{
 					<xsl:call-template name="initApp"/>
 				}
-				
+				window.isChild = true;
 				<xsl:call-template name="checkForError"/>
 
 				<xsl:call-template name="modelFromTemplate"/>				
@@ -77,6 +77,12 @@
 
 							<div class="windowMessage hidden">
 							</div>
+							<!--waiting  -->
+							<div id="waiting">
+								<div>Обработка...</div>
+								<img src="img/loading.gif"/>
+							</div>
+							
 						</div>
 						
 						<!-- Footer -->
