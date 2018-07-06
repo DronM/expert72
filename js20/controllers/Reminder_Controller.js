@@ -259,7 +259,7 @@ extend(Reminder_Controller,ControllerObjServer);
 	
 		options.required = true;
 	
-		pm.addField(new FieldInt("id",options));
+		pm.addField(new FieldText("id_list",options));
 	
 			
 	this.addPublicMethod(pm);

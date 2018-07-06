@@ -175,7 +175,7 @@ class Reminder_Controller extends ControllerSQL{
 	$opts=array();
 	
 		$opts['required']=TRUE;				
-		$pm->addParam(new FieldExtInt('id',$opts));
+		$pm->addParam(new FieldExtText('id_list',$opts));
 	
 			
 		$this->addPublicMethod($pm);
@@ -226,9 +226,19 @@ class Reminder_Controller extends ControllerSQL{
 	}
 	
 	public function set_viewed($pm){
+		$id_list = '';
+		$id_list_ar = explode(',',$this->getExtVal($pm,'id_list'));
+		foreach($id_list_ar as $id){
+			$id_clear = intval($id);
+			if ($id_clear){
+				$id_list.= ($id_list=='')? '':',';	
+				$id_list.= $id_clear;
+			}
+		}
+		
 		$this->getDbLinkMaster()->query(sprintf(
-			"UPDATE reminders SET viewed=TRUE,viewed_dt=now() WHERE id=%d",
-			$this->getExtDbVal($pm,'id')
+			"UPDATE reminders SET viewed=TRUE,viewed_dt=now() WHERE id IN(%s)",
+			$id_list
 		));
 	}
 	

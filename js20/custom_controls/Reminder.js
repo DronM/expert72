@@ -39,6 +39,7 @@ Reminder.prototype.check = function(){
 	this.m_controller.run("get_unviewed_list",{
 		"ok":function(resp){
 			var m = resp.getModel("ReminderUnviewedList_Model");				
+			var id_list = "";
 			while(m.getNextRow()){
 				var tp_ref = m.getFieldValue("doc_flow_importance_types_ref");
 				//common importance
@@ -94,9 +95,14 @@ Reminder.prototype.check = function(){
 						}
 					}
 				});		
-				self.m_updMeth.setFieldValue("id",m.getFieldValue("id"));
-				self.m_updMeth.run({"async":false});		
+				id_list+= (id_list=="")? "":",";
+				id_list+= m.getFieldValue("id");
 			}
+			if (id_list.length){
+				self.m_updMeth.setFieldValue("id_list",id_list);
+				self.m_updMeth.run();		
+			}
+			
 			var m = resp.getModel("DocFlowTaskShortList_Model");							
 			if (m){
 				self.updateTaskList(m);
