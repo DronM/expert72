@@ -450,51 +450,6 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			array('name'=>'Vars',
 				'id'=>'ApplicationDialog_Model',
 				'values'=>$obj_vals
-				/*array(
-					new Field('id',DT_STRING,array('value'=>$ar_obj['id'])),
-					new Field('create_dt',DT_STRING,array('value'=>$ar_obj['create_dt'])),					
-					new Field('expertise_type',DT_STRING,array('value'=>$ar_obj['expertise_type'])),
-					new Field('cost_eval_validity',DT_STRING,array('value'=>$ar_obj['cost_eval_validity'])),
-					new Field('cost_eval_validity_simult',DT_STRING,array('value'=>$ar_obj['cost_eval_validity_simult'])),
-					new Field('fund_sources_ref',DT_STRING,array('value'=>$ar_obj['fund_sources_ref'])),
-					new Field('construction_types_ref',DT_STRING,array('value'=>$ar_obj['construction_types_ref'])),
-					new Field('applicant',DT_STRING,array('value'=>$ar_obj['applicant'])),
-					new Field('customer',DT_STRING,array('value'=>$ar_obj['customer'])),
-					new Field('contractors',DT_STRING,array('value'=>$ar_obj['contractors'])),
-					new Field('constr_name',DT_STRING,array('value'=>$ar_obj['constr_name'])),
-					new Field('constr_address',DT_STRING,array('value'=>$ar_obj['constr_address'])),
-					new Field('constr_technical_features',DT_STRING,array('value'=>$ar_obj['constr_technical_features'])),
-					new Field('total_cost_eval',DT_STRING,array('value'=>$ar_obj['total_cost_eval'])),
-					new Field('limit_cost_eval',DT_STRING,array('value'=>$ar_obj['limit_cost_eval'])),
-					new Field('application_state',DT_STRING,array('value'=>$ar_obj['application_state'])),
-					new Field('application_state_dt',DT_DATETIMETZ,array('value'=>$ar_obj['application_state_dt'])),
-					new Field('application_state_end_date',DT_DATE,array('value'=>$ar_obj['application_state_end_date'])),
-					new Field('documents',DT_STRING,array('value'=>$documents)),
-					new Field('offices_ref',DT_STRING,array('value'=>$ar_obj['offices_ref'])),
-					new Field('primary_application',DT_STRING,array('value'=>$ar_obj['primary_application'])),
-					new Field('build_types_ref',DT_STRING,array('value'=>$ar_obj['build_types_ref'])),
-					new Field('developer',DT_STRING,array('value'=>$ar_obj['developer'])),
-					new Field('modification',DT_STRING,array('value'=>$ar_obj['modification'])),
-					new Field('audit',DT_STRING,array('value'=>$ar_obj['audit'])),
-					new Field('modif_primary_application',DT_STRING,array('value'=>$ar_obj['modif_primary_application'])),
-					new Field('select_descr',DT_STRING,array('value'=>$ar_obj['select_descr'])),
-					new Field('app_print_expertise',DT_STRING,array('value'=>$ar_obj['app_print_expertise'])),
-					new Field('app_print_modification',DT_STRING,array('value'=>$ar_obj['app_print_modification'])),
-					new Field('app_print_audit',DT_STRING,array('value'=>$ar_obj['app_print_audit'])),
-					new Field('app_print_cost_eval',DT_STRING,array('value'=>$ar_obj['app_print_cost_eval'])),
-					new Field('base_applications_ref',DT_STRING,array('value'=>$ar_obj['base_applications_ref'])),
-					new Field('derived_applications_ref',DT_STRING,array('value'=>$ar_obj['derived_applications_ref'])),
-					new Field('users_ref',DT_STRING,array('value'=>$ar_obj['users_ref'])),
-					new Field('auth_letter',DT_STRING,array('value'=>$ar_obj['auth_letter'])),
-					new Field('auth_letter_file',DT_STRING,array('value'=>$ar_obj['auth_letter_file'])),
-					new Field('pd_usage_info',DT_STRING,array('value'=>$ar_obj['pd_usage_info'])),
-					new Field('doc_folders',DT_STRING,array('value'=>$ar_obj['doc_folders'])),
-					new Field('work_start_date',DT_DATE,array('value'=>$ar_obj['work_start_date'])),
-					new Field('expertise_result_number',DT_DATE,array('value'=>$ar_obj['expertise_result_number'])),
-					new Field('expertise_result_date',DT_DATE,array('value'=>$ar_obj['expertise_result_date'])),
-					new Field('contract_number',DT_DATE,array('value'=>$ar_obj['contract_number'])),
-					new Field('contract_date',DT_DATE,array('value'=>$ar_obj['contract_date']))
-					)*/
 				)
 			)
 		);		
@@ -958,34 +913,45 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			$this->getExtDbVal($pm,'id')
 			));
 		}
-		if ($sig &amp;&amp; $ar['file_signed']!='t'){
-			throw new Exception(self::ER_NO_SIG);	
-		}
+		try{
+			if (!is_array($ar) || !count($ar)){
+				throw new Exception(self::ER_OTHER_USER_APP);	
+			}
 		
-		$fl_postf = (($sig)? self::SIG_EXT:'');
+			if ($sig &amp;&amp; $ar['file_signed']!='t'){
+				$this->setHeaderStatus(400);
+				throw new Exception(self::ER_NO_SIG);	
+			}
 		
-		if ($ar['deleted']=='t'){
-			$rel_fl = self::APP_DIR_PREF.$ar['application_id'].DIRECTORY_SEPARATOR.
-				self::APP_DIR_DELETED_FILES.DIRECTORY_SEPARATOR.
-				$ar['file_id'].$fl_postf;
-		}
-		else{
-			$rel_fl = self::APP_DIR_PREF.$ar['application_id'].DIRECTORY_SEPARATOR.
-				self::dirNameOnDocType($ar['document_type']).DIRECTORY_SEPARATOR.
-				$ar['document_id'].DIRECTORY_SEPARATOR.
-				$ar['file_id'].$fl_postf;		
-		}
+			$fl_postf = (($sig)? self::SIG_EXT:'');
 		
-		if (!file_exists($fl=FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_fl)
-		&amp;&amp;( defined('FILE_STORAGE_DIR_MAIN') &amp;&amp; !file_exists($fl=FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$rel_fl))
-		){
-			throw new Exception(self::ER_STORAGE_FILE_NOT_FOUND.' '.$fl);
-		}
+			if ($ar['deleted']=='t'){
+				$rel_fl = self::APP_DIR_PREF.$ar['application_id'].DIRECTORY_SEPARATOR.
+					self::APP_DIR_DELETED_FILES.DIRECTORY_SEPARATOR.
+					$ar['file_id'].$fl_postf;
+			}
+			else{
+				$rel_fl = self::APP_DIR_PREF.$ar['application_id'].DIRECTORY_SEPARATOR.
+					self::dirNameOnDocType($ar['document_type']).DIRECTORY_SEPARATOR.
+					$ar['document_id'].DIRECTORY_SEPARATOR.
+					$ar['file_id'].$fl_postf;		
+			}
 		
-		$mime = getMimeTypeOnExt($ar['file_name'].$fl_postf);
-		ob_clean();
-		downloadFile($fl, $mime,'attachment;',$ar['file_name'].$fl_postf);
-		return TRUE;
+			if (!file_exists($fl=FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_fl)
+			&amp;&amp;( defined('FILE_STORAGE_DIR_MAIN') &amp;&amp; !file_exists($fl=FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$rel_fl))
+			){
+				throw new Exception(self::ER_STORAGE_FILE_NOT_FOUND);
+			}
+		
+			$mime = getMimeTypeOnExt($ar['file_name'].$fl_postf);
+			ob_clean();
+			downloadFile($fl, $mime,'attachment;',$ar['file_name'].$fl_postf);
+			return TRUE;
+		}	
+		catch(Exception $e){
+			$this->setHeaderStatus(400);
+			throw $e;
+		}
 	}
 	
 	public function get_file($pm){
@@ -993,6 +959,52 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 	}
 	public function get_file_sig($pm){
 		$this->download_file($pm,TRUE);
+	}
+
+	public function get_file_out_sig($pm){
+		$q = sprintf(
+			"SELECT
+				a.id AS application_id,
+				att.file_id,
+				att.file_path AS file_path,
+				att.file_id,
+				att.file_name
+			FROM doc_flow_attachments AS att
+			LEFT JOIN doc_flow_out AS dout ON dout.id=att.doc_id AND att.doc_type='doc_flow_out'
+			LEFT JOIN applications AS a ON a.id=dout.to_application_id
+			WHERE att.file_id=%s",
+		$this->getExtDbVal($pm,'id')		
+		);			
+		try{
+			if ($_SESSION['role_id']=='client'){
+				//открывает только свои заявления!!!
+				$q.=sprintf(' AND a.user_id=%d',$_SESSION['user_id']);
+			}
+			$ar = $this->getDbLink()->query_first($q);
+			if (!is_array($ar) || !count($ar)){
+				throw new Exception(self::ER_OTHER_USER_APP);	
+			}
+			$fl_postf = '.sig';
+			$rel_fl = self::APP_DIR_PREF.$ar['application_id'].DIRECTORY_SEPARATOR.
+				$ar['file_path'].DIRECTORY_SEPARATOR.
+				$ar['file_id'].$fl_postf;		
+		
+			if (!file_exists($fl=FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_fl)
+			&amp;&amp;( defined('FILE_STORAGE_DIR_MAIN') &amp;&amp; !file_exists($fl=FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$rel_fl))
+			){
+				throw new Exception(self::ER_STORAGE_FILE_NOT_FOUND);
+			}
+		
+			$mime = getMimeTypeOnExt($ar['file_name'].$fl_postf);
+			ob_clean();
+			downloadFile($fl, $mime,'attachment;',$ar['file_name'].$fl_postf);
+			return TRUE;
+		}	
+		catch(Exception $e){
+			$this->setHeaderStatus(400);
+			throw $e;
+		}
+	
 	}
 	
 	private static function add_print_to_zip($docType,&amp;$fileInfo,&amp;$relDirZip,&amp;$zip,&amp;$cnt){

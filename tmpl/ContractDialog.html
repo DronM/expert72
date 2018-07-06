@@ -287,6 +287,7 @@
 				<h4>Связанные контракты</h4>
 				<div id="{{id}}:linked_contracts"/>
 			</div>
+			{{#notSetAccess}}
 			<div class="row">
 				<div class="{{bsCol}}6">
 					<div id="{{id}}:main_departments_ref"/>
@@ -295,7 +296,7 @@
 					<div id="{{id}}:main_experts_ref"/>
 				</div>				
 			</div>
-			
+			{{/notSetAccess}}
 							
 			<div class="row">
 				<div class="{{bsCol}}3">

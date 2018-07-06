@@ -56,3 +56,9 @@ DocFolder_View.prototype.downloadFile = function(btnCtrl){
 		pm_sig.download(null,1);
 	}
 }
+DocFolder_View.prototype.downloadOutSig = function(fileId){
+	var contr = new Application_Controller();
+	var pm = contr.getPublicMethod("get_file_out_sig");
+	pm.setFieldValue("id",fileId);
+	pm.download();
+}

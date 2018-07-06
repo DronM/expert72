@@ -52,7 +52,8 @@ function ContractDialog_View(id,options){
 			&& window.getApp().getServVar("department_boss")=="1"
 		)
 	);
-	
+	options.templateOptions.notSetAccess = !options.templateOptions.setAccess;
+
 	options.addElement = function(){
 		var bs = window.getBsCol();
 		var editContClassName = "input-group "+bs+"9";

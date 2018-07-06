@@ -239,7 +239,7 @@ FileUploader_View.prototype.calcFileTotals = function(docId){
 FileUploader_View.prototype.addFileToContainer = function(container,itemFile,itemId){
 
 	var self = this;
-	
+
 	var templateOptions = this.m_fileTemplateOptions;
 	templateOptions.file_id			= itemFile.file_id;
 	templateOptions.file_uploaded		= itemFile.file_uploaded;	
@@ -254,6 +254,7 @@ FileUploader_View.prototype.addFileToContainer = function(container,itemFile,ite
 	templateOptions.file_deletable		= (this.m_allowFileDeletion && !templateOptions.file_deleted);
 	templateOptions.separateSignature	= this.m_separateSignature;	
 	templateOptions.customFolder		= this.m_customFolder;
+	templateOptions.out_file_id		= itemFile.out_file_id;
 	
 	if (this.m_setFileOptions){
 		this.m_setFileOptions(templateOptions,itemFile);
@@ -268,6 +269,19 @@ FileUploader_View.prototype.addFileToContainer = function(container,itemFile,ite
 		"template":this.m_fileTemplate,
 		"templateOptions":templateOptions
 	});
+	
+	if (templateOptions.out_file_id){
+		container.addElement(new Button(this.getId()+":file_"+itemFile.file_id+"_outSig",{
+			"attrs":{"file_id":itemFile.out_file_id,"item_id":itemId},
+			"onClick":function(e){
+				//self.deleteFile(this.getAttr("file_id"),this.getAttr("item_id"));
+				e.preventDefault();
+				if (self.downloadOutSig)self.downloadOutSig(this.getAttr("file_id"));
+			}
+		}));
+	}
+	
+	
 	if (this.m_customFolder){	
 		var incl_id = this.getId()+":file_"+itemFile.file_id+":include";
 		var vis = (itemFile.file_path&&itemFile.file_path.length&&itemFile.file_path!="Исходящие")? true:false;

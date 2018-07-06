@@ -268,6 +268,8 @@ $permissions = array();
 				
 					$permissions['Application_Controller_get_file_sig']=TRUE;
 				
+					$permissions['Application_Controller_get_file_out_sig']=TRUE;
+				
 					$permissions['Application_Controller_zip_all']=TRUE;
 				
 					$permissions['Application_Controller_get_document_templates']=TRUE;

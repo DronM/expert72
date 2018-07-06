@@ -41,6 +41,11 @@
 		<i class="glyphicon glyphicon-trash"></i>	
 	</div>
 	{{/file_deletable}}
+
+	{{#out_file_id}}
+	<a id="{{id}}_outSig" href="#" class="btn btn-sm fileOutSigBtn" title="Скачать ЭЦП заказчика">ЭЦП заказчика
+	</a>
+	{{/out_file_id}}
 	
 	{{#customFolder}}
 	<span id="{{id}}:include">

@@ -137,11 +137,14 @@ CREATE OR REPLACE VIEW applications_dialog AS
 					'file_signed',adf.file_signed,
 					'file_uploaded','true',
 					'file_path',adf.file_path,
-					'date_time',adf.date_time
+					'date_time',adf.date_time,
+					'out_file_id',adf_att.file_id
 				)
 			) AS files
 		FROM application_document_files adf
 		LEFT JOIN application_doc_folders AS app_fd ON app_fd.name=adf.file_path
+		LEFT JOIN doc_flow_out AS adf_out ON adf_out.to_application_id=adf.application_id AND adf_out.doc_flow_type_id=(pdfn_doc_flow_types_app_resp()->'keys'->>'id')::int
+		LEFT JOIN doc_flow_attachments AS adf_att ON adf_att.doc_type='doc_flow_out' AND adf_att.doc_id=adf_out.id AND adf_att.file_name=adf.file_name
 		WHERE adf.document_type='documents'
 		GROUP BY adf.application_id,adf.file_path,app_fd.id
 		ORDER BY app_fd.id	

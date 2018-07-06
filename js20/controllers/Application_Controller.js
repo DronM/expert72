@@ -35,6 +35,7 @@ function Application_Controller(options){
 	this.add_remove_file();
 	this.add_get_file();
 	this.add_get_file_sig();
+	this.add_get_file_out_sig();
 	this.add_zip_all();
 	this.add_get_document_templates();
 	this.add_remove_document_types();
@@ -806,6 +807,24 @@ extend(Application_Controller,ControllerObjServer);
 			Application_Controller.prototype.add_get_file_sig = function(){
 	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('get_file_sig',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		options.maxlength = "36";
+	
+		pm.addField(new FieldString("id",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			Application_Controller.prototype.add_get_file_out_sig = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('get_file_out_sig',opts);
 	
 				
 	
