@@ -78,7 +78,7 @@ extend(DocFlowOutClient_Controller,ControllerObjServer);
 	pm.addField(field);
 	
 	var options = {};
-	
+	options.required = true;
 	var field = new FieldInt("application_id",options);
 	
 	pm.addField(field);

@@ -80,6 +80,7 @@ function DocFlowOutClient_Model(options){
 	filed_options.autoInc = false;	
 	
 	options.fields.application_id = new FieldInt("application_id",filed_options);
+	options.fields.application_id.getValidator().setRequired(true);
 	
 				
 	

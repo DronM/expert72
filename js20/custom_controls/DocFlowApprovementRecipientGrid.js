@@ -221,3 +221,9 @@ DocFlowApprovementRecipientGrid.prototype.calcSteps = function(){
 	}
 	this.onRefresh();
 }
+
+DocFlowApprovementRecipientGrid.prototype.afterServerDelRow = function(){	
+	DocFlowApprovementRecipientGrid.superclass.afterServerDelRow.call(this);
+	
+	this.calcSteps();
+}

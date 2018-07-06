@@ -68,7 +68,7 @@ function DocFlowOutClientDialog_View(id,options){
 			"labelClassName":labelClassName,
 			"labelCaption":"Заявление:",
 			"onSelect":function(fields){
-				self.onAppSelect(fields.id.getValue());
+				self.onAppSelect(fields);
 			}
 		});
 		app_ctrl.orig_reset = app_ctrl.reset;
@@ -192,9 +192,17 @@ DocFlowOutClientDialog_View.prototype.onAppClear = function(){
 	DOMHelper.addClass(document.getElementById(this.getId()+":documentFiles"),"hidden");	
 }
 
-DocFlowOutClientDialog_View.prototype.onAppSelect = function(appId,callBack){
+DocFlowOutClientDialog_View.prototype.onAppSelect = function(fields){
+	if (fields.application_state.getValue()!="waiting_for_contract"
+	&&fields.application_state.getValue()!="waiting_for_pay"
+	&&fields.application_state.getValue()!="expertise"
+	){
+		this.getElement("applications_ref").reset();
+		throw new Error("Неверный статус заявления!");
+	}
+	
 	var pm = this.getController().getPublicMethod("get_application_dialog");
-	pm.setFieldValue("application_id",appId);
+	pm.setFieldValue("application_id",fields.id.getValue());
 	pm.setFieldValue("id",this.getElement("id").getValue());
 	var self = this;
 	pm.run({

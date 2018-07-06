@@ -458,7 +458,7 @@ throw Error(CommonHelper.longString(function () {/*
 		<div class="navbar-collapse collapse" id="navbar-mobile">
 			
 			<ul class="nav navbar-nav">
-				<li><a class="sidebar-control sidebar-main-toggle hidden-xs"><i class="icon-paragraph-justify3"></i></a></li>
+				<li><a class="sidebar-control sidebar-main-toggle hidden-xs" title="Скрыть/показать меню"><i class="icon-paragraph-justify3"></i></a></li>
 				
 				<xsl:if test="/document/model[@id='ModelVars']/row/role_id != 'client'">		
 				<li class="dropdown" title="Мои задачи">

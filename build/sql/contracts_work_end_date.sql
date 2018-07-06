@@ -8,7 +8,7 @@ $$
 	SELECT
 		CASE
 			WHEN in_date_type='bank'::date_types THEN
-				(SELECT d2::date FROM applications_check_period(in_office_id,in_date_time,in_days+1) AS (d1 timestampTZ,d2 timestampTZ))
+				(SELECT d2::date FROM applications_check_period(in_office_id,in_date_time,in_days) AS (d1 timestampTZ,d2 timestampTZ))
 			ELSE (SELECT d2::date FROM applications_check_period(in_office_id,in_date_time::date+((in_days-1)||' days')::interval,1) AS (d1 timestampTZ,d2 timestampTZ))
 		END	
 $$

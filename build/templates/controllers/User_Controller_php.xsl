@@ -39,6 +39,7 @@ class <xsl:value-of select="@id"/>_Controller extends ControllerSQL{
 	const ER_NAME_OR_EMAIL_TAKEN = "Логин или адрес электронной почты заняты.@1003";
 	const ER_WRONG_CAPTCHA = "Неверный код с картинки.@1004";
 	const ER_BANNED = "Доступ запрещен!@1005";
+	const ER_REG = "Ошибка регистрации пользователя!@1006";
 
 	public function __construct($dbLinkMaster=NULL,$dbLink=NULL){
 		parent::__construct($dbLinkMaster,$dbLink);<xsl:apply-templates/>
@@ -168,8 +169,8 @@ class <xsl:value-of select="@id"/>_Controller extends ControllerSQL{
 		
 		$log_ar = $this->getDbLinkMaster()->query_first(
 			sprintf("SELECT pub_key FROM logins
-			WHERE session_id='%s' AND user_id ='%s' AND date_time_out IS NULL",
-			session_id(),$ar['id'])
+			WHERE session_id='%s' AND user_id =%d AND date_time_out IS NULL",
+			session_id(),intval($ar['id']))
 		);
 		if (!$log_ar['pub_key']){
 			//no user login
@@ -178,21 +179,21 @@ class <xsl:value-of select="@id"/>_Controller extends ControllerSQL{
 			
 			$log_ar = $this->getDbLinkMaster()->query_first(
 				sprintf("UPDATE logins SET 
-					user_id = '%s',
+					user_id = %d,
 					pub_key = '%s'
 				WHERE session_id='%s' AND user_id IS NULL
 				RETURNING id",
-				$ar['id'],$this->pub_key,session_id())
+				intval($ar['id']),$this->pub_key,session_id())
 			);				
 			if (!$log_ar['id']){
 				//нет вообще юзера
 				$log_ar = $this->getDbLinkMaster()->query_first(
 					sprintf("INSERT INTO logins
 					(date_time_in,ip,session_id,pub_key,user_id)
-					VALUES('%s','%s','%s','%s','%s')
+					VALUES('%s','%s','%s','%s',%d)
 					RETURNING id",
 					date('Y-m-d H:i:s'),$_SERVER["REMOTE_ADDR"],
-					session_id(),$this->pub_key,$ar['id'])
+					session_id(),$this->pub_key,intval($ar['id']))
 				);								
 			}
 			$_SESSION['LOGIN_ID'] = $ar['id'];			
@@ -226,19 +227,15 @@ class <xsl:value-of select="@id"/>_Controller extends ControllerSQL{
 			$this->getExtDbVal($pm,'pwd')
 			));
 			
-		if (!is_array($ar) || !count($ar)){
+		if (!is_array($ar) || !count($ar) || !intval($ar['id'])){
 			throw new Exception(ERR_AUTH);
 		}
 		else if ($ar['banned']=='t'){
 			throw new Exception(self::ER_BANNED);
 		}
-		else if (intval($ar['id'])){
+		else{
 			$this->set_logged($ar);
 			
-		}
-		else{
-			//???
-			throw new Exception(self::ER_USER_NOT_DEFIND);
 		}
 	}
 	
@@ -491,6 +488,10 @@ class <xsl:value-of select="@id"/>_Controller extends ControllerSQL{
 				$this->getExtDbVal($pm,'name_full')
 				));
 
+				if (!is_array($inserted_id_ar) || !count($inserted_id_ar) || !intval($inserted_id_ar['id'])){
+					throw new Exception(self::ER_REG);
+				}
+
 				$ar_email_key = $this->getDbLinkMaster()->query_first(sprintf(
 					"INSERT INTO user_email_confirmations (key,user_id)
 					values (md5(CURRENT_TIMESTAMP::text),%d)
@@ -509,7 +510,8 @@ class <xsl:value-of select="@id"/>_Controller extends ControllerSQL{
 		
 				$this->email_confirm_notify($inserted_id_ar['id'],"'".$ar_email_key['key']."'");
 		
-				$ar = $this->getDbLink()->query_first(
+				//From same server!!!!
+				$ar = $this->getDbLinkMaster()->query_first(
 					sprintf(
 					"SELECT 
 						u.*
@@ -517,7 +519,7 @@ class <xsl:value-of select="@id"/>_Controller extends ControllerSQL{
 					WHERE u.id=%d",
 					$inserted_id_ar['id']
 					));
-		
+
 				$this->set_logged($ar);
 			
 				$this->getDbLinkMaster()->query('COMMIT');

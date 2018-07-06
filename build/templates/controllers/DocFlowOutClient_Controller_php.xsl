@@ -26,6 +26,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 	const CONTRACT_FOLDER = 'Договорные документы';
 	const ER_NO_CONTRACT_SIG = 'Нет файла эцп с контрактом!';
 	const ER_NO_DOC = 'Document not found!';
+	const ER_WRONG_STATE = 'Невозможно создать исходящий документ по заявлению с данным статусом!';
 
 	public function __construct($dbLinkMaster=NULL,$dbLink=NULL){
 		parent::__construct($dbLinkMaster,$dbLink);<xsl:apply-templates/>
@@ -57,9 +58,11 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			self::CONTRACT_FOLDER;
 			
 		//*************** А если уже был контракт? надо удалять... *************************
+		/*
 		if (file_exists($dir)){
 			rrmdir($dir);
 		}
+		*/
 		$this->getDbLinkMaster()->query(sprintf(
 		"DELETE FROM doc_flow_out_client_document_files
 		WHERE file_id IN (
@@ -113,13 +116,33 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 	}
 
 	public function insert($pm){
+		//check app state
+		$app_id = $this->getExtDbVal($pm,'application_id');
+		
+		$ar = $this->getDbLink()->query_first(sprintf("SELECT
+			application_processes_last(%d) AS state,
+			(SELECT ap.user_id=%d FROM applications AS ap WHERE ap.id=%d) AS user_check_passed
+			",
+			$app_id,
+			$_SESSION['user_id'],
+			$app_id
+		));
+	
+		Application_Controller::checkApp($ar);
+		if ($ar['user_check_passed']!='t'){
+			throw new Exception(Application_Controller::ER_OTHER_USER_APP);
+		}
+		if ($ar['state']!='waiting_for_contract' &amp;&amp; $ar['state']!='waiting_for_pay' &amp;&amp; $ar['state']!='expertise'){
+			throw new Exception(self::ER_WRONG_STATE);
+		}
+	
 		$pm->setParamValue("user_id",$_SESSION['user_id']);
 		$this->getDbLinkMaster()->query("BEGIN");
 		try{			
 			$inserted_id_ar = parent::insert($pm);
 			
 			if (isset($_FILES['contract_files'])){
-				$this->move_contract_files($this->getExtDbVal($pm,'application_id'),$inserted_id_ar['id'],$_FILES['contract_files']);
+				$this->move_contract_files($app_id,$inserted_id_ar['id'],$_FILES['contract_files']);
 			}
 			
 			$this->getDbLinkMaster()->query("COMMIT");			

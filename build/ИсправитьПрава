@@ -7,4 +7,7 @@ sudo chmod 775 $(find /media/storage/Documents -type d)
 sudo chmod 664 $(find /media/storage/Documents -type f)
 
 
+sudo find /media/storage/Documents -type d -exec chmod 775 {} ";"
+sudo find /media/storage/Documents -type f -exec chmod 664 {} ";"
+
 sudo usermod -a -G groupName userName

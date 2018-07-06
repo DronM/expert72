@@ -2,7 +2,7 @@
 <metadata owner="expert72">
 	<versions>
 		<version dateOpen="2017-09-27 12:09:48" dateClose="2017-12-08 10:12:08">1.001 
-		<lastBuild>2018-07-04 13:49:11</lastBuild></version>
+		<lastBuild>2018-07-06 07:01:41</lastBuild></version>
 		<version dateOpen="2017-12-08 11:12:01" dateClose="2017-12-08 11:12:04">1.002</version>
 		<version dateOpen="2017-12-08 11:12:20" dateClose="2017-12-08 11:12:20">1.0.3</version>
 		<version dateOpen="2017-12-12 11:12:07" dateClose="2017-12-12 11:12:07">1.0.4</version>
@@ -58,6 +58,7 @@
 		<version dateOpen="2018-07-03 16:07:58" dateClose="2018-07-03 17:07:01">1.0.54</version>
 		<version dateOpen="2018-07-04 12:07:43" dateClose="2018-07-04 12:07:44">1.0.55</version>
 		<version dateOpen="2018-07-04 12:07:45" dateClose="2018-07-04 13:07:49">1.0.56</version>
+		<version dateOpen="2018-07-04 13:07:50" dateClose="2018-07-06 07:07:01">1.0.57</version>
 	</versions>
 	<globalFilters>
 		<field id="user_id"/>
@@ -1958,7 +1959,7 @@
 			<field id="reg_number" dataType="String" length="15"/>
 			<field id="comment_text" dataType="Text"/>
 			<field id="user_id" dataType="Int" refTable="users" refField="id"/>
-			<field id="application_id" dataType="Int" refTable="applications" refField="id"/>
+			<field id="application_id" dataType="Int" refTable="applications" refField="id" required="TRUE"/>
 			<field id="subject" dataType="Text"/>
 			<field id="content" dataType="Text"/>
 			<field id="sent" dataType="Bool" defaultValue="FALSE"/>

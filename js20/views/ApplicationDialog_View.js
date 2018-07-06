@@ -796,10 +796,8 @@ ApplicationDialog_View.prototype.onGetData = function(resp,cmd){
 	}
 	
 	//end date
-	if (m.getField("application_state_end_date").isSet()){
-		var n = document.getElementById(this.getId()+":application_state_end_date");
-		var dt = m.getFieldValue("application_state_end_date");
-		n.textContent = DateHelper.format(dt,"d/m/Y");		
+	if (m.getField("application_state_end_date").isSet()&&(st=="correcting"||st=="checking")){
+		document.getElementById(this.getId()+":application_state_end_date_"+st).textContent=DateHelper.format(m.getFieldValue("application_state_end_date"),"d/m/Y");
 	}
 
 	//read only states

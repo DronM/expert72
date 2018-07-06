@@ -860,8 +860,12 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				if (!file_exists($dest = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_dest)){
 					mkdir($dest,0777,TRUE);
 				}
-			
-				rename($fl, $dest.DIRECTORY_SEPARATOR.$ar['file_id']);
+				if ($unlink_file){
+					unlink($fl);
+				}
+				else{
+					rename($fl, $dest.DIRECTORY_SEPARATOR.$ar['file_id']);
+				}
 			}
 			if (defined('FILE_STORAGE_DIR_MAIN') &amp;&amp; file_exists($fl = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$rel_fl)){
 				if (!file_exists($dest = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$rel_dest)){
@@ -1241,13 +1245,14 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		}
 	}
 
-	private static function checkApp(&amp;$qAr){
+	public static function checkApp(&amp;$qAr){
 		if (!is_array($qAr) || !count($qAr)){
 			throw new Exception(self::ER_APP_NOT_FOUND);
 		}	
 	}
 
 	public function get_print($pm){
+		/*
 		if (
 		!file_exists(FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.self::APP_DIR_PREF.$this->getExtDbVal($pm,'id'))
 		&amp;&amp; (defined('FILE_STORAGE_DIR_MAIN') &amp;&amp; !file_exists(FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.self::APP_DIR_PREF.$this->getExtDbVal($pm,'id')))
@@ -1256,6 +1261,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			$this->setHeaderStatus(400);
 			throw new Exception('Нет ни одного вложенного файла!');
 		}
+		*/
 		$templ_name = $pm->getParamValue('templ');
 		$rel_dir = self::APP_DIR_PREF.$this->getExtDbVal($pm,'id');
 		if (!file_exists($dir = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_dir)){
