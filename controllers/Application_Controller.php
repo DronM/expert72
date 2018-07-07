@@ -31,6 +31,7 @@ require_once(ABSOLUTE_PATH.'functions/Morpher.php');
 require_once(FRAME_WORK_PATH.'basic_classes/ModelVars.php');
 
 require_once('common/file_func.php');
+require_once('common/short_name.php');
 
 class Application_Controller extends ControllerSQL{
 	
@@ -2022,23 +2023,15 @@ class Application_Controller extends ControllerSQL{
 			throw new Exception(self::ER_NO_BOSS);
 		}
 		try{
-			$boss_decl = Morpher::declension($this->getDbLink(),array('s'=>$boss_name,'flags'=>'name'));
-			$ar['boss_name_dat'] = $boss_decl['Д'];		
-			$sep = strpos($ar['boss_name_dat'],' ');
-			if ($sep !== FALSE){
-				$ar['boss_name_dat'] = substr($ar['boss_name_dat'],0,$sep);
-			}
-			$n2 = (isset($boss_decl['ФИО']->И) && strlen($boss_decl['ФИО']->И))? (mb_substr($boss_decl['ФИО']->И,0,1,'UTF-8').'.'):'';
-			$n3 = (isset($boss_decl['ФИО']->О) && strlen($boss_decl['ФИО']->О))? (mb_substr($boss_decl['ФИО']->О,0,1,'UTF-8').'.'):'';
-			$n23 = (strlen($n2) || strlen($n3))? (' '.$n2.$n3):'';
-			$ar['boss_name_dat'] = $ar['boss_name_dat'].$n23;
+			$boss_decl = Morpher::declension(array('s'=>$boss_name,'flags'=>'name'),$this->getDbLinkMaster(),$this->getDbLink());
+			$ar['boss_name_dat'] = get_short_name($boss_decl['Д']);
 		}
 		catch(Exception $e){
-			$ar['boss_name_dat']	= $boss_name;
+			$ar['boss_name_dat']	= get_short_name($boss_name);
 		}
 		
 		try{	
-			$boss_post_decl = Morpher::declension($this->getDbLink(),array('s'=>$boss_post,'flags'=>'common'));
+			$boss_post_decl = Morpher::declension(array('s'=>$boss_post,'flags'=>'common'),$this->getDbLinkMaster(),$this->getDbLink());
 			$ar['boss_post_dat'] = $boss_post_decl['Д'];
 		}
 		catch(Exception $e){
@@ -2046,7 +2039,7 @@ class Application_Controller extends ControllerSQL{
 		}
 		
 		try{	
-			$office_decl = Morpher::declension($this->getDbLink(),array('s'=>$ar['office_client_name_full'],'flags'=>'common'));
+			$office_decl = Morpher::declension(array('s'=>$ar['office_client_name_full'],'flags'=>'common'),$this->getDbLinkMaster(),$this->getDbLink());
 			$ar['office_rod'] = $office_decl['Р'];
 		}
 		catch(Exception $e){
@@ -2074,11 +2067,11 @@ class Application_Controller extends ControllerSQL{
 		}
 		else{
 			//pboul and person = name
-			$person_head = $applicant_m['name'];
+			$person_head = array('name'=>$applicant_m['name_full'],'post'=>'');
 		}
 		if (strlen($applicant_m['base_document_for_contract'])){
 			try{
-				$base_document_for_contract = Morpher::declension($this->getDbLink(),array('s'=>$applicant_m['base_document_for_contract'],'flags'=>'common'))['Р'];
+				$base_document_for_contract = Morpher::declension(array('s'=>$applicant_m['base_document_for_contract'],'flags'=>'common'),$this->getDbLinkMaster(),$this->getDbLink())['Р'];
 			}
 			catch(Exception $e){
 				$base_document_for_contract = $applicant_m['base_document_for_contract'];
@@ -2089,10 +2082,10 @@ class Application_Controller extends ControllerSQL{
 		}
 		if (strlen($person_head['name'])){
 			try{
-				$person_head_name_rod = Morpher::declension($this->getDbLink(),array('s'=>$person_head['name'],'flags'=>'name'))['Р'];
+				$person_head_name_rod = get_short_name(Morpher::declension(array('s'=>$person_head['name'],'flags'=>'name'),$this->getDbLinkMaster(),$this->getDbLink())['Р']);
 			}
 			catch(Exception $e){
-				$person_head_name_rod = $person_head['name'];
+				$person_head_name_rod = get_short_name($person_head['name']);
 			}
 		}
 		else{
@@ -2100,7 +2093,7 @@ class Application_Controller extends ControllerSQL{
 		}		
 		if (strlen($person_head['post'])){
 			try{
-				$person_head_post_rod = Morpher::declension($this->getDbLink(),array('s'=>$person_head['post'],'flags'=>'common'))['Р'];
+				$person_head_post_rod = Morpher::declension(array('s'=>$person_head['post'],'flags'=>'common'),$this->getDbLinkMaster(),$this->getDbLink())['Р'];
 			}
 			catch(Exception $e){
 				$person_head_post_rod = $person_head['post'];
@@ -2120,6 +2113,16 @@ class Application_Controller extends ControllerSQL{
 				$applicant_contacts.= strlen($appl_resp['fields']['email'])? ' '.$appl_resp['fields']['email'] : '';
 			}
 		}
+		try{	
+			$applicant_org_name_rod = Morpher::declension(array('s'=>$applicant_m['name_full'],'flags'=>'common'),$this->getDbLinkMaster(),$this->getDbLink())['Р'];
+		}
+		catch(Exception $e){
+			$applicant_org_name_rod	= $applicant_m['name_full'];
+		}
+		if ($applicant_m['client_type']=='pboul' || $applicant_m['client_type']=='person'){
+			$applicant_org_name_rod = get_short_name($applicant_org_name_rod);
+		}
+		
 		$ar['applicant'] =
 			sprintf('<field id="Наименование">%s</field>',$applicant_m['name_full']).
 			sprintf('<field id="ИНН/КПП">%s</field>',$inn).
@@ -2130,7 +2133,10 @@ class Application_Controller extends ControllerSQL{
 			sprintf('<field id="Должность руководителя">%s</field>',$person_head['post']).
 			sprintf('<field id="Действует на основании">%s</field>',$base_document_for_contract).
 			sprintf('<person_head_name_rod>%s</person_head_name_rod>',$person_head_name_rod).
-			sprintf('<person_head_post_rod>%s</person_head_post_rod>',$person_head_post_rod).
+			sprintf('<person_head_post_rod>%s</person_head_post_rod>',$person_head_post_rod).			
+			sprintf('<client_type>%s</client_type>',$applicant_m['client_type']).
+			sprintf('<org_name_rod>%s</org_name_rod>',$applicant_org_name_rod).
+			sprintf('<ogrn>%s</ogrn>',$applicant_m['ogrn']).
 			sprintf('<field id="Контакты">%s</field>',$applicant_contacts).
 			(($ar['auth_letter'])? sprintf('<field id="Доверенность">%s</field>',$ar['auth_letter']) : '')
 		;
@@ -2148,7 +2154,7 @@ class Application_Controller extends ControllerSQL{
 		
 		if (strlen($customer_m['base_document_for_contract'])){
 			try{
-				$base_document_for_contract = Morpher::declension($this->getDbLink(),array('s'=>$customer_m['base_document_for_contract'],'flags'=>'common'))['Р'];
+				$base_document_for_contract = Morpher::declension(array('s'=>$customer_m['base_document_for_contract'],'flags'=>'common'),$this->getDbLinkMaster(),$this->getDbLink())['Р'];
 			}
 			catch(Exception $e){
 				$base_document_for_contract = $customer_m['base_document_for_contract'];
@@ -2160,7 +2166,7 @@ class Application_Controller extends ControllerSQL{
 		
 		if (strlen($person_head['name'])){
 			try{
-				$person_head_name_rod = Morpher::declension($this->getDbLink(),array('s'=>$person_head['name'],'flags'=>'name'))['Р'];
+				$person_head_name_rod = Morpher::declension(array('s'=>$person_head['name'],'flags'=>'name'),$this->getDbLinkMaster(),$this->getDbLink())['Р'];
 			}
 			catch(Exception $e){
 				$person_head_name_rod = $person_head['name'];
@@ -2171,7 +2177,7 @@ class Application_Controller extends ControllerSQL{
 		}		
 		if (strlen($person_head['post'])){
 			try{
-				$person_head_post_rod = Morpher::declension($this->getDbLink(),array('s'=>$person_head['post'],'flags'=>'common'))['Р'];
+				$person_head_post_rod = Morpher::declension(array('s'=>$person_head['post'],'flags'=>'common'),$this->getDbLinkMaster(),$this->getDbLink())['Р'];
 			}
 			catch(Exception $e){
 				$person_head_post_rod = $person_head['post'];
@@ -2206,7 +2212,7 @@ class Application_Controller extends ControllerSQL{
 		
 		if (strlen($developer_m['base_document_for_contract'])){
 			try{
-				$base_document_for_contract = Morpher::declension($this->getDbLink(),array('s'=>$developer_m['base_document_for_contract'],'flags'=>'common'))['Р'];
+				$base_document_for_contract = Morpher::declension(array('s'=>$developer_m['base_document_for_contract'],'flags'=>'common'),$this->getDbLinkMaster(),$this->getDbLink())['Р'];
 			}
 			catch(Exception $e){
 				$base_document_for_contract = $developer_m['base_document_for_contract'];
@@ -2218,7 +2224,7 @@ class Application_Controller extends ControllerSQL{
 		
 		if (strlen($person_head['name'])){
 			try{
-				$person_head_name_rod = Morpher::declension($this->getDbLink(),array('s'=>$person_head['name'],'flags'=>'name'))['Р'];
+				$person_head_name_rod = Morpher::declension(array('s'=>$person_head['name'],'flags'=>'name'),$this->getDbLinkMaster(),$this->getDbLink())['Р'];
 			}
 			catch(Exception $e){
 				$person_head_name_rod = $person_head['name'];
@@ -2229,7 +2235,7 @@ class Application_Controller extends ControllerSQL{
 		}		
 		if (strlen($person_head['post'])){
 			try{
-				$person_head_post_rod = Morpher::declension($this->getDbLink(),array('s'=>$person_head['post'],'flags'=>'common'))['Р'];
+				$person_head_post_rod = Morpher::declension(array('s'=>$person_head['post'],'flags'=>'common'),$this->getDbLinkMaster(),$this->getDbLink())['Р'];
 			}
 			catch(Exception $e){
 				$person_head_post_rod = $person_head['post'];
@@ -2267,7 +2273,7 @@ class Application_Controller extends ControllerSQL{
 			
 			if (strlen($contractor_m['base_document_for_contract'])){
 				try{
-					$base_document_for_contract = Morpher::declension($this->getDbLink(),array('s'=>$contractor_m['base_document_for_contract'],'flags'=>'common'))['Р'];
+					$base_document_for_contract = Morpher::declension(array('s'=>$contractor_m['base_document_for_contract'],'flags'=>'common'),$this->getDbLinkMaster(),$this->getDbLink())['Р'];
 				}
 				catch(Exception $e){
 					$base_document_for_contract = $contractor_m['base_document_for_contract'];
@@ -2278,7 +2284,7 @@ class Application_Controller extends ControllerSQL{
 			}		
 			if (strlen($person_head['name'])){
 				try{
-					$person_head_name_rod = Morpher::declension($this->getDbLink(),array('s'=>$person_head['name'],'flags'=>'name'))['Р'];
+					$person_head_name_rod = Morpher::declension(array('s'=>$person_head['name'],'flags'=>'name'),$this->getDbLinkMaster(),$this->getDbLink())['Р'];
 				}
 				catch(Exception $e){
 					$person_head_name_rod = $person_head['name'];
@@ -2289,7 +2295,7 @@ class Application_Controller extends ControllerSQL{
 			}		
 			if (strlen($person_head['post'])){
 				try{
-					$person_head_post_rod = Morpher::declension($this->getDbLink(),array('s'=>$person_head['post'],'flags'=>'common'))['Р'];
+					$person_head_post_rod = Morpher::declension(array('s'=>$person_head['post'],'flags'=>'common'),$this->getDbLinkMaster(),$this->getDbLink())['Р'];
 				}
 				catch(Exception $e){
 					$person_head_post_rod = $person_head['post'];

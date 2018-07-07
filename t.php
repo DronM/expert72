@@ -1,9 +1,21 @@
 <?php
-phpinfo();
-return;
+
+/**
+ * Returns Name+initials
+ */
+function get_person_initials($fioFull,$space=FALSE){
+	//return preg_replace('#(.*)\s+(.).*\s+(.).*#usi', '$1 $2.$3.', $fioFull);
+	$ar = explode(' ',trim($fioFull));
+	return 
+		((count($ar)>=1)? $ar[0]:'').
+		((count($ar)>=2)? ' '.mb_substr($ar[1],0,1,'UTF-8').'.' : '').
+		((count($ar)>=3)? ($space? ' ':'').mb_substr($ar[2],0,1,'UTF-8').'.' : '')
+		;
+}
+
 //http://localhost/expert72/index.php?c=Contract_Controller&v=Child&f=get_object&t=ContractDialog&id=4#
 
-echo intval('01');
+echo get_person_initials('Михалевич Андрей Александрович');
 //header("HTTP/1.0 404 Not Found");
 //throw new Exception("Error");
 exit;

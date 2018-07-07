@@ -2,7 +2,7 @@
 <metadata owner="expert72">
 	<versions>
 		<version dateOpen="2017-09-27 12:09:48" dateClose="2017-12-08 10:12:08">1.001 
-		<lastBuild>2018-07-06 15:34:13</lastBuild></version>
+		<lastBuild>2018-07-07 08:39:03</lastBuild></version>
 		<version dateOpen="2017-12-08 11:12:01" dateClose="2017-12-08 11:12:04">1.002</version>
 		<version dateOpen="2017-12-08 11:12:20" dateClose="2017-12-08 11:12:20">1.0.3</version>
 		<version dateOpen="2017-12-12 11:12:07" dateClose="2017-12-12 11:12:07">1.0.4</version>
@@ -61,6 +61,7 @@
 		<version dateOpen="2018-07-04 13:07:50" dateClose="2018-07-06 07:07:01">1.0.57</version>
 		<version dateOpen="2018-07-06 07:07:48" dateClose="2018-07-06 07:07:49">1.0.58</version>
 		<version dateOpen="2018-07-06 07:07:55" dateClose="2018-07-06 15:07:34">1.0.59</version>
+		<version dateOpen="2018-07-06 17:07:13" dateClose="2018-07-07 08:07:39">1.0.60</version>
 	</versions>
 	<globalFilters>
 		<field id="user_id"/>
