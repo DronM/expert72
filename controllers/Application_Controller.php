@@ -1867,7 +1867,6 @@ class Application_Controller extends ControllerSQL{
 			$doc_type_dir;
 		mkdir($dest,0777,TRUE);
 		rmove($source,$dest);
-		rrmdir($source);
 		
 		//заявления
 		$dest = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
@@ -1878,7 +1877,6 @@ class Application_Controller extends ControllerSQL{
 			$doc_type_print_dir;
 		mkdir($dest,0777,TRUE);
 		rmove($source,$dest);
-		rrmdir($source);
 		
 		//Доверенность?
 		$doc_type_auth_dir = self::dirNameOnDocType('auth_letter_file');
@@ -2140,7 +2138,11 @@ class Application_Controller extends ControllerSQL{
 			sprintf('<field id="Контакты">%s</field>',$applicant_contacts).
 			(($ar['auth_letter'])? sprintf('<field id="Доверенность">%s</field>',$ar['auth_letter']) : '')
 		;
-
+		/*
+		if ($applicant_m['client_type']=='pboul'){
+		}
+		*/
+		
 		//customer
 		$customer_m = json_decode($ar['customer'],TRUE);
 		$inn = $customer_m['inn'].( (strlen($customer_m['kpp']))? ('/'.$customer_m['kpp']):'' );		

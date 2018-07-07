@@ -1161,7 +1161,6 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			$doc_type_dir;
 		mkdir($dest,0777,TRUE);
 		rmove($source,$dest);
-		rrmdir($source);
 		
 		//заявления
 		$dest = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
@@ -1172,7 +1171,6 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			$doc_type_print_dir;
 		mkdir($dest,0777,TRUE);
 		rmove($source,$dest);
-		rrmdir($source);
 		
 		//Доверенность?
 		$doc_type_auth_dir = self::dirNameOnDocType('auth_letter_file');
@@ -1434,7 +1432,11 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			sprintf('&lt;field id="Контакты"&gt;%s&lt;/field&gt;',$applicant_contacts).
 			(($ar['auth_letter'])? sprintf('&lt;field id="Доверенность"&gt;%s&lt;/field&gt;',$ar['auth_letter']) : '')
 		;
-
+		/*
+		if ($applicant_m['client_type']=='pboul'){
+		}
+		*/
+		
 		//customer
 		$customer_m = json_decode($ar['customer'],TRUE);
 		$inn = $customer_m['inn'].( (strlen($customer_m['kpp']))? ('/'.$customer_m['kpp']):'' );		
