@@ -1263,7 +1263,7 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ApplicationDocFolderList_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/DocFolder_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ShortMessage_View.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ShortMessageList_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ShortMessageChat_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'tmpl/App.templates.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/App.enums.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/App.predefinedItems.js'));
@@ -1628,6 +1628,8 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/EmployeeLocalList_Controller.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/EmployeeLocalList_Model.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ApplicationCorrection_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ShortMessageChat_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/RecipientPicture_Model.js'));
 	
 			if (isset($_SESSION['scriptId'])){
 				$script_id = $_SESSION['scriptId'];

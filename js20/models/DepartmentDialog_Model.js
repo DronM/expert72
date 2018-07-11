@@ -37,6 +37,7 @@ function DepartmentDialog_Model(options){
 	filed_options.autoInc = false;	
 	
 	options.fields.name = new FieldString("name",filed_options);
+	options.fields.name.getValidator().setRequired(true);
 	options.fields.name.getValidator().setMaxLength('200');
 		
 	

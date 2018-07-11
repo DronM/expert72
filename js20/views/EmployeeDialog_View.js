@@ -20,10 +20,13 @@ function EmployeeDialog_View(id,options){
 	options.controller = new Employee_Controller();
 	options.model = options.models.EmployeeDialog_Model;
 	
+	var self = this;
+	
 	options.addElement = function(){
 		this.addElement(new EditString(id+":name",{
-							"labelCaption":this.FIELD_CAP_name
-						}));	
+			"labelCaption":this.FIELD_CAP_name,
+			"required":true
+		}));	
 	
 		this.addElement(new DepartmentSelect(id+":departments_ref",{
 							"labelCaption":this.FIELD_CAP_departments_ref
@@ -36,6 +39,18 @@ function EmployeeDialog_View(id,options){
 		this.addElement(new UserEditRef(id+":users_ref",{
 							"labelCaption":this.FIELD_CAP_users_ref
 						}));		
+						
+		this.addElement(new EditFile(id+":picture_file",{
+			"labelCaption":"Фотография:",
+			"onDownload":function(){
+				self.downloadPicture();
+			},
+			"onDeleteFile":function(){
+				self.deletePicture();
+			}
+			
+		}));		
+						
 	}
 	
 	EmployeeDialog_View.superclass.constructor.call(this,id,options);
@@ -48,6 +63,7 @@ function EmployeeDialog_View(id,options){
 		,new DataBinding({"control":this.getElement("users_ref"),"model":this.m_model})
 		,new DataBinding({"control":this.getElement("departments_ref")})
 		,new DataBinding({"control":this.getElement("posts_ref")})
+		,new DataBinding({"control":this.getElement("picture_file"),"field":this.m_model.getField("picture_info")})
 		//,"field":this.m_model.getField("department_id")
 	]);
 	
@@ -57,7 +73,20 @@ function EmployeeDialog_View(id,options){
 		,new CommandBinding({"control":this.getElement("users_ref"),"fieldId":"user_id"})
 		,new CommandBinding({"control":this.getElement("departments_ref"),"fieldId":"department_id"})
 		,new CommandBinding({"control":this.getElement("posts_ref"),"fieldId":"post_id"})
+		,new CommandBinding({"control":this.getElement("picture_file"),"fieldId":"picture_file"})
 	]);
 		
 }
 extend(EmployeeDialog_View,ViewObjectAjx);
+
+EmployeeDialog_View.prototype.downloadPicture = function(){
+	(this.getController().getPublicMethod("download_picture")).download();
+}
+
+EmployeeDialog_View.prototype.deletePicture = function(){
+	(this.getController().getPublicMethod("delete_picture")).run({
+		"ok":function(){
+			window.showNote("Данные удалены.");
+		}
+	});
+}

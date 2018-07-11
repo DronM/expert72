@@ -156,6 +156,13 @@ class ApplicationProcess_Controller extends ControllerSQL{
 		parent::insert($pm);
 	}
 
+	public function delete($pm){
+		if ($_SESSION['role_id']!='admin'){
+			throw new Exception('Статусы удалять может только администратор!');
+		}
+		parent::delete($pm);
+	}
+
 
 }
 ?>

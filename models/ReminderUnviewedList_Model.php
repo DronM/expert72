@@ -8,6 +8,7 @@
 
 require_once(FRAME_WORK_PATH.'basic_classes/.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLInt.php');
+require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLString.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLText.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLDateTimeTZ.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLJSON.php');
@@ -68,6 +69,14 @@ class ReminderUnviewedList_Model extends {
 				
 		$f_files=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"files",$f_opts);
 		$this->addField($f_files);
+		//********************
+		
+		//*** Field short_message_sender ***
+		$f_opts = array();
+		$f_opts['id']="short_message_sender";
+				
+		$f_short_message_sender=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"short_message_sender",$f_opts);
+		$this->addField($f_short_message_sender);
 		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}

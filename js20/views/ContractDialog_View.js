@@ -255,7 +255,7 @@ function ContractDialog_View(id,options){
 					"enabled":false
 				}));			
 				this.addElement(new EditString(id+":order_document",{
-					"maxLength":"300",
+					"maxLength":"1000",
 					"labelCaption":"Распорядительный акт:",
 					"editContClassName":"input-group "+bs+"8",
 					"labelClassName":"control-label "+bs+"4"
@@ -522,7 +522,6 @@ function ContractDialog_View(id,options){
 		dlg_m.setFieldValue("contracts_ref",this_ref);
 		dlg_m.setFieldValue("subject","По контракту "+this_ref.getDescr());
 		dlg_m.setFieldValue("doc_flow_importance_types_ref", window.getApp().getPredefinedItem("doc_flow_importance_types","common"));
-		dlg_m.setFieldValue("contracts_ref", );
 		dlg_m.setFieldValue("employees_ref", CommonHelper.unserialize(window.getApp().getServVar("employees_ref")) );
 		dlg_m.recInsert();
 		tab_inside.getElement("grid").setInsertViewOptions({

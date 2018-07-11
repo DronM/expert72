@@ -78,12 +78,16 @@ rsync -az -e ssh /var/lib/postgresql/10/main/ postgres@expertiza72.ru:/var/lib/p
 На главном сервере
 sudo apt-get install sshfs
 sudo mkdir /media/rstorage
-sudo sshfs -o allow_other,reconnect,ServerAliveInterval=15,ServerAliveCountMax=4320 andrey@expertiza72.ru:/usr/share/client_files /media/rstorage
+sudo sshfs -o allow_other,reconnect,ServerAliveInterval=15,ServerAliveCountMax=17280 andrey@expertiza72.ru:/usr/share/client_files /media/rstorage
 Настроить скрипт!!!
-mv -f /media/rstorage/Documents/* /media/storage/Documents/
+
+sudo sshfs -o allow_other,reconnect,ServerAliveInterval=15,ServerAliveCountMax=4320 admin@192.168.1.101:/data/backup /mnt/backup
+
 
 на хостинге
 sudo apt-get install sshfs
 sudo mkdir /mnt/rstorage
-sudo sshfs -o allow_other,reconnect,ServerAliveInterval=15,ServerAliveCountMax=4320 andrey@92.255.164.139:/media/storage /mnt/rstorage
-mv -u /usr/share/client_files/Documents/* /mnt/rstorage/Documents/
+sudo sshfs -o allow_other,reconnect,ServerAliveInterval=15,ServerAliveCountMax=17280 andrey@92.255.164.139:/media/storage /mnt/rstorage
+
+
+sudo iptables -D f2b-sshd -s 92.255.164.139/32 -j REJECT --reject-with icmp-port-unreachable

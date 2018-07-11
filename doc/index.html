@@ -206,6 +206,8 @@
 <li><a href="#ShortMessageRecipientCurrentState_Model">ShortMessageRecipientCurrentState_Model</a></li>
 <li><a href="#ShortMessage_Model">ShortMessage_Model</a></li>
 <li><a href="#ShortMessageList_Model">ShortMessageList_Model</a></li>
+<li><a href="#ShortMessageChat_Model">ShortMessageChat_Model</a></li>
+<li><a href="#RecipientPicture_Model">RecipientPicture_Model</a></li>
 <li><a href="#ShortMessageRecipientList_Model">ShortMessageRecipientList_Model</a></li>
 <li><a href="#ReportTemplate_Model">ReportTemplate_Model</a></li>
 <li><a href="#ReportTemplateDialog_Model">ReportTemplateDialog_Model</a></li>
@@ -1772,7 +1774,12 @@
 <a href="#Employee_Model">Model: Employee_Model</a><h2>get_object</h2>
 <a href="#EmployeeDialog_Model">Model: EmployeeDialog_Model</a><h2>get_list</h2>
 <a href="#EmployeeList_Model">Model: EmployeeList_Model</a><h2>complete</h2>
-<a href="#EmployeeList_Model">Model: EmployeeList_Model</a>
+<a href="#EmployeeList_Model">Model: EmployeeList_Model</a><h2>download_picture</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2"></div>
+<h2>delete_picture</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2"></div>
 </div>
 </div>
 <div id="EmployeeLocalList_Controller" class="content_box">
@@ -2486,7 +2493,8 @@
 <h2>send_message</h2>
 <a href="#ShortMessage_Model">Model: ShortMessage_Model</a><h2>get_object</h2>
 <a href="#ShortMessageList_Model">Model: ShortMessageList_Model</a><h2>get_list</h2>
-<a href="#ShortMessageList_Model">Model: ShortMessageList_Model</a><h2>get_recipient_list</h2>
+<a href="#ShortMessageList_Model">Model: ShortMessageList_Model</a><h2>get_chat_list</h2>
+<a href="#ShortMessageChat_Model">Model: ShortMessageChat_Model</a><h2>get_recipient_list</h2>
 <a href="#ShortMessageRecipientList_Model">Model: ShortMessageRecipientList_Model</a><h2>get_unviewed_list</h2>
 <a href="#ShortMessageRecipientList_Model">Model: ShortMessageRecipientList_Model</a><h2>set_recipient_state</h2>
 <p>Arguments:</p>
@@ -2502,6 +2510,25 @@
 <h2>get_recipient_state</h2>
 <p>Arguments:</p>
 <div class="content_item content_item2"></div>
+<h2>download_file</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Нет</p>
+<p>Length:36</p>
+</div>
+<h3>message_id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Нет</p>
+</div>
+</div>
 </div>
 </div>
 <div id="ShortMessageRecipientState_Controller" class="content_box">
@@ -5533,7 +5560,7 @@
 <h2>name</h2>
 <div>Type:String</div>
 <div>Primary key:</div>
-<div>Required:</div>
+<div>Required:TRUE</div>
 <div>Length:200</div>
 <div>Precision:</div>
 <h2>boss_employee_id</h2>
@@ -8905,7 +8932,7 @@
 <h2>name</h2>
 <div>Type:String</div>
 <div>Primary key:</div>
-<div>Required:</div>
+<div>Required:TRUE</div>
 <div>Length:200</div>
 <div>Precision:</div>
 <h2>user_id</h2>
@@ -8922,6 +8949,18 @@
 <div>Precision:</div>
 <h2>post_id</h2>
 <div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>picture</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>picture_info</h2>
+<div>Type:JSON</div>
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>
@@ -9786,6 +9825,18 @@
 <div>Precision:</div>
 </div>
 </div>
+<div id="RecipientPicture_Model" class="content_box">
+<h1>RecipientPicture_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>picture</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
 <div id="Reminder_Model" class="content_box">
 <h1>Reminder_Model</h1>
 <div class="content_item">
@@ -9888,6 +9939,12 @@
 <div>Precision:</div>
 <h2>files</h2>
 <div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>short_message_sender</h2>
+<div>Type:String</div>
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>
@@ -10296,8 +10353,8 @@
 <div>Precision:</div>
 </div>
 </div>
-<div id="ShortMessageList_Model" class="content_box">
-<h1>ShortMessageList_Model</h1>
+<div id="ShortMessageChat_Model" class="content_box">
+<h1>ShortMessageChat_Model</h1>
 <div class="content_item">
 <p>Поля:</p>
 <h2>id</h2>
@@ -10366,8 +10423,74 @@
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
+</div>
+</div>
+<div id="ShortMessageList_Model" class="content_box">
+<h1>ShortMessageList_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:FALSE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>date_time</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>recipients_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>to_recipients_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
 <h2>doc_flow_importance_types_ref</h2>
 <div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>content</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>files</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>recipient_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>to_recipient_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>view_date_time</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>viewed</h2>
+<div>Type:Bool</div>
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>
@@ -11326,6 +11449,8 @@
 <h2>out_mail_to_app</h2>
 <div>Description:</div>
 <h2>contract_state_change</h2>
+<div>Description:</div>
+<h2>app_to_correction</h2>
 <div>Description:</div>
 </div>
 </div>

@@ -1,0 +1,31 @@
+<div id="{{id}}">
+	<!-- Две формы:
+		- для многоадресного сообщения: получатели и сообщение
+		- для одного получателя: переписка и сообщение
+	-->
+	<div class="form-group">
+		<label class="control-label {{bsCol}}2">Кому:</label>
+		{{#recipients}}
+		<span class="mesRecipient">{{#ind}},  {{/ind}}{{recipient}}</span>
+		{{/recipients}}	
+	</div>
+	
+	<!-- Переписка если получатель один сотр-->
+	{{#notMultyRecipients}}
+	<div id="{{id}}:message_list">
+	</div>	
+	{{/notMultyRecipients}}
+	
+	<div id="{{id}}:doc_flow_importance_types_ref">
+	</div>	
+
+	<div id="{{id}}:content"></div>
+	
+	<div id="{{id}}:files"></div>
+	
+	<div id="{{id}}:cmd-cont">
+		<div id="{{id}}:cmdOk" options="{'glyph':'glyphicon-send','caption':'Отправить '}" title="Отправить сообщение {{#multyRecipients}}получателям{{/multyRecipients}}{{#notMultyRecipients}}получателяю{{/notMultyRecipients}}"></div>
+		<div id="{{id}}:cmdCancel"></div>
+	</div>
+	
+</div>	

@@ -46,7 +46,7 @@ extend(Department_Controller,ControllerObjServer);
 	pm.addField(field);
 	
 	var options = {};
-	
+	options.required = true;
 	var field = new FieldString("name",options);
 	
 	pm.addField(field);

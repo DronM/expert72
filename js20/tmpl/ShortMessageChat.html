@@ -1,0 +1,35 @@
+<ul class="media-list chatMessageList">
+	{{#rows}}
+	{{#newDay}}
+	<span class="messageNewDay badger bg-info">{{newDay}}
+	</span>
+	{{/newDay}}
+	<li class="media chatMessage chatMessage{{messageType}}">
+		<div class="media-body">
+			{{#pic}}
+			<span class="media-annotation pull-left" style="margin-right:10px;">
+				<img src="data:image/png;base64,{{pic}}" height="50" width="50">
+				</img>
+			</span>
+			{{/pic}}
+			<div class="text-muted">Создано:{{time}}
+			</div>		
+			{{#viewTime}}
+			<div class="text-muted">Прочитано:{{viewTime}}
+			</div>
+			{{/viewTime}}
+			{{#importance}}
+			<div class="text-muted">Важность:{{importance}}
+			</div>		
+			{{/importance}}
+			
+			<div>{{content}}
+			</div>
+			{{#files}}
+			{{#ind}}, {{/ind}}<a id="{{file_id}}" message_id="{{message_id}}" href="#" class="chat_attachment">{{file_name}}({{file_size_formatted}})
+			</a>
+			{{/files}}
+		</div>
+	</li>
+	{{/rows}}
+</ul>

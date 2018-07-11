@@ -27,10 +27,12 @@ function ShortMessage_Controller(options){
 	this.add_send_message();
 	this.addGetObject();
 	this.addGetList();
+	this.add_get_chat_list();
 	this.add_get_recipient_list();
 	this.add_get_unviewed_list();
 	this.add_set_recipient_state();
 	this.add_get_recipient_state();
+	this.add_download_file();
 		
 }
 extend(ShortMessage_Controller,ControllerObjServer);
@@ -137,15 +139,28 @@ extend(ShortMessage_Controller,ControllerObjServer);
 	var f_opts = {};
 	
 	pm.addField(new FieldBool("viewed",f_opts));
-	var f_opts = {};
-	
-	pm.addField(new FieldJSON("doc_flow_importance_types_ref",f_opts));
 		var options = {};
 		
 			options.required = true;
 						
 		pm.addField(new FieldInt("to_recipient_id",options));
 	
+}
+
+			ShortMessage_Controller.prototype.add_get_chat_list = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('get_chat_list',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("to_recipient_id",options));
+	
+			
+	this.addPublicMethod(pm);
 }
 
 			ShortMessage_Controller.prototype.add_get_recipient_list = function(){
@@ -200,6 +215,28 @@ extend(ShortMessage_Controller,ControllerObjServer);
 	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('get_recipient_state',opts);
 	
+	this.addPublicMethod(pm);
+}
+
+			ShortMessage_Controller.prototype.add_download_file = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('download_file',opts);
+	
+				
+	
+	var options = {};
+	
+		options.maxlength = "36";
+	
+		pm.addField(new FieldString("id",options));
+	
+				
+	
+	var options = {};
+	
+		pm.addField(new FieldInt("message_id",options));
+	
+			
 	this.addPublicMethod(pm);
 }
 

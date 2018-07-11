@@ -2,7 +2,7 @@
 <metadata owner="expert72">
 	<versions>
 		<version dateOpen="2017-09-27 12:09:48" dateClose="2017-12-08 10:12:08">1.001 
-		<lastBuild>2018-07-07 10:00:04</lastBuild></version>
+		<lastBuild>2018-07-11 06:43:21</lastBuild></version>
 		<version dateOpen="2017-12-08 11:12:01" dateClose="2017-12-08 11:12:04">1.002</version>
 		<version dateOpen="2017-12-08 11:12:20" dateClose="2017-12-08 11:12:20">1.0.3</version>
 		<version dateOpen="2017-12-12 11:12:07" dateClose="2017-12-12 11:12:07">1.0.4</version>
@@ -63,6 +63,8 @@
 		<version dateOpen="2018-07-06 07:07:55" dateClose="2018-07-06 15:07:34">1.0.59</version>
 		<version dateOpen="2018-07-06 17:07:13" dateClose="2018-07-07 08:07:39">1.0.60</version>
 		<version dateOpen="2018-07-07 10:07:06" dateClose="2018-07-07 10:07:06">1.0.61</version>
+		<version dateOpen="2018-07-09 06:07:30" dateClose="2018-07-09 15:07:11">1.0.62</version>
+		<version dateOpen="2018-07-11 06:07:40" dateClose="2018-07-11 06:07:43">1.0.63</version>
 	</versions>
 	<globalFilters>
 		<field id="user_id"/>
@@ -121,6 +123,9 @@
 			</value>
 			<value id="contract_state_change">
 				<ru descr="&#x421;&#x43C;&#x435;&#x43D;&#x430; &#x441;&#x442;&#x430;&#x442;&#x443;&#x441;&#x430; &#x43A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x430;"/>
+			</value>
+			<value id="app_to_correction">
+				<ru descr="&#x412;&#x43E;&#x437;&#x432;&#x440;&#x430;&#x442; &#x437;&#x430;&#x44F;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x44F; &#x43D;&#x430; &#x43A;&#x43E;&#x440;&#x440;&#x435;&#x43A;&#x442;&#x438;&#x440;&#x43E;&#x432;&#x43A;&#x443;"/>
 			</value>
 		</enum>
 		<enum id="client_types" descr="&#x422;&#x438;&#x43F; &#x43A;&#x43B;&#x438;&#x435;&#x43D;&#x442;&#x430;">
@@ -1146,7 +1151,7 @@
 				<field id="name"/>
 			</defaultOrder>
 			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE" required="FALSE"/>
-			<field id="name" dataType="String" length="200"/>
+			<field id="name" dataType="String" length="200" required="TRUE"/>
 			<field id="boss_employee_id" dataType="Int" refTable="employees" refField="id"/>
 			<field id="email" dataType="String" length="50"/>
 			<index unique="TRUE" id="departments_name_idx">
@@ -1189,10 +1194,12 @@
 				<field id="name"/>
 			</defaultOrder>
 			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE" required="FALSE"/>
-			<field id="name" dataType="String" length="200"/>
+			<field id="name" dataType="String" length="200" required="TRUE"/>
 			<field id="user_id" dataType="Int" refTable="users" refField="id"/>
 			<field id="department_id" dataType="Int" refTable="departments" refField="id"/>
 			<field id="post_id" dataType="Int" refTable="posts" refField="id"/>
+			<field id="picture" dataType="Text"/>
+			<field id="picture_info" dataType="JSON"/>
 			<index unique="TRUE" id="employes_name_idx">
 				<expression>lower(name)</expression>
 			</index>
@@ -1699,6 +1706,7 @@
 			<field id="docs_ref" dataType="JSON"/>
 			<field id="doc_flow_importance_types_ref" dataType="JSON"/>
 			<field id="files" dataType="JSON"/>
+			<field id="short_message_sender" dataType="String"/>
 		</model>
 		<model id="DocFlowAcqaintance" parent="ModelSQL" dataTable="&#x438;" virtual="FALSE">
 			<defaultOrder>
@@ -2116,7 +2124,7 @@
 				<field id="date_time"/>
 			</index>
 		</model>
-		<model id="ShortMessageList" parent="ModelSQL" dataTable="short_messages_list" virtual="FALSE">
+		<model id="ShortMessageList" parent="ModelSQL" dataTable="short_messages_list" virtual="TRUE">
 			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE" required="FALSE"/>
 			<field id="date_time" dataType="DateTimeTZ" defaultValue="CURRENT_TIMESTAMP"/>
 			<field id="recipients_ref" dataType="JSON"/>
@@ -2128,7 +2136,22 @@
 			<field id="to_recipient_id" dataType="Int"/>
 			<field id="view_date_time" dataType="DateTimeTZ"/>
 			<field id="viewed" dataType="Bool"/>
+		</model>
+		<model id="ShortMessageChat" parent="ModelSQL" virtual="TRUE">
+			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE" required="FALSE"/>
+			<field id="date_time" dataType="DateTimeTZ" defaultValue="CURRENT_TIMESTAMP"/>
+			<field id="recipients_ref" dataType="JSON"/>
+			<field id="to_recipients_ref" dataType="JSON"/>
 			<field id="doc_flow_importance_types_ref" dataType="JSON"/>
+			<field id="content" dataType="Text"/>
+			<field id="files" dataType="JSON"/>
+			<field id="recipient_id" dataType="Int"/>
+			<field id="to_recipient_id" dataType="Int"/>
+			<field id="view_date_time" dataType="DateTimeTZ"/>
+			<field id="viewed" dataType="Bool"/>
+		</model>
+		<model id="RecipientPicture" parent="ModelSQL" virtual="TRUE">
+			<field id="picture" dataType="Text"/>
 		</model>
 		<model id="ShortMessageRecipientList" parent="ModelSQL" dataTable="short_message_recipient_list" virtual="TRUE">
 			<field id="recipient_id" dataType="Int"/>
@@ -3061,12 +3084,18 @@
 			<publicMethod id="complete" patternFieldId="id" modelId="DepartmentList"/>
 		</controller>
 		<controller id="Employee" parentId="ControllerSQL">
-			<publicMethod id="insert" modelId="Employee"/>
-			<publicMethod id="update" modelId="Employee"/>
+			<publicMethod id="insert" modelId="Employee" encType="multipart" requestType="post">
+				<field id="picture_file" dataType="Text"/>
+			</publicMethod>
+			<publicMethod id="update" modelId="Employee" encType="multipart" requestType="post">
+				<field id="picture_file" dataType="Text"/>
+			</publicMethod>
 			<publicMethod id="delete" modelId="Employee"/>
 			<publicMethod id="get_object" modelId="EmployeeDialog"/>
 			<publicMethod id="get_list" modelId="EmployeeList"/>
 			<publicMethod id="complete" patternFieldId="name" modelId="EmployeeList"/>
+			<publicMethod id="download_picture"/>
+			<publicMethod id="delete_picture"/>
 		</controller>
 		<controller id="DocFlowType" parentId="ControllerSQL">
 			<publicMethod id="insert" modelId="DocFlowType"/>
@@ -3477,12 +3506,19 @@
 			<publicMethod id="get_list" modelId="ShortMessageList">
 				<field id="to_recipient_id" dataType="Int" required="true"/>
 			</publicMethod>
+			<publicMethod id="get_chat_list" modelId="ShortMessageChat">
+				<field id="to_recipient_id" dataType="Int" required="true"/>
+			</publicMethod>
 			<publicMethod id="get_recipient_list" modelId="ShortMessageRecipientList" condFields="TRUE"/>
 			<publicMethod id="get_unviewed_list" modelId="ShortMessageRecipientList" condFields="TRUE"/>
 			<publicMethod id="set_recipient_state">
 				<field id="recipient_state_id" dataType="Int"/>
 			</publicMethod>
 			<publicMethod id="get_recipient_state"/>
+			<publicMethod id="download_file">
+				<field id="id" dataType="String" length="36"/>
+				<field id="message_id" dataType="Int"/>
+			</publicMethod>
 		</controller>
 	</controllers>
 	<permissions>
@@ -3670,6 +3706,7 @@
 		<jsTemplate id="WorkHoursEdit" file="tmpl/WorkHoursEdit.html"/>
 		<jsTemplate id="Doc1c" file="tmpl/Doc1c.html"/>
 		<jsTemplate id="ShortMessage" file="tmpl/ShortMessage.html"/>
+		<jsTemplate id="ShortMessageChat" file="tmpl/ShortMessageChat.html"/>
 	</jsTemplates>
 	<packages>
 		<package id="Bank" version="1.0.0" author="Andrey Mikhalevich"/>
@@ -4179,7 +4216,7 @@
 		<jsScript file="views/ApplicationDocFolderList_View.js"/>
 		<jsScript file="views/DocFolder_View.js"/>
 		<jsScript file="views/ShortMessage_View.js"/>
-		<jsScript file="views/ShortMessageList_View.js"/>
+		<jsScript file="views/ShortMessageChat_View.js"/>
 		<jsScript file="tmpl/App.templates.js" compressed="FALSE" standalone="FALSE"/>
 		<jsScript file="custom_controls/App.enums.js"/>
 		<jsScript file="custom_controls/App.predefinedItems.js"/>
@@ -4544,6 +4581,8 @@
 		<jsScript file="controllers/EmployeeLocalList_Controller.js"/>
 		<jsScript file="models/EmployeeLocalList_Model.js"/>
 		<jsScript file="models/ApplicationCorrection_Model.js"/>
+		<jsScript file="models/ShortMessageChat_Model.js"/>
+		<jsScript file="models/RecipientPicture_Model.js"/>
 	</jsScripts>
 	<cssScripts>
 		<cssScript file="assets/css/icons/icomoon/styles.css" compressed="TRUE" standalone="TRUE"/>

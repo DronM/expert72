@@ -33,6 +33,13 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		parent::insert($pm);
 	}
 
+	public function delete($pm){
+		if ($_SESSION['role_id']!='admin'){
+			throw new Exception('Статусы удалять может только администратор!');
+		}
+		parent::delete($pm);
+	}
+
 </xsl:template>
 
 </xsl:stylesheet>

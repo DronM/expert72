@@ -576,6 +576,13 @@ class User_Controller extends ControllerSQL{
 			$filter->addField($field,'=');
 			GlobalFilter::set('Reminder_Model',$filter);
 			
+			
+			$model = new ShortMessageRecipientList_Model($this->getDbLink());
+			$filter = new ModelWhereSQL();
+			$field = clone $model->getFieldById('recipient_id');
+			$field->setValue($_SESSION['global_employee_id']);
+			$filter->addField($field,'<>');
+			GlobalFilter::set('ShortMessageRecipientList_Model',$filter);
 		}
 		
 		$log_ar = $this->getDbLinkMaster()->query_first(

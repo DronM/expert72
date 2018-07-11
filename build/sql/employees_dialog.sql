@@ -1,10 +1,12 @@
 -- VIEW: employees_dialog
 
---DROP VIEW {{DB_SCHEMA}}.employees_dialog;
+DROP VIEW {{DB_SCHEMA}}.employees_dialog;
 
 CREATE OR REPLACE VIEW {{DB_SCHEMA}}.employees_dialog AS
 	SELECT
-		t.*
+		t.id
+		,t.name
+		,t.picture_info
 		,{{DB_SCHEMA}}.users_ref(users_join) AS users_ref
 		,{{DB_SCHEMA}}.posts_ref(posts_join) AS posts_ref
 		,{{DB_SCHEMA}}.departments_ref(departments_join) AS departments_ref

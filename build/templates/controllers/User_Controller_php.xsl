@@ -165,6 +165,13 @@ class <xsl:value-of select="@id"/>_Controller extends ControllerSQL{
 			$filter->addField($field,'=');
 			GlobalFilter::set('<xsl:value-of select="$model_id"/>',$filter);
 			</xsl:for-each>
+			
+			$model = new ShortMessageRecipientList_Model($this->getDbLink());
+			$filter = new ModelWhereSQL();
+			$field = clone $model->getFieldById('recipient_id');
+			$field->setValue($_SESSION['global_employee_id']);
+			$filter->addField($field,'&lt;&gt;');
+			GlobalFilter::set('ShortMessageRecipientList_Model',$filter);
 		}
 		
 		$log_ar = $this->getDbLinkMaster()->query_first(

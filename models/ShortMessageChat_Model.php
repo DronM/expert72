@@ -13,14 +13,14 @@ require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLBool.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLDateTimeTZ.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLJSON.php');
  
-class ShortMessageList_Model extends ModelSQL{
+class ShortMessageChat_Model extends ModelSQL{
 	
 	public function __construct($dbLink){
 		parent::__construct($dbLink);
 		
 		$this->setDbName("");
 		
-		$this->setTableName("short_messages_list");
+		$this->setTableName("");
 			
 		//*** Field id ***
 		$f_opts = array();

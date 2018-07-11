@@ -44,9 +44,15 @@ Reminder.prototype.check = function(){
 				var tp_ref = m.getFieldValue("doc_flow_importance_types_ref");
 				//common importance
 				var com_imp = (tp_ref.isNull()||tp_ref.getKey("id")==window.getApp().getPredefinedItem("doc_flow_importance_types","common").getKey("id"));
+				var sender = m.getFieldValue("short_message_sender");
+				var cont = m.getFieldValue("content");
+				if (sender){
+					cont = sender+": "+cont;
+				}
+				
 				window.showMsg(
 					com_imp? WindowMessage.prototype.TP_INFO : WindowMessage.prototype.TP_ER,
-					{"value":m.getFieldValue("content"),
+					{"value":cont,
 					/*
 					"addElement":function(){
 						if (!com_imp){

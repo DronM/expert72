@@ -192,8 +192,12 @@ class Reminder_Controller extends ControllerSQL{
 				r.content,
 				r.docs_ref,
 				doc_flow_importance_types_ref(tp) AS doc_flow_importance_types_ref,
-				r.files
+				r.files,
+				emp.name AS short_message_sender
 			FROM reminders AS r
+			LEFT JOIN short_messages AS ms ON
+				r.register_docs_ref->>'dataType'='short_messages' AND (r.register_docs_ref->'keys'->>'id')::int=ms.id
+			LEFT JOIN employees AS emp ON emp.id=ms.recipient_id
 			LEFT JOIN doc_flow_importance_types AS tp ON tp.id=r.doc_flow_importance_type_id
 			WHERE
 				r.recipient_employee_id=%d

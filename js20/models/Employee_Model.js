@@ -42,6 +42,7 @@ function Employee_Model(options){
 	filed_options.autoInc = false;	
 	
 	options.fields.name = new FieldString("name",filed_options);
+	options.fields.name.getValidator().setRequired(true);
 	options.fields.name.getValidator().setMaxLength('200');
 	
 				
@@ -70,6 +71,24 @@ function Employee_Model(options){
 	filed_options.autoInc = false;	
 	
 	options.fields.post_id = new FieldInt("post_id",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.picture = new FieldText("picture",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.picture_info = new FieldJSON("picture_info",filed_options);
 	
 			
 			

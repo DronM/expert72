@@ -16,8 +16,8 @@
  * @param {Object} options
  */
 
-function ShortMessageList_Model(options){
-	var id = 'ShortMessageList_Model';
+function ShortMessageChat_Model(options){
+	var id = 'ShortMessageChat_Model';
 	options = options || {};
 	
 	options.fields = {};
@@ -122,7 +122,7 @@ function ShortMessageList_Model(options){
 	
 	options.fields.viewed = new FieldBool("viewed",filed_options);
 	
-		ShortMessageList_Model.superclass.constructor.call(this,id,options);
+		ShortMessageChat_Model.superclass.constructor.call(this,id,options);
 }
-extend(ShortMessageList_Model,ModelXML);
+extend(ShortMessageChat_Model,ModelXML);
 

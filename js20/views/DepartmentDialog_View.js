@@ -22,8 +22,9 @@ function DepartmentDialog_View(id,options){
 	
 	options.addElement = function(){
 		this.addElement(new EditString(id+":name",{
-								"labelCaption":this.FIELD_CAP_name
-							}));	
+			"labelCaption":this.FIELD_CAP_name,
+			"required":true
+		}));	
 		this.addElement(new EditEmail(id+":email",{
 								"labelCaption":"Эл.почта:",
 								"maxLength":50

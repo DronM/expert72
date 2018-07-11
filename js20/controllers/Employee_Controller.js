@@ -30,6 +30,8 @@ function Employee_Controller(options){
 	this.addGetObject();
 	this.addGetList();
 	this.addComplete();
+	this.add_download_picture();
+	this.add_delete_picture();
 		
 }
 extend(Employee_Controller,ControllerObjServer);
@@ -39,6 +41,10 @@ extend(Employee_Controller,ControllerObjServer);
 	
 	var pm = this.getInsert();
 	
+	pm.setRequestType('post');
+	
+	pm.setEncType(ServConnector.prototype.ENCTYPES.MULTIPART);
+	
 	var options = {};
 	options.primaryKey = true;options.autoInc = true;
 	var field = new FieldInt("id",options);
@@ -46,7 +52,7 @@ extend(Employee_Controller,ControllerObjServer);
 	pm.addField(field);
 	
 	var options = {};
-	
+	options.required = true;
 	var field = new FieldString("name",options);
 	
 	pm.addField(field);
@@ -69,7 +75,23 @@ extend(Employee_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	
+	var field = new FieldText("picture",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldJSON("picture_info",options);
+	
+	pm.addField(field);
+	
 	pm.addField(new FieldInt("ret_id",{}));
+	
+		var options = {};
+				
+		pm.addField(new FieldText("picture_file",options));
 	
 	
 }
@@ -77,6 +99,10 @@ extend(Employee_Controller,ControllerObjServer);
 			Employee_Controller.prototype.addUpdate = function(){
 	Employee_Controller.superclass.addUpdate.call(this);
 	var pm = this.getUpdate();
+	
+	pm.setRequestType('post');
+	
+	pm.setEncType(ServConnector.prototype.ENCTYPES.MULTIPART);
 	
 	var options = {};
 	options.primaryKey = true;options.autoInc = true;
@@ -110,6 +136,22 @@ extend(Employee_Controller,ControllerObjServer);
 	var field = new FieldInt("post_id",options);
 	
 	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldText("picture",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldJSON("picture_info",options);
+	
+	pm.addField(field);
+	
+		var options = {};
+				
+		pm.addField(new FieldText("picture_file",options));
 	
 	
 }
@@ -164,6 +206,12 @@ extend(Employee_Controller,ControllerObjServer);
 	var f_opts = {};
 	
 	pm.addField(new FieldInt("post_id",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldText("picture",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldJSON("picture_info",f_opts));
 	pm.getField(this.PARAM_ORD_FIELDS).setValue("name");
 	
 }
@@ -176,6 +224,20 @@ extend(Employee_Controller,ControllerObjServer);
 	var pm = this.getComplete();
 	pm.addField(new FieldString("name",f_opts));
 	pm.getField(this.PARAM_ORD_FIELDS).setValue("name");	
+}
+
+			Employee_Controller.prototype.add_download_picture = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('download_picture',opts);
+	
+	this.addPublicMethod(pm);
+}
+
+			Employee_Controller.prototype.add_delete_picture = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('delete_picture',opts);
+	
+	this.addPublicMethod(pm);
 }
 
 		

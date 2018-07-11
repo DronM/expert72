@@ -9,6 +9,7 @@
 require_once(FRAME_WORK_PATH.'basic_classes/ModelSQL.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLInt.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLString.php');
+require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLText.php');
 require_once(FRAME_WORK_PATH.'basic_classes/ModelOrderSQL.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLJSON.php');
  
@@ -62,6 +63,22 @@ class EmployeeList_Model extends ModelSQL{
 				
 		$f_post_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"post_id",$f_opts);
 		$this->addField($f_post_id);
+		//********************
+		
+		//*** Field picture ***
+		$f_opts = array();
+		$f_opts['id']="picture";
+				
+		$f_picture=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"picture",$f_opts);
+		$this->addField($f_picture);
+		//********************
+		
+		//*** Field picture_info ***
+		$f_opts = array();
+		$f_opts['id']="picture_info";
+				
+		$f_picture_info=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"picture_info",$f_opts);
+		$this->addField($f_picture_info);
 		//********************
 		
 		//*** Field departments_ref ***

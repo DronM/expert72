@@ -432,6 +432,10 @@ $permissions = array();
 				
 					$permissions['Employee_Controller_complete']=TRUE;
 				
+					$permissions['Employee_Controller_download_picture']=TRUE;
+				
+					$permissions['Employee_Controller_delete_picture']=TRUE;
+				
 					$permissions['DocFlowType_Controller_insert']=TRUE;
 				
 					$permissions['DocFlowType_Controller_update']=TRUE;
@@ -856,6 +860,8 @@ $permissions = array();
 				
 					$permissions['ShortMessage_Controller_get_list']=TRUE;
 				
+					$permissions['ShortMessage_Controller_get_chat_list']=TRUE;
+				
 					$permissions['ShortMessage_Controller_get_recipient_list']=TRUE;
 				
 					$permissions['ShortMessage_Controller_get_unviewed_list']=TRUE;
@@ -863,6 +869,8 @@ $permissions = array();
 					$permissions['ShortMessage_Controller_set_recipient_state']=TRUE;
 				
 					$permissions['ShortMessage_Controller_get_recipient_state']=TRUE;
+				
+					$permissions['ShortMessage_Controller_download_file']=TRUE;
 				
 return array_key_exists($contrId.'_'.$methId,$permissions);
 }

@@ -476,26 +476,26 @@ function ApplicationDialog_View(id,options){
 								(frm_cmd=="insert"||frm_cmd=="copy")? self.m_controller.METH_INSERT:self.m_controller.METH_UPDATE
 							)
 							pm.setFieldValue("set_sent",true);
-							var f_fail = function(resp,errCode,errStr){
-								pm.setFieldValue("set_sent",false);
-								self.setError(window.getApp().formatError(errCode,errStr));
-								self.setTempEnabled(self.CMD_OK);
-								self.getElement("cmdSend").setEnabled(true);
-								self.getControlOK().setEnabled(true);								
-							}				
-							//if (!self.getModified()){
-								pm.setFieldValue("old_id",self.getElement("id").getValue());
-								pm.run({
-									"async":false,
-									"ok":function(){
+							pm.setFieldValue("old_id",self.getElement("id").getValue());
+							self.onSave(
+								function(){
 										self.close({"updated":true});
 									},
-									"fail":f_fail
-								});
-							/*}
-							else{
-								self.onOK(f_fail);
-							}*/
+								function(resp,errCode,errStr){
+									pm.setFieldValue("set_sent",false);
+									self.setError(window.getApp().formatError(errCode,errStr));
+									self.setTempEnabled(self.CMD_OK);
+									self.getElement("cmdSend").setEnabled(true);
+									self.getControlOK().setEnabled(true);								
+								}
+							);
+							/*
+							pm.run({
+								"async":false,
+								"ok":,
+								"fail":f_fail
+							});
+							*/
 						}
 					}
 				});

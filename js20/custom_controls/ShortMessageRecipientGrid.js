@@ -135,7 +135,7 @@ function ShortMessageRecipientGrid(id,options){
 			{"countPerPage":"100"}),		
 		*/
 		"autoRefresh":true,
-		//"refreshInterval":5000,
+		"refreshInterval":5000,
 		"rowSelect":false,
 		"focus":true,
 		"filters":null
@@ -239,6 +239,7 @@ ShortMessageRecipientGrid.prototype.openMessageForm = function(rowFields){
 	});
 	this.m_form = new WindowFormModalBS(this.getId()+":form",{
 		"cmdCancel":false,
+		"cmdClose":true,
 		"cmdOk":false,
 		"content":this.m_view,
 		"contentHead":"Новое сообщение"

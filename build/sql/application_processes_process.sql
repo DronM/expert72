@@ -60,7 +60,7 @@ BEGIN
 			END LOOP;
 			--*** Contacts ***************
 		
-			-- Если отправка из статуса correcting то уведомление отедлу приема
+			-- Если отправка из статуса correcting то уведомление отделу приема
 			--RAISE EXCEPTION 'main_lk STate=%',v_application_state;
 			IF v_application_state = 'correcting' THEN
 				--все поля из рассмотрения, которое должно быть с прошлой отправки

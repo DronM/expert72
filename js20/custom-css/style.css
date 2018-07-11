@@ -350,3 +350,28 @@ table,tr,td.noBorder{
 .chainDoc{
 	max-width:120px;
 }
+
+.chatMessageList{
+    max-height: 350px;
+    overflow-y: auto;
+    width:500px;
+}	
+.chatMessage{
+	border:1px solid black;
+	margin-bottom:20px;
+	padding:20px 20px;
+	border-radius: 25px;
+}
+
+.chatMessageFromMe{
+	background-color:#42f4f4;
+	width:380px;
+	margin-left:100px;
+}
+.chatMessageToMe{
+	background-color:#f4dc41;
+	width:380px;
+}
+.messageNewDay{
+	margin: 0 auto;
+}

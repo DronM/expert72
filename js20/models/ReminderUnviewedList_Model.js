@@ -77,6 +77,15 @@ function ReminderUnviewedList_Model(options){
 	
 	options.fields.files = new FieldJSON("files",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.short_message_sender = new FieldString("short_message_sender",filed_options);
+	
 		ReminderUnviewedList_Model.superclass.constructor.call(this,id,options);
 }
 extend(ReminderUnviewedList_Model,ModelXML);

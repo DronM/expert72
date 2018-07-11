@@ -23,7 +23,12 @@ require_once(FRAME_WORK_PATH.'basic_classes/FieldExtXML.php');
 
 
 
+require_once('common/downloader.php');
+
 class ShortMessage_Controller extends ControllerSQL{
+
+	const ER_WRONG_DOC = 'Документ не найден!';
+
 	public function __construct($dbLinkMaster=NULL,$dbLink=NULL){
 		parent::__construct($dbLinkMaster,$dbLink);
 			
@@ -89,6 +94,17 @@ class ShortMessage_Controller extends ControllerSQL{
 		$this->setListModelId('ShortMessageList_Model');
 		
 			
+		$pm = new PublicMethod('get_chat_list');
+		
+				
+	$opts=array();
+			
+		$pm->addParam(new FieldExtInt('to_recipient_id',$opts));
+	
+			
+		$this->addPublicMethod($pm);
+
+			
 		$pm = new PublicMethod('get_recipient_list');
 		
 		$pm->addParam(new FieldExtInt('count'));
@@ -134,12 +150,38 @@ class ShortMessage_Controller extends ControllerSQL{
 		
 		$this->addPublicMethod($pm);
 
+			
+		$pm = new PublicMethod('download_file');
+		
+				
+	$opts=array();
+	
+		$opts['length']=36;				
+		$pm->addParam(new FieldExtString('id',$opts));
+	
+				
+	$opts=array();
+					
+		$pm->addParam(new FieldExtInt('message_id',$opts));
+	
+			
+		$this->addPublicMethod($pm);
+
 		
 	}	
 	
 
 	public function get_recipient_list($pm){
 		$list_model = new ShortMessageRecipientList_Model($this->getDbLink());
+		//$pm->setParamValue('count',500);	
+		/*
+		$val = $pm->getParamValue('cond_fields');
+		if (isset($val) && $val!=''){
+		}
+		else{
+			$pm->setParamValue('cond_fields','re');	
+		}
+		*/
 		$this->modelGetList($list_model,$pm);
 	}
 	
@@ -217,14 +259,17 @@ class ShortMessage_Controller extends ControllerSQL{
 				){
 					throw new Exception('Ошибка загрузки файла '.$_FILES['files']['name'][$i]);
 				}
-				$file_o = new stdClass();
-				$file_o->file_name = $_FILES['files']['name'][$i];
-				$file_o->file_size = $_FILES['files']['size'][$i];
-				$file_o->file_id = $file_id;
-				array_push($files,$file_o);
+				array_push(
+					$files,
+					array(
+						'file_name'=>$_FILES['files']['name'][$i],
+						'file_size' => $_FILES['files']['size'][$i],
+						'file_id' => $file_id
+					)
+				);
 			}
 			if (count($files)){
-				$files_str = json_encode($files);
+				$files_str = "'".json_encode($files)."'";
 			}
 			
 		}
@@ -285,6 +330,118 @@ class ShortMessage_Controller extends ControllerSQL{
 		}
 		catch(Exception $e){
 			$this->getDbLinkMaster()->query("ROLLBACK");
+			throw $e;
+		}
+	}
+	
+	public function get_object($pm){
+		parent::get_object($pm);
+		
+		$e_id = intval(json_decode($_SESSION['employees_ref'])->keys->id);
+		
+		$this->addNewModel(
+			sprintf(
+			"WITH
+				base_m AS (SELECT
+						 recipient_id,
+						to_recipient_id
+					FROM short_messages WHERE id=%d AND (recipient_id=%d OR to_recipient_id=%d))
+			SELECT *
+			FROM short_messages_list
+			WHERE
+				(recipient_id=(SELECT base_m.recipient_id FROM base_m) AND to_recipient_id=(SELECT base_m.to_recipient_id FROM base_m))
+				OR
+				(recipient_id=(SELECT base_m.to_recipient_id FROM base_m) AND to_recipient_id=(SELECT base_m.recipient_id FROM base_m))
+			",
+			$this->getExtDbVal($pm,"id"),
+			$e_id,$e_id
+			),
+		"ShortMessageChat_Model");
+
+		$this->addNewModel(
+			sprintf(
+			"SELECT encode(employees.picture , 'base64') AS picture
+			FROM employees
+			WHERE employees.id=(SELECT t.to_recipient_id FROM short_messages AS t WHERE t.id=%d)",
+			$this->getExtDbVal($pm,"id")
+			),
+		"RecipientPicture_Model");
+		
+	}
+	
+	public function get_chat_list($pm){
+		$this->addNewModel(
+			sprintf(
+			"WITH
+				base_m AS (SELECT
+						%d AS recipient_id,
+						%d AS to_recipient_id
+				)
+			SELECT *
+			FROM short_messages_list
+			WHERE
+				(recipient_id=(SELECT base_m.recipient_id FROM base_m) AND to_recipient_id=(SELECT base_m.to_recipient_id FROM base_m))
+				OR
+				(recipient_id=(SELECT base_m.to_recipient_id FROM base_m) AND to_recipient_id=(SELECT base_m.recipient_id FROM base_m))
+			",
+			intval(json_decode($_SESSION['employees_ref'])->keys->id),
+			$this->getExtDbVal($pm,"to_recipient_id")
+			),
+		"ShortMessageChat_Model");
+		
+		$this->addNewModel(
+			sprintf(
+			"SELECT encode(employees.picture , 'base64') AS picture
+			FROM employees
+			WHERE employees.id=%d",
+			$this->getExtDbVal($pm,"to_recipient_id")
+			),
+		"RecipientPicture_Model");
+	
+	}
+	
+	public function download_file($pm){
+		$empl_id = intval(json_decode($_SESSION['employees_ref'])->keys->id);
+		$file_id = $this->getExtVal($pm,"id");
+		
+		try{
+			$ar = $this->getDbLink()->query_first(sprintf(
+				"SELECT
+					reminders.files
+				FROM short_messages
+				LEFT JOIN reminders ON
+					reminders.register_docs_ref->>'dataType'='short_messages'
+					AND (reminders.register_docs_ref->'keys'->>'id')::int=short_messages.id
+				WHERE short_messages.id=%d AND (short_messages.recipient_id=%d OR short_messages.to_recipient_id=%d)
+				LIMIT 1",
+				$this->getExtDbVal($pm,"message_id"),
+				$empl_id,$empl_id
+			));
+			if (!count($ar)){
+				throw new Exception(self::ER_WRONG_DOC);
+			}
+		
+			$files = json_decode($ar['files']);
+			$file_found = FALSE;
+			foreach($files as $f){
+				if ($f->file_id==$file_id){
+					$file_found = TRUE;
+					$file_name = $f->file_name;
+					break;
+				}
+			}
+		
+			if (!$file_found || !file_exists($fl=DOC_FLOW_FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$file_id)){
+				throw new Exception(self::ER_WRONG_DOC);
+			}
+			
+			$mime = getMimeTypeOnExt($file_name);
+			ob_clean();
+			downloadFile($fl, $mime,'attachment;',$file_name);
+			return TRUE;
+		}
+		catch(Exception $e){
+			$this->setHeaderStatus(400);
 			throw $e;
 		}
 	}

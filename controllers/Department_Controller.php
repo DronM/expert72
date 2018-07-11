@@ -30,7 +30,7 @@ class Department_Controller extends ControllerSQL{
 		/* insert */
 		$pm = new PublicMethod('insert');
 		$param = new FieldExtString('name'
-				,array());
+				,array('required'=>TRUE));
 		$pm->addParam($param);
 		$param = new FieldExtInt('boss_employee_id'
 				,array());

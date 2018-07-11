@@ -20,6 +20,7 @@ CREATE OR REPLACE VIEW short_messages_list AS
 	LEFT JOIN doc_flow_importance_types AS tp ON tp.id=rem.doc_flow_importance_type_id
 	LEFT JOIN employees AS e ON e.id=m.recipient_id
 	LEFT JOIN employees AS to_e ON to_e.id=m.to_recipient_id
+	ORDER BY m.date_time
 	;
 	
 ALTER VIEW short_messages_list OWNER TO ;
