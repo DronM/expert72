@@ -90,8 +90,6 @@ ShortMessageChat_View.prototype.renderData = function(modelChat,modelPicture){
 			"importance":(imp_ref.getKey("id")!=window.getApp().getPredefinedItem("doc_flow_importance_types","common").getKey("id"))? imp_ref.getDescr():null,
 			"files":files
 		});
-		if (prev_dt)
-			console.log("prev_dt="+prev_dt.getTime()+" dt="+dt_comp.getTime())
 		prev_dt = dt_comp;
 		
 		this.m_renderedCnt+=1;

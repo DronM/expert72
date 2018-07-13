@@ -1,3 +1,27 @@
+
+-- ******************* update 12/07/2018 12:04:48 ******************
+﻿-- Function: doc_flow_out_next_num(int)
+
+-- DROP FUNCTION doc_flow_out_next_num(int);
+
+CREATE OR REPLACE FUNCTION doc_flow_out_next_num(int)
+  RETURNS text AS
+$$
+	WITH
+		pref AS (SELECT num_prefix AS n FROM doc_flow_types WHERE id = $1)
+	SELECT
+		(SELECT n FROM pref) || (coalesce(max(
+			REGEXP_REPLACE(substr(reg_number,length((SELECT n FROM pref))+1), '[^0-9]+', '', 'g') ::int),
+			0)+1)::text
+	FROM doc_flow_out
+	WHERE substr(reg_number,1,length((SELECT n FROM pref)))=(SELECT n FROM pref)
+	
+$$
+  LANGUAGE sql VOLATILE
+  COST 100;
+ALTER FUNCTION doc_flow_out_next_num(int) OWNER TO expert72;
+
+-- ******************* update 12/07/2018 16:46:47 ******************
 -- Function: client_payments_process()
 
 -- DROP FUNCTION client_payments_process();

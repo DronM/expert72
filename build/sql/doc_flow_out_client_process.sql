@@ -21,6 +21,9 @@ DECLARE
 	v_dep_email text;
 	v_recip_department_id int;
 	v_application_state application_states;
+	v_contract_number text;
+	v_doc_flow_subject text;
+	v_contract_employee_id int;
 BEGIN
 	IF (TG_WHEN='BEFORE' AND TG_OP='DELETE') THEN		
 		DELETE FROM doc_flow_out_client_document_files WHERE doc_flow_out_client_id=OLD.id;
@@ -40,7 +43,9 @@ BEGIN
 				contracts.main_department_id,
 				contracts.main_expert_id,
 				dep.email,
-				st.state
+				st.state,
+				contracts.contract_number,
+				contracts.employee_id
 			INTO
 				v_applicant,
 				v_constr_name,
@@ -49,7 +54,9 @@ BEGIN
 				v_main_department_id,
 				v_main_expert_id,
 				v_dep_email,
-				v_application_state
+				v_application_state,
+				v_contract_number,
+				v_contract_employee_id
 			FROM applications AS app
 			LEFT JOIN contracts ON contracts.application_id=app.id
 				AND (
@@ -109,10 +116,20 @@ BEGIN
 			OR (NEW.doc_flow_out_client_type='contr_return'::doc_flow_out_client_types) THEN
 				v_recip_department_id = (SELECT const_app_recipient_department_val()->'keys'->>'id')::int;				
 			ELSE
-				v_recip_department_id = v_main_department_id;				
+				v_recip_department_id = v_main_department_id;
 			END IF;
 			
-			--Новое письмо всегда			
+			--Расширенная тема с доп.атрибутами
+			IF NEW.doc_flow_out_client_type='contr_return' THEN
+				v_doc_flow_subject = NEW.subject||' №'||v_contract_number||', '||(v_applicant->>'name')::text;
+			ELSIF NEW.doc_flow_out_client_type='contr_resp' THEN
+				v_doc_flow_subject = NEW.subject||', контракт №'||v_contract_number||', '||(v_applicant->>'name')::text;
+			ELSE
+				v_doc_flow_subject = NEW.subject;
+			END IF;
+			
+			
+			--Новое входяее письмо всегда						
 			INSERT INTO doc_flow_in (
 				date_time,
 				from_user_id,
@@ -140,7 +157,7 @@ BEGIN
 				END,
 				
 				v_end_date_time,
-				NEW.subject,
+				v_doc_flow_subject,
 				NEW.content,
 				(SELECT departments_ref(departments) FROM departments WHERE id=v_recip_department_id),
 				NEW.id,
@@ -158,7 +175,7 @@ BEGIN
 			
 			
 			IF v_contract_id IS NULL THEN
-				--НЕТ контракта - Передача на рассмотрение, видимо в отдел приема
+				--НЕТ контракта - Передача на рассмотрение в отдел приема
 				INSERT INTO doc_flow_examinations (
 					date_time,
 					subject,
@@ -202,8 +219,9 @@ BEGIN
 					employees.user_id IN (SELECT id FROM users WHERE role_id='boss')
 				);
 				
-			ELSIF v_main_expert_id IS NOT NULL THEN
-				--ЕСТЬ Контракт и есть Гл.эксперт - напоминание&&email ему
+			ELSIF v_main_expert_id IS NOT NULL AND NEW.doc_flow_out_client_type='contr_resp' THEN
+							
+				--ЕСТЬ Контракт и есть Гл.эксперт и не возврат контракта - напоминание&&email Гл.эксперту 
 				INSERT INTO reminders (register_docs_ref,recipient_employee_id,content,docs_ref)
 				VALUES(
 					applications_ref((SELECT applications
@@ -211,18 +229,63 @@ BEGIN
 								WHERE id = NEW.application_id
 					)),
 					v_main_expert_id,
-					NEW.subject,
+					v_doc_flow_subject,
 					doc_flow_in_ref((SELECT doc_flow_in
 								FROM doc_flow_in
 								WHERE id = v_doc_flow_in_id
 					))					
 				);
 				
-			END IF;
-			
-			
-			--Отметка даты возврата контракта && смена статуса
-			IF NEW.doc_flow_out_client_type='contr_return'::doc_flow_out_client_types THEN
+			ELSIF NEW.doc_flow_out_client_type='contr_return' THEN	
+				--Мыло отделу приема
+				INSERT INTO mail_for_sending
+				(to_addr,to_name,body,subject,email_type)
+				(WITH 
+					templ AS (
+					SELECT t.template AS v,t.mes_subject AS s
+					FROM email_templates t
+					WHERE t.email_type='contr_return'
+					)
+				SELECT
+				departments.email,
+				departments.name,
+				sms_templates_text(
+					ARRAY[
+						ROW('number', v_contract_number)::template_value,
+						ROW('doc_in_id',v_doc_flow_in_id)::template_value
+					],
+					(SELECT v FROM templ)
+				) AS mes_body,		
+				v_doc_flow_subject,
+				'contr_return'
+				FROM departments
+				WHERE
+					departments.id = v_recip_department_id
+					AND departments.email IS NOT NULL
+				);								
+				
+				--напоминание автору контракта из отдела приема
+				IF v_contract_employee_id IS NOT NULL THEN
+					INSERT INTO reminders
+					(register_docs_ref,recipient_employee_id,content,docs_ref)
+					(SELECT
+						applications_ref((SELECT applications
+									FROM applications
+									WHERE id = NEW.application_id
+						)),
+						employees.id,
+						v_doc_flow_subject,
+						doc_flow_in_ref((SELECT doc_flow_in
+									FROM doc_flow_in
+									WHERE id = v_doc_flow_in_id
+						))
+					FROM employees
+					LEFT JOIN users ON users.id=employees.user_id
+					WHERE employees.id=v_contract_employee_id AND users.email IS NOT NULL
+					);				
+				END IF;
+				
+				--Отметка даты возврата контракта && смена статуса
 				UPDATE contracts
 				SET contract_return_date = NEW.date_time::date
 				WHERE id=v_contract_id;
@@ -243,36 +306,40 @@ BEGIN
 						NULL
 					);			
 				END IF;
+				
 			END IF;
 			
-			--Email либо отделу приема/либо главному отделу
-			INSERT INTO mail_for_sending
-			(to_addr,to_name,body,subject,email_type)
-			(WITH 
-				templ AS (
-				SELECT t.template AS v,t.mes_subject AS s
-				FROM email_templates t
-				WHERE t.email_type='app_change'
-				)
-			SELECT
-			departments.email,
-			departments.name,
-			sms_templates_text(
-				ARRAY[
-					ROW('applicant', (v_applicant->>'name')::text)::template_value,
-					ROW('constr_name',v_constr_name)::template_value,
-					ROW('id',NEW.application_id)::template_value
-				],
-				(SELECT v FROM templ)
-			) AS mes_body,		
-			NEW.subject||' от ' || (v_applicant->>'name')::text,
-			'app_change'
-			FROM departments
-			WHERE
-				departments.id = v_recip_department_id
-				AND departments.email IS NOT NULL
-			);								
 			
+			--Email главному отделу
+			IF v_main_department_id IS NOT NULL AND NEW.doc_flow_out_client_type='contr_resp' THEN
+				INSERT INTO mail_for_sending
+				(to_addr,to_name,body,subject,email_type)
+				(WITH 
+					templ AS (
+					SELECT t.template AS v,t.mes_subject AS s
+					FROM email_templates t
+					WHERE t.email_type='app_change'
+					)
+				SELECT
+				departments.email,
+				departments.name,
+				sms_templates_text(
+					ARRAY[
+						ROW('applicant', (v_applicant->>'name')::text)::template_value,
+						ROW('constr_name',v_constr_name)::template_value,
+						ROW('id',NEW.application_id)::template_value
+					],
+					(SELECT v FROM templ)
+				) AS mes_body,		
+				v_doc_flow_subject,
+				'app_change'
+				FROM departments
+				WHERE
+					departments.id = v_main_department_id
+					AND departments.email IS NOT NULL
+				);								
+			END IF;
+						
 			--Напоминание&&email админу - всегда
 			INSERT INTO reminders
 			(register_docs_ref,recipient_employee_id,content,docs_ref)
@@ -282,7 +349,7 @@ BEGIN
 							WHERE id = NEW.application_id
 				)),
 				employees.id,
-				NEW.subject,
+				v_doc_flow_subject,
 				doc_flow_in_ref((SELECT doc_flow_in
 							FROM doc_flow_in
 							WHERE id = v_doc_flow_in_id
@@ -291,49 +358,6 @@ BEGIN
 			WHERE
 				employees.user_id IN (SELECT id FROM users WHERE role_id='admin')
 			);
-			
-			
-			--************email to admin(ВСЕГДА!!!)
-			/*
-			IF v_contract_id IS NOT NULL THEN
-				v_email_type = 'app_change';
-			ELSE
-				v_email_type = 'new_app';
-			END IF;
-			
-			
-			INSERT INTO mail_for_sending
-			(to_addr,to_name,body,subject,email_type)
-			(WITH 
-				templ AS (
-				SELECT t.template AS v,t.mes_subject AS s
-				FROM email_templates t
-				WHERE t.email_type=v_email_type
-				)
-			SELECT
-			users.email,
-			employees.name,
-			sms_templates_text(
-				ARRAY[
-					ROW('applicant', (v_applicant->>'name')::text)::template_value,
-					ROW('constr_name',v_constr_name)::template_value,
-					ROW('id',NEW.application_id)::template_value
-				],
-				(SELECT v FROM templ)
-			) AS mes_body,		
-			NEW.subject||' от ' || (v_applicant->>'name')::text,
-			v_email_type
-			FROM employees
-			LEFT JOIN users ON users.id=employees.user_id
-			WHERE
-				(
-				employees.user_id IN (SELECT id FROM users WHERE role_id='admin')
-				)
-				AND users.email IS NOT NULL
-				--AND users.email_confirmed					
-				--OR (role_id='boss' AND v_email_type = 'new_app')
-			);
-			*/				
 		
 		END IF;
 	

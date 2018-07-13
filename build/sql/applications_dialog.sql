@@ -1,7 +1,7 @@
 -- VIEW: applications_dialog
 
---DROP VIEW contracts_dialog;
---DROP VIEW applications_dialog;
+DROP VIEW contracts_dialog;
+DROP VIEW applications_dialog;
 
 CREATE OR REPLACE VIEW applications_dialog AS
 	SELECT
@@ -34,17 +34,15 @@ CREATE OR REPLACE VIEW applications_dialog AS
 		coalesce(d.modification,FALSE) AS modification,
 		coalesce(d.audit,FALSE) AS audit,
 		
-		/*CASE WHEN d.primary_application_id IS NOT NULL THEN applications_primary_chain(d.id)
+		CASE WHEN d.primary_application_id IS NOT NULL AND d.primary_application_id<>d.id THEN applications_primary_chain(d.id)
 		WHEN d.primary_application_reg_number IS NOT NULL THEN json_build_object('primary_application_reg_number',d.primary_application_reg_number)
 		ELSE NULL
-		END*/
-		NULL AS primary_application,
+		END AS primary_application,
 
-		/*CASE WHEN d.modif_primary_application_id IS NOT NULL THEN applications_modif_primary_chain(d.id)
+		CASE WHEN d.modif_primary_application_id IS NOT NULL AND d.modif_primary_application_id<>d.id THEN applications_modif_primary_chain(d.id)
 		WHEN d.modif_primary_application_reg_number IS NOT NULL THEN json_build_object('primary_application_reg_number',d.modif_primary_application_reg_number)
 		ELSE NULL
-		END*/
-		NULL AS modif_primary_application,
+		END AS modif_primary_application,
 		
 		st.state AS application_state,
 		st.date_time AS application_state_dt,

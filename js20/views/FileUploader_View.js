@@ -522,6 +522,7 @@ FileUploader_View.prototype.initDownload = function(){
 	
  	if (!this.m_uploader.support){
  		window.showWarn(this.ER_BROWSER_NOT_SUPPORTED);
+ 		return false;
  	}
 
 	this.m_uploader.assignBrowse(DOMHelper.getElementsByAttr(this.m_fileAddClass, this.getNode(), "class"));

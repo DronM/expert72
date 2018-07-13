@@ -93,3 +93,22 @@ VALUES (
 	)
 );
 
+
+INSERT INTO email_templates (
+	email_type,
+	template,
+	mes_subject,comment_text,fields
+	)
+
+VALUES (
+	'contr_return',
+	'Возврат подписанного контракта №[number]. Входящие документ http://192.168.1.134/index.php?c=DocFlowIn_Controller&f=get_object&t=DocFlowInDialog&v=Child&id=[doc_in_id]',
+	'Возврат подписанного контракта',
+	'Отправляется в отдел приема при возврате подписанного контракта',
+	json_build_object(
+		'id','ReportTemplateField_Model',
+		'rows','[{"fields":{"id":"number","descr":"Номер контракта"}},{"fields":{"id":"doc_in_id","descr":"Идентификатор входящо документа"}}]'
+	)
+);
+
+

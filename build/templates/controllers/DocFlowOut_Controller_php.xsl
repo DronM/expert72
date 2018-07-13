@@ -41,7 +41,8 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 	}
 
 	public function get_next_contract_number($pm){
-		$this->addNewModel(
+		$model = new ModelSQL($this->getDbLinkMaster(),array('id'=>'NewNum_Model'));
+		$model->query(
 			sprintf(
 			"SELECT
 				contracts_next_number(
@@ -56,9 +57,9 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			FROM applications
 			WHERE id=%d",
 			$this->getExtDbVal($pm,'application_id')
-			),
-		'NewNum_Model'
-		);		
+			)		
+		,TRUE);
+		$this->addModel($model);	
 	}
 	
 	public function get_app_state($pm){

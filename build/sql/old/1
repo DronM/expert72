@@ -1,0 +1,9 @@
+select contracts.*
+from client_payments
+left join contracts on contracts.id=client_payments.contract_id
+where contracts.work_start_date<>client_payments.pay_date AND client_payments.id=(SELECT t.id frOm client_payments t WHERE t.contract_id=contracts.id ORDER BY t.pay_date ASC LIMIT 1)
+AND client_payments.pay_date>='2018-06-25'
+limit 500
+
+
+145/Д

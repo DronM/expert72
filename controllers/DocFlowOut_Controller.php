@@ -345,7 +345,8 @@ class DocFlowOut_Controller extends DocFlow_Controller{
 	}
 
 	public function get_next_contract_number($pm){
-		$this->addNewModel(
+		$model = new ModelSQL($this->getDbLinkMaster(),array('id'=>'NewNum_Model'));
+		$model->query(
 			sprintf(
 			"SELECT
 				contracts_next_number(
@@ -360,9 +361,9 @@ class DocFlowOut_Controller extends DocFlow_Controller{
 			FROM applications
 			WHERE id=%d",
 			$this->getExtDbVal($pm,'application_id')
-			),
-		'NewNum_Model'
-		);		
+			)		
+		,TRUE);
+		$this->addModel($model);	
 	}
 	
 	public function get_app_state($pm){

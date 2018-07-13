@@ -81,7 +81,10 @@ sudo mkdir /media/rstorage
 sudo sshfs -o allow_other,reconnect,ServerAliveInterval=15,ServerAliveCountMax=17280 andrey@expertiza72.ru:/usr/share/client_files /media/rstorage
 Настроить скрипт!!!
 
-sudo sshfs -o allow_other,reconnect,ServerAliveInterval=15,ServerAliveCountMax=4320 admin@192.168.1.101:/data/backup /mnt/backup
+/etc/fstab
+sshfs#andrey@46.173.214.98/usr/share/client_files /media/rstorage
+
+rsync -a -e ssh /media/storage/* admin@192.168.1.101:/data/backup
 
 
 на хостинге
@@ -89,5 +92,10 @@ sudo apt-get install sshfs
 sudo mkdir /mnt/rstorage
 sudo sshfs -o allow_other,reconnect,ServerAliveInterval=15,ServerAliveCountMax=17280 andrey@92.255.164.139:/media/storage /mnt/rstorage
 
+/etc/fstab
+sshfs#andrey@92.255.164.139/media/storage /mnt/rstorage
+
+
+rsync -az -e ssh /usr/share/client_files/* andrey@92.255.164.139:/media/storage
 
 sudo iptables -D f2b-sshd -s 92.255.164.139/32 -j REJECT --reject-with icmp-port-unreachable

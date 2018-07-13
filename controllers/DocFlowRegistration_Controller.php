@@ -214,7 +214,7 @@ class DocFlowRegistration_Controller extends ControllerSQL{
 			&&$subject_doc->dataType=='doc_flow_out'
 			&&$subject_doc->keys->id
 			){
-				$ar_st = $this->getDbLink()->query_first(sprintf(
+				$ar_st = $this->getDbLinkMaster()->query_first(sprintf(
 				"SELECT
 					CASE
 						WHEN doc_flow_type_id=(pdfn_doc_flow_types_app_resp()->'keys'->>'id')::int THEN 'waiting_for_contract'::application_states
@@ -233,7 +233,7 @@ class DocFlowRegistration_Controller extends ControllerSQL{
 				
 				if (count($ar_st) && !is_null($ar_st['app_state'])){
 					//смена статуса заявления
-					$ar = $this->getDbLink()->query_first(sprintf("
+					$ar = $this->getDbLinkMaster()->query_first(sprintf("
 					SELECT
 						doc_flow_in.id AS doc_flow_in_id,
 						exam.id AS examination_id,

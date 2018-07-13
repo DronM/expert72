@@ -109,19 +109,28 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				$fl = NULL;
 				if ($ar['to_application_id']){
 					//Файл из папки заявления
-					$fl = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
+					if (
+					file_exists($fl = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
 						Application_Controller::APP_DIR_PREF.$ar['to_application_id'].DIRECTORY_SEPARATOR.
-						$ar['file_path'];
+						$ar['file_path'].
+						DIRECTORY_SEPARATOR.$this->getExtVal($pm,'file_id'))
+					||(defined('FILE_STORAGE_DIR_MAIN')
+					&amp;&amp; file_exists($fl = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.
+						Application_Controller::APP_DIR_PREF.$ar['to_application_id'].DIRECTORY_SEPARATOR.
+						$ar['file_path'].
+						DIRECTORY_SEPARATOR.$this->getExtVal($pm,'file_id'))
+					)
+					){
+						unlink($fl);
+					}
 				}
 				else{
 					//Общий документооборот
-					$fl = DOC_FLOW_FILE_STORAGE_DIR;
+					if (file_exists($fl = DOC_FLOW_FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$this->getExtVal($pm,'file_id'))){
+						unlink($fl);
+					}
 				}
-				$fl.= DIRECTORY_SEPARATOR.$this->getExtVal($pm,'file_id');
 			
-				if (file_exists($fl)){
-					unlink($fl);
-				}
 				if ($ar['file_signed'] &amp;&amp; file_exists($fl.='.sig')){
 					unlink($fl);			
 				}
@@ -259,23 +268,31 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			}
 		
 			$fl = NULL;
-			if ($ar['to_application_id']){
-				//Файл из папки заявления
-				$fl = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
-					Application_Controller::APP_DIR_PREF.$ar['to_application_id'].DIRECTORY_SEPARATOR.
-					$ar['file_path'];
-			}
-			else{
-				//Общий документооборот
-				$fl = DOC_FLOW_FILE_STORAGE_DIR;
-			}
-			$fl.= DIRECTORY_SEPARATOR.$this->getExtVal($pm,'file_id').$posf;
-		
-			if (!file_exists($fl)){
+			if (
+			(
+				$ar['to_application_id']
+				&amp;&amp; (!file_exists($fl = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
+						Application_Controller::APP_DIR_PREF.$ar['to_application_id'].DIRECTORY_SEPARATOR.
+						$ar['file_path'].
+						DIRECTORY_SEPARATOR.$this->getExtVal($pm,'file_id').$posf)
+						&amp;&amp;(
+							defined('FILE_STORAGE_DIR_MAIN') &amp;&amp;
+							!file_exists($fl = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.
+							Application_Controller::APP_DIR_PREF.$ar['to_application_id'].DIRECTORY_SEPARATOR.
+							$ar['file_path'].
+							DIRECTORY_SEPARATOR.$this->getExtVal($pm,'file_id').$posf)							
+						)
+					)
+			)
+			|| (
+				!$ar['to_application_id']
+				&amp;&amp; !file_exists($fl = DOC_FLOW_FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$this->getExtVal($pm,'file_id').$posf)
+			)
+			){
 				$er_st = 404;
 				throw new Exception(self::ER_STORAGE_FILE_NOT_FOUND);
 			}
-	
+		
 			ob_clean();
 			downloadFile($fl, 'application/octet-stream','attachment;',$ar['file_name'].$posf);
 			return TRUE;	
@@ -295,10 +312,11 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 	}
 	
 	protected function get_next_num_on_type($docFlowType,$typeId){
-		$this->addNewModel(
-			sprintf("SELECT doc_flow_%s_next_num(%d) AS num",$docFlowType,$typeId),
-			'NewNum_Model'
-		);
+		$model = new ModelSQL($this->getDbLinkMaster(),array('id'=>'NewNum_Model'));
+		$model->query(
+			sprintf("SELECT doc_flow_%s_next_num(%d) AS num",$docFlowType,$typeId)		
+		,TRUE);
+		$this->addModel($model);	
 	}
 	
 </xsl:template>
