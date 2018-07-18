@@ -375,7 +375,7 @@ BEGIN
 					contract_number,
 					expertise_result_number,
 					linked_contracts,
-					contract_date,					
+					--contract_date,					
 					date_type,
 					expertise_day_count,
 					expert_work_day_count,
@@ -416,7 +416,7 @@ BEGIN
 						'{"id":"LinkedContractList_Model","rows":[]}'::jsonb
 					END,
 					
-					now()::date,--contract_date
+					--now()::date,--contract_date
 					
 					v_date_type,
 					v_work_day_count,

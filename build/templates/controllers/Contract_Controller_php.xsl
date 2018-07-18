@@ -473,6 +473,20 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		);		
 	}
 	
+	public function update($pm){
+		$for_all_employees = $pm->getParamValue('for_all_employees');
+		$permissions = $pm->getParamValue('permissions');
+		if(
+		$_SESSION['role_id']!='admin'
+		&amp;&amp;
+		( isset($for_all_employees) || isset($permissions) )
+		){
+			throw new Exception('Изменение набора прав контракта доступно только администратору!');
+		}
+		
+		parent::update($pm);
+	}
+	
 </xsl:template>
 
 </xsl:stylesheet>

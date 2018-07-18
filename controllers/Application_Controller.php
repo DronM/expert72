@@ -53,6 +53,7 @@ class Application_Controller extends ControllerSQL{
 	const ER_APP_SENT = 'Невозможно удалять отправленное заявление!';
 	const ER_NO_SIG = 'Для файла нет ЭЦП!';
 	const ER_DOC_SENT = 'Документ отправлен на проверку. Операция невозможна.';
+	const ER_NO_ATT = 'Нет ни одного вложенного файла с документацией!';
 
 	const ER_PRINT_FILE_CNT = 'Нет файла ЭЦП с заявлением по ';
 
@@ -1132,7 +1133,8 @@ class Application_Controller extends ControllerSQL{
 				NULL AS contract_number,
 				NULL AS contract_date,
 				NULL AS expertise_result_number,
-				NULL AS expertise_result_date
+				NULL AS expertise_result_date,
+				0 AS filled_percent
 				"
 			);
 		}
@@ -1258,6 +1260,12 @@ class Application_Controller extends ControllerSQL{
 	}
 
 	public function insert($pm){		
+		$set_sent_v = $pm->getParamValue('set_sent');
+		$set_sent = (isset($set_sent_v) && $set_sent_v=='1');
+		if ($set_sent){
+			throw new Exception(self::ER_NO_ATT);
+		}		
+	
 		$pm->setParamValue("user_id",$_SESSION['user_id']);
 		$this->getDbLinkMaster()->query("BEGIN");
 		try{			
@@ -1269,8 +1277,7 @@ class Application_Controller extends ControllerSQL{
 			$inserted_id_ar = $this->getDbLinkMaster()->query_first($q);
 			
 			$state = NULL;
-			$set_sent = $pm->getParamValue('set_sent');
-			if (isset($set_sent) && $set_sent){
+			if ($set_sent){
 				$state = 'sent';
 			}
 			else{
@@ -1297,7 +1304,11 @@ class Application_Controller extends ControllerSQL{
 			$resAr = [];
 			$this->set_state($inserted_id_ar['id'],$state,$inserted_id_ar,$resAr);
 			if ( $state=='sent' && isset($resAr['new_app_id']) ){
-				$this->move_files_to_new_app($resAr);
+				$this->move_files_to_new_app(FILE_STORAGE_DIR,$resAr);
+				if (defined('FILE_STORAGE_DIR_MAIN')){
+					$this->move_files_to_new_app(FILE_STORAGE_DIR_MAIN,$resAr);
+				}
+				
 			}
 			
 			
@@ -1371,24 +1382,62 @@ class Application_Controller extends ControllerSQL{
 			$model = new $model_name($this->getDbLinkMaster());
 			$this->methodParamsToModel($pm,$model);
 			
+			$set_sent_v = $pm->getParamValue('set_sent');
+			$set_sent = (isset($set_sent_v) && $set_sent_v=='1');
+			
 			$ar = NULL;
 			$q = $model->getUpdateQuery();
-			if (strlen($q)){
-				$q.=' RETURNING id,expertise_type,cost_eval_validity,modification,audit';
+			if (strlen($q) && $set_sent){
+				$q.=' RETURNING
+					id,
+					expertise_type,
+					cost_eval_validity,
+					modification,
+					audit,
+					app_print_expertise IS NOT NULL AS app_print_expertise_set,
+					app_print_cost_eval IS NOT NULL AS app_print_cost_eval_set,
+					app_print_modification IS NOT NULL AS app_print_modificationl_set,
+					app_print_audit IS NOT NULL AS app_print_audit_set,
+					(SELECT COUNT(*) FROM application_document_files af WHERE af.application_id=id) AS file_count';
 				$ar = $this->getDbLinkMaster()->query_first($q);
 			}
-			else{
-				$q = sprintf('SELECT id,expertise_type,cost_eval_validity,modification,audit FROM applications WHERE id=%d',
+			else if ($set_sent){
+				$q = sprintf(
+				'SELECT
+					id,
+					expertise_type,
+					cost_eval_validity,
+					modification,
+					audit,
+					app_print_expertise IS NOT NULL AS app_print_expertise_set,
+					app_print_cost_eval IS NOT NULL AS app_print_cost_eval_set,
+					app_print_modification IS NOT NULL AS app_print_modificationl_set,
+					app_print_audit IS NOT NULL AS app_print_audit_set,
+					(SELECT COUNT(*) FROM application_document_files af WHERE af.application_id=id) AS file_count						
+				FROM applications WHERE id=%d',
 				$this->getExtDbVal($pm,'old_id')
-				);
+				);				
 			}			
 			
-			$set_sent = $pm->getParamValue('set_sent');
-			if (isset($set_sent) && $set_sent){
-				if (is_null($ar)){
-					//simple select
-					$ar = $this->getDbLink()->query_first($q);
+			if (strlen($q)){
+				$ar = $this->getDbLinkMaster()->query_first($q);
+			}
+			
+			if ($set_sent){
+				//Серверные проверки перед отправкой
+				if (
+				($ar['expertise_type'] && $ar['app_print_expertise_set']!='t')
+				||($ar['cost_eval_validity']=='t' && $ar['app_print_cost_eval_set']!='t')
+				||($ar['modification']=='t' && $ar['app_print_modification_set']!='t')
+				||($ar['audit']=='t' && $ar['app_print_audit_set']!='t')
+				){
+					throw new Exception('Нет файла с заявлением по выбранной услуге!');
 				}
+				
+				if ($ar['file_count']==0){
+					throw new Exception(self::ER_NO_ATT);
+				}				
+				
 				$resAr = [];
 				$this->set_state(
 					$this->getExtDbVal($pm,'old_id'),
@@ -1397,7 +1446,10 @@ class Application_Controller extends ControllerSQL{
 					$resAr
 				);
 				if (isset($resAr['new_app_id'])){
-					$this->move_files_to_new_app($resAr);
+					$this->move_files_to_new_app(FILE_STORAGE_DIR,$resAr);
+					if (defined('FILE_STORAGE_DIR_MAIN')){
+						$this->move_files_to_new_app(FILE_STORAGE_DIR_MAIN,$resAr);
+					}
 				}
 			}
 			
@@ -1760,6 +1812,7 @@ class Application_Controller extends ControllerSQL{
 		if (!file_exists($file_zip = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_dir_zip.DIRECTORY_SEPARATOR.self::ALL_DOC_ZIP_FILE)
 		){
 			//Всегда на клиентском сервере
+			mkdir(FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_dir_zip,0775,TRUE);
 			$file_zip = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_dir_zip.DIRECTORY_SEPARATOR.self::ALL_DOC_ZIP_FILE;
 			
 			//make zip			
@@ -1854,25 +1907,25 @@ class Application_Controller extends ControllerSQL{
 		
 	}
 	
-	private function move_files_to_new_app(&$ar){
+	private function move_files_to_new_app($storage,&$ar){
 		//move files
 		//Документация
 		$doc_type_dir = self::dirNameOnDocType($ar['doc_type']);
 		$doc_type_print_dir = self::dirNameOnDocType($ar['doc_type_print']);
-		$dest = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
+		$dest = $storage.DIRECTORY_SEPARATOR.
 			self::APP_DIR_PREF.$ar['new_app_id'].DIRECTORY_SEPARATOR.
 			$doc_type_dir;
-		$source = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
+		$source = $storage.DIRECTORY_SEPARATOR.
 			self::APP_DIR_PREF.$ar['old_app_id'].DIRECTORY_SEPARATOR.
 			$doc_type_dir;
 		mkdir($dest,0777,TRUE);
 		rmove($source,$dest);
 		
 		//заявления
-		$dest = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
+		$dest = $storage.DIRECTORY_SEPARATOR.
 			self::APP_DIR_PREF.$ar['new_app_id'].DIRECTORY_SEPARATOR.
 			$doc_type_print_dir;
-		$source = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
+		$source = $storage.DIRECTORY_SEPARATOR.
 			self::APP_DIR_PREF.$ar['old_app_id'].DIRECTORY_SEPARATOR.
 			$doc_type_print_dir;
 		mkdir($dest,0777,TRUE);
@@ -1880,11 +1933,11 @@ class Application_Controller extends ControllerSQL{
 		
 		//Доверенность?
 		$doc_type_auth_dir = self::dirNameOnDocType('auth_letter_file');
-		if (file_exists($source = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
+		if (file_exists($source = $storage.DIRECTORY_SEPARATOR.
 			self::APP_DIR_PREF.$ar['old_app_id'].DIRECTORY_SEPARATOR.
 			$doc_type_auth_dir)
 		){
-			$dest = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
+			$dest = $storage.DIRECTORY_SEPARATOR.
 				self::APP_DIR_PREF.$ar['new_app_id'];
 			mkdir($dest,0777,TRUE);									
 			rcopy($source,$dest);
@@ -1969,16 +2022,16 @@ class Application_Controller extends ControllerSQL{
 	}
 
 	public function get_print($pm){
-		/*
+		
 		if (
 		!file_exists(FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.self::APP_DIR_PREF.$this->getExtDbVal($pm,'id'))
 		&& (defined('FILE_STORAGE_DIR_MAIN') && !file_exists(FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.self::APP_DIR_PREF.$this->getExtDbVal($pm,'id')))
 		){
 			//нет ни одного файла
 			$this->setHeaderStatus(400);
-			throw new Exception('Нет ни одного вложенного файла!');
+			throw new Exception(self::ER_NO_ATT);
 		}
-		*/
+		
 		$templ_name = $pm->getParamValue('templ');
 		$rel_dir = self::APP_DIR_PREF.$this->getExtDbVal($pm,'id');
 		if (!file_exists($dir = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_dir)){
@@ -2104,7 +2157,7 @@ class Application_Controller extends ControllerSQL{
 		if ($applicant_m['responsable_persons']){			
 			$responsable_persons = json_decode($applicant_m['responsable_persons'],TRUE);
 			foreach($responsable_persons['rows'] as $appl_resp){
-				$applicant_contacts.= ($appl_contacts=='')? '':', ';
+				$applicant_contacts.= ($applicant_contacts=='')? '':', ';
 				$applicant_contacts.= strlen($appl_resp['fields']['post'])? $appl_resp['fields']['post'].' ' : '';
 				$applicant_contacts.= $appl_resp['fields']['name'];
 				$applicant_contacts.= strlen($appl_resp['fields']['tel'])? ' '.$appl_resp['fields']['tel'] : '';
@@ -2166,7 +2219,7 @@ class Application_Controller extends ControllerSQL{
 			$base_document_for_contract = '';
 		}
 		
-		if (strlen($person_head['name'])){
+		if (array_key_exists('name',$person_head) && strlen($person_head['name'])){
 			try{
 				$person_head_name_rod = Morpher::declension(array('s'=>$person_head['name'],'flags'=>'name'),$this->getDbLinkMaster(),$this->getDbLink())['Р'];
 			}
@@ -2177,7 +2230,7 @@ class Application_Controller extends ControllerSQL{
 		else{
 			$person_head_name_rod = '';
 		}		
-		if (strlen($person_head['post'])){
+		if (array_key_exists('post',$person_head) && strlen($person_head['post'])){
 			try{
 				$person_head_post_rod = Morpher::declension(array('s'=>$person_head['post'],'flags'=>'common'),$this->getDbLinkMaster(),$this->getDbLink())['Р'];
 			}

@@ -25,6 +25,7 @@ function FileUploader_View(id,options){
 	this.m_allowSignature = (options.allowSignature!=undefined)? options.allowSignature:true;
 	
 	this.m_customFolder = options.customFolder;
+	this.m_includeFilePath = (options.includeFilePath!=undefined)? options.includeFilePath : false;
 	
 	if (options.constDownloadTypes && options.constDownloadMaxSize){
 		var constants = {};
@@ -255,6 +256,10 @@ FileUploader_View.prototype.addFileToContainer = function(container,itemFile,ite
 	templateOptions.separateSignature	= this.m_separateSignature;	
 	templateOptions.customFolder		= this.m_customFolder;
 	templateOptions.out_file_id		= itemFile.out_file_id;
+	
+	if (this.m_includeFilePath){
+		templateOptions.file_path = itemFile.file_path+"/ ";
+	}
 	
 	if (this.m_setFileOptions){
 		this.m_setFileOptions(templateOptions,itemFile);

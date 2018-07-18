@@ -112,3 +112,23 @@ VALUES (
 );
 
 
+INSERT INTO email_templates (
+	email_type,
+	template,
+	mes_subject,comment_text,fields
+
+	)
+
+VALUES (
+	'expert_work_change',
+	'Изменение по экспертизе контракта №[contract_number], объект [constr_name] по разделу [section_name], эксперт [expert_name]',
+	'Изменение по локальным заключениям',
+	'Отправляется в главный отдел контракта при любом изменении в таблице экспертизы',
+	json_build_object(
+		'id','ReportTemplateField_Model',
+		'rows','[{"fields":{"id":"contract_number","descr":"Номер контракта"}},{"fields":{"id":"constr_name","descr":"Объект контракта"}},{"fields":{"id":"section_name","descr":"Наименование раздела"}},{"fields":{"id":"expert_name","descr":"ФИО эксперта"}}]'
+	)
+);
+
+
+

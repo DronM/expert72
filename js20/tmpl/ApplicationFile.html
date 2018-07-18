@@ -24,13 +24,16 @@
 		<i class="glyphicon glyphicon-remove" title="Файл удален"></i>	
 	{{/file_deleted}}
 	
+	{{file_path}}
 	<a id="{{id}}_href" href="#" title="{{refTitle}}" download_href="true" file_uploaded="{{file_uploaded}}" class="{{refClass}}">
 		{{#file_not_deleted}}
 		{{file_name}} ({{file_size_formatted}}, {{file_date_time_formatted}})
 		{{/file_not_deleted}}
 		
 		{{#file_deleted}}
-		<span class="text-thin appFileDeleted" title="Удален {{file_deleted_dt}}">{{file_name}} ({{file_size_formatted}}, {{file_date_time_formatted}})</span>
+		<span class="text-thin appFileDeleted" title="Удален {{file_deleted_dt}}">
+		{{file_name}} ({{file_size_formatted}}, {{file_date_time_formatted}})
+		</span>
 		{{/file_deleted}}		
 	</a>
 	

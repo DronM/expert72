@@ -387,12 +387,12 @@ function ContractDialog_View(id,options){
 		if (options.templateOptions.setAccess){				
 			//********* permissions grid ***********************
 			this.addElement(new AccessPermissionGrid(id+":permissions",{
-				"enabled":(role=="expert")
+				"enabled":(role=="admin")
 			}));		
 			
 			this.addElement(new EditCheckBox(id+":for_all_employees",{
-				"labelCaption":"Контракт доступен всем:",
-				"enabled":(role=="expert")
+				"labelCaption":"Контракт доступен всем:"
+				//"enabled":(role=="admin")
 			}));		
 			
 		}

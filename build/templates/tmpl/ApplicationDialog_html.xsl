@@ -36,7 +36,7 @@ Edit template instead.
 			<ul class="nav nav-tabs nav-tabs-highlight">				
 				<li class="active">
 					<a href="#aplication" data-toggle="tab" aria-expanded="true">
-						<span id="{{{{id}}}}:fill_percent" class="badge badge-danger" title="Необходимо заполнить заявление на 100%"></span>
+						<span id="{{{{id}}}}:fill_percent" class="badge badge-danger" title="Необходимо заполнить заявление на 100% и загрузить файлы с документацией"></span>
 						Заявление</a>
 				</li>
 				<li id="{{{{id}}}}:tab-pd" class=""><a href="#documents_pd" data-toggle="tab" aria-expanded="false">ПД</a></li>

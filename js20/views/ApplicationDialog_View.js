@@ -75,6 +75,8 @@ function ApplicationDialog_View(id,options){
 		this.addElement(new Control(id+":application_prints-tab-fill_percent","SPAN"));																
 		
 		this.addElement(new ControlForm(id+":id","U"));			
+		this.addElement(new HiddenKey(id+":filled_percent",{"value":0}));
+		
 		this.addElement(new ControlDate(id+":create_dt","U",{"dateFormat":"d/m/Y H:i"}));
 		
 		var bs = window.getBsCol(4);
@@ -463,7 +465,8 @@ function ApplicationDialog_View(id,options){
 			"onClick":function(){
 				self.checkRequiredFiles();
 				self.checkPrintFiles();
-							
+				self.checkForUploadFileCount();				
+				//throw new Error("TotalFileCount="+self.getFileCount(true));
 				WindowQuestion.show({
 					"text":"Отправить заявление на проверку?",
 					"cancel":false,
@@ -476,7 +479,9 @@ function ApplicationDialog_View(id,options){
 								(frm_cmd=="insert"||frm_cmd=="copy")? self.m_controller.METH_INSERT:self.m_controller.METH_UPDATE
 							)
 							pm.setFieldValue("set_sent",true);
-							pm.setFieldValue("old_id",self.getElement("id").getValue());
+							if (frm_cmd!="insert"&&frm_cmd!="copy"){
+								pm.setFieldValue("old_id",self.getElement("id").getValue());
+							}
 							self.onSave(
 								function(){
 										self.close({"updated":true});
@@ -489,13 +494,6 @@ function ApplicationDialog_View(id,options){
 									self.getControlOK().setEnabled(true);								
 								}
 							);
-							/*
-							pm.run({
-								"async":false,
-								"ok":,
-								"fail":f_fail
-							});
-							*/
 						}
 					}
 				});
@@ -528,6 +526,7 @@ function ApplicationDialog_View(id,options){
 	//read
 	var r_binds = [
 		new DataBinding({"control":this.getElement("id")})
+		,new DataBinding({"control":this.getElement("filled_percent")})
 		,new DataBinding({"control":this.getElement("create_dt")})
 		,new DataBinding({"control":this.getElement("offices_ref")})
 		,new DataBinding({"control":this.getElement("service_cont").getElement("expertise_type"),"fieldId":"expertise_type"})
@@ -566,6 +565,7 @@ function ApplicationDialog_View(id,options){
 	//write
 	w_binds = [
 		new CommandBinding({"control":this.getElement("offices_ref")})
+		,new CommandBinding({"control":this.getElement("filled_percent")})
 		,new CommandBinding({"control":this.getElement("service_cont").getElement("expertise_type"),"fieldId":"expertise_type"})
 		,new CommandBinding({"control":this.getElement("service_cont").getElement("cost_eval_validity"),"fieldId":"cost_eval_validity"})
 		,new CommandBinding({"control":this.getElement("service_cont").getElement("cost_eval_validity_simult"),"fieldId":"cost_eval_validity_simult"})
@@ -648,7 +648,6 @@ extend(ApplicationDialog_View, DocumentDialog_View);//ViewObjectAjx
 ApplicationDialog_View.prototype.NEW_TAB_FLASH_TIME = 3000;
 ApplicationDialog_View.prototype.FORM_SAVE_INTERVAL = 1*60*1000;
 
-ApplicationDialog_View.prototype.m_totalFilledPercent;
 ApplicationDialog_View.prototype.m_technicalFeatures;
 ApplicationDialog_View.prototype.m_prevConstructionTypeId;
 ApplicationDialog_View.prototype.m_prevExpertiseType;
@@ -704,10 +703,11 @@ ApplicationDialog_View.prototype.calcFillPercent = function(){
 		}
 	}
 	
-	this.m_totalFilledPercent = (tot_cnt)? (Math.floor(tot_percent/tot_cnt)):0;
+	var filled_percent = (tot_cnt)? (Math.floor(tot_percent/tot_cnt)):0;
+	this.getElement("filled_percent").setValue(filled_percent);
 	var ctrl = this.getElement("fill_percent");
-	ctrl.setValue(this.m_totalFilledPercent+"%");
-	ctrl.setAttr("class","badge "+this.getPercentClass(this.m_totalFilledPercent));
+	ctrl.setValue(filled_percent+"%");
+	ctrl.setAttr("class","badge "+this.getPercentClass(filled_percent));
 	
 	this.setCmdEnabled();
 	
@@ -836,11 +836,14 @@ ApplicationDialog_View.prototype.onGetData = function(resp,cmd){
 }
 
 ApplicationDialog_View.prototype.setCmdEnabled = function(){
+	//this.getElement("cmdSend").setEnabled(true);
+	
 	var tot = this.getTotalFileCount();
+	var unloaded_tot = (tot==0)? 0:this.getFileCount(false);
 	var st = this.getModel().getFieldValue("application_state");
-	this.getElement("cmdSend").setEnabled( (this.m_totalFilledPercent==100 && tot>0 && (st=="filling"||st=="correcting") ) );
-	//this.getElement("cmdPrintApp").setEnabled( (this.m_totalFilledPercent==100 && tot>0 && (st=="filling"||st=="returned")) );
-	this.getElement("cmdZipAll").setEnabled( (tot>0) );				
+	this.getElement("cmdSend").setEnabled( (this.getElement("filled_percent").getValue()==100 && !unloaded_tot && tot>0 && (st=="filling"||st=="correcting") ) );
+	this.getElement("cmdZipAll").setEnabled( (tot>0 && !unloaded_tot) );				
+	
 }
 
 
@@ -916,16 +919,6 @@ ApplicationDialog_View.prototype.removeDocumentTypeWithWarn = function(docTypesF
 	}
 }
 
-ApplicationDialog_View.prototype.onOK = function(failFunc){
-	var frm_cmd = this.getCmd();
-	var pm = this.m_controller.getPublicMethod(
-		(frm_cmd=="insert" || frm_cmd=="copy")? this.m_controller.METH_INSERT:this.m_controller.METH_UPDATE
-	);
-	pm.setFieldValue("filled_percent",this.m_totalFilledPercent);
-
-	ApplicationDialog_View.superclass.onOK.call(this,failFunc);
-}
-
 ApplicationDialog_View.prototype.toggleDocTypeVis = function(){
 	ApplicationDialog_View.superclass.toggleDocTypeVis.call(this);
 	
@@ -978,7 +971,7 @@ ApplicationDialog_View.prototype.checkSaveExecute = function(func,checkReqFiles,
 		var pm = this.m_controller.getPublicMethod(
 			(frm_cmd=="insert" || frm_cmd=="copy")? this.m_controller.METH_INSERT:this.m_controller.METH_UPDATE
 		);
-		pm.setFieldValue("filled_percent",this.m_totalFilledPercent);
+		pm.setFieldValue("set_sent",false);		
 	
 		var self = this;
 		this.m_commands[this.CMD_OK].setAsync(false);

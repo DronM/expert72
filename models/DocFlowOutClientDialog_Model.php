@@ -141,6 +141,14 @@ class DocFlowOutClientDialog_Model extends ModelSQL{
 		$f_contract_files=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"contract_files",$f_opts);
 		$this->addField($f_contract_files);
 		//********************
+		
+		//*** Field attachment_files ***
+		$f_opts = array();
+		$f_opts['id']="attachment_files";
+				
+		$f_attachment_files=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"attachment_files",$f_opts);
+		$this->addField($f_attachment_files);
+		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}
 

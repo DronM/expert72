@@ -153,6 +153,15 @@ function DocFlowOutClientDialog_Model(options){
 	
 	options.fields.contract_files = new FieldJSON("contract_files",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.attachment_files = new FieldJSON("attachment_files",filed_options);
+	
 			
 		DocFlowOutClientDialog_Model.superclass.constructor.call(this,id,options);
 }

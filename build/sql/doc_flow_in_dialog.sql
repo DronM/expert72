@@ -10,17 +10,21 @@ CREATE OR REPLACE VIEW doc_flow_in_dialog AS
 		applications_ref(applications) AS from_applications_ref,
 		doc_flow_out_ref(doc_flow_out) AS doc_flow_out_ref,
 		
-		/*
-		json_build_object(
-			'fields',json_build_object('id','doc','required','false','descr','Все файлы'),
-			'files',files.attachments
-		) AS files,
-		*/
-		json_build_array(
-			json_build_object(
-				'files',files.attachments
-			)
-		) AS files,
+		CASE
+			WHEN doc_flow_in.from_doc_flow_out_client_id IS NOT NULL THEN
+				-- от исходящего клиентского
+				json_build_array(
+					json_build_object(
+						'files',files2.attachments
+					)
+				)
+			ELSE
+				json_build_array(
+					json_build_object(
+						'files',files.attachments
+					)
+				)
+		END files,
 		
 		
 		st.state AS state,
@@ -66,6 +70,25 @@ CREATE OR REPLACE VIEW doc_flow_in_dialog AS
 		WHERE t.doc_type='doc_flow_in'::data_types
 		GROUP BY t.doc_id		
 	) AS files ON files.doc_id = doc_flow_in.id
+
+	LEFT JOIN (
+		SELECT
+			t.doc_flow_out_client_id AS client_doc_id,
+			json_agg(
+				json_build_object(
+					'file_id',app_f.file_id,
+					'file_name',app_f.file_name,
+					'file_size',app_f.file_size,
+					'file_signed',app_f.file_signed,
+					'file_uploaded','true',
+					'file_path',app_f.file_path
+				)
+			) AS attachments			
+		FROM doc_flow_out_client_document_files AS t
+		LEFT JOIN application_document_files As app_f ON app_f.file_id = t.file_id
+		GROUP BY t.doc_flow_out_client_id		
+	) AS files2 ON files2.client_doc_id = doc_flow_in.from_doc_flow_out_client_id
+	
 	LEFT JOIN (
 		SELECT
 			t.doc_flow_in_id AS doc_id,

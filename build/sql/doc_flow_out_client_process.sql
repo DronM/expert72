@@ -287,7 +287,9 @@ BEGIN
 				
 				--Отметка даты возврата контракта && смена статуса
 				UPDATE contracts
-				SET contract_return_date = NEW.date_time::date
+				SET
+					contract_return_date = NEW.date_time::date,
+					contract_date = NEW.date_time
 				WHERE id=v_contract_id;
 				
 				IF v_application_state='waiting_for_contract' THEN

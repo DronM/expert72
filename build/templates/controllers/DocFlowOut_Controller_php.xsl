@@ -28,6 +28,84 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 
 <xsl:template name="extra_methods">
 
+	private function get_afile($pm,$sigFile){
+		try{
+			$er_st = 500;
+			
+			$posf = $sigFile? '.sig':'';
+			$ar = $this->getDbLink()->query_first(sprintf(
+				"(SELECT
+					app_f.file_name,
+					app_f.document_type,
+					CASE
+						WHEN app_f.document_type='documents' THEN app_f.file_path
+						ELSE app_f.document_id::text
+					END AS file_path,
+					TRUE AS from_app,
+					application_id AS from_application_id
+				FROM doc_flow_out_client_document_files AS t
+				LEFT JOIN doc_flow_in ON doc_flow_in.from_doc_flow_out_client_id=t.doc_flow_out_client_id
+				LEFT JOIN application_document_files AS app_f ON app_f.file_id = t.file_id				
+				WHERE t.file_id=%s AND doc_flow_in.id=%d)
+				UNION ALL
+				(SELECT
+					t.file_name,
+					NULL AS document_type,
+					NULL AS file_path,
+					FALSE AS from_app,
+					NULL AS from_application_id
+				FROM doc_flow_attachments AS t
+				WHERE t.doc_type='doc_flow_in'::data_types AND t.doc_id=%d AND t.file_id=%s)				
+				",
+				$this->getExtDbVal($pm,'file_id'),
+				$this->getExtDbVal($pm,'doc_id'),
+				$this->getExtDbVal($pm,'doc_id'),
+				$this->getExtDbVal($pm,'file_id')				
+			));
+		
+			if (!count($ar)){
+				$er_st = 404;
+				throw new Exception(self::ER_STORAGE_FILE_NOT_FOUND);
+			}
+		
+			$fl = NULL;
+			if (
+			(
+				$ar['from_app']=='t'
+				&amp;&amp; (!file_exists($fl = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
+						Application_Controller::APP_DIR_PREF.$ar['from_application_id'].DIRECTORY_SEPARATOR.
+						Application_Controller::dirNameOnDocType($ar['document_type']).DIRECTORY_SEPARATOR.
+						$ar['file_path'].DIRECTORY_SEPARATOR.
+						$this->getExtVal($pm,'file_id').$posf)
+						&amp;&amp;(
+							defined('FILE_STORAGE_DIR_MAIN') &amp;&amp;
+							!file_exists($fl = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.
+							Application_Controller::APP_DIR_PREF.$ar['from_application_id'].DIRECTORY_SEPARATOR.
+							Application_Controller::dirNameOnDocType($ar['document_type']).DIRECTORY_SEPARATOR.
+							$ar['file_path'].DIRECTORY_SEPARATOR.
+							$this->getExtVal($pm,'file_id').$posf)							
+						)
+					)
+			)
+			|| (
+				$ar['from_app']!='t'
+				&amp;&amp; !file_exists($fl = DOC_FLOW_FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$this->getExtVal($pm,'file_id').$posf)
+			)
+			){
+				$er_st = 404;
+				throw new Exception(self::ER_STORAGE_FILE_NOT_FOUND);
+			}
+		
+			ob_clean();
+			downloadFile($fl, 'application/octet-stream','attachment;',$ar['file_name'].$posf);
+			return TRUE;	
+		}
+		catch(Exception $e){
+			$this->setHeaderStatus($er_st);
+			throw $e;
+		}	
+	}
+
 	public function remove_file($pm){
 		$this->remove_afile($pm,'out');
 	}
@@ -145,6 +223,14 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			$this->getDbLinkMaster()->query("ROLLBACK");
 			throw $e;
 		}
+	}
+
+	public function get_file($pm){
+		return $this->get_afile($pm,FALSE);
+	}
+
+	public function get_file_sig($pm){
+		return $this->get_afile($pm,TRUE);
 	}
 
 </xsl:template>

@@ -15,7 +15,12 @@ CREATE OR REPLACE VIEW doc_flow_out_client_dialog AS
 		t.sent,
 		cl_in_regs.reg_number AS reg_number_in,
 		t.doc_flow_out_client_type,
-		files.contract_file AS contract_files
+		files.contract_file AS contract_files,
+		json_build_array(
+			json_build_object(
+				'files',att.attachments
+			)
+		) AS attachment_files
 		
 	FROM doc_flow_out_client t
 	LEFT JOIN applications ON applications.id=t.application_id
@@ -35,6 +40,26 @@ CREATE OR REPLACE VIEW doc_flow_out_client_dialog AS
 		FROM doc_flow_out_client_document_files AS out_f
 		LEFT JOIN application_document_files AS app_f ON app_f.file_id=out_f.file_id	
 	) AS files ON files.doc_flow_out_client_id=t.id AND files.file_path='Контракт'
+
+	LEFT JOIN (
+		SELECT
+			out_f.doc_flow_out_client_id,
+			app_f.file_path,
+			json_agg(
+				json_build_object(
+					'file_id',app_f.file_id,
+					'file_name',app_f.file_name,
+					'file_size',app_f.file_size,
+					'file_signed',app_f.file_signed,
+					'file_uploaded','true',
+					'file_path',app_f.file_path
+				)
+			) AS attachments			
+		FROM doc_flow_out_client_document_files AS out_f
+		LEFT JOIN application_document_files AS app_f ON app_f.file_id=out_f.file_id	
+		GROUP BY out_f.doc_flow_out_client_id, app_f.file_path
+	) AS att ON att.doc_flow_out_client_id=t.id AND att.file_path='Исходящие заявителя'
+	
 	ORDER BY t.date_time DESC
 	;
 	

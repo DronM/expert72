@@ -22,7 +22,7 @@
 					}
 				}
 				
-				if (window.onClose){
+				if (window.onClose){					
 					window.onClose();
 				}
 				/*

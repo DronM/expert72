@@ -238,6 +238,14 @@ class DocFlowInDialog_Model extends ModelSQL{
 		$f_doc_flow_in_processes_chain=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"doc_flow_in_processes_chain",$f_opts);
 		$this->addField($f_doc_flow_in_processes_chain);
 		//********************
+		
+		//*** Field from_doc_flow_out_client_id ***
+		$f_opts = array();
+		$f_opts['id']="from_doc_flow_out_client_id";
+				
+		$f_from_doc_flow_out_client_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"from_doc_flow_out_client_id",$f_opts);
+		$this->addField($f_from_doc_flow_out_client_id);
+		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}
 

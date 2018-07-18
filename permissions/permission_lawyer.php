@@ -108,6 +108,8 @@ $permissions = array();
 				
 					$permissions['MailForSending_Controller_get_list']=TRUE;
 				
+					$permissions['MailForSending_Controller_get_object']=TRUE;
+				
 					$permissions['TimeZoneLocale_Controller_get_list']=TRUE;
 				
 					$permissions['TimeZoneLocale_Controller_get_object']=TRUE;

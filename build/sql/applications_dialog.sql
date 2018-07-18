@@ -1,7 +1,7 @@
 -- VIEW: applications_dialog
 
-DROP VIEW contracts_dialog;
-DROP VIEW applications_dialog;
+--DROP VIEW contracts_dialog;
+--DROP VIEW applications_dialog;
 
 CREATE OR REPLACE VIEW applications_dialog AS
 	SELECT
@@ -93,7 +93,9 @@ CREATE OR REPLACE VIEW applications_dialog AS
 		contr.contract_number,
 		contr.contract_date,
 		contr.expertise_result_number,
-		contr.expertise_result_date
+		contr.expertise_result_date,
+		
+		d.filled_percent
 		
 	FROM applications AS d
 	LEFT JOIN offices ON offices.id=d.office_id

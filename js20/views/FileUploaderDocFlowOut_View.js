@@ -34,7 +34,7 @@ function FileUploaderDocFlowOut_View(id,options){
 		"docType":"doc"
 	};
 	
-	options.customFolder = true;
+	options.customFolder = (options.customFolder==undefined)? true:options.customFolder;
 	
 	var self = this;
 	options.addElement = function(){

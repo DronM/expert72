@@ -523,6 +523,7 @@ function ApplicationDialog_Model(options){
 	options.fields.expertise_result_date = new FieldDate("expertise_result_date",filed_options);
 	
 			
+			
 		ApplicationDialog_Model.superclass.constructor.call(this,id,options);
 }
 extend(ApplicationDialog_Model,ModelXML);

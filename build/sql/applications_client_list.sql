@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION applications_client_list(in_user_id int)
   	inn varchar(12),
   	kpp varchar(10),
   	ogrn varchar(20),
-  	client_type client_types,
+  	client_type text,--client_types,
   	client_data jsonb
   )  AS
 $BODY$
@@ -26,7 +26,8 @@ $BODY$
 			app.applicant->>'inn' AS inn,
 			app.applicant->>'kpp' AS kpp,
 			app.applicant->>'ogrn' AS ogrn,
-			(app.applicant->>'client_type')::client_types AS client_type,
+			--(app.applicant->>'client_type')::client_types AS client_type,
+			app.applicant->>'client_type' AS client_type,
 			app.applicant AS client_data
 		FROM applications AS app
 		WHERE app.user_id=in_user_id
@@ -38,7 +39,8 @@ $BODY$
 			app.customer->>'inn' AS inn,
 			app.customer->>'kpp' AS kpp,
 			app.customer->>'ogrn' AS ogrn,
-			(app.customer->>'client_type')::client_types AS client_type,
+			--(app.customer->>'client_type')::client_types AS client_type,
+			app.customer->>'client_type' AS client_type,
 			app.customer AS client_data
 		FROM applications AS app
 		WHERE app.user_id=in_user_id
@@ -50,7 +52,8 @@ $BODY$
 			contractor->>'inn' AS inn,
 			contractor->>'kpp' AS kpp,
 			contractor->>'ogrn' AS ogrn,
-			(contractor->>'client_type')::client_types AS client_type,
+			--(contractor->>'client_type')::client_types AS client_type,
+			contractor->>'client_type' AS client_type,
 			contractor AS client_data
 		FROM jsonb_array_elements((SELECT ap.contractors FROM applications ap WHERE ap.user_id=in_user_id)) AS contractor		
 		*/

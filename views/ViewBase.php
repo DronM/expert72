@@ -1262,6 +1262,7 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ServiceList_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ApplicationDocFolderList_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/DocFolder_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/DocFolderClient_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ShortMessage_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ShortMessageChat_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'tmpl/App.templates.js'));

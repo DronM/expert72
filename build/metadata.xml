@@ -2,7 +2,7 @@
 <metadata owner="expert72">
 	<versions>
 		<version dateOpen="2017-09-27 12:09:48" dateClose="2017-12-08 10:12:08">1.001 
-		<lastBuild>2018-07-13 05:40:41</lastBuild></version>
+		<lastBuild>2018-07-18 07:06:01</lastBuild></version>
 		<version dateOpen="2017-12-08 11:12:01" dateClose="2017-12-08 11:12:04">1.002</version>
 		<version dateOpen="2017-12-08 11:12:20" dateClose="2017-12-08 11:12:20">1.0.3</version>
 		<version dateOpen="2017-12-12 11:12:07" dateClose="2017-12-12 11:12:07">1.0.4</version>
@@ -66,6 +66,7 @@
 		<version dateOpen="2018-07-09 06:07:30" dateClose="2018-07-09 15:07:11">1.0.62</version>
 		<version dateOpen="2018-07-11 06:07:40" dateClose="2018-07-11 06:07:43">1.0.63</version>
 		<version dateOpen="2018-07-12 11:07:32" dateClose="2018-07-13 05:07:41">1.0.64</version>
+		<version dateOpen="2018-07-13 15:07:13" dateClose="2018-07-18 07:07:06">1.0.66</version>
 	</versions>
 	<globalFilters>
 		<field id="user_id"/>
@@ -130,6 +131,9 @@
 			</value>
 			<value id="contr_return">
 				<ru descr="&#x412;&#x43E;&#x437;&#x432;&#x440;&#x430;&#x442; &#x43F;&#x43E;&#x434;&#x43F;&#x438;&#x441;&#x430;&#x43D;&#x43D;&#x43E;&#x433;&#x43E; &#x43A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x430;"/>
+			</value>
+			<value id="expert_work_change">
+				<ru descr="&#x418;&#x437;&#x43C;&#x435;&#x43D;&#x43D;&#x438;&#x44F; &#x43F;&#x43E; &#x43B;&#x43E;&#x43A;&#x430;&#x43B;&#x44C;&#x43D;&#x44B;&#x43C; &#x437;&#x430;&#x43A;&#x43B;&#x44E;&#x447;&#x435;&#x43D;&#x438;&#x44F;&#x43C;"/>
 			</value>
 		</enum>
 		<enum id="client_types" descr="&#x422;&#x438;&#x43F; &#x43A;&#x43B;&#x438;&#x435;&#x43D;&#x442;&#x430;">
@@ -1008,6 +1012,7 @@
 			<field id="contract_date" dataType="Date"/>
 			<field id="expertise_result_number" dataType="String"/>
 			<field id="expertise_result_date" dataType="Date"/>
+			<field id="filled_percent" dataType="Int"/>
 			<globalFilter id="user_id"/>
 		</model>
 		<model id="ApplicationList" parent="ModelSQL" dataTable="applications_list" virtual="TRUE" baseModelId="Application">
@@ -1552,6 +1557,7 @@
 			<field id="state_register_doc" dataType="JSON"/>
 			<field id="from_client_app" dataType="Bool" defaultValue="FALSE"/>
 			<field id="doc_flow_in_processes_chain" dataType="JSON"/>
+			<field id="from_doc_flow_out_client_id" dataType="Int"/>
 		</model>
 		<model id="DocFlowInProcess" parent="ModelSQL" dataTable="doc_flow_in_processes" virtual="FALSE">
 			<field id="doc_flow_in_id" dataType="Int" refTable="doc_flow_in" refField="id" required="TRUE" primaryKey="TRUE"/>
@@ -2017,6 +2023,7 @@
 			<field id="contract_file" dataType="JSON"/>
 			<field id="doc_flow_out_client_type" dataType="String"/>
 			<field id="contract_files" dataType="JSON"/>
+			<field id="attachment_files" dataType="JSON"/>
 			<globalFilter id="user_id"/>
 		</model>
 		<model id="DocFlowOutClientDocumentFile" parent="ModelSQL" dataTable="doc_flow_out_client_document_files" virtual="FALSE">
@@ -2729,6 +2736,7 @@
 		</controller>
 		<controller id="MailForSending" parentId="ControllerSQL">
 			<publicMethod id="get_list" modelId="MailForSendingList"/>
+			<publicMethod id="get_object" modelId="MailForSending"/>
 		</controller>
 		<controller id="TimeZoneLocale" parentId="ControllerSQL">
 			<publicMethod id="get_list" modelId="TimeZoneLocale"/>
@@ -4219,6 +4227,7 @@
 		<jsScript file="views/ServiceList_View.js"/>
 		<jsScript file="views/ApplicationDocFolderList_View.js"/>
 		<jsScript file="views/DocFolder_View.js"/>
+		<jsScript file="views/DocFolderClient_View.js"/>
 		<jsScript file="views/ShortMessage_View.js"/>
 		<jsScript file="views/ShortMessageChat_View.js"/>
 		<jsScript file="tmpl/App.templates.js" compressed="FALSE" standalone="FALSE"/>

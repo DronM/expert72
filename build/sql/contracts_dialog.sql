@@ -120,7 +120,9 @@ CREATE OR REPLACE VIEW contracts_dialog AS
 				AND sec.create_date=(
 					SELECT max(sec2.create_date)
 					FROM expert_sections AS sec2
-					WHERE sec2.document_type=t.document_type AND sec2.construction_type_id=(app.construction_types_ref->'keys'->>'id')::int
+					WHERE sec2.document_type=t.document_type
+						AND sec2.construction_type_id=(app.construction_types_ref->'keys'->>'id')::int
+						AND sec2.create_date<=t.date_time
 				)
 				ORDER BY sec.section_index				
 			) AS sec_rows

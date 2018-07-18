@@ -39,30 +39,61 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 <xsl:template name="extra_methods">
 	private function move_contract_files($appId,$docFlowId,&amp;$files){
 	
-		if (count($files['name'])!=2){
+		if (count($files['name'])%2!=0){
 			throw new Exception(self::ER_NO_CONTRACT_SIG);
 		}
-	
-		//sig-data indexes ".sig" - 4 chars
-		$sig_ind = (strtolower(substr($files['name'][0],strlen($files['name'][0])-4,4))=='.sig')? 0 : NULL;		
-		if (is_null($sig_ind)){
-			$sig_ind = (strtolower(substr($files['name'][1],strlen($files['name'][1])-4,4))=='.sig')? 1 : NULL;
-			if (is_null($sig_ind)){
-				throw new Exception(self::ER_NO_CONTRACT_SIG);
-			}
-		}
-		$data_ind = ($sig_ind==1)? 0:1;
 
 		$dir = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
 			Application_Controller::APP_DIR_PREF.$appId.DIRECTORY_SEPARATOR.
 			self::CONTRACT_FOLDER;
 			
+		mkdir($dir,0777,TRUE);
+		
+		$fl_ind = 0;
+		$fl_names = [];
+		foreach($files['tmp_name'] as $fl){
+			$is_sig = (strtolower(substr($files['name'][$fl_ind],strlen($files['name'][$fl_ind])-4,4))=='.sig');
+			$fl_name = $is_sig? substr($files['name'][$fl_ind],0,strlen($files['name'][$fl_ind])-4) : $files['name'][$fl_ind];
+			if (!array_key_exists($fl_name,$fl_names)){
+				$fl_names[$fl_name] = md5(uniqid());
+			}
+			
+			if (!move_uploaded_file($files['tmp_name'][$fl_ind],$dir.DIRECTORY_SEPARATOR.$fl_names[$fl_name].($is_sig? '.sig':'') )){
+				throw new Exception('Ошибка загрузки файла '.$files['name'][$fl_ind]);
+			}
+			
+			if (!$is_sig){
+				$this->getDbLinkMaster()->query(sprintf(
+					"INSERT INTO application_document_files
+					(file_id,application_id,document_id,document_type,date_time,
+					file_name,file_path,file_signed,file_size)
+					VALUES
+					('%s',%d,0,'documents',now(),'%s','%s',TRUE,%f)",
+					$fl_names[$fl_name],
+					$appId,
+					$files['name'][$fl_ind],
+					self::CONTRACT_FOLDER,
+					$files['size'][$fl_ind]
+				));
+				//Отметка к письму				
+				$this->getDbLinkMaster()->query(sprintf(
+					"INSERT INTO doc_flow_out_client_document_files
+					(file_id,doc_flow_out_client_id)
+					VALUES
+					('%s',%d)",
+					$fl_names[$fl_name],
+					$docFlowId
+				));				
+			}			
+			$fl_ind++;
+		}
+	
 		//*************** А если уже был контракт? надо удалять... *************************
 		/*
 		if (file_exists($dir)){
 			rrmdir($dir);
 		}
-		*/
+		
 		$this->getDbLinkMaster()->query(sprintf(
 		"DELETE FROM doc_flow_out_client_document_files
 		WHERE file_id IN (
@@ -78,41 +109,8 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		$appId,
 		self::CONTRACT_FOLDER
 		));
+		*/
 		//***********************************************
-				
-		mkdir($dir,0777,TRUE);
-	
-		$file_id = md5(uniqid());
-	
-		if (!move_uploaded_file($files['tmp_name'][$data_ind],$dir.DIRECTORY_SEPARATOR.$file_id)){
-			throw new Exception('Ошибка загрузки контракта');
-		}
-		//sig
-		if (!move_uploaded_file($files['tmp_name'][$sig_ind],$dir.DIRECTORY_SEPARATOR.$file_id.'.sig')){
-			throw new Exception('Ошибка загрузки подписи контракта');
-		}
-		
-		$this->getDbLinkMaster()->query(sprintf(
-			"INSERT INTO application_document_files
-			(file_id,application_id,document_id,document_type,date_time,
-			file_name,file_path,file_signed,file_size)
-			VALUES
-			('%s',%d,0,'documents',now(),'%s','%s',TRUE,%f)",
-			$file_id,
-			$appId,
-			$files['name'][$data_ind],
-			self::CONTRACT_FOLDER,
-			$files['size'][$data_ind]
-		));
-		//Отметка к письму				
-		$this->getDbLinkMaster()->query(sprintf(
-			"INSERT INTO doc_flow_out_client_document_files
-			(file_id,doc_flow_out_client_id)
-			VALUES
-			('%s',%d)",
-			$file_id,
-			$docFlowId
-		));				
 	}
 
 	public function insert($pm){

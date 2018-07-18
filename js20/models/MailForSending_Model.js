@@ -151,7 +151,7 @@ function MailForSending_Model(options){
 	filed_options.autoInc = false;	
 	
 	options.fields.email_type = new FieldEnum("email_type",filed_options);
-	filed_options.enumValues = 'new_account,reset_pwd,user_email_conf,out_mail,new_app,app_change,new_remind,out_mail_to_app,contract_state_change,app_to_correction,contr_return';
+	filed_options.enumValues = 'new_account,reset_pwd,user_email_conf,out_mail,new_app,app_change,new_remind,out_mail_to_app,contract_state_change,app_to_correction,contr_return,expert_work_change';
 	
 			
 			

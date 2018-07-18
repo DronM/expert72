@@ -31,8 +31,13 @@ function DocFlowOutClientDialog_View(id,options){
 		,"contr_return":"Возврат контракта"
 	}
 	
+	//все прочие папки	
+	var attachments;
+	var sent = false;
 	if (options.model && (options.model.getRowIndex()>=0 || options.model.getNextRow()) ){			
 		options.readOnly = options.model.getFieldValue("sent");
+		attachments = options.model.getFieldValue("attachment_files");
+		sent = options.model.getFieldValue("sent");
 	}
 	
 	options.addElement = function(){
@@ -129,6 +134,7 @@ function DocFlowOutClientDialog_View(id,options){
 			"mainView":this,
 			"separateSignature":true,
 			"allowOnlySignedFiles":true,
+			"multipleFiles":true,
 			"onDeleteFile":function(fileId,callBack){
 				self.deleteContract(fileId,callBack);
 			},
@@ -141,12 +147,35 @@ function DocFlowOutClientDialog_View(id,options){
 		//Вкладки с документацией
 		this.addDocumentTabs(options.models.ApplicationDialog_Model,options.models.DocumentTemplateAllList_Model);
 
+		//произвольные файлы
+		this.addElement(new DocFolderClient_View(id+":attachments",{
+			"items":attachments,
+			"templateOptions":{
+				"isNotSent":!sent
+			},
+			"mainView":this
+		}));				
+		
+
 		options.controlOk = new ButtonOK(id+":cmdOk",{
 			"onClick":function(){
-				self.setSent(true);
-				self.getControlSave().setEnabled(false);
-				self.onOK(function(){
-					self.getControlSave().setEnabled(true);
+				if (self.getElement("doc_flow_out_client_type").getValue()=="contr_resp"){
+					self.checkRequiredFiles();
+					self.checkForUploadFileCount();				
+				}
+				//
+				WindowQuestion.show({
+					"text":"Отправить исходящее письмо?",
+					"cancel":false,
+					"callBack":function(res){			
+						if (res==WindowQuestion.RES_YES){
+							self.setSent(true);
+							self.getControlSave().setEnabled(false);
+							self.onOK(function(){
+								self.getControlSave().setEnabled(true);
+							});
+						}
+					}
 				});
 			}
 		});
@@ -248,7 +277,7 @@ DocFlowOutClientDialog_View.prototype.onGetData = function(resp,cmd){
 		
 		$(".fileDeleteBtn").attr("disabled","disabled");
 		$(".uploader-file-add").attr("disabled","disabled");
-		
+		$("a[download_href=true]").removeAttr("disabled");
 	}
 	else{
 		//doc flow files can be modified
@@ -259,6 +288,8 @@ DocFlowOutClientDialog_View.prototype.onGetData = function(resp,cmd){
 		}
 		
 		this.setType(this.getModel().getFieldValue("doc_flow_out_client_type"));
+		
+		this.getElement("attachments").initDownload();
 	}
 	
 	this.setType(this.getElement("doc_flow_out_client_type").getValue());
@@ -319,3 +350,52 @@ DocFlowOutClientDialog_View.prototype.downloadContract = function(fileId){
 	pm_sig.setFieldValue("id",this.getElement("id").getValue());
 	pm_sig.download(null,1);
 }
+
+DocFlowOutClientDialog_View.prototype.getTotalFileCount = function(){
+	return this.getFileCount(true);
+}
+DocFlowOutClientDialog_View.prototype.getForUploadFileCount = function(tabs){
+	return this.getFileCount(false,tabs);
+}
+
+DocFlowOutClientDialog_View.prototype.checkForUploadFileCount = function(){
+	var tabs = [];
+	if (this.getForUploadFileCount(tabs)){
+		var mes = "Есть незагруженные файлы документации " +( (tabs.length==1)? (" в разделе "+tabs[0]) : (" в разделах:"+tabs.join(", ")) ); 
+		throw new Error(mes);
+	}
+}
+DocFlowOutClientDialog_View.prototype.checkRequiredFiles = function(){
+	for (var tab_name in this.m_documentTabs){
+		if (this.m_documentTabs[tab_name] && this.m_documentTabs[tab_name].control){
+			this.m_documentTabs[tab_name].control.checkRequiredFiles();
+		}
+	}
+	this.getElement("attachments").checkRequiredFiles();
+}
+
+/**
+ * @param {bool} total total file count or only for download
+ * @param {array} tabs tab names with files
+ */
+DocFlowOutClientDialog_View.prototype.getFileCount = function(total,tabs){
+	var tot = 0;
+	for (var id in this.m_documentTabs){
+		if (this.m_documentTabs[id].control){
+			var tab_tot = total? this.m_documentTabs[id].control.getTotalFileCount():this.m_documentTabs[id].control.getForUploadFileCount();
+			if (tabs && tab_tot){
+				tabs.push(this.m_documentTabs[id].title);
+			}			
+			tot+= tab_tot;
+		}
+	}
+	
+	var tab_tot = total? this.getElement("attachments").getTotalFileCount() : this.getElement("attachments").getForUploadFileCount();
+	if (tabs && tab_tot){
+		tabs.push("Прочие файлы");
+	}			
+	tot+= tab_tot;
+	
+	return tot;
+}
+

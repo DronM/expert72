@@ -20,10 +20,12 @@
 function MailForSending_Controller(options){
 	options = options || {};
 	options.listModelClass = MailForSendingList_Model;
+	options.objModelClass = MailForSending_Model;
 	MailForSending_Controller.superclass.constructor.call(this,options);	
 	
 	//methods
 	this.addGetList();
+	this.addGetObject();
 		
 }
 extend(MailForSending_Controller,ControllerObjServer);
@@ -87,6 +89,16 @@ extend(MailForSending_Controller,ControllerObjServer);
 	var f_opts = {};
 	f_opts.alias = "Тип";
 	pm.addField(new FieldEnum("email_type",f_opts));
+}
+
+			MailForSending_Controller.prototype.addGetObject = function(){
+	MailForSending_Controller.superclass.addGetObject.call(this);
+	
+	var pm = this.getGetObject();
+	var f_opts = {};
+		
+	pm.addField(new FieldInt("id",f_opts));
+	pm.addField(new FieldString("mode"));
 }
 
 		

@@ -116,24 +116,21 @@ function DocFlowInDialog_View(id,options){
 		}));	
 		
 		
-		var files;
-		var not_sent = true;
-		if (options.model && options.model.getNextRow()){
+		var files = [];
+		this.m_notSent = true;
+		if (options.model && (options.model.getRowIndex()>=0 || options.model.getNextRow()) ){			
 			//options.templateOptions.isNotSent = !options.model.getFieldValue("sent");
 			files = options.model.getFieldValue("files") || [];
 			var st = options.model.getFieldValue("state");
-			if (st && (st=="examining"||st=="acquainting"||st=="fulfilling")){
-				not_sent = false;
+			if (options.model.getFieldValue("from_doc_flow_out_client_id") || (st && (st=="examining"||st=="acquainting"||st=="fulfilling")) ){
+				this.m_notSent = false;
 			}
 		}
-		else{
-			files = [];
-		}
-
+		
 		this.addElement(new FileUploaderDocFlowIn_View(this.getId()+":attachments",{
 			"mainView":this,
 			"items":files,
-			"templateOptions":{"isNotSent":not_sent}
+			"templateOptions":{"isNotSent":this.m_notSent}
 			})
 		);
 		
@@ -350,14 +347,12 @@ DocFlowInDialog_View.prototype.toDOM = function(p){
 DocFlowInDialog_View.prototype.setAppVis = function(){
 	var v = this.getElement("doc_flow_types_ref").getValue();
 	v = v? v.getKey():null;
-	
+
 	var app_vis = (v &&
 		(v==window.getApp().getPredefinedItem("doc_flow_types","app").getKey()
 		||v==window.getApp().getPredefinedItem("doc_flow_types","contr_resp").getKey()
+		||v==window.getApp().getPredefinedItem("doc_flow_types","contr_paper_return").getKey()
 		)
-	);
-	
-	var att_vis = (v &&!app_vis && v!=window.getApp().getPredefinedItem("doc_flow_types","contr_paper_return").getKey()
 	);
 	
 	this.getElement("from_applications_ref").setVisible(app_vis);
@@ -365,7 +360,7 @@ DocFlowInDialog_View.prototype.setAppVis = function(){
 	this.getElement("from_addr_name").setVisible(!app_vis);
 	this.getElement("doc_flow_out_ref").setVisible(!app_vis);
 	this.getElement("content").setVisible(!app_vis);
-	this.getElement("attachments").setVisible(att_vis);
+	this.getElement("attachments").setVisible(app_vis);
 	
 	var cont_n = document.getElementById(this.getId()+":from_client_cont");
 	if (!app_vis && cont_n){
@@ -393,7 +388,7 @@ DocFlowInDialog_View.prototype.onGetData = function(resp){
 		this.getElement("cmdExamination").setEnabled(true);
 		this.getElement("comment_text").setEnabled(true);
 	}
-	if (st){
+	if (!this.m_notSent){
 		var n = document.getElementById(this.getId()+":state_descr");
 		/*
 			" (документ: "+this.getModel().getFieldValue("state_register_doc").getDescr()+
@@ -409,6 +404,11 @@ DocFlowInDialog_View.prototype.onGetData = function(resp){
 			self.showStateReport();
 		}, true);
 		DOMHelper.delClass(n,"hidden");
+		
+		$(".fileDeleteBtn").attr("disabled","disabled");
+		$(".fillClientData").attr("disabled","disabled");
+		$(".uploader-file-add").attr("disabled","disabled");
+		$("a[download_href=true]").removeAttr("disabled");		
 	}
 	else{	
 		//if not sent

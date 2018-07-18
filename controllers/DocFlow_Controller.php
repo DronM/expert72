@@ -28,6 +28,8 @@ require_once(USER_CONTROLLERS_PATH.'Application_Controller.php');
 
 class DocFlow_Controller extends ControllerSQL{
 
+	const CLIENT_OUT_FOLDER = 'Исходящие заявителя';
+
 	const ER_STORAGE_FILE_NOT_FOUND = 'Файл не найден!@1001';
 	const ER_INVALID_DOC_FLOW_TYPE = 'Invalid document type!@1002';
 	const ER_EMPLOYEE_NOT_DEFINED = 'К пользователю не привязан сотрудник!@1003';

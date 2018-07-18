@@ -30,6 +30,18 @@ sudo apt-get install nginx
 Настраиваемые параметры
 
 sudo service nginx start/stop/reload/restart
+
+/lib/systemd/system/php5-fpm.service
+/lib/systemd/system/nginx.service
+[Service]
+umask=0002
+
+
+!!!НА ХОСТИНГЕ СМЕНИТЬ umask www-data!!!
+/etc/apache2/evvars
+Добавить строку
+umask 002
+sudo service apache2 restart
 #********* Nginx installation ***********************
 
 

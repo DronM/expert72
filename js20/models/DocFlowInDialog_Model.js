@@ -261,6 +261,15 @@ function DocFlowInDialog_Model(options){
 	
 	options.fields.doc_flow_in_processes_chain = new FieldJSON("doc_flow_in_processes_chain",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.from_doc_flow_out_client_id = new FieldInt("from_doc_flow_out_client_id",filed_options);
+	
 		DocFlowInDialog_Model.superclass.constructor.call(this,id,options);
 }
 extend(DocFlowInDialog_Model,ModelXML);

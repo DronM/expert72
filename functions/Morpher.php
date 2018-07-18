@@ -12,7 +12,7 @@ class Morpher {
 			$par_str.= $n.'='.urlencode($v);
 		}
 		$q = sprintf('%s/%s?%s',self::HOST,$cmd,$par_str);
-		$res = fopen($q,'r');
+		$res = @fopen($q,'r');
 		
 		if (!$res) {
 			throw new Exception('Ошибка соединения с сервером morpher '.$q);

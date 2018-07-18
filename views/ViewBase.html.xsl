@@ -31,6 +31,7 @@
 				<xsl:call-template name="checkForError"/>
 				
 				<xsl:call-template name="modelFromTemplate"/>
+				
 			}
 		</script>
 	</head>
@@ -107,10 +108,10 @@
 
 	<!--ALL js modules -->
 	<xsl:apply-templates select="model[@id='ModelJavaScript']/row"/>
+	<!--<script src="http://localhost:1337/vorlon.js"></script>-->
 	<script>
 		$("#waiting").hide();
 	</script>
-	
 </xsl:template>
 
 

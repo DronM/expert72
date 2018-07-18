@@ -14,6 +14,9 @@
 function FileUploaderDocFlowIn_View(id,options){
 	options = options || {};	
 	
+	options.customFolder = false;
+	options.includeFilePath = true;
+	
 	FileUploaderDocFlowIn_View.superclass.constructor.call(this, id,options);
 }
 extend(FileUploaderDocFlowIn_View,FileUploaderDocFlowOut_View);
