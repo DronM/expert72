@@ -40,7 +40,10 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		));
 		$files = json_decode($ar['files']);
 		foreach($files as $file){
-			if (file_exists($fl=DOC_FLOW_FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$file->id)){
+			if (
+				file_exists($fl=DOC_FLOW_FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$file->id)
+				||(defined('DOC_FLOW_FILE_STORAGE_DIR_MAIN')&amp;&amp; file_exists($fl=DOC_FLOW_FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$file->id))
+			){
 				unlink($fl);
 			}
 		}				
@@ -178,7 +181,12 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		$this->getExtDbVal($pm,'file_id'),
 		$this->getExtDbVal($pm,'file_id')
 		));
-		if (count($ar) &amp;&amp; file_exists($fl=DOC_FLOW_FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$ar['file_id'])){
+		if (
+			count($ar) &amp;&amp;
+				(file_exists($fl=DOC_FLOW_FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$ar['file_id'])
+				||(defined('DOC_FLOW_FILE_STORAGE_DIR_MAIN')&amp;&amp; file_exists($fl=DOC_FLOW_FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$ar['file_id']) )
+				)
+		){
 			$mime = getMimeTypeOnExt($ar['file_name']);
 			ob_clean();
 			downloadFile($fl, $mime,'attachment;',$ar['file_name']);
@@ -208,7 +216,10 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 					array_push($new_files,$file);
 				}
 			}
-			if (file_exists($fl=DOC_FLOW_FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$file_id)){
+			if (
+				file_exists($fl=DOC_FLOW_FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$file_id)
+				||(defined('DOC_FLOW_FILE_STORAGE_DIR_MAIN')&amp;&amp;file_exists($fl=DOC_FLOW_FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$file_id))
+			){
 				$new_db_files = (count($new_files))? ("'".json_encode($new_files)."'") : 'NULL';
 				unlink($fl);
 				$this->getDbLinkMaster()->query(sprintf(

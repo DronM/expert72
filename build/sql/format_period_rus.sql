@@ -82,4 +82,4 @@ $$
 $$
   LANGUAGE sql IMMUTABLE CALLED ON NULL INPUT
   COST 100;
-ALTER FUNCTION format_period_rus(in_date_from date, in_date_to date, in_date_format text) OWNER TO expert72;
+ALTER FUNCTION format_period_rus(in_date_from date, in_date_to date, in_date_format text) OWNER TO ;

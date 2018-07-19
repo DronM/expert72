@@ -160,7 +160,11 @@ function ExpertWorkGrid(id,options){
 									},
 									"title":"Добавлен "+DateHelper.format(DateHelper.strtotime(files[i].date),"d/m/y"),
 									"events":{
-										"click":function(){
+										"click":function(e){
+											if (e.preventDefault){
+												e.preventDefault();
+											}
+											e.stopPropagation();
 											self.downloadFile(this.getAttr("expert_id"),this.getAttr("file_id"));
 										}
 									}

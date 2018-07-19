@@ -567,6 +567,7 @@ function Contract_Model(options){
 			
 			
 			
+			
 		Contract_Model.superclass.constructor.call(this,id,options);
 }
 extend(Contract_Model,ModelXML);

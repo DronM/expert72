@@ -345,8 +345,8 @@ class DocFlowOut_Controller extends DocFlow_Controller{
 						WHEN app_f.document_type='documents' THEN app_f.file_path
 						ELSE app_f.document_id::text
 					END AS file_path,
-					TRUE AS from_app,
-					application_id AS from_application_id
+					TRUE AS is_application,
+					application_id AS application_id
 				FROM doc_flow_out_client_document_files AS t
 				LEFT JOIN doc_flow_in ON doc_flow_in.from_doc_flow_out_client_id=t.doc_flow_out_client_id
 				LEFT JOIN application_document_files AS app_f ON app_f.file_id = t.file_id				
@@ -354,12 +354,13 @@ class DocFlowOut_Controller extends DocFlow_Controller{
 				UNION ALL
 				(SELECT
 					t.file_name,
-					NULL AS document_type,
-					NULL AS file_path,
-					FALSE AS from_app,
-					NULL AS from_application_id
+					'documents' AS document_type,
+					t.file_path AS file_path,
+					TRUE AS is_application,
+					out.to_application_id AS application_id
 				FROM doc_flow_attachments AS t
-				WHERE t.doc_type='doc_flow_in'::data_types AND t.doc_id=%d AND t.file_id=%s)				
+				LEFT JOIN doc_flow_out AS out ON t.doc_id=out.id
+				WHERE t.doc_type='doc_flow_out'::data_types AND t.doc_id=%d AND t.file_id=%s)				
 				",
 				$this->getExtDbVal($pm,'file_id'),
 				$this->getExtDbVal($pm,'doc_id'),
@@ -375,16 +376,16 @@ class DocFlowOut_Controller extends DocFlow_Controller{
 			$fl = NULL;
 			if (
 			(
-				$ar['from_app']=='t'
+				$ar['is_application']=='t'
 				&& (!file_exists($fl = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
-						Application_Controller::APP_DIR_PREF.$ar['from_application_id'].DIRECTORY_SEPARATOR.
+						Application_Controller::APP_DIR_PREF.$ar['application_id'].DIRECTORY_SEPARATOR.
 						Application_Controller::dirNameOnDocType($ar['document_type']).DIRECTORY_SEPARATOR.
 						$ar['file_path'].DIRECTORY_SEPARATOR.
 						$this->getExtVal($pm,'file_id').$posf)
 						&&(
 							defined('FILE_STORAGE_DIR_MAIN') &&
 							!file_exists($fl = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.
-							Application_Controller::APP_DIR_PREF.$ar['from_application_id'].DIRECTORY_SEPARATOR.
+							Application_Controller::APP_DIR_PREF.$ar['application_id'].DIRECTORY_SEPARATOR.
 							Application_Controller::dirNameOnDocType($ar['document_type']).DIRECTORY_SEPARATOR.
 							$ar['file_path'].DIRECTORY_SEPARATOR.
 							$this->getExtVal($pm,'file_id').$posf)							
@@ -392,7 +393,7 @@ class DocFlowOut_Controller extends DocFlow_Controller{
 					)
 			)
 			|| (
-				$ar['from_app']!='t'
+				$ar['is_application']!='t'
 				&& !file_exists($fl = DOC_FLOW_FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$this->getExtVal($pm,'file_id').$posf)
 			)
 			){

@@ -16,23 +16,11 @@
  * @param {Object} options
  */
 
-function ApplicationDocFolder_Model(options){
-	var id = 'ApplicationDocFolder_Model';
+function RepReestr_Model(options){
+	var id = 'RepReestr_Model';
 	options = options || {};
 	
 	options.fields = {};
-	
-			
-				
-			
-				
-	
-	var filed_options = {};
-	filed_options.primaryKey = true;	
-	
-	filed_options.autoInc = false;	
-	
-	options.fields.id = new FieldInt("id",filed_options);
 	
 				
 	
@@ -41,10 +29,9 @@ function ApplicationDocFolder_Model(options){
 	
 	filed_options.autoInc = false;	
 	
-	options.fields.name = new FieldText("name",filed_options);
+	options.fields.date_time = new FieldDate("date_time",filed_options);
 	
-			
-		ApplicationDocFolder_Model.superclass.constructor.call(this,id,options);
+		RepReestr_Model.superclass.constructor.call(this,id,options);
 }
-extend(ApplicationDocFolder_Model,ModelXML);
+extend(RepReestr_Model,ModelXML);
 

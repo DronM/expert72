@@ -690,6 +690,12 @@ $permissions = array();
 				
 					$permissions['Contract_Controller_get_work_end_date']=TRUE;
 				
+					$permissions['Contract_Controller_get_object_inf']=TRUE;
+				
+					$permissions['Contract_Controller_get_reestr_expertise']=TRUE;
+				
+					$permissions['Contract_Controller_get_reestr_cost_eval']=TRUE;
+				
 					$permissions['ExpertiseRejectType_Controller_insert']=TRUE;
 				
 					$permissions['ExpertiseRejectType_Controller_update']=TRUE;

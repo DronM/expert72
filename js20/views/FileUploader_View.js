@@ -25,6 +25,7 @@ function FileUploader_View(id,options){
 	this.m_allowSignature = (options.allowSignature!=undefined)? options.allowSignature:true;
 	
 	this.m_customFolder = options.customFolder;
+	this.m_getCustomFolderDefault = options.getCustomFolderDefault;
 	this.m_includeFilePath = (options.includeFilePath!=undefined)? options.includeFilePath : false;
 	
 	if (options.constDownloadTypes && options.constDownloadMaxSize){
@@ -241,6 +242,8 @@ FileUploader_View.prototype.addFileToContainer = function(container,itemFile,ite
 
 	var self = this;
 
+	var cust_folder = self.m_getCustomFolderDefault? self.m_getCustomFolderDefault():null;
+
 	var templateOptions = this.m_fileTemplateOptions;
 	templateOptions.file_id			= itemFile.file_id;
 	templateOptions.file_uploaded		= itemFile.file_uploaded;	
@@ -254,7 +257,7 @@ FileUploader_View.prototype.addFileToContainer = function(container,itemFile,ite
 	templateOptions.file_not_signed		= !itemFile.file_signed;
 	templateOptions.file_deletable		= (this.m_allowFileDeletion && !templateOptions.file_deleted);
 	templateOptions.separateSignature	= this.m_separateSignature;	
-	templateOptions.customFolder		= this.m_customFolder;
+	templateOptions.customFolder		= cust_folder? true : false;
 	templateOptions.out_file_id		= itemFile.out_file_id;
 	
 	if (this.m_includeFilePath){
@@ -287,9 +290,10 @@ FileUploader_View.prototype.addFileToContainer = function(container,itemFile,ite
 	}
 	
 	
-	if (this.m_customFolder){	
+	if (cust_folder){	
 		var incl_id = this.getId()+":file_"+itemFile.file_id+":include";
-		var vis = (itemFile.file_path&&itemFile.file_path.length&&itemFile.file_path!="Исходящие")? true:false;
+		var vis = (self.m_getCustomFolderDefault || (itemFile.file_path&&itemFile.file_path.length&&itemFile.file_path!="Исходящие") )? true:false;
+		
 		var folder_ctrl = new ApplicationDocFolderSelect(incl_id+":folder",{
 			"visible":vis,
 			"enabled":!itemFile.file_uploaded,
@@ -297,7 +301,8 @@ FileUploader_View.prototype.addFileToContainer = function(container,itemFile,ite
 			"inline":true,
 			"labelCaption":"",
 			"title":"Выберите папку проекта",
-			"addNotSelected":true
+			"addNotSelected":true,
+			"value":cust_folder
 		});
 		if (folder_ctrl.getVisible()){
 			folder_ctrl.origtoDOM = folder_ctrl.toDOM;
@@ -327,6 +332,7 @@ FileUploader_View.prototype.addFileToContainer = function(container,itemFile,ite
 					"attrs":{"file_id":itemFile.file_id,"doc_id":itemId},
 					"title":"Включение файла в папку проекта",
 					"enabled":folder_ctrl.getEnabled(),
+					"checked":cust_folder? true:false,
 					"events":{
 						"change":function(){
 							var cont = self.getElement("file-list_"+this.getAttr("doc_id"));

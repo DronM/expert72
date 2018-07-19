@@ -272,6 +272,7 @@ ContractList_View.prototype.addGrid = function(options){
 		})
 	);	
 	
+	var self = this;
 	this.addElement(new GridAjx(id+":grid",{
 		"model":model,
 		"keyIds":["id"],
@@ -286,7 +287,17 @@ ContractList_View.prototype.addGrid = function(options){
 			"cmdEdit":true,
 			"cmdFilter":true,
 			"filters":filters,
-			"variantStorage":options.variantStorage
+			"variantStorage":options.variantStorage,
+			"addCustomCommands":function(commands){
+				commands.push(
+					new ContractObjInfGridCmd(id+":grid:cmdObjInf",{
+						"controller":contr,
+						"getContractId":function(){
+							return self.getElement("grid").getModelRow().id.getValue();
+						}
+					})
+				);
+			}
 		}),
 		"head":new GridHead(id+"-grid:head",{
 			"elements":[

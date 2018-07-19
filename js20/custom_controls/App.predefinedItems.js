@@ -28,4 +28,9 @@ App.prototype.m_predefinedItems = {
 	,"short_message_recipient_states":{
 		"free":new RefType({"dataType":"short_message_recipient_states","descr":"Свободен","keys":{"id":1}})
 	}
+	,"application_doc_folders":{
+		"contract":new RefType({"dataType":"application_doc_folders","descr":"Договорные документы","keys":{"id":1}})
+		,"result":new RefType({"dataType":"application_doc_folders","descr":"Заключение","keys":{"id":2}})
+	}
+	
 }

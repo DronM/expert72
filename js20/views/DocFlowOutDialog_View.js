@@ -30,8 +30,21 @@ function DocFlowOutDialog_View(id,options){
 		var labelClassName = "control-label "+bs+"2";
 		var role = window.getApp().getServVar("role_id");
 		var is_admin = (role=="admin");		
-		var akt1c = (role=="boss"||role=="admin");
-		var order1c = (role=="lawyer"||role=="boss"||role=="admin");
+		
+		var files;
+		var st;
+		var model_exists = false;
+		if (options.model && ( options.model.getRowIndex()==0 || (options.model.getRowIndex()<0 && options.model.getNextRow())) ){
+			files = options.model.getFieldValue("files") || [];
+			st = options.model.getFieldValue("state");
+			model_exists = true;
+		}
+		else{
+			files = [];
+		}
+	
+		var akt1c = ( (role=="boss"||role=="admin") && st!="registered");
+		var order1c = ( (role=="lawyer"||role=="boss"||role=="admin") && st!="registered");
 		this.addElement(new HiddenKey(id+":id"));
 		
 		//EditDateTime
@@ -163,25 +176,25 @@ function DocFlowOutDialog_View(id,options){
 		}));	
 		
 
-		var files;
-		var st;
-		var model_exists = false;
-		if (options.model && ( options.model.getRowIndex()==0 || (options.model.getRowIndex()<0 && options.model.getNextRow())) ){
-			files = options.model.getFieldValue("files") || [];
-			st = options.model.getFieldValue("state");
-			model_exists = true;
-		}
-		else{
-			files = [];
-		}
-	
 		this.addElement(new FileUploaderDocFlowOut_View(this.getId()+":attachments",{
 			"mainView":this,
 			"items":files,
 			"templateOptions":{"isNotSent":(st!="registered")},
 			"akt1c":akt1c,
-			"order1c":order1c
-			})
+			"order1c":order1c,
+			"getCustomFolderDefault":function(){
+				var v = self.getElement("doc_flow_types_ref").getValue();
+				if (v){
+					var k = v.getKey();
+					if (k==window.getApp().getPredefinedItem("doc_flow_types","contr_close").getKey()){
+						return window.getApp().getPredefinedItem("application_doc_folders","result");
+					}
+					if (k==window.getApp().getPredefinedItem("doc_flow_types","app_resp").getKey()){
+						return window.getApp().getPredefinedItem("application_doc_folders","contract");
+					}				
+				}
+			}
+		})
 		);
 	
 		//Команды
@@ -224,14 +237,15 @@ function DocFlowOutDialog_View(id,options){
 			}
 		}));
 		
-		this.addElement(new ButtonCmd(id+":attachments:attFromTemplate",{
-			"caption":"Создать из шаблона ",
-			"glyph":"glyphicon-duplicate",
-			"onClick":function(){				
-				self.createFromTemplate();
-			}
-		}));
-		
+		if (st!="registered"){
+			this.addElement(new ButtonCmd(id+":attachments:attFromTemplate",{
+				"caption":"Создать из шаблона ",
+				"glyph":"glyphicon-duplicate",
+				"onClick":function(){				
+					self.createFromTemplate();
+				}
+			}));
+		}		
 		if (akt1c){
 			this.addElement(new Doc1cAkt(id+":attachments:akt1c",{
 				"model":options.model,
@@ -400,6 +414,11 @@ DocFlowOutDialog_View.prototype.onGetData = function(resp,cmd){
 		this.setEnabled(false);
 		this.getElement("attachments").setEnabled(true);
 		//delete!!!
+		$(".fileDeleteBtn").attr("disabled","disabled");
+		$(".fillClientData").attr("disabled","disabled");
+		$(".uploader-file-add").attr("disabled","disabled");
+		$("a[download_href=true]").removeAttr("disabled");
+		
 	}
 	else{
 		this.getElement("attachments").initDownload();

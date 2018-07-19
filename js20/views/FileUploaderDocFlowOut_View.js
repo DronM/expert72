@@ -133,7 +133,7 @@ FileUploaderDocFlowOut_View.prototype.getQuerySruc = function(file){
 	if (this.m_customFolder){
 		//один раздел
 		var file_ctrl = this.getElement("file-list_doc").getElement("file_"+file.file_id);	
-		if (file_ctrl.includeCont.getElement("check").getValue()){
+		if (file_ctrl && file_ctrl.includeCont && file_ctrl.includeCont.getElement("check").getValue()){
 			//все проверено уже
 			res.file_path = file_ctrl.includeCont.getElement("folder").getValue().getDescr();
 		}		
