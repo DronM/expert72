@@ -129,7 +129,7 @@ https://www.webucator.com/tutorial/learn-xsl-fo
 					<fo:block text-align="left">Исполнитель работ по подготовке документации</fo:block>
 				</fo:table-cell>																												
 				<fo:table-cell border-width="0.2mm" border-style="solid">
-					<fo:block text-align="left"><xsl:value-of select="row/contrctor_names"/>
+					<fo:block text-align="left"><xsl:value-of select="row/contrcator_names"/>
 					</fo:block>
 				</fo:table-cell>
 			</fo:table-row>
@@ -140,6 +140,14 @@ https://www.webucator.com/tutorial/learn-xsl-fo
 				</fo:table-cell>																												
 				<fo:table-cell border-width="0.2mm" border-style="solid">
 					<fo:block text-align="left">
+						<xsl:choose>
+						<xsl:when test="row/document_type='pd'">ПД</xsl:when>
+						<xsl:when test="row/document_type='eng_survey'">РИИ</xsl:when>
+						<xsl:when test="row/document_type='pd_eng_survey'">ПД и РИИ</xsl:when>
+						<xsl:when test="row/document_type='cost_eval_validity'">Достоверность</xsl:when>
+						<xsl:otherwise>Заключение не выдано</xsl:otherwise>
+						</xsl:choose>
+					
 					</fo:block>
 				</fo:table-cell>
 			</fo:table-row>

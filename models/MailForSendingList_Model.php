@@ -34,6 +34,8 @@ class MailForSendingList_Model extends ModelSQL{
 		
 		//*** Field date_time ***
 		$f_opts = array();
+		
+		$f_opts['alias']='Дата письма';
 		$f_opts['id']="date_time";
 				
 		$f_date_time=new FieldSQLDateTimeTZ($this->getDbLink(),$this->getDbName(),$this->getTableName(),"date_time",$f_opts);
@@ -42,6 +44,8 @@ class MailForSendingList_Model extends ModelSQL{
 		
 		//*** Field from_addr ***
 		$f_opts = array();
+		
+		$f_opts['alias']='Адрес отправителя';
 		$f_opts['length']=50;
 		$f_opts['id']="from_addr";
 				
@@ -51,6 +55,8 @@ class MailForSendingList_Model extends ModelSQL{
 		
 		//*** Field from_name ***
 		$f_opts = array();
+		
+		$f_opts['alias']='Отправитель';
 		$f_opts['length']=255;
 		$f_opts['id']="from_name";
 				
@@ -60,6 +66,8 @@ class MailForSendingList_Model extends ModelSQL{
 		
 		//*** Field to_addr ***
 		$f_opts = array();
+		
+		$f_opts['alias']='Адрес получателя';
 		$f_opts['length']=50;
 		$f_opts['id']="to_addr";
 				
@@ -69,6 +77,8 @@ class MailForSendingList_Model extends ModelSQL{
 		
 		//*** Field to_name ***
 		$f_opts = array();
+		
+		$f_opts['alias']='Получатель';
 		$f_opts['length']=255;
 		$f_opts['id']="to_name";
 				
@@ -113,6 +123,8 @@ class MailForSendingList_Model extends ModelSQL{
 		
 		//*** Field subject ***
 		$f_opts = array();
+		
+		$f_opts['alias']='Тема';
 		$f_opts['length']=255;
 		$f_opts['id']="subject";
 				
@@ -122,6 +134,8 @@ class MailForSendingList_Model extends ModelSQL{
 		
 		//*** Field sent ***
 		$f_opts = array();
+		
+		$f_opts['alias']='Отправлено';
 		$f_opts['defaultValue']='false';
 		$f_opts['id']="sent";
 				
@@ -131,6 +145,8 @@ class MailForSendingList_Model extends ModelSQL{
 		
 		//*** Field sent_date_time ***
 		$f_opts = array();
+		
+		$f_opts['alias']='Дата отправки';
 		$f_opts['id']="sent_date_time";
 				
 		$f_sent_date_time=new FieldSQLDateTimeTZ($this->getDbLink(),$this->getDbName(),$this->getTableName(),"sent_date_time",$f_opts);
@@ -139,6 +155,8 @@ class MailForSendingList_Model extends ModelSQL{
 		
 		//*** Field email_type ***
 		$f_opts = array();
+		
+		$f_opts['alias']='Тип';
 		$f_opts['id']="email_type";
 				
 		$f_email_type=new FieldSQLEnum($this->getDbLink(),$this->getDbName(),$this->getTableName(),"email_type",$f_opts);

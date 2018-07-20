@@ -51,6 +51,8 @@ class ReportTemplate_Model extends ModelSQL{
 		
 		//*** Field comment_text ***
 		$f_opts = array();
+		
+		$f_opts['alias']='Комментарий';
 		$f_opts['id']="comment_text";
 				
 		$f_comment_text=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"comment_text",$f_opts);
@@ -59,6 +61,8 @@ class ReportTemplate_Model extends ModelSQL{
 		
 		//*** Field fields ***
 		$f_opts = array();
+		
+		$f_opts['alias']='Поля шаблона';
 		$f_opts['id']="fields";
 				
 		$f_fields=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"fields",$f_opts);
@@ -67,6 +71,8 @@ class ReportTemplate_Model extends ModelSQL{
 		
 		//*** Field in_params ***
 		$f_opts = array();
+		
+		$f_opts['alias']='Параметры выборки данных';
 		$f_opts['id']="in_params";
 				
 		$f_in_params=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"in_params",$f_opts);

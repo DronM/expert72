@@ -36,6 +36,8 @@ class DocFlowApprovementTemplateDialog_Model extends ModelSQL{
 		
 		//*** Field name ***
 		$f_opts = array();
+		
+		$f_opts['alias']='Наименование';
 		$f_opts['length']=100;
 		$f_opts['id']="name";
 				
@@ -45,6 +47,8 @@ class DocFlowApprovementTemplateDialog_Model extends ModelSQL{
 		
 		//*** Field comment_text ***
 		$f_opts = array();
+		
+		$f_opts['alias']='Комментарий';
 		$f_opts['id']="comment_text";
 				
 		$f_comment_text=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"comment_text",$f_opts);

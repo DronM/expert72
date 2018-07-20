@@ -24,6 +24,8 @@ class View_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['autoInc']=TRUE;
+		
+		$f_opts['alias']='Код';
 		$f_opts['id']="id";
 				
 		$f_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"id",$f_opts);

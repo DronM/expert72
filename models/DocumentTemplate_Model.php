@@ -43,6 +43,8 @@ class DocumentTemplate_Model extends ModelSQL{
 		//*** Field create_date ***
 		$f_opts = array();
 		$f_opts['primaryKey'] = TRUE;
+		
+		$f_opts['alias']='Дата создания';
 		$f_opts['defaultValue']='now()::date';
 		$f_opts['id']="create_date";
 				
@@ -52,6 +54,8 @@ class DocumentTemplate_Model extends ModelSQL{
 		
 		//*** Field content ***
 		$f_opts = array();
+		
+		$f_opts['alias']='Содержимое шаблона';
 		$f_opts['id']="content";
 				
 		$f_content=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"content",$f_opts);
@@ -60,6 +64,8 @@ class DocumentTemplate_Model extends ModelSQL{
 		
 		//*** Field content_for_experts ***
 		$f_opts = array();
+		
+		$f_opts['alias']='Содержимое шаблона';
 		$f_opts['id']="content_for_experts";
 				
 		$f_content_for_experts=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"content_for_experts",$f_opts);
@@ -68,6 +74,8 @@ class DocumentTemplate_Model extends ModelSQL{
 		
 		//*** Field comment_text ***
 		$f_opts = array();
+		
+		$f_opts['alias']='Комментарий';
 		$f_opts['id']="comment_text";
 				
 		$f_comment_text=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"comment_text",$f_opts);

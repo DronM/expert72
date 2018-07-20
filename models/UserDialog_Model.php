@@ -24,6 +24,8 @@ class UserDialog_Model extends ModelSQL{
 		//*** Field id ***
 		$f_opts = array();
 		$f_opts['primaryKey'] = TRUE;
+		
+		$f_opts['alias']='Код';
 		$f_opts['id']="id";
 				
 		$f_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"id",$f_opts);
@@ -32,6 +34,8 @@ class UserDialog_Model extends ModelSQL{
 		
 		//*** Field name ***
 		$f_opts = array();
+		
+		$f_opts['alias']='Имя';
 		$f_opts['id']="name";
 				
 		$f_name=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"name",$f_opts);
@@ -57,6 +61,8 @@ class UserDialog_Model extends ModelSQL{
 		
 		//*** Field email ***
 		$f_opts = array();
+		
+		$f_opts['alias']='Эл.почта';
 		$f_opts['id']="email";
 				
 		$f_email=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"email",$f_opts);
@@ -65,6 +71,8 @@ class UserDialog_Model extends ModelSQL{
 		
 		//*** Field role_descr ***
 		$f_opts = array();
+		
+		$f_opts['alias']='Роль';
 		$f_opts['id']="role_descr";
 				
 		$f_role_descr=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"role_descr",$f_opts);
@@ -97,6 +105,8 @@ class UserDialog_Model extends ModelSQL{
 		
 		//*** Field phone_cel ***
 		$f_opts = array();
+		
+		$f_opts['alias']='Моб.телефон';
 		$f_opts['length']=11;
 		$f_opts['id']="phone_cel";
 				
@@ -106,6 +116,8 @@ class UserDialog_Model extends ModelSQL{
 		
 		//*** Field color_palette ***
 		$f_opts = array();
+		
+		$f_opts['alias']='Цветовая схема';
 		$f_opts['id']="color_palette";
 				
 		$f_color_palette=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"color_palette",$f_opts);

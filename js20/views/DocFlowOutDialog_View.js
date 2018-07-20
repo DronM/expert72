@@ -362,6 +362,10 @@ DocFlowOutDialog_View.prototype.setDocVis = function(){
 			contr_vis = true;
 			doc_type = "contr_return";
 		}
+		else if (v_key==window.getApp().getPredefinedItem("doc_flow_types","signed_documents").getKey()){
+			contr_vis = true;
+			doc_type = "signed_documents";
+		}
 		if (app_vis||contr_vis){
 			this.getElement("subject").setValue(window.getApp().getPredefinedItem("doc_flow_types",doc_type).getDescr());
 		}

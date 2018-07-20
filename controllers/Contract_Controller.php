@@ -1272,12 +1272,15 @@ class Contract_Controller extends ControllerSQL{
 				app.customer->>'name' AS customer_name,
 				(SELECT
 					string_agg(a2.contractor_name,', ')
-				FROM (SELECT (jsonb_array_elements(a1.contractors)->>'name')::text AS contractor_name FROM applications AS a1 WHERE a1.id=t.application_id) AS a2
+				FROM (SELECT (jsonb_array_elements(app.contractors)->>'name')::text AS contractor_name) AS a2
 				) AS contrcator_names,
 				t.expertise_result,
 				t.reg_number,
 				t.expertise_result_date,
-				format_date_rus(t.expertise_result_date,FALSE) AS expertise_result_date_descr
+				format_date_rus(t.expertise_result_date,FALSE) AS expertise_result_date_descr,
+				
+				t.document_type
+				
 			FROM contracts AS t
 			LEFT JOIN applications AS app ON app.id=t.application_id
 			WHERE t.id=%d",
@@ -1377,7 +1380,8 @@ class Contract_Controller extends ControllerSQL{
 				t.expertise_result_date AS expertise_result_ret_date,
 				to_char(t.expertise_result_date,'DD/MM/YY') AS expertise_result_ret_date_descr,
 				
-				t.argument_document
+				t.argument_document,
+				t.order_document
 				
 				
 			FROM contracts AS t
@@ -1406,10 +1410,179 @@ class Contract_Controller extends ControllerSQL{
 	}	
 	
 	public function get_reestr_expertise($pm){
-		$this->get_reestr($pm,'pd');
+		$cond = new ConditionParamsSQL($pm,$this->getDbLink());
+		$dt_from = $cond->getDbVal('date_time','ge',DT_DATETIME);
+		if (!isset($dt_from)){
+			throw new Exception('Не задана дата начала!');
+		}		
+		$dt_to = $cond->getDbVal('date_time','le',DT_DATETIME);
+		if (!isset($dt_to)){
+			throw new Exception('Не задана дата окончания!');
+		}		
+		
+		$model = new RepReestrExpertise_Model($this->getDbLink());
+		$model->query(
+			sprintf(
+			"SELECT
+				row_number() OVER (ORDER BY t.expertise_result_date) AS ord,
+				
+				(SELECT
+					string_agg(a2.contractor_name,', ')
+				FROM (SELECT (jsonb_array_elements(a1.contractors)->>'name')::text AS contractor_name FROM applications AS a1 WHERE a1.id=t.application_id) AS a2
+				) AS contrcator_names,
+			
+				(SELECT string_agg(w.expert_name,', ')
+				FROM (
+					SELECT DISTINCT (expert_works.expert_id), employees.name AS expert_name
+					FROM expert_works
+					LEFT JOIN employees ON employees.id=expert_works.expert_id
+					WHERE expert_works.contract_id=t.id
+				) AS w			
+				) AS experts,
+				
+				t.contract_number||' от '||to_char(t.contract_date,'DD/MM/YY') AS contract,
+				
+				t.constr_name,
+				kladr_parse_addr(t.constr_address) AS constr_address,
+				
+				(SELECT
+					string_agg(rep.n||':'||rep.v,', ')
+					FROM (SELECT
+						jsonb_array_elements(c1.constr_technical_features->'rows')->'fields'->>'name' AS n,
+						jsonb_array_elements(t.constr_technical_features->'rows')->'fields'->>'value' AS v
+						FROM contracts AS c1
+						WHERE c1.id=t.id
+					) AS rep
+				) AS constr_features,
+				
+				t.kadastr_number,
+				t.grad_plan_number,				
+				
+				coalesce(app.developer->>'name','')||
+				CASE WHEN app.developer->>'name' IS NOT NULL THEN ', ' ELSE '' END||
+				coalesce(app.customer->>'name','')
+				AS developer_customer,
+								
+				t.area_document,
+				
+				CASE
+					WHEN t.expertise_result='negative' THEN 'Отрицательое заключение: '||rej.name
+					ELSE 'Положительное заключение'
+				END AS exeprtise_res_descr,
+				
+				CASE
+					WHEN t.expertise_type='pd' THEN 'ПД'
+					WHEN t.expertise_type='eng_survey' THEN 'РИИ'
+					WHEN t.expertise_type='pd_eng_survey' THEN 'ПД и РИИ'
+					ELSE '-'
+				END AS exeprtise_type,
+				
+				t.reg_number,
+				
+				to_char(t.expertise_result_date,'DD/MM/YY') AS expertise_result_date,
+				
+				to_char(t.date_time,'DD/MM/YY') AS date_time,
+				
+				(SELECT to_char(max(p.pay_date),'DD/MM/YY') FROM client_payments AS p
+				WHERE p.contract_id=t.id
+				) AS pay_date,
+				
+				to_char(t.expertise_result_date,'DD/MM/YY') AS expertise_result_ret_date
+				
+			FROM contracts AS t
+			LEFT JOIN applications AS app ON app.id=t.application_id
+			LEFT JOIN expertise_reject_types AS rej ON rej.id=t.expertise_reject_type_id
+			WHERE t.expertise_result_date BETWEEN %s AND (%s::timestamp+'1 day'::interval-'1 second'::interval) AND document_type='pd' AND t.expertise_result IS NOT NULL
+			ORDER BY t.expertise_result_date",
+			$dt_from,
+			$dt_to
+			)
+		);
+		$this->addModel($model);
+		
+		$this->addNewModel(
+			sprintf(
+			"SELECT format_period_rus(%s::date,%s::date,NULL) AS period_descr
+			",
+			$dt_from,
+			$dt_to
+			),
+		'Head_Model'
+		);		
+	
 	}
+	
 	public function get_reestr_cost_eval($pm){
-		$this->get_reestr($pm,'cost_eval_validity');
+		$cond = new ConditionParamsSQL($pm,$this->getDbLink());
+		$dt_from = $cond->getDbVal('date_time','ge',DT_DATETIME);
+		if (!isset($dt_from)){
+			throw new Exception('Не задана дата начала!');
+		}		
+		$dt_to = $cond->getDbVal('date_time','le',DT_DATETIME);
+		if (!isset($dt_to)){
+			throw new Exception('Не задана дата окончания!');
+		}		
+		
+		$model = new RepReestrCostEval_Model($this->getDbLink());
+		$model->query(
+			sprintf(
+			"SELECT
+				row_number() OVER (ORDER BY t.expertise_result_date) AS ord,
+				t.constr_name,
+				
+				CASE WHEN t.constr_address IS NOT NULL THEN kladr_parse_addr(t.constr_address)||', ' ELSE '' END||
+				(SELECT
+					string_agg(rep.n||':'||rep.v,', ')
+					FROM (SELECT
+						jsonb_array_elements(c1.constr_technical_features->'rows')->'fields'->>'name' AS n,
+						jsonb_array_elements(t.constr_technical_features->'rows')->'fields'->>'value' AS v
+						FROM contracts AS c1
+						WHERE c1.id=t.id
+					) AS rep
+				)				
+				AS constr_address_features,
+				
+				coalesce(app.customer->>'name','')||
+				CASE WHEN app.customer->>'name' IS NOT NULL THEN ', ' ELSE '' END||
+				coalesce(app.developer->>'name','')
+				AS customer_developer,
+				
+				(SELECT
+					string_agg(a2.contractor_name,', ')
+				FROM (SELECT (jsonb_array_elements(a1.contractors)->>'name')::text AS contractor_name FROM applications AS a1 WHERE a1.id=t.application_id) AS a2
+				) AS contrcator_names,
+			
+				CASE
+					WHEN t.expertise_result='negative' THEN 'Отрицательое заключение: '||rej.name
+					ELSE 'Положительное заключение'
+				END AS exeprtise_res_descr,
+			
+				t.reg_number||' от '||to_char(t.expertise_result_date,'DD/MM/YY') AS exeprtise_res_number_date,			
+			
+				t.order_document,
+				t.argument_document
+				
+			FROM contracts AS t
+			LEFT JOIN applications AS app ON app.id=t.application_id
+			LEFT JOIN expertise_reject_types AS rej ON rej.id=t.expertise_reject_type_id
+			WHERE t.expertise_result_date BETWEEN %s AND (%s::timestamp+'1 day'::interval-'1 second'::interval) AND document_type='cost_eval_validity' AND t.expertise_result IS NOT NULL
+			ORDER BY t.expertise_result_date",
+			$dt_from,
+			$dt_to
+			)
+		);
+		$this->addModel($model);
+		
+		$this->addNewModel(
+			sprintf(
+			"SELECT format_period_rus(%s::date,%s::date,NULL) AS period_descr
+			",
+			$dt_from,
+			$dt_to
+			),
+		'Head_Model'
+		);		
+	
 	}
 	
 

@@ -36,6 +36,8 @@ class EmailTemplate_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['primaryKey'] = FALSE;
 		$f_opts['autoInc']=FALSE;
+		
+		$f_opts['alias']='Тип email';
 		$f_opts['id']="email_type";
 				
 		$f_email_type=new FieldSQLEnum($this->getDbLink(),$this->getDbName(),$this->getTableName(),"email_type",$f_opts);
@@ -44,6 +46,8 @@ class EmailTemplate_Model extends ModelSQL{
 		
 		//*** Field template ***
 		$f_opts = array();
+		
+		$f_opts['alias']='Шаблон';
 		$f_opts['id']="template";
 				
 		$f_template=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"template",$f_opts);
@@ -52,6 +56,8 @@ class EmailTemplate_Model extends ModelSQL{
 		
 		//*** Field comment_text ***
 		$f_opts = array();
+		
+		$f_opts['alias']='Комментарий';
 		$f_opts['id']="comment_text";
 				
 		$f_comment_text=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"comment_text",$f_opts);
@@ -60,6 +66,8 @@ class EmailTemplate_Model extends ModelSQL{
 		
 		//*** Field mes_subject ***
 		$f_opts = array();
+		
+		$f_opts['alias']='Тема';
 		$f_opts['id']="mes_subject";
 				
 		$f_mes_subject=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"mes_subject",$f_opts);
@@ -68,6 +76,8 @@ class EmailTemplate_Model extends ModelSQL{
 		
 		//*** Field fields ***
 		$f_opts = array();
+		
+		$f_opts['alias']='Поля';
 		$f_opts['id']="fields";
 				
 		$f_fields=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"fields",$f_opts);

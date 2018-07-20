@@ -18,7 +18,7 @@ function RepReestrCostEval_View(id,options){
 	options.cmdMake = true;
 	options.cmdPrint = true;
 	options.cmdFilter = true;
-	options.cmdExcel = false;
+	options.cmdExcel = true;
 	options.cmdPdf = false;
 	
 	var period_ctrl = new EditPeriodDate(id+":filter-ctrl-period",{

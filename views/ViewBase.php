@@ -1636,6 +1636,8 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ShortMessageChat_Model.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/RecipientPicture_Model.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/RepReestr_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/RepReestrExpertise_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/RepReestrCostEval_Model.js'));
 	
 			if (isset($_SESSION['scriptId'])){
 				$script_id = $_SESSION['scriptId'];

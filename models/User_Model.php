@@ -114,6 +114,8 @@ class User_Model extends ModelSQL{
 		
 		//*** Field pers_data_proc_agreement ***
 		$f_opts = array();
+		
+		$f_opts['alias']='Согласие на обработку персональных данных';
 		$f_opts['defaultValue']='FALSE';
 		$f_opts['id']="pers_data_proc_agreement";
 				
@@ -123,6 +125,8 @@ class User_Model extends ModelSQL{
 		
 		//*** Field create_dt ***
 		$f_opts = array();
+		
+		$f_opts['alias']='Дата создания';
 		$f_opts['id']="create_dt";
 				
 		$f_create_dt=new FieldSQLDateTimeTZ($this->getDbLink(),$this->getDbName(),$this->getTableName(),"create_dt",$f_opts);
@@ -131,6 +135,8 @@ class User_Model extends ModelSQL{
 		
 		//*** Field email_confirmed ***
 		$f_opts = array();
+		
+		$f_opts['alias']='Адрес электр.почты подтвержден';
 		$f_opts['defaultValue']='FALSE';
 		$f_opts['id']="email_confirmed";
 				
@@ -140,6 +146,8 @@ class User_Model extends ModelSQL{
 		
 		//*** Field comment_text ***
 		$f_opts = array();
+		
+		$f_opts['alias']='Комментарий';
 		$f_opts['id']="comment_text";
 				
 		$f_comment_text=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"comment_text",$f_opts);
@@ -148,6 +156,8 @@ class User_Model extends ModelSQL{
 		
 		//*** Field color_palette ***
 		$f_opts = array();
+		
+		$f_opts['alias']='Цветовая схема';
 		$f_opts['id']="color_palette";
 				
 		$f_color_palette=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"color_palette",$f_opts);
@@ -156,6 +166,8 @@ class User_Model extends ModelSQL{
 		
 		//*** Field reminders_to_email ***
 		$f_opts = array();
+		
+		$f_opts['alias']='Дублировать напоминания на электронную почту';
 		$f_opts['defaultValue']='TRUE';
 		$f_opts['id']="reminders_to_email";
 				

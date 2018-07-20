@@ -25,6 +25,8 @@ class UserList_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['autoInc']=TRUE;
+		
+		$f_opts['alias']='Код';
 		$f_opts['id']="id";
 				
 		$f_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"id",$f_opts);
@@ -33,6 +35,8 @@ class UserList_Model extends ModelSQL{
 		
 		//*** Field name ***
 		$f_opts = array();
+		
+		$f_opts['alias']='Логин';
 		$f_opts['length']=50;
 		$f_opts['id']="name";
 				
@@ -42,6 +46,8 @@ class UserList_Model extends ModelSQL{
 		
 		//*** Field name_full ***
 		$f_opts = array();
+		
+		$f_opts['alias']='ФИО';
 		$f_opts['length']=250;
 		$f_opts['id']="name_full";
 				
@@ -51,6 +57,8 @@ class UserList_Model extends ModelSQL{
 		
 		//*** Field email ***
 		$f_opts = array();
+		
+		$f_opts['alias']='Email';
 		$f_opts['length']=50;
 		$f_opts['id']="email";
 				
@@ -60,6 +68,8 @@ class UserList_Model extends ModelSQL{
 		
 		//*** Field phone_cel ***
 		$f_opts = array();
+		
+		$f_opts['alias']='Телефон';
 		$f_opts['length']=50;
 		$f_opts['id']="phone_cel";
 				

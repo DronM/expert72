@@ -25,6 +25,8 @@ class MainMenuConstructor_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['autoInc']=TRUE;
+		
+		$f_opts['alias']='Код';
 		$f_opts['id']="id";
 				
 		$f_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"id",$f_opts);
@@ -49,6 +51,8 @@ class MainMenuConstructor_Model extends ModelSQL{
 		
 		//*** Field content ***
 		$f_opts = array();
+		
+		$f_opts['alias']='Содержание';
 		$f_opts['id']="content";
 				
 		$f_content=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"content",$f_opts);

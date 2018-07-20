@@ -117,7 +117,8 @@ function DocFlowInDialog_View(id,options){
 		
 		
 		var files = [];
-		this.m_notSent = true;
+		var is_admin = (window.getApp().getServVar("role_id")=="admin");
+		this.m_notSent = false;
 		if (options.model && (options.model.getRowIndex()>=0 || options.model.getNextRow()) ){			
 			//options.templateOptions.isNotSent = !options.model.getFieldValue("sent");
 			files = options.model.getFieldValue("files") || [];
@@ -130,7 +131,7 @@ function DocFlowInDialog_View(id,options){
 		this.addElement(new FileUploaderDocFlowIn_View(this.getId()+":attachments",{
 			"mainView":this,
 			"items":files,
-			"templateOptions":{"isNotSent":this.m_notSent}
+			"templateOptions":{"isNotSent": this.m_notSent}
 			})
 		);
 		
@@ -377,6 +378,8 @@ DocFlowInDialog_View.prototype.onGetData = function(resp){
 
 	this.setAppVis();
 
+	var is_admin = (window.getApp().getServVar("role_id")=="admin");
+
 	var m = this.getModel();
 	var st = m.getFieldValue("state");
 	var read_only = (m.getFieldValue("from_client_app") || st);
@@ -388,15 +391,8 @@ DocFlowInDialog_View.prototype.onGetData = function(resp){
 		this.getElement("cmdExamination").setEnabled(true);
 		this.getElement("comment_text").setEnabled(true);
 	}
-	if (!this.m_notSent){
+	if (!this.m_notSent && st){
 		var n = document.getElementById(this.getId()+":state_descr");
-		/*
-			" (документ: "+this.getModel().getFieldValue("state_register_doc").getDescr()+
-			", до "+
-			DateHelper.format(this.getModel().getFieldValue("state_end_dt"),"d/m/y H:i")+
-			")"
-		
-		*/
 		$(n).text("Статус: "+window.getApp().getEnum("doc_flow_in_states",this.getModel().getFieldValue("state"))
 		);
 		var self = this;
@@ -404,6 +400,9 @@ DocFlowInDialog_View.prototype.onGetData = function(resp){
 			self.showStateReport();
 		}, true);
 		DOMHelper.delClass(n,"hidden");
+	}	
+	
+	if (!this.m_notSent){
 		
 		$(".fileDeleteBtn").attr("disabled","disabled");
 		$(".fillClientData").attr("disabled","disabled");

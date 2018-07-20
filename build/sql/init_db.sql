@@ -94,10 +94,10 @@ CREATE TRIGGER client_payments_after_trigger
 
 INSERT INTO client_payments
 (contract_id,pay_date,total)
-(select id,date_time,payment2 from contracts where payment2>0)
+(select id,work_start_date,payment2 from contracts where payment2>0)
 INSERT INTO client_payments
 (contract_id,pay_date,total)
-(select id,date_time+'1 day',payment from contracts where payment>0)
+(select id,work_start_date+'1 day',payment from contracts where payment>0)
 
 
 COPY tmp_logins FROM '/home/andrey/logins.csv' (FORMAT csv, DELIMITER '@')
@@ -264,3 +264,25 @@ SELECT
 FROM applications
 ) As app
 WHERE app.id=contracts.application_id
+
+
+
+
+//*************************************
+DELETE from client_payments where contract_id in (select id from contracts where payment2>0 OR payment>0) LIMIT 10
+
+DROP TRIGGER client_payments_after_trigger ON public.client_payments;
+
+INSERT INTO client_payments
+(contract_id,pay_date,total)
+(select id,work_start_date,payment2 from contracts where payment2>0)
+INSERT INTO client_payments
+(contract_id,pay_date,total)
+(select id,work_start_date+'1 day',payment from contracts where payment>0)
+
+CREATE TRIGGER client_payments_after_trigger
+  AFTER INSERT
+  ON public.client_payments
+  FOR EACH ROW
+  EXECUTE PROCEDURE public.client_payments_process();
+

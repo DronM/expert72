@@ -24,6 +24,8 @@ class BankList_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['autoInc']=FALSE;
+		
+		$f_opts['alias']='БИК';
 		$f_opts['length']=9;
 		$f_opts['id']="bik";
 				
@@ -42,6 +44,8 @@ class BankList_Model extends ModelSQL{
 		
 		//*** Field gr_descr ***
 		$f_opts = array();
+		
+		$f_opts['alias']='Регион';
 		$f_opts['length']=50;
 		$f_opts['id']="gr_descr";
 				
@@ -51,6 +55,8 @@ class BankList_Model extends ModelSQL{
 		
 		//*** Field name ***
 		$f_opts = array();
+		
+		$f_opts['alias']='Наименование';
 		$f_opts['length']=50;
 		$f_opts['id']="name";
 				
@@ -60,6 +66,8 @@ class BankList_Model extends ModelSQL{
 		
 		//*** Field korshet ***
 		$f_opts = array();
+		
+		$f_opts['alias']='Кoр.счет';
 		$f_opts['length']=20;
 		$f_opts['id']="korshet";
 				
@@ -69,6 +77,8 @@ class BankList_Model extends ModelSQL{
 		
 		//*** Field adres ***
 		$f_opts = array();
+		
+		$f_opts['alias']='Адрес';
 		$f_opts['length']=70;
 		$f_opts['id']="adres";
 				
@@ -78,6 +88,8 @@ class BankList_Model extends ModelSQL{
 		
 		//*** Field gor ***
 		$f_opts = array();
+		
+		$f_opts['alias']='Город';
 		$f_opts['length']=31;
 		$f_opts['id']="gor";
 				

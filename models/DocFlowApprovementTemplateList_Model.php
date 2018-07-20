@@ -34,6 +34,8 @@ class DocFlowApprovementTemplateList_Model extends ModelSQL{
 		
 		//*** Field name ***
 		$f_opts = array();
+		
+		$f_opts['alias']='Наименование';
 		$f_opts['length']=100;
 		$f_opts['id']="name";
 				
