@@ -343,6 +343,7 @@ BEGIN
 			END IF;
 						
 			--Напоминание&&email админу - всегда
+			-- ну и всему списку сотрудников, указанных в доступности (permissions)
 			INSERT INTO reminders
 			(register_docs_ref,recipient_employee_id,content,docs_ref)
 			(SELECT
@@ -359,6 +360,19 @@ BEGIN
 			FROM employees
 			WHERE
 				employees.user_id IN (SELECT id FROM users WHERE role_id='admin')
+				OR
+				(NEW.doc_flow_out_client_type='contr_resp'
+				AND
+				employees.id IN (
+					SELECT (fld.obj->'keys'->>'id')::int
+					FROM (
+						SELECT jsonb_array_elements(contracts.permissions->'rows')->'fields'->'obj' AS obj
+						FROM contracts
+						WHERE contracts.id=v_contract_id
+					) AS fld
+					WHERE fld.obj->>'dataType'='employees'
+					)
+				)
 			);
 		
 		END IF;

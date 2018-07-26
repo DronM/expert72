@@ -396,6 +396,7 @@ DocFlowOutDialog_View.prototype.onGetData = function(resp,cmd){
 	var st = this.getModel().getFieldValue("state");
 	if (st){						
 		this.getElement("cmdApprove").setEnabled((st=="not_approved"||st=="approved_with_notes"));
+		this.getElement("cmdRegister").setEnabled((st=="approved"));
 		
 		var n = document.getElementById(this.getId()+":state_descr");
 		$(n).text(window.getApp().getEnum("doc_flow_out_states",st)+

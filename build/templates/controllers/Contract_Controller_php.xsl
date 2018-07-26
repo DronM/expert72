@@ -199,6 +199,12 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			coalesce(contr.expertise_cost_budget,0)+coalesce(contr.expertise_cost_self_fund,0) AS total,
 			contr.reg_number,
 			
+			(SELECT
+				jsonb_agg(json_build_object('pay_docum_date',pm.pay_docum_date,'pay_docum_number',pm.pay_docum_number))
+			FROM client_payments AS pm
+			WHERE pm.contract_id=contr.id
+			) AS payment,
+			
 			cl.ext_id AS client_ext_id,
 			cl.name AS client_name,
 			cl.name_full AS client_name_full,
@@ -538,108 +544,6 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		
 	}
 	
-	public function get_reestr($pm,$documentType){
-		$cond = new ConditionParamsSQL($pm,$this->getDbLink());
-		$dt_from = $cond->getDbVal('date_time','ge',DT_DATETIME);
-		if (!isset($dt_from)){
-			throw new Exception('Не задана дата начала!');
-		}		
-		$dt_to = $cond->getDbVal('date_time','le',DT_DATETIME);
-		if (!isset($dt_to)){
-			throw new Exception('Не задана дата окончания!');
-		}		
-		
-		$this->addNewModel(
-			sprintf(
-			"SELECT
-				t.id,
-				
-				(SELECT
-					string_agg(a2.contractor_name,', ')
-				FROM (SELECT (jsonb_array_elements(a1.contractors)->>'name')::text AS contractor_name FROM applications AS a1 WHERE a1.id=t.application_id) AS a2
-				) AS contrcator_names,
-			
-				(SELECT string_agg(w.expert_name,', ')
-				FROM (
-					SELECT DISTINCT (expert_works.expert_id), employees.name AS expert_name
-					FROM expert_works
-					LEFT JOIN employees ON employees.id=expert_works.expert_id
-					WHERE expert_works.contract_id=t.id
-				) AS w			
-				) AS experts,
-				
-				t.contract_number,
-				t.contract_date,
-				to_char(t.contract_date,'DD/MM/YY') AS contract_date_descr,
-				
-				t.constr_name,
-				kladr_parse_addr(t.constr_address) AS constr_address,
-				
-				(SELECT
-					string_agg(rep.n||':'||rep.v,', ')
-					FROM (SELECT
-						jsonb_array_elements(c1.constr_technical_features->'rows')->'fields'->>'name' AS n,
-						jsonb_array_elements(t.constr_technical_features->'rows')->'fields'->>'value' AS v
-						FROM contracts AS c1
-						WHERE c1.id=t.id
-					) AS rep
-				) AS constr_features,
-				
-				t.kadastr_number,
-				t.grad_plan_number,				
-				
-				app.developer->>'name' AS developer_name,
-				app.customer->>'name' AS customer_name,
-				
-				t.area_document,
-				
-				t.expertise_result,
-				rej.name AS reject_type_descr,
-				
-				t.expertise_type,
-				t.reg_number,
-				t.expertise_result_date,
-				to_char(t.expertise_result_date,'DD/MM/YY') AS expertise_result_date_descr,
-				
-				t.date_time,
-				to_char(t.date_time,'DD/MM/YY') AS date_time_date_descr,
-				
-				(SELECT to_char(max(p.pay_date),'DD/MM/YY') FROM client_payments AS p
-				WHERE p.contract_id=t.id
-				) AS pay_date_descr,
-				
-				t.expertise_result_date AS expertise_result_ret_date,
-				to_char(t.expertise_result_date,'DD/MM/YY') AS expertise_result_ret_date_descr,
-				
-				t.argument_document,
-				t.order_document
-				
-				
-			FROM contracts AS t
-			LEFT JOIN applications AS app ON app.id=t.application_id
-			LEFT JOIN expertise_reject_types AS rej ON rej.id=t.expertise_reject_type_id
-			WHERE t.expertise_result_date BETWEEN %s AND (%s::timestamp+'1 day'::interval-'1 second'::interval) AND document_type='%s' AND t.expertise_result IS NOT NULL
-			ORDER BY t.expertise_result_date",
-			$dt_from,
-			$dt_to,
-			$documentType
-			),
-		'Reestr_Model'
-		);
-		
-		$this->addNewModel(
-			sprintf(
-			"SELECT format_period_rus(%s::date,%s::date,NULL) AS period_descr
-			",
-			$dt_from,
-			$dt_to
-			),
-		'Head_Model'
-		);		
-	
-				
-	}	
-	
 	public function get_reestr_expertise($pm){
 		$cond = new ConditionParamsSQL($pm,$this->getDbLink());
 		$dt_from = $cond->getDbVal('date_time','ge',DT_DATETIME);
@@ -659,16 +563,16 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				
 				(SELECT
 					string_agg(a2.contractor_name,', ')
-				FROM (SELECT (jsonb_array_elements(a1.contractors)->>'name')::text AS contractor_name FROM applications AS a1 WHERE a1.id=t.application_id) AS a2
+				FROM (SELECT (jsonb_array_elements(app.contractors)->>'name')::text AS contractor_name) AS a2
 				) AS contrcator_names,
 			
-				(SELECT string_agg(w.expert_name,', ')
-				FROM (
-					SELECT DISTINCT (expert_works.expert_id), employees.name AS expert_name
-					FROM expert_works
-					LEFT JOIN employees ON employees.id=expert_works.expert_id
-					WHERE expert_works.contract_id=t.id
-				) AS w			
+				(SELECT
+					string_agg(e.n,', ')
+	
+					FROM (SELECT
+						jsonb_array_elements(t.result_sign_expert_list->'rows')->'fields'->'employees_ref'->>'descr' AS n
+					) AS e
+	
 				) AS experts,
 				
 				t.contract_number||' от '||to_char(t.contract_date,'DD/MM/YY') AS contract,
@@ -679,10 +583,8 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				(SELECT
 					string_agg(rep.n||':'||rep.v,', ')
 					FROM (SELECT
-						jsonb_array_elements(c1.constr_technical_features->'rows')->'fields'->>'name' AS n,
+						jsonb_array_elements(t.constr_technical_features->'rows')->'fields'->>'name' AS n,
 						jsonb_array_elements(t.constr_technical_features->'rows')->'fields'->>'value' AS v
-						FROM contracts AS c1
-						WHERE c1.id=t.id
 					) AS rep
 				) AS constr_features,
 				
@@ -765,10 +667,8 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				(SELECT
 					string_agg(rep.n||':'||rep.v,', ')
 					FROM (SELECT
-						jsonb_array_elements(c1.constr_technical_features->'rows')->'fields'->>'name' AS n,
+						jsonb_array_elements(t.constr_technical_features->'rows')->'fields'->>'name' AS n,
 						jsonb_array_elements(t.constr_technical_features->'rows')->'fields'->>'value' AS v
-						FROM contracts AS c1
-						WHERE c1.id=t.id
 					) AS rep
 				)				
 				AS constr_address_features,

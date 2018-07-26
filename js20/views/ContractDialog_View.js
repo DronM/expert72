@@ -251,8 +251,7 @@ function ContractDialog_View(id,options){
 				this.addElement(new Enum_cost_eval_validity_pd_orders(id+":cost_eval_validity_pd_order",{
 					"editContClassName":editContClassName,
 					"labelClassName":labelClassName,
-					"labelCaption":"Тип проверки ПД:",
-					"enabled":false
+					"labelCaption":"Тип проверки ПД:"
 				}));			
 				this.addElement(new EditString(id+":order_document",{
 					"maxLength":"1000",
@@ -539,6 +538,26 @@ function ContractDialog_View(id,options){
 				}
 			})
 		);
+		
+		//Архив - только admin и юристы!
+		if (role=="admin" || options.templateOptions.notExpert){
+			this.addElement(new ButtonCmd(id+":cmdZipAll",{
+				"caption":"Скачать документацию ",
+				"glyph":"glyphicon-compressed",
+				"title":"Скачать все документы одним архивом",
+				"onClick":function(){	
+					var contr = new Application_Controller();
+					contr.getPublicMethod("zip_all").setFieldValue("application_id",self.getElement("applications_ref").getValue().getKey("id"));
+					contr.download("zip_all",null,null,function(n,descr){
+						self.getElement("cmdZipAll").setEnabled(true);
+						if (n){
+							throw new Error(descr);
+						}
+					});
+				}
+			}));
+		}
+				
 		/*
 		this.addElement(new ButtonCmd(id+":cmdObjInf",{
 			"caption":"Выписка ",
@@ -677,10 +696,11 @@ function ContractDialog_View(id,options){
 			,new CommandBinding({"control":this.getElement("constr_address"),"fieldId":"constr_address"})
 			,new CommandBinding({"control":this.getElement("constr_technical_features"),"fieldId":"constr_technical_features"})
 			,new CommandBinding({"control":this.getElement("expertise_cost_budget")})
-			,new CommandBinding({"control":this.getElement("expertise_cost_self_fund")})
+			,new CommandBinding({"control":this.getElement("expertise_cost_self_fund")})			
 		];
 		if (options.templateOptions.costEvalValidity){
 			write_b.push(new CommandBinding({"control":this.getElement("order_document")}));
+			write_b.push(new CommandBinding({"control":this.getElement("cost_eval_validity_pd_order")}));
 		}
 	}
 	else{

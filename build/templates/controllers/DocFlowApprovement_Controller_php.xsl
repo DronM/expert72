@@ -86,10 +86,10 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			
 			$link->query('BEGIN');
 			try{
-				if (!$bigger_step_exists &amp;&amp; $step_closed){
+				if (($close_result_num==0 || !$bigger_step_exists) &amp;&amp; $step_closed){
 					$close_fields = sprintf(", close_date_time=now(),close_result='%s'",$close_result);
 				}
-				else if ($bigger_step_exists &amp;&amp; $step_closed){
+				else if ($close_result_num!=0 &amp;&amp; $bigger_step_exists &amp;&amp; $step_closed){
 					$close_fields = sprintf(", current_step=%d",$empl_step+1);
 				}
 				$link->query(sprintf(
@@ -123,7 +123,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				));
 				
 				//передать дальше по цепочке, если все с днным step закрыты и есть еще строки с большим step
-				if ($bigger_step_exists &amp;&amp; $step_closed){
+				if ($close_result_num!=0 &amp;&amp; $bigger_step_exists &amp;&amp; $step_closed){
 					$link->query(sprintf(
 						"SELECT doc_flow_approvements_add_task_for_step(
 							(SELECT doc_flow_approvements FROM doc_flow_approvements WHERE id=%d),

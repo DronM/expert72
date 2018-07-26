@@ -286,7 +286,7 @@ DocFlowApprovement_View.prototype.onGetData = function(resp,cmd){
 			this.getControlOK().setEnabled(false);
 			
 			var res = "";
-			if (model.getField("closed").getValue()){
+			if (model.getField("close_date_time").getValue()){
 				res = window.getApp().getEnum("doc_flow_approvement_results",model.getField("close_result").getValue())+
 					" ("+DateHelper.format(model.getField("close_date_time").getValue(),"d/m/Y")+")";
 			}

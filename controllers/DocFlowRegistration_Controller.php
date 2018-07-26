@@ -206,8 +206,6 @@ class DocFlowRegistration_Controller extends ControllerSQL{
 	public function insert($pm){
 		$this->getDbLinkMaster()->query("BEGIN");
 		try{
-			$ar_id = parent::insert($pm);
-			
 			$subject_doc = json_decode($pm->getParamValue('subject_doc'));
 			if ($subject_doc
 			&&$subject_doc->dataType
@@ -225,11 +223,28 @@ class DocFlowRegistration_Controller extends ControllerSQL{
 						WHEN doc_flow_type_id=(pdfn_doc_flow_types_contr_close()->'keys'->>'id')::int THEN 'closed'::application_states
 						WHEN doc_flow_type_id=(pdfn_doc_flow_types_contr_return()->'keys'->>'id')::int THEN 'closed_no_expertise'::application_states
 						ELSE NULL
-					END AS app_state 
+					END AS app_state,					
+					(st.state='approving' OR st.state='confirming') AS wrong_doc_flow_out_state
 				FROM doc_flow_out
+				LEFT JOIN (
+					SELECT
+						t.doc_flow_out_id AS doc_id,
+						max(t.date_time) AS date_time
+					FROM doc_flow_out_processes t
+					GROUP BY t.doc_flow_out_id
+				) AS h_max ON h_max.doc_id=doc_flow_out.id
+				LEFT JOIN doc_flow_out_processes st
+					ON st.doc_flow_out_id=h_max.doc_id AND st.date_time = h_max.date_time
 				WHERE id=%d",
 				intval($subject_doc->keys->id)
 				));
+				
+				if (count($ar_st) && $ar_st['wrong_doc_flow_out_state']=='t'){
+					throw new Exception('Исходящий документ в данном статусе нельзя отправить клиенту!');
+				}
+				
+				//вставка ТОЛЬКО после проверки статуса!!!
+				$ar_id = parent::insert($pm);
 				
 				if (count($ar_st) && !is_null($ar_st['app_state'])){
 					//смена статуса заявления
@@ -298,6 +313,10 @@ class DocFlowRegistration_Controller extends ControllerSQL{
 					}
 				
 				}
+			}
+			else{
+				//вставка
+				$ar_id = parent::insert($pm);
 			}			
 			
 			

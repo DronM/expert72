@@ -1,9 +1,92 @@
-select contracts.*
-from client_payments
-left join contracts on contracts.id=client_payments.contract_id
-where contracts.work_start_date<>client_payments.pay_date AND client_payments.id=(SELECT t.id frOm client_payments t WHERE t.contract_id=contracts.id ORDER BY t.pay_date ASC LIMIT 1)
-AND client_payments.pay_date>='2018-06-25'
-limit 500
+Client Host -->> Office
+application_document_files
+application_processes
+applications
+?doc_flow_in_client_reg_numbers
+doc_flow_out_client
+doc_flow_out_client_document_files
+?doc_flow_out_client_reg_numbers
+*logins дать интервал
+morpher
+*users дать интервал
+?user_email_confirmations
 
 
-145/Д
+
+
+
+
+Office -->> Client Host
+application_corrections
+application_doc_folders
+banks
+build_types
+client_payments
+clients
+const_app_recipient_department
+const_application_check_days
+const_client_download_file_max_size
+const_client_download_file_types
+const_client_download_max_file_size
+--const_client_lk
+const_debug
+const_doc_per_page_count
+const_employee_download_file_max_size
+const_employee_download_file_types
+const_grid_refresh_interval
+const_outmail_data
+const_reminder_refresh_interval
+const_reminder_show_days
+const_session_live_time
+construction_types
+contacts
+contracts
+departments
+doc_flow_approvement_templates
+doc_flow_approvements
+doc_flow_attachments
+doc_flow_examinations
+doc_flow_importance_types
+doc_flow_in_client
+doc_flow_in
+doc_flow_in_processes
+doc_flow_inside
+doc_flow_inside_processes
+doc_flow_out
+doc_flow_out_processes
+doc_flow_registrations
+doc_flow_tasks
+doc_flow_types
+document_templates
+email_templates
+employees
+expert_sections
+expert_works
+expertise_reject_types
+fund_sources
+holidays
+mail_for_sending
+mail_for_sending_attachments
+mail_types
+main_menus
+office_day_schedules
+offices
+person_id_papers
+posts
+reminders
+report_template_files
+report_templates
+services
+*sessions
+short_message_recipient_current_states
+short_message_recipient_states
+short_messages
+time_zone_locales
+variant_storages
+views
+
+
+
+
+
+

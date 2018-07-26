@@ -220,6 +220,9 @@ try{
 				$resumable->uploadFolder =
 					FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
 					Application_Controller::APP_DIR_PREF.$ar['to_application_id'].DIRECTORY_SEPARATOR.$file_path;
+					
+				//удалить zip
+				Application_Controller::removeAllZipFile($ar['to_application_id']);
 			}
 			else{
 				$resumable->uploadFolder = DOC_FLOW_FILE_STORAGE_DIR;
