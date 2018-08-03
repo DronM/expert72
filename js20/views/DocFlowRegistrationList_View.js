@@ -79,6 +79,22 @@ function DocFlowRegistrationList_View(id,options){
 				})
 			]
 		})
+		,new GridCellHead(id+":grid:head:employee",{
+			"value":"Автор",
+			"columns":[
+				new GridColumnRef({
+					"field":model.getField("employees_ref"),
+					"formatFunction":function(fields){
+						return (
+							(!fields.employees_ref.isNull())?
+							Employee_Controller.prototype.getInitials(fields.employees_ref.getValue().getDescr())
+							:
+							""
+						);
+					}					
+				})
+			]
+		})
 	];	
 	
 	this.addElement(new GridAjx(id+":grid",{

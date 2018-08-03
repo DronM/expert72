@@ -196,6 +196,8 @@ $permissions = array();
 				
 					$permissions['Office_Controller_get_object']=TRUE;
 				
+					$permissions['Office_Controller_get_bank_acc_list']=TRUE;
+				
 					$permissions['OfficeDaySchedule_Controller_insert']=TRUE;
 				
 					$permissions['OfficeDaySchedule_Controller_update']=TRUE;
@@ -310,6 +312,10 @@ $permissions = array();
 				
 					$permissions['Application_Controller_delete_auth_letter_file']=TRUE;
 				
+					$permissions['Application_Controller_all_sig_report']=TRUE;
+				
+					$permissions['Application_Controller_get_constr_name']=TRUE;
+				
 					$permissions['ApplicationClient_Controller_insert']=TRUE;
 				
 					$permissions['ApplicationClient_Controller_update']=TRUE;
@@ -361,6 +367,8 @@ $permissions = array();
 					$permissions['DocFlowOut_Controller_get_app_state']=TRUE;
 				
 					$permissions['DocFlowOut_Controller_get_next_contract_number']=TRUE;
+				
+					$permissions['DocFlowOut_Controller_alter_file_folder']=TRUE;
 				
 					$permissions['DocFlowIn_Controller_insert']=TRUE;
 				
@@ -695,6 +703,8 @@ $permissions = array();
 					$permissions['Contract_Controller_get_reestr_expertise']=TRUE;
 				
 					$permissions['Contract_Controller_get_reestr_cost_eval']=TRUE;
+				
+					$permissions['Contract_Controller_get_constr_name']=TRUE;
 				
 					$permissions['ExpertiseRejectType_Controller_insert']=TRUE;
 				

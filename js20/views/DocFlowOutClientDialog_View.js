@@ -150,6 +150,7 @@ function DocFlowOutClientDialog_View(id,options){
 		//произвольные файлы
 		this.addElement(new DocFolderClient_View(id+":attachments",{
 			"items":attachments,
+			"maxFileCount":4,
 			"templateOptions":{
 				"isNotSent":!sent
 			},

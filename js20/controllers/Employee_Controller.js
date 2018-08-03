@@ -241,3 +241,15 @@ extend(Employee_Controller,ControllerObjServer);
 }
 
 		
+	
+Employee_Controller.prototype.getInitials = function(fullName){
+	var res = "";
+	if (fullName && fullName.length){
+		var ar = fullName.split(" ");
+		if (ar.length>=1)res = ar[0];
+		if (ar.length>=2)res+= " "+(ar[1].substring(0,1)).toUpperCase()+".";
+		if (ar.length>=3)res+= " "+(ar[2].substring(0,1)).toUpperCase()+".";
+	}
+	return res;
+}
+

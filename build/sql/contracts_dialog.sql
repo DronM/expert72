@@ -52,7 +52,7 @@ CREATE OR REPLACE VIEW contracts_dialog AS
 		app.build_types_ref,
 		app.cost_eval_validity_simult,
 		app.fund_sources_ref,
-		app.primary_application_reg_number AS primary_contract_reg_number,
+		coalesce(t.primary_contract_reg_number,app.primary_application_reg_number) AS primary_contract_reg_number,
 		app.modif_primary_application_reg_number AS modif_primary_contract_reg_number,
 		contracts_ref(prim_contr) AS primary_contracts_ref,
 		contracts_ref(modif_prim_contr) AS modif_primary_contracts_ref,

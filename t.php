@@ -1,165 +1,43 @@
 <?php
-
-/**
- * Returns Name+initials
- */
-function get_person_initials($fioFull,$space=FALSE){
-	//return preg_replace('#(.*)\s+(.).*\s+(.).*#usi', '$1 $2.$3.', $fioFull);
-	$ar = explode(' ',trim($fioFull));
-	return 
-		((count($ar)>=1)? $ar[0]:'').
-		((count($ar)>=2)? ' '.mb_substr($ar[1],0,1,'UTF-8').'.' : '').
-		((count($ar)>=3)? ($space? ' ':'').mb_substr($ar[2],0,1,'UTF-8').'.' : '')
-		;
-}
-
-//http://localhost/expert72/index.php?c=Contract_Controller&v=Child&f=get_object&t=ContractDialog&id=4#
-
-echo get_person_initials('Михалевич Андрей Александрович');
-//header("HTTP/1.0 404 Not Found");
-//throw new Exception("Error");
-exit;
-
-$v = '{"keys" : {"id" : 2}, "descr" : "Администраторов Администратор Администраторович", "dataType" : "employees"}';
-print_r(json_decode($v)->keys->id);
-exit;
-
-
-try{
-	try{
-		throw new Exception("Test!");
-	}
-	catch (Exception $e){
-		throw $e;
-	}
-}
-catch (Exception $e2){
-	echo $e2->getMessage();
-}
-exit;
-
-$out_file = '/home/andrey/www/htdocs/expert72/output/Документ.odt';
-$tmp_file = '/home/andrey/www/htdocs/expert72/output/c2a989fd0386aebea403de5dbce9975d_tmpl.odt';
-copy($tmp_file,$out_file);
-$CONTENT_NAME = 'content.xml';
-$zip = new ZipArchive();
-if ($zip->open($out_file)!==TRUE) {
-	throw new Exception('Error');
-}
-$unzipped = '/home/andrey/www/htdocs/expert72/output/'.uniqid().'_'.$CONTENT_NAME;
-$data = ['id'=>125,'applicant_name'=>'ООО Рога и Копыта','date'=>'23/01/2018'];
-$tmp_data = $zip->getFromName($CONTENT_NAME);
-if($tmp_data===FALSE) {
-	throw new Exception('Error');
-}
-$zip->deleteName($CONTENT_NAME);
-foreach($data as $f_id=>$f_val){
-	$tmp_data = str_replace('{'.$f_id.'}',$f_val,$tmp_data);
-}
-file_put_contents($unzipped, $tmp_data);
-$zip->deleteName($CONTENT_NAME);
-$zip->addFile($unzipped, $CONTENT_NAME);        
-$zip->close();
-unlink($unzipped);
-exit;
 /*
-require_once('functions/db_con.php');
-require_once(FRAME_WORK_PATH.'Constants.php');
-require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLString.php');
-
-$s= "andrey' or 'a'='a' '";
-$s_out = NULL;
-FieldSQLString::formatForDb($dbLink,$s,$s_out);
-echo sprintf('SELECT name FROM users where name=%s',$s_out);
-
-exit;
-
-*/
-
-/*
-require_once('functions/Morpher.php');
-
-$res = Morpher::declension($dbLink,array('s'=>'Иванов Петр Сергеевич','flags'=>'name'));
-echo var_dump($res);
-exit;
-*/
-
-//echo pathinfo('/home/andrey/www/htdocs/expert72/version.php', PATHINFO_EXTENSION);
-/*
-$ext_ar = array();
-foreach($ar['rows'] as $row){
-	array_push($ext_ar,strtolower($row['fields']['ext']));
-	
-}
-//var_dump($ext_ar);
-echo 'PDF='.in_array('ccc',$ext_ar).'</br>';
-*/
-
-//require_once('functions/morpher.php');
-
-//$xml = declension('Кучерявый Алексей Александрович');
-//var_dump($xml);
-
-//$ar = json_decode('{"inn": "9999999999", "kpp": "7203010011", "bank": "{\"bank\":{\"RefType\":{\"keys\":{\"bik\":\"040001002\"},\"descr\":\"ПУ БАНКА РОССИИ N 43192\"}},\"acc_number\":\"99999999999999999999\"}", "name": "ООО \"Катрэн+\"", "ogrn": "555555555555", "name_full": "Общество с ограниченной ответственностью  \"Катрэн+\"", "client_type": "enterprise", "post_address": "{\"region\":{\"RefType\":{\"keys\":{\"region_code\":\"7200000000000\"},\"descr\":\"Тюменская обл\"}},\"raion\":{\"RefType\":{\"keys\":null,\"descr\":null}},\"naspunkt\":{\"RefType\":{\"keys\":null,\"descr\":null}},\"gorod\":{\"RefType\":{\"keys\":{\"gorod_code\":\"7200000100000\"},\"descr\":\"Тюмень г\"}},\"ulitsa\":{\"RefType\":{\"keys\":{\"ulitsa_code\":\"72000001000016600\"},\"descr\":\"Республики ул\"}},\"dom\":\"10\",\"korpus\":null,\"kvartira\":null}", "legal_address": "{\"region\":{\"RefType\":{\"keys\":{\"region_code\":\"7200000000000\"},\"descr\":\"Тюменская обл\"}},\"raion\":{\"RefType\":{\"keys\":null,\"descr\":null}},\"naspunkt\":{\"RefType\":{\"keys\":null,\"descr\":null}},\"gorod\":{\"RefType\":{\"keys\":{\"gorod_code\":\"7200000100000\"},\"descr\":\"Тюмень г\"}},\"ulitsa\":{\"RefType\":{\"keys\":{\"ulitsa_code\":\"72000001000016600\"},\"descr\":\"Республики ул\"}},\"dom\":\"10\",\"korpus\":null,\"kvartira\":null}", "fillOnCustomer": "По заказчику", "fillOnClientList": "Выбрать из списка клиентов", "fillOnContractor": "По исполнителю", "responsable_persons": "{\"id\":\"ClientResponsablePerson_Model\",\"rows\":[{\"fields\":{\"id\":1,\"name\":\"Михалевич Андрей Александрович\",\"post\":\"Директор\",\"tel\":\"9222695251\",\"person_type\":\"boss\"},\"inserted\":\"1\"}]}", "responsable_person_head": "{\"name\":\"Михалевич Андрей\",\"post\":\"Директор\",\"tel\":\"9222695251\",\"email\":\"katren_shd@rambler.ru\"}", "base_document_for_contract": "Устав"}',TRUE);
-//$b = json_decode('{"id":"ClientResponsablePerson_Model","rows":[{"fields":{"id":2,"name":"Кучерявый Алексей Анаттольевич","post":"Директор","email":"kkk"}}]}');
-//$b = json_decode('[{"document_type" : "pd", "document_id" : "pd_1", "document" : [{"fields":{"id":1,"descr":"РАЗДЕл 1"},"parent_id":null,"items":[{"fields":{"id":4,"descr":"Раздел 1.1"},"parent_id":1}]},{"fields":{"id":2,"descr":"РАЗДЕЛ 2"},"parent_id":null},{"fields":{"id":3,"descr":"РАЗДЕЛ 3"},"parent_id":null,"items":[{"fields":{"id":5,"descr":"Раздел 3.1"},"parent_id":3},{"fields":{"id":6,"descr":"Раздел 3.2"},"parent_id":3}]}]}]');
-$params = json_decode('[{"id":"id","val":{"RefType":{"keys":{"id":48},"descr":"Заявление №48 от 22/01/18"}},"cond":true},{"id":"test","val":"gdfg"},{"id":"test2","val":1111,"cond":false}]');
-$field_model = json_decode('{"id":"ReportTemplateField_Model","rows":[{"fields":{"id":"id","descr":"Номер заявления"}},{"fields":{"id":"applicant_name","descr":"Наименование заявителя"}}]}');
-//print_r($field_model->rows);
-//exit;
-$columns = '';
-$cond = '';
-if (is_array($field_model->rows)){
-	foreach ($field_model->rows as $row) {
-		if (is_object($row->fields)){			
-			$columns.= ($columns=='')? '':', ';
-			$columns.= $row->fields->id;
-		}
-	}
-}
-//print_r($columns);
-//exit;
-echo '</br>';
-foreach($params as $param){
-	$field_id = $param->id;
-	
-	if (is_object($param->val)){
-		foreach ($param->val->RefType->keys as $key => $key_val) {
-			$val = $key_val;
-			//first key
-			break;
-		}
-	}
-	else{
-		$val = $param->val;
-	}
-	$val = "'".$val."'";
-	if (isset($param->cond) && $param->cond){
-		$cond.= ($cond=='')? ' WHERE ':' AND ';
-		$cond.= sprintf('%s=%s',$field_id, $val);
-	}
-	else{
-		$columns.= ($columns=='')? '':', ';
-		$columns.= sprintf('%s AS "%s"', $val, $field_id);
-	}
-}
-echo "columns=".$columns.'</br>';
-echo "cond=".$cond.'</br>';
-exit;
-
-foreach($b as $doc){
-	print_r($doc->document);
+	$s = '1.2.643.100.1 = 1097746293886 1.2.643.3.131.1.1 = 007729633131 countryName = RU stateOrProvinceName = 77 \U0433.\U041C\U043E\U0441\U043A\U0432\U0430 localityName = \U041C\U043E\U0441\U043A\U0432\U0430 streetAddress = \U041B\U0435\U043D\U0438\U043D\U0441\U043A\U0438\U0435 \U0433\U043E\U0440\U044B, \U0434.1, \U0441\U0442\U0440.77 organizationalUnitName = \U0423\U0434\U043E\U0441\U0442\U043E\U0432\U0435\U0440\U044F\U044E\U0449\U0438\U0439 \U0446\U0435\U043D\U0442\U0440 organizationName = \U041E\U0431\U0449\U0435\U0441\U0442\U0432\U043E \U0441 \U043E\U0433\U0440\U0430\U043D\U0438\U0447\U0435\U043D\U043D\U043E\U0439 \U043E\U0442\U0432\U0435\U0442\U0441\U0442\U0432\U0435\U043D\U043D\U043E\U0441\U0442\U044C\U044E "\U042D\U043B\U0435\U043A\U0442\U0440\U043E\U043D\U043D\U044B\U0439 \U044D\U043A\U0441\U043F\U0440\U0435\U0441\U0441" commonName = \U041E\U041E\U041E "\U042D\U043B\U0435\U043A\U0442\U0440\U043E\U043D\U043D\U044B\U0439 \U044D\U043A\U0441\U043F\U0440\U0435\U0441\U0441" ';
+	echo ucode2str($s);
+	echo '</br>';
+	echo 'Это русский';
 	exit;
-	foreach($doc as $obj){
-		foreach($obj as $row){
-			$row->files = ['name'=>'filename','size'=>1256542,'path'=>'sd/fd'];
-			print_r($row);
-			//var_dump($row[0]->fields);
-			exit;
-			echo $row->fields->id.'</br>';
+*/	
+	require_once('functions/PKIManager.php');
+	$pki_man = new PKIManager(PKI_PATH,PKI_CRL_VALIDITY,'note');
+	//echo $pki_man->getIssuier(OUTPUT_PATH.'test.pdf.sig')['CN'];
+	$certData = $pki_man->verifySig(OUTPUT_PATH.'test.pdf.sig',OUTPUT_PATH.'test.pdf');
+	
+	//var_dump($certData->subject);
+	echo ($certData->checkPassed? 'PASSED':'NOT passed').'</br>';
+	if (!$certData->checkPassed)echo 'Ошибка='.$certData->checkError.'<br>';
+	echo 'From='.date('d/m/Y',$certData->dateFrom).'<br>';
+	echo 'To='.date('d/m/Y',$certData->dateTo).'<br>';
+	//echo 'СНИЛС='.$certData->subject['СНИЛС'].'<br>';
+	//echo 'Фамилия='.$certData->subject['Фамилия'].'<br>';
+	echo 'Время проверки='.$certData->checkTime.'<br>';
+	echo '</BR></BR>';
+	//var_dump($certData->subject);
+	/*
+	if (isset($certData->subject)){
+		$subject_cert = '';
+		foreach($certData->subject as $prop_id=>$prop_v){
+			$subject_cert.= ($subject_cert=='')? '':','; 
+		
+			$db_prop_v = NULL;
+			FieldSQLString::formatForDb($dbLink,$prop_v,$db_prop_v);
+		
+			$subject_cert.= sprintf("'%s','%s'",$prop_id,$db_prop_v);
 		}
+		$subject_cert = 'jsonb_build_object('.$subject_cert.')';			
 	}
-}
+	else{
+		$subject_cert = 'NULL';
+	}
+	*/
+	//echo 'Подпись действительна!';
 
-//var_dump($b['bank']['RefType']['keys']['bik']);//['RefType']
 ?>

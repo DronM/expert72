@@ -156,3 +156,26 @@ FileUploaderDocFlowOut_View.prototype.uploadAll = function(){
 	}
 }
 
+FileUploaderDocFlowOut_View.prototype.alterFolder = function(fileId,folderRef,oldFolderCtrl){
+	var self = this;
+	WindowQuestion.show({
+		"text":"Переместить файл в другую папку?",
+		"no":false,
+		"callBack":function(res){
+			if (res==WindowQuestion.RES_YES){
+				var contr = new DocFlowOut_Controller();
+				var pm = contr.getPublicMethod("alter_file_folder");
+				pm.setFieldValue("file_id",fileId);
+				pm.setFieldValue("new_folder_id",folderRef? folderRef.getKey("id"):0);
+				pm.setFieldValue("doc_flow_out_id",self.m_mainView.getElement("id").getValue());
+				pm.run({
+					"ok":function(resp){
+						oldFolderCtrl.setValue(folderRef);
+						window.showNote('Файл перемещен в новую папку.');
+			
+					}
+				});
+			}
+		}
+	});
+}

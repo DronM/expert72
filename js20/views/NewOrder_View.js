@@ -20,11 +20,18 @@ function NewOrder_View(id,options){
 	var self = this;
 	options.addElement = function(){
 		var id = this.getId();
+		
+		this.addElement(new OfficeBankAccSelect(id+":acc_number",{
+			"labelCaption":"Банковский счет:",
+			"required":true
+		}));
+		
 		this.addElement(new EditMoney(id+":total",{
 			"autofocus":true,
 			"labelCaption":"Сумма счета:",
 			"placeholder":"сумма счета, руб."
 		}));
+		
 		this.addElement(new ButtonCmd(id+":ok",{
 			"caption":"ОК",
 			"onClick":function(){
@@ -36,8 +43,7 @@ function NewOrder_View(id,options){
 				self.getCommand("ok").getPublicMethod().setFieldValue("id", contr_id);
 				self.execCommand(
 					"ok",
-					function(resp){
-						self.setEnabled(true);
+					function(resp){						
 						var m = new ModelXML("ExtDoc_Model",{
 							"fields":{
 								"doc_ext_id":new FieldString("doc_ext_id"),
@@ -48,6 +54,10 @@ function NewOrder_View(id,options){
 							"data":resp.getModelData("ExtDoc_Model")
 						});
 						self.m_onNewOrderCreated.call(self,m);
+					},
+					null,
+					function(){
+						self.setEnabled(true);
 					}
 				);				
 			}
@@ -69,6 +79,7 @@ function NewOrder_View(id,options){
 		"async":true,
 		"bindings":[
 			new CommandBinding({"control":this.getElement("total")})
+			,new CommandBinding({"control":this.getElement("acc_number")})
 		]
 	}));
 }

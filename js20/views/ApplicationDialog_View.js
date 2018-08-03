@@ -31,9 +31,9 @@ function ApplicationDialog_View(id,options){
 
 	//все прочие папки	
 	var doc_folders;
-	
+	var role_id = window.getApp().getServVar("role_id");
 	if (options.model && (options.model.getRowIndex()>=0 || options.model.getNextRow()) ){			
-		options.templateOptions.is_admin = (window.getApp().getServVar("role_id")=="admin");
+		options.templateOptions.is_admin = (role_id=="admin");
 		options.readOnly = (options.model.getField("application_state").isSet() && options.model.getFieldValue("application_state")!="filling" && options.model.getFieldValue("application_state")!="correcting");
 		
 		options.templateOptions.contractExists = options.model.getField("contract_number").isSet();
@@ -60,6 +60,7 @@ function ApplicationDialog_View(id,options){
 	}
 	options.templateOptions.contractNotExists = !options.templateOptions.contractExists;
 	options.templateOptions.readOnly = options.readOnly;
+	options.templateOptions.checkSig = (role_id=="admin"||role_id=="lawyer");
 	
 	var self = this;
 	
@@ -516,6 +517,17 @@ function ApplicationDialog_View(id,options){
 			}
 		}));
 		
+		if (options.templateOptions.checkSig){
+			this.addElement(new ButtonCmd(id+":cmdCheckSig",{
+				"onClick":function(){	
+					var contr = new Application_Controller();
+					var pm = contr.getPublicMethod("all_sig_report");
+					pm.setFieldValue("id",self.getElement("id").getValue());
+					pm.setFieldValue("inline","1");
+					contr.openHref("all_sig_report","ViewPDF","location=0,menubar=0,status=0,titlebar=0,fullScreen=1");
+				}
+			}));
+		}
 	}
 	
 	options.cmdSave = false;
@@ -1082,6 +1094,7 @@ ApplicationDialog_View.prototype.disableAll = function(){
 		this.getElement("users_ref").setEnabled(true);
 	}
 	
+	if(this.getElement("cmdCheckSig"))this.getElement("cmdCheckSig").setEnabled(true);
 }
 
 /**

@@ -328,6 +328,31 @@ class DocFlowOut_Controller extends DocFlow_Controller{
 			
 		$this->addPublicMethod($pm);
 
+			
+		$pm = new PublicMethod('alter_file_folder');
+		
+				
+	$opts=array();
+	
+		$opts['length']=36;
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtString('file_id',$opts));
+	
+				
+	$opts=array();
+	
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtInt('new_folder_id',$opts));
+	
+				
+	$opts=array();
+	
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtInt('doc_flow_out_id',$opts));
+	
+			
+		$this->addPublicMethod($pm);
+
 		
 	}	
 	
@@ -536,6 +561,88 @@ class DocFlowOut_Controller extends DocFlow_Controller{
 
 	public function get_file_sig($pm){
 		return $this->get_afile($pm,TRUE);
+	}
+
+	private function move_file($oldFile,$newFile){
+		$dir = dirname($newFile);
+		if(!file_exists($dir))mkdir($dir,0777,TRUE);
+		if (!rename($oldFile, $newFile))throw new Exception('Не удалось переместить файл.');
+	}
+
+	public function alter_file_folder($pm){
+		if (!$pm->getParamValue('new_folder_id') || $pm->getParamValue('new_folder_id')=='0'){
+			$new_folder = 'Исходящие';
+		}
+		else{
+			$ar = $this->getDbLink()->query_first(sprintf("SELECT name FROM application_doc_folders WHERE id=%d",$this->getExtDbVal($pm,'new_folder_id')));
+			if (!count($ar)){
+				throw new Exception('Folder not found!');
+			}
+			$new_folder = $ar['name'];
+		}
+		
+		$ar = $this->getDbLink()->query_first(sprintf(
+		"SELECT
+			att.file_path,
+			d_out.to_application_id AS application_id
+		FROM doc_flow_attachments AS att
+		LEFT JOIN doc_flow_out AS d_out ON att.doc_type='doc_flow_out' AND att.doc_id=d_out.id
+		WHERE att.file_id=%s AND d_out.id=%d",
+		$this->getExtDbVal($pm,'file_id'),
+		$this->getExtDbVal($pm,'doc_flow_out_id')
+		));
+		if (!count($ar)){
+			throw new Exception('Document not found!');
+		}
+		
+		$old_rel_file = Application_Controller::APP_DIR_PREF.$ar['application_id'].DIRECTORY_SEPARATOR.
+					$ar['file_path'].DIRECTORY_SEPARATOR.
+					$this->getExtVal($pm,'file_id');
+
+		$new_rel_file = Application_Controller::APP_DIR_PREF.$ar['application_id'].DIRECTORY_SEPARATOR.
+					$new_folder.DIRECTORY_SEPARATOR.
+					$this->getExtVal($pm,'file_id');
+
+		try{
+			$this->getDbLinkMaster()->query('BEGIN');
+			
+			$this->getDbLinkMaster()->query(sprintf(
+			"UPDATE doc_flow_attachments
+			SET file_path = '%s'
+			WHERE file_id=%s",
+			$new_folder,
+			$this->getExtDbVal($pm,'file_id')			
+			));
+			$moved = FALSE;
+			if (file_exists($fl = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$old_rel_file)){
+				$this->move_file($fl,FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$new_rel_file);
+				$moved = TRUE;
+			}
+			if (defined('FILE_STORAGE_DIR_MAIN') && file_exists($fl = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$old_rel_file)){
+				$this->move_file($fl,FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$new_rel_file);
+				$moved = TRUE;
+			}
+			//sig
+			if (file_exists($fl = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$old_rel_file.'.sig')){
+				$this->move_file($fl,FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$new_rel_file.'.sig');
+				$moved = TRUE;
+			}
+			if (defined('FILE_STORAGE_DIR_MAIN') && file_exists($fl = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$old_rel_file.'.sig')){
+				$this->move_file($fl,FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$new_rel_file.'.sig');
+				$moved = TRUE;
+			}
+			
+			if (!$moved){
+				throw new Exception('Файл не найден!');
+			}
+			
+			$this->getDbLinkMaster()->query('COMMIT');
+		
+		}
+		catch(Exception $e){
+			$this->getDbLinkMaster()->query('ROLLBACK');
+			throw $e;
+		}
 	}
 
 

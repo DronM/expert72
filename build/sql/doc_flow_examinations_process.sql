@@ -260,7 +260,10 @@ BEGIN
 					user_id		= v_app_user_id,
 					legal_address	= v_app_applicant->'legal_address',
 					bank_accounts	= v_app_applicant->'bank_accounts',
-					client_type	= (v_app_applicant->>'client_type')::client_types,
+					client_type	= 
+						CASE WHEN v_app_applicant->>'client_type' IS NULL THEN 'enterprise'
+						ELSE (v_app_applicant->>'client_type')::client_types
+						END,
 					base_document_for_contract = v_app_applicant->>'base_document_for_contract',
 					person_id_paper	= v_app_applicant->'person_id_paper',
 					person_registr_paper = v_app_applicant->'person_registr_paper'
@@ -298,7 +301,9 @@ BEGIN
 						v_app_user_id,
 						v_app_applicant->'legal_address',
 						v_app_applicant->'bank_accounts',
-						(v_app_applicant->>'client_type')::client_types,
+						CASE WHEN v_app_applicant->>'client_type' IS NULL THEN 'enterprise'
+						ELSE (v_app_applicant->>'client_type')::client_types
+						END,
 						v_app_applicant->>'base_document_for_contract',
 						v_app_applicant->'person_id_paper',
 						v_app_applicant->'person_registr_paper'

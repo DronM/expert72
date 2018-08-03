@@ -222,7 +222,10 @@ ContractList_View.prototype.addGrid = function(options){
 						"field":new FieldInt("main_expert_id"),
 						"searchType":"on_match",
 						"typeChange":false
-					}
+					},
+					"formatFunction":function(fields){
+						return Employee_Controller.prototype.getInitials(fields.main_expert_descr.getValue());
+					}					
 				})
 			],
 			"sortable":true

@@ -27,6 +27,11 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 </xsl:template>
 
 <xsl:template name="extra_methods">
+
+	public function get_bank_acc_list($pm){
+		$this->addNewModel("SELECT * FROM offices_bank_acc_list",'OfficeBankAccList_Model');			
+	}
+
 </xsl:template>
 
 </xsl:stylesheet>

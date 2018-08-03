@@ -1357,6 +1357,7 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ShortMessageRecipientGrid.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ContractObjInfBtn.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ContractObjInfGridCmd.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/OfficeBankAccSelect.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/Enum_role_types.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/rs_ru.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/rs_common_ru.js'));
@@ -1638,6 +1639,8 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/RepReestr_Model.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/RepReestrExpertise_Model.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/RepReestrCostEval_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/FileVerification_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/OfficeBankAccList_Model.js'));
 	
 			if (isset($_SESSION['scriptId'])){
 				$script_id = $_SESSION['scriptId'];

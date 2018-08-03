@@ -557,6 +557,16 @@ function Contract_Model(options){
 	
 	options.fields.result_sign_expert_list = new FieldJSONB("result_sign_expert_list",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.primary_contract_reg_number = new FieldString("primary_contract_reg_number",filed_options);
+	options.fields.primary_contract_reg_number.getValidator().setMaxLength('20');
+	
 			
 			
 			

@@ -2,7 +2,7 @@
 <metadata owner="expert72">
 	<versions>
 		<version dateOpen="2017-09-27 12:09:48" dateClose="2017-12-08 10:12:08">1.001 
-		<lastBuild>2018-07-26 05:57:53</lastBuild></version>
+		<lastBuild>2018-08-03 05:31:04</lastBuild></version>
 		<version dateOpen="2017-12-08 11:12:01" dateClose="2017-12-08 11:12:04">1.002</version>
 		<version dateOpen="2017-12-08 11:12:20" dateClose="2017-12-08 11:12:20">1.0.3</version>
 		<version dateOpen="2017-12-12 11:12:07" dateClose="2017-12-12 11:12:07">1.0.4</version>
@@ -71,6 +71,7 @@
 		<version dateOpen="2018-07-19 07:07:12" dateClose="2018-07-19 07:07:20">1.0.68</version>
 		<version dateOpen="2018-07-19 16:07:28" dateClose="2018-07-20 07:07:57">1.0.69</version>
 		<version dateOpen="2018-07-20 07:07:57" dateClose="2018-07-26 05:07:58">1.0.70</version>
+		<version dateOpen="2018-07-26 05:07:58" dateClose="2018-08-03 05:08:31">1.0.71</version>
 	</versions>
 	<globalFilters>
 		<field id="user_id"/>
@@ -894,6 +895,10 @@
 			<field id="client_id" dataType="Int"/>
 			<field id="address" dataType="Text"/>
 			<field id="work_hours" dataType="JSONB"/>
+		</model>
+		<model id="OfficeBankAccList" parent="ModelSQL" virtual="TRUE" dataTable="offices_bank_acc_list">
+			<field id="acc_number" dataType="Text" primaryKey="TRUE"/>
+			<field id="bank_descr" dataType="Text"/>
 		</model>
 		<model id="OfficeDaySchedule" parent="ModelSQL" dataTable="office_day_schedules" virtual="FALSE">
 			<defaultOrder>
@@ -2344,6 +2349,7 @@
 			<field id="cur_estim_cost" dataType="Float" length="15" precision="2"/>
 			<field id="cur_estim_cost_recommend" dataType="Float" length="15" precision="2"/>
 			<field id="result_sign_expert_list" dataType="JSONB"/>
+			<field id="primary_contract_reg_number" dataType="String" length="20"/>
 			<index id="contracts_reg_number_idx" unique="TRUE">
 				<field id="reg_number"/>
 			</index>
@@ -2633,6 +2639,17 @@
 				</predefinedItem>
 			</predefinedItems>
 		</model>
+		<model id="FileVerification" parent="ModelSQL" dataTable="file_verification" virtual="FALSE">
+			<field id="file_id" dataType="String" length="36" required="TRUE" primaryKey="TRUE"/>
+			<field id="date_time" dataType="DateTimeTZ"/>
+			<field id="subject_cert" dataType="JSONB"/>
+			<field id="issuer_cert" dataType="JSONB"/>
+			<field id="check_result" dataType="Bool"/>
+			<field id="check_time" dataType="Float" length="15" precision="4"/>
+			<field id="date_from" dataType="Date"/>
+			<field id="date_to" dataType="Date"/>
+			<field id="error_str" dataType="Text"/>
+		</model>
 	</models>
 	<constants>
 		<constant id="doc_per_page_count" name="&#x41A;&#x43E;&#x43B;&#x438;&#x447;&#x435;&#x441;&#x442;&#x432;&#x43E; &#x434;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x43E;&#x432; &#x43D;&#x430; &#x441;&#x442;&#x440;&#x430;&#x43D;&#x438;&#x446;&#x435;" descr="&#x41A;&#x43E;&#x43B;&#x438;&#x447;&#x435;&#x441;&#x442;&#x432;&#x43E; &#x434;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x43E;&#x432; &#x43D;&#x430; &#x441;&#x442;&#x440;&#x430;&#x43D;&#x438;&#x446;&#x435; &#x432; &#x436;&#x443;&#x440;&#x43D;&#x430;&#x43B;&#x435; &#x434;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x43E;&#x432;" dataType="Int" defaultValue="60" autoload="TRUE"/>
@@ -2896,6 +2913,7 @@
 			<publicMethod id="delete" modelId="Office"/>
 			<publicMethod id="get_list" modelId="OfficeList"/>
 			<publicMethod id="get_object" modelId="OfficeList"/>
+			<publicMethod id="get_bank_acc_list" modelId="OfficeBankAccList"/>
 		</controller>
 		<controller id="OfficeDaySchedule" parentId="ControllerSQL">
 			<publicMethod id="insert" modelId="OfficeDaySchedule"/>
@@ -3031,6 +3049,13 @@
 			<publicMethod id="delete_auth_letter_file">
 				<field id="id" dataType="Int" required="TRUE"/>
 			</publicMethod>
+			<publicMethod id="all_sig_report">
+				<field id="id" dataType="Int" required="TRUE"/>
+				<field id="inline" dataType="Int" required="TRUE"/>
+			</publicMethod>
+			<publicMethod id="get_constr_name">
+				<field id="id" dataType="Int" required="TRUE"/>
+			</publicMethod>
 		</controller>
 		<controller id="ApplicationClient" parentIdJS="ControllerObjClient" server="FALSE">
 			<publicMethod id="insert" modelId="ApplicationClient"/>
@@ -3089,6 +3114,11 @@
 			</publicMethod>
 			<publicMethod id="get_next_contract_number">
 				<field id="application_id" dataType="Int" required="TRUE"/>
+			</publicMethod>
+			<publicMethod id="alter_file_folder">
+				<field id="file_id" dataType="String" length="36" required="TRUE"/>
+				<field id="new_folder_id" dataType="Int" required="TRUE"/>
+				<field id="doc_flow_out_id" dataType="Int" required="TRUE"/>
 			</publicMethod>
 		</controller>
 		<controller id="DocFlowIn" parentId="DocFlow_Controller" parentType="user" state="TRUE">
@@ -3401,6 +3431,7 @@
 			<publicMethod id="make_order">
 				<field id="id" dataType="Int" required="TRUE"/>
 				<field id="total" dataType="Float" precision="2" length="15" required="TRUE"/>
+				<field id="acc_number" dataType="String" length="20" required="TRUE"/>
 			</publicMethod>
 			<publicMethod id="print_akt">
 				<field id="id" dataType="Int" required="TRUE"/>
@@ -3433,6 +3464,9 @@
 			<publicMethod id="get_reestr_cost_eval" condFields="TRUE">
 				<field id="templ" dataType="String"/>
 				<field id="inline" dataType="Int"/>
+			</publicMethod>
+			<publicMethod id="get_constr_name">
+				<field id="id" dataType="Int" required="TRUE"/>
 			</publicMethod>
 		</controller>
 		<controller id="ExpertiseRejectType" parentId="ControllerSQL">
@@ -4393,6 +4427,7 @@
 		<jsScript file="custom_controls/ShortMessageRecipientGrid.js"/>
 		<jsScript file="custom_controls/ContractObjInfBtn.js"/>
 		<jsScript file="custom_controls/ContractObjInfGridCmd.js"/>
+		<jsScript file="custom_controls/OfficeBankAccSelect.js"/>
 		<jsScript file="enum_controls/Enum_role_types.js"/>
 		<jsScript file="views/rs_ru.js"/>
 		<jsScript file="views/rs_common_ru.js"/>
@@ -4674,6 +4709,8 @@
 		<jsScript file="models/RepReestr_Model.js"/>
 		<jsScript file="models/RepReestrExpertise_Model.js"/>
 		<jsScript file="models/RepReestrCostEval_Model.js"/>
+		<jsScript file="models/FileVerification_Model.js"/>
+		<jsScript file="models/OfficeBankAccList_Model.js"/>
 	</jsScripts>
 	<cssScripts>
 		<cssScript file="assets/css/icons/icomoon/styles.css" compressed="TRUE" standalone="TRUE"/>

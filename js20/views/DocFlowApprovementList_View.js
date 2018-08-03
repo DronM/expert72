@@ -173,7 +173,15 @@ function DocFlowApprovementList_View(id,options){
 			"value":"Автор",
 			"columns":[
 				new GridColumnRef({
-					"field":model.getField("employees_ref")
+					"field":model.getField("employees_ref"),
+					"formatFunction":function(fields){
+						return (
+							(!fields.employees_ref.isNull())?
+							Employee_Controller.prototype.getInitials(fields.employees_ref.getValue().getDescr())
+							:
+							""
+						);
+					}					
 				})
 			]
 		}),		

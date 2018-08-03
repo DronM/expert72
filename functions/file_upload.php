@@ -8,6 +8,9 @@ require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLInt.php');
 require_once(ABSOLUTE_PATH.'controllers/Application_Controller.php');
 require_once(ABSOLUTE_PATH.'controllers/DocFlow_Controller.php');
 
+require_once(ABSOLUTE_PATH.'functions/PKIManager.php');
+require_once(ABSOLUTE_PATH.'functions/pki.php');
+
 include ABSOLUTE_PATH.'vendor/autoload.php';
  
 use Dilab\Network\SimpleRequest;
@@ -173,9 +176,26 @@ try{
 				$new_name = $resumable->uploadFolder.DIRECTORY_SEPARATOR.$_REQUEST['file_id'].($is_sig? '.sig':'');
 				rename($orig_file,$new_name);
 				chmod($new_name, 0664);
+				
+				//Если загружено все (файл + данные), делаем проверку подписи
+				if (
+				file_exists($file_doc = $resumable->uploadFolder.DIRECTORY_SEPARATOR.$_REQUEST['file_id'])
+				&&file_exists($file_doc_sig = $resumable->uploadFolder.DIRECTORY_SEPARATOR.$_REQUEST['file_id'].'.sig')
+				){
+					try{
+						$db_file_id = NULL;
+						FieldSQLString::formatForDb($dbLink,$_REQUEST['file_id'],$db_file_id);
+						
+						$pki_man = new PKIManager(PKI_PATH,PKI_CRL_VALIDITY,'error');
+						pki_log_sig_check($file_doc_sig, $file_doc, $db_file_id, $pki_man, $dbLink);
+					}
+					catch(Exception $e){
+					
+					}
+				}
 			}
 			catch(Exception $e){
-				unlink($orig_file);
+				if(file_exists($orig_file))unlink($orig_file);
 				throw $e;			
 			}
 		}
@@ -304,7 +324,7 @@ try{
 				chmod($new_name, 0664);			
 			}
 			catch(Exception $e){
-				unlink($orig_file);
+				if(file_exists($orig_file))unlink($orig_file);
 				throw $e;
 			}		
 		}

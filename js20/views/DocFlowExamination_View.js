@@ -362,7 +362,9 @@ DocFlowExamination_View.prototype.onGetData = function(resp,cmd){
 DocFlowExamination_View.prototype.createDocFlowOut = function(){
 	var model = new DocFlowOutDialog_Model();
 	model.setFieldValue("employees_ref",CommonHelper.unserialize(window.getApp().getServVar("employees_ref")));
-	var subject = "";
+	model.setFieldValue("signed_by_employees_ref",null);
+	model.setFieldValue("doc_flow_in_ref",this.getElement("subject_docs_ref").getValue());
+	
 	if (this.getModel().getFieldValue("application_based")){		
 		var app_st = this.getElement("application_resolution_state").getValue();
 		var doc_type;
@@ -375,17 +377,29 @@ DocFlowExamination_View.prototype.createDocFlowOut = function(){
 		else if (app_st=="filling"){
 			doc_type = "app_resp_correct";
 		}	
-		type_ref = window.getApp().getPredefinedItem("doc_flow_types",doc_type);	
-		subject = type_ref.getDescr();
+		var type_ref = window.getApp().getPredefinedItem("doc_flow_types",doc_type);	
 		model.setFieldValue("doc_flow_types_ref", type_ref);
 		model.setFieldValue("to_applications_ref", this.getModel().getFieldValue("applications_ref"));
+		/*
+		var pm = (new Application_Controller()).getPublicMethod("get_constr_name");
+		pm.setFieldValue("id",this.getModel().getFieldValue("applications_ref").getKey());
+		var self = this;
+		pm.run({
+			"ok":function(resp){
+				var m = new ModelXML("ConstrName_Model",{
+					"data":resp.getModelData("ConstrName_Model")
+				});
+				if (m.getNextRow()){
+					model.setFieldValue("subject", type_ref.getDescr()+", "+m.getFieldValue("constr_name"));
+					model.recInsert();
+					self.showDocFlowOut(model);	
+				}
+			}
+		});
+		*/
 	}
-	model.setFieldValue("subject",subject);
-	model.setFieldValue("signed_by_employees_ref",null);
 	
-	model.setFieldValue("doc_flow_in_ref",this.getElement("subject_docs_ref").getValue());
 	model.recInsert();
-	
 	var self = this;
 	this.m_docForm = new DocFlowOutDialog_Form({
 		"id":CommonHelper.uniqid(),
@@ -399,7 +413,7 @@ DocFlowExamination_View.prototype.createDocFlowOut = function(){
 			"editViewOptions":{"models":{"DocFlowOutDialog_Model":model}}
 		}
 	});
-	this.m_docForm.open();
+	this.m_docForm.open();	
 }
 
 DocFlowExamination_View.prototype.resolve = function(){

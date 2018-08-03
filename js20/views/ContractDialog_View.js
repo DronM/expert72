@@ -35,7 +35,7 @@ function ContractDialog_View(id,options){
 	//все прочие папки	
 	var doc_folders = options.model.getFieldValue("doc_folders");
 
-	options.templateOptions.primaryContractExists = (!options.model.getField("primary_contracts_ref").isNull()||options.model.getField("primary_contract_reg_number").isSet());
+	options.templateOptions.primaryContractExists = true;//(!options.model.getField("primary_contracts_ref").isNull()||options.model.getField("primary_contract_reg_number").isSet());
 	options.templateOptions.modifPrimaryContractExists = (!options.model.getField("modif_primary_contracts_ref").isNull()||options.model.getField("modif_primary_contract_reg_number").isSet());
 	
 	options.templateOptions.costEvalValidity = options.model.getFieldValue("cost_eval_validity");
@@ -253,30 +253,36 @@ function ContractDialog_View(id,options){
 					"labelClassName":labelClassName,
 					"labelCaption":"Тип проверки ПД:"
 				}));			
-				this.addElement(new EditString(id+":order_document",{
-					"maxLength":"1000",
+				this.addElement(new EditText(id+":order_document",{
+					"rows":"2",
+					"maxLength":"5000",
 					"labelCaption":"Распорядительный акт:",
 					"editContClassName":"input-group "+bs+"8",
 					"labelClassName":"control-label "+bs+"4"
 				}));	
 			
 			}
-		
-			if (options.templateOptions.primaryContractExists){
-				this.addElement(new ApplicationPrimaryCont(id+":primary_contracts_ref",{
-					"isModification":false,
-					"editClass":ContractEditRef,
-					"editLabelCaption":"Первичный контракт модификации:",
-					"primaryFieldId":"primary_contract_reg_number",
-					"template":window.getApp().getTemplate("ApplicationPrimaryContTmpl"),
-					"enabled":false
-				}));
-			}
+			/*
+			this.addElement(new ApplicationPrimaryCont(id+":primary_contracts_ref",{
+				"isModification":false,
+				"editClass":ContractEditRef,
+				"editLabelCaption":"Первичный контракт:",
+				"primaryFieldId":"primary_contract_reg_number",
+				"template":window.getApp().getTemplate("ApplicationPrimaryContTmpl")
+			}));
+			*/
+			this.addElement(new EditString(id+":primary_contract_reg_number",{
+				"labelCaption":"Рег.номер первичного контракта:",
+				"maxLength":20,
+				"editContClassName":editContClassName,
+				"labelClassName":labelClassName,
+			}));
+			
 			if (options.templateOptions.modifPrimaryContractExists){
 				this.addElement(new ApplicationPrimaryCont(id+":modif_primary_contracts_ref",{
 					"isModification":true,
 					"editClass":ContractEditRef,
-					"editLabelCaption":"Первичный контракт:",
+					"editLabelCaption":"Первичный контракт модификации:",
 					"primaryFieldId":"modif_primary_contract_reg_number",
 					"enabled":false
 				}));
@@ -637,6 +643,7 @@ function ContractDialog_View(id,options){
 		read_b.push(new DataBinding({"control":this.getElement("contract_return_date")}));
 		read_b.push(new DataBinding({"control":this.getElement("akt_number")}));
 		read_b.push(new DataBinding({"control":this.getElement("akt_date")}));
+		read_b.push(new DataBinding({"control":this.getElement("primary_contract_reg_number")}));
 	}
 
 	read_b.push(new DataBinding({"control":this.getElement("main_departments_ref")}));
@@ -647,9 +654,8 @@ function ContractDialog_View(id,options){
 		read_b.push(new DataBinding({"control":this.getElement("for_all_employees")}));
 	}
 	
-	if (options.templateOptions.primaryContractExists){
-		read_b.push(new DataBinding({"control":this.getElement("primary_contracts_ref")}));
-	}
+	read_b.push(new DataBinding({"control":this.getElement("primary_contracts_ref")}));
+	
 	if (options.templateOptions.costEvalValidity){
 		read_b.push(new DataBinding({"control":this.getElement("cost_eval_validity_pd_order")}));
 		read_b.push(new DataBinding({"control":this.getElement("order_document")}));
@@ -696,7 +702,8 @@ function ContractDialog_View(id,options){
 			,new CommandBinding({"control":this.getElement("constr_address"),"fieldId":"constr_address"})
 			,new CommandBinding({"control":this.getElement("constr_technical_features"),"fieldId":"constr_technical_features"})
 			,new CommandBinding({"control":this.getElement("expertise_cost_budget")})
-			,new CommandBinding({"control":this.getElement("expertise_cost_self_fund")})			
+			,new CommandBinding({"control":this.getElement("expertise_cost_self_fund")})
+			,new CommandBinding({"control":this.getElement("primary_contract_reg_number")})						
 		];
 		if (options.templateOptions.costEvalValidity){
 			write_b.push(new CommandBinding({"control":this.getElement("order_document")}));
@@ -814,4 +821,31 @@ ContractDialog_View.prototype.toDOM = function(p){
 
 
 /* public methods */
-
+ContractDialog_View.prototype.onOK = function(failFunc){
+	if (this.getModified(this.CMD_OK)){
+		var self = this;
+		
+		WindowQuestion.show({
+			"text":this.Q_SAVE_CHANGES,
+			"timeout":this.SAVE_CH_TIMEOUT,
+			"winObj":this.m_winObj,
+			"callBack":function(res){
+				if (res==WindowQuestion.RES_YES){
+					self.onSave(null,failFunc);
+					self.close(self.m_editResult);
+				}
+				else if(res==WindowQuestion.RES_NO){
+					self.close(self.m_editResult);
+				}
+				else{
+					self.getControlOK().setEnabled(true);
+					self.getControlSave().setEnabled(true);		
+					self.setTempEnabled(self.CMD_OK);
+				}
+			}
+		});
+	}
+	else{
+		this.close(this.m_editResult);
+	}
+}

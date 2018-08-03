@@ -36,6 +36,7 @@ function DocFlowOut_Controller(options){
 	this.addComplete();
 	this.add_get_app_state();
 	this.add_get_next_contract_number();
+	this.add_alter_file_folder();
 		
 }
 extend(DocFlowOut_Controller,ControllerObjServer);
@@ -486,6 +487,40 @@ extend(DocFlowOut_Controller,ControllerObjServer);
 		options.required = true;
 	
 		pm.addField(new FieldInt("application_id",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			DocFlowOut_Controller.prototype.add_alter_file_folder = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('alter_file_folder',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		options.maxlength = "36";
+	
+		pm.addField(new FieldString("file_id",options));
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("new_folder_id",options));
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("doc_flow_out_id",options));
 	
 			
 	this.addPublicMethod(pm);

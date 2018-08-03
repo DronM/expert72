@@ -33,6 +33,9 @@ require_once(FRAME_WORK_PATH.'basic_classes/ModelVars.php');
 require_once('common/file_func.php');
 require_once('common/short_name.php');
 
+require_once(ABSOLUTE_PATH.'functions/PKIManager.php');
+require_once(ABSOLUTE_PATH.'functions/pki.php');
+
 class Application_Controller extends ControllerSQL{
 	
 	const MAX_FILE_LEN = 200;
@@ -764,6 +767,36 @@ class Application_Controller extends ControllerSQL{
 			
 		$this->addPublicMethod($pm);
 
+			
+		$pm = new PublicMethod('all_sig_report');
+		
+				
+	$opts=array();
+	
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtInt('id',$opts));
+	
+				
+	$opts=array();
+	
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtInt('inline',$opts));
+	
+			
+		$this->addPublicMethod($pm);
+
+			
+		$pm = new PublicMethod('get_constr_name');
+		
+				
+	$opts=array();
+	
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtInt('id',$opts));
+	
+			
+		$this->addPublicMethod($pm);
+
 		
 	}	
 	
@@ -815,6 +848,14 @@ class Application_Controller extends ControllerSQL{
 			$files['size'][$data_ind]
 		);
 	
+		//проверка ЭЦП
+		$pki_man = new PKIManager(PKI_PATH,PKI_CRL_VALIDITY,'error');		
+		pki_log_sig_check(
+			$dir.DIRECTORY_SEPARATOR.$file_id,
+			$dir.DIRECTORY_SEPARATOR.$file_id.'.sig',
+			"'".$file_id."'",
+			$pki_man,$this->getDbLinkMaster()
+		);
 	}
 
 	private function upload_prints($appId,&$fileParams){
@@ -1255,6 +1296,10 @@ class Application_Controller extends ControllerSQL{
 		self::delFileFromStorage(
 			self::APP_DIR_PREF.$applicationId.DIRECTORY_SEPARATOR.
 			'ApplicationAudit.pdf'
+		);
+		self::delFileFromStorage(
+			self::APP_DIR_PREF.$applicationId.DIRECTORY_SEPARATOR.
+			'ApplicationSigCheck.pdf'
 		);
 		
 	}
@@ -2459,6 +2504,9 @@ class Application_Controller extends ControllerSQL{
 		));
 		
 		if ($_REQUEST['v']=='ViewPDF'){
+			$cont = $model->dataToXML(TRUE);
+			return $this->print_pdf($templ_name,$out_file,$cont);		
+			/*
 			$xml = '<?xml version="1.0" encoding="UTF-8"?>';
 			$xml.= '<document>';
 			$xml.= $model->dataToXML(TRUE);
@@ -2494,10 +2542,50 @@ class Application_Controller extends ControllerSQL{
 			}		
 		
 			return TRUE;
+			*/
 		}
 		else{
 			$this->addModel($model);
 		}	
+	}
+	
+	private function print_pdf($templName,$outFile,&$content){
+		$xml = '<?xml version="1.0" encoding="UTF-8"?>';
+		$xml.= '<document>';
+		$xml.= $content;
+		$xml.= '</document>';
+		$xml_file = OUTPUT_PATH.uniqid().".xml";
+		file_put_contents($xml_file,$xml);
+		//FOP
+		try{			
+			$xslt_file = USER_VIEWS_PATH.$templName.".pdf.xsl";
+			$out_file_tmp = OUTPUT_PATH.uniqid().".pdf";
+			exec(sprintf(PDF_CMD_TEMPLATE,$xml_file, $xslt_file, $out_file_tmp));
+				
+			if (!file_exists($out_file_tmp)){
+				$this->setHeaderStatus(400);
+				throw new Exception('Ошибка формирования файла!');
+			}
+			
+			rename($out_file_tmp, $outFile);
+			ob_clean();
+			downloadFile(
+				$outFile,
+				'application/pdf',
+				(isset($_REQUEST['inline']) && $_REQUEST['inline']=='1')? 'inline;':'attachment;',
+				$templName.".pdf"
+			);
+		
+		}
+		finally{
+			unlink($xml_file);
+			if (file_exists($out_file_tmp)){
+				rename($out_file_tmp, $outFile);
+			}
+		}		
+	
+		return TRUE;
+	
 	}
 	
 	public function get_document_templates($pm){
@@ -2600,6 +2688,347 @@ class Application_Controller extends ControllerSQL{
 			$this->getDbLinkMaster()->query("ROLLBACK");
 			throw $e;
 		}
+	}
+	
+	
+	public function all_sig_report($pm){
+		$db_app_id = $this->getExtDbVal($pm,'id');
+		
+		$rel_dir = self::APP_DIR_PREF.$db_app_id;
+		if (!file_exists($dir = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_dir)){
+			mkdir($dir,0775,TRUE);
+			chmod($dir, 0775);
+		}
+	
+		$templ_name = 'ApplicationSigCheck';
+		$rel_out_file = $rel_dir.DIRECTORY_SEPARATOR.$templ_name.".pdf";		
+		$out_file = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_out_file;
+			
+		if (
+		file_exists($out_pdf=FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_out_file)
+		|| (defined('FILE_STORAGE_DIR_MAIN') && file_exists($out_pdf=FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$rel_out_file))
+		){
+			downloadFile(
+				$out_pdf,
+				'application/pdf',
+				(isset($_REQUEST['inline']) && $_REQUEST['inline']=='1')? 'inline;':'attachment;',
+				$templ_name.".pdf"
+			);
+			return TRUE;			
+		}
+		
+		//Header
+		$ar_app = $this->getDbLink()->query_first(sprintf(
+			"SELECT	
+				to_char(app.create_dt,'DD/MM/YY') AS date_time_descr,			
+				app.user_id,
+				app.app_print_expertise,
+				app.expertise_type,
+				app.app_print_cost_eval,
+				app.cost_eval_validity,
+				app.app_print_modification,
+				app.modification,
+				app.app_print_audit,
+				app.audit,
+				app.auth_letter_file
+			FROM applications app			
+			WHERE app.id=%s",
+			$db_app_id
+		));			
+	
+		if ($_SESSION['role_id']=='client' && $_SESSION['user_id']!=$ar_app['user_id']){
+			throw new Exception(self::ER_OTHER_USER_APP);
+		}
+		
+		//Не проверенные документы
+		$qid = $this->getDbLink()->query(sprintf(
+			"(SELECT 
+							app_f.file_id,
+							CASE
+								WHEN app_f.document_type='pd' THEN 'ПД/'||app_f.document_id
+								WHEN app_f.document_type='eng_survey' THEN 'РИИ/'||app_f.document_id
+								WHEN app_f.document_type='cost_eval_validity' THEN 'Достоверность/'||app_f.document_id
+								WHEN app_f.document_type='modification' THEN 'Модификация/'||app_f.document_id
+								WHEN app_f.document_type='audit' THEN 'Аудит/'||app_f.document_id
+								ELSE 'Договорные документы'
+							END||'/'||app_f.file_id
+							AS file_path	
+						FROM application_document_files AS app_f
+						LEFT JOIN file_verification AS v ON app_f.file_id=v.file_id
+						WHERE app_f.application_id=%d AND app_f.deleted=FALSE AND app_f.file_signed AND v.file_id IS NULL
+						ORDER BY v.date_time)
+			UNION ALL
+			(SELECT 
+							app_f.fl->>'id',
+							'Заявления/Экспертиза/'||(app_f.fl->>'id')::text
+						FROM (
+						SELECT jsonb_array_elements(app_print_expertise) AS fl FROM applications WHERE id=%d AND app_print_expertise IS NOT NULL
+						) AS app_f
+						LEFT JOIN file_verification AS v ON app_f.fl->>'id'=v.file_id
+						WHERE v.file_id IS NULL)
+			UNION ALL
+			(SELECT 
+							app_f.fl->>'id',
+							'Заявления/Достоверность/'||(app_f.fl->>'id')::text
+						FROM (
+						SELECT jsonb_array_elements(app_print_cost_eval) AS fl FROM applications WHERE id=%d AND app_print_cost_eval IS NOT NULL
+						) AS app_f
+						LEFT JOIN file_verification AS v ON app_f.fl->>'id'=v.file_id
+						WHERE v.file_id IS NULL)			
+			UNION ALL
+			(SELECT 
+							app_f.fl->>'id',
+							'Заявления/Модификация/'||(app_f.fl->>'id')::text
+						FROM (
+						SELECT jsonb_array_elements(app_print_modification) AS fl FROM applications WHERE id=%d AND app_print_modification IS NOT NULL
+						) AS app_f
+						LEFT JOIN file_verification AS v ON app_f.fl->>'id'=v.file_id
+						WHERE v.file_id IS NULL)						
+			UNION ALL
+			(SELECT 
+							app_f.fl->>'id',
+							'Заявления/Аудит/'||(app_f.fl->>'id')::text
+						FROM (
+						SELECT jsonb_array_elements(app_print_audit) AS fl FROM applications WHERE id=%d AND app_print_audit IS NOT NULL
+						) AS app_f
+						LEFT JOIN file_verification AS v ON app_f.fl->>'id'=v.file_id
+						WHERE v.file_id IS NULL)									
+			UNION ALL
+			(SELECT 
+							app_f.fl->>'id',
+							'Доверенность/'||(app_f.fl->>'id')::text
+						FROM (
+						SELECT jsonb_array_elements(auth_letter_file) AS fl FROM applications WHERE id=%d AND auth_letter_file IS NOT NULL
+						) AS app_f
+						LEFT JOIN file_verification AS v ON app_f.fl->>'id'=v.file_id
+						WHERE v.file_id IS NULL)															
+			",
+			$db_app_id,
+			$db_app_id,
+			$db_app_id,
+			$db_app_id,
+			$db_app_id,
+			$db_app_id
+		));
+		
+		$pki_man = new PKIManager(PKI_PATH,PKI_CRL_VALIDITY,'error');		
+		$rel_dir = self::APP_DIR_PREF.$this->getExtVal($pm,'id');
+		
+		while($file = $this->getDbLink()->fetch_array($qid)){
+			if (
+			(file_exists($file_doc = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$file['file_path'])
+			|| (defined('FILE_STORAGE_DIR_MAIN') && file_exists($file_doc = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$file['file_path']) )
+			)
+			&&
+			(file_exists($file_doc_sig = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$file['file_path'].self::SIG_EXT)
+			|| (defined('FILE_STORAGE_DIR_MAIN') && file_exists($file_doc_sig = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$file['file_path'].self::SIG_EXT) )
+			)			
+			){
+				pki_log_sig_check($file_doc_sig, $file_doc, "'".$file['file_id']."'", $pki_man,$this->getDbLinkMaster());
+			}
+		}		
+	
+		$m = new ModelSQL($this->getDbLink(),array('id'=>'SigCheck_Model'));
+		$m->query(sprintf(
+			"(SELECT 
+				v.date_time,
+				to_char(v.date_from,'DD/MM/YY') AS date_from,
+				to_char(v.date_to,'DD/MM/YY') AS date_to,
+				round(v.check_time,1) AS check_time,
+				v.check_result,
+				v.error_str,
+				(SELECT string_agg('<field alias=\"'||f.key||'\">'||f.value||'</field>','')
+				FROM 
+				(select (jsonb_each_text(v.subject_cert)).* ) f
+				) AS subject_cert,
+				(SELECT string_agg('<field alias=\"'||f.key||'\">'||f.value||'</field>','')
+				FROM 
+				(select (jsonb_each_text(v.issuer_cert)).* ) f
+				) AS issuer_cert,
+
+				CASE
+					WHEN app_f.document_type='pd' THEN 'ПД'
+					WHEN app_f.document_type='eng_survey' THEN 'РИИ'
+					WHEN app_f.document_type='cost_eval_validity' THEN 'Достоверность'
+					WHEN app_f.document_type='modification' THEN 'Модификация'
+					WHEN app_f.document_type='audit' THEN 'Аудит'
+					ELSE ''
+				END||' / '||app_f.file_path||' / '||app_f.file_name
+				AS file_name
+		
+			FROM application_document_files AS app_f
+			LEFT JOIN file_verification AS v ON app_f.file_id=v.file_id
+			WHERE app_f.application_id=%d AND app_f.deleted=FALSE AND v.date_time IS NOT NULL
+			ORDER BY v.date_time)
+
+			UNION ALL
+
+			(SELECT
+				v.date_time,
+				to_char(v.date_from,'DD/MM/YY') AS date_from,
+				to_char(v.date_to,'DD/MM/YY') AS date_to,
+				round(v.check_time,1) AS check_time,
+				v.check_result,
+				v.error_str,
+				(SELECT string_agg('<field alias=\"'||f.key||'\">'||f.value||'</field>','')
+				FROM 
+				(select (jsonb_each_text(v.subject_cert)).* ) f
+				) AS subject_cert,
+				(SELECT string_agg('<field alias=\"'||f.key||'\">'||f.value||'</field>','')
+				FROM 
+				(select (jsonb_each_text(v.issuer_cert)).* ) f
+				) AS issuer_cert,
+
+				'Заявление ПД / '||(app_f.fl->>'name')::text AS file_name
+
+			FROM (
+			SELECT jsonb_array_elements(app_print_expertise) AS fl FROM applications WHERE id=%d AND app_print_expertise IS NOT NULL
+			) AS app_f
+			LEFT JOIN file_verification AS v ON app_f.fl->>'id'=v.file_id)
+
+			UNION ALL
+
+			(SELECT
+				v.date_time,
+				to_char(v.date_from,'DD/MM/YY') AS date_from,
+				to_char(v.date_to,'DD/MM/YY') AS date_to,
+				round(v.check_time,1) AS check_time,
+				v.check_result,
+				v.error_str,
+				(SELECT string_agg('<field alias=\"'||f.key||'\">'||f.value||'</field>','')
+				FROM 
+				(select (jsonb_each_text(v.subject_cert)).* ) f
+				) AS subject_cert,
+				(SELECT string_agg('<field alias=\"'||f.key||'\">'||f.value||'</field>','')
+				FROM 
+				(select (jsonb_each_text(v.issuer_cert)).* ) f
+				) AS issuer_cert,
+
+				'Заявление Достоверность / '||(app_f.fl->>'name')::text AS file_name
+
+			FROM (
+			SELECT jsonb_array_elements(app_print_cost_eval) AS fl FROM applications WHERE id=%d AND app_print_cost_eval IS NOT NULL
+			) AS app_f
+			LEFT JOIN file_verification AS v ON app_f.fl->>'id'=v.file_id)
+
+			UNION ALL
+
+			(SELECT
+				v.date_time,
+				to_char(v.date_from,'DD/MM/YY') AS date_from,
+				to_char(v.date_to,'DD/MM/YY') AS date_to,
+				round(v.check_time,1) AS check_time,
+				v.check_result,
+				v.error_str,
+				(SELECT string_agg('<field alias=\"'||f.key||'\">'||f.value||'</field>','')
+				FROM 
+				(select (jsonb_each_text(v.subject_cert)).* ) f
+				) AS subject_cert,
+				(SELECT string_agg('<field alias=\"'||f.key||'\">'||f.value||'</field>','')
+				FROM 
+				(select (jsonb_each_text(v.issuer_cert)).* ) f
+				) AS issuer_cert,
+
+				'Заявление Модификация / '||(app_f.fl->>'name')::text AS file_name
+
+			FROM (
+			SELECT jsonb_array_elements(app_print_modification) AS fl FROM applications WHERE id=%d AND app_print_modification IS NOT NULL
+			) AS app_f
+			LEFT JOIN file_verification AS v ON app_f.fl->>'id'=v.file_id)
+
+			UNION ALL
+
+			(SELECT
+				v.date_time,
+				to_char(v.date_from,'DD/MM/YY') AS date_from,
+				to_char(v.date_to,'DD/MM/YY') AS date_to,
+				round(v.check_time,1) AS check_time,
+				v.check_result,
+				v.error_str,
+				(SELECT string_agg('<field alias=\"'||f.key||'\">'||f.value||'</field>','')
+				FROM 
+				(select (jsonb_each_text(v.subject_cert)).* ) f
+				) AS subject_cert,
+				(SELECT string_agg('<field alias=\"'||f.key||'\">'||f.value||'</field>','')
+				FROM 
+				(select (jsonb_each_text(v.issuer_cert)).* ) f
+				) AS issuer_cert,
+
+				'Заявление Аудит / '||(app_f.fl->>'name')::text AS file_name
+
+			FROM (
+			SELECT jsonb_array_elements(app_print_audit) AS fl FROM applications WHERE id=%d AND app_print_audit IS NOT NULL
+			) AS app_f
+			LEFT JOIN file_verification AS v ON app_f.fl->>'id'=v.file_id)
+
+			UNION ALL
+
+			(SELECT
+				v.date_time,
+				to_char(v.date_from,'DD/MM/YY') AS date_from,
+				to_char(v.date_to,'DD/MM/YY') AS date_to,
+				round(v.check_time,1) AS check_time,
+				v.check_result,
+				v.error_str,
+				(SELECT string_agg('<field alias=\"'||f.key||'\">'||f.value||'</field>','')
+				FROM 
+				(select (jsonb_each_text(v.subject_cert)).* ) f
+				) AS subject_cert,
+				(SELECT string_agg('<field alias=\"'||f.key||'\">'||f.value||'</field>','')
+				FROM 
+				(select (jsonb_each_text(v.issuer_cert)).* ) f
+				) AS issuer_cert,
+
+				'Доверенность / '||(app_f.fl->>'name')::text AS file_name
+
+			FROM (
+			SELECT jsonb_array_elements(auth_letter_file) AS fl FROM applications WHERE id=%d AND auth_letter_file IS NOT NULL
+			) AS app_f
+			LEFT JOIN file_verification AS v ON app_f.fl->>'id'=v.file_id)			
+			",
+			$db_app_id,
+			$db_app_id,
+			$db_app_id,
+			$db_app_id,
+			$db_app_id,
+			$db_app_id
+		));
+		
+		$h = new ModelVars(
+			array('name'=>'Vars',
+				'id'=>'Header_Model',
+				'values'=>array(
+						new Field('application_id',DT_STRING,array('value'=>$db_app_id))
+						,new Field('application_date',DT_STRING,array('value'=>$ar_app['date_time_descr']))
+					)
+				)
+		);
+		if ($_REQUEST['v']=='ViewPDF'){
+			$cont = $h->dataToXML(TRUE).html_entity_decode($m->dataToXML(TRUE));
+			return $this->print_pdf($templ_name,$out_file,$cont);
+		}
+		else{
+			$this->addModel($h);
+			$this->addModel($m);
+		}
+		
+		/*
+		$xml_file = OUTPUT_PATH."rep.xml";
+		$xml = '<?xml version="1.0" encoding="UTF-8"?>';
+		$xml.= '<document>';
+		$xml.= $h->dataToXML(TRUE);
+		$xml.= $m->dataToXML(TRUE);
+		$xml.= '</document>';
+		file_put_contents($xml_file,$xml);
+		*/
+	}
+	
+	
+	public function get_constr_name($pm){
+		$this->addNewModel(sprintf(
+			"SELECT constr_name FROM applications WHERE id=%d",
+			$this->getExtDbVal($pm,'id')
+		),'ConstrName_Model');
 	}
 	
 

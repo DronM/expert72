@@ -22,7 +22,10 @@ Edit template instead.
 	
 	<div id="{{{{id}}}}:cmdZipAll" options="{{'caption':'Скачать документацию ','glyph':'glyphicon-compressed'}}" title="Скачать все документы одним архивом">
 	</div>	
-	
+	{{#checkSig}}
+	<div id="{{{{id}}}}:cmdCheckSig" options="{{'caption':'Проверить подписи ','glyph':'glyphicon-thumbs-up'}}" title="Сформировать отчет о проверке всех ЭЦП заявления">
+	</div>	
+	{{/checkSig}}
 	<div id="{{{{id}}}}:cmdSend" options="{{'caption':'Отправить на проверку ','glyph':'glyphicon-send'}}" title="Отправить заявление с документацией на проверку">
 	</div>
 	{{#linkedAppExists}}

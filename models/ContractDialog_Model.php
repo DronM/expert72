@@ -500,6 +500,15 @@ class ContractDialog_Model extends ModelSQL{
 		$this->addField($f_result_sign_expert_list);
 		//********************
 		
+		//*** Field primary_contract_reg_number ***
+		$f_opts = array();
+		$f_opts['length']=20;
+		$f_opts['id']="primary_contract_reg_number";
+				
+		$f_primary_contract_reg_number=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"primary_contract_reg_number",$f_opts);
+		$this->addField($f_primary_contract_reg_number);
+		//********************
+		
 		//*** Field applications_ref ***
 		$f_opts = array();
 		$f_opts['id']="applications_ref";
@@ -634,14 +643,6 @@ class ContractDialog_Model extends ModelSQL{
 				
 		$f_fund_sources_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"fund_sources_ref",$f_opts);
 		$this->addField($f_fund_sources_ref);
-		//********************
-		
-		//*** Field primary_contract_reg_number ***
-		$f_opts = array();
-		$f_opts['id']="primary_contract_reg_number";
-				
-		$f_primary_contract_reg_number=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"primary_contract_reg_number",$f_opts);
-		$this->addField($f_primary_contract_reg_number);
 		//********************
 		
 		//*** Field primary_contracts_ref ***

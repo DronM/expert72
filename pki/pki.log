@@ -1,0 +1,645 @@
+31/07/2018 09:04 Called verifySig
+31/07/2018 09:04 Called get_issuer
+31/07/2018 09:04 Called run_shell_cmd openssl enc -d -base64 -in /home/andrey/www/htdocs/expert72/output/test.pdf.sig -out /home/andrey/www/htdocs/expert72/output/test.pdf.der
+31/07/2018 09:04 Called run_shell_cmd openssl pkcs7 -in /home/andrey/www/htdocs/expert72/output/test.pdf.der -print_certs -inform DER -outform pem -out /home/andrey/www/htdocs/expert72/output/test.pdf.pem
+31/07/2018 09:04 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in /home/andrey/www/htdocs/expert72/output/test.pdf.pem -noout -nameopt multiline
+31/07/2018 09:04 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -issuer -in /home/andrey/www/htdocs/expert72/output/test.pdf.pem -noout
+31/07/2018 09:04 Called get_ca_list_file
+31/07/2018 09:04 Called get_ca_certs progComplexAlias=ООО "Электронный экспресс",caOGRN=1097746293886
+31/07/2018 09:04 Certificate found, making pem
+31/07/2018 09:04 Called run_shell_cmd openssl base64 -d -A -in /home/andrey/www/htdocs/expert72/pki/365A9833E7F35C6462494D5F723B5EED0ED917F4.b64 -out /home/andrey/www/htdocs/expert72/pki/365A9833E7F35C6462494D5F723B5EED0ED917F4.der
+31/07/2018 09:04 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in /home/andrey/www/htdocs/expert72/pki/365A9833E7F35C6462494D5F723B5EED0ED917F4.der -noout
+31/07/2018 09:04 Called run_shell_cmd openssl x509 -in /home/andrey/www/htdocs/expert72/pki/365A9833E7F35C6462494D5F723B5EED0ED917F4.der -inform der -outform pem -out /home/andrey/www/htdocs/expert72/pki/365A9833E7F35C6462494D5F723B5EED0ED917F4.pem
+31/07/2018 09:04 CRL urls exist
+31/07/2018 09:04 Called run_shell_cmd wget -O /home/andrey/www/htdocs/expert72/pki/365A9833E7F35C6462494D5F723B5EED0ED917F4.crl.der http://ca.garant.ru/cdp/accredited/garant_ac4.crl
+31/07/2018 09:04 Called run_shell_cmd openssl crl -in /home/andrey/www/htdocs/expert72/pki/365A9833E7F35C6462494D5F723B5EED0ED917F4.crl.der -inform DER -out /home/andrey/www/htdocs/expert72/pki/365A9833E7F35C6462494D5F723B5EED0ED917F4.crl
+31/07/2018 09:04 Appending crl to pem file
+31/07/2018 09:04 Adding certificate pem with crl to chain file
+31/07/2018 09:04 Looking for parent certificate
+31/07/2018 09:04 Called get_ca_certs progComplexAlias=УЦ 1 ИС ГУЦ,caOGRN=1047702026701
+31/07/2018 09:04 Certificate found, making pem
+31/07/2018 09:04 Called run_shell_cmd openssl base64 -d -A -in /home/andrey/www/htdocs/expert72/pki/9E78A331020E528C046FFD57704A21B7D2241CB3.b64 -out /home/andrey/www/htdocs/expert72/pki/9E78A331020E528C046FFD57704A21B7D2241CB3.der
+31/07/2018 09:04 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in /home/andrey/www/htdocs/expert72/pki/9E78A331020E528C046FFD57704A21B7D2241CB3.der -noout
+31/07/2018 09:04 Called run_shell_cmd openssl x509 -in /home/andrey/www/htdocs/expert72/pki/9E78A331020E528C046FFD57704A21B7D2241CB3.der -inform der -outform pem -out /home/andrey/www/htdocs/expert72/pki/9E78A331020E528C046FFD57704A21B7D2241CB3.pem
+31/07/2018 09:04 CRL urls exist
+31/07/2018 09:04 Called run_shell_cmd wget -O /home/andrey/www/htdocs/expert72/pki/9E78A331020E528C046FFD57704A21B7D2241CB3.crl.der http://rostelecom.ru/cdp/vguc1.crl
+31/07/2018 09:04 Called run_shell_cmd openssl crl -in /home/andrey/www/htdocs/expert72/pki/9E78A331020E528C046FFD57704A21B7D2241CB3.crl.der -inform DER -out /home/andrey/www/htdocs/expert72/pki/9E78A331020E528C046FFD57704A21B7D2241CB3.crl
+31/07/2018 09:04 Appending crl to pem file
+31/07/2018 09:04 Adding certificate pem with crl to chain file
+31/07/2018 09:04 Looking for parent certificate
+31/07/2018 09:04 Called get_ca_certs progComplexAlias=Головной удостоверяющий центр,caOGRN=1047702026701
+31/07/2018 09:04 Certificate found, making pem
+31/07/2018 09:04 Called run_shell_cmd openssl base64 -d -A -in /home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.b64 -out /home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der
+31/07/2018 09:04 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in /home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der -noout
+31/07/2018 09:04 Called run_shell_cmd openssl x509 -in /home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der -inform der -outform pem -out /home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.pem
+31/07/2018 09:04 CRL urls exist
+31/07/2018 09:04 Called run_shell_cmd wget -O /home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.crl.der http://rostelecom.ru/cdp/guc.crl
+31/07/2018 09:04 Called run_shell_cmd openssl crl -in /home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.crl.der -inform DER -out /home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.crl
+31/07/2018 09:04 Appending crl to pem file
+31/07/2018 09:04 Adding certificate pem with crl to chain file
+31/07/2018 09:04 Certificate found, making pem
+31/07/2018 09:04 Called run_shell_cmd openssl base64 -d -A -in /home/andrey/www/htdocs/expert72/pki/9D05A704C8C1E565ACDE5878FE0BB96EC53C2A40.b64 -out /home/andrey/www/htdocs/expert72/pki/9D05A704C8C1E565ACDE5878FE0BB96EC53C2A40.der
+31/07/2018 09:04 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in /home/andrey/www/htdocs/expert72/pki/9D05A704C8C1E565ACDE5878FE0BB96EC53C2A40.der -noout
+31/07/2018 09:04 Called run_shell_cmd openssl x509 -in /home/andrey/www/htdocs/expert72/pki/9D05A704C8C1E565ACDE5878FE0BB96EC53C2A40.der -inform der -outform pem -out /home/andrey/www/htdocs/expert72/pki/9D05A704C8C1E565ACDE5878FE0BB96EC53C2A40.pem
+31/07/2018 09:04 CRL urls exist
+31/07/2018 09:04 Called run_shell_cmd wget -O /home/andrey/www/htdocs/expert72/pki/9D05A704C8C1E565ACDE5878FE0BB96EC53C2A40.crl.der http://reestr-pki.ru/cdp/vguc1_3.crl
+31/07/2018 09:04 Called run_shell_cmd openssl crl -in /home/andrey/www/htdocs/expert72/pki/9D05A704C8C1E565ACDE5878FE0BB96EC53C2A40.crl.der -inform DER -out /home/andrey/www/htdocs/expert72/pki/9D05A704C8C1E565ACDE5878FE0BB96EC53C2A40.crl
+31/07/2018 09:04 Appending crl to pem file
+31/07/2018 09:04 Adding certificate pem with crl to chain file
+31/07/2018 09:04 Looking for parent certificate
+31/07/2018 09:04 Called get_ca_certs progComplexAlias=Головной удостоверяющий центр,caOGRN=1047702026701
+31/07/2018 09:04 Certificate found, making pem
+31/07/2018 09:04 Called run_shell_cmd openssl base64 -d -A -in /home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.b64 -out /home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der
+31/07/2018 09:04 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in /home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der -noout
+31/07/2018 09:04 Adding certificate pem with crl to chain file
+31/07/2018 09:04 Certificate found, making pem
+31/07/2018 09:04 Called run_shell_cmd openssl base64 -d -A -in /home/andrey/www/htdocs/expert72/pki/0408435EB90E5C8796A160E69E4BFAC453435D1D.b64 -out /home/andrey/www/htdocs/expert72/pki/0408435EB90E5C8796A160E69E4BFAC453435D1D.der
+31/07/2018 09:04 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in /home/andrey/www/htdocs/expert72/pki/0408435EB90E5C8796A160E69E4BFAC453435D1D.der -noout
+31/07/2018 09:04 Called run_shell_cmd openssl x509 -in /home/andrey/www/htdocs/expert72/pki/0408435EB90E5C8796A160E69E4BFAC453435D1D.der -inform der -outform pem -out /home/andrey/www/htdocs/expert72/pki/0408435EB90E5C8796A160E69E4BFAC453435D1D.pem
+31/07/2018 09:04 CRL urls exist
+31/07/2018 09:04 Called run_shell_cmd wget -O /home/andrey/www/htdocs/expert72/pki/0408435EB90E5C8796A160E69E4BFAC453435D1D.crl.der http://reestr-pki.ru/cdp/vguc1_4.crl
+31/07/2018 09:04 Called run_shell_cmd openssl crl -in /home/andrey/www/htdocs/expert72/pki/0408435EB90E5C8796A160E69E4BFAC453435D1D.crl.der -inform DER -out /home/andrey/www/htdocs/expert72/pki/0408435EB90E5C8796A160E69E4BFAC453435D1D.crl
+31/07/2018 09:04 Appending crl to pem file
+31/07/2018 09:04 Adding certificate pem with crl to chain file
+31/07/2018 09:04 Looking for parent certificate
+31/07/2018 09:04 Called get_ca_certs progComplexAlias=Головной удостоверяющий центр,caOGRN=1047702026701
+31/07/2018 09:04 Certificate found, making pem
+31/07/2018 09:04 Called run_shell_cmd openssl base64 -d -A -in /home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.b64 -out /home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der
+31/07/2018 09:04 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in /home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der -noout
+31/07/2018 09:04 Adding certificate pem with crl to chain file
+31/07/2018 09:04 Certificate found, making pem
+31/07/2018 09:04 Called run_shell_cmd openssl base64 -d -A -in /home/andrey/www/htdocs/expert72/pki/0932E483C4420E668F64D360006D0BEB0BFACCA7.b64 -out /home/andrey/www/htdocs/expert72/pki/0932E483C4420E668F64D360006D0BEB0BFACCA7.der
+31/07/2018 09:04 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in /home/andrey/www/htdocs/expert72/pki/0932E483C4420E668F64D360006D0BEB0BFACCA7.der -noout
+31/07/2018 09:04 Called run_shell_cmd openssl x509 -in /home/andrey/www/htdocs/expert72/pki/0932E483C4420E668F64D360006D0BEB0BFACCA7.der -inform der -outform pem -out /home/andrey/www/htdocs/expert72/pki/0932E483C4420E668F64D360006D0BEB0BFACCA7.pem
+31/07/2018 09:04 CRL urls exist
+31/07/2018 09:04 Called run_shell_cmd wget -O /home/andrey/www/htdocs/expert72/pki/0932E483C4420E668F64D360006D0BEB0BFACCA7.crl.der http://reestr-pki.ru/cdp/vguc1_5.crl
+31/07/2018 09:04 Called run_shell_cmd openssl crl -in /home/andrey/www/htdocs/expert72/pki/0932E483C4420E668F64D360006D0BEB0BFACCA7.crl.der -inform DER -out /home/andrey/www/htdocs/expert72/pki/0932E483C4420E668F64D360006D0BEB0BFACCA7.crl
+31/07/2018 09:04 Appending crl to pem file
+31/07/2018 09:04 Adding certificate pem with crl to chain file
+31/07/2018 09:04 Looking for parent certificate
+31/07/2018 09:04 Called get_ca_certs progComplexAlias=Головной удостоверяющий центр,caOGRN=1047702026701
+31/07/2018 09:04 Certificate found, making pem
+31/07/2018 09:04 Called run_shell_cmd openssl base64 -d -A -in /home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.b64 -out /home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der
+31/07/2018 09:04 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in /home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der -noout
+31/07/2018 09:04 Adding certificate pem with crl to chain file
+31/07/2018 09:04 Certificate found, making pem
+31/07/2018 09:04 Called run_shell_cmd openssl base64 -d -A -in /home/andrey/www/htdocs/expert72/pki/11608B4E03D484BC20BB7939AC5ED2C8E48D24CF.b64 -out /home/andrey/www/htdocs/expert72/pki/11608B4E03D484BC20BB7939AC5ED2C8E48D24CF.der
+31/07/2018 09:04 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in /home/andrey/www/htdocs/expert72/pki/11608B4E03D484BC20BB7939AC5ED2C8E48D24CF.der -noout
+31/07/2018 09:04 Called run_shell_cmd openssl x509 -in /home/andrey/www/htdocs/expert72/pki/11608B4E03D484BC20BB7939AC5ED2C8E48D24CF.der -inform der -outform pem -out /home/andrey/www/htdocs/expert72/pki/11608B4E03D484BC20BB7939AC5ED2C8E48D24CF.pem
+31/07/2018 09:04 CRL urls exist
+31/07/2018 09:04 Called run_shell_cmd wget -O /home/andrey/www/htdocs/expert72/pki/11608B4E03D484BC20BB7939AC5ED2C8E48D24CF.crl.der http://ca.garant.ru/cdp/accredited/garant_ac5.crl
+31/07/2018 09:04 Called run_shell_cmd openssl crl -in /home/andrey/www/htdocs/expert72/pki/11608B4E03D484BC20BB7939AC5ED2C8E48D24CF.crl.der -inform DER -out /home/andrey/www/htdocs/expert72/pki/11608B4E03D484BC20BB7939AC5ED2C8E48D24CF.crl
+31/07/2018 09:04 Appending crl to pem file
+31/07/2018 09:04 Adding certificate pem with crl to chain file
+31/07/2018 09:04 Looking for parent certificate
+31/07/2018 09:04 Called get_ca_certs progComplexAlias=Головной удостоверяющий центр,caOGRN=1047702026701
+31/07/2018 09:04 Certificate found, making pem
+31/07/2018 09:04 Called run_shell_cmd openssl base64 -d -A -in /home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.b64 -out /home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der
+31/07/2018 09:04 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in /home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der -noout
+31/07/2018 09:04 Adding certificate pem with crl to chain file
+31/07/2018 09:04 Certificate found, making pem
+31/07/2018 09:04 Called run_shell_cmd openssl base64 -d -A -in /home/andrey/www/htdocs/expert72/pki/65D66F39C3FB48DDF441313F1E1441A0E0ABD804.b64 -out /home/andrey/www/htdocs/expert72/pki/65D66F39C3FB48DDF441313F1E1441A0E0ABD804.der
+31/07/2018 09:04 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in /home/andrey/www/htdocs/expert72/pki/65D66F39C3FB48DDF441313F1E1441A0E0ABD804.der -noout
+31/07/2018 09:04 Called run_shell_cmd openssl x509 -in /home/andrey/www/htdocs/expert72/pki/65D66F39C3FB48DDF441313F1E1441A0E0ABD804.der -inform der -outform pem -out /home/andrey/www/htdocs/expert72/pki/65D66F39C3FB48DDF441313F1E1441A0E0ABD804.pem
+31/07/2018 09:04 CRL urls exist
+31/07/2018 09:04 Called run_shell_cmd wget -O /home/andrey/www/htdocs/expert72/pki/65D66F39C3FB48DDF441313F1E1441A0E0ABD804.crl.der http://ca.garant.ru/cdp/accredited/garant_ac6.crl
+31/07/2018 09:04 Called run_shell_cmd openssl crl -in /home/andrey/www/htdocs/expert72/pki/65D66F39C3FB48DDF441313F1E1441A0E0ABD804.crl.der -inform DER -out /home/andrey/www/htdocs/expert72/pki/65D66F39C3FB48DDF441313F1E1441A0E0ABD804.crl
+31/07/2018 09:04 Appending crl to pem file
+31/07/2018 09:04 Adding certificate pem with crl to chain file
+31/07/2018 09:04 Looking for parent certificate
+31/07/2018 09:04 Called get_ca_certs progComplexAlias=Головной удостоверяющий центр,caOGRN=1047702026701
+31/07/2018 09:04 Certificate found, making pem
+31/07/2018 09:04 Called run_shell_cmd openssl base64 -d -A -in /home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.b64 -out /home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der
+31/07/2018 09:04 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in /home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der -noout
+31/07/2018 09:04 Adding certificate pem with crl to chain file
+31/07/2018 09:04 Certificate found, making pem
+31/07/2018 09:04 Called run_shell_cmd openssl base64 -d -A -in /home/andrey/www/htdocs/expert72/pki/E4A14407156D3EF733AAD050C4B1F00C278671C5.b64 -out /home/andrey/www/htdocs/expert72/pki/E4A14407156D3EF733AAD050C4B1F00C278671C5.der
+31/07/2018 09:04 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in /home/andrey/www/htdocs/expert72/pki/E4A14407156D3EF733AAD050C4B1F00C278671C5.der -noout
+31/07/2018 09:04 Called run_shell_cmd openssl x509 -in /home/andrey/www/htdocs/expert72/pki/E4A14407156D3EF733AAD050C4B1F00C278671C5.der -inform der -outform pem -out /home/andrey/www/htdocs/expert72/pki/E4A14407156D3EF733AAD050C4B1F00C278671C5.pem
+31/07/2018 09:04 CRL urls exist
+31/07/2018 09:04 Called run_shell_cmd wget -O /home/andrey/www/htdocs/expert72/pki/E4A14407156D3EF733AAD050C4B1F00C278671C5.crl.der http://ca.garant.ru/cdp/accredited/garant_ac7.crl
+31/07/2018 09:04 Called run_shell_cmd openssl crl -in /home/andrey/www/htdocs/expert72/pki/E4A14407156D3EF733AAD050C4B1F00C278671C5.crl.der -inform DER -out /home/andrey/www/htdocs/expert72/pki/E4A14407156D3EF733AAD050C4B1F00C278671C5.crl
+31/07/2018 09:04 Appending crl to pem file
+31/07/2018 09:04 Adding certificate pem with crl to chain file
+31/07/2018 09:04 Looking for parent certificate
+31/07/2018 09:04 Called get_ca_certs progComplexAlias=Минкомсвязь России,caOGRN=1047702026701
+31/07/2018 09:04 Certificate found, making pem
+31/07/2018 09:04 Called run_shell_cmd openssl base64 -d -A -in /home/andrey/www/htdocs/expert72/pki/9BA648660733ED7A550BCEA03A20E14B8F25C99B.b64 -out /home/andrey/www/htdocs/expert72/pki/9BA648660733ED7A550BCEA03A20E14B8F25C99B.der
+31/07/2018 09:04 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in /home/andrey/www/htdocs/expert72/pki/9BA648660733ED7A550BCEA03A20E14B8F25C99B.der -noout
+31/07/2018 09:04 Called run_shell_cmd openssl x509 -in /home/andrey/www/htdocs/expert72/pki/9BA648660733ED7A550BCEA03A20E14B8F25C99B.der -inform der -outform pem -out /home/andrey/www/htdocs/expert72/pki/9BA648660733ED7A550BCEA03A20E14B8F25C99B.pem
+31/07/2018 09:04 CRL urls exist
+31/07/2018 09:04 Called run_shell_cmd wget -O /home/andrey/www/htdocs/expert72/pki/9BA648660733ED7A550BCEA03A20E14B8F25C99B.crl.der http://reestr-pki.ru/cdp/vguc1_6.crl
+31/07/2018 09:04 Called run_shell_cmd openssl crl -in /home/andrey/www/htdocs/expert72/pki/9BA648660733ED7A550BCEA03A20E14B8F25C99B.crl.der -inform DER -out /home/andrey/www/htdocs/expert72/pki/9BA648660733ED7A550BCEA03A20E14B8F25C99B.crl
+31/07/2018 09:04 Appending crl to pem file
+31/07/2018 09:04 Adding certificate pem with crl to chain file
+31/07/2018 09:04 Looking for parent certificate
+31/07/2018 09:04 Called get_ca_certs progComplexAlias=Головной удостоверяющий центр,caOGRN=1047702026701
+31/07/2018 09:04 Certificate found, making pem
+31/07/2018 09:04 Called run_shell_cmd openssl base64 -d -A -in /home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.b64 -out /home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der
+31/07/2018 09:04 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in /home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der -noout
+31/07/2018 09:04 Adding certificate pem with crl to chain file
+31/07/2018 09:04 Certificate found, making pem
+31/07/2018 09:04 Called run_shell_cmd openssl base64 -d -A -in /home/andrey/www/htdocs/expert72/pki/4BC6DC14D97010C41A26E058AD851F81C842415A.b64 -out /home/andrey/www/htdocs/expert72/pki/4BC6DC14D97010C41A26E058AD851F81C842415A.der
+31/07/2018 09:04 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in /home/andrey/www/htdocs/expert72/pki/4BC6DC14D97010C41A26E058AD851F81C842415A.der -noout
+31/07/2018 09:04 Called run_shell_cmd openssl x509 -in /home/andrey/www/htdocs/expert72/pki/4BC6DC14D97010C41A26E058AD851F81C842415A.der -inform der -outform pem -out /home/andrey/www/htdocs/expert72/pki/4BC6DC14D97010C41A26E058AD851F81C842415A.pem
+31/07/2018 09:04 CRL urls exist
+31/07/2018 09:04 Called run_shell_cmd wget -O /home/andrey/www/htdocs/expert72/pki/4BC6DC14D97010C41A26E058AD851F81C842415A.crl.der http://reestr-pki.ru/cdp/guc_gost12.crl
+31/07/2018 09:04 Called run_shell_cmd openssl crl -in /home/andrey/www/htdocs/expert72/pki/4BC6DC14D97010C41A26E058AD851F81C842415A.crl.der -inform DER -out /home/andrey/www/htdocs/expert72/pki/4BC6DC14D97010C41A26E058AD851F81C842415A.crl
+31/07/2018 09:04 Appending crl to pem file
+31/07/2018 09:04 Adding certificate pem with crl to chain file
+31/07/2018 09:04 Called run_shell_cmd openssl smime -verify -content /home/andrey/www/htdocs/expert72/output/test.pdf -purpose any -crl_check -out /dev/null -inform der -in /home/andrey/www/htdocs/expert72/output/test.pdf.der -CAfile /home/andrey/www/htdocs/expert72/pki/7d96a6c1.chain.pem
+31/07/2018 09:06 Called verifySig
+31/07/2018 09:06 Called get_issuer
+31/07/2018 09:06 Called run_shell_cmd openssl enc -d -base64 -in /home/andrey/www/htdocs/expert72/output/test.pdf.sig -out /home/andrey/www/htdocs/expert72/output/test.pdf.der
+31/07/2018 09:06 Called run_shell_cmd openssl pkcs7 -in /home/andrey/www/htdocs/expert72/output/test.pdf.der -print_certs -inform DER -outform pem -out /home/andrey/www/htdocs/expert72/output/test.pdf.pem
+31/07/2018 09:06 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in /home/andrey/www/htdocs/expert72/output/test.pdf.pem -noout -nameopt multiline
+31/07/2018 09:09 Called verifySig
+31/07/2018 09:09 Called get_issuer
+31/07/2018 09:09 Called run_shell_cmd openssl enc -d -base64 -in /home/andrey/www/htdocs/expert72/output/test.pdf.sig -out /home/andrey/www/htdocs/expert72/output/test.pdf.der
+31/07/2018 09:09 Called run_shell_cmd openssl pkcs7 -in /home/andrey/www/htdocs/expert72/output/test.pdf.der -print_certs -inform DER -outform pem -out /home/andrey/www/htdocs/expert72/output/test.pdf.pem
+31/07/2018 09:09 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in /home/andrey/www/htdocs/expert72/output/test.pdf.pem -noout -nameopt multiline
+31/07/2018 09:13 Called verifySig
+31/07/2018 09:13 Called get_issuer
+31/07/2018 09:13 Called run_shell_cmd openssl enc -d -base64 -in /home/andrey/www/htdocs/expert72/output/test.pdf.sig -out /home/andrey/www/htdocs/expert72/output/test.pdf.der
+31/07/2018 09:13 Called run_shell_cmd openssl pkcs7 -in /home/andrey/www/htdocs/expert72/output/test.pdf.der -print_certs -inform DER -outform pem -out /home/andrey/www/htdocs/expert72/output/test.pdf.pem
+31/07/2018 09:13 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in /home/andrey/www/htdocs/expert72/output/test.pdf.pem -noout -nameopt multiline
+31/07/2018 09:14 Called verifySig
+31/07/2018 09:14 Called get_issuer
+31/07/2018 09:14 Called run_shell_cmd openssl enc -d -base64 -in /home/andrey/www/htdocs/expert72/output/test.pdf.sig -out /home/andrey/www/htdocs/expert72/output/test.pdf.der
+31/07/2018 09:14 Called run_shell_cmd openssl pkcs7 -in /home/andrey/www/htdocs/expert72/output/test.pdf.der -print_certs -inform DER -outform pem -out /home/andrey/www/htdocs/expert72/output/test.pdf.pem
+31/07/2018 09:14 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in /home/andrey/www/htdocs/expert72/output/test.pdf.pem -noout -nameopt multiline
+31/07/2018 09:15 Called verifySig
+31/07/2018 09:15 Called get_issuer
+31/07/2018 09:15 Called run_shell_cmd openssl enc -d -base64 -in /home/andrey/www/htdocs/expert72/output/test.pdf.sig -out /home/andrey/www/htdocs/expert72/output/test.pdf.der
+31/07/2018 09:15 Called run_shell_cmd openssl pkcs7 -in /home/andrey/www/htdocs/expert72/output/test.pdf.der -print_certs -inform DER -outform pem -out /home/andrey/www/htdocs/expert72/output/test.pdf.pem
+31/07/2018 09:15 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in /home/andrey/www/htdocs/expert72/output/test.pdf.pem -noout -nameopt multiline
+31/07/2018 09:15 Called verifySig
+31/07/2018 09:15 Called get_issuer
+31/07/2018 09:15 Called run_shell_cmd openssl enc -d -base64 -in /home/andrey/www/htdocs/expert72/output/test.pdf.sig -out /home/andrey/www/htdocs/expert72/output/test.pdf.der
+31/07/2018 09:15 Called run_shell_cmd openssl pkcs7 -in /home/andrey/www/htdocs/expert72/output/test.pdf.der -print_certs -inform DER -outform pem -out /home/andrey/www/htdocs/expert72/output/test.pdf.pem
+31/07/2018 09:15 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in /home/andrey/www/htdocs/expert72/output/test.pdf.pem -noout -nameopt multiline
+31/07/2018 09:16 Called verifySig
+31/07/2018 09:16 Called get_issuer
+31/07/2018 09:16 Called run_shell_cmd openssl enc -d -base64 -in /home/andrey/www/htdocs/expert72/output/test.pdf.sig -out /home/andrey/www/htdocs/expert72/output/test.pdf.der
+31/07/2018 09:16 Called run_shell_cmd openssl pkcs7 -in /home/andrey/www/htdocs/expert72/output/test.pdf.der -print_certs -inform DER -outform pem -out /home/andrey/www/htdocs/expert72/output/test.pdf.pem
+31/07/2018 09:16 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in /home/andrey/www/htdocs/expert72/output/test.pdf.pem -noout -nameopt multiline
+31/07/2018 09:17 Called verifySig
+31/07/2018 09:17 Called get_issuer
+31/07/2018 09:17 Called run_shell_cmd openssl enc -d -base64 -in /home/andrey/www/htdocs/expert72/output/test.pdf.sig -out /home/andrey/www/htdocs/expert72/output/test.pdf.der
+31/07/2018 09:17 Called run_shell_cmd openssl pkcs7 -in /home/andrey/www/htdocs/expert72/output/test.pdf.der -print_certs -inform DER -outform pem -out /home/andrey/www/htdocs/expert72/output/test.pdf.pem
+31/07/2018 09:17 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in /home/andrey/www/htdocs/expert72/output/test.pdf.pem -noout -nameopt multiline
+31/07/2018 09:19 Called verifySig
+31/07/2018 09:19 Called get_issuer
+31/07/2018 09:19 Called run_shell_cmd openssl enc -d -base64 -in /home/andrey/www/htdocs/expert72/output/test.pdf.sig -out /home/andrey/www/htdocs/expert72/output/test.pdf.der
+31/07/2018 09:19 Called run_shell_cmd openssl pkcs7 -in /home/andrey/www/htdocs/expert72/output/test.pdf.der -print_certs -inform DER -outform pem -out /home/andrey/www/htdocs/expert72/output/test.pdf.pem
+31/07/2018 09:19 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in /home/andrey/www/htdocs/expert72/output/test.pdf.pem -noout -nameopt multiline
+31/07/2018 09:19 Called verifySig
+31/07/2018 09:19 Called get_issuer
+31/07/2018 09:19 Called run_shell_cmd openssl enc -d -base64 -in /home/andrey/www/htdocs/expert72/output/test.pdf.sig -out /home/andrey/www/htdocs/expert72/output/test.pdf.der
+31/07/2018 09:19 Called run_shell_cmd openssl pkcs7 -in /home/andrey/www/htdocs/expert72/output/test.pdf.der -print_certs -inform DER -outform pem -out /home/andrey/www/htdocs/expert72/output/test.pdf.pem
+31/07/2018 09:19 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in /home/andrey/www/htdocs/expert72/output/test.pdf.pem -noout -nameopt multiline
+31/07/2018 09:19 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -issuer -in /home/andrey/www/htdocs/expert72/output/test.pdf.pem -noout
+31/07/2018 09:19 Called run_shell_cmd openssl smime -verify -content /home/andrey/www/htdocs/expert72/output/test.pdf -purpose any -crl_check -out /dev/null -inform der -in /home/andrey/www/htdocs/expert72/output/test.pdf.der -CAfile /home/andrey/www/htdocs/expert72/pki/7d96a6c1.chain.pem
+31/07/2018 09:20 Called verifySig
+31/07/2018 09:20 Called get_issuer
+31/07/2018 09:20 Called run_shell_cmd openssl enc -d -base64 -in /home/andrey/www/htdocs/expert72/output/test.pdf.sig -out /home/andrey/www/htdocs/expert72/output/test.pdf.der
+31/07/2018 09:20 Called run_shell_cmd openssl pkcs7 -in /home/andrey/www/htdocs/expert72/output/test.pdf.der -print_certs -inform DER -outform pem -out /home/andrey/www/htdocs/expert72/output/test.pdf.pem
+31/07/2018 09:20 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in /home/andrey/www/htdocs/expert72/output/test.pdf.pem -noout -nameopt multiline
+31/07/2018 09:20 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -issuer -in /home/andrey/www/htdocs/expert72/output/test.pdf.pem -noout
+31/07/2018 09:20 Called run_shell_cmd openssl smime -verify -content /home/andrey/www/htdocs/expert72/output/test.pdf -purpose any -crl_check -out /dev/null -inform der -in /home/andrey/www/htdocs/expert72/output/test.pdf.der -CAfile /home/andrey/www/htdocs/expert72/pki/7d96a6c1.chain.pem
+31/07/2018 09:26 Called verifySig
+31/07/2018 09:26 Called get_issuer
+31/07/2018 09:26 Called run_shell_cmd openssl enc -d -base64 -in /home/andrey/www/htdocs/expert72/output/test.pdf.sig -out /home/andrey/www/htdocs/expert72/output/test.pdf.der
+31/07/2018 09:26 Called run_shell_cmd openssl pkcs7 -in /home/andrey/www/htdocs/expert72/output/test.pdf.der -print_certs -inform DER -outform pem -out /home/andrey/www/htdocs/expert72/output/test.pdf.pem
+31/07/2018 09:26 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in /home/andrey/www/htdocs/expert72/output/test.pdf.pem -noout -nameopt multiline
+31/07/2018 09:26 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -issuer -in /home/andrey/www/htdocs/expert72/output/test.pdf.pem -noout
+31/07/2018 09:26 Called run_shell_cmd openssl smime -verify -content /home/andrey/www/htdocs/expert72/output/test.pdf -purpose any -crl_check -out /dev/null -inform der -in /home/andrey/www/htdocs/expert72/output/test.pdf.der -CAfile /home/andrey/www/htdocs/expert72/pki/7d96a6c1.chain.pem
+31/07/2018 09:36 unable to load PKCS7 object
+3073574588:error:0D07207B:asn1 encoding routines:ASN1_get_object:header too long:asn1_lib.c:150:
+
+31/07/2018 09:38 unable to load PKCS7 object
+3074041532:error:0D07207B:asn1 encoding routines:ASN1_get_object:header too long:asn1_lib.c:150:
+
+31/07/2018 09:39 unable to load PKCS7 object
+3073484476:error:0D07207B:asn1 encoding routines:ASN1_get_object:header too long:asn1_lib.c:150:
+
+31/07/2018 09:39 Could not find field 1.2.643.100.1 in subject issuer=, CN=202K9   . ., emailAddress=72okvd@mail.ru, O=#  "   " ", L=3 ."N<5
+31/07/2018 09:40 unable to load PKCS7 object
+3073627836:error:0D07207B:asn1 encoding routines:ASN1_get_object:header too long:asn1_lib.c:150:
+
+31/07/2018 10:05 unknown option '/.der'
+options are
+-in <file>     input file
+-out <file>    output file
+-pass <arg>    pass phrase source
+-e             encrypt
+-d             decrypt
+-a/-base64     base64 encode/decode, depending on encryption flag
+-k             passphrase is the next argument
+-kfile         passphrase is the first line of the file argument
+-md            the next argument is the md to use to create a key
+                 from a passphrase.  One of md2, md5, sha or sha1
+-S             salt in hex is the next argument
+-K/-iv         key/iv in hex is the next argument
+-[pP]          print the iv/key (then exit if -P)
+-bufsize <n>   buffer size
+-nopad         disable standard block padding
+-engine e      use engine e, possibly a hardware device.
+Cipher Types
+-aes-128-cbc               -aes-128-cfb               -aes-128-cfb1             
+-aes-128-cfb8              -aes-128-ctr               -aes-128-ecb              
+-aes-128-gcm               -aes-128-ofb               -aes-128-xts              
+-aes-192-cbc               -aes-192-cfb               -aes-192-cfb1             
+-aes-192-cfb8              -aes-192-ctr               -aes-192-ecb              
+-aes-192-gcm               -aes-192-ofb               -aes-256-cbc              
+-aes-256-cfb               -aes-256-cfb1              -aes-256-cfb8             
+-aes-256-ctr               -aes-256-ecb               -aes-256-gcm              
+-aes-256-ofb               -aes-256-xts               -aes128                   
+-aes192                    -aes256                    -bf                       
+-bf-cbc                    -bf-cfb                    -bf-ecb                   
+-bf-ofb                    -blowfish                  -camellia-128-cbc         
+-camellia-128-cfb          -camellia-128-cfb1         -camellia-128-cfb8        
+-camellia-128-ecb          -camellia-128-ofb          -camellia-192-cbc         
+-camellia-192-cfb          -camellia-192-cfb1         -camellia-192-cfb8        
+-camellia-192-ecb          -camellia-192-ofb          -camellia-256-cbc         
+-camellia-256-cfb          -camellia-256-cfb1         -camellia-256-cfb8        
+-camellia-256-ecb          -camellia-256-ofb          -camellia128              
+-camellia192               -camellia256               -cast                     
+-cast-cbc                  -cast5-cbc                 -cast5-cfb                
+-cast5-ecb                 -cast5-ofb                 -des                      
+-des-cbc                   -des-cfb                   -des-cfb1                 
+-des-cfb8                  -des-ecb                   -des-ede                  
+-des-ede-cbc               -des-ede-cfb               -des-ede-ofb              
+-des-ede3                  -des-ede3-cbc              -des-ede3-cfb             
+-des-ede3-cfb1             -des-ede3-cfb8             -des-ede3-ofb             
+-des-ofb                   -des3                      -desx                     
+-desx-cbc                  -gost89                    -gost89-cnt               
+-id-aes128-GCM             -id-aes192-GCM             -id-aes256-GCM            
+-rc2                       -rc2-40-cbc                -rc2-64-cbc               
+-rc2-cbc                   -rc2-cfb                   -rc2-ecb                  
+-rc2-ofb                   -rc4                       -rc4-40                   
+-rc4-hmac-md5              -seed                      -seed-cbc                 
+-seed-cfb                  -seed-ecb                  -seed-ofb                 
+
+
+31/07/2018 10:05 unknown option '/.der'
+options are
+-in <file>     input file
+-out <file>    output file
+-pass <arg>    pass phrase source
+-e             encrypt
+-d             decrypt
+-a/-base64     base64 encode/decode, depending on encryption flag
+-k             passphrase is the next argument
+-kfile         passphrase is the first line of the file argument
+-md            the next argument is the md to use to create a key
+                 from a passphrase.  One of md2, md5, sha or sha1
+-S             salt in hex is the next argument
+-K/-iv         key/iv in hex is the next argument
+-[pP]          print the iv/key (then exit if -P)
+-bufsize <n>   buffer size
+-nopad         disable standard block padding
+-engine e      use engine e, possibly a hardware device.
+Cipher Types
+-aes-128-cbc               -aes-128-cfb               -aes-128-cfb1             
+-aes-128-cfb8              -aes-128-ctr               -aes-128-ecb              
+-aes-128-gcm               -aes-128-ofb               -aes-128-xts              
+-aes-192-cbc               -aes-192-cfb               -aes-192-cfb1             
+-aes-192-cfb8              -aes-192-ctr               -aes-192-ecb              
+-aes-192-gcm               -aes-192-ofb               -aes-256-cbc              
+-aes-256-cfb               -aes-256-cfb1              -aes-256-cfb8             
+-aes-256-ctr               -aes-256-ecb               -aes-256-gcm              
+-aes-256-ofb               -aes-256-xts               -aes128                   
+-aes192                    -aes256                    -bf                       
+-bf-cbc                    -bf-cfb                    -bf-ecb                   
+-bf-ofb                    -blowfish                  -camellia-128-cbc         
+-camellia-128-cfb          -camellia-128-cfb1         -camellia-128-cfb8        
+-camellia-128-ecb          -camellia-128-ofb          -camellia-192-cbc         
+-camellia-192-cfb          -camellia-192-cfb1         -camellia-192-cfb8        
+-camellia-192-ecb          -camellia-192-ofb          -camellia-256-cbc         
+-camellia-256-cfb          -camellia-256-cfb1         -camellia-256-cfb8        
+-camellia-256-ecb          -camellia-256-ofb          -camellia128              
+-camellia192               -camellia256               -cast                     
+-cast-cbc                  -cast5-cbc                 -cast5-cfb                
+-cast5-ecb                 -cast5-ofb                 -des                      
+-des-cbc                   -des-cfb                   -des-cfb1                 
+-des-cfb8                  -des-ecb                   -des-ede                  
+-des-ede-cbc               -des-ede-cfb               -des-ede-ofb              
+-des-ede3                  -des-ede3-cbc              -des-ede3-cfb             
+-des-ede3-cfb1             -des-ede3-cfb8             -des-ede3-ofb             
+-des-ofb                   -des3                      -desx                     
+-desx-cbc                  -gost89                    -gost89-cnt               
+-id-aes128-GCM             -id-aes192-GCM             -id-aes256-GCM            
+-rc2                       -rc2-40-cbc                -rc2-64-cbc               
+-rc2-cbc                   -rc2-cfb                   -rc2-ecb                  
+-rc2-ofb                   -rc4                       -rc4-40                   
+-rc4-hmac-md5              -seed                      -seed-cbc                 
+-seed-cfb                  -seed-ecb                  -seed-ofb                 
+
+
+31/07/2018 10:05 unknown option '/.der'
+options are
+-in <file>     input file
+-out <file>    output file
+-pass <arg>    pass phrase source
+-e             encrypt
+-d             decrypt
+-a/-base64     base64 encode/decode, depending on encryption flag
+-k             passphrase is the next argument
+-kfile         passphrase is the first line of the file argument
+-md            the next argument is the md to use to create a key
+                 from a passphrase.  One of md2, md5, sha or sha1
+-S             salt in hex is the next argument
+-K/-iv         key/iv in hex is the next argument
+-[pP]          print the iv/key (then exit if -P)
+-bufsize <n>   buffer size
+-nopad         disable standard block padding
+-engine e      use engine e, possibly a hardware device.
+Cipher Types
+-aes-128-cbc               -aes-128-cfb               -aes-128-cfb1             
+-aes-128-cfb8              -aes-128-ctr               -aes-128-ecb              
+-aes-128-gcm               -aes-128-ofb               -aes-128-xts              
+-aes-192-cbc               -aes-192-cfb               -aes-192-cfb1             
+-aes-192-cfb8              -aes-192-ctr               -aes-192-ecb              
+-aes-192-gcm               -aes-192-ofb               -aes-256-cbc              
+-aes-256-cfb               -aes-256-cfb1              -aes-256-cfb8             
+-aes-256-ctr               -aes-256-ecb               -aes-256-gcm              
+-aes-256-ofb               -aes-256-xts               -aes128                   
+-aes192                    -aes256                    -bf                       
+-bf-cbc                    -bf-cfb                    -bf-ecb                   
+-bf-ofb                    -blowfish                  -camellia-128-cbc         
+-camellia-128-cfb          -camellia-128-cfb1         -camellia-128-cfb8        
+-camellia-128-ecb          -camellia-128-ofb          -camellia-192-cbc         
+-camellia-192-cfb          -camellia-192-cfb1         -camellia-192-cfb8        
+-camellia-192-ecb          -camellia-192-ofb          -camellia-256-cbc         
+-camellia-256-cfb          -camellia-256-cfb1         -camellia-256-cfb8        
+-camellia-256-ecb          -camellia-256-ofb          -camellia128              
+-camellia192               -camellia256               -cast                     
+-cast-cbc                  -cast5-cbc                 -cast5-cfb                
+-cast5-ecb                 -cast5-ofb                 -des                      
+-des-cbc                   -des-cfb                   -des-cfb1                 
+-des-cfb8                  -des-ecb                   -des-ede                  
+-des-ede-cbc               -des-ede-cfb               -des-ede-ofb              
+-des-ede3                  -des-ede3-cbc              -des-ede3-cfb             
+-des-ede3-cfb1             -des-ede3-cfb8             -des-ede3-ofb             
+-des-ofb                   -des3                      -desx                     
+-desx-cbc                  -gost89                    -gost89-cnt               
+-id-aes128-GCM             -id-aes192-GCM             -id-aes256-GCM            
+-rc2                       -rc2-40-cbc                -rc2-64-cbc               
+-rc2-cbc                   -rc2-cfb                   -rc2-ecb                  
+-rc2-ofb                   -rc4                       -rc4-40                   
+-rc4-hmac-md5              -seed                      -seed-cbc                 
+-seed-cfb                  -seed-ecb                  -seed-ofb                 
+
+
+31/07/2018 10:05 unknown option '/.der'
+options are
+-in <file>     input file
+-out <file>    output file
+-pass <arg>    pass phrase source
+-e             encrypt
+-d             decrypt
+-a/-base64     base64 encode/decode, depending on encryption flag
+-k             passphrase is the next argument
+-kfile         passphrase is the first line of the file argument
+-md            the next argument is the md to use to create a key
+                 from a passphrase.  One of md2, md5, sha or sha1
+-S             salt in hex is the next argument
+-K/-iv         key/iv in hex is the next argument
+-[pP]          print the iv/key (then exit if -P)
+-bufsize <n>   buffer size
+-nopad         disable standard block padding
+-engine e      use engine e, possibly a hardware device.
+Cipher Types
+-aes-128-cbc               -aes-128-cfb               -aes-128-cfb1             
+-aes-128-cfb8              -aes-128-ctr               -aes-128-ecb              
+-aes-128-gcm               -aes-128-ofb               -aes-128-xts              
+-aes-192-cbc               -aes-192-cfb               -aes-192-cfb1             
+-aes-192-cfb8              -aes-192-ctr               -aes-192-ecb              
+-aes-192-gcm               -aes-192-ofb               -aes-256-cbc              
+-aes-256-cfb               -aes-256-cfb1              -aes-256-cfb8             
+-aes-256-ctr               -aes-256-ecb               -aes-256-gcm              
+-aes-256-ofb               -aes-256-xts               -aes128                   
+-aes192                    -aes256                    -bf                       
+-bf-cbc                    -bf-cfb                    -bf-ecb                   
+-bf-ofb                    -blowfish                  -camellia-128-cbc         
+-camellia-128-cfb          -camellia-128-cfb1         -camellia-128-cfb8        
+-camellia-128-ecb          -camellia-128-ofb          -camellia-192-cbc         
+-camellia-192-cfb          -camellia-192-cfb1         -camellia-192-cfb8        
+-camellia-192-ecb          -camellia-192-ofb          -camellia-256-cbc         
+-camellia-256-cfb          -camellia-256-cfb1         -camellia-256-cfb8        
+-camellia-256-ecb          -camellia-256-ofb          -camellia128              
+-camellia192               -camellia256               -cast                     
+-cast-cbc                  -cast5-cbc                 -cast5-cfb                
+-cast5-ecb                 -cast5-ofb                 -des                      
+-des-cbc                   -des-cfb                   -des-cfb1                 
+-des-cfb8                  -des-ecb                   -des-ede                  
+-des-ede-cbc               -des-ede-cfb               -des-ede-ofb              
+-des-ede3                  -des-ede3-cbc              -des-ede3-cfb             
+-des-ede3-cfb1             -des-ede3-cfb8             -des-ede3-ofb             
+-des-ofb                   -des3                      -desx                     
+-desx-cbc                  -gost89                    -gost89-cnt               
+-id-aes128-GCM             -id-aes192-GCM             -id-aes256-GCM            
+-rc2                       -rc2-40-cbc                -rc2-64-cbc               
+-rc2-cbc                   -rc2-cfb                   -rc2-ecb                  
+-rc2-ofb                   -rc4                       -rc4-40                   
+-rc4-hmac-md5              -seed                      -seed-cbc                 
+-seed-cfb                  -seed-ecb                  -seed-ofb                 
+
+
+31/07/2018 10:05 unknown option '/.der'
+options are
+-in <file>     input file
+-out <file>    output file
+-pass <arg>    pass phrase source
+-e             encrypt
+-d             decrypt
+-a/-base64     base64 encode/decode, depending on encryption flag
+-k             passphrase is the next argument
+-kfile         passphrase is the first line of the file argument
+-md            the next argument is the md to use to create a key
+                 from a passphrase.  One of md2, md5, sha or sha1
+-S             salt in hex is the next argument
+-K/-iv         key/iv in hex is the next argument
+-[pP]          print the iv/key (then exit if -P)
+-bufsize <n>   buffer size
+-nopad         disable standard block padding
+-engine e      use engine e, possibly a hardware device.
+Cipher Types
+-aes-128-cbc               -aes-128-cfb               -aes-128-cfb1             
+-aes-128-cfb8              -aes-128-ctr               -aes-128-ecb              
+-aes-128-gcm               -aes-128-ofb               -aes-128-xts              
+-aes-192-cbc               -aes-192-cfb               -aes-192-cfb1             
+-aes-192-cfb8              -aes-192-ctr               -aes-192-ecb              
+-aes-192-gcm               -aes-192-ofb               -aes-256-cbc              
+-aes-256-cfb               -aes-256-cfb1              -aes-256-cfb8             
+-aes-256-ctr               -aes-256-ecb               -aes-256-gcm              
+-aes-256-ofb               -aes-256-xts               -aes128                   
+-aes192                    -aes256                    -bf                       
+-bf-cbc                    -bf-cfb                    -bf-ecb                   
+-bf-ofb                    -blowfish                  -camellia-128-cbc         
+-camellia-128-cfb          -camellia-128-cfb1         -camellia-128-cfb8        
+-camellia-128-ecb          -camellia-128-ofb          -camellia-192-cbc         
+-camellia-192-cfb          -camellia-192-cfb1         -camellia-192-cfb8        
+-camellia-192-ecb          -camellia-192-ofb          -camellia-256-cbc         
+-camellia-256-cfb          -camellia-256-cfb1         -camellia-256-cfb8        
+-camellia-256-ecb          -camellia-256-ofb          -camellia128              
+-camellia192               -camellia256               -cast                     
+-cast-cbc                  -cast5-cbc                 -cast5-cfb                
+-cast5-ecb                 -cast5-ofb                 -des                      
+-des-cbc                   -des-cfb                   -des-cfb1                 
+-des-cfb8                  -des-ecb                   -des-ede                  
+-des-ede-cbc               -des-ede-cfb               -des-ede-ofb              
+-des-ede3                  -des-ede3-cbc              -des-ede3-cfb             
+-des-ede3-cfb1             -des-ede3-cfb8             -des-ede3-ofb             
+-des-ofb                   -des3                      -desx                     
+-desx-cbc                  -gost89                    -gost89-cnt               
+-id-aes128-GCM             -id-aes192-GCM             -id-aes256-GCM            
+-rc2                       -rc2-40-cbc                -rc2-64-cbc               
+-rc2-cbc                   -rc2-cfb                   -rc2-ecb                  
+-rc2-ofb                   -rc4                       -rc4-40                   
+-rc4-hmac-md5              -seed                      -seed-cbc                 
+-seed-cfb                  -seed-ecb                  -seed-ofb                 
+
+
+31/07/2018 10:05 unknown option '/.der'
+options are
+-in <file>     input file
+-out <file>    output file
+-pass <arg>    pass phrase source
+-e             encrypt
+-d             decrypt
+-a/-base64     base64 encode/decode, depending on encryption flag
+-k             passphrase is the next argument
+-kfile         passphrase is the first line of the file argument
+-md            the next argument is the md to use to create a key
+                 from a passphrase.  One of md2, md5, sha or sha1
+-S             salt in hex is the next argument
+-K/-iv         key/iv in hex is the next argument
+-[pP]          print the iv/key (then exit if -P)
+-bufsize <n>   buffer size
+-nopad         disable standard block padding
+-engine e      use engine e, possibly a hardware device.
+Cipher Types
+-aes-128-cbc               -aes-128-cfb               -aes-128-cfb1             
+-aes-128-cfb8              -aes-128-ctr               -aes-128-ecb              
+-aes-128-gcm               -aes-128-ofb               -aes-128-xts              
+-aes-192-cbc               -aes-192-cfb               -aes-192-cfb1             
+-aes-192-cfb8              -aes-192-ctr               -aes-192-ecb              
+-aes-192-gcm               -aes-192-ofb               -aes-256-cbc              
+-aes-256-cfb               -aes-256-cfb1              -aes-256-cfb8             
+-aes-256-ctr               -aes-256-ecb               -aes-256-gcm              
+-aes-256-ofb               -aes-256-xts               -aes128                   
+-aes192                    -aes256                    -bf                       
+-bf-cbc                    -bf-cfb                    -bf-ecb                   
+-bf-ofb                    -blowfish                  -camellia-128-cbc         
+-camellia-128-cfb          -camellia-128-cfb1         -camellia-128-cfb8        
+-camellia-128-ecb          -camellia-128-ofb          -camellia-192-cbc         
+-camellia-192-cfb          -camellia-192-cfb1         -camellia-192-cfb8        
+-camellia-192-ecb          -camellia-192-ofb          -camellia-256-cbc         
+-camellia-256-cfb          -camellia-256-cfb1         -camellia-256-cfb8        
+-camellia-256-ecb          -camellia-256-ofb          -camellia128              
+-camellia192               -camellia256               -cast                     
+-cast-cbc                  -cast5-cbc                 -cast5-cfb                
+-cast5-ecb                 -cast5-ofb                 -des                      
+-des-cbc                   -des-cfb                   -des-cfb1                 
+-des-cfb8                  -des-ecb                   -des-ede                  
+-des-ede-cbc               -des-ede-cfb               -des-ede-ofb              
+-des-ede3                  -des-ede3-cbc              -des-ede3-cfb             
+-des-ede3-cfb1             -des-ede3-cfb8             -des-ede3-ofb             
+-des-ofb                   -des3                      -desx                     
+-desx-cbc                  -gost89                    -gost89-cnt               
+-id-aes128-GCM             -id-aes192-GCM             -id-aes256-GCM            
+-rc2                       -rc2-40-cbc                -rc2-64-cbc               
+-rc2-cbc                   -rc2-cfb                   -rc2-ecb                  
+-rc2-ofb                   -rc4                       -rc4-40                   
+-rc4-hmac-md5              -seed                      -seed-cbc                 
+-seed-cfb                  -seed-ecb                  -seed-ofb                 
+
+
+31/07/2018 10:05 unknown option '/.der'
+options are
+-in <file>     input file
+-out <file>    output file
+-pass <arg>    pass phrase source
+-e             encrypt
+-d             decrypt
+-a/-base64     base64 encode/decode, depending on encryption flag
+-k             passphrase is the next argument
+-kfile         passphrase is the first line of the file argument
+-md            the next argument is the md to use to create a key
+                 from a passphrase.  One of md2, md5, sha or sha1
+-S             salt in hex is the next argument
+-K/-iv         key/iv in hex is the next argument
+-[pP]          print the iv/key (then exit if -P)
+-bufsize <n>   buffer size
+-nopad         disable standard block padding
+-engine e      use engine e, possibly a hardware device.
+Cipher Types
+-aes-128-cbc               -aes-128-cfb               -aes-128-cfb1             
+-aes-128-cfb8              -aes-128-ctr               -aes-128-ecb              
+-aes-128-gcm               -aes-128-ofb               -aes-128-xts              
+-aes-192-cbc               -aes-192-cfb               -aes-192-cfb1             
+-aes-192-cfb8              -aes-192-ctr               -aes-192-ecb              
+-aes-192-gcm               -aes-192-ofb               -aes-256-cbc              
+-aes-256-cfb               -aes-256-cfb1              -aes-256-cfb8             
+-aes-256-ctr               -aes-256-ecb               -aes-256-gcm              
+-aes-256-ofb               -aes-256-xts               -aes128                   
+-aes192                    -aes256                    -bf                       
+-bf-cbc                    -bf-cfb                    -bf-ecb                   
+-bf-ofb                    -blowfish                  -camellia-128-cbc         
+-camellia-128-cfb          -camellia-128-cfb1         -camellia-128-cfb8        
+-camellia-128-ecb          -camellia-128-ofb          -camellia-192-cbc         
+-camellia-192-cfb          -camellia-192-cfb1         -camellia-192-cfb8        
+-camellia-192-ecb          -camellia-192-ofb          -camellia-256-cbc         
+-camellia-256-cfb          -camellia-256-cfb1         -camellia-256-cfb8        
+-camellia-256-ecb          -camellia-256-ofb          -camellia128              
+-camellia192               -camellia256               -cast                     
+-cast-cbc                  -cast5-cbc                 -cast5-cfb                
+-cast5-ecb                 -cast5-ofb                 -des                      
+-des-cbc                   -des-cfb                   -des-cfb1                 
+-des-cfb8                  -des-ecb                   -des-ede                  
+-des-ede-cbc               -des-ede-cfb               -des-ede-ofb              
+-des-ede3                  -des-ede3-cbc              -des-ede3-cfb             
+-des-ede3-cfb1             -des-ede3-cfb8             -des-ede3-ofb             
+-des-ofb                   -des3                      -desx                     
+-desx-cbc                  -gost89                    -gost89-cnt               
+-id-aes128-GCM             -id-aes192-GCM             -id-aes256-GCM            
+-rc2                       -rc2-40-cbc                -rc2-64-cbc               
+-rc2-cbc                   -rc2-cfb                   -rc2-ecb                  
+-rc2-ofb                   -rc4                       -rc4-40                   
+-rc4-hmac-md5              -seed                      -seed-cbc                 
+-seed-cfb                  -seed-ecb                  -seed-ofb                 
+
+
+31/07/2018 10:08 /home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.b64: No such file or directory
+3073959612:error:02001002:system library:fopen:No such file or directory:bss_file.c:398:fopen('/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.b64','r')
+3073959612:error:20074002:BIO routines:FILE_CTRL:system lib:bss_file.c:400:
+
+31/07/2018 10:08 unable to load PKCS7 object
+3074340540:error:0D07207B:asn1 encoding routines:ASN1_get_object:header too long:asn1_lib.c:150:
+
+31/07/2018 10:08 unable to load PKCS7 object
+3074143932:error:0D07207B:asn1 encoding routines:ASN1_get_object:header too long:asn1_lib.c:150:
+
+31/07/2018 13:01 unable to load PKCS7 object
+3073824444:error:0D07207B:asn1 encoding routines:ASN1_get_object:header too long:asn1_lib.c:150:
+
+31/07/2018 13:13 unable to load PKCS7 object
+3074152124:error:0D07207B:asn1 encoding routines:ASN1_get_object:header too long:asn1_lib.c:150:
+
+31/07/2018 13:20 unable to load PKCS7 object
+3073885884:error:0D07207B:asn1 encoding routines:ASN1_get_object:header too long:asn1_lib.c:150:
+
+31/07/2018 13:27 unable to load PKCS7 object
+3073836732:error:0D07207B:asn1 encoding routines:ASN1_get_object:header too long:asn1_lib.c:150:
+
+31/07/2018 13:27 unable to load PKCS7 object
+3074098876:error:0D07207B:asn1 encoding routines:ASN1_get_object:header too long:asn1_lib.c:150:
+
+31/07/2018 15:02 unable to load PKCS7 object
+3073709756:error:0D07207B:asn1 encoding routines:ASN1_get_object:header too long:asn1_lib.c:150:
+
+31/07/2018 15:16 unable to load PKCS7 object
+3073656508:error:0D07207B:asn1 encoding routines:ASN1_get_object:header too long:asn1_lib.c:150:
+

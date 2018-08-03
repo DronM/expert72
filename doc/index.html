@@ -131,6 +131,7 @@
 <li><a href="#ApplicationTemplateContent_Model">ApplicationTemplateContent_Model</a></li>
 <li><a href="#Office_Model">Office_Model</a></li>
 <li><a href="#OfficeList_Model">OfficeList_Model</a></li>
+<li><a href="#OfficeBankAccList_Model">OfficeBankAccList_Model</a></li>
 <li><a href="#OfficeDaySchedule_Model">OfficeDaySchedule_Model</a></li>
 <li><a href="#FundSource_Model">FundSource_Model</a></li>
 <li><a href="#ConstructionType_Model">ConstructionType_Model</a></li>
@@ -237,6 +238,7 @@
 <li><a href="#RepReestrExpertise_Model">RepReestrExpertise_Model</a></li>
 <li><a href="#RepReestrCostEval_Model">RepReestrCostEval_Model</a></li>
 <li><a href="#Service_Model">Service_Model</a></li>
+<li><a href="#FileVerification_Model">FileVerification_Model</a></li>
 </ul>
 <div class="section-title">Enumerations</div>
 <ul>
@@ -574,6 +576,35 @@
 </div>
 </div>
 <h2>delete_auth_letter_file</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Да</p>
+</div>
+</div>
+<h2>all_sig_report</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Да</p>
+</div>
+<h3>inline</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Да</p>
+</div>
+</div>
+<h2>get_constr_name</h2>
 <p>Arguments:</p>
 <div class="content_item content_item2">
 <h3>id</h3>
@@ -928,6 +959,14 @@
 <p>Length:15</p>
 <p>Precision:2</p>
 </div>
+<h3>acc_number</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Да</p>
+<p>Length:20</p>
+</div>
 </div>
 <h2>print_akt</h2>
 <p>Arguments:</p>
@@ -1071,6 +1110,17 @@
 <p>Type:Int</p>
 <p>Required:
 								Нет</p>
+</div>
+</div>
+<h2>get_constr_name</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Да</p>
 </div>
 </div>
 </div>
@@ -1620,6 +1670,32 @@
 <p>Arguments:</p>
 <div class="content_item content_item2">
 <h3>application_id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Да</p>
+</div>
+</div>
+<h2>alter_file_folder</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>file_id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Да</p>
+<p>Length:36</p>
+</div>
+<h3>new_folder_id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Да</p>
+</div>
+<h3>doc_flow_out_id</h3>
 <p></p>
 <div class="content_item content_item3">
 <p>Type:Int</p>
@@ -2298,7 +2374,8 @@
 <a href="#Office_Model">Model: Office_Model</a><h2>delete</h2>
 <a href="#Office_Model">Model: Office_Model</a><h2>get_list</h2>
 <a href="#OfficeList_Model">Model: OfficeList_Model</a><h2>get_object</h2>
-<a href="#OfficeList_Model">Model: OfficeList_Model</a>
+<a href="#OfficeList_Model">Model: OfficeList_Model</a><h2>get_bank_acc_list</h2>
+<a href="#OfficeBankAccList_Model">Model: OfficeBankAccList_Model</a>
 </div>
 </div>
 <div id="OfficeDaySchedule_Controller" class="content_box">
@@ -4966,6 +5043,12 @@
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>
+<div>Precision:</div>
+<h2>primary_contract_reg_number</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:20</div>
 <div>Precision:</div>
 </div>
 </div>
@@ -9283,6 +9366,66 @@
 <div>Precision:</div>
 </div>
 </div>
+<div id="FileVerification_Model" class="content_box">
+<h1>FileVerification_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>file_id</h2>
+<div>Type:String</div>
+<div>Primary key:TRUE</div>
+<div>Required:TRUE</div>
+<div>Length:36</div>
+<div>Precision:</div>
+<h2>date_time</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>subject_cert</h2>
+<div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>issuer_cert</h2>
+<div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>check_result</h2>
+<div>Type:Bool</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>check_time</h2>
+<div>Type:Float</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:15</div>
+<div>Precision:4</div>
+<h2>date_from</h2>
+<div>Type:Date</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>date_to</h2>
+<div>Type:Date</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>error_str</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
 <div id="FundSource_Model" class="content_box">
 <h1>FundSource_Model</h1>
 <div class="content_item">
@@ -9775,6 +9918,24 @@
 <div>Precision:</div>
 <h2>work_hours</h2>
 <div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="OfficeBankAccList_Model" class="content_box">
+<h1>OfficeBankAccList_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>acc_number</h2>
+<div>Type:Text</div>
+<div>Primary key:TRUE</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>bank_descr</h2>
+<div>Type:Text</div>
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>

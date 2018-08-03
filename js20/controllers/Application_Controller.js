@@ -55,6 +55,8 @@ function Application_Controller(options){
 	this.add_download_auth_letter_file();
 	this.add_download_auth_letter_file_sig();
 	this.add_delete_auth_letter_file();
+	this.add_all_sig_report();
+	this.add_get_constr_name();
 		
 }
 extend(Application_Controller,ControllerObjServer);
@@ -1138,6 +1140,46 @@ extend(Application_Controller,ControllerObjServer);
 			Application_Controller.prototype.add_delete_auth_letter_file = function(){
 	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('delete_auth_letter_file',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("id",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			Application_Controller.prototype.add_all_sig_report = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('all_sig_report',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("id",options));
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("inline",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			Application_Controller.prototype.add_get_constr_name = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('get_constr_name',opts);
 	
 				
 	

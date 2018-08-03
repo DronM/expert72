@@ -54,7 +54,16 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		
 		$files_q_id = $this->getDbLink()->query(sprintf(
 			"SELECT
-				adf.*,
+				adf.file_id,
+				adf.document_id,
+				adf.document_type,
+				adf.date_time,
+				adf.file_name,
+				adf.file_path,
+				adf.file_signed,
+				adf.file_size,
+				adf.deleted,
+				adf.deleted_dt,
 				mdf.doc_flow_out_client_id,
 				m.date_time AS doc_flow_out_date_time,
 				reg.reg_number AS doc_flow_out_reg_number
@@ -65,8 +74,8 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			WHERE adf.application_id=%d
 			ORDER BY adf.document_type,adf.document_id,adf.file_name,adf.deleted_dt ASC NULLS LAST",
 		$ar_obj['application_id']
-		));			
-			
+		));
+		
 		$documents = NULL;
 		if ($ar_obj['documents']){
 			$documents_json = json_decode($ar_obj['documents']);
@@ -249,6 +258,11 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 	public function make_order($pm){
 		$params = $this->get_data_for_1c($this->getExtDbVal($pm,'id'));
 		$params['total'] = $this->getExtDbVal($pm,'total');
+		$params['acc_number'] = $this->getExtDbVal($pm,'acc_number');
+		if ($params['acc_number']=='null'){
+			//не понимает с клиента???
+			throw new Exception('Не выбран лицевой счет!');
+		}
 		
 		if (!$params['client_inn'] || !$params['client_kpp']){
 			throw new Exception('Не задан ИНН или КПП для контрагента');
@@ -714,6 +728,13 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		'Head_Model'
 		);		
 	
+	}
+	
+	public function get_constr_name($pm){
+		$this->addNewModel(sprintf(
+			"SELECT constr_name FROM contracts WHERE id=%d",
+			$this->getExtDbVal($pm,'id')
+		),'ConstrName_Model');
 	}
 	
 </xsl:template>

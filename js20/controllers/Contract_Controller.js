@@ -46,6 +46,7 @@ function Contract_Controller(options){
 	this.add_get_object_inf();
 	this.add_get_reestr_expertise();
 	this.add_get_reestr_cost_eval();
+	this.add_get_constr_name();
 		
 }
 extend(Contract_Controller,ControllerObjServer);
@@ -399,6 +400,12 @@ extend(Contract_Controller,ControllerObjServer);
 	var options = {};
 	
 	var field = new FieldJSONB("result_sign_expert_list",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldString("primary_contract_reg_number",options);
 	
 	pm.addField(field);
 	
@@ -766,6 +773,12 @@ extend(Contract_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	
+	var field = new FieldString("primary_contract_reg_number",options);
+	
+	pm.addField(field);
+	
 	
 }
 
@@ -975,6 +988,9 @@ extend(Contract_Controller,ControllerObjServer);
 	var f_opts = {};
 	
 	pm.addField(new FieldJSONB("result_sign_expert_list",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldString("primary_contract_reg_number",f_opts));
 	pm.getField(this.PARAM_ORD_FIELDS).setValue("date_time");
 	
 }
@@ -1137,6 +1153,16 @@ extend(Contract_Controller,ControllerObjServer);
 		options.maxlength = "15";
 	
 		pm.addField(new FieldFloat("total",options));
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		options.maxlength = "20";
+	
+		pm.addField(new FieldString("acc_number",options));
 	
 			
 	this.addPublicMethod(pm);
@@ -1337,6 +1363,22 @@ extend(Contract_Controller,ControllerObjServer);
 	var options = {};
 	
 		pm.addField(new FieldInt("inline",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			Contract_Controller.prototype.add_get_constr_name = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('get_constr_name',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("id",options));
 	
 			
 	this.addPublicMethod(pm);

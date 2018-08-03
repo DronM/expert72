@@ -100,6 +100,10 @@ $permissions = array();
 			
 				$permissions['Application_Controller_delete_auth_letter_file']=TRUE;
 			
+				$permissions['Application_Controller_all_sig_report']=TRUE;
+			
+				$permissions['Application_Controller_get_constr_name']=TRUE;
+			
 				$permissions['Constant_Controller_set_value']=TRUE;
 			
 				$permissions['Constant_Controller_get_list']=TRUE;

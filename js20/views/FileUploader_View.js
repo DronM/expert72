@@ -73,6 +73,8 @@ function FileUploader_View(id,options){
 	
 	this.m_totalFileCount = 0;
 	
+	this.m_maxFileCount = options.maxFileCount;
+	
 	options.templateOptions = options.templateOptions || {};
 	options.templateOptions.items		= this.m_items;
 	options.templateOptions.COLOR_CLASS	= window.getApp().getColorClass();
@@ -107,6 +109,7 @@ FileUploader_View.prototype.m_maxFileSize;
 FileUploader_View.prototype.m_allowedFileExt;
 FileUploader_View.prototype.m_uploader;
 FileUploader_View.prototype.m_totalFileCount;
+FileUploader_View.prototype.m_maxFileCount;
 FileUploader_View.prototype.m_fileTemplate;
 FileUploader_View.prototype.m_fileTemplateOptions;
 FileUploader_View.prototype.m_filePicClass;
@@ -259,6 +262,7 @@ FileUploader_View.prototype.addFileToContainer = function(container,itemFile,ite
 	templateOptions.separateSignature	= this.m_separateSignature;	
 	templateOptions.customFolder		= cust_folder? true : false;
 	templateOptions.out_file_id		= itemFile.out_file_id;
+	templateOptions.customFolderAlt		= (window.getApp().getServVar("role_id")=="admin");
 	
 	if (this.m_includeFilePath){
 		templateOptions.file_path = itemFile.file_path+"/ ";
@@ -273,7 +277,7 @@ FileUploader_View.prototype.addFileToContainer = function(container,itemFile,ite
 	}
 	
 	var file_ctrl = new ControlContainer(this.getId()+":file_"+itemFile.file_id,"TEMPLATE",{
-		"attrs":{"file_uploaded":itemFile.file_uploaded},
+		"attrs":{"file_uploaded":itemFile.file_uploaded,"file_signed":itemFile.file_signed},
 		"template":this.m_fileTemplate,
 		"templateOptions":templateOptions
 	});
@@ -293,7 +297,7 @@ FileUploader_View.prototype.addFileToContainer = function(container,itemFile,ite
 	if (cust_folder){	
 		var incl_id = this.getId()+":file_"+itemFile.file_id+":include";
 		var vis = (self.m_getCustomFolderDefault || (itemFile.file_path&&itemFile.file_path.length&&itemFile.file_path!="Исходящие") )? true:false;
-		
+
 		var folder_ctrl = new ApplicationDocFolderSelect(incl_id+":folder",{
 			"visible":vis,
 			"enabled":!itemFile.file_uploaded,
@@ -302,7 +306,7 @@ FileUploader_View.prototype.addFileToContainer = function(container,itemFile,ite
 			"labelCaption":"",
 			"title":"Выберите папку проекта",
 			"addNotSelected":true,
-			"value":cust_folder
+			"value":itemFile.file_path=="Исходящие"? null:cust_folder
 		});
 		if (folder_ctrl.getVisible()){
 			folder_ctrl.origtoDOM = folder_ctrl.toDOM;
@@ -323,31 +327,64 @@ FileUploader_View.prototype.addFileToContainer = function(container,itemFile,ite
 				}
 			}
 		}
-		file_ctrl.includeCont = new ControlContainer(incl_id,"SPAN",{
-			"elements":[
-				new EditCheckBox(incl_id+":check",{
-					"value":folder_ctrl.getVisible(),
-					"className":"",
-					"inline":true,
+		var cust_f_elements = [
+			new EditCheckBox(incl_id+":check",{
+				"value":folder_ctrl.getVisible(),
+				"className":"",
+				"inline":true,
+				"attrs":{"file_id":itemFile.file_id,"doc_id":itemId},
+				"title":"Включение файла в папку проекта",
+				"enabled":folder_ctrl.getEnabled(),
+				"checked":itemFile.file_path=="Исходящие"? false:true,
+				"events":{
+					"change":function(){
+						var cont = self.getElement("file-list_"+this.getAttr("doc_id"));
+						var folder = cont.getElement("file_"+this.getAttr("file_id")).includeCont.getElement("folder");
+						var v = this.getValue();
+						if (!v){
+							folder.reset();									
+						}
+						folder.setVisible(v);
+						
+					}
+				}
+			})
+			,folder_ctrl
+		];
+		
+		if (templateOptions.customFolderAlt){
+			cust_f_elements.push(
+				new ButtonCmd(incl_id+":alter",{
 					"attrs":{"file_id":itemFile.file_id,"doc_id":itemId},
-					"title":"Включение файла в папку проекта",
-					"enabled":folder_ctrl.getEnabled(),
-					"checked":cust_folder? true:false,
-					"events":{
-						"change":function(){
-							var cont = self.getElement("file-list_"+this.getAttr("doc_id"));
-							var folder = cont.getElement("file_"+this.getAttr("file_id")).includeCont.getElement("folder");
-							var v = this.getValue();
-							if (!v){
-								folder.reset();									
-							}
-							folder.setVisible(v);
-							
+					"visible":(vis && itemFile.file_uploaded),
+					"caption":"Переместить в другую папку ==>>",
+					"title":"Переместить файл в другую папку",
+					"onClick":function(e){
+						var cont = self.getElement("file-list_"+this.getAttr("doc_id"));
+						var new_folder = cont.getElement("file_"+this.getAttr("file_id")).includeCont.getElement("newFolder").getValue();
+						var old_folder_ctrl = cont.getElement("file_"+this.getAttr("file_id")).includeCont.getElement("folder");
+						var old_folder = old_folder_ctrl.getValue();
+						if ( self.alterFolder &&( (!new_folder&&old_folder) || (new_folder&&!old_folder) || (new_folder.getKey()!=old_folder.getKey()) ) ){
+							self.alterFolder(this.getAttr("file_id"),new_folder,old_folder_ctrl);
 						}
 					}
 				})
-				,folder_ctrl
-			]
+			);
+			cust_f_elements.push(
+				new ApplicationDocFolderSelect(incl_id+":newFolder",{
+					"visible":(vis && itemFile.file_uploaded),
+					"className":"",
+					"inline":true,
+					"labelCaption":"",
+					"title":"Выберите новую папку проекта",
+					"addNotSelected":true
+				})
+			);
+		}
+		
+				
+		file_ctrl.includeCont = new ControlContainer(incl_id,"SPAN",{
+			"elements":cust_f_elements
 		});
 		file_ctrl.includeCont.toDOM(file_ctrl.getNode());
 	}
@@ -613,6 +650,22 @@ FileUploader_View.prototype.initDownload = function(){
 				}				
 			}
 			else{
+				if (self.m_maxFileCount){
+					var cnt = 0;
+					var cont_files = file_cont.getElements();
+					for (var f_id in cont_files){
+						if (cont_files[f_id] && cont_files[f_id].getAttr("file_name")){						
+							cnt++;
+							if (cont_files[f_id].getAttr("file_signed"))cnt++;
+						}
+					}
+					if (cnt>=self.m_maxFileCount){
+						//удалить
+						self.deleteFileFromDownload(file.file_id);
+						throw new Error("Разрешено прикрепить не более "+self.m_maxFileCount+" файлов.");
+					}
+				}
+			
 				//а сели уже есть загруженный с таким именем в этом разделе - не даем. В любом случае
 				//серевер побреет
 				var cont_files = file_cont.getElements();

@@ -95,7 +95,11 @@ function DocFlowOutDialog_View(id,options){
 			"labelCaption":"Заявление:",
 			"editContClassName":editContClassName,
 			"labelClassName":labelClassName,
-			"visible":false			
+			"visible":false,
+			"onSelect":function(fields){				
+				self.setSubjectFromApplication();
+			}
+			
 		}));	
 		this.addElement(new EditString(id+":new_contract_number",{
 			"labelCaption":"№ контракта:",
@@ -117,7 +121,7 @@ function DocFlowOutDialog_View(id,options){
 				if (self.elementExists("akt1c")){
 					self.getElement("akt1c").update(fields);
 				}
-				
+				self.setSubjectFromContract();
 			}
 		}));	
 
@@ -184,14 +188,22 @@ function DocFlowOutDialog_View(id,options){
 			"order1c":order1c,
 			"getCustomFolderDefault":function(){
 				var v = self.getElement("doc_flow_types_ref").getValue();
+				if (!v && model_exists){
+					v = options.model.getFieldValue("doc_flow_types_ref");
+				}
 				if (v){
 					var k = v.getKey();
+					var res;
 					if (k==window.getApp().getPredefinedItem("doc_flow_types","contr_close").getKey()){
-						return window.getApp().getPredefinedItem("application_doc_folders","result");
+						res = window.getApp().getPredefinedItem("application_doc_folders","result");
 					}
-					if (k==window.getApp().getPredefinedItem("doc_flow_types","app_resp").getKey()){
-						return window.getApp().getPredefinedItem("application_doc_folders","contract");
-					}				
+					else if (k==window.getApp().getPredefinedItem("doc_flow_types","app_resp").getKey()){
+						res = window.getApp().getPredefinedItem("application_doc_folders","contract");
+					}	
+					else if (k==window.getApp().getPredefinedItem("doc_flow_types","signed_documents").getKey()){
+						res = window.getApp().getPredefinedItem("application_doc_folders","contract");
+					}	
+					return res;			
 				}
 			}
 		})
@@ -325,23 +337,25 @@ function DocFlowOutDialog_View(id,options){
 extend(DocFlowOutDialog_View,DocFlowBaseDialog_View);
 
 
-DocFlowOutDialog_View.prototype.setDocVis = function(){
+DocFlowOutDialog_View.prototype.getParamsOnDocFlowType = function(){
 	var v = this.getElement("doc_flow_types_ref").getValue();
-	var app_vis = false;
-	var contr_vis = false;
-	var new_contr_num_vis = false;
-	var result_vis = false;
+	var res = {
+		"app_vis":false,
+		"contr_vis":false,
+		"new_contr_num_vis":false,
+		"result_vis":false,	
+		"doc_type":null
+	};
 	if (v){
 		var v_key = v.getKey();
-		var doc_type;
 		if (v_key==window.getApp().getPredefinedItem("doc_flow_types","app_resp").getKey()){
-			app_vis = true;
-			doc_type = "app_resp";
-			new_contr_num_vis = true;
+			res.app_vis = true;
+			res.doc_type = "app_resp";
+			res.new_contr_num_vis = true;
 		}
 		else if (v_key==window.getApp().getPredefinedItem("doc_flow_types","app_resp_return").getKey()){
-			app_vis = true;
-			doc_type = "app_resp_return";
+			res.app_vis = true;
+			res.doc_type = "app_resp_return";
 		}
 		/*
 		else if (v_key==window.getApp().getPredefinedItem("doc_flow_types","app_resp_correct").getKey()){
@@ -350,42 +364,73 @@ DocFlowOutDialog_View.prototype.setDocVis = function(){
 		}
 		*/
 		else if (v_key==window.getApp().getPredefinedItem("doc_flow_types","contr").getKey()){
-			contr_vis = true;
-			doc_type = "contr";
+			res.contr_vis = true;
+			res.doc_type = "contr";
 		}
 		else if (v_key==window.getApp().getPredefinedItem("doc_flow_types","contr_close").getKey()){
-			contr_vis = true;
-			doc_type = "contr_close";
-			result_vis = true;
+			res.contr_vis = true;
+			res.doc_type = "contr_close";
+			res.result_vis = true;
 		}
 		else if (v_key==window.getApp().getPredefinedItem("doc_flow_types","contr_return").getKey()){
-			contr_vis = true;
-			doc_type = "contr_return";
+			res.contr_vis = true;
+			res.doc_type = "contr_return";
 		}
 		else if (v_key==window.getApp().getPredefinedItem("doc_flow_types","signed_documents").getKey()){
-			contr_vis = true;
-			doc_type = "signed_documents";
-		}
-		if (app_vis||contr_vis){
-			this.getElement("subject").setValue(window.getApp().getPredefinedItem("doc_flow_types",doc_type).getDescr());
+			res.contr_vis = true;
+			res.doc_type = "signed_documents";
 		}
 	}
-	this.getElement("to_applications_ref").setVisible(app_vis);
-	this.getElement("new_contract_number").setVisible(new_contr_num_vis);
-	this.getElement("to_contracts_ref").setVisible(contr_vis);
+	return res;
+}
+
+DocFlowOutDialog_View.prototype.setDocVis = function(){
+	var params = this.getParamsOnDocFlowType();
 	
-	this.getElement("expertise_result").setVisible(result_vis);
-	this.getElement("expertise_reject_types_ref").setVisible((result_vis && this.getElement("expertise_result").getValue()=="negative"));	
+	this.getElement("to_applications_ref").setVisible(params.app_vis);
+	this.getElement("new_contract_number").setVisible(params.new_contr_num_vis);
+	this.getElement("to_contracts_ref").setVisible(params.contr_vis);
+	
+	this.getElement("expertise_result").setVisible(params.result_vis);
+	this.getElement("expertise_reject_types_ref").setVisible((params.result_vis && this.getElement("expertise_result").getValue()=="negative"));	
 	
 	if (this.elementExists("order1c")){
-		this.getElement("order1c").setVisible(contr_vis||new_contr_num_vis);
+		this.getElement("order1c").setVisible(params.contr_vis||params.new_contr_num_vis);
 	}
 	if (this.elementExists("akt1c")){
-		this.getElement("akt1c").setVisible(contr_vis);
+		this.getElement("akt1c").setVisible(params.contr_vis);
 	}
 	
-	this.getElement("to_addr_names").setVisible(!app_vis && !contr_vis);
-	this.getElement("doc_flow_in_ref").setVisible(!app_vis && !contr_vis);
+	this.getElement("to_addr_names").setVisible(!params.app_vis && !params.contr_vis);
+	this.getElement("doc_flow_in_ref").setVisible(!params.app_vis && !params.contr_vis);
+		
+	if (params.app_vis){
+		this.setSubjectFromApplication(params.doc_type);
+	}
+	else if (params.contr_vis){
+		this.setSubjectFromContract(params.doc_type);
+	}
+	
+	/*
+	if (params.app_vis||params.contr_vis){
+		var subj = window.getApp().getPredefinedItem("doc_flow_types",params.doc_type).getDescr();
+		var pm = app_vis? (new Application_Controller()).getPublicMethod("get_constr_name") : (new Contract_Controller()).getPublicMethod("get_constr_name");
+		pm.setFieldValue("id",this.getElement(app_vis? "to_applications_ref":"to_contracts_ref").getValue().getKey());
+		var self = this;
+		pm.run({
+			"ok":function(resp){
+				var m = new ModelXML("ConstrName_Model",{
+					"data":resp.getModelData("ConstrName_Model")
+				});
+				if (m.getNextRow()){
+					m.getFieldValue("constr_name");
+				}
+			}
+		});
+		
+		this.getElement("subject").setValue(subj);
+	}
+	*/	
 }
 
 DocFlowOutDialog_View.prototype.onGetData = function(resp,cmd){
@@ -542,3 +587,41 @@ DocFlowOutDialog_View.prototype.addProcessChainEvents = function(){
 	DocFlowOutDialog_View.superclass.addProcessChainEvents.call(this,"doc_flow_out_processes_chain");
 }
 
+DocFlowOutDialog_View.prototype.setSubject = function(docType,docId,pm){
+	if (!docType)docType = this.getParamsOnDocFlowType();
+	
+	var subj = window.getApp().getPredefinedItem("doc_flow_types",docType).getDescr();
+
+	if (docId){
+		pm.setFieldValue("id",docId);
+		var self = this;
+		pm.run({
+			"ok":function(resp){
+				var m = new ModelXML("ConstrName_Model",{
+					"data":resp.getModelData("ConstrName_Model")
+				});
+				if (m.getNextRow()){
+					subj = subj + ", "+m.getFieldValue("constr_name");
+					self.getElement("subject").setValue(subj);
+				}
+			}
+		});
+	}
+	else{
+		this.getElement("subject").setValue(subj);
+	}		
+}
+
+DocFlowOutDialog_View.prototype.setSubjectFromApplication = function(docType){
+	var doc_ref = this.getElement( "to_applications_ref").getValue();
+	var doc_id = (doc_ref && !doc_ref.isNull())? doc_ref.getKey():null;
+	var pm = doc_id? (new Application_Controller()).getPublicMethod("get_constr_name") : null;
+	this.setSubject(docType,doc_id,pm);
+}
+
+DocFlowOutDialog_View.prototype.setSubjectFromContract = function(docType){
+	var doc_ref = this.getElement( "to_contracts_ref").getValue();
+	var doc_id = (doc_ref && !doc_ref.isNull())? doc_ref.getKey():null;
+	var pm = doc_id? (new Contract_Controller()).getPublicMethod("get_constr_name") : null;
+	this.setSubject(docType,doc_id,pm);
+}

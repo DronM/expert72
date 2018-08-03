@@ -29,6 +29,7 @@ function Office_Controller(options){
 	this.addDelete();
 	this.addGetList();
 	this.addGetObject();
+	this.add_get_bank_acc_list();
 		
 }
 extend(Office_Controller,ControllerObjServer);
@@ -139,6 +140,13 @@ extend(Office_Controller,ControllerObjServer);
 		
 	pm.addField(new FieldInt("id",f_opts));
 	pm.addField(new FieldString("mode"));
+}
+
+			Office_Controller.prototype.add_get_bank_acc_list = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('get_bank_acc_list',opts);
+	
+	this.addPublicMethod(pm);
 }
 
 		

@@ -111,8 +111,19 @@ class Office_Controller extends ControllerSQL{
 		$this->addPublicMethod($pm);
 		$this->setObjectModelId('OfficeList_Model');		
 
+			
+		$pm = new PublicMethod('get_bank_acc_list');
+		
+		$this->addPublicMethod($pm);
+
 		
 	}	
 	
+
+	public function get_bank_acc_list($pm){
+		$this->addNewModel("SELECT * FROM offices_bank_acc_list",'OfficeBankAccList_Model');			
+	}
+
+
 }
 ?>
