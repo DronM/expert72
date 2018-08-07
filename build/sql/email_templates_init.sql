@@ -131,4 +131,24 @@ VALUES (
 );
 
 
+INSERT INTO email_templates (
+	email_type,
+	template,
+	mes_subject,comment_text,fields
+
+	)
+
+VALUES (
+	'ca_update_error',
+	'Во время обновления списка головных сертификатов произошла ошибка: [error]',
+	'Ошибка обновления списка головных сертификатов',
+	'Отправляется администратору при возникновении автоматического обновления',
+	json_build_object(
+		'id','ReportTemplateField_Model',
+		'rows','[{"fields":{"id":"error"}]'
+	)
+);
+
+
+
 

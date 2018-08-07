@@ -18,6 +18,10 @@
 	{{#setTask}}
 	<div id="{{id}}:cmd-cont">
 		<div id="{{id}}:cmdOk" options="{'caption':'Запустить процесс ','glyph':'glyphicon-send'}" title="Запустить процесс согласования для выбранных сотрудников" />
+		{{#correction}}
+		<div id="{{id}}:cmdCorrection" options="{'caption':'Записать изменения ','glyph':'glyphicon-ok'}" title="Записать изменения и закрыть форму" />
+		{{/correction}}
+		
 		<div id="{{id}}:cmdCancel"/>
 	</div>
 	{{/setTask}}
@@ -39,6 +43,17 @@
 
 	{{#setTask}}
 	<div id="{{id}}:state_descr" class="text-info hidden"/>
+	{{#correction}}
+	<div class="row">
+		<div class="col-lg-3">
+			<div id="{{id}}:current_step"/>
+		</div>
+		<div class="col-lg-3">
+			<div id="{{id}}:close_result"/>
+		</div>
+		
+	</div>
+	{{/correction}}
 	{{/setTask}}
 	
 	<div class="steps-basic wizard clearfix">

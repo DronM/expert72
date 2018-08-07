@@ -20,16 +20,110 @@
 function DocFlowTask_Controller(options){
 	options = options || {};
 	options.listModelClass = DocFlowTaskList_Model;
+	options.objModelClass = DocFlowTaskList_Model;
 	DocFlowTask_Controller.superclass.constructor.call(this,options);	
 	
 	//methods
+	this.addUpdate();
+	this.addDelete();
 	this.addGetList();
+	this.addGetObject();
 	this.add_get_short_list();
 	this.add_get_unviewed_task_list();
 	this.add_set_task_viewed();
 		
 }
 extend(DocFlowTask_Controller,ControllerObjServer);
+
+			DocFlowTask_Controller.prototype.addUpdate = function(){
+	DocFlowTask_Controller.superclass.addUpdate.call(this);
+	var pm = this.getUpdate();
+	
+	var options = {};
+	options.primaryKey = true;options.autoInc = true;
+	var field = new FieldInt("id",options);
+	
+	pm.addField(field);
+	
+	field = new FieldInt("old_id",{});
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldJSONB("register_doc",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldJSONB("recipient",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldDateTimeTZ("end_date_time",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldDateTimeTZ("date_time",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldInt("doc_flow_importance_type_id",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldInt("employee_id",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldDateTimeTZ("close_date_time",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldJSONB("close_doc",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldText("description",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldBool("closed",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldInt("close_employee_id",options);
+	
+	pm.addField(field);
+	
+	
+}
+
+			DocFlowTask_Controller.prototype.addDelete = function(){
+	DocFlowTask_Controller.superclass.addDelete.call(this);
+	var pm = this.getDelete();
+	var options = {"required":true};
+		
+	pm.addField(new FieldInt("id",options));
+}
 
 			DocFlowTask_Controller.prototype.addGetList = function(){
 	DocFlowTask_Controller.superclass.addGetList.call(this);
@@ -95,6 +189,16 @@ extend(DocFlowTask_Controller,ControllerObjServer);
 	pm.addField(new FieldJSON("close_employees_ref",f_opts));
 	pm.getField(this.PARAM_ORD_FIELDS).setValue("date_time");
 	
+}
+
+			DocFlowTask_Controller.prototype.addGetObject = function(){
+	DocFlowTask_Controller.superclass.addGetObject.call(this);
+	
+	var pm = this.getGetObject();
+	var f_opts = {};
+		
+	pm.addField(new FieldInt("id",f_opts));
+	pm.addField(new FieldString("mode"));
 }
 
 			DocFlowTask_Controller.prototype.add_get_short_list = function(){

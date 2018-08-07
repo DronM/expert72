@@ -23,6 +23,108 @@ function DocFlowApprovementRecipientGrid(id,options){
 	
 	this.m_mainView = options.view;
 	
+	if (options.current_id){
+		this.m_selectedRowKeys = {"id":options.current_id};
+	}
+	
+	var elements = [
+		new GridCellHead(id+":head:row0:step",{
+			"value":"Шаг",
+			"columns":[
+				new GridColumn({
+					"field":model.getField("step"),
+					"ctrlClass":Edit,
+					"ctrlOptions":{"enabled":false}
+				})							
+			]
+		})
+		,new GridCellHead(id+":head:row0:employee",{
+			"value":"С кем согласовать",
+			"columns":[
+				new GridColumnRef({
+					"field":model.getField("employee"),
+					"ctrlClass":EmployeeEditRef,
+					"form":EmployeeDialog_Form,
+					"ctrlBindField":model.getField("employee"),
+					"ctrlOptions":{
+						"labelCaption":"",
+						/*"onSelect":function(f){
+							console.dir(f)
+						}*/
+					}
+				})							
+			]
+		})
+		,new GridCellHead(id+":head:row0:employee_comment",{
+			"value":"Комментарий",
+			"columns":[
+				new GridColumn({
+					"field":model.getField("employee_comment"),
+					"ctrlClass":EditString
+				})								
+			]
+		})
+		/*						
+		,new GridCellHead(id+":head:row0:author_comment",{
+			"value":"Комментарий автора",
+			"columns":[
+				new GridColumn({
+					"field":model.getField("author_comment"),
+					"ctrlClass":EditString
+				})								
+			]
+		})
+		*/												
+		,new GridCellHead(id+":head:row0:approvement_order",{
+			"value":"Порядок",
+			"columns":[
+				new EnumGridColumn_doc_flow_approvement_orders({
+					"field":model.getField("approvement_order"),
+					"ctrlClass":Enum_doc_flow_approvement_orders
+				})								
+			]
+		})						
+		,new GridCellHead(id+":head:row0:approvement_dt",{
+			"value":"Когда согласовано",
+			"columns":[
+				new GridColumnDateTime({
+					"field":model.getField("approvement_dt"),
+					"ctrlClass":EditDateTime,
+					"ctrlOptions":{
+						"editMask":"99/99/9999 99:99",
+						"dateFormat":"d/m/Y H:i",
+						"cmdClear":false
+					}
+				})								
+			]
+		})						
+		
+		,new GridCellHead(id+":head:row0:approvement_result",{
+			"value":"Резальтат",
+			"columns":[
+				new EnumGridColumn_doc_flow_approvement_results({
+					"field":model.getField("approvement_result"),
+					"ctrlClass":Enum_doc_flow_approvement_results
+				})								
+			]
+		})						
+	
+	];
+	if (window.getApp().getServVar("role_id")=="admin"){
+		elements.push(
+			new GridCellHead(id+":head:row0:approvement_closed",{
+				"value":"Закрыто",
+				"columns":[
+					new GridColumnBool({
+						"field":model.getField("closed"),
+						"ctrlClass":EditCheckBox
+					})							
+				]
+			})						
+		
+		);
+	}
+	
 	options = {	
 		"model":model,
 		"keyIds":["id"],
@@ -42,89 +144,7 @@ function DocFlowApprovementRecipientGrid(id,options){
 		"head":new GridHead(id+":recipient_list:head",{
 			"elements":[
 				new GridRow(id+":head:row0",{
-					"elements":[
-						new GridCellHead(id+":head:row0:step",{
-							"value":"Шаг",
-							"columns":[
-								new GridColumn({
-									"field":model.getField("step"),
-									"ctrlClass":Edit,
-									"ctrlOptions":{"enabled":false}
-								})							
-							]
-						})
-						,new GridCellHead(id+":head:row0:employee",{
-							"value":"С кем согласовать",
-							"columns":[
-								new GridColumnRef({
-									"field":model.getField("employee"),
-									"ctrlClass":EmployeeEditRef,
-									"form":EmployeeDialog_Form,
-									"ctrlBindField":model.getField("employee"),
-									"ctrlOptions":{
-										"labelCaption":"",
-										/*"onSelect":function(f){
-											console.dir(f)
-										}*/
-									}
-								})							
-							]
-						})
-						,new GridCellHead(id+":head:row0:employee_comment",{
-							"value":"Комментарий",
-							"columns":[
-								new GridColumn({
-									"field":model.getField("employee_comment"),
-									"ctrlClass":EditString
-								})								
-							]
-						})
-						/*						
-						,new GridCellHead(id+":head:row0:author_comment",{
-							"value":"Комментарий автора",
-							"columns":[
-								new GridColumn({
-									"field":model.getField("author_comment"),
-									"ctrlClass":EditString
-								})								
-							]
-						})
-						*/												
-						,new GridCellHead(id+":head:row0:approvement_order",{
-							"value":"Порядок",
-							"columns":[
-								new EnumGridColumn_doc_flow_approvement_orders({
-									"field":model.getField("approvement_order"),
-									"ctrlClass":Enum_doc_flow_approvement_orders
-								})								
-							]
-						})						
-						,new GridCellHead(id+":head:row0:approvement_dt",{
-							"value":"Когда согласовано",
-							"columns":[
-								new GridColumnDateTime({
-									"field":model.getField("approvement_dt"),
-									"ctrlClass":EditDateTime,
-									"ctrlOptions":{
-										"editMask":"99/99/9999 99:99",
-										"dateFormat":"d/m/Y H:i",
-										"cmdClear":false
-									}
-								})								
-							]
-						})						
-						
-						,new GridCellHead(id+":head:row0:approvement_result",{
-							"value":"Резальтат",
-							"columns":[
-								new EnumGridColumn_doc_flow_approvement_results({
-									"field":model.getField("approvement_result"),
-									"ctrlClass":Enum_doc_flow_approvement_results
-								})								
-							]
-						})						
-					
-					]
+					elements
 				})
 			]
 		}),
@@ -148,6 +168,11 @@ extend(DocFlowApprovementRecipientGrid,GridAjx);
 
 /* public methods */
 DocFlowApprovementRecipientGrid.prototype.edit = function(cmd){
+	if (this.m_correction){
+		DocFlowApprovementRecipientGrid.superclass.edit.call(this,cmd);
+		return;
+	}
+	
 	if (!this.m_mainView.getEnabled()) return;
 	
 	if (cmd=="edit"){

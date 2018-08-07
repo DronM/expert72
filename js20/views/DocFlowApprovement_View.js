@@ -27,16 +27,23 @@ function DocFlowApprovement_View(id,options){
 	 *	Документ закрыт
 	 *	Документ может быть не закрыт, но всеми утвержден
 	 *	Текущий сотрудник (который открывает) может быть в списке или автор документа
-	 *	Будет 3 варианта формы: SetTask - обычная форма установки задач, approve форма для сотрудников списка, notification - ознакомление с результатом
+	 *	Будет 3 варианта формы:
+	 *		setTask - обычная форма установки задач,
+	 *		approve - форма для текущего сотрудников списка,
+	 *		notification - ознакомление с результатом
 	 */
 	options.templateOptions = options.templateOptions || {};
 	this.m_formVariant = "setTask";//default
+	var doc_closed = false;
+	var current_step = 0,step_count=0,current_id=0;
 	if (options.model && options.model.getNextRow()){
+		doc_closed = options.model.getFieldValue("closed");
 		var list = options.model.getFieldValue("recipient_list_ref");
 		var cur_employee_id = CommonHelper.unserialize(window.getApp().getServVar("employees_ref")).getKey();
 		var list_closed = true;
 		var employee_in_list = false;
 		var employee_closed = false;
+		var employee_step = 0;
 		for (var i=0;i<list.rows.length;i++){
 			if (list_closed && !list.rows[i].fields.closed){
 				list_closed = false;
@@ -44,29 +51,38 @@ function DocFlowApprovement_View(id,options){
 			if (!employee_in_list && cur_employee_id==list.rows[i].fields.employee.getKey()){
 				employee_in_list = true;
 				employee_closed = list.rows[i].fields.closed;
+				employee_step = list.rows[i].fields.step;
+				current_id = list.rows[i].fields.id;
 			}
 		}
-		//Форма утвержения только если Сотр есть в списке, он не утвердил и документ не закрыт		
-		if (employee_in_list && !employee_closed && !options.model.getFieldValue("closed")){
+		current_step = options.model.getField("current_step").getValue();
+		
+		//console.log("employee_in_list="+employee_in_list+" employee_closed="+employee_closed+" doc_closed="+doc_closed+" current_step="+current_step+" employee_step="+employee_step)
+		//Форма утвержения только если Сотр есть в списке, он не утвердил и документ не закрыт и это его шаг
+		if (employee_in_list && !employee_closed && !doc_closed && current_step==employee_step){
 			this.m_formVariant = "approve";
 			options.templateOptions.title = "Согласовать: "+options.model.getFieldValue("subject");
 		}
 		
 		//Результат если открывает автор, все уже утвердили и не закрыт
-		else if (!options.model.getFieldValue("closed") && list_closed && cur_employee_id==options.model.getFieldValue("employees_ref").getKey()){
+		else if (!doc_closed && list_closed && cur_employee_id==options.model.getFieldValue("employees_ref").getKey()){
 			options.templateOptions.title = "Ознакомиться с результатов согласования: "+options.model.getFieldValue("subject");
 			this.m_formVariant = "notification";
 		}
+		
+		step_count = options.model.getField("step_count").getValue();
 	}	
 	options.templateOptions.approve = (this.m_formVariant=="approve");
 	options.templateOptions.setTask = (this.m_formVariant=="setTask");
-	options.templateOptions.notification = (this.m_formVariant=="notification");
+	options.templateOptions.notification = (this.m_formVariant=="notification");	 
+	
+	var is_admin = (window.getApp().getServVar("role_id")=="admin");
+	options.templateOptions.correction = (is_admin && !doc_closed);
 	 
 	options.addElement = function(){
 		var bs = window.getBsCol();
 		var editContClassName = "input-group "+bs+"10";
-		var labelClassName = "control-label "+bs+"2";
-		var is_admin = (window.getApp().getServVar("role_id")=="admin");	
+		var labelClassName = "control-label "+bs+"2";		
 
 		this.addElement(new DocFlowImportanceTypeSelect(id+":doc_flow_importance_types_ref",{
 			"editContClassName":"input-group "+bs+"9",
@@ -150,9 +166,30 @@ function DocFlowApprovement_View(id,options){
 				"labelCaption":"Дата исполнения:",
 				"editMask":"99/99/9999 99:99",
 				"dateFormat":"d/m/Y H:i",
-				"enabled":is_admin			
+				"enabled":is_admin
 			}));	
-		
+
+			if (options.templateOptions.correction){
+				this.addElement(new EditInt(id+":current_step",{
+					"labelCaption":"Текущий шаг:",
+					"editContClassName":"input-group "+bs+"8",
+					"labelClassName":"control-label "+bs+"4"
+				}));	
+				this.addElement(new Enum_doc_flow_approvement_results(id+":close_result",{
+					"editContClassName":"input-group "+bs+"8",
+					"labelClassName":"control-label "+bs+"4",			
+					"labelCaption":"Результат:"
+				}));	
+			
+				this.addElement(new ButtonCmd(id+":cmdCorrection",{
+					"onClick":function(){
+						self.getElement("cmdCorrection").setEnabled(false);
+						self.onOK(function(resp,errCode,errStr){
+							self.getElement("cmdCorrection").setEnabled(true);
+						});
+					}
+				}));				
+			}
 		}
 		else if (this.m_formVariant=="approve"){
 			this.addElement(new EmployeeEditRef(id+":employees_ref",{
@@ -204,8 +241,9 @@ function DocFlowApprovement_View(id,options){
 			
 		}
 		//******** recipient list grid ********************	
-		this.addElement(new DocFlowApprovementRecipientGrid(id+":recipient_list_ref",{
-			"view":this
+		this.addElement(new DocFlowApprovementRecipientGrid(id+":recipient_list_ref",{			
+			"view":this,
+			"current_id":current_id
 		}));
 		//****************************************************
 				
@@ -231,6 +269,10 @@ function DocFlowApprovement_View(id,options){
 	];
 	if (this.m_formVariant=="setTask"){		
 		read_b.push(new DataBinding({"control":this.getElement("close_date_time")}));
+		if (options.templateOptions.correction){
+			read_b.push(new DataBinding({"control":this.getElement("current_step")}));
+			read_b.push(new DataBinding({"control":this.getElement("close_result")}));
+		}
 	}
 	read_b.push(new DataBinding({"control":this.getElement("recipient_list_ref")}));
 	this.setDataBindings(read_b);
@@ -250,6 +292,12 @@ function DocFlowApprovement_View(id,options){
 	
 		write_b.push(new CommandBinding({"control":this.getElement("recipient_list_ref"),"fieldId":"recipient_list"}));
 		write_b.push(new CommandBinding({"control":this.getElement("close_date_time")}));
+		
+		if (options.templateOptions.correction){
+			write_b.push(new CommandBinding({"control":this.getElement("current_step")}));
+			write_b.push(new CommandBinding({"control":this.getElement("close_result")}));
+		}
+		
 		this.setWriteBindings(write_b);
 	}	
 }
@@ -284,6 +332,14 @@ DocFlowApprovement_View.prototype.onGetData = function(resp,cmd){
 		if (!is_new){
 			this.setEnabled(false);
 			this.getControlOK().setEnabled(false);
+			if (!model.getFieldValue("closed") && (window.getApp().getServVar("role_id")=="admin")){
+				this.getElement("recipient_list_ref").m_correction = true;
+				this.getElement("recipient_list_ref").setEnabled(true);
+				this.getElement("current_step").setEnabled(true);
+				this.getElement("close_result").setEnabled(true);
+				this.getElement("cmdCorrection").setEnabled(true);
+				this.getElement("close_date_time").setEnabled(true);
+			}
 			
 			var res = "";
 			if (model.getField("close_date_time").getValue()){

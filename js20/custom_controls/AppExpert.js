@@ -122,3 +122,42 @@ AppExpert.prototype.setColorClass = function(v){
 	this.m_colorClass = v;
 }
 
+AppExpert.prototype.magnify = function(dir){
+	this.currFFZoom = this.currFFZoom? this.currFFZoom : 1;
+	this.currIEZoom = this.currIEZoom? this.currIEZoom : 100;
+	
+	if (dir){
+		    var step = 0.02;
+		    this.currFFZoom += step; 
+		    $('body').css('MozTransform','scale(' + this.currFFZoom + ')');
+		/*	
+		if ($.browser.mozilla){
+		    var step = 0.02;
+		    currFFZoom += step; 
+		    $('body').css('MozTransform','scale(' + currFFZoom + ')');
+		} else {
+		    var step = 2;
+		    currIEZoom += step;
+		    $('body').css('zoom', ' ' + currIEZoom + '%');
+		}
+		*/
+	}
+	else{
+		    var step = 0.02;
+		    this.currFFZoom -= step;                 
+		    $('body').css('MozTransform','scale(' + this.currFFZoom + ')');
+	
+		/*
+		if ($.browser.mozilla){
+		    var step = 0.02;
+		    currFFZoom -= step;                 
+		    $('body').css('MozTransform','scale(' + currFFZoom + ')');
+
+		} else {
+		    var step = 2;
+		    currIEZoom -= step;
+		    $('body').css('zoom', ' ' + currIEZoom + '%');
+		}
+		*/	
+	}
+}

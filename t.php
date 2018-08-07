@@ -9,7 +9,8 @@
 	require_once('functions/PKIManager.php');
 	$pki_man = new PKIManager(PKI_PATH,PKI_CRL_VALIDITY,'note');
 	//echo $pki_man->getIssuier(OUTPUT_PATH.'test.pdf.sig')['CN'];
-	$certData = $pki_man->verifySig(OUTPUT_PATH.'test.pdf.sig',OUTPUT_PATH.'test.pdf');
+	//$certData = $pki_man->verifySig('/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/ЛСР №02-01-01 демонтажные работы.xlsx.sig','/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/ЛСР №02-01-01 демонтажные работы.xlsx');
+	$certData = $pki_man->verifySig('/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/1.pdf.sig','/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/1.pdf');
 	
 	//var_dump($certData->subject);
 	echo ($certData->checkPassed? 'PASSED':'NOT passed').'</br>';

@@ -26,6 +26,9 @@ require_once(FRAME_WORK_PATH.'basic_classes/FieldExtXML.php');
 require_once(USER_CONTROLLERS_PATH.'Application_Controller.php');
 require_once('common/file_func.php');
 
+require_once(ABSOLUTE_PATH.'functions/PKIManager.php');
+require_once(ABSOLUTE_PATH.'functions/pki.php');
+
 class DocFlowOutClient_Controller extends ControllerSQL{
 	
 	const CONTRACT_FOLDER = 'Договорные документы';
@@ -284,11 +287,16 @@ class DocFlowOutClient_Controller extends ControllerSQL{
 			throw new Exception(self::ER_NO_CONTRACT_SIG);
 		}
 
+		Application_Controller::removeAllZipFile($appId);
+
 		$dir = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
 			Application_Controller::APP_DIR_PREF.$appId.DIRECTORY_SEPARATOR.
 			self::CONTRACT_FOLDER;
 			
 		mkdir($dir,0777,TRUE);
+		
+		//Ключ - file_id
+		$fl_for_pki_check = [];
 		
 		$fl_ind = 0;
 		$fl_names = [];
@@ -324,34 +332,21 @@ class DocFlowOutClient_Controller extends ControllerSQL{
 					('%s',%d)",
 					$fl_names[$fl_name],
 					$docFlowId
-				));				
+				));
+				
+				$fl_for_pki_check[$fl_names[$fl_name]] = $dir.DIRECTORY_SEPARATOR.$fl_names[$fl_name];
 			}			
 			$fl_ind++;
 		}
 	
-		//*************** А если уже был контракт? надо удалять... *************************
-		/*
-		if (file_exists($dir)){
-			rrmdir($dir);
+		//проверка ЭЦП
+		if (count($fl_for_pki_check)){
+			Application_Controller::removeSigCheckReport($appId);
+			$pki_man = new PKIManager(PKI_PATH,PKI_CRL_VALIDITY,'error');
+			foreach($fl_for_pki_check as $fl_id=>$fl){
+				pki_log_sig_check($fl.'.sig', $fl, "'".$fl_id."'", $pki_man,$this->getDbLinkMaster());
+			}
 		}
-		
-		$this->getDbLinkMaster()->query(sprintf(
-		"DELETE FROM doc_flow_out_client_document_files
-		WHERE file_id IN (
-			SELECT file_id
-			FROM application_document_files
-			WHERE application_id=%d AND file_path='%s')",
-		$appId,
-		self::CONTRACT_FOLDER
-		));
-		
-		$this->getDbLinkMaster()->query(sprintf(
-		"DELETE FROM application_document_files WHERE application_id=%d AND file_path='%s'",
-		$appId,
-		self::CONTRACT_FOLDER
-		));
-		*/
-		//***********************************************
 	}
 
 	public function insert($pm){

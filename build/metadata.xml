@@ -2,7 +2,7 @@
 <metadata owner="expert72">
 	<versions>
 		<version dateOpen="2017-09-27 12:09:48" dateClose="2017-12-08 10:12:08">1.001 
-		<lastBuild>2018-08-03 05:32:25</lastBuild></version>
+		<lastBuild>2018-08-07 06:02:49</lastBuild></version>
 		<version dateOpen="2017-12-08 11:12:01" dateClose="2017-12-08 11:12:04">1.002</version>
 		<version dateOpen="2017-12-08 11:12:20" dateClose="2017-12-08 11:12:20">1.0.3</version>
 		<version dateOpen="2017-12-12 11:12:07" dateClose="2017-12-12 11:12:07">1.0.4</version>
@@ -72,6 +72,7 @@
 		<version dateOpen="2018-07-19 16:07:28" dateClose="2018-07-20 07:07:57">1.0.69</version>
 		<version dateOpen="2018-07-20 07:07:57" dateClose="2018-07-26 05:07:58">1.0.70</version>
 		<version dateOpen="2018-07-26 05:07:58" dateClose="2018-08-03 05:08:32">1.0.71</version>
+		<version dateOpen="2018-08-03 05:08:34" dateClose="2018-08-07 06:08:03">1.0.72</version>
 	</versions>
 	<globalFilters>
 		<field id="user_id"/>
@@ -139,6 +140,9 @@
 			</value>
 			<value id="expert_work_change">
 				<ru descr="&#x418;&#x437;&#x43C;&#x435;&#x43D;&#x43D;&#x438;&#x44F; &#x43F;&#x43E; &#x43B;&#x43E;&#x43A;&#x430;&#x43B;&#x44C;&#x43D;&#x44B;&#x43C; &#x437;&#x430;&#x43A;&#x43B;&#x44E;&#x447;&#x435;&#x43D;&#x438;&#x44F;&#x43C;"/>
+			</value>
+			<value id="ca_update_error">
+				<ru descr="&#x41E;&#x448;&#x438;&#x431;&#x43A;&#x430; &#x43E;&#x431;&#x43D;&#x43E;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x44F; &#x433;&#x43E;&#x43B;&#x43E;&#x432;&#x43D;&#x44B;&#x445; &#x441;&#x435;&#x440;&#x442;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x43E;&#x432;"/>
 			</value>
 		</enum>
 		<enum id="client_types" descr="&#x422;&#x438;&#x43F; &#x43A;&#x43B;&#x438;&#x435;&#x43D;&#x442;&#x430;">
@@ -3384,7 +3388,10 @@
 			</publicMethod>
 		</controller>
 		<controller id="DocFlowTask" parentId="ControllerSQL">
+			<publicMethod id="update" modelId="DocFlowTask"/>
+			<publicMethod id="delete" modelId="DocFlowTask"/>
 			<publicMethod id="get_list" modelId="DocFlowTaskList"/>
+			<publicMethod id="get_object" modelId="DocFlowTaskList"/>
 			<publicMethod id="get_short_list" modelId="DocFlowTaskShortList"/>
 			<publicMethod id="get_unviewed_task_list" modelId="DocFlowTaskUnviewedList"/>
 			<publicMethod id="set_task_viewed">

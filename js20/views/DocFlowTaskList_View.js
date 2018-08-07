@@ -107,6 +107,7 @@ function DocFlowTaskList_View(id,options){
 						"field":new FieldDate("date_time"),
 						"searchType":"on_beg"
 					}
+					,"ctrlOptions":{"enabled":false}
 				})
 			],
 			"sortable":true,
@@ -118,6 +119,7 @@ function DocFlowTaskList_View(id,options){
 			"columns":[
 				new GridColumn({
 					"field":model.getField("description")
+					,"ctrlClass":EditString
 				})
 			]
 		})
@@ -126,6 +128,8 @@ function DocFlowTaskList_View(id,options){
 			"columns":[
 				new GridColumnRef({
 					"field":model.getField("doc_flow_importance_types_ref")
+					,"ctrlClass":DocFlowImportanceTypeSelect
+					,"ctrlOptions":{"labelCaption":""}
 				})
 			]
 		})
@@ -134,6 +138,7 @@ function DocFlowTaskList_View(id,options){
 			"columns":[
 				new GridColumnRef({
 					"field":model.getField("recipients_ref")
+					,"ctrlOptions":{"enabled":false}
 				})
 			]
 		})
@@ -142,6 +147,7 @@ function DocFlowTaskList_View(id,options){
 			"columns":[
 				new GridColumnRef({
 					"field":model.getField("employees_ref")
+					,"ctrlOptions":{"enabled":false}
 				})
 			]
 		})
@@ -151,15 +157,17 @@ function DocFlowTaskList_View(id,options){
 			"columns":[
 				new GridColumnRef({
 					"field":model.getField("register_docs_ref")
+					,"ctrlOptions":{"enabled":false}
 				})
 			]
 		})
 		
 		,new GridCellHead(id+":grid:head:close_docs_ref",{
-			"value":"Дата завершения",
+			"value":"Документ закрытия",
 			"columns":[
 				new GridColumnRef({
 					"field":model.getField("close_docs_ref")
+					,"ctrlOptions":{"enabled":false}
 				})
 			],
 			"sortable":true
@@ -169,9 +177,39 @@ function DocFlowTaskList_View(id,options){
 			"value":"Кто завершил",
 			"columns":[
 				new GridColumnRef({
-					"field":model.getField("close_employees_ref")
+					"field":model.getField("close_employees_ref"),
+					"ctrlClass":EmployeeEditRef
+					,"ctrlOptions":{
+						"labelCaption":""						
+					}
+					,"ctrlBindFieldId":"close_employee_id"
 				})
 			]
+		})
+		,new GridCellHead(id+":grid:head:close_date_time",{
+			"value":"Дата закрытия",
+			"columns":[
+				new GridColumnDate({
+					"field":model.getField("close_date_time"),
+					"dateFormat":"d/m/Y H:i",
+					"ctrlClass":EditDate,
+					"searchOptions":{
+						"field":new FieldDate("close_date_time"),
+						"searchType":"on_beg"
+					}
+				})
+			],
+			"sortable":true
+		})
+		,new GridCellHead(id+":grid:head:closed",{
+			"value":"Закрыто",
+			"columns":[
+				new GridColumnBool({
+					"field":model.getField("closed"),
+					"ctrlClass":EditCheckBox
+				})
+			],
+			"sortable":true
 		})
 		
 	];
@@ -180,7 +218,7 @@ function DocFlowTaskList_View(id,options){
 		"model":model,
 		"keyIds":["id"],
 		"controller":contr,
-		"editInline":false,		
+		"editInline":true,		
 		"editWinClass":function(winParams){
 			var doc = this.m_model.getFields().register_docs_ref.getValue();
 			winParams.keys = doc.getKeys();
@@ -200,11 +238,11 @@ function DocFlowTaskList_View(id,options){
 		},
 		"popUpMenu":popup_menu,
 		"commands":new GridCmdContainerAjx(id+":grid:cmd",{
-			"cmdInsert":false,
-			"cmdEdit":new GridCmd(id+":grid:cmd:open",{
+			"cmdInsert":false
+			,"cmdEdit":new GridCmd(id+":grid:cmd:open",{
 				"caption":"Открыть задачу ",
 				"glyph":"glyphicon-pencil",
-				"title":"Открыть задачу",
+				"title":"Открыть документ",
 				"showCmdControl":true,
 				"onCommand":function(){
 					this.getGrid().edit("edit");

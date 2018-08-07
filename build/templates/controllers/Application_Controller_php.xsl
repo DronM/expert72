@@ -149,6 +149,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		
 		if ($res){
 			self::removeAllZipFile($appId);
+			self::removePDFFile($appId);
 		}
 		
 		return $res;
@@ -543,6 +544,14 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			self::ALL_DOC_ZIP_FILE
 		);
 	}
+	
+	public static function removeSigCheckReport($applicationId){
+		self::delFileFromStorage(
+			self::APP_DIR_PREF.$applicationId.DIRECTORY_SEPARATOR.
+			'ApplicationSigCheck.pdf'
+		);
+	}
+	
 	public static function removePDFFile($applicationId){
 		self::delFileFromStorage(
 			self::APP_DIR_PREF.$applicationId.DIRECTORY_SEPARATOR.
@@ -561,11 +570,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			self::APP_DIR_PREF.$applicationId.DIRECTORY_SEPARATOR.
 			'ApplicationAudit.pdf'
 		);
-		self::delFileFromStorage(
-			self::APP_DIR_PREF.$applicationId.DIRECTORY_SEPARATOR.
-			'ApplicationSigCheck.pdf'
-		);
-		
+		self::removeSigCheckReport($applicationId);
 	}
 
 	public function insert($pm){		
@@ -2080,19 +2085,19 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		
 		while($file = $this->getDbLink()->fetch_array($qid)){
 			if (
-			(file_exists($file_doc = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$file['file_path'])
-			|| (defined('FILE_STORAGE_DIR_MAIN') &amp;&amp; file_exists($file_doc = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$file['file_path']) )
+			(file_exists($file_doc = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_dir.DIRECTORY_SEPARATOR.$file['file_path'])
+			|| (defined('FILE_STORAGE_DIR_MAIN') &amp;&amp; file_exists($file_doc = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$rel_dir.DIRECTORY_SEPARATOR.$file['file_path']) )
 			)
 			&amp;&amp;
-			(file_exists($file_doc_sig = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$file['file_path'].self::SIG_EXT)
-			|| (defined('FILE_STORAGE_DIR_MAIN') &amp;&amp; file_exists($file_doc_sig = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$file['file_path'].self::SIG_EXT) )
+			(file_exists($file_doc_sig = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_dir.DIRECTORY_SEPARATOR.$file['file_path'].self::SIG_EXT)
+			|| (defined('FILE_STORAGE_DIR_MAIN') &amp;&amp; file_exists($file_doc_sig = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$rel_dir.DIRECTORY_SEPARATOR.$file['file_path'].self::SIG_EXT) )
 			)			
 			){
 				pki_log_sig_check($file_doc_sig, $file_doc, "'".$file['file_id']."'", $pki_man,$this->getDbLinkMaster());
 			}
 		}		
 	
-		$m = new ModelSQL($this->getDbLink(),array('id'=>'SigCheck_Model'));
+		$m = new ModelSQL($this->getDbLinkMaster(),array('id'=>'SigCheck_Model'));
 		$m->query(sprintf(
 			"(SELECT 
 				v.date_time,

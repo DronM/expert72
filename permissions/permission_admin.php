@@ -628,7 +628,13 @@ $permissions = array();
 				
 					$permissions['DocFlowInClient_Controller_set_viewed']=TRUE;
 				
+					$permissions['DocFlowTask_Controller_update']=TRUE;
+				
+					$permissions['DocFlowTask_Controller_delete']=TRUE;
+				
 					$permissions['DocFlowTask_Controller_get_list']=TRUE;
+				
+					$permissions['DocFlowTask_Controller_get_object']=TRUE;
 				
 					$permissions['DocFlowTask_Controller_get_short_list']=TRUE;
 				

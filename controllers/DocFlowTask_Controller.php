@@ -29,6 +29,82 @@ class DocFlowTask_Controller extends ControllerSQL{
 	public function __construct($dbLinkMaster=NULL,$dbLink=NULL){
 		parent::__construct($dbLinkMaster,$dbLink);
 			
+		/* update */		
+		$pm = new PublicMethod('update');
+		
+		$pm->addParam(new FieldExtInt('old_id',array('required'=>TRUE)));
+		
+		$pm->addParam(new FieldExtInt('obj_mode'));
+		$param = new FieldExtInt('id'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtJSONB('register_doc'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtJSONB('recipient'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtDateTimeTZ('end_date_time'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtDateTimeTZ('date_time'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtInt('doc_flow_importance_type_id'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtInt('employee_id'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtDateTimeTZ('close_date_time'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtJSONB('close_doc'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtText('description'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtBool('closed'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtInt('close_employee_id'
+				,array(
+			));
+			$pm->addParam($param);
+		
+			$param = new FieldExtInt('id',array(
+			));
+			$pm->addParam($param);
+		
+		
+			$this->addPublicMethod($pm);
+			$this->setUpdateModelId('DocFlowTask_Model');
+
+			
+		/* delete */
+		$pm = new PublicMethod('delete');
+		
+		$pm->addParam(new FieldExtInt('id'
+		));		
+		
+		$pm->addParam(new FieldExtInt('count'));
+		$pm->addParam(new FieldExtInt('from'));				
+		$this->addPublicMethod($pm);					
+		$this->setDeleteModelId('DocFlowTask_Model');
+
+			
 		/* get_list */
 		$pm = new PublicMethod('get_list');
 		
@@ -46,6 +122,17 @@ class DocFlowTask_Controller extends ControllerSQL{
 		
 		$this->setListModelId('DocFlowTaskList_Model');
 		
+			
+		/* get_object */
+		$pm = new PublicMethod('get_object');
+		$pm->addParam(new FieldExtString('mode'));
+		
+		$pm->addParam(new FieldExtInt('id'
+		));
+		
+		$this->addPublicMethod($pm);
+		$this->setObjectModelId('DocFlowTaskList_Model');		
+
 			
 		$pm = new PublicMethod('get_short_list');
 		
