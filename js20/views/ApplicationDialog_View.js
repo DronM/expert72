@@ -59,8 +59,26 @@ function ApplicationDialog_View(id,options){
 		}
 	}
 	options.templateOptions.contractNotExists = !options.templateOptions.contractExists;
-	options.templateOptions.readOnly = options.readOnly;
+	options.templateOptions.readOnly = options.readOnly;	
 	options.templateOptions.checkSig = (role_id=="admin"||role_id=="lawyer");
+	
+	//********** cades plugin *******************
+	options.templateOptions.loadCadesPlugin = (!options.readOnly && !window.getApp().getDoNotLoadCadesPlugin());
+	if (options.templateOptions.loadCadesPlugin){
+		var cades = window.getApp().getCadesAPI();		
+		if (cades && !options.readOnly){
+			options.templateOptions.pluginSupBrowser = cades.browserSupported();
+			options.templateOptions.pluginUnsupBrowser = !options.templateOptions.pluginSupBrowser;
+		
+			if (options.templateOptions.pluginSupBrowser){
+				var br = CommonHelper.getBrowser();				
+				options.templateOptions.isFirefox = (br["name"]=="Firefox");
+				options.templateOptions.isOpera = (br["name"]=="Opera" || br["name"]=="Yandex");
+				options.templateOptions.isChrome = (br["name"]=="Chrome");
+			}
+		}
+	}
+	//********** cades plugin *******************		
 	
 	var self = this;
 	
@@ -286,6 +304,12 @@ function ApplicationDialog_View(id,options){
 			},
 			"onDownload":function(){
 				self.downloadPrint("download_app_print_expertise");
+			},
+			"onSignClick":function(){
+				self.downloadPrintSig("download_app_print_expertise");
+			},
+			"onSignFile":function(fileId){
+				self.signPrint(self.getElement("app_print_expertise"),fileId);
 			}
 		}));	
 
@@ -323,6 +347,12 @@ function ApplicationDialog_View(id,options){
 			},
 			"onDownload":function(){
 				self.downloadPrint("download_app_print_cost_eval");
+			},
+			"onSignClick":function(){
+				self.downloadPrintSig("download_app_print_cost_eval");
+			},
+			"onSignFile":function(fileId){
+				self.signPrint(self.getElement("app_print_cost_eval"),fileId);
 			}
 		}));	
 
@@ -360,6 +390,12 @@ function ApplicationDialog_View(id,options){
 			},
 			"onDownload":function(){
 				self.downloadPrint("download_app_print_modification");
+			},
+			"onSignClick":function(){
+				self.downloadPrintSig("download_app_print_modification");
+			},
+			"onSignFile":function(fileId){
+				self.signPrint(self.getElement("app_print_modification"),fileId);
 			}
 		}));	
 
@@ -397,7 +433,13 @@ function ApplicationDialog_View(id,options){
 			},
 			"onDownload":function(){
 				self.downloadPrint("download_app_print_audit");
-			}
+			},
+			"onSignClick":function(){
+				self.downloadPrintSig("download_app_print_audit");
+			},
+			"onSignFile":function(fileId){
+				self.signPrint(self.getElement("app_print_audit"),fileId);
+			}			
 		}));	
 		
 		this.addElement(new ApplicationClientEdit(id+":applicant",{
@@ -654,6 +696,35 @@ function ApplicationDialog_View(id,options){
 	this.getElement("app_print_audit").setActive = f_setAppPrintActive;
 	this.getElement("app_print_audit").getFillPercent = this.m_getAppPrintFillPercent;
 	this.getElement("applicant").getElement("auth_letter_file").getFillPercent = this.m_getAppPrintFillPercent;
+	
+	//********** cades plugin ******************************
+	if (options.templateOptions.loadCadesPlugin){
+		$(".doNotCadesLoadPlugin").click(function(){
+			var checked = $("#doNotCadesLoadPlugin").is(":checked");
+			window.getApp().setDoNotLoadCadesPlugin(checked);
+		});
+		if (cades && !cades.getLoaded()){
+			cades.setOnCertListFilled(function(){
+				self.cadesOnCertListFilled();
+			});
+			cades.setOnLoadSuccess(this.cadesOnLoadSuccess);
+			cades.setOnLoadError(this.cadesOnLoadError);
+		}
+		else if (cades){
+			//already loaded
+			if (cades.getLoadError()){
+				this.cadesOnLoadError();
+			}
+			else{
+				this.cadesOnLoadSuccess();
+				if (cades.getCertListFilled()){
+					this.cadesOnCertListFilled();
+				}
+			}
+		}
+	}
+	//********** cades plugin ******************************
+	
 }
 extend(ApplicationDialog_View, DocumentDialog_View);//ViewObjectAjx
 
@@ -663,6 +734,9 @@ ApplicationDialog_View.prototype.FORM_SAVE_INTERVAL = 1*60*1000;
 ApplicationDialog_View.prototype.m_technicalFeatures;
 ApplicationDialog_View.prototype.m_prevConstructionTypeId;
 ApplicationDialog_View.prototype.m_prevExpertiseType;
+
+//Cades plugin certificate list control
+ApplicationDialog_View.prototype.m_certBoxControl;
 
 ApplicationDialog_View.prototype.getPercentClass = function(percent){
 	var new_class;
@@ -1166,6 +1240,9 @@ ApplicationDialog_View.prototype.downloadPrint = function(meth){
 	var pm = this.getController().getPublicMethod(meth);
 	pm.setFieldValue("id",this.getElement("id").getValue());
 	pm.download();
+}
+
+ApplicationDialog_View.prototype.downloadPrintSig = function(meth){
 	var pm2 = this.getController().getPublicMethod(meth+"_sig");
 	pm2.setFieldValue("id",this.getElement("id").getValue());
 	pm2.download(null,1);
@@ -1211,17 +1288,72 @@ ApplicationDialog_View.prototype.onSaveOk = function(resp){
 	this.updateControlsFromResponse(resp);
 }
 
-/*
-ApplicationDialog_View.prototype.checkForServices = function(){
-	var serv_ctrl = this.getElement("service_cont");
-	var exp_type_null = serv_ctrl.getElement("expertise_type").isNull();
-	if(
-	(!exp_type_null && serv_ctrl.getElement("modification").getValue())
-	||(!exp_type_null && serv_ctrl.getElement("audit").getValue())
-	||(serv_ctrl.getElement("cost_eval_validity").getValue() && serv_ctrl.getElement("audit").getValue())
-	||(serv_ctrl.getElement("modification").getValue() && serv_ctrl.getElement("audit").getValue())
-	){
-		throw Error("Данные виды услуг не могут быть указаны в одном заявлении!");
-	}
+//******** CADES ***********************************
+ApplicationDialog_View.prototype.cadesOnCertListFilled = function(){
+	var id = this.getId();
+	//общая информация
+	var cades = window.getApp().getCadesAPI();
+	document.getElementById(id+":cspName").innerHTML = "Криптопровайдер: " + cades.getCSPName();
+	document.getElementById(id+":cspVersion").innerHTML = "версия: " + cades.getCSPVersion();
+	document.getElementById(id+":plugInVersion").innerHTML = "Версия плагина: " + cades.getPluginVersion();
+	
+	//заполнение списка сертификатов
+	this.m_certBoxControl = new EditCertificateSelect(id+":certListBox",{
+		"cades":cades
+	});
+	this.m_certBoxControl.toDOM();
+	
+	$(".certFilling").addClass("hidden");
+	$(".certReady").removeClass("hidden");
+	$(".fileSignNoSig").removeClass("hidden");
 }
-*/
+
+ApplicationDialog_View.prototype.cadesOnLoadSuccess = function(){
+	$(".cadesChecking").remove();		
+	$(".cadesInstalled").removeClass("hidden");				
+		
+}
+ApplicationDialog_View.prototype.cadesOnLoadError = function(){
+	$(".cadesChecking").remove();		
+	$(".cadesNotInstalled").removeClass("hidden");			
+}
+ApplicationDialog_View.prototype.getCertBoxControl = function(){
+	return this.m_certBoxControl;
+}
+ApplicationDialog_View.prototype.signPrint = function(printControl,fileId,itemId){
+	
+	var cades = window.getApp().getCadesAPI();
+	if (!cades || !cades.getCertListCount() || !this.m_certBoxControl || !this.m_certBoxControl.getSelectedCert()){
+		throw new Error("Сертификат для подписи не выбран!");
+	}
+	var files = printControl.getFiles();
+	if (!files || !files.length){
+		throw new Error("Файл с данными не найден!");	
+	}
+	var cert_struc = this.m_certBoxControl.getSelectedCert()	
+	
+	printControl.sigCont.setWait(true);
+	var self = this;
+	cades.getFileContentForSign(
+		files[0],
+		function(fileContent){
+			cades.makeCadesBESSign(fileContent,cert_struc.cert,function(signature){						
+				var sig_file = cades.makeSigFile(signature,files[0]["name"]+".sig");
+				
+				files.push(sig_file);
+				printControl.sigCont.setWait(false);
+				printControl.sigCont.addSignature({
+					"id":fileId,
+					"owner":{
+						"Организация":cert_struc.owner,
+						"Фамилия":cert_struc.ownerFirstName,
+						"Имя":cert_struc.ownerSecondName
+					},
+					"create_dt":new Date(sig_file.lastModified)
+				});
+				printControl.sigCont.sigsToDOM();
+			});
+		}
+	);
+}
+

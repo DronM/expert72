@@ -108,6 +108,12 @@ function UserProfile_View(id,options){
 	]);
 	
 	this.getControlSave().setEnabled(false);
+	
+	$(".doNotCadesLoadPlugin").click(function(){
+		var checked = $("#doNotCadesLoadPlugin").is(":checked");
+		window.getApp().setDoNotLoadCadesPlugin(checked);
+	});
+	
 }
 extend(UserProfile_View,ViewObjectAjx);
 

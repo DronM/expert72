@@ -67,6 +67,30 @@ class DocFlowInList_Model extends ModelSQL{
 		$this->addField($f_from_application_id);
 		//********************
 		
+		//*** Field from_applications_ref ***
+		$f_opts = array();
+		$f_opts['id']="from_applications_ref";
+				
+		$f_from_applications_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"from_applications_ref",$f_opts);
+		$this->addField($f_from_applications_ref);
+		//********************
+		
+		//*** Field from_contract_id ***
+		$f_opts = array();
+		$f_opts['id']="from_contract_id";
+				
+		$f_from_contract_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"from_contract_id",$f_opts);
+		$this->addField($f_from_contract_id);
+		//********************
+		
+		//*** Field from_contracts_ref ***
+		$f_opts = array();
+		$f_opts['id']="from_contracts_ref";
+				
+		$f_from_contracts_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"from_contracts_ref",$f_opts);
+		$this->addField($f_from_contracts_ref);
+		//********************
+		
 		//*** Field subject ***
 		$f_opts = array();
 		$f_opts['id']="subject";

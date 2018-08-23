@@ -375,3 +375,15 @@ table,tr,td.noBorder{
 .messageNewDay{
 	margin: 0 auto;
 }
+/*
+.appDialog{
+	padding-top:0px;
+}
+*/
+.cadesCert{
+	margin-top:15px;
+	margin-bottom:0px;
+}
+.doNotCadesLoadPlugin{
+	margin:5px 5px;
+}

@@ -230,12 +230,12 @@ function ApplicationClientEdit(id,options){
 			}));	
 			this.addElement(new EditFile(id+":auth_letter_file",{
 				"attrs":{"percentcalc":"false","notForValue":"true"},
-				"labelClassName": "control-label "+window.getBsCol(4),//percentcalc
-				//"contClassName":"form-group "+window.getBsCol(6),
+				"labelClassName": "control-label "+window.getBsCol(2),//percentcalc
+				"contClassName":"form-group "+window.getBsCol(6),
 				"labelCaption":"Файлы (бланк и ЭЦП)",
-				"editContClassName":"input-group "+window.getBsCol(8),
+				"editContClassName":"input-group "+window.getBsCol(12),
 				"template":window.getApp().getTemplate("EditFileApp"),
-				"templateOptions":{"bsColClass":window.getBsCol(6)},
+				"templateOptions":{"bsColClass":window.getBsCol(12)},
 				"addControls":null,
 				"mainView":this,
 				"separateSignature":true,
@@ -254,7 +254,13 @@ function ApplicationClientEdit(id,options){
 				},
 				"onDownload":function(){
 					self.m_mainView.downloadPrint("download_auth_letter_file");
-				}
+				},
+				"onSignClick":function(){
+					self.m_mainView.downloadPrintSig("download_auth_letter_file");
+				},
+				"onSignFile":function(fileId){
+					self.m_mainView.signPrint(self.getElement("auth_letter_file"),fileId);
+				}											
 			}));			
 		}
 				
@@ -408,7 +414,7 @@ ApplicationClientEdit.prototype.getValueJSON = function(){
 
 ApplicationClientEdit.prototype.setAuthLetterRequired = function(init){
 	if (this.m_mainView.m_readOnly|| (!this.m_isApplicant&&!this.m_isDeveloper&&!this.m_isCustomer))return;
-	var DIF_FIELD = "name";
+	var DIF_FIELD = "name_full";
 	var appl = this.m_mainView.getElement("applicant");
 	var appl_v = appl.getElement(DIF_FIELD).getValue();
 	var appl_f = appl_v? appl_v.toLowerCase():"";

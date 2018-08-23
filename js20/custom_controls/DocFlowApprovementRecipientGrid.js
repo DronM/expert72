@@ -144,7 +144,7 @@ function DocFlowApprovementRecipientGrid(id,options){
 		"head":new GridHead(id+":recipient_list:head",{
 			"elements":[
 				new GridRow(id+":head:row0",{
-					elements
+					"elements":elements
 				})
 			]
 		}),

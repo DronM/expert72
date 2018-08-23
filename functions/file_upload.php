@@ -190,7 +190,6 @@ try{
 						pki_log_sig_check($file_doc_sig, $file_doc, $db_file_id, $pki_man, $dbLink);
 					}
 					catch(Exception $e){
-					
 					}
 				}
 			}

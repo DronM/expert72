@@ -1240,6 +1240,9 @@
 		<jsScript file="ext/DragnDrop/DragMaster.js" />
 		<jsScript file="ext/DragnDrop/DragObject.js" />
 		<jsScript file="ext/DragnDrop/DropTarget.js" />
+		<!--cades plugin-->
+		<jsScript file="ext/cadesplugin/cadesplugin_api.js.js" />
+		
 		<!-- core -->
 		<jsScript file="core/extend.js" />
 		<jsScript file="core/App.js" />

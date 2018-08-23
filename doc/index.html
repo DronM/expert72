@@ -181,7 +181,7 @@
 <li><a href="#Reminder_Model">Reminder_Model</a></li>
 <li><a href="#ReminderUnviewedList_Model">ReminderUnviewedList_Model</a></li>
 <li><a href="#DocFlowAcqaintance_Model">DocFlowAcqaintance_Model</a></li>
-<li><a href="#DocFlowFilfilment_Model">DocFlowFilfilment_Model</a></li>
+<li><a href="#DocFlowFulfilment_Model">DocFlowFulfilment_Model</a></li>
 <li><a href="#DocFlowExamination_Model">DocFlowExamination_Model</a></li>
 <li><a href="#DocFlowExaminationList_Model">DocFlowExaminationList_Model</a></li>
 <li><a href="#DocFlowExaminationDialog_Model">DocFlowExaminationDialog_Model</a></li>
@@ -239,6 +239,8 @@
 <li><a href="#RepReestrCostEval_Model">RepReestrCostEval_Model</a></li>
 <li><a href="#Service_Model">Service_Model</a></li>
 <li><a href="#FileVerification_Model">FileVerification_Model</a></li>
+<li><a href="#UserCertificate_Model">UserCertificate_Model</a></li>
+<li><a href="#FileSignatures_Model">FileSignatures_Model</a></li>
 </ul>
 <div class="section-title">Enumerations</div>
 <ul>
@@ -6151,6 +6153,12 @@
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
+<h2>contract_state</h2>
+<div>Type:Enum</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
 </div>
 </div>
 <div id="DocFlowApprovementRecipientList_Model" class="content_box">
@@ -6729,8 +6737,8 @@
 <div>Precision:</div>
 </div>
 </div>
-<div id="DocFlowFilfilment_Model" class="content_box">
-<h1>DocFlowFilfilment_Model</h1>
+<div id="DocFlowFulfilment_Model" class="content_box">
+<h1>DocFlowFulfilment_Model</h1>
 <div class="content_item">
 <p>Поля:</p>
 <h2>id</h2>
@@ -7425,6 +7433,24 @@
 <div>Precision:</div>
 <h2>from_application_id</h2>
 <div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>from_applications_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>from_contract_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>from_contracts_ref</h2>
+<div>Type:JSON</div>
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>
@@ -9369,6 +9395,36 @@
 <div>Precision:</div>
 </div>
 </div>
+<div id="FileSignatures_Model" class="content_box">
+<h1>FileSignatures_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>file_id</h2>
+<div>Type:String</div>
+<div>Primary key:TRUE</div>
+<div>Required:TRUE</div>
+<div>Length:36</div>
+<div>Precision:</div>
+<h2>signature_file_id</h2>
+<div>Type:String</div>
+<div>Primary key:TRUE</div>
+<div>Required:TRUE</div>
+<div>Length:36</div>
+<div>Precision:</div>
+<h2>sign_date_time</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>user_certificate_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
 <div id="FileVerification_Model" class="content_box">
 <h1>FileVerification_Model</h1>
 <div class="content_item">
@@ -9385,18 +9441,6 @@
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
-<h2>subject_cert</h2>
-<div>Type:JSONB</div>
-<div>Primary key:</div>
-<div>Required:</div>
-<div>Length:</div>
-<div>Precision:</div>
-<h2>issuer_cert</h2>
-<div>Type:JSONB</div>
-<div>Primary key:</div>
-<div>Required:</div>
-<div>Length:</div>
-<div>Precision:</div>
 <h2>check_result</h2>
 <div>Type:Bool</div>
 <div>Primary key:</div>
@@ -9409,18 +9453,6 @@
 <div>Required:</div>
 <div>Length:15</div>
 <div>Precision:4</div>
-<h2>date_from</h2>
-<div>Type:Date</div>
-<div>Primary key:</div>
-<div>Required:</div>
-<div>Length:</div>
-<div>Precision:</div>
-<h2>date_to</h2>
-<div>Type:Date</div>
-<div>Primary key:</div>
-<div>Required:</div>
-<div>Length:</div>
-<div>Precision:</div>
 <h2>error_str</h2>
 <div>Type:Text</div>
 <div>Primary key:</div>
@@ -11157,6 +11189,60 @@
 <div>Precision:</div>
 <h2>reminders_to_email</h2>
 <div>Type:Bool</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="UserCertificate_Model" class="content_box">
+<h1>UserCertificate_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>fingerprint</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:TRUE</div>
+<div>Length:40</div>
+<div>Precision:</div>
+<h2>user_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>date_time</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>date_time_from</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>date_time_to</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>subject_cert</h2>
+<div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>issuer_cert</h2>
+<div>Type:JSONB</div>
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>

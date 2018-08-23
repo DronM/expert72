@@ -9,36 +9,24 @@
 	require_once('functions/PKIManager.php');
 	$pki_man = new PKIManager(PKI_PATH,PKI_CRL_VALIDITY,'note');
 	//echo $pki_man->getIssuier(OUTPUT_PATH.'test.pdf.sig')['CN'];
-	//$certData = $pki_man->verifySig('/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/ЛСР №02-01-01 демонтажные работы.xlsx.sig','/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/ЛСР №02-01-01 демонтажные работы.xlsx');
-	$certData = $pki_man->verifySig('/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/1.pdf.sig','/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/1.pdf');
+	//$$verif_res = $pki_man->verifySig('/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/ЛСР №02-01-01 демонтажные работы.xlsx.sig','/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/ЛСР №02-01-01 демонтажные работы.xlsx');
+	//$verif_res = $pki_man->verifySig('/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Заключение.pdf.sig','/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Заключение.pdf');
+	$verif_res = $pki_man->verifySig('/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/ИсхДанСмета.pdf.sig','/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/ИсхДанСмета.pdf');
 	
-	//var_dump($certData->subject);
-	echo ($certData->checkPassed? 'PASSED':'NOT passed').'</br>';
-	if (!$certData->checkPassed)echo 'Ошибка='.$certData->checkError.'<br>';
+	var_dump($verif_res);
+	
+	echo '</BR></BR></BR></BR></BR>';
+	echo ($verif_res->checkPassed? 'PASSED':'NOT passed').'</br>';
+	if (!$verif_res->checkPassed)echo 'Ошибка='.$verif_res->checkError.'<br>';
+	
+	/*
+	
 	echo 'From='.date('d/m/Y',$certData->dateFrom).'<br>';
 	echo 'To='.date('d/m/Y',$certData->dateTo).'<br>';
 	//echo 'СНИЛС='.$certData->subject['СНИЛС'].'<br>';
 	//echo 'Фамилия='.$certData->subject['Фамилия'].'<br>';
-	echo 'Время проверки='.$certData->checkTime.'<br>';
-	echo '</BR></BR>';
-	//var_dump($certData->subject);
-	/*
-	if (isset($certData->subject)){
-		$subject_cert = '';
-		foreach($certData->subject as $prop_id=>$prop_v){
-			$subject_cert.= ($subject_cert=='')? '':','; 
-		
-			$db_prop_v = NULL;
-			FieldSQLString::formatForDb($dbLink,$prop_v,$db_prop_v);
-		
-			$subject_cert.= sprintf("'%s','%s'",$prop_id,$db_prop_v);
-		}
-		$subject_cert = 'jsonb_build_object('.$subject_cert.')';			
-	}
-	else{
-		$subject_cert = 'NULL';
-	}
 	*/
-	//echo 'Подпись действительна!';
+	echo 'Время проверки='.$verif_res->checkTime.'<br>';
+	echo '</BR></BR>';
 
 ?>

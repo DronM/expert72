@@ -183,7 +183,7 @@ function DocFlowOutDialog_View(id,options){
 		this.addElement(new FileUploaderDocFlowOut_View(this.getId()+":attachments",{
 			"mainView":this,
 			"items":files,
-			"templateOptions":{"isNotSent":(st!="registered")},
+			"templateOptions":{"isNotSent":(st!="registered" || is_admin)},
 			"akt1c":akt1c,
 			"order1c":order1c,
 			"getCustomFolderDefault":function(){
@@ -460,7 +460,7 @@ DocFlowOutDialog_View.prototype.onGetData = function(resp,cmd){
 		DOMHelper.delClass(n,"hidden");
 	}
 	
-	if (st=="registered"){
+	if (st=="registered" && window.getApp().getServVar("role_id")!="admin"){
 		this.setEnabled(false);
 		this.getElement("attachments").setEnabled(true);
 		//delete!!!

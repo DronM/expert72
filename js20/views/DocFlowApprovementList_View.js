@@ -56,7 +56,8 @@ function DocFlowApprovementList_View(id,options){
 			"binding":new CommandBinding({
 				"control":new DocFlowImportanceTypeSelect(id+":filter-ctrl-doc_flow_importance_type",{"contClassName":"form-group-filter"}),
 				"field":new FieldInt("doc_flow_importance_type_id")
-			})		
+			}),
+			"sign":"e"		
 		}
 		,"closed":{
 			"binding":new CommandBinding({
@@ -70,7 +71,8 @@ function DocFlowApprovementList_View(id,options){
 					]
 				}),
 				"field":new FieldBool("closed")
-			})		
+			}),
+			"sign":"e"		
 		}
 		,"doc_flow_importance_type":{
 			"binding":new CommandBinding({
@@ -78,6 +80,17 @@ function DocFlowApprovementList_View(id,options){
 				"field":new FieldInt("doc_flow_importance_type_id")
 			})		
 		}
+		,"contract_state":{
+			"binding":new CommandBinding({
+				"control":new Enum_application_states(id+":filter-ctrl-contract_state",{
+					"labelCaption":"Статус контракта:",
+					"contClassName":"form-group-filter"
+				}),
+				"field":new FieldString("contract_state")
+			}),
+			"sign":"e"		
+		}
+		
 	};
 	
 	var columns = [

@@ -28,10 +28,11 @@ function FileUploaderApplication_View(id,options){
 	options.fileAddClass = "uploader-file-add-"+this.m_documentType;
 	options.fileListClass = "uploader-file-list-"+this.m_documentType;
 	options.template = window.getApp().getTemplate("ApplicationDocuments"); 
+	
 	options.templateOptions = {
 		"docType" : this.m_documentType,
 		"notReadOnly":!options.readOnly
-	};
+	};	
 	options.fileTemplate = window.getApp().getTemplate("ApplicationFile"); 
 	options.fileTemplateOptions = {
 		"docType":this.m_documentType,
@@ -46,6 +47,7 @@ function FileUploaderApplication_View(id,options){
 	options.customUploadServer = window.getApp().getServVar("custom_app_upload_server");
 	
 	FileUploaderApplication_View.superclass.constructor.call(this,id,options);
+	
 }
 extend(FileUploaderApplication_View,FileUploader_View);
 
@@ -112,14 +114,13 @@ FileUploaderApplication_View.prototype.downloadFile = function(btnCtrl){
 	pm.setFieldValue("id",btnCtrl.getAttr("file_id"));
 	pm.download();
 	//signature
+	/*
 	if (btnCtrl.getAttr("file_signed")=="true"){
-		/*
-		var contr_sig = new Application_Controller();
-		*/
 		var pm_sig = contr.getPublicMethod("get_file_sig");
 		pm_sig.setFieldValue("id",btnCtrl.getAttr("file_id"));
 		pm_sig.download(null,1);
 	}
+	*/
 }
 
 FileUploaderApplication_View.prototype.calcFileTotals = function(docId){
@@ -165,4 +166,21 @@ FileUploaderApplication_View.prototype.setFileOptions = function(fileOpts,file){
 	}
 		
 	fileOpts.file_date_time_formatted = DateHelper.format(DateHelper.strtotime(file.date_time),"d/m/y");	
+}
+
+
+FileUploaderApplication_View.prototype.signFile = function(fileId,itemId){
+	
+	var cades = window.getApp().getCadesAPI();
+	var cert_lits_ctrl = this.m_mainView.getCertBoxControl();
+	if (!cades || !cades.getCertListCount() || !cert_lits_ctrl || !cert_lits_ctrl.getSelectedCert()){
+		throw new Error("Сертификат для подписи не выбран!");
+	}
+	
+	FileUploaderApplication_View.superclass.signFile.call(this,fileId,itemId,cert_lits_ctrl.getSelectedCert());
+}
+FileUploader_View.prototype.onSignClick = function(fileId,itemId){
+	var pm_sig = (new Application_Controller()).getPublicMethod("get_file_sig");
+	pm_sig.setFieldValue("id",fileId);
+	pm_sig.download(null,1);
 }

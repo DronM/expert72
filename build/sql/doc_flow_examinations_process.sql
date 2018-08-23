@@ -261,7 +261,7 @@ BEGIN
 					legal_address	= v_app_applicant->'legal_address',
 					bank_accounts	= v_app_applicant->'bank_accounts',
 					client_type	= 
-						CASE WHEN v_app_applicant->>'client_type' IS NULL THEN 'enterprise'
+						CASE WHEN v_app_applicant->>'client_type' IS NULL OR v_app_applicant->>'client_type'='on' THEN 'enterprise'
 						ELSE (v_app_applicant->>'client_type')::client_types
 						END,
 					base_document_for_contract = v_app_applicant->>'base_document_for_contract',
@@ -290,7 +290,9 @@ BEGIN
 						person_registr_paper
 					)
 					VALUES(
-						v_app_applicant->>'name',
+						CASE WHEN v_app_applicant->>'name' IS NULL THEN v_app_applicant->>'name_full'
+						ELSE v_app_applicant->>'name'
+						END,
 						v_app_applicant->>'name_full',
 						v_app_applicant->>'inn',
 						v_app_applicant->>'kpp',
@@ -301,7 +303,7 @@ BEGIN
 						v_app_user_id,
 						v_app_applicant->'legal_address',
 						v_app_applicant->'bank_accounts',
-						CASE WHEN v_app_applicant->>'client_type' IS NULL THEN 'enterprise'
+						CASE WHEN v_app_applicant->>'client_type' IS NULL OR v_app_applicant->>'client_type'='on' THEN 'enterprise'
 						ELSE (v_app_applicant->>'client_type')::client_types
 						END,
 						v_app_applicant->>'base_document_for_contract',

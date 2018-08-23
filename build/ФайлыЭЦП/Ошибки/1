@@ -1,5 +1,0 @@
-
-cat 1.pdf.pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > i ".extracted.crt" }'
-
-
-openssl x509 -subject_hash -issuer_hash -in 1.extracted.crt -noout

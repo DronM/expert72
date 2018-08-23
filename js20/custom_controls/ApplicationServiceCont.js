@@ -32,6 +32,7 @@ function ApplicationServiceCont(id,options){
 	this.m_mainView = options.mainView;
 	
 	options.templateOptions = options.templateOptions || {};
+	//options.template = window.getApp().getTemplate("ApplicationServiceCont");
 	
 	var self = this;
 	options.addElement = function(){

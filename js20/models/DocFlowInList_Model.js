@@ -79,6 +79,33 @@ function DocFlowInList_Model(options){
 	
 	filed_options.autoInc = false;	
 	
+	options.fields.from_applications_ref = new FieldJSON("from_applications_ref",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.from_contract_id = new FieldInt("from_contract_id",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.from_contracts_ref = new FieldJSON("from_contracts_ref",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
 	options.fields.subject = new FieldText("subject",filed_options);
 	
 				

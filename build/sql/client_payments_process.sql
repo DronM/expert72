@@ -70,7 +70,7 @@ BEGIN
 				--Устанавливается автоматически из загрузки оплат
 				INSERT INTO application_processes
 				(application_id, date_time, state, user_id, end_date_time)
-				VALUES (v_application_id, NEW.pay_date::timestampTZ, 'expertise'::application_states, v_user_id, v_work_end_date);
+				VALUES (v_application_id, (NEW.pay_date+'23:59:59'::interval)::timestampTZ, 'expertise'::application_states, v_user_id, v_work_end_date);
 			
 				--А если это ПД и есть связная достоверность ОДНОВРЕМЕННО - сменить там тоже
 				IF v_simult_contr_id IS NOT NULL THEN
@@ -86,6 +86,10 @@ BEGIN
 					VALUES (v_simult_app_id, NEW.pay_date::timestampTZ, 'expertise'::application_states, v_user_id, v_work_end_date);
 				
 				END IF;
+				
+				--А если уже есть статусы после оплаты (вернулся контракт)
+				DELETE FROM application_processes
+				WHERE date_time>NEW.pay_date AND application_id=v_application_id AND state='waiting_for_pay';
 			END IF;	
 		END IF;
 				

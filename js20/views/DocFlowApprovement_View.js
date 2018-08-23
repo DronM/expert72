@@ -77,8 +77,7 @@ function DocFlowApprovement_View(id,options){
 	options.templateOptions.notification = (this.m_formVariant=="notification");	 
 	
 	var is_admin = (window.getApp().getServVar("role_id")=="admin");
-	options.templateOptions.correction = (is_admin && !doc_closed);
-	 
+	options.templateOptions.correction = (is_admin);// && !doc_closed
 	options.addElement = function(){
 		var bs = window.getBsCol();
 		var editContClassName = "input-group "+bs+"10";
@@ -330,17 +329,21 @@ DocFlowApprovement_View.prototype.onGetData = function(resp,cmd){
 		var is_new = (this.getCmd()=="insert");
 	
 		if (!is_new){
-			this.setEnabled(false);
 			this.getControlOK().setEnabled(false);
-			if (!model.getFieldValue("closed") && (window.getApp().getServVar("role_id")=="admin")){
+			//!model.getFieldValue("closed") && 
+			if (window.getApp().getServVar("role_id")=="admin"){
 				this.getElement("recipient_list_ref").m_correction = true;
+				/*
 				this.getElement("recipient_list_ref").setEnabled(true);
 				this.getElement("current_step").setEnabled(true);
 				this.getElement("close_result").setEnabled(true);
 				this.getElement("cmdCorrection").setEnabled(true);
 				this.getElement("close_date_time").setEnabled(true);
+				*/
 			}
-			
+			else{
+				this.setEnabled(false);
+			}
 			var res = "";
 			if (model.getField("close_date_time").getValue()){
 				res = window.getApp().getEnum("doc_flow_approvement_results",model.getField("close_result").getValue())+

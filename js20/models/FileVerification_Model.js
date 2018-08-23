@@ -49,24 +49,6 @@ function FileVerification_Model(options){
 	
 	filed_options.autoInc = false;	
 	
-	options.fields.subject_cert = new FieldJSONB("subject_cert",filed_options);
-	
-				
-	
-	var filed_options = {};
-	filed_options.primaryKey = false;	
-	
-	filed_options.autoInc = false;	
-	
-	options.fields.issuer_cert = new FieldJSONB("issuer_cert",filed_options);
-	
-				
-	
-	var filed_options = {};
-	filed_options.primaryKey = false;	
-	
-	filed_options.autoInc = false;	
-	
 	options.fields.check_result = new FieldBool("check_result",filed_options);
 	
 				
@@ -78,24 +60,6 @@ function FileVerification_Model(options){
 	
 	options.fields.check_time = new FieldFloat("check_time",filed_options);
 	options.fields.check_time.getValidator().setMaxLength('15');
-	
-				
-	
-	var filed_options = {};
-	filed_options.primaryKey = false;	
-	
-	filed_options.autoInc = false;	
-	
-	options.fields.date_from = new FieldDate("date_from",filed_options);
-	
-				
-	
-	var filed_options = {};
-	filed_options.primaryKey = false;	
-	
-	filed_options.autoInc = false;	
-	
-	options.fields.date_to = new FieldDate("date_to",filed_options);
 	
 				
 	

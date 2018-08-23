@@ -76,11 +76,18 @@
 									</div>
 								</div>
 							</div>
-
+							
+							<!-- IE8 condition -->
+							<xsl:comment><![CDATA[[if IE 8]>
+							<div class="alert alert-danger alert-styled-left alert-bordered">К сожалению, работа в личном кабинете с данным браузером невозможна!
+							</div>
+							<![endif]]]></xsl:comment>
+							
 							<div class="form-group">
 								<div id="Login:submit_login" class="btn bg-{$COLOR_PALETTE} btn-block">Войти <i class="icon-arrow-right14 position-right"></i></div>
 							</div>
 
+							<!--
 							<div class="content-divider text-muted form-group"><span>или авторизуйтесь через</span></div>
 							<ul class="list-inline form-group list-inline-condensed text-center">
 								<li><a href="#" class="btn border-indigo text-indigo btn-flat btn-icon btn-rounded"><i class="icon-facebook"></i></a></li>
@@ -88,7 +95,7 @@
 								<li><a href="#" class="btn border-slate-600 text-slate-600 btn-flat btn-icon btn-rounded"><i class="icon-github"></i></a></li>
 								<li><a href="#" class="btn border-info text-info btn-flat btn-icon btn-rounded"><i class="icon-twitter"></i></a></li>
 							</ul>
-
+							-->
 							<div class="content-divider text-muted form-group"><span>Не зарегистрированы?</span></div>
 							<a href="index.php?v=Registration" class="btn btn-default btn-block content-group">Регистрация</a>
 						</div>

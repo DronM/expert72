@@ -73,6 +73,9 @@ function AppExpert(options){
 		$('body').toggleClass('sidebar-xs');
 	}
 	
+	//cades
+	this.m_cades = new CadesAPI();
+	
 }
 extend(AppExpert,App);
 
@@ -160,4 +163,15 @@ AppExpert.prototype.magnify = function(dir){
 		}
 		*/	
 	}
+}
+
+AppExpert.prototype.getCadesAPI = function(){
+	return this.m_cades;
+}
+AppExpert.prototype.setDoNotLoadCadesPlugin = function(v){
+	console.log("Setting doNotLoadCadesPlugin to "+v)
+	//this.storageSet("doNotLoadCadesPlugin",v);
+}
+AppExpert.prototype.getDoNotLoadCadesPlugin = function(){
+	return this.storageGet("doNotLoadCadesPlugin");
 }

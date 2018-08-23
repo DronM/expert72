@@ -1,7 +1,8 @@
 <div id="{{id}}" class="{{panelClass}}">
 	<div class="panel-heading">
 		<h6 class="panel-title">
-			<span class="text-semibold">{{IND}}) Сведения об исполнителе</span>
+			<span class="text-semibold app-client-header">{{IND}}) Сведения об исполнителе</span>
+			
 			<a class="heading-elements-toggle">
 				<i class="icon-more"></i>
 			</a>
@@ -16,21 +17,21 @@
 		</div>
 	</div>
 	
-	<div class="panel-body" style="display: block;">	
+	<div class="panel-body" style="display: block;">		
+		{{#isClient}}
 		<div class="dropdown">
-			{{#isClient}}
-			<button class="btn bg-{{colorClass}} dropdown-toggle fillClientData" type="button" data-toggle="dropdown">Заполнить
+			<button class="btn bg-{{colorClass}} dropdown-toggle fillClientData pull-right" type="button" data-toggle="dropdown">Заполнить
 				<span class="caret"></span>
 			</button>
-			<ul class="dropdown-menu" title="Зполнить по другим данным">
+			<ul class="dropdown-menu dropdown-menu-right" title="Зполнить по другим данным">
 				<li><a id="{{id}}:fillOnApplicant" href="#">По заявителю</a></li>
 				<li><a id="{{id}}:fillOnCustomer" href="#">По техн.заказчику</a></li>				
 				<li><a id="{{id}}:fillOnApplicant" href="#">По застройщику</a></li>						
 				<li><a id="{{id}}:fillOnClientList" href="#">Выбрать из списка клиентов</a></li>
 			</ul>
-			{{/isClient}}
 		</div> 
-	
+		{{/isClient}}
+			
 		<div id="{{id}}:client_type">
 		</div>
 		<div id="{{id}}:name">

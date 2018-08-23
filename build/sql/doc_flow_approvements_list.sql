@@ -42,14 +42,26 @@ CREATE OR REPLACE VIEW doc_flow_approvements_list AS
 			FROM doc_flow_approvements AS t1 WHERE t1.id=t.id
 		) AS recipient_employee_id_list,
 		
-		t.employee_id
+		t.employee_id,
 		
+		st.state AS contract_state
 		
 	FROM doc_flow_approvements AS t
 	LEFT JOIN doc_flow_out ON doc_flow_out.id = (t.subject_doc->'keys'->>'id')::int AND t.subject_doc->>'dataType'='doc_flow_out'
 	LEFT JOIN doc_flow_inside ON doc_flow_inside.id = (t.subject_doc->'keys'->>'id')::int AND t.subject_doc->>'dataType'='doc_flow_inside'
 	LEFT JOIN doc_flow_importance_types ON doc_flow_importance_types.id=t.doc_flow_importance_type_id
 	LEFT JOIN employees ON employees.id=t.employee_id
+	LEFT JOIN contracts ON contracts.id=doc_flow_out.to_contract_id
+	LEFT JOIN applications ON applications.id=contracts.application_id
+	LEFT JOIN (
+		SELECT
+			t.application_id,
+			max(t.date_time) AS date_time
+		FROM application_processes t
+		GROUP BY t.application_id
+	) AS h_max ON h_max.application_id=applications.id
+	LEFT JOIN application_processes st
+		ON st.application_id=h_max.application_id AND st.date_time = h_max.date_time
 	
 	ORDER BY t.date_time DESC
 	;

@@ -76,6 +76,13 @@ function DocFlowInList_View(id,options){
 					"field":new FieldString("state")
 				})		
 			}
+			,"from_contract":{
+				"binding":new CommandBinding({
+					"control":new ContractEditRef(id+":filter-ctrl-from_contract",{"labelCaption":"Контракт:","contClassName":"form-group-filter"}),
+					"field":new FieldInt("from_contract_id")
+				})		
+			}
+			
 		};
 		commands = new GridCmdContainerAjx(id+":grid:cmd",{
 				"cmdFilter":true,
@@ -175,6 +182,20 @@ function DocFlowInList_View(id,options){
 		})
 		
 	];	
+	
+	if (!options.fromApp){
+		columns.push(
+			new GridCellHead(id+":grid:head:from_contracts_ref",{
+						"value":"Контракт",
+						"columns":[
+							new GridColumnRef({
+								"field":model.getField("from_contracts_ref"),
+								"form":ContractDialog_Form
+							})
+						]
+			})		
+		);
+	}
 	
 	this.addElement(new GridAjx(id+":grid",{
 		"model":model,

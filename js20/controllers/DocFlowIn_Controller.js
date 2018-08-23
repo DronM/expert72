@@ -340,6 +340,15 @@ extend(DocFlowIn_Controller,ControllerObjServer);
 	pm.addField(new FieldInt("from_application_id",f_opts));
 	var f_opts = {};
 	
+	pm.addField(new FieldJSON("from_applications_ref",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldInt("from_contract_id",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldJSON("from_contracts_ref",f_opts));
+	var f_opts = {};
+	
 	pm.addField(new FieldText("subject",f_opts));
 	var f_opts = {};
 	

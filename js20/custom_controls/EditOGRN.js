@@ -31,10 +31,11 @@ function EditOGRN(id,options){
 	
 	//ВРЕМЕННО ОТКЛЮЧЕНО
 	var self = this;
+	/*
 	options.events.change = function(){
 		self.validate();
 	}
-	
+	*/
 	EditOGRN.superclass.constructor.call(this,id,options);
 }
 extend(EditOGRN,EditString);
@@ -65,7 +66,7 @@ EditOGRN.prototype.validate = function(){
 
 EditOGRN.prototype.setIsEnterprise = function(v){
 	var len = (v)? this.ENT_LEN:this.PERS_LEN;
-	this.setAttr("maxlength",len);
+	this.setMaxLength(len);
 	//this.setEditMask("99999999999999999999".substr(0,len));
 }
 

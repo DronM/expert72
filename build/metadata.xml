@@ -2,7 +2,7 @@
 <metadata owner="expert72">
 	<versions>
 		<version dateOpen="2017-09-27 12:09:48" dateClose="2017-12-08 10:12:08">1.001 
-		<lastBuild>2018-08-07 06:02:49</lastBuild></version>
+		<lastBuild>2018-08-23 07:18:55</lastBuild></version>
 		<version dateOpen="2017-12-08 11:12:01" dateClose="2017-12-08 11:12:04">1.002</version>
 		<version dateOpen="2017-12-08 11:12:20" dateClose="2017-12-08 11:12:20">1.0.3</version>
 		<version dateOpen="2017-12-12 11:12:07" dateClose="2017-12-12 11:12:07">1.0.4</version>
@@ -73,6 +73,7 @@
 		<version dateOpen="2018-07-20 07:07:57" dateClose="2018-07-26 05:07:58">1.0.70</version>
 		<version dateOpen="2018-07-26 05:07:58" dateClose="2018-08-03 05:08:32">1.0.71</version>
 		<version dateOpen="2018-08-03 05:08:34" dateClose="2018-08-07 06:08:03">1.0.72</version>
+		<version dateOpen="2018-08-07 09:08:25" dateClose="2018-08-23 07:08:19">1.0.73</version>
 	</versions>
 	<globalFilters>
 		<field id="user_id"/>
@@ -1549,6 +1550,9 @@
 			<field id="reg_number" dataType="String" length="30"/>
 			<field id="from_addr_name" dataType="String" length="250"/>
 			<field id="from_application_id" dataType="Int" refTable="applications" refField="id"/>
+			<field id="from_applications_ref" dataType="JSON"/>
+			<field id="from_contract_id" dataType="Int" refTable="contracts" refField="id"/>
+			<field id="from_contracts_ref" dataType="JSON"/>
 			<field id="subject" dataType="Text"/>
 			<field id="doc_flow_types_ref" dataType="JSON"/>
 			<field id="recipient" dataType="JSON"/>
@@ -1771,7 +1775,7 @@
 			</index>
 			<constraint id="doc_flow_acqaintances_valid_ref" expression="check_id_existance(subject_doc_type,subject_doc_id)"/>
 		</model>
-		<model id="DocFlowFilfilment" parent="ModelSQL" dataTable="doc_flow_fulfilments" virtual="FALSE">
+		<model id="DocFlowFulfilment" parent="ModelSQL" dataTable="doc_flow_fulfilments" virtual="FALSE">
 			<defaultOrder>
 				<field id="date_time"/>
 			</defaultOrder>
@@ -1915,6 +1919,7 @@
 			<field id="step_count" dataType="Int"/>
 			<field id="current_step" dataType="Int"/>
 			<field id="close_result" dataType="Enum" enumId="doc_flow_approvement_results"/>
+			<field id="contract_state" dataType="Enum" enumId="application_states"/>
 		</model>
 		<model id="DocFlowApprovementDialog" parent="ModelSQL" dataTable="doc_flow_approvements_dialog" virtual="TRUE">
 			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE" required="FALSE"/>
@@ -2021,9 +2026,11 @@
 			<index id="doc_flow_out_client_application_idx">
 				<field id="application_id"/>
 			</index>
+			<!--
 			<index unique="TRUE" id="doc_flow_out_client_reg_number_idx">
 				<expression>lower(reg_number)</expression>
 			</index>
+			-->
 			<globalFilter id="user_id"/>
 		</model>
 		<model id="DocFlowOutClientList" parent="ModelSQL" dataTable="doc_flow_out_client_list" virtual="TRUE" baseModelId="DocFlowOutClient">
@@ -2643,16 +2650,32 @@
 				</predefinedItem>
 			</predefinedItems>
 		</model>
-		<model id="FileVerification" parent="ModelSQL" dataTable="file_verification" virtual="FALSE">
+		<model id="FileVerification" parent="ModelSQL" dataTable="file_verifications" virtual="FALSE">
 			<field id="file_id" dataType="String" length="36" required="TRUE" primaryKey="TRUE"/>
 			<field id="date_time" dataType="DateTimeTZ"/>
-			<field id="subject_cert" dataType="JSONB"/>
-			<field id="issuer_cert" dataType="JSONB"/>
 			<field id="check_result" dataType="Bool"/>
 			<field id="check_time" dataType="Float" length="15" precision="4"/>
-			<field id="date_from" dataType="Date"/>
-			<field id="date_to" dataType="Date"/>
 			<field id="error_str" dataType="Text"/>
+		</model>
+		<model id="UserCertificate" parent="ModelSQL" dataTable="user_certificates" virtual="FALSE">
+			<field id="id" dataType="Int" required="TRUE" primaryKey="TRUE" autoInc="TRUE"/>
+			<field id="fingerprint" dataType="String" length="40" required="TRUE"/>
+			<field id="user_id" dataType="Int" refTable="users" refField="id" required="TRUE"/>
+			<field id="date_time" dataType="DateTimeTZ" required="TRUE"/>
+			<field id="date_time_from" dataType="DateTimeTZ" required="TRUE"/>
+			<field id="date_time_to" dataType="DateTimeTZ" required="TRUE"/>
+			<field id="subject_cert" dataType="JSONB"/>
+			<field id="issuer_cert" dataType="JSONB"/>
+			<index id="user_certificates_fingerprint_user_idx" unique="TRUE">
+				<field id="fingerprint"/>
+				<field id="user_id"/>
+			</index>
+		</model>
+		<model id="FileSignatures" parent="ModelSQL" dataTable="file_signatures" virtual="FALSE">
+			<field id="file_id" dataType="String" length="36" required="TRUE" primaryKey="TRUE"/>
+			<field id="signature_file_id" dataType="String" length="36" required="TRUE" primaryKey="TRUE"/>
+			<field id="sign_date_time" dataType="DateTimeTZ"/>
+			<field id="user_certificate_id" dataType="Int" refTable="user_certificates" refField="id"/>
 		</model>
 	</models>
 	<constants>
@@ -3874,6 +3897,11 @@
 		<jsScript file="ext/DragnDrop/DragMaster.js"/>
 		<jsScript file="ext/DragnDrop/DragObject.js"/>
 		<jsScript file="ext/DragnDrop/DropTarget.js"/>
+		<!--cades plugin-->
+		<jsScript file="ext/cadesplugin/es6-promise.min.js" compressed="TRUE" standalone="TRUE"/>
+		<jsScript file="ext/cadesplugin/cadesplugin_api.js"/>
+		<jsScript file="ext/cadesplugin/CertificateAdjuster.js"/>
+		<jsScript file="ext/cadesplugin/CadesAPI.js"/>
 		<!-- core -->
 		<jsScript file="core/extend.js"/>
 		<jsScript file="core/App.js"/>
@@ -4014,6 +4042,8 @@
 		<jsScript file="controls/EditRadio.js"/>
 		<jsScript file="controls/EditSelect.js"/>
 		<jsScript file="controls/EditSelectRef.js"/>
+		<!-- Cades Certificate box -->
+		<jsScript file="ext/cadesplugin/EditCertificateSelect.js"/>
 		<jsScript file="controls/rs/EditSelectRef.rs_ru.js" resource="ru"/>
 		<jsScript file="controls/EditSelectOption.js"/>
 		<jsScript file="controls/EditSelectOptionRef.js"/>
@@ -4027,7 +4057,7 @@
 		<jsScript file="controls/HiddenKey.js"/>
 		<jsScript file="controls/EditJSON.js"/>
 		<!--<jsScript file="controls/EditHTML.js" />-->
-		<jsScript file="controls/EditFile.js"/>
+		<jsScript file="custom_controls/EditFile.js"/>
 		<jsScript file="controls/rs/EditFile.rs_ru.js" resource="ru"/>
 		<jsScript file="controls/EditCompound.js"/>
 		<jsScript file="controls/rs/EditCompound.rs_ru.js" resource="ru"/>
@@ -4177,6 +4207,7 @@
 		<jsScript file="controls/rs/ConstantGrid.rs_ru.js" resource="ru"/>
 		<jsScript file="controls/Captcha.js"/>
 		<jsScript file="controls/ViewTemplate.js"/>
+		<jsScript file="controls/ToolTip.js"/>
 		<!-- **** Forms *** -->
 		<jsScript file="forms/ViewList_Form.js"/>
 		<jsScript file="forms/MainMenuConstructor_Form.js"/>
@@ -4435,6 +4466,7 @@
 		<jsScript file="custom_controls/ContractObjInfBtn.js"/>
 		<jsScript file="custom_controls/ContractObjInfGridCmd.js"/>
 		<jsScript file="custom_controls/OfficeBankAccSelect.js"/>
+		<jsScript file="custom_controls/FileSigContainer.js"/>
 		<jsScript file="enum_controls/Enum_role_types.js"/>
 		<jsScript file="views/rs_ru.js"/>
 		<jsScript file="views/rs_common_ru.js"/>
@@ -4718,6 +4750,9 @@
 		<jsScript file="models/RepReestrCostEval_Model.js"/>
 		<jsScript file="models/FileVerification_Model.js"/>
 		<jsScript file="models/OfficeBankAccList_Model.js"/>
+		<jsScript file="models/UserCertificate_Model.js"/>
+		<jsScript file="models/DocFlowFulfilment_Model.js"/>
+		<jsScript file="models/FileSignatures_Model.js"/>
 	</jsScripts>
 	<cssScripts>
 		<cssScript file="assets/css/icons/icomoon/styles.css" compressed="TRUE" standalone="TRUE"/>

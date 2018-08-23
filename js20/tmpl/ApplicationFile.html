@@ -8,16 +8,6 @@
 		<i class="file-pic-{{docType}} glyphicon glyphicon-cloud-upload" title="Необходимо загрузить файл!"></i>
 		{{/file_not_uploaded}}
 				
-		{{#separateSignature}}		
-			{{#file_signed}}
-			<i id="{{id}}_sig" class="icon-file-locked" title="Файл подписан ЭЦП"></i>	
-			{{/file_signed}}
-		
-			{{#file_not_signed}}
-			<i id="{{id}}_sig" class="icon-file-minus" title="Необходимо загрузить файл ЭЦП"></i>	
-			{{/file_not_signed}}		
-		{{/separateSignature}}
-		
 	{{/file_not_deleted}}
 	
 	{{#file_deleted}}
@@ -39,6 +29,10 @@
 	
 	{{#file_not_deleted}}
 	
+	{{#separateSignature}}
+	<span id="{{id}}:sigList"></span>
+	{{/separateSignature}}
+	
 	{{#file_deletable}}
 	<div id="{{id}}_del" class="btn btn-sm fileDeleteBtn" title="Удалить файл">
 		<i class="glyphicon glyphicon-trash"></i>	
@@ -52,12 +46,12 @@
 	
 	{{#customFolder}}
 	<span id="{{id}}:include">
-	<span id="{{id}}:include:check"></span>
-	<span id="{{id}}:include:folder"></span>
-	{{#customFolderAlt}}
-	<span id="{{id}}:include:alter"></span>
-	<span id="{{id}}:include:newFolder"></span>
-	{{/customFolderAlt}}
+		<span id="{{id}}:include:check"></span>
+		<span id="{{id}}:include:folder"></span>
+		{{#customFolderAlt}}
+		<span id="{{id}}:include:alter"></span>
+		<span id="{{id}}:include:newFolder"></span>
+		{{/customFolderAlt}}
 	</span>
 	{{/customFolder}}
 	

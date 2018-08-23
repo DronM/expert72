@@ -3,6 +3,10 @@ CREATE DATABASE expert72;
 GRANT ALL PRIVILEGES ON DATABASE expert72 TO expert72;
 GRANT SELECT ON ALL TABLES IN SCHEMA public TO expert72;
 
+-Восстанавливает в другую базу
+pg_dump -U polimerplast -Fc -v polimerplast > plpl.dump
+pg_restore -U postgres -v -e -d plpl_test plpl.dump
+
 ПРОСТОЙ DUMP!!!
 sudo service postgresql stop
 sudo service postgresql start
@@ -286,3 +290,6 @@ CREATE TRIGGER client_payments_after_trigger
   FOR EACH ROW
   EXECUTE PROCEDURE public.client_payments_process();
 
+
+select  id,create_dt,user_id from applications where NOT id IN (SELECT application_id FROM contracts)
+AND (applicant->>'client_type'='on' OR customer->>'client_type'='on' OR developer->>'client_type'='on')

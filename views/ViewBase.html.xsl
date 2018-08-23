@@ -147,7 +147,7 @@
 		application.showMenuItem(iRef,'<xsl:value-of select="$def_menu_item/@c"/>','<xsl:value-of select="$def_menu_item/@f"/>','<xsl:value-of select="$def_menu_item/@t"/>');
 	}
 	</xsl:if>
-	
+		
 </xsl:template>
 
 <xsl:template name="initReminder">
@@ -179,7 +179,7 @@
 		</xsl:if>	
 		-->
 	});
-	
+		
 </xsl:template>
 
 <!--************* Page head ******************** -->

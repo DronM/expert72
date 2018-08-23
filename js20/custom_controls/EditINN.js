@@ -30,10 +30,13 @@ function EditINN(id,options){
 	options.events = options.events || {};
 	
 	var self = this;
+	/*
 	options.events.change = function(){
 		self.validate();
 	}
+	*/
 	EditINN.superclass.constructor.call(this,id,options);
+	
 }
 extend(EditINN,EditString);
 
@@ -62,7 +65,7 @@ EditINN.prototype.validate = function(){
 EditINN.prototype.setIsEnterprise = function(v){
 //console.log("EditINN.prototype.setIsEnterprise="+v)
 	var len = v? this.ENT_LEN:this.PERS_LEN;
-	this.setAttr("maxlength",len);
+	this.setMaxLength(len);
 	//this.setEditMask("99999999999999999999".substr(0,len));
 	//this.applyMask();
 }

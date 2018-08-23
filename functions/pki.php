@@ -3,75 +3,115 @@
 	
 	function pki_log_sig_check($file_doc_sig, $file_doc,$dbFileId,&$pkiMan,&$dbLink){
 		//$pkiMan->setLogLevel('error');
-		$cert_data = $pkiMan->verifySig($file_doc_sig, $file_doc);
-							
-		if (isset($cert_data->subject)){
-			$subject_cert = '';
-			foreach($cert_data->subject as $prop_id=>$prop_v){
-				$subject_cert.= ($subject_cert=='')? '':','; 
-				
-				$db_prop_v = NULL;
-				FieldSQLString::formatForDb($dbLink,$prop_v,$db_prop_v);
-				
-				$subject_cert.= sprintf("'%s',%s",$prop_id,$db_prop_v);
-			}
-			$subject_cert = 'jsonb_build_object('.$subject_cert.')';			
-		}
-		else{
-			$subject_cert = 'NULL';
-		}
-		
-		if (isset($cert_data->issuer)){
-			$issuer_cert = '';
-			foreach($cert_data->issuer as $prop_id=>$prop_v){
-				$issuer_cert.= ($issuer_cert=='')? '':','; 
-				
-				$db_prop_v = NULL;
-				FieldSQLString::formatForDb($dbLink,$prop_v,$db_prop_v);
-				
-				$issuer_cert.= sprintf("'%s',%s",$prop_id,$db_prop_v);
-			}
-			$issuer_cert = 'jsonb_build_object('.$issuer_cert.')';			
-		}
-		else{
-			$issuer_cert = 'NULL';
-		}
+		$verif_res = $pkiMan->verifySig($file_doc_sig, $file_doc);
 		
 		$db_checkError = NULL;
-		FieldSQLString::formatForDb($dbLink,$cert_data->checkError,$db_checkError);
-
-		$db_dateFrom = isset($cert_data->dateFrom)? "'".date('Y-m-d',$cert_data->dateFrom)."'":'NULL';
-		$db_dateTo = isset($cert_data->dateTo)? "'".date('Y-m-d',$cert_data->dateTo)."'":'NULL';
-		$db_checkPassed = $cert_data->checkPassed? 'TRUE':'FALSE';
+		FieldSQLString::formatForDb($dbLink,$verif_res->checkError,$db_checkError);
+		$db_checkPassed = $verif_res->checkPassed? 'TRUE':'FALSE';
 		
 		$dbLink->query(sprintf(		
-		"INSERT INTO file_verification
-		(file_id,date_time,date_from,date_to,subject_cert,issuer_cert,check_time,check_result,error_str)
-		VALUES (%s,now(),%s,%s,%s,%s,%f,%s,%s)
+		"INSERT INTO file_verifications
+		(file_id,date_time,check_time,check_result,error_str)
+		VALUES (%s,now(),%f,%s,%s)
 		ON CONFLICT (file_id) DO UPDATE
 		SET
 			date_time = now(),
-			date_from = %s,
-			date_to = %s,
-			subject_cert = %s,
-			issuer_cert = %s,
 			check_time = %f,
 			check_result = %s,
 			error_str = %s",
 		$dbFileId,
-		$db_dateFrom,
-		$db_dateTo,
-		$subject_cert,$issuer_cert,
-		$cert_data->checkTime,
+		$verif_res->checkTime,
 		$db_checkPassed,
 		$db_checkError,
-		$db_dateFrom,
-		$db_dateTo,
-		$subject_cert,$issuer_cert,
-		$cert_data->checkTime,
+		$verif_res->checkTime,
 		$db_checkPassed,
 		$db_checkError
 		));
-	
+		
+		foreach($verif_res->signatures AS $cert_data){
+		
+			if (isset($cert_data->subject)){
+				$subject_cert = '';
+				foreach($cert_data->subject as $prop_id=>$prop_v){
+					$subject_cert.= ($subject_cert=='')? '':','; 
+				
+					$db_prop_v = NULL;
+					FieldSQLString::formatForDb($dbLink,$prop_v,$db_prop_v);
+				
+					$subject_cert.= sprintf("'%s',%s",$prop_id,$db_prop_v);
+				}
+				$subject_cert = 'jsonb_build_object('.$subject_cert.')';			
+			}
+			else{
+				$subject_cert = 'NULL';
+			}
+		
+			if (isset($cert_data->issuer)){
+				$issuer_cert = '';
+				foreach($cert_data->issuer as $prop_id=>$prop_v){
+					$issuer_cert.= ($issuer_cert=='')? '':','; 
+				
+					$db_prop_v = NULL;
+					FieldSQLString::formatForDb($dbLink,$prop_v,$db_prop_v);
+				
+					$issuer_cert.= sprintf("'%s',%s",$prop_id,$db_prop_v);
+				}
+				$issuer_cert = 'jsonb_build_object('.$issuer_cert.')';			
+			}
+			else{
+				$issuer_cert = 'NULL';
+			}
+		
+			$db_dateFrom = isset($cert_data->dateFrom)? "'".date('Y-m-d',$cert_data->dateFrom)."'":'NULL';
+			$db_dateTo = isset($cert_data->dateTo)? "'".date('Y-m-d',$cert_data->dateTo)."'":'NULL';		
+		
+			$db_sign_date_time = isset($cert_data->signDate)? "'".date('Y-m-d',$cert_data->signDate)."'":'NULL';
+		
+			$user_cert_ar = NULL;
+			if (isset($cert_data->fingerprint)){
+				$db_fingerprint = NULL;
+				FieldSQLString::formatForDb($dbLink,$cert_data->fingerprint,$db_fingerprint);	
+		
+				$user_cert_ar = $dbLink->query_first(sprintf(
+					"INSERT INTO user_certificates
+					(fingerprint,
+					  user_id,
+					  date_time,
+					  date_time_from,
+					  date_time_to,
+					  subject_cert,
+					  issuer_cert)
+					VALUES (%s,%d,now(),%s,%s,%s,%s)			
+					ON CONFLICT (fingerprint,user_id) DO UPDATE
+						SET date_time=now()
+					RETURNING id",
+					$db_fingerprint,
+					$_SESSION['user_id'],			
+					$db_dateFrom,
+					$db_dateTo,
+					$subject_cert,$issuer_cert
+				));
+				
+				$dbLink->query(sprintf(
+					"INSERT INTO file_signatures
+					(file_id,signature_file_id,sign_date_time,user_certificate_id)
+					VALUES (%s,%s,%s,%d)			
+					ON CONFLICT (file_id,signature_file_id) DO UPDATE
+						SET sign_date_time=%s,
+						user_certificate_id=%d",
+					$dbFileId,
+					$dbFileId,			
+					$db_sign_date_time,
+					$user_cert_ar['id'],
+					$db_sign_date_time,$user_cert_ar['id']
+				));
+				
+			}
+			else{
+				$dbLink->query(sprintf("DELETE FROM file_signatures WHERE file_id=%s",$dbFileId));
+			}
+		}
+		
+		return $verif_res;				
 	}
 ?>

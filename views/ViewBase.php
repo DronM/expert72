@@ -116,7 +116,7 @@ class ViewBase extends ViewHTMLXSLT {
 			
 		
 		if (!DEBUG){			
-			$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/core/libraries/jquery.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/core/libraries/bootstrap.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/plugins/loaders/blockui.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/core/app.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/bootstrap-datepicker/bootstrap-datepicker.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/bootstrap-datepicker/bootstrap-datepicker.ru.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/mustache/mustache.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/jshash-2.2/md5-min.js'));
+			$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/core/libraries/jquery.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/core/libraries/bootstrap.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/plugins/loaders/blockui.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/core/app.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/bootstrap-datepicker/bootstrap-datepicker.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/bootstrap-datepicker/bootstrap-datepicker.ru.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/mustache/mustache.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/jshash-2.2/md5-min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/cadesplugin/es6-promise.min.js'));
 			$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'lib.js'));
 			$script_id = VERSION;
 		}
@@ -144,6 +144,11 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/DragnDrop/DragMaster.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/DragnDrop/DragObject.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/DragnDrop/DropTarget.js'));
+		
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/cadesplugin/es6-promise.min.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/cadesplugin/cadesplugin_api.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/cadesplugin/CertificateAdjuster.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/cadesplugin/CadesAPI.js'));
 		
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'core/extend.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'core/App.js'));
@@ -453,6 +458,8 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/EditSelect.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/EditSelectRef.js'));
 		
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/cadesplugin/EditCertificateSelect.js'));
+		
 	if (
 	(isset($_SESSION['locale_id']) && $_SESSION['locale_id']=='ru')
 	||
@@ -489,7 +496,7 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/HiddenKey.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/EditJSON.js'));
 		
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/EditFile.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/EditFile.js'));
 		
 	if (
 	(isset($_SESSION['locale_id']) && $_SESSION['locale_id']=='ru')
@@ -1068,6 +1075,7 @@ class ViewBase extends ViewHTMLXSLT {
 
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/Captcha.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/ViewTemplate.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/ToolTip.js'));
 		
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/ViewList_Form.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/MainMenuConstructor_Form.js'));
@@ -1358,6 +1366,7 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ContractObjInfBtn.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ContractObjInfGridCmd.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/OfficeBankAccSelect.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/FileSigContainer.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/Enum_role_types.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/rs_ru.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/rs_common_ru.js'));
@@ -1641,6 +1650,9 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/RepReestrCostEval_Model.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/FileVerification_Model.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/OfficeBankAccList_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/UserCertificate_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowFulfilment_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/FileSignatures_Model.js'));
 	
 			if (isset($_SESSION['scriptId'])){
 				$script_id = $_SESSION['scriptId'];

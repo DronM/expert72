@@ -32,8 +32,79 @@ Edit template instead.
 	<div class="pull-right">Данное заявление подавалось вместе с <a id="{{{{id}}}}:linkedApp" href="#">{{linkedApp}}</a></div>
 	{{/linkedAppExists}}
 </div>
+	{{#loadCadesPlugin}}
+	<div class="cadesCert">
+		{{#pluginUnsupBrowser}}
+		<div class="alert alert-danger alert-styled-left alert-bordered">К сожалению, Ваш браузер не поддерживает формирование ЭЦП личном кабинете!
+		</div>
+		{{/pluginUnsupBrowser}}
 
-	<div class="panel-body dialogForm">
+		{{#pluginSupBrowser}}
+		<div class="cadesChecking alert alert-warning alert-styled-left">
+			<div>Ваш браузер поддерживает формирование ЭЦП в личном кабинете</div>
+			<div>
+				<i class="fa fa-spinner fa-spin position-left">
+				</i>
+				Попытка загрузки КриптоПро ЭЦП браузер плагина...
+			</div>
+		</div>
+		
+		<div class="hidden cadesNotInstalled alert alert-warning alert-styled-left">Ваш браузер поддерживает формирование ЭЦП личном кабинете, но необходимо установить:
+			<ol>
+				<li>
+					<a target="_blank" rel="noopener noreferrer" href="https://www.cryptopro.ru/products/csp/overview">СКЗИ КриптоПро CSP</a>
+				</li>
+				<li>
+					<a target="_blank" rel="noopener noreferrer" href="https://www.cryptopro.ru/products/cades/plugin/get_2_0">КриптоПро ЭЦП Browser plug-in</a>			
+				</li>
+				{{#isFirefox}}
+				<li>
+					<a target="_blank" rel="noopener noreferrer" href="https://www.cryptopro.ru/sites/default/files/products/cades/extensions/firefox_cryptopro_extension_latest.xpi">Расширение браузера для работы в Firefox </a>
+				</li>
+				{{/isFirefox}}
+				{{#isOpera}}
+				<li>
+					<a target="_blank" rel="noopener noreferrer" href="https://addons.opera.com/en/extensions/details/cryptopro-extension-for-cades-browser-plug-in">Расширение браузера для Opera или Яндекс.Браузер </a>
+				</li>
+				{{/isOpera}}
+				{{#isChrome}}
+				<li>
+					<a target="_blank" rel="noopener noreferrer" href="https://chrome.google.com/webstore/detail/cryptopro-extension-for-c/iifchhfnnmpdbibifmljnfjhpififfog">Расширение браузера для Chrome </a>
+				</li>
+				{{/isChrome}}
+		
+			</ol>
+			<div>
+				<a target="_blank" rel="noopener noreferrer" href="http://cpdn.cryptopro.ru/default.asp?url=content/cades/plugin.html">Описание установки КриптоПро ЭЦП Browser plug-in в Windows</a>
+			</div>	
+			
+			<div class="doNotCadesLoadPluginCont">
+				<input class="doNotCadesLoadPlugin" type="checkbox" id="doNotCadesLoadPlugin" name="doNotCadesLoadPlugin" value="doNotCadesLoadPlugin" style="margin:5px 5px;"/>
+				<label for="doNotCadesLoadPlugin">Больше не пытаться загружать КриптоПро ЭЦП браузер плагин</label>
+			</div>
+		</div>
+		
+		<div class="hidden cadesInstalled alert alert-success alert-styled-left alert-arrow-left alert-bordered">
+			<div class="certFilling">
+				<i class="fa fa-spinner fa-spin position-left">
+				</i>
+				Чтение списка сертификатов...
+			</div>
+			<div class="certReady hidden">
+				<div>
+					<span id="{{{{id}}}}:cspName"></span>, 
+					<span id="{{{{id}}}}:cspVersion"></span>  
+					<span id="{{{{id}}}}:plugInVersion"></span>
+				</div>
+				<div id="{{{{id}}}}:certListBox"></div>
+			</div>		
+		</div>	
+		{{/pluginSupBrowser}}
+	</div>
+	
+	{{/loadCadesPlugin}}
+	
+	<div class="panel-body dialogForm appDialog">
 		<div class="tabbable">
 			<!--  {{app.COLOR_CLASS}} -->
 			<ul class="nav nav-tabs nav-tabs-highlight">				
@@ -54,43 +125,44 @@ Edit template instead.
 			
 			<div class="tab-content">
 				<div class="tab-pane fade in active" id="aplication">
-					<div id="{{{{id}}}}:inf_sent" class="hidden appState">
-					<h5 class="no-margin text-semibold text-danger">Заявление отправлено на проверку.</h5>
-					<h5 class="no-margin text-semibold text-danger">Редактирование запрещено.</h5>
-					</div>
-					<div id="{{{{id}}}}:inf_checking" class="hidden appState">
-					<h5 class="no-margin text-semibold text-danger">Заявление на рассмотрении до <span id="{{{{id}}}}:application_state_end_date_checking" class="label label-primary label-rounded"></span>.</h5>
-					<h5 class="no-margin text-semibold text-danger">Редактирование запрещено.</h5>
-					</div>					
-					<div id="{{{{id}}}}:inf_filling" class="hidden appState">
-					<h5 class="no-margin text-semibold">Для подачи необходимо заполнить заявление на 100%.</h5>
-					<h5 class="no-margin text-semibold">Все поля, отмеченные звездочкой, обязательны для заполнения.</h5>
-					<!--  При отсутствии данных, необходимо указать <u class="text-bold">«Отсутствует»</u> или <u class="text-bold">«Не требуется»</u>, для числовых полей <u class="text-bold">«0»</u>. -->
-					</div>
-					<div id="{{{{id}}}}:inf_correcting" class="hidden appState">
-					<h5 class="no-margin text-semibold">Для подачи необходимо заполнить заявление на 100%.</h5>
-					<h5 class="no-margin text-semibold">Все поля, отмеченные звездочкой, обязательны для заполнения.</h5>
-					<h5 class="no-margin text-semibold text-danger">Необходимо повторно отправить заявление до <span id="{{{{id}}}}:application_state_end_date_correcting" class="label label-primary label-rounded">.</span>.</h5>
-					</div>
-					<div id="{{{{id}}}}:inf_closed" class="hidden appState">
-					<h5 class="no-margin text-semibold">Отправлено заключение.</h5>
-					</div>
-					<div id="{{{{id}}}}:inf_closed_no_expertise" class="hidden appState">
-					<h5 class="no-margin text-semibold">Заявление закрыто без проведения экспертизы.</h5>
-					</div>					
-					<div id="{{{{id}}}}:inf_returned" class="hidden appState">
-					<h5 class="no-margin text-semibold">Отказ по заявлению. Файлы будут храниться в течении трех месяцев.</h5>
-					</div>
-					<div id="{{{{id}}}}:inf_waiting_for_pay" class="hidden appState">
-					<h5 class="no-margin text-semibold">Ожидание оплаты.</h5>
-					</div>
-					<div id="{{{{id}}}}:inf_waiting_for_contract" class="hidden appState">
-					<h5 class="no-margin text-semibold">Ожидание подписания контракта.</h5>
-					</div>
-					<div id="{{{{id}}}}:inf_expertise" class="hidden appState">
-					<h5 class="no-margin text-semibold">Проведение экспертизы проекта.</h5>
-					</div>
-										
+					<div class="alert alert-info alert-styled-left alert-bordered">
+						<div id="{{{{id}}}}:inf_sent" class="hidden appState">
+							<h5 class="no-margin text-semibold text-danger">Заявление отправлено на проверку.</h5>
+							<h5 class="no-margin text-semibold text-danger">Редактирование запрещено.</h5>
+						</div>
+						<div id="{{{{id}}}}:inf_checking" class="hidden appState">
+							<h5 class="no-margin text-semibold text-danger">Заявление на рассмотрении до <span id="{{{{id}}}}:application_state_end_date_checking" class="label label-primary label-rounded"></span>.</h5>
+							<h5 class="no-margin text-semibold text-danger">Редактирование запрещено.</h5>
+						</div>					
+						<div id="{{{{id}}}}:inf_filling" class="hidden appState">
+							<h5 class="no-margin text-semibold">Для подачи необходимо заполнить заявление на 100%.</h5>
+							<h5 class="no-margin text-semibold">Все поля, отмеченные звездочкой, обязательны для заполнения.</h5>
+						<!--  При отсутствии данных, необходимо указать <u class="text-bold">«Отсутствует»</u> или <u class="text-bold">«Не требуется»</u>, для числовых полей <u class="text-bold">«0»</u>. -->
+						</div>
+						<div id="{{{{id}}}}:inf_correcting" class="hidden appState">
+							<h5 class="no-margin text-semibold">Для подачи необходимо заполнить заявление на 100%.</h5>
+							<h5 class="no-margin text-semibold">Все поля, отмеченные звездочкой, обязательны для заполнения.</h5>
+							<h5 class="no-margin text-semibold text-danger">Необходимо повторно отправить заявление до <span id="{{{{id}}}}:application_state_end_date_correcting" class="label label-primary label-rounded">.</span>.</h5>
+						</div>
+						<div id="{{{{id}}}}:inf_closed" class="hidden appState">
+							<h5 class="no-margin text-semibold">Отправлено заключение.</h5>
+						</div>
+						<div id="{{{{id}}}}:inf_closed_no_expertise" class="hidden appState">
+							<h5 class="no-margin text-semibold">Заявление закрыто без проведения экспертизы.</h5>
+						</div>					
+						<div id="{{{{id}}}}:inf_returned" class="hidden appState">
+							<h5 class="no-margin text-semibold">Отказ по заявлению. Файлы будут храниться в течении трех месяцев.</h5>
+						</div>
+						<div id="{{{{id}}}}:inf_waiting_for_pay" class="hidden appState">
+							<h5 class="no-margin text-semibold">Ожидание оплаты.</h5>
+						</div>
+						<div id="{{{{id}}}}:inf_waiting_for_contract" class="hidden appState">
+							<h5 class="no-margin text-semibold">Ожидание подписания контракта.</h5>
+						</div>
+						<div id="{{{{id}}}}:inf_expertise" class="hidden appState">
+							<h5 class="no-margin text-semibold">Проведение экспертизы проекта.</h5>
+						</div>
+					</div>			
 					{{#contractExists}}					
 					<h4>Заключение № <u>{{expertiseResultNumber}}</u>{{#expertiseResultExists}}{{expertiseResultDate}}{{/expertiseResultExists}}</h4>
 					<h4>Контракт № <u>{{contractNumber}}</u> от <u>{{contractDate}}</u> </h4>
@@ -193,7 +265,7 @@ Edit template instead.
 							
 							<div class="tab-pane has-padding" id="contractors-tab">
 								<h3>Сведения об исполнителях</h3>
-								<div class="bg-">Вы можите добавить несколько исполнителей.</div>
+								<div class="alert alert-info alert-styled-left alert-bordered">Вы можите добавить несколько исполнителей.</div>
 								<div id="{{{{id}}}}:contractors"/>
 							</div>
 
@@ -206,9 +278,11 @@ Edit template instead.
 								<div id="{{{{id}}}}:developer"/>
 							</div>
 
-							<div class="tab-pane has-padding" id="application_prints-tab">	
-								<h3>Файлы заявлений</h3>
-								<h4>Рапечатайте заполненный бланк заявления, подпишите ЭЦП, загрузите бланк заявления (pdf) и подписанный бланк (sig)</h4>
+							<div class="tab-pane has-padding" id="application_prints-tab">
+								<h3>Файлы заявлений</h3>	
+								<div class="alert alert-info alert-styled-left alert-bordered">									
+									<p>Рапечатайте заполненный бланк заявления, подпишите ЭЦП, загрузите бланк заявления (pdf) и подписанный бланк (sig)</p>
+								</div>
 								<div id="{{{{id}}}}:app_print_expertise"/>
 								<div id="{{{{id}}}}:app_print_cost_eval"/>
 								<div id="{{{{id}}}}:app_print_modification"/>

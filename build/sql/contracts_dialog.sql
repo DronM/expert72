@@ -100,19 +100,43 @@ CREATE OR REPLACE VIEW contracts_dialog AS
 					json_build_object(
 						'section_id',sec.section_id,
 						'section_name',sec.section_name,
-						'experts_list',(
+						'experts_list',
+						/*
+						(
 							SELECT string_agg(sub.name||'('||
 								CASE WHEN EXTRACT(DAY FROM sub.d)<10 THEN '0'||EXTRACT(DAY FROM sub.d)::text ELSE EXTRACT(DAY FROM sub.d)::text END ||
 								'/'||
 								CASE WHEN EXTRACT(MONTH FROM sub.d)<10 THEN '0'||EXTRACT(MONTH FROM sub.d)::text ELSE EXTRACT(MONTH FROM sub.d)::text END ||	
-							')',',')
+								')'||') '||sub.comment_text
+							,',')
 							FROM (
-							SELECT person_init(employees.name,FALSE) AS name,max(expert_works.date_time)::date AS d
+							SELECT
+								person_init(employees.name,FALSE) AS name,
+								max(expert_works.date_time)::date AS d,
+								expert_works.comment_text
 							FROM expert_works
 							LEFT JOIN employees ON employees.id=expert_works.expert_id
 							WHERE contract_id=t.id AND section_id=sec.section_id
-							GROUP BY employees.name
+							GROUP BY employees.name,expert_works.comment_text
 							) AS sub	
+						)
+						*/
+						(SELECT
+							string_agg(expert_works.comment_text||'('||person_init(employees.name,FALSE)||to_char(expert_works.date_time,'DD/MM/YY')||')',', ')
+						FROM(
+							SELECT
+								expert_works.expert_id,
+								expert_works.section_id,
+								max(expert_works.date_time) AS date_time
+							FROM expert_works
+							WHERE expert_works.contract_id=t.id AND expert_works.section_id=sec.section_id
+							GROUP BY expert_works.expert_id,expert_works.section_id
+						) AS ew_last
+						LEFT JOIN expert_works ON
+							expert_works.date_time=ew_last.date_time
+							AND expert_works.expert_id=ew_last.expert_id
+							AND expert_works.section_id=ew_last.section_id
+						LEFT JOIN employees ON employees.id=expert_works.expert_id	
 						)
 					) AS sec_data
 				FROM expert_sections AS sec
@@ -163,7 +187,7 @@ CREATE OR REPLACE VIEW contracts_dialog AS
 	LEFT JOIN employees AS exp_empl ON exp_empl.id=t.main_expert_id
 	LEFT JOIN contracts AS prim_contr ON prim_contr.id=t.primary_contract_id
 	LEFT JOIN contracts AS modif_prim_contr ON modif_prim_contr.id=t.modif_primary_contract_id
-	LEFT JOIN clients ON clients.id=t.client_id
+	--LEFT JOIN clients ON clients.id=t.client_id
 	;
 	
 ALTER VIEW contracts_dialog OWNER TO ;

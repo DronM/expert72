@@ -128,6 +128,14 @@ class DocFlowApprovementList_Model extends ModelSQL{
 		$f_close_result=new FieldSQLEnum($this->getDbLink(),$this->getDbName(),$this->getTableName(),"close_result",$f_opts);
 		$this->addField($f_close_result);
 		//********************
+		
+		//*** Field contract_state ***
+		$f_opts = array();
+		$f_opts['id']="contract_state";
+				
+		$f_contract_state=new FieldSQLEnum($this->getDbLink(),$this->getDbName(),$this->getTableName(),"contract_state",$f_opts);
+		$this->addField($f_contract_state);
+		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}
 

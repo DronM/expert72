@@ -10,10 +10,8 @@ require_once(FRAME_WORK_PATH.'basic_classes/ModelSQL.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLString.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLText.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLFloat.php');
-require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLDate.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLBool.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLDateTimeTZ.php');
-require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLJSONB.php');
  
 class FileVerification_Model extends ModelSQL{
 	
@@ -22,7 +20,7 @@ class FileVerification_Model extends ModelSQL{
 		
 		$this->setDbName("");
 		
-		$this->setTableName("file_verification");
+		$this->setTableName("file_verifications");
 			
 		//*** Field file_id ***
 		$f_opts = array();
@@ -42,22 +40,6 @@ class FileVerification_Model extends ModelSQL{
 		$this->addField($f_date_time);
 		//********************
 		
-		//*** Field subject_cert ***
-		$f_opts = array();
-		$f_opts['id']="subject_cert";
-				
-		$f_subject_cert=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"subject_cert",$f_opts);
-		$this->addField($f_subject_cert);
-		//********************
-		
-		//*** Field issuer_cert ***
-		$f_opts = array();
-		$f_opts['id']="issuer_cert";
-				
-		$f_issuer_cert=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"issuer_cert",$f_opts);
-		$this->addField($f_issuer_cert);
-		//********************
-		
 		//*** Field check_result ***
 		$f_opts = array();
 		$f_opts['id']="check_result";
@@ -73,22 +55,6 @@ class FileVerification_Model extends ModelSQL{
 				
 		$f_check_time=new FieldSQLFloat($this->getDbLink(),$this->getDbName(),$this->getTableName(),"check_time",$f_opts);
 		$this->addField($f_check_time);
-		//********************
-		
-		//*** Field date_from ***
-		$f_opts = array();
-		$f_opts['id']="date_from";
-				
-		$f_date_from=new FieldSQLDate($this->getDbLink(),$this->getDbName(),$this->getTableName(),"date_from",$f_opts);
-		$this->addField($f_date_from);
-		//********************
-		
-		//*** Field date_to ***
-		$f_opts = array();
-		$f_opts['id']="date_to";
-				
-		$f_date_to=new FieldSQLDate($this->getDbLink(),$this->getDbName(),$this->getTableName(),"date_to",$f_opts);
-		$this->addField($f_date_to);
 		//********************
 		
 		//*** Field error_str ***

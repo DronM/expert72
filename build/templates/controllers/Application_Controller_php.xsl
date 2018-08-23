@@ -105,21 +105,82 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			throw new Exception('Ошибка загрузки подписи заявления о '.$ER_PRINT_FILE_CNT_END[$id].'.');
 		}
 	
+		//проверка ЭЦП
+		$sig_ar = NULL;
+		$pki_man = new PKIManager(PKI_PATH,PKI_CRL_VALIDITY,'error');		
+		try{
+			$db_file_id = "'".$file_id."'";
+			$verif_res = pki_log_sig_check(
+				$dir.DIRECTORY_SEPARATOR.$file_id.'.sig',
+				$dir.DIRECTORY_SEPARATOR.$file_id,				
+				$db_file_id,
+				$pki_man,$this->getDbLinkMaster()
+			);
+			$sig_ar = $this->getDbLinkMaster()->query_first(sprintf(
+			"SELECT
+				f_sig.file_id,
+				jsonb_agg(
+					jsonb_build_object(
+						'id',f_sig.signature_file_id,
+						'owner',u_certs.subject_cert,
+						'create_dt',f_sig.sign_date_time,
+						'check_result',ver.check_result,
+						'check_time',ver.check_time,
+						'error_str',ver.error_str
+					)
+				) AS signatures
+			FROM file_signatures AS f_sig
+			LEFT JOIN file_verifications AS ver ON ver.file_id=f_sig.file_id
+			LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id			
+			WHERE ver.file_id=%s
+			GROUP BY f_sig.file_id",
+			$db_file_id
+			));
+			if (!count($sig_ar) || !isset($sig_ar['signatures'])){
+				$sig_ar['signatures'] = sprintf('[{
+					"id":"%s",
+					"create_dt":null,
+					"owner":null,
+					"check_result":"%s",
+					"check_time":"%s",
+					"error_str":"%s",
+				}]',
+				$file_id,
+				$verif_res->check_result,
+				$verif_res->check_time,
+				$verif_res->error_str
+				);
+			}
+		}
+		catch(Exception $e){
+			$sig_ar['signatures'] = sprintf('[{
+				"id":"%s",
+				"create_dt":null,
+				"owner":null,
+				"check_result":false,
+				"check_time":null,
+				"error_str":%s,
+			}]',
+			$file_id,
+			$e->getMessage()
+			);
+			
+		}
+		
 		$fileParams[$id] = sprintf(
-			'[{"name":"%s","id":"%s","size":"%s","file_signed":"true"}]',
+			'[{
+				"name":"%s",
+				"id":"%s",
+				"size":"%s",
+				"file_signed":"true",
+				"signatures":%s
+			}]',
 			$files['name'][$data_ind],
 			$file_id,
-			$files['size'][$data_ind]
+			$files['size'][$data_ind],
+			$sig_ar['signatures']
 		);
-	
-		//проверка ЭЦП
-		$pki_man = new PKIManager(PKI_PATH,PKI_CRL_VALIDITY,'error');		
-		pki_log_sig_check(
-			$dir.DIRECTORY_SEPARATOR.$file_id,
-			$dir.DIRECTORY_SEPARATOR.$file_id.'.sig',
-			"'".$file_id."'",
-			$pki_man,$this->getDbLinkMaster()
-		);
+		
 	}
 
 	private function upload_prints($appId,&amp;$fileParams){
@@ -174,6 +235,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 						$file_o->file_path	= $file['file_path'];
 						$file_o->file_signed	= ($file['file_signed']=='t')? TRUE:FALSE;
 						$file_o->file_uploaded	= TRUE;
+						$file_o->signatures	= $file['signatures'];
 						
 						if ($file['doc_flow_out_client_id']){
 							$file_o->doc_flow_out	= new stdClass();
@@ -324,11 +386,44 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				adf.*,
 				mdf.doc_flow_out_client_id,
 				m.date_time AS doc_flow_out_date_time,
-				reg.reg_number AS doc_flow_out_reg_number
+				reg.reg_number AS doc_flow_out_reg_number,
+				CASE
+					WHEN sign.signatures IS NULL THEN
+						jsonb_build_array(
+							jsonb_build_object(
+								'id',adf.file_id,
+								'owner',NULL,
+								'create_dt',NULL,
+								'check_result',NULL,
+								'check_time',NULL,
+								'error_str',NULL
+							)
+						)
+					ELSE sign.signatures
+				END AS signatures
+								
 			FROM application_document_files AS adf
 			LEFT JOIN doc_flow_out_client_document_files AS mdf ON mdf.file_id=adf.file_id
 			LEFT JOIN doc_flow_out_client AS m ON m.id=mdf.doc_flow_out_client_id
 			LEFT JOIN doc_flow_out_client_reg_numbers AS reg ON reg.doc_flow_out_client_id=m.id
+			LEFT JOIN (
+				SELECT
+					f_sig.file_id,
+					jsonb_agg(
+						jsonb_build_object(
+							'id',f_sig.signature_file_id,
+							'owner',u_certs.subject_cert,
+							'create_dt',f_sig.sign_date_time,
+							'check_result',ver.check_result,
+							'check_time',ver.check_time,
+							'error_str',ver.error_str
+						)
+					) As signatures
+				FROM file_signatures AS f_sig
+				LEFT JOIN file_verifications AS ver ON ver.file_id=f_sig.file_id
+				LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id
+				GROUP BY f_sig.file_id
+			) AS sign ON sign.file_id=adf.file_id			
 			WHERE adf.application_id=%d %s
 			ORDER BY adf.document_type,adf.document_id,adf.file_name,adf.deleted_dt ASC NULLS LAST",
 		$appId,
@@ -1518,7 +1613,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		}
 		else{
 			//pboul and person = name
-			$person_head = $customer_m['name'];
+			$person_head = array('name'=>$customer_m['name_full'],'post'=>'');			
 		}
 		
 		if (strlen($customer_m['base_document_for_contract'])){
@@ -1576,7 +1671,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		}
 		else{
 			//pboul and person = name
-			$person_head = $developer_m['name'];
+			$person_head = array('name'=>$developer_m['name_full'],'post'=>'');			
 		}
 		
 		if (strlen($developer_m['base_document_for_contract'])){
@@ -1637,7 +1732,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			}
 			else{
 				//pboul and person = name
-				$person_head = $contractor_m['name'];
+				$person_head = array('name'=>$contractor_m['name_full'],'post'=>'');			
 			}
 			
 			if (strlen($contractor_m['base_document_for_contract'])){
@@ -2101,20 +2196,20 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		$m->query(sprintf(
 			"(SELECT 
 				v.date_time,
-				to_char(v.date_from,'DD/MM/YY') AS date_from,
-				to_char(v.date_to,'DD/MM/YY') AS date_to,
+				to_char(u_certs.date_from,'DD/MM/YY') AS date_from,
+				to_char(u_certs.date_to,'DD/MM/YY') AS date_to,
 				round(v.check_time,1) AS check_time,
 				v.check_result,
 				v.error_str,
 				(SELECT string_agg('&lt;field alias=\"'||f.key||'\"&gt;'||f.value||'&lt;/field&gt;','')
 				FROM 
-				(select (jsonb_each_text(v.subject_cert)).* ) f
+				(select (jsonb_each_text(u_certs.subject_cert)).* ) f
 				) AS subject_cert,
 				(SELECT string_agg('&lt;field alias=\"'||f.key||'\"&gt;'||f.value||'&lt;/field&gt;','')
 				FROM 
-				(select (jsonb_each_text(v.issuer_cert)).* ) f
+				(select (jsonb_each_text(u_certs.issuer_cert)).* ) f
 				) AS issuer_cert,
-
+				u_certs.sign_date_time,
 				CASE
 					WHEN app_f.document_type='pd' THEN 'ПД'
 					WHEN app_f.document_type='eng_survey' THEN 'РИИ'
@@ -2127,6 +2222,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		
 			FROM application_document_files AS app_f
 			LEFT JOIN file_verification AS v ON app_f.file_id=v.file_id
+			LEFT JOIN user_certificates AS u_certs ON u_certs.id=v.user_certificate_id
 			WHERE app_f.application_id=%d AND app_f.deleted=FALSE AND v.date_time IS NOT NULL
 			ORDER BY v.date_time)
 
@@ -2134,126 +2230,131 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 
 			(SELECT
 				v.date_time,
-				to_char(v.date_from,'DD/MM/YY') AS date_from,
-				to_char(v.date_to,'DD/MM/YY') AS date_to,
+				to_char(u_certs.date_from,'DD/MM/YY') AS date_from,
+				to_char(u_certs.date_to,'DD/MM/YY') AS date_to,
 				round(v.check_time,1) AS check_time,
 				v.check_result,
 				v.error_str,
 				(SELECT string_agg('&lt;field alias=\"'||f.key||'\"&gt;'||f.value||'&lt;/field&gt;','')
 				FROM 
-				(select (jsonb_each_text(v.subject_cert)).* ) f
+				(select (jsonb_each_text(u_certs.subject_cert)).* ) f
 				) AS subject_cert,
 				(SELECT string_agg('&lt;field alias=\"'||f.key||'\"&gt;'||f.value||'&lt;/field&gt;','')
 				FROM 
-				(select (jsonb_each_text(v.issuer_cert)).* ) f
+				(select (jsonb_each_text(u_certs.issuer_cert)).* ) f
 				) AS issuer_cert,
-
+				u_certs.sign_date_time,
 				'Заявление ПД / '||(app_f.fl->>'name')::text AS file_name
 
 			FROM (
 			SELECT jsonb_array_elements(app_print_expertise) AS fl FROM applications WHERE id=%d AND app_print_expertise IS NOT NULL
 			) AS app_f
-			LEFT JOIN file_verification AS v ON app_f.fl->>'id'=v.file_id)
+			LEFT JOIN file_verification AS v ON app_f.fl->>'id'=v.file_id
+			LEFT JOIN user_certificates AS u_certs ON u_certs.id=v.user_certificate_id)
 
 			UNION ALL
 
 			(SELECT
 				v.date_time,
-				to_char(v.date_from,'DD/MM/YY') AS date_from,
-				to_char(v.date_to,'DD/MM/YY') AS date_to,
+				to_char(u_certs.date_from,'DD/MM/YY') AS date_from,
+				to_char(u_certs.date_to,'DD/MM/YY') AS date_to,
 				round(v.check_time,1) AS check_time,
 				v.check_result,
 				v.error_str,
 				(SELECT string_agg('&lt;field alias=\"'||f.key||'\"&gt;'||f.value||'&lt;/field&gt;','')
 				FROM 
-				(select (jsonb_each_text(v.subject_cert)).* ) f
+				(select (jsonb_each_text(u_certs.subject_cert)).* ) f
 				) AS subject_cert,
 				(SELECT string_agg('&lt;field alias=\"'||f.key||'\"&gt;'||f.value||'&lt;/field&gt;','')
 				FROM 
-				(select (jsonb_each_text(v.issuer_cert)).* ) f
+				(select (jsonb_each_text(u_certs.issuer_cert)).* ) f
 				) AS issuer_cert,
-
+				u_certs.sign_date_time,
 				'Заявление Достоверность / '||(app_f.fl->>'name')::text AS file_name
 
 			FROM (
 			SELECT jsonb_array_elements(app_print_cost_eval) AS fl FROM applications WHERE id=%d AND app_print_cost_eval IS NOT NULL
 			) AS app_f
-			LEFT JOIN file_verification AS v ON app_f.fl->>'id'=v.file_id)
+			LEFT JOIN file_verification AS v ON app_f.fl->>'id'=v.file_id
+			LEFT JOIN user_certificates AS u_certs ON u_certs.id=v.user_certificate_id)
 
 			UNION ALL
 
 			(SELECT
 				v.date_time,
-				to_char(v.date_from,'DD/MM/YY') AS date_from,
-				to_char(v.date_to,'DD/MM/YY') AS date_to,
+				to_char(u_certs.date_from,'DD/MM/YY') AS date_from,
+				to_char(u_certs.date_to,'DD/MM/YY') AS date_to,
 				round(v.check_time,1) AS check_time,
 				v.check_result,
 				v.error_str,
 				(SELECT string_agg('&lt;field alias=\"'||f.key||'\"&gt;'||f.value||'&lt;/field&gt;','')
 				FROM 
-				(select (jsonb_each_text(v.subject_cert)).* ) f
+				(select (jsonb_each_text(u_certs.subject_cert)).* ) f
 				) AS subject_cert,
 				(SELECT string_agg('&lt;field alias=\"'||f.key||'\"&gt;'||f.value||'&lt;/field&gt;','')
 				FROM 
-				(select (jsonb_each_text(v.issuer_cert)).* ) f
+				(select (jsonb_each_text(u_certs.issuer_cert)).* ) f
 				) AS issuer_cert,
-
+				u_certs.sign_date_time,
 				'Заявление Модификация / '||(app_f.fl->>'name')::text AS file_name
 
 			FROM (
 			SELECT jsonb_array_elements(app_print_modification) AS fl FROM applications WHERE id=%d AND app_print_modification IS NOT NULL
 			) AS app_f
-			LEFT JOIN file_verification AS v ON app_f.fl->>'id'=v.file_id)
+			LEFT JOIN file_verification AS v ON app_f.fl->>'id'=v.file_id
+			LEFT JOIN user_certificates AS u_certs ON u_certs.id=v.user_certificate_id)
 
 			UNION ALL
 
 			(SELECT
 				v.date_time,
-				to_char(v.date_from,'DD/MM/YY') AS date_from,
-				to_char(v.date_to,'DD/MM/YY') AS date_to,
+				to_char(u_certs.date_from,'DD/MM/YY') AS date_from,
+				to_char(u_certs.date_to,'DD/MM/YY') AS date_to,
 				round(v.check_time,1) AS check_time,
 				v.check_result,
 				v.error_str,
 				(SELECT string_agg('&lt;field alias=\"'||f.key||'\"&gt;'||f.value||'&lt;/field&gt;','')
 				FROM 
-				(select (jsonb_each_text(v.subject_cert)).* ) f
+				(select (jsonb_each_text(u_certs.subject_cert)).* ) f
 				) AS subject_cert,
 				(SELECT string_agg('&lt;field alias=\"'||f.key||'\"&gt;'||f.value||'&lt;/field&gt;','')
 				FROM 
-				(select (jsonb_each_text(v.issuer_cert)).* ) f
+				(select (jsonb_each_text(u_certs.issuer_cert)).* ) f
 				) AS issuer_cert,
-
+				u_certs.sign_date_time,
 				'Заявление Аудит / '||(app_f.fl->>'name')::text AS file_name
 
 			FROM (
 			SELECT jsonb_array_elements(app_print_audit) AS fl FROM applications WHERE id=%d AND app_print_audit IS NOT NULL
 			) AS app_f
-			LEFT JOIN file_verification AS v ON app_f.fl->>'id'=v.file_id)
+			LEFT JOIN file_verification AS v ON app_f.fl->>'id'=v.file_id
+			LEFT JOIN user_certificates AS u_certs ON u_certs.id=v.user_certificate_id)
 
 			UNION ALL
 
 			(SELECT
 				v.date_time,
-				to_char(v.date_from,'DD/MM/YY') AS date_from,
-				to_char(v.date_to,'DD/MM/YY') AS date_to,
+				to_char(u_certs.date_from,'DD/MM/YY') AS date_from,
+				to_char(u_certs.date_to,'DD/MM/YY') AS date_to,
 				round(v.check_time,1) AS check_time,
 				v.check_result,
 				v.error_str,
 				(SELECT string_agg('&lt;field alias=\"'||f.key||'\"&gt;'||f.value||'&lt;/field&gt;','')
 				FROM 
-				(select (jsonb_each_text(v.subject_cert)).* ) f
+				(select (jsonb_each_text(u_certs.subject_cert)).* ) f
 				) AS subject_cert,
 				(SELECT string_agg('&lt;field alias=\"'||f.key||'\"&gt;'||f.value||'&lt;/field&gt;','')
 				FROM 
-				(select (jsonb_each_text(v.issuer_cert)).* ) f
+				(select (jsonb_each_text(u_certs.issuer_cert)).* ) f
 				) AS issuer_cert,
-
+				u_certs.sign_date_time,
 				'Доверенность / '||(app_f.fl->>'name')::text AS file_name
 
 			FROM (
 			SELECT jsonb_array_elements(auth_letter_file) AS fl FROM applications WHERE id=%d AND auth_letter_file IS NOT NULL
 			) AS app_f
-			LEFT JOIN file_verification AS v ON app_f.fl->>'id'=v.file_id)			
+			LEFT JOIN file_verification AS v ON app_f.fl->>'id'=v.file_id
+			LEFT JOIN user_certificates AS u_certs ON u_certs.id=v.user_certificate_id)			
 			",
 			$db_app_id,
 			$db_app_id,

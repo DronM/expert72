@@ -140,6 +140,16 @@ function DocFlowApprovementList_Model(options){
 	options.fields.close_result = new FieldEnum("close_result",filed_options);
 	filed_options.enumValues = 'approved,not_approved,approved_with_notes';
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.contract_state = new FieldEnum("contract_state",filed_options);
+	filed_options.enumValues = 'filling,correcting,sent,checking,returned,closed_no_expertise,waiting_for_contract,waiting_for_pay,expertise,closed';
+	
 		DocFlowApprovementList_Model.superclass.constructor.call(this,id,options);
 }
 extend(DocFlowApprovementList_Model,ModelXML);

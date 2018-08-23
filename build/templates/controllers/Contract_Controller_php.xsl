@@ -201,7 +201,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				WHEN contr.document_type='audit' THEN 'Проведение аудита'
 				ELSE ''
 			END||' объекта капитального строительства '||app.constr_name||' согласно договора № '||contr.contract_number||
-			' от '||to_char(contr.date_time,'DD.MM.YYYY')
+			' от '||to_char(contr.contract_date,'DD.MM.YYYY')
 			--kladr_parse_addr(d.constr_address)
 			AS item_1c_doc_descr,
 			

@@ -6,10 +6,10 @@
 		{{#isDeveloper}}Сведения о застройщике{{/isDeveloper}}  
 		</h3>
 		{{#isClient}}
-		<button class="btn bg-{{colorClass}} dropdown-toggle fillClientData" type="button" data-toggle="dropdown">Заполнить
+		<button class="btn bg-{{colorClass}} dropdown-toggle fillClientData pull-right" type="button" data-toggle="dropdown">Заполнить
 			<span class="caret"></span>
 		</button>
-		<ul class="dropdown-menu" title="Зполнить по другим данным">
+		<ul class="dropdown-menu dropdown-menu-right" title="Зполнить по другим данным">
 			{{#isDeveloper}}
 			<li><a id="{{id}}:fillOnApplicant" href="#">По заявителю</a></li>
 			<li><a id="{{id}}:fillOnCustomer" href="#">По техн.заказчику</a></li>
@@ -90,10 +90,14 @@
 			<p class="panel-title">Заполняется в том случае, если заявитель не является ни заказчиком ни застройщиком</p>
 		</div>
 		<div class="panel-body">
-			<div id="{{id}}:auth_letter">
-			</div>
-			<div id="{{id}}:auth_letter_file">
-			</div>
+			<div class="row">
+				<div id="{{id}}:auth_letter">
+				</div>
+			</div>	
+			<div class="row">
+				<div id="{{id}}:auth_letter_file">
+				</div>
+			</div>	
 		</div>	
 	</div>
 	{{/isApplicant}}
