@@ -2,7 +2,7 @@
 <metadata owner="expert72">
 	<versions>
 		<version dateOpen="2017-09-27 12:09:48" dateClose="2017-12-08 10:12:08">1.001 
-		<lastBuild>2018-08-23 07:20:06</lastBuild></version>
+		<lastBuild>2018-09-03 14:31:03</lastBuild></version>
 		<version dateOpen="2017-12-08 11:12:01" dateClose="2017-12-08 11:12:04">1.002</version>
 		<version dateOpen="2017-12-08 11:12:20" dateClose="2017-12-08 11:12:20">1.0.3</version>
 		<version dateOpen="2017-12-12 11:12:07" dateClose="2017-12-12 11:12:07">1.0.4</version>
@@ -73,7 +73,7 @@
 		<version dateOpen="2018-07-20 07:07:57" dateClose="2018-07-26 05:07:58">1.0.70</version>
 		<version dateOpen="2018-07-26 05:07:58" dateClose="2018-08-03 05:08:32">1.0.71</version>
 		<version dateOpen="2018-08-03 05:08:34" dateClose="2018-08-07 06:08:03">1.0.72</version>
-		<version dateOpen="2018-08-07 09:08:25" dateClose="2018-08-23 07:08:20">1.0.73</version>
+		<version dateOpen="2018-08-07 09:08:25" dateClose="2018-09-03 14:09:31">1.0.73</version>
 	</versions>
 	<globalFilters>
 		<field id="user_id"/>
@@ -2656,6 +2656,7 @@
 			<field id="check_result" dataType="Bool"/>
 			<field id="check_time" dataType="Float" length="15" precision="4"/>
 			<field id="error_str" dataType="Text"/>
+			<field id="hash_gost94" dataType="Text"/>
 		</model>
 		<model id="UserCertificate" parent="ModelSQL" dataTable="user_certificates" virtual="FALSE">
 			<field id="id" dataType="Int" required="TRUE" primaryKey="TRUE" autoInc="TRUE"/>
@@ -2672,10 +2673,14 @@
 			</index>
 		</model>
 		<model id="FileSignatures" parent="ModelSQL" dataTable="file_signatures" virtual="FALSE">
-			<field id="file_id" dataType="String" length="36" required="TRUE" primaryKey="TRUE"/>
-			<field id="signature_file_id" dataType="String" length="36" required="TRUE" primaryKey="TRUE"/>
-			<field id="sign_date_time" dataType="DateTimeTZ"/>
+			<field id="id" dataType="Int" required="TRUE" primaryKey="TRUE" autoInc="TRUE"/>
+			<field id="file_id" dataType="String" length="36" required="TRUE"/>
 			<field id="user_certificate_id" dataType="Int" refTable="user_certificates" refField="id"/>
+			<field id="sign_date_time" dataType="DateTimeTZ"/>
+			<field id="algorithm" dataType="Text"/>
+			<index id="file_signatures_file_idx">
+				<field id="file_id"/>
+			</index>
 		</model>
 	</models>
 	<constants>
@@ -3128,6 +3133,10 @@
 				<field id="file_id" dataType="String" length="36" required="TRUE"/>
 				<field id="doc_id" dataType="Int" required="TRUE"/>
 			</publicMethod>
+			<publicMethod id="get_file_hash">
+				<field id="file_id" dataType="String" length="36" required="TRUE"/>
+				<field id="doc_id" dataType="Int" required="TRUE"/>
+			</publicMethod>
 			<publicMethod id="get_file_sig">
 				<field id="file_id" dataType="String" length="36" required="TRUE"/>
 				<field id="doc_id" dataType="Int" required="TRUE"/>
@@ -3146,6 +3155,11 @@
 				<field id="file_id" dataType="String" length="36" required="TRUE"/>
 				<field id="new_folder_id" dataType="Int" required="TRUE"/>
 				<field id="doc_flow_out_id" dataType="Int" required="TRUE"/>
+			</publicMethod>
+			<publicMethod id="add_sig_to_file" encType="multipart" requestType="post">
+				<field id="file_id" dataType="String" length="36" required="TRUE"/>
+				<field id="sig_data" dataType="Text" required="TRUE"/>
+				<field id="doc_id" dataType="Int" required="TRUE"/>
 			</publicMethod>
 		</controller>
 		<controller id="DocFlowIn" parentId="DocFlow_Controller" parentType="user" state="TRUE">

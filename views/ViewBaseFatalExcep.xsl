@@ -14,7 +14,7 @@
 <xsl:template match="/document">
 <html>
 	<head>
-		<title>CRM</title>
+		<title>Ошибка</title>
 		<xsl:apply-templates select="model[@id='ModelStyleSheet']"/>
 	</head>
 	<body>

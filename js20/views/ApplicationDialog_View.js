@@ -64,6 +64,7 @@ function ApplicationDialog_View(id,options){
 	
 	//********** cades plugin *******************
 	options.templateOptions.loadCadesPlugin = (!options.readOnly && !window.getApp().getDoNotLoadCadesPlugin());
+	
 	if (options.templateOptions.loadCadesPlugin){
 		var cades = window.getApp().getCadesAPI();		
 		if (cades && !options.readOnly){
@@ -703,6 +704,7 @@ function ApplicationDialog_View(id,options){
 			var checked = $("#doNotCadesLoadPlugin").is(":checked");
 			window.getApp().setDoNotLoadCadesPlugin(checked);
 		});
+		
 		if (cades && !cades.getLoaded()){
 			cades.setOnCertListFilled(function(){
 				self.cadesOnCertListFilled();
@@ -712,6 +714,7 @@ function ApplicationDialog_View(id,options){
 		}
 		else if (cades){
 			//already loaded
+			//console.log("Cades loaded")
 			if (cades.getLoadError()){
 				this.cadesOnLoadError();
 			}
@@ -1331,29 +1334,43 @@ ApplicationDialog_View.prototype.signPrint = function(printControl,fileId,itemId
 		throw new Error("Файл с данными не найден!");	
 	}
 	var cert_struc = this.m_certBoxControl.getSelectedCert()	
-	
-	printControl.sigCont.setWait(true);
+		
 	var self = this;
-	cades.getFileContentForSign(
+	printControl.sigCont.setWait(true);
+	
+	cades.signFile(
 		files[0],
-		function(fileContent){
-			cades.makeCadesBESSign(fileContent,cert_struc.cert,function(signature){						
-				var sig_file = cades.makeSigFile(signature,files[0]["name"]+".sig");
-				
-				files.push(sig_file);
-				printControl.sigCont.setWait(false);
-				printControl.sigCont.addSignature({
-					"id":fileId,
-					"owner":{
-						"Организация":cert_struc.owner,
-						"Фамилия":cert_struc.ownerFirstName,
-						"Имя":cert_struc.ownerSecondName
-					},
-					"create_dt":new Date(sig_file.lastModified)
-				});
-				printControl.sigCont.sigsToDOM();
+		cert_struc.cert,
+		files[0]["name"],
+		true,
+		function(signature,verRes){
+			if (!verRes.check_result && verRes.error_str){
+				window.showWarn(verRes.error_str);
+			}
+			
+			var sig_file = cades.makeSigFile(signature,files[0]["name"]+".sig");
+			printControl.sigCont.setWait(false);
+			files.push(sig_file);
+			
+			printControl.sigCont.addSignature({
+				"check_result":verRes.check_result,
+				"error_str":verRes.error_str,
+				"sign_date_time":verRes.sign_date_time,
+				"owner":{
+					"Организация":cert_struc.owner,
+					"Фамилия":cert_struc.ownerFirstName,
+					"Имя":cert_struc.ownerSecondName
+				}
 			});
+			printControl.sigCont.sigsToDOM();
+		},
+		function(er){
+			printControl.sigCont.setWait(false);
+			window.showError(er);
+		},
+		function(percentLoaded){
 		}
 	);
+	
 }
 

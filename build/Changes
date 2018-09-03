@@ -230,8 +230,13 @@ FileUploaderContract_View исправлено options.allowFileDownload = true;
 12) Шаблоны в IE9,IE10 function.name не работает, обход
 13) Сбор статистики какими сертификатами подписывает пользователь. При проверке подписи в бд записывается отпечаток сертификата.
 В дальнейшем возможна авторизация по данному сертификату.
-14) Формирование ЭЦП по заявлениям в ЛК: изменить структуру file_verification,add user_certificates,
+14) Формирование ЭЦП по заявлениям в ЛК:
+изменить структуру file_verification,add user_certificates,
 application_document_files_process,file_verifications_trigger,file_verifications_processes
+doc_flow_out_dialog
+doc_flow_attachments_process()
+doc_flow_attachments_after_trigger
+
 
 15) Формирование договора в 1с: дата Контракта. Исправлено наименование улсуги, стояла дата создания документа, а не дата контракта.
 

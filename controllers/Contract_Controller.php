@@ -861,11 +861,43 @@ class Contract_Controller extends ControllerSQL{
 				adf.deleted_dt,
 				mdf.doc_flow_out_client_id,
 				m.date_time AS doc_flow_out_date_time,
-				reg.reg_number AS doc_flow_out_reg_number
+				reg.reg_number AS doc_flow_out_reg_number,
+				CASE
+					WHEN sign.signatures IS NULL THEN
+						jsonb_build_array(
+							jsonb_build_object(
+								'id',adf.file_id,
+								'owner',NULL,
+								'create_dt',NULL,
+								'check_result',NULL,
+								'check_time',NULL,
+								'error_str',NULL
+							)
+						)
+					ELSE sign.signatures
+				END AS signatures
+				
 			FROM application_document_files AS adf
 			LEFT JOIN doc_flow_out_client_document_files AS mdf ON mdf.file_id=adf.file_id
 			LEFT JOIN doc_flow_out_client AS m ON m.id=mdf.doc_flow_out_client_id
 			LEFT JOIN doc_flow_out_client_reg_numbers AS reg ON reg.doc_flow_out_client_id=m.id
+			LEFT JOIN (
+				SELECT
+					f_sig.file_id,
+					jsonb_agg(
+						jsonb_build_object(
+							'owner',u_certs.subject_cert,
+							'create_dt',f_sig.sign_date_time,
+							'check_result',ver.check_result,
+							'check_time',ver.check_time,
+							'error_str',ver.error_str
+						)
+					) As signatures
+				FROM file_signatures AS f_sig
+				LEFT JOIN file_verifications AS ver ON ver.file_id=f_sig.file_id
+				LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id
+				GROUP BY f_sig.file_id
+			) AS sign ON sign.file_id=adf.file_id			
 			WHERE adf.application_id=%d
 			ORDER BY adf.document_type,adf.document_id,adf.file_name,adf.deleted_dt ASC NULLS LAST",
 		$ar_obj['application_id']

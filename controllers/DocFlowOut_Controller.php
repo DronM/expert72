@@ -22,6 +22,10 @@ require_once(FRAME_WORK_PATH.'basic_classes/FieldExtXML.php');
  */
 
 
+
+require_once(ABSOLUTE_PATH.'functions/PKIManager.php');
+require_once(ABSOLUTE_PATH.'functions/pki.php');
+
 class DocFlowOut_Controller extends DocFlow_Controller{
 	public function __construct($dbLinkMaster=NULL,$dbLink=NULL){
 		parent::__construct($dbLinkMaster,$dbLink);
@@ -263,6 +267,25 @@ class DocFlowOut_Controller extends DocFlow_Controller{
 		$this->addPublicMethod($pm);
 
 			
+		$pm = new PublicMethod('get_file_hash');
+		
+				
+	$opts=array();
+	
+		$opts['length']=36;
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtString('file_id',$opts));
+	
+				
+	$opts=array();
+	
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtInt('doc_id',$opts));
+	
+			
+		$this->addPublicMethod($pm);
+
+			
 		$pm = new PublicMethod('get_file_sig');
 		
 				
@@ -353,81 +376,130 @@ class DocFlowOut_Controller extends DocFlow_Controller{
 			
 		$this->addPublicMethod($pm);
 
+			
+		$pm = new PublicMethod('add_sig_to_file');
+		
+				
+	$opts=array();
+	
+		$opts['length']=36;
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtString('file_id',$opts));
+	
+				
+	$opts=array();
+	
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtText('sig_data',$opts));
+	
+				
+	$opts=array();
+	
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtInt('doc_id',$opts));
+	
+			
+		$this->addPublicMethod($pm);
+
 		
 	}	
 	
+
+	private function find_afile($fileId,$fileIdDb,$docIdDb,$sigFile,&$fl,&$fileName,&$exception){
+		$ar = $this->getDbLink()->query_first(sprintf(
+			"(SELECT
+				app_f.file_name,
+				app_f.document_type,
+				CASE
+					WHEN app_f.document_type='documents' THEN app_f.file_path
+					ELSE app_f.document_id::text
+				END AS file_path,
+				TRUE AS is_application,
+				application_id AS application_id
+			FROM doc_flow_out_client_document_files AS t
+			LEFT JOIN doc_flow_in ON doc_flow_in.from_doc_flow_out_client_id=t.doc_flow_out_client_id
+			LEFT JOIN application_document_files AS app_f ON app_f.file_id = t.file_id				
+			WHERE t.file_id=%s AND doc_flow_in.id=%d)
+			UNION ALL
+			(SELECT
+				t.file_name,
+				'documents' AS document_type,
+				t.file_path AS file_path,
+				TRUE AS is_application,
+				out.to_application_id AS application_id
+			FROM doc_flow_attachments AS t
+			LEFT JOIN doc_flow_out AS out ON t.doc_id=out.id
+			WHERE t.doc_type='doc_flow_out'::data_types AND t.doc_id=%d AND t.file_id=%s)				
+			",
+			$fileIdDb,
+			$docIdDb,
+			$docIdDb,
+			$fileIdDb
+		));
+	
+		if (!count($ar)){
+			$exception = new Exception(self::ER_STORAGE_FILE_NOT_FOUND);
+			return FALSE;
+		}
+	
+		$postf = $sigFile? '.sig':'';
+		$document_type_path = Application_Controller::dirNameOnDocType($ar['document_type']);
+		$document_type_path.= ($document_type_path=='')? '':DIRECTORY_SEPARATOR;
+		if (
+		(
+			$ar['is_application']=='t'
+			&& (!file_exists($fl = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
+					Application_Controller::APP_DIR_PREF.$ar['application_id'].DIRECTORY_SEPARATOR.
+					$document_type_path.
+					$ar['file_path'].DIRECTORY_SEPARATOR.
+					$fileId.$postf)
+					&&(
+						defined('FILE_STORAGE_DIR_MAIN') &&
+						!file_exists($fl = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.
+						Application_Controller::APP_DIR_PREF.$ar['application_id'].DIRECTORY_SEPARATOR.
+						$document_type_path.
+						$ar['file_path'].DIRECTORY_SEPARATOR.
+						$fileId.$postf)							
+					)
+				)
+		)
+		|| (
+			$ar['is_application']!='t'
+			&& !file_exists($fl = DOC_FLOW_FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$fileId.$postf)
+		)
+		){
+			$exception = new Exception(self::ER_STORAGE_FILE_NOT_FOUND);
+			return FALSE;
+		}
+	
+		$fileName = $ar['file_name'].$postf;
+	
+		return TRUE;
+	}
 
 	private function get_afile($pm,$sigFile){
 		try{
 			$er_st = 500;
 			
-			$posf = $sigFile? '.sig':'';
-			$ar = $this->getDbLink()->query_first(sprintf(
-				"(SELECT
-					app_f.file_name,
-					app_f.document_type,
-					CASE
-						WHEN app_f.document_type='documents' THEN app_f.file_path
-						ELSE app_f.document_id::text
-					END AS file_path,
-					TRUE AS is_application,
-					application_id AS application_id
-				FROM doc_flow_out_client_document_files AS t
-				LEFT JOIN doc_flow_in ON doc_flow_in.from_doc_flow_out_client_id=t.doc_flow_out_client_id
-				LEFT JOIN application_document_files AS app_f ON app_f.file_id = t.file_id				
-				WHERE t.file_id=%s AND doc_flow_in.id=%d)
-				UNION ALL
-				(SELECT
-					t.file_name,
-					'documents' AS document_type,
-					t.file_path AS file_path,
-					TRUE AS is_application,
-					out.to_application_id AS application_id
-				FROM doc_flow_attachments AS t
-				LEFT JOIN doc_flow_out AS out ON t.doc_id=out.id
-				WHERE t.doc_type='doc_flow_out'::data_types AND t.doc_id=%d AND t.file_id=%s)				
-				",
+			$exception = NULL;
+			$fl = NULL;
+			$file_name = NULL;
+			if (!$this->find_afile(
+				$this->getExtVal($pm,'file_id'),
 				$this->getExtDbVal($pm,'file_id'),
 				$this->getExtDbVal($pm,'doc_id'),
-				$this->getExtDbVal($pm,'doc_id'),
-				$this->getExtDbVal($pm,'file_id')				
-			));
-		
-			if (!count($ar)){
+				$sigFile,
+				$fl,
+				$file_name,
+				$exception
+			)){
 				$er_st = 404;
-				throw new Exception(self::ER_STORAGE_FILE_NOT_FOUND);
+				throw $exception;
 			}
 		
-			$fl = NULL;
-			if (
-			(
-				$ar['is_application']=='t'
-				&& (!file_exists($fl = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
-						Application_Controller::APP_DIR_PREF.$ar['application_id'].DIRECTORY_SEPARATOR.
-						Application_Controller::dirNameOnDocType($ar['document_type']).DIRECTORY_SEPARATOR.
-						$ar['file_path'].DIRECTORY_SEPARATOR.
-						$this->getExtVal($pm,'file_id').$posf)
-						&&(
-							defined('FILE_STORAGE_DIR_MAIN') &&
-							!file_exists($fl = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.
-							Application_Controller::APP_DIR_PREF.$ar['application_id'].DIRECTORY_SEPARATOR.
-							Application_Controller::dirNameOnDocType($ar['document_type']).DIRECTORY_SEPARATOR.
-							$ar['file_path'].DIRECTORY_SEPARATOR.
-							$this->getExtVal($pm,'file_id').$posf)							
-						)
-					)
-			)
-			|| (
-				$ar['is_application']!='t'
-				&& !file_exists($fl = DOC_FLOW_FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$this->getExtVal($pm,'file_id').$posf)
-			)
-			){
-				$er_st = 404;
-				throw new Exception(self::ER_STORAGE_FILE_NOT_FOUND);
-			}
-		
+			$mime = getMimeTypeOnExt($file_name);
 			ob_clean();
-			downloadFile($fl, 'application/octet-stream','attachment;',$ar['file_name'].$posf);
+			downloadFile($fl, $mime,'attachment;',$file_name);
 			return TRUE;	
 		}
 		catch(Exception $e){
@@ -643,6 +715,70 @@ class DocFlowOut_Controller extends DocFlow_Controller{
 			$this->getDbLinkMaster()->query('ROLLBACK');
 			throw $e;
 		}
+	}
+	
+	public function add_sig_to_file($pm){
+		$doc_id = $this->getExtDbVal($pm,'doc_id');
+		
+		$state = $this->get_state($doc_id,"out");
+		if (
+			($state=='registered'||$state=='approved'||$state=='approved_with_notes'||$state=='not_approved')
+			&& $_SESSION['role_id']!='admin'){
+			throw new Exception(self::ER_ALLOWED_TO_ADMIN);
+		}
+		
+		
+		if (isset($_FILES['sig_data'])){
+			$exception = NULL;
+			$fl = NULL;
+			$file_name = NULL;
+			if (!$this->find_afile(
+				$this->getExtVal($pm,'file_id'),
+				$this->getExtDbVal($pm,'file_id'),
+				$this->getExtDbVal($pm,'doc_id'),
+				$sigFile,
+				$fl,
+				$file_name,
+				$exception
+			)){
+				throw $exception;
+			}
+			
+			//$_FILES['sig_data']['tmp_name']
+			
+		}
+	}
+
+	public function get_file_hash($pm){
+		$exception = NULL;
+		$fl = NULL;
+		$file_name = NULL;
+		if (!$this->find_afile(
+			$this->getExtVal($pm,'file_id'),
+			$this->getExtDbVal($pm,'file_id'),
+			$this->getExtDbVal($pm,'doc_id'),
+			FALSE,
+			$fl,
+			$file_name,
+			$exception
+		)){
+			throw $exception;
+		}
+		
+		$pki_man = new PKIManager(PKI_PATH,PKI_CRL_VALIDITY,'error');
+		$hash = pki_get_hash(
+			$fl,
+			$this->getExtDbVal($pm,'file_id'),
+			$pki_man,$this->getDbLinkMaster()
+		);
+		if (is_null($hash)){
+			throw new Exception('Ошибка чтения файла');
+		}
+		
+		ob_clean();
+		header('Content-Type: text/plain');
+		echo $hash;
+		return TRUE;
 	}
 
 

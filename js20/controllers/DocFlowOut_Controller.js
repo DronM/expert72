@@ -31,12 +31,14 @@ function DocFlowOut_Controller(options){
 	this.addGetObject();
 	this.add_remove_file();
 	this.add_get_file();
+	this.add_get_file_hash();
 	this.add_get_file_sig();
 	this.add_get_next_num();
 	this.addComplete();
 	this.add_get_app_state();
 	this.add_get_next_contract_number();
 	this.add_alter_file_folder();
+	this.add_add_sig_to_file();
 		
 }
 extend(DocFlowOut_Controller,ControllerObjServer);
@@ -408,6 +410,32 @@ extend(DocFlowOut_Controller,ControllerObjServer);
 	this.addPublicMethod(pm);
 }
 
+			DocFlowOut_Controller.prototype.add_get_file_hash = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('get_file_hash',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		options.maxlength = "36";
+	
+		pm.addField(new FieldString("file_id",options));
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("doc_id",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
 			DocFlowOut_Controller.prototype.add_get_file_sig = function(){
 	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('get_file_sig',opts);
@@ -521,6 +549,44 @@ extend(DocFlowOut_Controller,ControllerObjServer);
 		options.required = true;
 	
 		pm.addField(new FieldInt("doc_flow_out_id",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			DocFlowOut_Controller.prototype.add_add_sig_to_file = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('add_sig_to_file',opts);
+	
+	pm.setRequestType('post');
+	
+	pm.setEncType(ServConnector.prototype.ENCTYPES.MULTIPART);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		options.maxlength = "36";
+	
+		pm.addField(new FieldString("file_id",options));
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldText("sig_data",options));
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("doc_id",options));
 	
 			
 	this.addPublicMethod(pm);

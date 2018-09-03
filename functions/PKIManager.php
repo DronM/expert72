@@ -2,6 +2,21 @@
 require_once(dirname(__FILE__).'/../Config.php');
 require_once('common/Logger.php');
 
+/*
+ * Converts large numbers
+ * http://php.net/manual/ru/function.dechex.php
+ */
+function dec2hex($number){
+    $hexvalues = array('0','1','2','3','4','5','6','7',
+               '8','9','A','B','C','D','E','F');
+    $hexval = '';
+     while($number != '0'){
+        $hexval = $hexvalues[bcmod($number,'16')].$hexval;
+        $number = bcdiv($number,'16',0);
+    }
+    return $hexval;
+}
+
 function ucode2str($str) {
      $cyr_chars = array (
          '\U0430' => 'а', '\U0410' => 'А',
@@ -54,6 +69,7 @@ class PKIManager {
 	const ER_VERIF_FAIL = 'Неверная подпись!';
 	const ER_BROKEN_CHAIN = 'Невозможно посторить цепь сертификатов!';
 	const ER_UNABLE_LOAD_CRL = 'Невозможно обновить список отозванных сертификатов для УЦ CN=%s, ОГРН=%s';
+	const ER_CERT_FIELD_NOT_FOUND = 'Нет поля %s в объекте %s';
 
 	const CA_LIST_URL = 'https://e-trust.gosuslugi.ru/CA/DownloadTSL?schemaVersion=0';		
 	const DEF_CRL_VALIDITY = 86400;//24*60*60
@@ -148,15 +164,18 @@ class PKIManager {
 		$derFile = $this->replace_extension($sigFile,'der');				
 		
 		//проверяем файл
+		$need_decode = $this->isBase64Encoded($sigFile);
+		/*
 		$handle = @fopen($sigFile, "r");
 		if ($handle===FALSE){
 			throw new Exception('Unable to open sig file!');
 		}
 		$need_decode = (@fread($handle,strlen(self::SIG_HEADER))==self::SIG_HEADER);
 		fclose($handle);
+		*/
 		// декодируем подпись из base64 - получаем подпись в бинарном формате
 		if ($need_decode){
-			$this->run_shell_cmd(sprintf('openssl enc -d -base64 -in "%s" -out "%s"',$sigFile,$derFile));
+			$this->decodeSigFromBase64($sigFile,$derFile);
 		}
 		else{
 			//der = sig
@@ -500,7 +519,7 @@ class PKIManager {
 					$subj.= $subj_fld_k.'='.$subj_fld_v;
 				}
 				
-				$this->logger->add(sprintf('Could not find field %s in subject %s',$fld,$subj),'error');
+				$this->logger->add(sprintf(self::ER_CERT_FIELD_NOT_FOUND,$fld,$subj),'error');
 				throw new Exception(self::ER_BROKEN_CHAIN);
 			}			
 		}
@@ -558,17 +577,21 @@ class PKIManager {
 				$der_file = '';
 				$pem_files = [];//этих может быть несколько!
 				$this->parseSigFile($sigFile,$der_file,$pem_files);
+				
+				$sig_attrs = $this->getSigAttributes($der_file,TRUE);
+				
 				foreach($pem_files as $pem_file){
 					try{	
 						$cert_data = new stdClass();		
-						$cert_data->signDate = NULL;
+						$cert_data->signedDate = NULL;
+						$cert_data->algorithm = NULL;
 						$cert_data->subject = [];
 						$cert_data->issuer = [];
 						$this->getCertInf($pem_file,$cert_data->subject,$cert_data->issuer);
 						
-						$cert_str = $this->run_shell_cmd(sprintf('openssl x509 -subject_hash -issuer_hash -dates -fingerprint -issuer -in "%s" -noout',$pem_file));
+						$cert_str = $this->run_shell_cmd(sprintf('openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "%s" -noout',$pem_file));
 						$cert_ar = explode(PHP_EOL,trim($cert_str));
-						if (count($cert_ar)<6){
+						if (count($cert_ar)<7){
 							$this->logger->add('Could not get certificate data from '.$cert_str,'error');
 							throw new Exception(self::ER_BROKEN_CHAIN);
 						}
@@ -597,9 +620,19 @@ class PKIManager {
 							}
 							$cert_data->fingerprint = str_replace(':','',$cert_data->fingerprint);
 						}
-
+						
+						//serial
+						$p = strpos($cert_ar[5],'=');
+						if ($p>=0){
+							$serial_hex = substr($cert_ar[5],$p+1);
+							if (isset($sig_attrs[$serial_hex])){
+								$cert_data->signedDate = $sig_attrs[$serial_hex]->signedDate;
+								$cert_data->algorithm = $sig_attrs[$serial_hex]->algorithm;
+							}
+						}
+						
 						//issuer
-						$issuer = $this->parse_fields('/',$cert_ar[5]);
+						$issuer = $this->parse_fields('/',$cert_ar[6]);
 						$this->check_subj_fields($issuer, array('CN',self::SUBJ_FLD_OGRN));
 			
 						//файл со всеми головными сертами (УЦ и root) и crl
@@ -638,6 +671,7 @@ class PKIManager {
 						}
 			
 						try{
+							//-noverify
 							$verif_res = $this->run_shell_cmd(sprintf(				
 								'openssl smime -verify -content "%s" -purpose any -crl_check -out /dev/null -inform der -in "%s" -CAfile "%s"',
 								$contentFile,
@@ -647,15 +681,20 @@ class PKIManager {
 						}
 						catch(Exception $e){
 							$user_m = '';
-							$m = $e->getMessage();				
-							if (strpos($m,'unable to get issuer certificate')>=0){
-								$user_m = self::ER_BROKEN_CHAIN;
-							}
-							else{
-								$user_m = self::ER_VERIF_FAIL;					
-							}
-							unlink($chain_file);
-							throw new Exception($user_m);
+							$m = $e->getMessage();	
+										
+							if (strpos($m,'certificate has expired')===FALSE){
+								if (strpos($m,'unable to get issuer certificate')>=0){
+									$user_m = self::ER_BROKEN_CHAIN;
+								}
+								else{
+									$user_m = self::ER_VERIF_FAIL;					
+								}
+								unlink($chain_file);
+								//throw new Exception($user_m);
+								$verifResult->checkError = (is_null($verifResult->checkError)? '':($verifResult->checkError.', ')).$e->getMessage();
+								$verifResult->checkPassed = FALSE;
+							}							
 						}
 						
 						array_push($verifResult->signatures,$cert_data);
@@ -679,6 +718,136 @@ class PKIManager {
 		}
 		
 		return $verifResult;
+	}
+	
+	public function getFileHash($contentFile){
+		$res_str = $this->run_shell_cmd(sprintf('cat "%s" | openssl dgst -md_gost94',$contentFile));
+		$p = strpos($res_str,'=');
+		$hash = NULL;
+		if ($p>=0){
+			$hash = trim(substr($res_str,$p+1));
+		}
+		return $hash;
+	}
+	
+	/*
+	 * @param {string} result of "openssl cms" command
+	 * @returns {array} hash array of stdClass(algorithm,signedDate). Hash is a certificate hex serial
+	 */
+	protected function get_sig_attributes($str){
+		$res_ar = explode(PHP_EOL,$str);
+		
+		$serial_found = FALSE;
+		$alg_found = FALSE;
+		$signed_dt_found = FALSE;
+		$signed_dt_val_next = FALSE;
+		
+		$res = [];
+		$cur_serial = NULL;
+		
+		foreach($res_ar as $line){
+			$line = trim($line);
+			if ($line=='d.issuerAndSerialNumber:'){
+				$serial_found = TRUE;
+			}
+			else if ($serial_found && strpos($line,'serialNumber:')!==FALSE){
+				$p=strpos($line,':')+1;
+				$cur_serial = dec2hex(trim(substr($line,$p)));
+				$res[$cur_serial] = new stdClass();
+				$res[$cur_serial]->signedDate = NULL;
+				$res[$cur_serial]->algorithm = NULL;				
+				$serial_found = FALSE;
+			}
+			else if ($signed_dt_val_next){
+				$p=strpos($line,':');
+				if ($p>=0){
+					$res[$cur_serial]->signedDate = strtotime(trim(substr($line,$p+1)));
+					$signed_dt_val_next = FALSE;
+					$signed_dt_found = FALSE;
+				}
+			}
+			else if  ($alg_found && strpos($line,'algorithm:')!==FALSE ){
+				$p=strpos($line,':')+1;
+				$res[$cur_serial]->algorithm = trim(substr($line,$p));
+				if (($p = strpos($res[$cur_serial]->algorithm,' ('))>=0){
+					$res[$cur_serial]->algorithm = substr($res[$cur_serial]->algorithm,0,$p);
+				}
+				$alg_found = FALSE;
+			}
+			else if  ($signed_dt_found && $line=='value.set:' ){
+				$signed_dt_val_next = TRUE;
+			}
+			else if ($line=='digestAlgorithm:'){
+				$alg_found = TRUE;
+			}
+			else if ($line=='object: signingTime (1.2.840.113549.1.9.5)'){
+				$signed_dt_found = TRUE;
+			}
+			
+		}
+		return $res;
+	}
+	
+	/*
+	 * @param {string} pemFile gets signing date time from base64 sig
+	 * @param {bool} binForamt true=der binary format, otherwise pem, base64
+	 * @return {stdClass} from get_sig_attributes
+	 */
+	public function getSigAttributes($file,$binForamt){
+		$ret = NULL;
+		try{
+			$res_str = $this->run_shell_cmd(sprintf('openssl cms -inform %s -in "%s" -noout -cmsout -print',($binForamt? 'der':'pem'),$file));
+			$ret = $this->get_sig_attributes($res_str);
+		}
+		finally{
+			$this->logger->dump();
+		}			
+		return $ret;
+	}
+	
+	/*
+	 * @param {string} sigFile
+	 * @param {string} derFile
+	 */
+	public function decodeSigFromBase64($sigFile,$derFile){
+		try{
+			$this->run_shell_cmd(sprintf('openssl enc -d -base64 -in "%s" -out "%s"',$sigFile,$derFile));
+		}
+		finally{
+			$this->logger->dump();
+		}					
+	}
+	
+	/*
+	 * @param {string} sSigFile source sig file id der format
+	 * @param {string} dSigFile destinations sig file id der format
+	 * @param {string} oSigFile output sig file id der format
+	 */	
+	public function mergeSigs($sSigFile,$dSigFile,$oSigFile){
+		try{
+			$this->run_shell_cmd(sprintf(dirname(__FILE__).DIRECTORY_SEPARATOR.'cmsmerge -s %s -d %s -o %s',$sSigFile,$dSigFile,$oSigFile));
+		}
+		finally{
+			$this->logger->dump();
+		}					
+	}
+	
+	/*
+	 */
+	public function isBase64Encoded($sigFile){
+		try{
+			$handle = @fopen($sigFile, "r");
+			if ($handle===FALSE){
+				throw new Exception('Unable to open sig file!');
+			}	
+			$is_base64 = (@fread($handle,strlen(self::SIG_HEADER))==self::SIG_HEADER);
+			fclose($handle);
+		}
+		finally{
+			$this->logger->dump();
+		}			
+		
+		return $is_base64;
 	}
 }
 

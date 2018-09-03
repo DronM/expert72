@@ -1,6 +1,6 @@
 -- VIEW: doc_flow_out_dialog
 
-DROP VIEW doc_flow_out_dialog;
+--DROP VIEW doc_flow_out_dialog;
 
 CREATE OR REPLACE VIEW doc_flow_out_dialog AS
 	SELECT
@@ -53,10 +53,42 @@ CREATE OR REPLACE VIEW doc_flow_out_dialog AS
 					'file_size',t.file_size,
 					'file_signed',t.file_signed,
 					'file_uploaded','true',
-					'file_path',t.file_path
+					'file_path',t.file_path,
+					'signatures',--sign.signatures
+					CASE
+						WHEN sign.signatures IS NULL AND f_ver.file_id IS NOT NULL THEN
+							jsonb_build_array(
+								jsonb_build_object(
+									'sign_date_time',f_ver.date_time,
+									'check_result',f_ver.check_result,
+									'error_str',f_ver.error_str
+								)
+							)
+						ELSE sign.signatures
+					END
 				)
 			) AS attachments			
 		FROM doc_flow_attachments AS t
+		LEFT JOIN file_verifications AS f_ver ON f_ver.file_id=t.file_id
+		LEFT JOIN (
+			SELECT
+				f_sig.file_id,
+				jsonb_agg(
+					jsonb_build_object(
+						'owner',u_certs.subject_cert,
+						'cert_from',u_certs.date_time_from,
+						'cert_to',u_certs.date_time_to,
+						'sign_date_time',f_sig.sign_date_time,
+						'check_result',ver.check_result,
+						'check_time',ver.check_time,
+						'error_str',ver.error_str
+					)
+				) As signatures
+			FROM file_signatures AS f_sig
+			LEFT JOIN file_verifications AS ver ON ver.file_id=f_sig.file_id
+			LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id
+			GROUP BY f_sig.file_id
+		) AS sign ON sign.file_id=t.file_id			
 		WHERE t.doc_type='doc_flow_out'::data_types
 		GROUP BY t.doc_id		
 	) AS files ON files.doc_id = doc_flow_out.id

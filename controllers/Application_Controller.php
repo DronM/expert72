@@ -821,10 +821,13 @@ class Application_Controller extends ControllerSQL{
 		
 		$file_id = md5(uniqid());
 		
-		//sig-data indexes ".sig" - 4 chars
-		$sig_ind = (strtolower(substr($files['name'][0],strlen($files['name'][0])-4,4))=='.sig')? 0 : NULL;		
+		/* sig-data indexes ".sig" - 4 chars
+		 * IE does not have File constructro, so Blob is used instead
+		 * it has always name=blob
+		 */
+		$sig_ind = (strtolower($files['name'][0])=='blob' || strtolower(substr($files['name'][0],strlen($files['name'][0])-4,4))=='.sig')? 0 : NULL;		
 		if (is_null($sig_ind)){
-			$sig_ind = (strtolower(substr($files['name'][1],strlen($files['name'][1])-4,4))=='.sig')? 1 : NULL;
+			$sig_ind = (strtolower($files['name'][1])=='blob' || strtolower(substr($files['name'][1],strlen($files['name'][1])-4,4))=='.sig')? 1 : NULL;
 			if (is_null($sig_ind)){
 				throw new Exception(self::ER_PRINT_FILE_CNT.$ER_PRINT_FILE_CNT_END[$id].'.');
 			}
@@ -857,9 +860,10 @@ class Application_Controller extends ControllerSQL{
 				f_sig.file_id,
 				jsonb_agg(
 					jsonb_build_object(
-						'id',f_sig.signature_file_id,
 						'owner',u_certs.subject_cert,
-						'create_dt',f_sig.sign_date_time,
+						'cert_from',u_certs.date_time_from,
+						'cert_to',u_certs.date_time_to,
+						'sign_date_time',f_sig.sign_date_time,
 						'check_result',ver.check_result,
 						'check_time',ver.check_time,
 						'error_str',ver.error_str
@@ -874,14 +878,15 @@ class Application_Controller extends ControllerSQL{
 			));
 			if (!count($sig_ar) || !isset($sig_ar['signatures'])){
 				$sig_ar['signatures'] = sprintf('[{
-					"id":"%s",
-					"create_dt":null,
+					"sign_date_time":"%s",
+					"cert_from",null,
+					"cert_to",null,
 					"owner":null,
 					"check_result":"%s",
 					"check_time":"%s",
-					"error_str":"%s",
+					"error_str":"%s"
 				}]',
-				$file_id,
+				date('Y-m-d H:i:s'),
 				$verif_res->check_result,
 				$verif_res->check_time,
 				$verif_res->error_str
@@ -890,14 +895,15 @@ class Application_Controller extends ControllerSQL{
 		}
 		catch(Exception $e){
 			$sig_ar['signatures'] = sprintf('[{
-				"id":"%s",
-				"create_dt":null,
+				"sign_date_time":"%s",
 				"owner":null,
+				"cert_from",null,
+				"cert_to",null,
 				"check_result":false,
 				"check_time":null,
-				"error_str":%s,
+				"error_str":"%s"
 			}]',
-			$file_id,
+			date('Y-m-d H:i:s'),
 			$e->getMessage()
 			);
 			
@@ -1122,14 +1128,13 @@ class Application_Controller extends ControllerSQL{
 				adf.*,
 				mdf.doc_flow_out_client_id,
 				m.date_time AS doc_flow_out_date_time,
-				reg.reg_number AS doc_flow_out_reg_number,
+				reg.reg_number AS doc_flow_out_reg_number,				
 				CASE
-					WHEN sign.signatures IS NULL THEN
+					WHEN sign.signatures IS NULL AND f_ver.file_id IS NOT NULL THEN
 						jsonb_build_array(
 							jsonb_build_object(
-								'id',adf.file_id,
 								'owner',NULL,
-								'create_dt',NULL,
+								'sign_date_time',NULL,
 								'check_result',NULL,
 								'check_time',NULL,
 								'error_str',NULL
@@ -1139,6 +1144,7 @@ class Application_Controller extends ControllerSQL{
 				END AS signatures
 								
 			FROM application_document_files AS adf
+			LEFT JOIN file_verifications AS f_ver ON f_ver.file_id=adf.file_id
 			LEFT JOIN doc_flow_out_client_document_files AS mdf ON mdf.file_id=adf.file_id
 			LEFT JOIN doc_flow_out_client AS m ON m.id=mdf.doc_flow_out_client_id
 			LEFT JOIN doc_flow_out_client_reg_numbers AS reg ON reg.doc_flow_out_client_id=m.id
@@ -1147,9 +1153,10 @@ class Application_Controller extends ControllerSQL{
 					f_sig.file_id,
 					jsonb_agg(
 						jsonb_build_object(
-							'id',f_sig.signature_file_id,
 							'owner',u_certs.subject_cert,
-							'create_dt',f_sig.sign_date_time,
+							'cert_from',u_certs.date_time_from,
+							'cert_to',u_certs.date_time_to,
+							'sign_date_time',f_sig.sign_date_time,
 							'check_result',ver.check_result,
 							'check_time',ver.check_time,
 							'error_str',ver.error_str
@@ -1710,8 +1717,10 @@ class Application_Controller extends ControllerSQL{
 			$rel_dest = self::APP_DIR_PREF.$ar['application_id'].DIRECTORY_SEPARATOR.
 				self::APP_DIR_DELETED_FILES;
 			
+			$document_type_path = self::dirNameOnDocType($ar['document_type']);
+			$document_type_path.= ($document_type_path=='')? '':DIRECTORY_SEPARATOR;
 			$rel_fl = self::APP_DIR_PREF.$ar['application_id'].DIRECTORY_SEPARATOR.
-				self::dirNameOnDocType($ar['document_type']).DIRECTORY_SEPARATOR.				
+				$document_type_path.
 				$ar['document_id'].DIRECTORY_SEPARATOR.
 				$ar['file_id'];
 				
@@ -1835,8 +1844,10 @@ class Application_Controller extends ControllerSQL{
 					$ar['file_id'].$fl_postf;
 			}
 			else{
+				$document_type_path = self::dirNameOnDocType($ar['document_type']);
+				$document_type_path.= ($document_type_path=='')? '':DIRECTORY_SEPARATOR;			
 				$rel_fl = self::APP_DIR_PREF.$ar['application_id'].DIRECTORY_SEPARATOR.
-					self::dirNameOnDocType($ar['document_type']).DIRECTORY_SEPARATOR.
+					$document_type_path.
 					$ar['document_id'].DIRECTORY_SEPARATOR.
 					$ar['file_id'].$fl_postf;		
 			}
@@ -2854,7 +2865,7 @@ class Application_Controller extends ControllerSQL{
 							END||'/'||app_f.file_id
 							AS file_path	
 						FROM application_document_files AS app_f
-						LEFT JOIN file_verification AS v ON app_f.file_id=v.file_id
+						LEFT JOIN file_verifications AS v ON app_f.file_id=v.file_id
 						WHERE app_f.application_id=%d AND app_f.deleted=FALSE AND app_f.file_signed AND v.file_id IS NULL
 						ORDER BY v.date_time)
 			UNION ALL
@@ -2864,7 +2875,7 @@ class Application_Controller extends ControllerSQL{
 						FROM (
 						SELECT jsonb_array_elements(app_print_expertise) AS fl FROM applications WHERE id=%d AND app_print_expertise IS NOT NULL
 						) AS app_f
-						LEFT JOIN file_verification AS v ON app_f.fl->>'id'=v.file_id
+						LEFT JOIN file_verifications AS v ON app_f.fl->>'id'=v.file_id
 						WHERE v.file_id IS NULL)
 			UNION ALL
 			(SELECT 
@@ -2873,7 +2884,7 @@ class Application_Controller extends ControllerSQL{
 						FROM (
 						SELECT jsonb_array_elements(app_print_cost_eval) AS fl FROM applications WHERE id=%d AND app_print_cost_eval IS NOT NULL
 						) AS app_f
-						LEFT JOIN file_verification AS v ON app_f.fl->>'id'=v.file_id
+						LEFT JOIN file_verifications AS v ON app_f.fl->>'id'=v.file_id
 						WHERE v.file_id IS NULL)			
 			UNION ALL
 			(SELECT 
@@ -2882,7 +2893,7 @@ class Application_Controller extends ControllerSQL{
 						FROM (
 						SELECT jsonb_array_elements(app_print_modification) AS fl FROM applications WHERE id=%d AND app_print_modification IS NOT NULL
 						) AS app_f
-						LEFT JOIN file_verification AS v ON app_f.fl->>'id'=v.file_id
+						LEFT JOIN file_verifications AS v ON app_f.fl->>'id'=v.file_id
 						WHERE v.file_id IS NULL)						
 			UNION ALL
 			(SELECT 
@@ -2891,7 +2902,7 @@ class Application_Controller extends ControllerSQL{
 						FROM (
 						SELECT jsonb_array_elements(app_print_audit) AS fl FROM applications WHERE id=%d AND app_print_audit IS NOT NULL
 						) AS app_f
-						LEFT JOIN file_verification AS v ON app_f.fl->>'id'=v.file_id
+						LEFT JOIN file_verifications AS v ON app_f.fl->>'id'=v.file_id
 						WHERE v.file_id IS NULL)									
 			UNION ALL
 			(SELECT 
@@ -2900,7 +2911,7 @@ class Application_Controller extends ControllerSQL{
 						FROM (
 						SELECT jsonb_array_elements(auth_letter_file) AS fl FROM applications WHERE id=%d AND auth_letter_file IS NOT NULL
 						) AS app_f
-						LEFT JOIN file_verification AS v ON app_f.fl->>'id'=v.file_id
+						LEFT JOIN file_verifications AS v ON app_f.fl->>'id'=v.file_id
 						WHERE v.file_id IS NULL)															
 			",
 			$db_app_id,
@@ -2932,8 +2943,8 @@ class Application_Controller extends ControllerSQL{
 		$m->query(sprintf(
 			"(SELECT 
 				v.date_time,
-				to_char(u_certs.date_from,'DD/MM/YY') AS date_from,
-				to_char(u_certs.date_to,'DD/MM/YY') AS date_to,
+				to_char(u_certs.date_time_from,'DD/MM/YY') AS date_from,
+				to_char(u_certs.date_time_to,'DD/MM/YY') AS date_to,
 				round(v.check_time,1) AS check_time,
 				v.check_result,
 				v.error_str,
@@ -2945,7 +2956,7 @@ class Application_Controller extends ControllerSQL{
 				FROM 
 				(select (jsonb_each_text(u_certs.issuer_cert)).* ) f
 				) AS issuer_cert,
-				u_certs.sign_date_time,
+				to_char(f_sig.sign_date_time,'DD/MM/YY') AS sign_date_time,
 				CASE
 					WHEN app_f.document_type='pd' THEN 'ПД'
 					WHEN app_f.document_type='eng_survey' THEN 'РИИ'
@@ -2957,8 +2968,9 @@ class Application_Controller extends ControllerSQL{
 				AS file_name
 		
 			FROM application_document_files AS app_f
-			LEFT JOIN file_verification AS v ON app_f.file_id=v.file_id
-			LEFT JOIN user_certificates AS u_certs ON u_certs.id=v.user_certificate_id
+			LEFT JOIN file_verifications AS v ON app_f.file_id=v.file_id
+			LEFT JOIN file_signatures AS f_sig ON f_sig.file_id=v.file_id
+			LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id
 			WHERE app_f.application_id=%d AND app_f.deleted=FALSE AND v.date_time IS NOT NULL
 			ORDER BY v.date_time)
 
@@ -2966,8 +2978,8 @@ class Application_Controller extends ControllerSQL{
 
 			(SELECT
 				v.date_time,
-				to_char(u_certs.date_from,'DD/MM/YY') AS date_from,
-				to_char(u_certs.date_to,'DD/MM/YY') AS date_to,
+				to_char(u_certs.date_time_from,'DD/MM/YY') AS date_from,
+				to_char(u_certs.date_time_to,'DD/MM/YY') AS date_to,
 				round(v.check_time,1) AS check_time,
 				v.check_result,
 				v.error_str,
@@ -2979,21 +2991,22 @@ class Application_Controller extends ControllerSQL{
 				FROM 
 				(select (jsonb_each_text(u_certs.issuer_cert)).* ) f
 				) AS issuer_cert,
-				u_certs.sign_date_time,
+				to_char(f_sig.sign_date_time,'DD/MM/YY') AS sign_date_time,
 				'Заявление ПД / '||(app_f.fl->>'name')::text AS file_name
 
 			FROM (
 			SELECT jsonb_array_elements(app_print_expertise) AS fl FROM applications WHERE id=%d AND app_print_expertise IS NOT NULL
 			) AS app_f
-			LEFT JOIN file_verification AS v ON app_f.fl->>'id'=v.file_id
-			LEFT JOIN user_certificates AS u_certs ON u_certs.id=v.user_certificate_id)
+			LEFT JOIN file_verifications AS v ON app_f.fl->>'id'=v.file_id
+			LEFT JOIN file_signatures AS f_sig ON f_sig.file_id=v.file_id
+			LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id)			
 
 			UNION ALL
 
 			(SELECT
 				v.date_time,
-				to_char(u_certs.date_from,'DD/MM/YY') AS date_from,
-				to_char(u_certs.date_to,'DD/MM/YY') AS date_to,
+				to_char(u_certs.date_time_from,'DD/MM/YY') AS date_from,
+				to_char(u_certs.date_time_to,'DD/MM/YY') AS date_to,
 				round(v.check_time,1) AS check_time,
 				v.check_result,
 				v.error_str,
@@ -3005,21 +3018,22 @@ class Application_Controller extends ControllerSQL{
 				FROM 
 				(select (jsonb_each_text(u_certs.issuer_cert)).* ) f
 				) AS issuer_cert,
-				u_certs.sign_date_time,
+				to_char(f_sig.sign_date_time,'DD/MM/YY') AS sign_date_time,
 				'Заявление Достоверность / '||(app_f.fl->>'name')::text AS file_name
 
 			FROM (
 			SELECT jsonb_array_elements(app_print_cost_eval) AS fl FROM applications WHERE id=%d AND app_print_cost_eval IS NOT NULL
 			) AS app_f
-			LEFT JOIN file_verification AS v ON app_f.fl->>'id'=v.file_id
-			LEFT JOIN user_certificates AS u_certs ON u_certs.id=v.user_certificate_id)
+			LEFT JOIN file_verifications AS v ON app_f.fl->>'id'=v.file_id
+			LEFT JOIN file_signatures AS f_sig ON f_sig.file_id=v.file_id
+			LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id)			
 
 			UNION ALL
 
 			(SELECT
 				v.date_time,
-				to_char(u_certs.date_from,'DD/MM/YY') AS date_from,
-				to_char(u_certs.date_to,'DD/MM/YY') AS date_to,
+				to_char(u_certs.date_time_from,'DD/MM/YY') AS date_from,
+				to_char(u_certs.date_time_to,'DD/MM/YY') AS date_to,
 				round(v.check_time,1) AS check_time,
 				v.check_result,
 				v.error_str,
@@ -3031,21 +3045,22 @@ class Application_Controller extends ControllerSQL{
 				FROM 
 				(select (jsonb_each_text(u_certs.issuer_cert)).* ) f
 				) AS issuer_cert,
-				u_certs.sign_date_time,
+				to_char(f_sig.sign_date_time,'DD/MM/YY') AS sign_date_time,
 				'Заявление Модификация / '||(app_f.fl->>'name')::text AS file_name
 
 			FROM (
 			SELECT jsonb_array_elements(app_print_modification) AS fl FROM applications WHERE id=%d AND app_print_modification IS NOT NULL
 			) AS app_f
-			LEFT JOIN file_verification AS v ON app_f.fl->>'id'=v.file_id
-			LEFT JOIN user_certificates AS u_certs ON u_certs.id=v.user_certificate_id)
+			LEFT JOIN file_verifications AS v ON app_f.fl->>'id'=v.file_id
+			LEFT JOIN file_signatures AS f_sig ON f_sig.file_id=v.file_id
+			LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id)			
 
 			UNION ALL
 
 			(SELECT
 				v.date_time,
-				to_char(u_certs.date_from,'DD/MM/YY') AS date_from,
-				to_char(u_certs.date_to,'DD/MM/YY') AS date_to,
+				to_char(u_certs.date_time_from,'DD/MM/YY') AS date_from,
+				to_char(u_certs.date_time_to,'DD/MM/YY') AS date_to,
 				round(v.check_time,1) AS check_time,
 				v.check_result,
 				v.error_str,
@@ -3057,21 +3072,22 @@ class Application_Controller extends ControllerSQL{
 				FROM 
 				(select (jsonb_each_text(u_certs.issuer_cert)).* ) f
 				) AS issuer_cert,
-				u_certs.sign_date_time,
+				to_char(f_sig.sign_date_time,'DD/MM/YY') AS sign_date_time,
 				'Заявление Аудит / '||(app_f.fl->>'name')::text AS file_name
 
 			FROM (
 			SELECT jsonb_array_elements(app_print_audit) AS fl FROM applications WHERE id=%d AND app_print_audit IS NOT NULL
 			) AS app_f
-			LEFT JOIN file_verification AS v ON app_f.fl->>'id'=v.file_id
-			LEFT JOIN user_certificates AS u_certs ON u_certs.id=v.user_certificate_id)
+			LEFT JOIN file_verifications AS v ON app_f.fl->>'id'=v.file_id
+			LEFT JOIN file_signatures AS f_sig ON f_sig.file_id=v.file_id
+			LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id)			
 
 			UNION ALL
 
 			(SELECT
 				v.date_time,
-				to_char(u_certs.date_from,'DD/MM/YY') AS date_from,
-				to_char(u_certs.date_to,'DD/MM/YY') AS date_to,
+				to_char(u_certs.date_time_from,'DD/MM/YY') AS date_from,
+				to_char(u_certs.date_time_to,'DD/MM/YY') AS date_to,
 				round(v.check_time,1) AS check_time,
 				v.check_result,
 				v.error_str,
@@ -3083,14 +3099,15 @@ class Application_Controller extends ControllerSQL{
 				FROM 
 				(select (jsonb_each_text(u_certs.issuer_cert)).* ) f
 				) AS issuer_cert,
-				u_certs.sign_date_time,
+				to_char(f_sig.sign_date_time,'DD/MM/YY') AS sign_date_time,
 				'Доверенность / '||(app_f.fl->>'name')::text AS file_name
 
 			FROM (
 			SELECT jsonb_array_elements(auth_letter_file) AS fl FROM applications WHERE id=%d AND auth_letter_file IS NOT NULL
 			) AS app_f
-			LEFT JOIN file_verification AS v ON app_f.fl->>'id'=v.file_id
-			LEFT JOIN user_certificates AS u_certs ON u_certs.id=v.user_certificate_id)			
+			LEFT JOIN file_verifications AS v ON app_f.fl->>'id'=v.file_id
+			LEFT JOIN file_signatures AS f_sig ON f_sig.file_id=v.file_id
+			LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id)			
 			",
 			$db_app_id,
 			$db_app_id,

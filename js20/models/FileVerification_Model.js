@@ -70,6 +70,15 @@ function FileVerification_Model(options){
 	
 	options.fields.error_str = new FieldText("error_str",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.hash_gost94 = new FieldText("hash_gost94",filed_options);
+	
 		FileVerification_Model.superclass.constructor.call(this,id,options);
 }
 extend(FileVerification_Model,ModelXML);

@@ -27,6 +27,16 @@ function FileSignatures_Model(options){
 	var filed_options = {};
 	filed_options.primaryKey = true;	
 	
+	filed_options.autoInc = true;	
+	
+	options.fields.id = new FieldInt("id",filed_options);
+	options.fields.id.getValidator().setRequired(true);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
 	filed_options.autoInc = false;	
 	
 	options.fields.file_id = new FieldString("file_id",filed_options);
@@ -36,13 +46,11 @@ function FileSignatures_Model(options){
 				
 	
 	var filed_options = {};
-	filed_options.primaryKey = true;	
+	filed_options.primaryKey = false;	
 	
 	filed_options.autoInc = false;	
 	
-	options.fields.signature_file_id = new FieldString("signature_file_id",filed_options);
-	options.fields.signature_file_id.getValidator().setRequired(true);
-	options.fields.signature_file_id.getValidator().setMaxLength('36');
+	options.fields.user_certificate_id = new FieldInt("user_certificate_id",filed_options);
 	
 				
 	
@@ -60,8 +68,9 @@ function FileSignatures_Model(options){
 	
 	filed_options.autoInc = false;	
 	
-	options.fields.user_certificate_id = new FieldInt("user_certificate_id",filed_options);
+	options.fields.algorithm = new FieldText("algorithm",filed_options);
 	
+			
 		FileSignatures_Model.superclass.constructor.call(this,id,options);
 }
 extend(FileSignatures_Model,ModelXML);

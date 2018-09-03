@@ -3,12 +3,13 @@
 	</h4>
 	<div>
 		{{#isNotSent}}
-		<p>Поддерживаются следующие форматы: {{#allowedFileExt}}<mark>{{ext}}</mark>{{/allowedFileExt}}</p>
-		<p>Максимальный размер файла для загрузки:<mark>{{maxFileSize}}</mark></p>
-		<p>Добавьте файлы и затем нажмите "загрузить".</p>
-		
+		<div class="alert alert-info alert-styled-left alert-bordered">
+			<div>Поддерживаются следующие форматы: {{#allowedFileExt}}<mark>{{ext}}</mark>{{/allowedFileExt}}</div>
+			<div>Максимальный размер файла для загрузки:<mark>{{maxFileSize}}</mark></div>
+			<div>Добавьте файлы и затем нажмите "загрузить".</div>
+		</div>
 		<div id="upload-container">
-			<div id="{{id}}:file-upload" style="display:inline;" class="btn bg-{{COLOR_CLASS}}" type="button" title="Загрузить на сервер добавленные файлы">Загрузить все файлы  <span id="{{id}}:total_upload_files" class="badge badge-danger" title="Количество файлов для загрузки">0</span></div>
+			<div id="{{id}}:file-upload" style="display:inline;" class="btn bg-{{COLOR_CLASS}} uploadBtn" type="button" title="Загрузить на сервер добавленные файлы">Загрузить все файлы  <span id="{{id}}:total_upload_files" class="badge badge-danger" title="Количество файлов для загрузки">0</span></div>
 			{{#attFromTemplate}}
 			<div id="{{id}}:attFromTemplate" style="display:inline;">
 			</div>

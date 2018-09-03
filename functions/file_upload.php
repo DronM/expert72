@@ -25,6 +25,8 @@ $session->start_session('_s', $dbLink,$dbLink);
 $request = new SimpleRequest();
 $response = new SimpleResponse();
 
+define('ER_UNABLE_RENAME','Ошибка записи файла!');
+
 function mkdir_or_error($dir){
 	if (!file_exists($dir)){
 		@mkdir($dir,0775,TRUE);
@@ -44,6 +46,24 @@ function prolongate_session() {
 	$sess_len = (isset($_SESSION['sess_len']))? $_SESSION['sess_len'] : ( (defined('SESSION_EXP_SEC'))? SESSION_EXP_SEC : 0);
 	if ($sess_len){
 		$_SESSION['sess_discard_after'] = $now + $sess_len;
+	}
+}
+ 
+function check_signature($dbLink,$fileDir,$fileId,&$dbFileId) {
+	if (
+	file_exists($file_doc = $fileDir.DIRECTORY_SEPARATOR.$fileId)
+	&&file_exists($file_doc_sig = $fileDir.DIRECTORY_SEPARATOR.$fileId.'.sig')
+	){
+		try{
+			if (is_null($dbFileId)){
+				FieldSQLString::formatForDb($dbLink,$fileId,$dbFileId);
+			}
+		
+			$pki_man = new PKIManager(PKI_PATH,PKI_CRL_VALIDITY,'error');
+			pki_log_sig_check($file_doc_sig, $file_doc, $dbFileId, $pki_man, $dbLink);
+		}
+		catch(Exception $e){
+		}
 	}
 }
  
@@ -113,6 +133,8 @@ try{
 					throw new Exception("Превышение максимального размера файла!");
 				}
 		
+				$db_file_id = NULL;//for all cases
+				
 				$is_sig = (isset($_REQUEST['signature']) && $_REQUEST['signature']=='true');
 				if (!$is_sig){
 					$orig_ext = strtolower(pathinfo($_REQUEST['resumableFilename'], PATHINFO_EXTENSION));
@@ -122,8 +144,7 @@ try{
 		
 					$db_fileName = NULL;				
 					$db_doc_type = NULL;
-					$db_doc_id = NULL;
-					$db_file_id = NULL;
+					$db_doc_id = NULL;					
 					$db_file_path = NULL;
 						
 					FieldSQLInt::formatForDb($_REQUEST['doc_id'],$db_doc_id);
@@ -174,10 +195,15 @@ try{
 					}				
 				}
 				$new_name = $resumable->uploadFolder.DIRECTORY_SEPARATOR.$_REQUEST['file_id'].($is_sig? '.sig':'');
-				rename($orig_file,$new_name);
+				if (rename($orig_file,$new_name)===FALSE){
+					throw new Exception(ER_UNABLE_RENAME);
+				}
+				
 				chmod($new_name, 0664);
 				
 				//Если загружено все (файл + данные), делаем проверку подписи
+				check_signature($dbLink,$resumable->uploadFolder,$_REQUEST['file_id'],$db_file_id);
+				/*
 				if (
 				file_exists($file_doc = $resumable->uploadFolder.DIRECTORY_SEPARATOR.$_REQUEST['file_id'])
 				&&file_exists($file_doc_sig = $resumable->uploadFolder.DIRECTORY_SEPARATOR.$_REQUEST['file_id'].'.sig')
@@ -192,6 +218,7 @@ try{
 					catch(Exception $e){
 					}
 				}
+				*/
 			}
 			catch(Exception $e){
 				if(file_exists($orig_file))unlink($orig_file);
@@ -202,7 +229,7 @@ try{
 	else if (
 		isset($_SESSION['LOGGED']) && $_SESSION['LOGGED']
 		&& isset($_REQUEST['f']) &&  $_REQUEST['f']=='doc_flow_file_upload'
-		&& isset($_REQUEST['doc_flow_id'])
+		&& isset($_REQUEST['doc_id'])
 		&& isset($_REQUEST['file_id'])
 		&& isset($_REQUEST['doc_type']) && ($_REQUEST['doc_type']=='in' || $_REQUEST['doc_type']=='out' || $_REQUEST['doc_type']=='inside')
 	){
@@ -214,7 +241,7 @@ try{
 		$file_path = (isset($_REQUEST['file_path']))? $_REQUEST['file_path'] : DocFlow_Controller::getDefAppDir($_REQUEST['doc_type']);
 	
 		$db_id = NULL;
-		FieldSQLInt::formatForDb($_REQUEST['doc_flow_id'],$db_id);
+		FieldSQLInt::formatForDb($_REQUEST['doc_id'],$db_id);
 		
 		//Определим куда поместить файл в заявление или отдельно
 		if ($_REQUEST['doc_type']=='out'||$_REQUEST['doc_type']=='inside'){
@@ -284,9 +311,11 @@ try{
 		
 				$is_sig = (isset($_REQUEST['signature']) && $_REQUEST['signature']=='true');
 			
+				$new_name = $resumable->uploadFolder.DIRECTORY_SEPARATOR.$_REQUEST['file_id'].($is_sig? '.sig':'');
+				$db_file_id = NULL;
+				
 				if (!$is_sig){
-					
-					$db_file_id = NULL;
+										
 					$db_file_name = NULL;
 					$db_file_path = NULL;
 						
@@ -317,10 +346,56 @@ try{
 						$db_file_path,
 						(isset($_REQUEST['file_signed']) && $_REQUEST['file_signed']=='true')? 'TRUE':'FALSE'
 					));
+					
+					if (rename($orig_file,$new_name)===FALSE){
+						throw new Exception(ER_UNABLE_RENAME);
+					}					
 				}
-				$new_name = $resumable->uploadFolder.DIRECTORY_SEPARATOR.$_REQUEST['file_id'].($is_sig? '.sig':'');
-				rename($orig_file,$new_name);
-				chmod($new_name, 0664);			
+				else if(isset($_REQUEST['sig_add']) && $_REQUEST['sig_add']=='true'){
+					//browser signature, always in base64					
+					$pki_man = new PKIManager(PKI_PATH,PKI_CRL_VALIDITY,'debug');
+					$need_decode = $pki_man->isBase64Encoded($orig_file);
+					if (file_exists($new_name)){
+						//merge contents with existing file
+						$der_file = NULL;
+						$merged_sig = $resumable->uploadFolder.DIRECTORY_SEPARATOR.$_REQUEST['file_id'].'.mrg';
+						if ($need_decode){
+							$der_file = $resumable->uploadFolder.DIRECTORY_SEPARATOR.$_REQUEST['file_id'].'.der';							
+							$pki_man->decodeSigFromBase64($orig_file,$der_file);
+						}
+						else{
+							$der_file = $orig_file;
+						}
+						$pki_man->mergeSigs($der_file,$new_name,$merged_sig);
+						
+						unlink($new_name);//old new name
+						unlink($orig_file);
+						if ($der_file && file_exists($der_file)){
+							unlink($der_file);
+						}
+						rename($merged_sig,$new_name);
+					}
+					else if ($need_decode){
+						//first signature
+						$pki_man->decodeSigFromBase64($orig_file,$new_name);
+						unlink($orig_file);
+					}
+					else{
+						rename($orig_file,$new_name);
+					}
+					FieldSQLString::formatForDb($dbLink,$_REQUEST['file_id'],$db_file_id);
+					
+					$dbLink->query(sprintf(
+					"UPDATE doc_flow_attachments
+					SET file_signed = TRUE
+					WHERE file_id=%s",
+					$db_file_id
+					));
+				}	
+								
+				//Если загружено все (файл + данные), делаем проверку подписи
+				check_signature($dbLink,$resumable->uploadFolder,$_REQUEST['file_id'],$db_file_id);
+				
 			}
 			catch(Exception $e){
 				if(file_exists($orig_file))unlink($orig_file);

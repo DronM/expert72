@@ -64,6 +64,14 @@ class FileVerification_Model extends ModelSQL{
 		$f_error_str=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"error_str",$f_opts);
 		$this->addField($f_error_str);
 		//********************
+		
+		//*** Field hash_gost94 ***
+		$f_opts = array();
+		$f_opts['id']="hash_gost94";
+				
+		$f_hash_gost94=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"hash_gost94",$f_opts);
+		$this->addField($f_hash_gost94);
+		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}
 

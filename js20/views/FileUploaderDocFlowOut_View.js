@@ -34,6 +34,9 @@ function FileUploaderDocFlowOut_View(id,options){
 		"docType":"doc"
 	};
 	
+	options.multiSignature = true;
+	options.uploadOnAdd = true;
+	
 	options.customFolder = (options.customFolder==undefined)? true:options.customFolder;
 	
 	var self = this;
@@ -107,29 +110,27 @@ FileUploaderDocFlowOut_View.prototype.deleteFileFromServer = function(fileId,ite
 }
 
 FileUploaderDocFlowOut_View.prototype.downloadFile = function(btnCtrl){
-//return;
-	var contr = new DocFlowOut_Controller();
-	var pm = contr.getPublicMethod("get_file");
+	var pm = (new DocFlowOut_Controller()).getPublicMethod("get_file");
 	pm.setFieldValue("file_id",btnCtrl.getAttr("file_id"));
 	pm.setFieldValue("doc_id",this.m_mainView.getElement("id").getValue());
 	pm.download();
+	/*
 	if (btnCtrl.getAttr("file_signed")=="true"){
 		var pm_sig = contr.getPublicMethod("get_file_sig");
 		pm_sig.setFieldValue("file_id",btnCtrl.getAttr("file_id"));
 		pm_sig.setFieldValue("doc_id",this.m_mainView.getElement("id").getValue());
 		pm_sig.download(null,1);
-	}	
+	}
+	*/	
 }
 
 FileUploaderDocFlowOut_View.prototype.getQuerySruc = function(file){
-	var res = {
-		"f":"doc_flow_file_upload",
-		"file_id":file.file_id,
-		"doc_flow_id":this.m_mainView.getElement("id").getValue(),
-		"doc_type":"out",
-		"file_signed":file.file_signed,
-		"signature":file.signature
-	};
+	var res = FileUploaderDocFlowOut_View.superclass.getQuerySruc.call(this,file);
+	res.f = "doc_flow_file_upload";
+	res.doc_id = this.m_mainView.getElement("id").getValue();
+	res.doc_type = "out";
+	delete res.file_path;
+	
 	if (this.m_customFolder){
 		//один раздел
 		var file_ctrl = this.getElement("file-list_doc").getElement("file_"+file.file_id);	
@@ -179,3 +180,21 @@ FileUploaderDocFlowOut_View.prototype.alterFolder = function(fileId,folderRef,ol
 		}
 	});
 }
+FileUploaderDocFlowOut_View.prototype.onSignClick = function(fileId,itemId){
+	var pm_sig = (new DocFlowOut_Controller()).getPublicMethod("get_file_sig");
+	pm_sig.setFieldValue("file_id",fileId);
+	pm_sig.setFieldValue("doc_id",this.m_mainView.getElement("id").getValue());	
+	pm_sig.download(null,1);
+}
+
+FileUploaderDocFlowOut_View.prototype.signFile = function(fileId,itemId){
+	
+	var cades = window.getApp().getCadesAPI();
+	var cert_lits_ctrl = this.m_mainView.getCertBoxControl();
+	if (!cades || !cades.getCertListCount() || !cert_lits_ctrl || !cert_lits_ctrl.getSelectedCert()){
+		throw new Error("Сертификат для подписи не выбран!");
+	}
+	
+	FileUploaderDocFlowOut_View.superclass.signFile.call(this,fileId,itemId,cert_lits_ctrl.getSelectedCert());
+}
+

@@ -1,9 +1,9 @@
 <?php
 	require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLString.php');
 	
-	function pki_log_sig_check($file_doc_sig, $file_doc,$dbFileId,&$pkiMan,&$dbLink){
+	function pki_log_sig_check($fileDocSig, $fileDoc,$dbFileId,&$pkiMan,&$dbLink){
 		//$pkiMan->setLogLevel('error');
-		$verif_res = $pkiMan->verifySig($file_doc_sig, $file_doc);
+		$verif_res = $pkiMan->verifySig($fileDocSig, $fileDoc);
 		
 		$db_checkError = NULL;
 		FieldSQLString::formatForDb($dbLink,$verif_res->checkError,$db_checkError);
@@ -27,6 +27,8 @@
 		$db_checkPassed,
 		$db_checkError
 		));
+		
+		$dbLink->query(sprintf("DELETE FROM file_signatures WHERE file_id=%s",$dbFileId));
 		
 		foreach($verif_res->signatures AS $cert_data){
 		
@@ -65,7 +67,8 @@
 			$db_dateFrom = isset($cert_data->dateFrom)? "'".date('Y-m-d',$cert_data->dateFrom)."'":'NULL';
 			$db_dateTo = isset($cert_data->dateTo)? "'".date('Y-m-d',$cert_data->dateTo)."'":'NULL';		
 		
-			$db_sign_date_time = isset($cert_data->signDate)? "'".date('Y-m-d',$cert_data->signDate)."'":'NULL';
+			$db_sign_date_time = isset($cert_data->signedDate)? "'".date('Y-m-d H:i:s',$cert_data->signedDate)."'":'NULL';
+			$db_algorithm = isset($cert_data->algorithm)? "'".$cert_data->algorithm."'":'NULL';
 		
 			$user_cert_ar = NULL;
 			if (isset($cert_data->fingerprint)){
@@ -91,27 +94,59 @@
 					$db_dateTo,
 					$subject_cert,$issuer_cert
 				));
-				
-				$dbLink->query(sprintf(
-					"INSERT INTO file_signatures
-					(file_id,signature_file_id,sign_date_time,user_certificate_id)
-					VALUES (%s,%s,%s,%d)			
-					ON CONFLICT (file_id,signature_file_id) DO UPDATE
-						SET sign_date_time=%s,
-						user_certificate_id=%d",
-					$dbFileId,
-					$dbFileId,			
-					$db_sign_date_time,
-					$user_cert_ar['id'],
-					$db_sign_date_time,$user_cert_ar['id']
-				));
-				
 			}
-			else{
-				$dbLink->query(sprintf("DELETE FROM file_signatures WHERE file_id=%s",$dbFileId));
-			}
+			
+			$dbLink->query(sprintf(
+				"INSERT INTO file_signatures
+				(file_id,sign_date_time,user_certificate_id,algorithm)
+				VALUES (%s,%s,%d,%s)",
+				$dbFileId,
+				$db_sign_date_time,
+				$user_cert_ar['id'],
+				$db_algorithm
+			));
+			
 		}
 		
 		return $verif_res;				
+	}
+	function pki_get_hash($fileDoc,$dbFileId,&$pkiMan,&$dbLink){
+		$hash = NULL;
+		$ar = $dbLink->query_first(sprintf(
+			"SELECT
+				date_time,
+				hash_gost94
+			FROM file_verifications
+			WHERE file_id=%s",
+			$dbFileId
+		));
+		if (count($ar) && isset($ar['hash_gost94']) && strlen($ar['hash_gost94'])){
+			$hash = $ar['hash_gost94'];
+		}
+		else{
+			$hash = $pkiMan->getFileHash($fileDoc);
+			$db_hash = "'".$hash."'";
+			if (isset($ar['date_time'])){
+				$dbLink->query(sprintf(
+					"UPDATE file_verifications
+					SET hash_gost94=%s
+					WHERE file_id=%s",
+					$db_hash,
+					$dbFileId
+				));
+			}
+			else{
+				$dbLink->query(sprintf(
+					"INSERT INTO file_verifications
+					(file_id,date_time,hash_gost94)
+					VALUES(%s,now(),%s)",
+					$dbFileId,
+					$db_hash
+				));
+			
+			}			
+		}
+		
+		return $ar['hash_gost94'];
 	}
 ?>

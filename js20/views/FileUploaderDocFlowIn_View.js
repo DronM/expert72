@@ -31,11 +31,13 @@ extend(FileUploaderDocFlowIn_View,FileUploaderDocFlowOut_View);
 
 /* public methods */
 FileUploaderDocFlowIn_View.prototype.getQuerySruc = function(file){
-	return {
-		"f":"doc_flow_file_upload",
-		"file_id":file.file_id,
-		"doc_flow_id":this.m_mainView.getElement("id").getValue(),
-		"doc_type":"in"
-	};
+	var res = FileUploaderDocFlowIn_View.superclass.getQuerySruc.call(this,file);
+	res.f = "doc_flow_file_upload";
+	res.file_id = file.file_id;
+	res.doc_id = this.m_mainView.getElement("id").getValue();
+	res.doc_type = "in";
+	delete res.file_path;
+	
+	return res;
 }
 

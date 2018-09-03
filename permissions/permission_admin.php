@@ -358,6 +358,8 @@ $permissions = array();
 				
 					$permissions['DocFlowOut_Controller_get_file']=TRUE;
 				
+					$permissions['DocFlowOut_Controller_get_file_hash']=TRUE;
+				
 					$permissions['DocFlowOut_Controller_get_file_sig']=TRUE;
 				
 					$permissions['DocFlowOut_Controller_get_next_num']=TRUE;
@@ -369,6 +371,8 @@ $permissions = array();
 					$permissions['DocFlowOut_Controller_get_next_contract_number']=TRUE;
 				
 					$permissions['DocFlowOut_Controller_alter_file_folder']=TRUE;
+				
+					$permissions['DocFlowOut_Controller_add_sig_to_file']=TRUE;
 				
 					$permissions['DocFlowIn_Controller_insert']=TRUE;
 				

@@ -20,6 +20,43 @@ function DocFlowOutDialog_View(id,options){
 	options.controller = new DocFlowOut_Controller();
 	options.model = options.models.DocFlowOutDialog_Model;
 
+	options.templateOptions = options.templateOptions || {};
+
+	var role = window.getApp().getServVar("role_id");
+	var is_admin = (role=="admin");		
+	var files;
+	var st;
+	var model_exists = false;
+	var read_only = false;
+	if (options.model && (options.model.getRowIndex()>=0 || options.model.getNextRow()) ){			
+		files = options.model.getFieldValue("files") || [];
+		st = options.model.getFieldValue("state");
+		model_exists = true;
+	
+		read_only = (st=="registered" && !is_admin);
+	}
+	else{
+		files = [];
+	}	
+	//********** cades plugin *******************
+	options.templateOptions.loadCadesPlugin = (!read_only && !window.getApp().getDoNotLoadCadesPlugin());
+	
+	if (options.templateOptions.loadCadesPlugin){
+		var cades = window.getApp().getCadesAPI();		
+		if (cades && !read_only){
+			options.templateOptions.pluginSupBrowser = cades.browserSupported();
+			options.templateOptions.pluginUnsupBrowser = !options.templateOptions.pluginSupBrowser;
+		
+			if (options.templateOptions.pluginSupBrowser){
+				var br = CommonHelper.getBrowser();				
+				options.templateOptions.isFirefox = (br["name"]=="Firefox");
+				options.templateOptions.isOpera = (br["name"]=="Opera" || br["name"]=="Yandex");
+				options.templateOptions.isChrome = (br["name"]=="Chrome");
+			}
+		}
+	}
+	//********** cades plugin *******************		
+
 	var self = this;
 	
 	this.m_dataType = "doc_flow_out";
@@ -27,22 +64,8 @@ function DocFlowOutDialog_View(id,options){
 	options.addElement = function(){
 		var bs = window.getBsCol();
 		var editContClassName = "input-group "+bs+"10";
-		var labelClassName = "control-label "+bs+"2";
-		var role = window.getApp().getServVar("role_id");
-		var is_admin = (role=="admin");		
+		var labelClassName = "control-label "+bs+"2";		
 		
-		var files;
-		var st;
-		var model_exists = false;
-		if (options.model && ( options.model.getRowIndex()==0 || (options.model.getRowIndex()<0 && options.model.getNextRow())) ){
-			files = options.model.getFieldValue("files") || [];
-			st = options.model.getFieldValue("state");
-			model_exists = true;
-		}
-		else{
-			files = [];
-		}
-	
 		var akt1c = ( (role=="boss"||role=="admin") && st!="registered");
 		var order1c = ( (role=="lawyer"||role=="boss"||role=="admin") && st!="registered");
 		this.addElement(new HiddenKey(id+":id"));
@@ -182,6 +205,7 @@ function DocFlowOutDialog_View(id,options){
 
 		this.addElement(new FileUploaderDocFlowOut_View(this.getId()+":attachments",{
 			"mainView":this,
+			"readOnly":read_only,
 			"items":files,
 			"templateOptions":{"isNotSent":(st!="registered" || is_admin)},
 			"akt1c":akt1c,
@@ -332,6 +356,36 @@ function DocFlowOutDialog_View(id,options){
 		,new CommandBinding({"control":this.getElement("expertise_reject_types_ref"),"fieldId":"expertise_reject_type_id"})
 		,new CommandBinding({"control":this.getElement("expertise_result")})		
 	]);
+	
+	//********** cades plugin ******************************
+	if (options.templateOptions.loadCadesPlugin){
+		$(".doNotCadesLoadPlugin").click(function(){
+			var checked = $("#doNotCadesLoadPlugin").is(":checked");
+			window.getApp().setDoNotLoadCadesPlugin(checked);
+		});
+		
+		if (cades && !cades.getLoaded()){
+			cades.setOnCertListFilled(function(){
+				self.cadesOnCertListFilled();
+			});
+			cades.setOnLoadSuccess(this.cadesOnLoadSuccess);
+			cades.setOnLoadError(this.cadesOnLoadError);
+		}
+		else if (cades){
+			//already loaded
+			//console.log("Cades loaded")
+			if (cades.getLoadError()){
+				this.cadesOnLoadError();
+			}
+			else{
+				this.cadesOnLoadSuccess();
+				if (cades.getCertListFilled()){
+					this.cadesOnCertListFilled();
+				}
+			}
+		}
+	}
+	//********** cades plugin ******************************
 	
 }
 extend(DocFlowOutDialog_View,DocFlowBaseDialog_View);
@@ -625,3 +679,37 @@ DocFlowOutDialog_View.prototype.setSubjectFromContract = function(docType){
 	var pm = doc_id? (new Contract_Controller()).getPublicMethod("get_constr_name") : null;
 	this.setSubject(docType,doc_id,pm);
 }
+
+//******** CADES ***********************************
+DocFlowOutDialog_View.prototype.cadesOnCertListFilled = function(){
+	var id = this.getId();
+	//общая информация
+	var cades = window.getApp().getCadesAPI();
+	document.getElementById(id+":cspName").innerHTML = "Криптопровайдер: " + cades.getCSPName();
+	document.getElementById(id+":cspVersion").innerHTML = "версия: " + cades.getCSPVersion();
+	document.getElementById(id+":plugInVersion").innerHTML = "Версия плагина: " + cades.getPluginVersion();
+	
+	//заполнение списка сертификатов
+	this.m_certBoxControl = new EditCertificateSelect(id+":certListBox",{
+		"cades":cades
+	});
+	this.m_certBoxControl.toDOM();
+	
+	$(".certFilling").addClass("hidden");
+	$(".certReady").removeClass("hidden");
+	$(".fileSignNoSig").removeClass("hidden");
+}
+
+DocFlowOutDialog_View.prototype.cadesOnLoadSuccess = function(){
+	$(".cadesChecking").remove();		
+	$(".cadesInstalled").removeClass("hidden");				
+		
+}
+DocFlowOutDialog_View.prototype.cadesOnLoadError = function(){
+	$(".cadesChecking").remove();		
+	$(".cadesNotInstalled").removeClass("hidden");			
+}
+DocFlowOutDialog_View.prototype.getCertBoxControl = function(){
+	return this.m_certBoxControl;
+}
+

@@ -420,16 +420,27 @@ throw Error(CommonHelper.longString(function () {/*
 	<xsl:choose>
 	<!--$er_num='100' or -->
 	<xsl:when test="$er_num='101' or $er_num='102'">
-		throw new FatalException({
-			"code":<xsl:value-of select="$er_num"/>
-			,"message":'<xsl:value-of select="/document/model[@id='ModelServResponse']/row/descr"/>'
-		});
+		if (CommonHelper.isIE()){
+			throw new Error('<xsl:value-of select="/document/model[@id='ModelServResponse']/row/descr"/>');
+		}
+		else{
+			throw new FatalException({
+				"code":<xsl:value-of select="$er_num"/>
+				,"message":'<xsl:value-of select="/document/model[@id='ModelServResponse']/row/descr"/>'
+			});
+		}
 	</xsl:when>
 	<xsl:when test="$er_num='105'">
-		throw new DbException({
-			"code":<xsl:value-of select="$er_num"/>
-			,"message":'<xsl:value-of select="/document/model[@id='ModelServResponse']/row/descr"/>'
-		});
+		if (CommonHelper.isIE()){
+			throw new Error('<xsl:value-of select="/document/model[@id='ModelServResponse']/row/descr"/>');
+		}
+		else{
+	
+			throw new DbException({
+				"code":<xsl:value-of select="$er_num"/>
+				,"message":'<xsl:value-of select="/document/model[@id='ModelServResponse']/row/descr"/>'
+			});
+		}
 	</xsl:when>
 	
 	<xsl:when test="not($er_num='0')">

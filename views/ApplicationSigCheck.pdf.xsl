@@ -87,7 +87,7 @@ https://www.webucator.com/tutorial/learn-xsl-fo
 					<fo:table-cell
 						display-align="center"
 						border-width="0.2mm" border-style="solid">
-						<fo:block>Время,с</fo:block>
+						<fo:block>Дата подписи</fo:block>
 					</fo:table-cell>					
 					
 				</fo:table-row>
@@ -155,9 +155,9 @@ https://www.webucator.com/tutorial/learn-xsl-fo
 				<xsl:value-of select="error_str"/>
 			</fo:block>
 		</fo:table-cell>
-		<fo:table-cell display-align="center" border-width="0.2mm" border-style="solid">
-			<fo:block text-align="center">
-				<xsl:value-of select="check_time"/>
+		<fo:table-cell border-width="0.2mm" border-style="solid">
+			<fo:block>
+				<xsl:value-of select="sign_date_time"/>
 			</fo:block>
 		</fo:table-cell>
 		

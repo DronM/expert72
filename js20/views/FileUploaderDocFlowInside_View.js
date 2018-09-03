@@ -121,15 +121,12 @@ FileUploaderDocFlowInside_View.prototype.downloadFile = function(btnCtrl){
 }
 
 FileUploaderDocFlowInside_View.prototype.getQuerySruc = function(file){
-	var res = {
-		"f":"doc_flow_file_upload",
-		"file_id":file.file_id,
-		"doc_flow_id":this.m_mainView.getElement("id").getValue(),
-		"doc_type":"inside",
-		"file_signed":file.file_signed,
-		"signature":file.signature,
-		"file_path":"Внутренние"
-	};
+	var res = FileUploaderDocFlowInside_View.superclass.getQuerySruc.call(this,file);
+	res.f = "doc_flow_file_upload";
+	res.doc_id = this.m_mainView.getElement("id").getValue();
+	res.doc_type = "inside";
+	res.file_path = "Внутренние";
+	
 	/*
 	if (this.m_customFolder){
 		//один раздел

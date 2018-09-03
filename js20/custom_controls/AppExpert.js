@@ -72,10 +72,7 @@ function AppExpert(options){
 	if (this.storageGet(this.getSidebarId())=="xs"){
 		$('body').toggleClass('sidebar-xs');
 	}
-	
-	//cades
-	this.m_cades = new CadesAPI();
-	
+		
 }
 extend(AppExpert,App);
 
@@ -166,6 +163,14 @@ AppExpert.prototype.magnify = function(dir){
 }
 
 AppExpert.prototype.getCadesAPI = function(){
+	//cades
+	if (!this.m_cades){
+		this.m_cades = new CadesAPI({
+			"debug":(this.getServVar("debug")=="1"),
+			"cadesType":CadesAPI.prototype.CADESCOM_CADES_BES
+			//CADESCOM_CADES_X_LONG_TYPE_1
+		});
+	}
 	return this.m_cades;
 }
 AppExpert.prototype.setDoNotLoadCadesPlugin = function(v){
