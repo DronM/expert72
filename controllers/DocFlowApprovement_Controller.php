@@ -185,6 +185,7 @@ class DocFlowApprovement_Controller extends ControllerSQL{
 		$pm->addParam(new FieldExtInt('id'
 		));
 		
+		
 		$this->addPublicMethod($pm);
 		$this->setObjectModelId('DocFlowApprovementDialog_Model');		
 

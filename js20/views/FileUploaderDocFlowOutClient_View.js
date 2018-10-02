@@ -14,6 +14,8 @@
 function FileUploaderDocFlowOutClient_View(id,options){
 	options = options || {};	
 	
+	options.allowFileSwitch = true;
+	
 	FileUploaderDocFlowOutClient_View.superclass.constructor.call(this,id,options);
 }
 extend(FileUploaderDocFlowOutClient_View, FileUploaderApplication_View);
@@ -31,10 +33,16 @@ FileUploaderDocFlowOutClient_View.prototype.checkRequiredFiles = function(){
 }
 
 FileUploaderDocFlowOutClient_View.prototype.deleteFileFromServer = function(fileId,itemId){
-	var self = this;
+	var doc_id = this.m_mainView.getElement("id").getValue();
+	if (!doc_id){
+		//something wrong - document has downloaded files but not inserted???
+		throw new Error("Документ не выбран!");
+	}
 	
-	var pm = (new Application_Controller()).getPublicMethod("remove_file");
+	var self = this;	
+	var pm = (new DocFlowOutClient_Controller()).getPublicMethod("remove_document_file");
 	pm.setFieldValue("file_id",fileId);
+	pm.setFieldValue("doc_flow_out_client_id",doc_id);
 	pm.run({"ok":function(){
 		window.showNote(self.NT_FILE_DELETED);
 		self.decTotalFileCount();
@@ -65,6 +73,10 @@ FileUploaderDocFlowOutClient_View.prototype.getQuerySruc = function(file){
 	var struc = FileUploaderDocFlowOutClient_View.superclass.getQuerySruc.call(this,file);
 	struc.doc_flow_out_client_id = this.m_mainView.getElement("id").getValue();
 	struc.application_id = this.m_mainView.getElement("applications_ref").getValue().getKey("id");
+	if(file.original_file){
+		struc.original_file_id = file.original_file.fileId;
+	}
+	
 	return struc;	
 }
 

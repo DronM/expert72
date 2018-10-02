@@ -360,7 +360,20 @@ DocFlowExamination_View.prototype.onGetData = function(resp,cmd){
 }
 
 DocFlowExamination_View.prototype.createDocFlowOut = function(){
-	var model = new DocFlowOutDialog_Model();
+	var pm = (new DocFlowOut_Controller()).getPublicMethod("get_object");
+	pm.setFieldValue("mode","insert");
+	var self = this;
+	pm.run({
+		"ok":function(resp){		
+			var m = resp.getModel("DocFlowOutDialog_Model");
+			m.getNextRow();	
+			self.openDocFlowOut(m);	
+		}
+	});
+}
+
+DocFlowExamination_View.prototype.openDocFlowOut = function(model){
+	//var model = new DocFlowOutDialog_Model();
 	model.setFieldValue("employees_ref",CommonHelper.unserialize(window.getApp().getServVar("employees_ref")));
 	model.setFieldValue("signed_by_employees_ref",null);
 	model.setFieldValue("doc_flow_in_ref",this.getElement("subject_docs_ref").getValue());
@@ -399,7 +412,7 @@ DocFlowExamination_View.prototype.createDocFlowOut = function(){
 		*/
 	}
 	
-	model.recInsert();
+	//model.recInsert();
 	var self = this;
 	this.m_docForm = new DocFlowOutDialog_Form({
 		"id":CommonHelper.uniqid(),

@@ -19,6 +19,7 @@ function Enum_doc_flow_out_client_types(id,options){
 ,"ru_contr_resp":"Ответы на замечания по контракту"
 ,"ru_contr_return":"Возврат контракта"
 ,"ru_contr_other":"Прочее"
+,"ru_date_prolongate":"Продление срока"
 };
 	options.options = [{"value":"app",
 "descr":multy_lang_values[window.getApp().getLocale()+"_"+"app"],
@@ -32,6 +33,9 @@ checked:(options.defaultValue&&options.defaultValue=="contr_return")}
 ,{"value":"contr_other",
 "descr":multy_lang_values[window.getApp().getLocale()+"_"+"contr_other"],
 checked:(options.defaultValue&&options.defaultValue=="contr_other")}
+,{"value":"date_prolongate",
+"descr":multy_lang_values[window.getApp().getLocale()+"_"+"date_prolongate"],
+checked:(options.defaultValue&&options.defaultValue=="date_prolongate")}
 ];
 	
 	Enum_doc_flow_out_client_types.superclass.constructor.call(this,id,options);

@@ -183,6 +183,26 @@ function User_Model(options){
 	
 	options.fields.reminders_to_email = new FieldBool("reminders_to_email",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	filed_options.defValue = true;
+	filed_options.alias = 'КриптоПро плагин: Время ожидания загрузки плагина';
+	filed_options.autoInc = false;	
+	
+	options.fields.cades_load_timeout = new FieldInt("cades_load_timeout",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	filed_options.defValue = true;
+	filed_options.alias = 'КриптоПро плагин: Размер части файла в байтах при поточной загрузке';
+	filed_options.autoInc = false;	
+	
+	options.fields.cades_chunk_size = new FieldInt("cades_chunk_size",filed_options);
+	
 			
 			
 			

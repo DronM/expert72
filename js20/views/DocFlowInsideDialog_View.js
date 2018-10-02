@@ -22,6 +22,21 @@ function DocFlowInsideDialog_View(id,options){
 	options.cmdSave = true;
 
 	var self = this;
+
+	var files = [];
+	var st;
+	var model_exists = false;
+	if (options.model && (options.model.getRowIndex()>=0 || options.model.getNextRow()) ){			
+		files = options.model.getFieldValue("files") || [];
+		st = options.model.getFieldValue("state");
+		model_exists = true;		
+	}
+	options.templateOptions = options.templateOptions || {};
+	options.templateOptions.fileCount = (files.length&&files[0].files&&files[0].files.length)? files[0].files.length:"0";
+	
+	//********** cades plugin *******************
+	this.m_cadesView = new Cades_View(id,options);
+	//********** cades plugin *******************		
 	
 	this.m_dataType = "doc_flow_out";
 	
@@ -95,24 +110,13 @@ function DocFlowInsideDialog_View(id,options){
 			"value":window.getApp().getPredefinedItem("doc_flow_importance_types","common")
 		}));	
 
-		var files;
-		var st;
-		var model_exists = false;
-		if (options.model && ( options.model.getRowIndex()==0 || (options.model.getRowIndex()<0 && options.model.getNextRow())) ){
-			files = options.model.getFieldValue("files") || [];
-			st = options.model.getFieldValue("state");
-			model_exists = true;
-		}
-		else{
-			files = [];
-		}
-	
 		this.addElement(new FileUploaderDocFlowInside_View(this.getId()+":attachments",{
 			"mainView":this,
 			"items":files,
-			"templateOptions":{"isNotSent":true}
-			})
-		);
+			"templateOptions":{
+				"isNotSent":true
+			}
+		}));
 	
 		//Команды
 		options.controlOk = new ButtonOK(id+":cmdOk",{
@@ -184,6 +188,7 @@ function DocFlowInsideDialog_View(id,options){
 		,new CommandBinding({"control":this.getElement("employees_ref"),"fieldId":"employee_id"})
 	]);
 	
+	this.m_cadesView.afterViewConstructed();
 }
 extend(DocFlowInsideDialog_View,DocFlowBaseDialog_View);
 

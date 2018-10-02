@@ -33,6 +33,7 @@ class About_Controller extends ControllerSQL{
 		$pm = new PublicMethod('get_object');
 		$pm->addParam(new FieldExtString('mode'));
 		
+		
 		$this->addPublicMethod($pm);
 		$this->setObjectModelId('About_Model');		
 

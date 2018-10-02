@@ -72,6 +72,7 @@ class DocFlowRegistration_Controller extends ControllerSQL{
 		$pm->addParam(new FieldExtInt('id'
 		));
 		
+		
 		$this->addPublicMethod($pm);
 		$this->setObjectModelId('DocFlowRegistrationDialog_Model');		
 

@@ -18,6 +18,17 @@ BEGIN
 			;
 		END IF;
 		/*
+		IF (TG_OP='UPDATE' AND NEW.experts_for_notification<>OLD.experts_for_notification) THEN
+			SELECT
+				array_agg( ((sub.obj->'fields'->>'expert')::json->'keys'->>'id')::int )
+			INTO NEW.experts_for_notification_ar
+			FROM (
+				SELECT jsonb_array_elements(NEW.experts_for_notification->'rows') AS obj
+			) AS sub		
+			;
+		END IF;
+		*/
+		/*
 		IF TG_OP='UPDATE' THEN
 			RAISE EXCEPTION 'Updating contracts linked_contracts=%',NEW.linked_contracts;
 		END IF;

@@ -50,16 +50,6 @@ function UserCertificate_Model(options){
 	
 	filed_options.autoInc = false;	
 	
-	options.fields.user_id = new FieldInt("user_id",filed_options);
-	options.fields.user_id.getValidator().setRequired(true);
-	
-				
-	
-	var filed_options = {};
-	filed_options.primaryKey = false;	
-	
-	filed_options.autoInc = false;	
-	
 	options.fields.date_time = new FieldDateTimeTZ("date_time",filed_options);
 	options.fields.date_time.getValidator().setRequired(true);
 	
@@ -100,6 +90,15 @@ function UserCertificate_Model(options){
 	filed_options.autoInc = false;	
 	
 	options.fields.issuer_cert = new FieldJSONB("issuer_cert",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.employee_id = new FieldInt("employee_id",filed_options);
 	
 			
 		UserCertificate_Model.superclass.constructor.call(this,id,options);

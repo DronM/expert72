@@ -145,6 +145,7 @@ extend(Order1CList_Controller,ControllerObjClient);
 	var f_opts = {};
 		
 	pm.addField(new FieldString("ext_id",f_opts));
+	
 	pm.addField(new FieldString("mode"));
 }
 

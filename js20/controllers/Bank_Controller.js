@@ -83,6 +83,7 @@ extend(Bank_Controller,ControllerObjServer);
 	var f_opts = {};
 	f_opts.alias = "БИК";	
 	pm.addField(new FieldString("bik",f_opts));
+	
 	pm.addField(new FieldString("mode"));
 }
 

@@ -16,7 +16,7 @@
 function DocFlowOutClientDialog_View(id,options){	
 
 	options = options || {};
-	
+//console.dir(options)	
 	options.controller = new DocFlowOutClient_Controller();
 	options.model = options.models.DocFlowOutClientDialog_Model;
 	
@@ -24,22 +24,31 @@ function DocFlowOutClientDialog_View(id,options){
 	
 	options.cmdOkAsync = false;
 	
+	this.m_fromApp = options.fromApp;
+	
 	var self = this;
 	
 	this.m_subjects = {
 		"contr_resp":"Ответы на замечания"
-		,"contr_return":"Возврат контракта"
+		,"contr_return":"Возврат подписанных документов"
+		,"date_prolongate":"Продление срока"
 	}
 	
 	//все прочие папки	
 	var attachments;
 	var sent = false;
+	var is_contr_return = false;
 	if (options.model && (options.model.getRowIndex()>=0 || options.model.getNextRow()) ){			
 		options.readOnly = options.model.getFieldValue("sent");
 		attachments = options.model.getFieldValue("attachment_files");
 		sent = options.model.getFieldValue("sent");
+		is_contr_return = (options.model.getFieldValue("doc_flow_out_client_type")=="contr_return");
 	}
+	options.templateOptions = options.templateOptions || {};
+	options.templateOptions.fileCount = (attachments&&attachments.length&&attachments[0].files&&attachments[0].files.length)? attachments[0].files.length:"0";
 	
+	this.m_cadesView = new Cades_View(id,options);
+		
 	options.addElement = function(){
 		var bs = window.getBsCol();
 		var editContClassName = "input-group "+bs+"10";
@@ -99,6 +108,7 @@ function DocFlowOutClientDialog_View(id,options){
 		var t_opts = [
 				{"value":"contr_resp","descr":this.m_subjects.contr_resp,"checked":true}				
 				,{"value":"contr_return","descr":this.m_subjects.contr_return}
+				,{"value":"date_prolongate","descr":this.m_subjects.date_prolongate}
 		];
 		if (options.readOnly){
 			t_opts.push({"value":"app","descr":window.getApp().getEnum("doc_flow_out_client_types","app")});
@@ -111,8 +121,36 @@ function DocFlowOutClientDialog_View(id,options){
 			"options":t_opts,
 			"events":{
 				"change":function(){
-					self.getElement("subject").setValue(self.m_subjects[this.getValue()]);
-					self.setType(this.getValue());
+					var v = this.getValue();
+					var ctrl = self.getElement("attachments");
+					if (self.getElement("id").getValue() && (ctrl.getForUploadFileCount() + ctrl.getTotalFileCount())){
+						var this_ctrl = this;
+						var tp = self.getElement("doc_flow_out_client_type").getValue();
+						var msg = (tp=="contr_return")?
+							"Загруженные электронно цифровые подписи необходимо удалть, продолжить?" :
+							"Вложенные файлы с другим типом письма необходимо удалить, продолжить?";
+						WindowQuestion.show({
+							"text":msg,
+							"cancel":false,
+							"callBack":function(res){			
+								if (res==WindowQuestion.RES_YES){
+									this_ctrl.setAttr("prevval",v);
+									self.onChangeType(true);
+								}
+								else{
+									var prev_val = this_ctrl.getAttr("prevvval");
+									if (!prev_val){
+										prev_val = this_ctrl.getAttr("initvalue");
+										this_ctrl.setAttr("prevval",prev_val);
+									}
+									this_ctrl.setValue(prev_val);
+								}
+							}
+						});
+					}
+					else{
+						self.onChangeType();
+					}
 				}			
 			}
 		}));
@@ -126,34 +164,20 @@ function DocFlowOutClientDialog_View(id,options){
 		}));
 		*/
 		
-		//Contract file
-		this.addElement(new EditFile(id+":contract_file",{
-			"labelClassName": "control-label "+window.getBsCol(2),
-			"labelCaption":"Файл контракта:",
-			"template":window.getApp().getTemplate("EditFileApp"),
-			"mainView":this,
-			"separateSignature":true,
-			"allowOnlySignedFiles":true,
-			"multipleFiles":true,
-			"onDeleteFile":function(fileId,callBack){
-				self.deleteContract(fileId,callBack);
-			},
-			"onDownload":function(fileId){
-				self.downloadContract(fileId);
-			}
-		}));	
-		
-		
 		//Вкладки с документацией
 		this.addDocumentTabs(options.models.ApplicationDialog_Model,options.models.DocumentTemplateAllList_Model);
 
-		//произвольные файлы
+		//произвольные файлы для любых типов
 		this.addElement(new DocFolderClient_View(id+":attachments",{
 			"items":attachments,
 			"maxFileCount":4,
 			"templateOptions":{
-				"isNotSent":!sent
+				"isNotSent":!sent				
 			},
+			"onlySignature":is_contr_return,
+			"multiSignature":is_contr_return,
+			"allowOnlySignedFiles":true,
+			"includeFilePath":true,
 			"mainView":this
 		}));				
 		
@@ -195,7 +219,6 @@ function DocFlowOutClientDialog_View(id,options){
 		,new DataBinding({"control":this.getElement("subject")})
 		,new DataBinding({"control":this.getElement("content")})
 		,new DataBinding({"control":this.getElement("doc_flow_out_client_type"),"fieldId":"doc_flow_out_client_type"})
-		,new DataBinding({"control":this.getElement("contract_file"),"fieldId":"contract_files"})
 	]);
 	
 	//write
@@ -206,8 +229,9 @@ function DocFlowOutClientDialog_View(id,options){
 		,new CommandBinding({"control":this.getElement("subject")})
 		,new CommandBinding({"control":this.getElement("content")})
 		,new CommandBinding({"control":this.getElement("doc_flow_out_client_type"),"fieldId":"doc_flow_out_client_type"})
-		,new CommandBinding({"control":this.getElement("contract_file"),"fieldId":"contract_files"})
 	]);
+	
+	this.m_cadesView.afterViewConstructed();
 }
 extend(DocFlowOutClientDialog_View,DocumentDialog_View);
 
@@ -223,6 +247,7 @@ DocFlowOutClientDialog_View.prototype.onAppClear = function(){
 }
 
 DocFlowOutClientDialog_View.prototype.onAppSelect = function(fields){
+	/*
 	if (fields.application_state.getValue()!="waiting_for_contract"
 	&&fields.application_state.getValue()!="waiting_for_pay"
 	&&fields.application_state.getValue()!="expertise"
@@ -230,7 +255,7 @@ DocFlowOutClientDialog_View.prototype.onAppSelect = function(fields){
 		this.getElement("applications_ref").reset();
 		throw new Error("Неверный статус заявления!");
 	}
-	
+	*/
 	var pm = this.getController().getPublicMethod("get_application_dialog");
 	pm.setFieldValue("application_id",fields.id.getValue());
 	pm.setFieldValue("id",this.getElement("id").getValue());
@@ -249,7 +274,12 @@ DocFlowOutClientDialog_View.prototype.onGetAppModel = function(resp){
 		,true
 	);
 	this.toggleDocTypeVis();
-	this.setType(this.getElement("doc_flow_out_client_type").getValue());
+	var client_type = this.getElement("doc_flow_out_client_type").getValue();
+	this.setType(client_type);
+	
+	if (client_type=="contr_return"){
+		this.setFilesForSigning(resp);
+	}
 }
 
 DocFlowOutClientDialog_View.prototype.constrTypeIsNull = function(){	
@@ -277,8 +307,10 @@ DocFlowOutClientDialog_View.prototype.onGetData = function(resp,cmd){
 		this.getControlCancel().setEnabled(true);		
 		
 		$(".fileDeleteBtn").attr("disabled","disabled");
+		$(".fileSwitchBtn").attr("disabled","disabled");
 		$(".uploader-file-add").attr("disabled","disabled");
 		$("a[download_href=true]").removeAttr("disabled");
+		$(".fileSignNoSig").addClass("hidden");
 	}
 	else{
 		//doc flow files can be modified
@@ -291,11 +323,28 @@ DocFlowOutClientDialog_View.prototype.onGetData = function(resp,cmd){
 		this.setType(this.getModel().getFieldValue("doc_flow_out_client_type"));
 		
 		this.getElement("attachments").initDownload();
+		
+		var type_ctrl = this.getElement("doc_flow_out_client_type");
+		type_ctrl.setEnabled(!this.getElement("id").getValue() || type_ctrl.getValue()!="contr_resp");
 	}
 	
 	this.setType(this.getElement("doc_flow_out_client_type").getValue());
+
+	if (this.m_fromApp)
+		this.onChangeType();
 	
 }
+
+DocFlowOutClientDialog_View.prototype.onCancel = function(){
+	this.setSent(false);
+	DocFlowOutClientDialog_View.superclass.onCancel.call(this);
+}
+
+DocFlowOutClientDialog_View.onSave = function(okFunc,failFunc,allFunc){	
+	this.setSent(false);
+	DocFlowOutClientDialog_View.superclass.onSave.call(this,okFunc,failFunc,allFunc);
+}
+
 DocFlowOutClientDialog_View.prototype.setSent = function(v){
 	var frm_cmd = this.getCmd();
 	var pm = this.m_controller.getPublicMethod(
@@ -305,52 +354,51 @@ DocFlowOutClientDialog_View.prototype.setSent = function(v){
 }
 DocFlowOutClientDialog_View.prototype.setType = function(tp){
 	var app = this.getElement("applications_ref").getValue();
-	var docs_vis = false,contr_vis = false;
-	if (tp=="contr_resp"){
-		docs_vis = app? true:false;
-	}
-	else if (tp=="contr_return"){
-		contr_vis = app? !this.getElement("applications_ref").isNull():false;
-	}
-	var docs_n = document.getElementById(this.getId()+":documentFiles");
-	if (!docs_vis){
-		DOMHelper.addClass(docs_n,"hidden");
+	if (!app){
+		DOMHelper.hide(document.getElementById(this.getId()+":documentFiles"));
 	}
 	else{
-		DOMHelper.delClass(docs_n,"hidden");
-	}	
-	this.getElement("contract_file").setVisible(contr_vis);
-}
-DocFlowOutClientDialog_View.prototype.deleteContract = function(fileId,callBack){
-	var self = this;
-	WindowQuestion.show({
-		"text":"Удалить файл контракта?",
-		"cancel":false,
-		"callBack":function(res){			
-			if (res==WindowQuestion.RES_YES){
-				var pm = self.getController().getPublicMethod("remove_contract_file");
-				pm.setFieldValue("id",self.getElement("id").getValue());
-				pm.setFieldValue("file_id",fileId);
-				pm.run({
-					"ok":callBack
-				});
-			}
+		DOMHelper.show(document.getElementById(this.getId()+":documentFiles"));
+		var docs_n = document.getElementById(this.getId()+":documentFiles-toggle");
+		var com_files_lab;
+		var is_contr_return = (tp=="contr_return")? true:false;
+		var tab;
+		if (tp=="contr_resp"){
+			DOMHelper.show(docs_n);
+			com_files_lab = " Сопроводительное письмо к ответу на замечания";
+			//$('#documentTabs a[href="#commonFiles"]').tab("show");		
+			tab = "documentFiles";
 		}
-	});			
+		else{
+			tab = "commonFiles";
+			DOMHelper.hide(docs_n);
+			if (is_contr_return){
+				com_files_lab = " Документы для подписания";
+			}
+			else{
+				com_files_lab = " Сопроводительное письмо";
+			}
+			
+		}
+		
+		$('#documentTabs a[href="#'+tab+'"]').tab("show");
+		
+		var att_ctrl = this.getElement("attachments");		
+		att_ctrl.setUploadOnAdd(is_contr_return);
+		att_ctrl.setOnlySignature(is_contr_return);
+		att_ctrl.setMultiSignature(is_contr_return);
+		
+		//$("#commonFiles-ref").text(com_files_lab);	
+		DOMHelper.setText(document.getElementById("commonFiles-ref"),com_files_lab);
+		
+		var other_inf_n = document.getElementById(this.getId()+":attachments::uploadAttachInf");
+		var contr_return_inf_n = document.getElementById(this.getId()+":attachments:uploadContrReturnInf");
+		DOMHelper.show((tp=="contr_return")? contr_return_inf_n:other_inf_n);
+		DOMHelper.hide((tp!="contr_return")? contr_return_inf_n:other_inf_n);
+		
+	}
 }
 
-DocFlowOutClientDialog_View.prototype.downloadContract = function(fileId){
-	var contr = this.getController();
-	var pm = contr.getPublicMethod("download_contract_file");
-	pm.setFieldValue("file_id",fileId);
-	pm.setFieldValue("id",this.getElement("id").getValue());
-	pm.download();
-	//signature
-	var pm_sig = contr.getPublicMethod("download_contract_file_sig");
-	pm_sig.setFieldValue("file_id",fileId);
-	pm_sig.setFieldValue("id",this.getElement("id").getValue());
-	pm_sig.download(null,1);
-}
 
 DocFlowOutClientDialog_View.prototype.getTotalFileCount = function(){
 	return this.getFileCount(true);
@@ -364,6 +412,14 @@ DocFlowOutClientDialog_View.prototype.checkForUploadFileCount = function(){
 	if (this.getForUploadFileCount(tabs)){
 		var mes = "Есть незагруженные файлы документации " +( (tabs.length==1)? (" в разделе "+tabs[0]) : (" в разделах:"+tabs.join(", ")) ); 
 		throw new Error(mes);
+	}
+	var att = this.getElement("attachments");
+	if (att.getForUploadFileCount()){
+		throw new Error("Есть незагруженные вложения!");
+	}
+	var tp = this.getElement("doc_flow_out_client_type").getValue();
+	if (tp=="date_prolongate"&&!att.getTotalFileCount()){
+		throw new Error("Нет ни одного вложенного файла!");		
 	}
 }
 DocFlowOutClientDialog_View.prototype.checkRequiredFiles = function(){
@@ -400,3 +456,67 @@ DocFlowOutClientDialog_View.prototype.getFileCount = function(total,tabs){
 	return tot;
 }
 
+DocFlowOutClientDialog_View.prototype.setFilesForSigning = function(resp){
+	var m = resp.getModel("FileForSigningList_Model");
+	if (m && m.getNextRow()){
+		var v = m.getFieldValue("attachment_files");
+	/*
+	console.log("DocFlowOutClientDialog_View.prototype.setFilesForSigning")
+	console.dir(v)
+	debugger
+	*/
+		this.getElement("attachments").addFileControls(v);
+		this.getElement("attachments").toDOM();
+	}
+}
+
+DocFlowOutClientDialog_View.prototype.getDocsForSigning = function(){
+	var app = this.getElement("applications_ref").getValue();
+	if (app&&app.getKey()){
+		var pm = (this.getController()).getPublicMethod("get_files_for_signing");
+		pm.setFieldValue("application_id",app.getKey());
+		var self = this;
+		pm.run({
+			"ok":function(resp){
+				self.setFilesForSigning(resp);
+			}
+		})
+	}
+}
+
+DocFlowOutClientDialog_View.prototype.onChangeTypeContinue = function(){
+	var v = this.getElement("doc_flow_out_client_type").getValue();
+	this.getElement("subject").setValue(this.m_subjects[v]);
+	this.setType(v);
+	this.getElement("attachments").setOnlySignature((v=="contr_return"));
+	this.getElement("attachments").setMultiSignature((v=="contr_return"));
+	this.getElement("attachments").setIncludeFilePath((v=="contr_return"));
+	if (v=="contr_return"){
+		this.getDocsForSigning();
+	}	
+}
+
+DocFlowOutClientDialog_View.prototype.onChangeType = function(deleteAllAttachments){
+	DOMHelper.setText(document.getElementById(this.getId()+":attachments:total_item_files_doc"),"");
+	this.getElement("attachments").clearContainer("doc");				
+
+	if (deleteAllAttachments){
+		var pm = (this.getController()).getPublicMethod("delete_all_attachments");
+		pm.setFieldValue("id",this.getElement("id").getValue());
+		var self = this;
+		pm.run({
+			"ok":function(){
+				self.onChangeTypeContinue();
+			}
+		})
+	}
+	else{
+		this.onChangeTypeContinue();
+	}
+}
+
+DocFlowOutClientDialog_View.prototype.onSaveOk = function(resp){
+	DocFlowOutClientDialog_View.superclass.onSaveOk.call(this,resp);
+	
+	this.getElement("doc_flow_out_client_type").setEnabled(false);
+}

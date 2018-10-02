@@ -47,6 +47,8 @@ function Contract_Controller(options){
 	this.add_get_reestr_expertise();
 	this.add_get_reestr_cost_eval();
 	this.add_get_constr_name();
+	this.add_get_reestr_pay();
+	this.add_get_reestr_contract();
 		
 }
 extend(Contract_Controller,ControllerObjServer);
@@ -406,6 +408,18 @@ extend(Contract_Controller,ControllerObjServer);
 	var options = {};
 	
 	var field = new FieldString("primary_contract_reg_number",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldJSONB("experts_for_notification",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldBool("contract_return_date_on_sig",options);
 	
 	pm.addField(field);
 	
@@ -779,6 +793,18 @@ extend(Contract_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	
+	var field = new FieldJSONB("experts_for_notification",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldBool("contract_return_date_on_sig",options);
+	
+	pm.addField(field);
+	
 	
 }
 
@@ -797,6 +823,11 @@ extend(Contract_Controller,ControllerObjServer);
 	var f_opts = {};
 		
 	pm.addField(new FieldInt("id",f_opts));
+		var options = {};
+						
+		pm.addField(new FieldString("fields",options));
+	
+	
 	pm.addField(new FieldString("mode"));
 }
 
@@ -991,6 +1022,12 @@ extend(Contract_Controller,ControllerObjServer);
 	var f_opts = {};
 	
 	pm.addField(new FieldString("primary_contract_reg_number",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldJSONB("experts_for_notification",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldBool("contract_return_date_on_sig",f_opts));
 	pm.getField(this.PARAM_ORD_FIELDS).setValue("date_time");
 	
 }
@@ -1379,6 +1416,66 @@ extend(Contract_Controller,ControllerObjServer);
 		options.required = true;
 	
 		pm.addField(new FieldInt("id",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			Contract_Controller.prototype.add_get_reestr_pay = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('get_reestr_pay',opts);
+	
+	pm.addField(new FieldInt(this.PARAM_COUNT));
+	pm.addField(new FieldInt(this.PARAM_FROM));
+	pm.addField(new FieldString(this.PARAM_COND_FIELDS));
+	pm.addField(new FieldString(this.PARAM_COND_SGNS));
+	pm.addField(new FieldString(this.PARAM_COND_VALS));
+	pm.addField(new FieldString(this.PARAM_COND_ICASE));
+	pm.addField(new FieldString(this.PARAM_ORD_FIELDS));
+	pm.addField(new FieldString(this.PARAM_ORD_DIRECTS));
+	pm.addField(new FieldString(this.PARAM_FIELD_SEP));
+
+				
+	
+	var options = {};
+	
+		pm.addField(new FieldString("templ",options));
+	
+				
+	
+	var options = {};
+	
+		pm.addField(new FieldInt("inline",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			Contract_Controller.prototype.add_get_reestr_contract = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('get_reestr_contract',opts);
+	
+	pm.addField(new FieldInt(this.PARAM_COUNT));
+	pm.addField(new FieldInt(this.PARAM_FROM));
+	pm.addField(new FieldString(this.PARAM_COND_FIELDS));
+	pm.addField(new FieldString(this.PARAM_COND_SGNS));
+	pm.addField(new FieldString(this.PARAM_COND_VALS));
+	pm.addField(new FieldString(this.PARAM_COND_ICASE));
+	pm.addField(new FieldString(this.PARAM_ORD_FIELDS));
+	pm.addField(new FieldString(this.PARAM_ORD_DIRECTS));
+	pm.addField(new FieldString(this.PARAM_FIELD_SEP));
+
+				
+	
+	var options = {};
+	
+		pm.addField(new FieldString("templ",options));
+	
+				
+	
+	var options = {};
+	
+		pm.addField(new FieldInt("inline",options));
 	
 			
 	this.addPublicMethod(pm);

@@ -87,6 +87,12 @@ extend(Employee_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	
+	var field = new FieldString("snils",options);
+	
+	pm.addField(field);
+	
 	pm.addField(new FieldInt("ret_id",{}));
 	
 		var options = {};
@@ -149,6 +155,12 @@ extend(Employee_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	
+	var field = new FieldString("snils",options);
+	
+	pm.addField(field);
+	
 		var options = {};
 				
 		pm.addField(new FieldText("picture_file",options));
@@ -171,6 +183,7 @@ extend(Employee_Controller,ControllerObjServer);
 	var f_opts = {};
 		
 	pm.addField(new FieldInt("id",f_opts));
+	
 	pm.addField(new FieldString("mode"));
 }
 
@@ -212,6 +225,9 @@ extend(Employee_Controller,ControllerObjServer);
 	var f_opts = {};
 	
 	pm.addField(new FieldJSON("picture_info",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldString("snils",f_opts));
 	pm.getField(this.PARAM_ORD_FIELDS).setValue("name");
 	
 }

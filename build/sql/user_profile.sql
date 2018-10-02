@@ -10,7 +10,9 @@ CREATE OR REPLACE VIEW user_profile AS
 		u.email,
 		u.phone_cel,
 		u.color_palette,
-		u.reminders_to_email
+		u.reminders_to_email,
+		u.cades_chunk_size,
+		u.cades_load_timeout
 	FROM users u;
 
 ALTER TABLE user_profile OWNER TO ;

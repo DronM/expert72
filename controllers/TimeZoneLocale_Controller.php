@@ -51,6 +51,7 @@ class TimeZoneLocale_Controller extends ControllerSQL{
 		$pm->addParam(new FieldExtInt('id'
 		));
 		
+		
 		$this->addPublicMethod($pm);
 		$this->setObjectModelId('TimeZoneLocale_Model');		
 

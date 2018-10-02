@@ -171,6 +171,7 @@ EditFile.prototype.setInitValue = function(v){
 
 EditFile.prototype.addFile =  function(fileInf){
 //console.dir(fileInf)
+//debugger
 	var cont = this.getElement("file_cont");
 	if (!this.m_multipleFiles && !this.m_separateSignature){
 		cont.clear();
@@ -198,6 +199,10 @@ EditFile.prototype.addFile =  function(fileInf){
 		
 		if (this.m_onFileSigAdded){
 			this.m_onFileSigAdded();
+		}
+		
+		if (this.sigCont && !this.sigCont.getSignatureCount()){
+			this.sigCont.addSignature({"sign_date_time":DateHelper.time()});
 		}
 				
 		return;
@@ -262,6 +267,9 @@ EditFile.prototype.addFile =  function(fileInf){
 		},
 		"onSignClick":function(fileId){
 			self.m_onSignClick(fileId);
+		},
+		"onGetFileUploaded":function(){
+			return (self.getAttr("file_uploaded")=="true");
 		}
 	});
 	cont.addElement(this.sigCont);
@@ -398,7 +406,11 @@ EditFile.prototype.fileAdded = function(){
 		if(ctrls_to_add[sig_list[fi].base_name]){
 			this.m_files.push(sig_list[fi].file);
 			ctrls_to_add[sig_list[fi].base_name].file_signed = true;
-			ctrls_to_add[sig_list[fi].base_name].signatures.push({"id":ctrls_to_add[sig_list[fi].base_name].id});
+			ctrls_to_add[sig_list[fi].base_name].signatures.push(
+				{"id":ctrls_to_add[sig_list[fi].base_name].id,
+				"sign_date_time":DateHelper.time()
+				}
+			);
 		}
 		else{
 			//no data in this batch

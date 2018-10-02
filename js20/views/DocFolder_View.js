@@ -18,6 +18,8 @@ function DocFolder_View(id,options){
 	
 	this.m_mainView = options.mainView;
 	
+	options.clientReqSigInf = true;
+	
 	options.templateOptions = options.templateOptions || {};
 	
 	options.allowFileDeletion = false;
@@ -47,18 +49,26 @@ DocFolder_View.prototype.downloadFile = function(btnCtrl){
 	pm.setFieldValue("id",btnCtrl.getAttr("file_id"));
 	pm.download();
 	//signature
+	/*
 	if (btnCtrl.getAttr("file_signed")=="true"){
-		/*
-		var contr_sig = new Application_Controller();
-		*/
 		var pm_sig = contr.getPublicMethod("get_file_sig");
 		pm_sig.setFieldValue("id",btnCtrl.getAttr("file_id"));
 		pm_sig.download(null,1);
 	}
+	*/
 }
+
+DocFolder_View.prototype.onSignClick = function(fileId,itemId){
+	var pm_sig = (new Application_Controller()).getPublicMethod("get_file_sig");
+	pm_sig.setFieldValue("id",fileId);
+	pm_sig.download(null,1);
+}
+
+/*
 DocFolder_View.prototype.downloadOutSig = function(fileId){
 	var contr = new Application_Controller();
 	var pm = contr.getPublicMethod("get_file_out_sig");
 	pm.setFieldValue("id",fileId);
 	pm.download();
 }
+*/

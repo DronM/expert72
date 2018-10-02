@@ -54,6 +54,7 @@ class Bank_Controller extends ControllerSQL{
 		$pm->addParam(new FieldExtString('bik'
 		));
 		
+		
 		$this->addPublicMethod($pm);
 		$this->setObjectModelId('BankList_Model');		
 

@@ -44,8 +44,8 @@ function ApplicationDocFolderList_View(id,options){
 							],
 							"sortable":true,
 							"sort":"asc"
-						}),
-						new GridCellHead(id+":grid:head:name",{
+						})
+						,new GridCellHead(id+":grid:head:name",{
 							"value":"Наименование",
 							"columns":[
 								new GridColumn({
@@ -54,6 +54,14 @@ function ApplicationDocFolderList_View(id,options){
 							],
 							"sortable":true
 						})											
+						,new GridCellHead(id+":grid:head:require_client_sig",{
+							"value":"Требуется подпись клиента",
+							"columns":[
+								new GridColumnBool({
+									"field":model.getField("require_client_sig")
+								})
+							]
+						})																	
 					]
 				})
 			]

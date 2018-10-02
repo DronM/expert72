@@ -215,6 +215,12 @@ class Contract_Controller extends ControllerSQL{
 		$param = new FieldExtString('primary_contract_reg_number'
 				,array());
 		$pm->addParam($param);
+		$param = new FieldExtJSONB('experts_for_notification'
+				,array());
+		$pm->addParam($param);
+		$param = new FieldExtBool('contract_return_date_on_sig'
+				,array());
+		$pm->addParam($param);
 		
 		$pm->addParam(new FieldExtInt('ret_id'));
 		
@@ -466,6 +472,14 @@ class Contract_Controller extends ControllerSQL{
 				,array(
 			));
 			$pm->addParam($param);
+		$param = new FieldExtJSONB('experts_for_notification'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtBool('contract_return_date_on_sig'
+				,array(
+			));
+			$pm->addParam($param);
 		
 			$param = new FieldExtInt('id',array(
 			));
@@ -494,6 +508,12 @@ class Contract_Controller extends ControllerSQL{
 		
 		$pm->addParam(new FieldExtInt('id'
 		));
+		
+			$f_params = array();
+			$param = new FieldExtString('fields'
+			,$f_params);
+		$pm->addParam($param);		
+		
 		
 		$this->addPublicMethod($pm);
 		$this->setObjectModelId('ContractDialog_Model');		
@@ -829,14 +849,89 @@ class Contract_Controller extends ControllerSQL{
 			
 		$this->addPublicMethod($pm);
 
+			
+		$pm = new PublicMethod('get_reestr_pay');
+		
+		$pm->addParam(new FieldExtInt('count'));
+		$pm->addParam(new FieldExtInt('from'));
+		$pm->addParam(new FieldExtString('cond_fields'));
+		$pm->addParam(new FieldExtString('cond_sgns'));
+		$pm->addParam(new FieldExtString('cond_vals'));
+		$pm->addParam(new FieldExtString('cond_ic'));
+		$pm->addParam(new FieldExtString('ord_fields'));
+		$pm->addParam(new FieldExtString('ord_directs'));
+		$pm->addParam(new FieldExtString('field_sep'));
+
+				
+	$opts=array();
+					
+		$pm->addParam(new FieldExtString('templ',$opts));
+	
+				
+	$opts=array();
+					
+		$pm->addParam(new FieldExtInt('inline',$opts));
+	
+			
+		$this->addPublicMethod($pm);
+
+			
+		$pm = new PublicMethod('get_reestr_contract');
+		
+		$pm->addParam(new FieldExtInt('count'));
+		$pm->addParam(new FieldExtInt('from'));
+		$pm->addParam(new FieldExtString('cond_fields'));
+		$pm->addParam(new FieldExtString('cond_sgns'));
+		$pm->addParam(new FieldExtString('cond_vals'));
+		$pm->addParam(new FieldExtString('cond_ic'));
+		$pm->addParam(new FieldExtString('ord_fields'));
+		$pm->addParam(new FieldExtString('ord_directs'));
+		$pm->addParam(new FieldExtString('field_sep'));
+
+				
+	$opts=array();
+					
+		$pm->addParam(new FieldExtString('templ',$opts));
+	
+				
+	$opts=array();
+					
+		$pm->addParam(new FieldExtInt('inline',$opts));
+	
+			
+		$this->addPublicMethod($pm);
+
 		
 	}	
 	
 
-	public function get_object($pm){
+	public function get_object($pm){		
+		$columns = '*';
+		$tb = 'contracts_dialog';
+		$fields = $this->getExtVal($pm,'fields');
+		if ($fields && strlen($fields) && $fields!='null'){
+			$aval_fields = ['experts_for_notification'];
+			$fields_ar = explode(',',$fields);
+			foreach($fields_ar as $field){
+				if (array_search($field,$aval_fields)!==FALSE){
+					if ($columns=='*'){
+						$columns = '';
+					}
+					else{
+						$columns.= ',';
+					}
+					$columns.= $field;
+				}
+			}
+			if($columns!='*'){
+				$tb = 'contracts';
+			}
+		}
 	
 		$ar_obj = $this->getDbLink()->query_first(sprintf(
-		"SELECT * FROM contracts_dialog WHERE id=%d",
+		"SELECT %s FROM %s WHERE id=%d",
+		$columns,
+		$tb,
 		$this->getExtDbVal($pm,'id')
 		));
 	
@@ -1396,6 +1491,15 @@ class Contract_Controller extends ControllerSQL{
 			throw new Exception('Не задана дата окончания!');
 		}		
 		
+		$exp_res_cond = '';
+		$expertise_result = $cond->getVal('expertise_result','e',DT_STRING);
+		if ($expertise_result=='positive'){
+			$exp_res_cond.= " AND t.expertise_result='positive'";
+		}
+		else if ($expertise_result=='negative'){
+			$exp_res_cond.= " AND t.expertise_result='negative'";
+		}
+		
 		$model = new RepReestrExpertise_Model($this->getDbLink());
 		$model->query(
 			sprintf(
@@ -1466,10 +1570,12 @@ class Contract_Controller extends ControllerSQL{
 			FROM contracts AS t
 			LEFT JOIN applications AS app ON app.id=t.application_id
 			LEFT JOIN expertise_reject_types AS rej ON rej.id=t.expertise_reject_type_id
-			WHERE t.expertise_result_date BETWEEN %s AND (%s::timestamp+'1 day'::interval-'1 second'::interval) AND document_type='pd' AND t.expertise_result IS NOT NULL
+			WHERE t.expertise_result_date BETWEEN %s AND (%s::timestamp+'1 day'::interval-'1 second'::interval)
+				AND document_type='pd' AND t.expertise_result IS NOT NULL %s
 			ORDER BY t.expertise_result_date",
 			$dt_from,
-			$dt_to
+			$dt_to,
+			$exp_res_cond
 			)
 		);
 		$this->addModel($model);
@@ -1496,6 +1602,15 @@ class Contract_Controller extends ControllerSQL{
 		if (!isset($dt_to)){
 			throw new Exception('Не задана дата окончания!');
 		}		
+		
+		$exp_res_cond = '';
+		$expertise_result = $cond->getVal('expertise_result','e',DT_STRING);
+		if ($expertise_result=='positive'){
+			$exp_res_cond.= " AND t.expertise_result='positive'";
+		}
+		else if ($expertise_result=='negative'){
+			$exp_res_cond.= " AND t.expertise_result='negative'";
+		}
 		
 		$model = new RepReestrCostEval_Model($this->getDbLink());
 		$model->query(
@@ -1537,10 +1652,12 @@ class Contract_Controller extends ControllerSQL{
 			FROM contracts AS t
 			LEFT JOIN applications AS app ON app.id=t.application_id
 			LEFT JOIN expertise_reject_types AS rej ON rej.id=t.expertise_reject_type_id
-			WHERE t.expertise_result_date BETWEEN %s AND (%s::timestamp+'1 day'::interval-'1 second'::interval) AND document_type='cost_eval_validity' AND t.expertise_result IS NOT NULL
+			WHERE t.expertise_result_date BETWEEN %s AND (%s::timestamp+'1 day'::interval-'1 second'::interval)
+				AND document_type='cost_eval_validity' AND t.expertise_result IS NOT NULL %s
 			ORDER BY t.expertise_result_date",
 			$dt_from,
-			$dt_to
+			$dt_to,
+			$exp_res_cond
 			)
 		);
 		$this->addModel($model);
@@ -1562,6 +1679,156 @@ class Contract_Controller extends ControllerSQL{
 			"SELECT constr_name FROM contracts WHERE id=%d",
 			$this->getExtDbVal($pm,'id')
 		),'ConstrName_Model');
+	}
+	
+	public function get_reestr_pay($pm){
+		$cond = new ConditionParamsSQL($pm,$this->getDbLink());
+		$dt_from = $cond->getDbVal('date_time','ge',DT_DATE);
+		if (!isset($dt_from)){
+			throw new Exception('Не задана дата начала!');
+		}		
+		$dt_to = $cond->getDbVal('date_time','le',DT_DATE);
+		if (!isset($dt_to)){
+			throw new Exception('Не задана дата окончания!');
+		}		
+	
+		$extra_cond = '';
+		$client_id = $cond->getDbVal('client_id','e',DT_INT);
+		if ($client_id && $client_id!='null'){
+			$extra_cond.= sprintf(' AND contracts.client_id=%d',$client_id);
+		}
+		$customer_name = $cond->getDbVal('customer_name','e',DT_STRING);
+		if ($customer_name && $customer_name!='null'){
+			$extra_cond.= sprintf(" AND app.customer->>'name'=%s",$customer_name);
+		}
+		
+		$model = new RepReestrPay_Model($this->getDbLink());
+		$model->query(
+			sprintf(
+			"SELECT
+				row_number() OVER (ORDER BY p.pay_date) AS ord,
+				contracts.expertise_result_number,
+				app.applicant->>'name' AS applicant,
+				app.customer->>'name' AS customer,
+				contracts.contract_number,
+				contracts.constr_name,	
+				to_char(contracts.work_start_date,'DD/MM/YY') As work_start_date,
+				contracts.expertise_cost_budget,
+				contracts.expertise_cost_self_fund,
+				p.total,
+				p.pay_docum_number,
+				to_char(p.pay_docum_date,'DD/MM/YY') As pay_docum_date
+			FROM client_payments AS p
+			LEFT JOIN contracts ON contracts.id=p.contract_id
+			LEFT JOIN applications AS app ON app.id=contracts.application_id
+			WHERE p.pay_date BETWEEN %s AND %s %s
+			ORDER BY p.pay_date",
+			$dt_from,
+			$dt_to,
+			$extra_cond
+			)
+		);
+		$this->addModel($model);
+	
+		$this->addNewModel(
+			sprintf(
+			"SELECT format_period_rus(%s::date,%s::date,NULL) AS period_descr
+			",
+			$dt_from,
+			$dt_to
+			),
+		'Head_Model'
+		);		
+	
+	}
+
+	public function get_reestr_contract($pm){
+		$cond = new ConditionParamsSQL($pm,$this->getDbLink());
+		$dt_from = $cond->getDbVal('date_time','ge',DT_DATE);
+		if (!isset($dt_from)){
+			throw new Exception('Не задана дата начала!');
+		}		
+		$dt_to = $cond->getDbVal('date_time','le',DT_DATE);
+		if (!isset($dt_to)){
+			throw new Exception('Не задана дата окончания!');
+		}		
+	
+		$extra_cond = '';
+		$client_id = $cond->getDbVal('client_id','e',DT_INT);
+		if ($client_id && $client_id!='null'){
+			$extra_cond.= sprintf(' AND contracts.client_id=%d',$client_id);
+		}
+		$customer_name = $cond->getDbVal('customer_name','e',DT_STRING);
+		if ($customer_name && $customer_name!='null'){
+			$extra_cond.= sprintf(" AND app.customer->>'name'=%s",$customer_name);
+		}
+		
+		$model = new RepReestrPay_Model($this->getDbLink());
+		$model->query(
+			sprintf(
+			"SELECT
+				row_number() OVER (ORDER BY %s) AS ord,
+				contracts.expertise_result_number,
+				to_char(contracts.date_time,'DD/MM/YY') AS date,
+				(contracts.primary_contract_reg_number IS NOT NULL) AS primary_exists,				
+				app.applicant->>'name' AS applicant,
+				app.customer->>'name' AS customer,
+				contracts.constr_name,	
+				contracts.expertise_cost_budget,
+				contracts.expertise_cost_self_fund,				
+				
+				coalesce(contracts.contract_number,'')||
+					CASE contracts.contract_date IS NOT NULL THEN' от '||to_char(contracts.contract_date,'DD/MM/YY')
+					ELSE ''
+					END
+				AS contract_number_date,
+				
+				coalesce(payments.total,0) AS total
+				
+				to_char(contracts.work_start_date,'DD/MM/YY') As work_start_date,
+				
+				employees.name AS main_expert,
+				
+				CASE
+					WHEN expertise_result='positive' THEN to_char(expertise_result_date,'DD/MM/YY')
+					ELSE ''
+				END AS expertise_result_date_positive,
+				
+				'дата доработки???' AS aaa,
+				
+				AS akt_number_date,
+				
+				AS comment_text
+				
+			FROM contracts
+			LEFT JOIN (
+				SELECT
+					p.contract_id,
+					sum(total) AS total
+				FROM client_payments p
+				GROUP BY p.contract_id
+			) AS payments ON contracts.id=payments.contract_id
+			LEFT JOIN applications AS app ON app.id=contracts.application_id
+			LEFT JOIN employees ON employees.id=contracts.main_expert_id
+			WHERE %s
+			ORDER %s",
+			$order_field,
+			$conditions,
+			$order_field
+			)
+		);
+		$this->addModel($model);
+	
+		$this->addNewModel(
+			sprintf(
+			"SELECT format_period_rus(%s::date,%s::date,NULL) AS period_descr
+			",
+			$dt_from,
+			$dt_to
+			),
+		'Head_Model'
+		);		
+	
 	}
 	
 

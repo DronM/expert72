@@ -134,6 +134,10 @@ FileUploaderApplication_View.prototype.getQuerySruc = function(file){
 	struc.f = "app_file_upload";
 	struc.application_id = this.m_mainView.getElement("id").getValue();
 	struc.doc_type = this.m_documentType;
+	if(file.original_file){
+		struc.original_file_id = file.original_file.fileId;
+	}
+	
 	return struc;	
 }
 
@@ -172,15 +176,20 @@ FileUploaderApplication_View.prototype.setFileOptions = function(fileOpts,file){
 FileUploaderApplication_View.prototype.signFile = function(fileId,itemId){
 	
 	var cades = window.getApp().getCadesAPI();
-	var cert_lits_ctrl = this.m_mainView.getCertBoxControl();
+	var cert_lits_ctrl = this.m_mainView.m_cadesView.getCertBoxControl();
 	if (!cades || !cades.getCertListCount() || !cert_lits_ctrl || !cert_lits_ctrl.getSelectedCert()){
 		throw new Error("Сертификат для подписи не выбран!");
 	}
 	
 	FileUploaderApplication_View.superclass.signFile.call(this,fileId,itemId,cert_lits_ctrl.getSelectedCert());
 }
-FileUploader_View.prototype.onSignClick = function(fileId,itemId){
+
+FileUploaderApplication_View.prototype.onSignClick = function(fileId,itemId){
 	var pm_sig = (new Application_Controller()).getPublicMethod("get_file_sig");
 	pm_sig.setFieldValue("id",fileId);
 	pm_sig.download(null,1);
+}
+
+FileUploaderApplication_View.prototype.onGetSignatureDetails = function(fileId,callBack){
+	FileUploaderApplication_View.superclass.onGetSignatureDetails.call(this,fileId,callBack,(new Application_Controller()));
 }

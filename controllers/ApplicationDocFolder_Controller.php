@@ -35,6 +35,9 @@ class ApplicationDocFolder_Controller extends ControllerSQL{
 		$param = new FieldExtText('name'
 				,array());
 		$pm->addParam($param);
+		$param = new FieldExtBool('require_client_sig'
+				,array());
+		$pm->addParam($param);
 		
 		
 		$this->addPublicMethod($pm);
@@ -52,6 +55,10 @@ class ApplicationDocFolder_Controller extends ControllerSQL{
 			));
 			$pm->addParam($param);
 		$param = new FieldExtText('name'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtBool('require_client_sig'
 				,array(
 			));
 			$pm->addParam($param);
@@ -83,6 +90,7 @@ class ApplicationDocFolder_Controller extends ControllerSQL{
 		
 		$pm->addParam(new FieldExtInt('id'
 		));
+		
 		
 		$this->addPublicMethod($pm);
 		$this->setObjectModelId('ApplicationDocFolder_Model');		

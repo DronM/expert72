@@ -49,8 +49,16 @@ function RepReestrExpertise_View(id,options){
 				}
 			]
 		}
+		,"expertise_result":{
+			"binding":new CommandBinding({
+				"control":new Enum_expertise_results(id+":filter-ctrl-expertise_result",{"labelCaption":"Результат:","contClassName":"form-group-filter"}),
+				"field":new FieldString("expertise_result")
+			}),
+			"sign":"e"
+		}
+		
 	};
-	
+
 	RepReestrExpertise_View.superclass.constructor.call(this, id, options);
 	
 }

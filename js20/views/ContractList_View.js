@@ -128,7 +128,9 @@ ContractList_View.prototype.addGrid = function(options){
 		new GridCellHead(id+":grid:head:expertise_result_number",{
 			"value":"№ эксп.закл.",
 			"columns":[
-				new GridColumn({"field":model.getField("expertise_result_number")})
+				new GridColumn({
+					"field":model.getField("expertise_result_number")
+				})
 			],
 			"sortable":true							
 		})
@@ -275,6 +277,25 @@ ContractList_View.prototype.addGrid = function(options){
 		})
 	);	
 	
+	this.m_colorInf = {
+		"no_pay":{
+			"title":"Нет оплаты",
+			"style":"background:#ffb41e;"
+		}
+		,"returned":{
+			"title":"Расторгнут договор",
+			"style":"background:#99e7ff;"
+		}
+		,"no_result":{
+			"title":"Истек срок выдачи заключения",
+			"style":"background:#ff0202;color:white;"
+		}
+		,"no_correction_result":{
+			"title":"Истек срок доработки замечаний",
+			"style":"background:#9101ff;color:white;"
+		}
+	}
+	
 	var self = this;
 	this.addElement(new GridAjx(id+":grid",{
 		"model":model,
@@ -284,6 +305,15 @@ ContractList_View.prototype.addGrid = function(options){
 		"editInline":false,
 		"editWinClass":ContractDialog_Form,
 		"popUpMenu":popup_menu,
+		"onEventAddCell":function(cell){
+			if (cell.getGridColumn().getId()=="expertise_result_number"){
+				var st = this.m_model.getFieldValue("state_for_color");
+				if (st && self.m_colorInf[st]){					
+					cell.setAttr("style",self.m_colorInf[st].style);
+					cell.setAttr("title",self.m_colorInf[st].title);
+				}
+			}
+		},
 		"commands":new GridCmdContainerAjx(id+":grid:cmd",{
 			"cmdInsert":false,
 			"cmdDelete":(role_id=="admin"),

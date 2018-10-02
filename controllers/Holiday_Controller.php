@@ -102,6 +102,7 @@ class Holiday_Controller extends ControllerSQL{
 		$pm->addParam(new FieldExtDate('date'
 		));
 		
+		
 		$this->addPublicMethod($pm);
 		$this->setObjectModelId('Holiday_Model');		
 

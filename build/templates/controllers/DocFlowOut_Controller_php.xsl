@@ -139,6 +139,10 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		$this->remove_afile($pm,'out');
 	}
 
+	public function remove_sig($pm){
+		$this->remove_asig($pm,'out');
+	}
+
 	public function delete($pm){
 		$this->delete_attachments($pm,'out');
 	}
@@ -406,6 +410,59 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		header('Content-Type: text/plain');
 		echo $hash;
 		return TRUE;
+	}
+
+	public function get_sig_details($pm){
+		if ($_SESSION['role_id']=='client'){
+			//открывает только свои заявления!!!
+			$ar = $this->getDbLink()->query_first(sprintf(
+				"SELECT
+					CASE WHEN af.file_id IS NOT NULL THEN TRUE ELSE FALSE END AS user_check_passed
+				FROM application_document_files AS af
+				LEFT JOIN applications AS a ON a.id=af.application_id
+				WHERE af.file_id=%s AND a.user_id=%d",
+			$this->getExtDbVal($pm,'id'),
+			$_SESSION['user_id']
+			));			
+			if (!count($ar) || $ar['user_check_passed']!='t'){
+				throw new Exception(self::ER_OTHER_USER_APP);
+			}			
+		}
+				
+	
+		$this->addNewModel(
+			Application_Controller::getSigDetailsQuery($this->getExtDbVal($pm,'id')),
+			'FileSignatures_Model'
+		);
+	
+	}
+
+	public function get_object($pm){
+		if (!is_null($pm->getParamValue("id"))){
+			parent::get_object($pm);
+		}
+		else{
+			//new document
+			$this->addNewModel(
+			"SELECT json_agg(fld.files) As files
+			FROM (
+				SELECT
+					json_build_object(
+						'fields',
+						json_build_object(
+							'id',id,
+							'descr',name,
+							'required',false,
+							'require_client_sig',require_client_sig
+						),
+						'files','[]'::json
+					) AS files
+				FROM application_doc_folders
+				ORDER BY name
+			) AS fld",
+			'DocFlowOutDialog_Model'
+			);			
+		}
 	}
 
 </xsl:template>

@@ -113,6 +113,7 @@ class Service_Controller extends ControllerSQL{
 		$pm->addParam(new FieldExtInt('id'
 		));
 		
+		
 		$this->addPublicMethod($pm);
 		$this->setObjectModelId('Service_Model');		
 

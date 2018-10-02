@@ -37,6 +37,83 @@
 	<div id="{{id}}:subject"/>	
 	<div id="{{id}}:content"/>
 	
+	{{#loadCadesPlugin}}
+	<div class="cadesCert">
+		{{#pluginUnsupBrowser}}
+		<div class="alert alert-danger alert-styled-left alert-bordered">К сожалению, Ваш браузер не поддерживает формирование ЭЦП личном кабинете!
+		</div>
+		{{/pluginUnsupBrowser}}
+
+		{{#pluginSupBrowser}}
+		<div class="cadesChecking alert alert-warning alert-styled-left">
+			<div>Ваш браузер поддерживает формирование ЭЦП в личном кабинете</div>
+			<div>
+				<i class="fa fa-spinner fa-spin position-left">
+				</i>
+				Попытка загрузки КриптоПро ЭЦП браузер плагина...
+			</div>
+		</div>
+	
+		<div class="hidden cadesNotInstalled alert alert-warning alert-styled-left">Ваш браузер поддерживает формирование ЭЦП личном кабинете, но необходимо установить:
+			<ol>
+				<li>
+					<a target="_blank" rel="noopener noreferrer" href="https://www.cryptopro.ru/products/csp/overview">СКЗИ КриптоПро CSP</a>
+				</li>
+				<li>
+					<a target="_blank" rel="noopener noreferrer" href="https://www.cryptopro.ru/products/cades/plugin/get_2_0">КриптоПро ЭЦП Browser plug-in</a>			
+				</li>
+				{{#isFirefox}}
+				<li>
+					<a target="_blank" rel="noopener noreferrer" href="https://www.cryptopro.ru/sites/default/files/products/cades/extensions/firefox_cryptopro_extension_latest.xpi">Расширение браузера для работы в Firefox </a>
+				</li>
+				{{/isFirefox}}
+				{{#isOpera}}
+				<li>
+					<a target="_blank" rel="noopener noreferrer" href="https://addons.opera.com/en/extensions/details/cryptopro-extension-for-cades-browser-plug-in">Расширение браузера для Opera или Яндекс.Браузер </a>
+				</li>
+				{{/isOpera}}
+				{{#isChrome}}
+				<li>
+					<a target="_blank" rel="noopener noreferrer" href="https://chrome.google.com/webstore/detail/cryptopro-extension-for-c/iifchhfnnmpdbibifmljnfjhpififfog">Расширение браузера для Chrome </a>
+				</li>
+				{{/isChrome}}
+	
+			</ol>
+			<div>
+				<a target="_blank" rel="noopener noreferrer" href="http://cpdn.cryptopro.ru/default.asp?url=content/cades/plugin.html">Описание установки КриптоПро ЭЦП Browser plug-in в Windows</a>
+			</div>	
+		
+			<div class="doNotCadesLoadPluginCont">
+				<input class="doNotCadesLoadPlugin" type="checkbox" id="doNotCadesLoadPlugin" name="doNotCadesLoadPlugin" value="doNotCadesLoadPlugin" style="margin:5px 5px;"/>
+				<label for="doNotCadesLoadPlugin">Больше не пытаться загружать КриптоПро ЭЦП браузер плагин</label>
+			</div>
+		</div>
+	
+		<div class="hidden cadesInstalled alert alert-success alert-styled-left alert-arrow-left alert-bordered">
+			<div class="certFilling">
+				<i class="fa fa-spinner fa-spin position-left">
+				</i>
+				Чтение списка сертификатов...
+			</div>
+			<div class="certReady hidden">
+				<div>
+					<span id="{{id}}:cspName"></span>, 
+					<span id="{{id}}:cspVersion"></span>  
+					<span id="{{id}}:plugInVersion"></span>
+				</div>
+				<div id="{{id}}:certListBox"></div>
+			</div>		
+		</div>	
+		{{/pluginSupBrowser}}
+	</div>
+
+	{{/loadCadesPlugin}}
+	
+	<h4>
+		<span id="{{id}}:attachments:total_item_files_doc" class="badge badge-danger" title="Общее количество файлов в документе">{{fileCount}}
+		</span> Вложенные файлы
+	</h4>	
+	
 	<div id="{{id}}:attachments"/>
 	
 	<div id="{{id}}:comment_text"/>

@@ -174,6 +174,28 @@ class User_Model extends ModelSQL{
 		$f_reminders_to_email=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"reminders_to_email",$f_opts);
 		$this->addField($f_reminders_to_email);
 		//********************
+		
+		//*** Field cades_load_timeout ***
+		$f_opts = array();
+		
+		$f_opts['alias']='КриптоПро плагин: Время ожидания загрузки плагина';
+		$f_opts['defaultValue']='60000';
+		$f_opts['id']="cades_load_timeout";
+				
+		$f_cades_load_timeout=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"cades_load_timeout",$f_opts);
+		$this->addField($f_cades_load_timeout);
+		//********************
+		
+		//*** Field cades_chunk_size ***
+		$f_opts = array();
+		
+		$f_opts['alias']='КриптоПро плагин: Размер части файла в байтах при поточной загрузке';
+		$f_opts['defaultValue']='1048576';
+		$f_opts['id']="cades_chunk_size";
+				
+		$f_cades_chunk_size=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"cades_chunk_size",$f_opts);
+		$this->addField($f_cades_chunk_size);
+		//********************
 	
 		$order = new ModelOrderSQL();		
 		$this->setDefaultModelOrder($order);		

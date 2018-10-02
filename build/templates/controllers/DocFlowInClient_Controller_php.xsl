@@ -153,6 +153,15 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		}
 	}
 	
+	public function get_object($pm){
+		parent::get_object($pm);
+		
+		//extra model
+		$m = new ApplicationDocFolder_Model($this->getDbLink());
+		$m->select();
+		$this->addModel($m);
+	}
+	
 </xsl:template>
 
 </xsl:stylesheet>

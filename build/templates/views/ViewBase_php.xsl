@@ -118,7 +118,11 @@ class ViewBase extends ViewHTMLXSLT {
 			$this->getVarModel()->addField(new Field('user_name_full',DT_STRING));
 			$this->getVarModel()->addField(new Field('temp_doc_storage',DT_STRING));
 			$this->getVarModel()->addField(new Field('temp_doc_storage_hours',DT_INT));
-			$this->getVarModel()->addField(new Field('color_palette',DT_STRING));				
+			//user attrs
+			$this->getVarModel()->addField(new Field('color_palette',DT_STRING));
+			$this->getVarModel()->addField(new Field('cades_load_timeout',DT_INT));
+			$this->getVarModel()->addField(new Field('cades_chunk_size',DT_INT));
+			
 			if (defined('CUSTOM_APP_UPLOAD_SERVER')){
 				$this->getVarModel()->addField(new Field('custom_app_upload_server',DT_STRING));
 			}
@@ -151,7 +155,11 @@ class ViewBase extends ViewHTMLXSLT {
 		if (isset($_SESSION['role_id'])){
 			$this->setVarValue('temp_doc_storage',TEMP_DOC_STORAGE);
 			$this->setVarValue('temp_doc_storage_hours',TEMP_DOC_STORAGE_HOURS);
+			
+			//user
 			$this->setVarValue('color_palette',$_SESSION['color_palette']);
+			$this->setVarValue('cades_load_timeout',$_SESSION['cades_load_timeout']);
+			$this->setVarValue('cades_chunk_size',$_SESSION['cades_chunk_size']);
 		
 			$this->setVarValue('role_id',$_SESSION['role_id']);
 			$this->setVarValue('user_name',$_SESSION['user_name']);

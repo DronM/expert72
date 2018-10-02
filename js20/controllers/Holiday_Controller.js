@@ -117,6 +117,7 @@ extend(Holiday_Controller,ControllerObjServer);
 	var f_opts = {};
 		
 	pm.addField(new FieldDate("date",f_opts));
+	
 	pm.addField(new FieldString("mode"));
 }
 

@@ -121,6 +121,7 @@ class OfficeDaySchedule_Controller extends ControllerSQL{
 		$pm->addParam(new FieldExtDate('day'
 		));
 		
+		
 		$this->addPublicMethod($pm);
 		$this->setObjectModelId('OfficeDaySchedule_Model');		
 

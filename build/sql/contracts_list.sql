@@ -47,8 +47,13 @@ CREATE OR REPLACE VIEW contracts_list AS
 		st.date_time AS state_dt,
 		st.end_date_time AS state_end_date,
 		
-		t.for_all_employees
-		
+		t.for_all_employees,
+		CASE
+			WHEN (coalesce(pm.cnt,0)=0) THEN 'no_pay'
+			WHEN st.state='returned' OR st.state='closed_no_expertise' THEN 'returned'
+			WHEN t.expertise_result IS NULL AND t.expertise_result_date<=now()::date THEN 'no_result'
+			ELSE NULL
+		END AS state_for_color
 		
 	FROM contracts AS t
 	LEFT JOIN applications ON applications.id=t.application_id
@@ -64,7 +69,13 @@ CREATE OR REPLACE VIEW contracts_list AS
 	) AS h_max ON h_max.application_id=t.application_id
 	LEFT JOIN application_processes st
 		ON st.application_id=h_max.application_id AND st.date_time = h_max.date_time
-	
+	LEFT JOIN (
+		SELECT
+			client_payments.contract_id,
+			count(*) AS cnt
+		FROM client_payments
+		GROUP BY client_payments.contract_id
+	) AS pm ON pm.contract_id=t.id
 	;
 	
 ALTER VIEW contracts_list OWNER TO ;

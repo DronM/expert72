@@ -120,10 +120,16 @@ function DocFlowOutClientList_View(id,options){
 			"sortable":true
 		})
 		,new GridCellHead(id+":grid:head:sent",{
-			"value":"Отправлен",
+			"value":"Статус",
+			"colAttrs":{
+				"state":function(fields){
+					return ((!fields.sent.getValue())? "not_sent":"sent");
+				}
+			},
 			"columns":[
-				new GridColumnBool({
-					"field":model.getField("sent")
+				new GridColumn({
+					"field":model.getField("sent"),
+					"assocValueList":{"true":"Отправлено","null":"Не отправлено","false":"Не отправлено"}					
 				})
 			]
 		})

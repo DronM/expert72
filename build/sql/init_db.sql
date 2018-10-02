@@ -4,8 +4,9 @@ GRANT ALL PRIVILEGES ON DATABASE expert72 TO expert72;
 GRANT SELECT ON ALL TABLES IN SCHEMA public TO expert72;
 
 -Восстанавливает в другую базу
-pg_dump -U polimerplast -Fc -v polimerplast > plpl.dump
-pg_restore -U postgres -v -e -d plpl_test plpl.dump
+pg_dump -U expert72 -Fc -v expert72 > expert72.dump
+drop database expert72_test;
+pg_restore -U expert72 -v -e -d expert72_test -n public expert72.dump
 
 ПРОСТОЙ DUMP!!!
 sudo service postgresql stop

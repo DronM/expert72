@@ -83,6 +83,7 @@ class FundSource_Controller extends ControllerSQL{
 		$pm->addParam(new FieldExtInt('id'
 		));
 		
+		
 		$this->addPublicMethod($pm);
 		$this->setObjectModelId('FundSource_Model');		
 

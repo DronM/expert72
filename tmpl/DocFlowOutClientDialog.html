@@ -31,20 +31,94 @@
 
 	</div>
 	
-	<div id="{{id}}:contract_file">
-	</div>
-	
 	<div id="{{id}}:documentFiles" class="panel-body">
+		{{#loadCadesPlugin}}
+		<div class="cadesCert">
+			{{#pluginUnsupBrowser}}
+			<div class="alert alert-danger alert-styled-left alert-bordered">К сожалению, Ваш браузер не поддерживает формирование ЭЦП личном кабинете!
+			</div>
+			{{/pluginUnsupBrowser}}
+
+			{{#pluginSupBrowser}}
+			<div class="cadesChecking alert alert-warning alert-styled-left">
+				<div>Ваш браузер поддерживает формирование ЭЦП в личном кабинете</div>
+				<div>
+					<i class="fa fa-spinner fa-spin position-left">
+					</i>
+					Попытка загрузки КриптоПро ЭЦП браузер плагина...
+				</div>
+			</div>
+		
+			<div class="hidden cadesNotInstalled alert alert-warning alert-styled-left">Ваш браузер поддерживает формирование ЭЦП личном кабинете, но необходимо установить:
+				<ol>
+					<li>
+						<a target="_blank" rel="noopener noreferrer" href="https://www.cryptopro.ru/products/csp/overview">СКЗИ КриптоПро CSP</a>
+					</li>
+					<li>
+						<a target="_blank" rel="noopener noreferrer" href="https://www.cryptopro.ru/products/cades/plugin/get_2_0">КриптоПро ЭЦП Browser plug-in</a>			
+					</li>
+					{{#isFirefox}}
+					<li>
+						<a target="_blank" rel="noopener noreferrer" href="https://www.cryptopro.ru/sites/default/files/products/cades/extensions/firefox_cryptopro_extension_latest.xpi">Расширение браузера для работы в Firefox </a>
+					</li>
+					{{/isFirefox}}
+					{{#isOpera}}
+					<li>
+						<a target="_blank" rel="noopener noreferrer" href="https://addons.opera.com/en/extensions/details/cryptopro-extension-for-cades-browser-plug-in">Расширение браузера для Opera или Яндекс.Браузер </a>
+					</li>
+					{{/isOpera}}
+					{{#isChrome}}
+					<li>
+						<a target="_blank" rel="noopener noreferrer" href="https://chrome.google.com/webstore/detail/cryptopro-extension-for-c/iifchhfnnmpdbibifmljnfjhpififfog">Расширение браузера для Chrome </a>
+					</li>
+					{{/isChrome}}
+		
+				</ol>
+				<div>
+					<a target="_blank" rel="noopener noreferrer" href="http://cpdn.cryptopro.ru/default.asp?url=content/cades/plugin.html">Описание установки КриптоПро ЭЦП Browser plug-in в Windows</a>
+				</div>	
+			
+				<div class="doNotCadesLoadPluginCont">
+					<input class="doNotCadesLoadPlugin" type="checkbox" id="doNotCadesLoadPlugin" name="doNotCadesLoadPlugin" value="doNotCadesLoadPlugin" style="margin:5px 5px;"/>
+					<label for="doNotCadesLoadPlugin">Больше не пытаться загружать КриптоПро ЭЦП браузер плагин</label>
+				</div>
+			</div>
+		
+			<div class="hidden cadesInstalled alert alert-success alert-styled-left alert-arrow-left alert-bordered">
+				<div class="certFilling">
+					<i class="fa fa-spinner fa-spin position-left">
+					</i>
+					Чтение списка сертификатов...
+				</div>
+				<div class="certReady hidden">
+					<div>
+						<span id="{{id}}:cspName"></span>, 
+						<span id="{{id}}:cspVersion"></span>  
+						<span id="{{id}}:plugInVersion"></span>
+					</div>
+					<div id="{{id}}:certListBox"></div>
+				</div>		
+			</div>	
+			{{/pluginSupBrowser}}
+		</div>
+	
+		{{/loadCadesPlugin}}
+	
 		<div class="tabbable">
-			<ul class="nav nav-tabs nav-tabs-highlight">				
-				<li class="active">
+			<ul id="documentTabs" class="nav nav-tabs nav-tabs-highlight">				
+				<li class="active" id="{{id}}:documentFiles-toggle">
 					<a href="#documentFiles" data-toggle="tab" aria-expanded="true">
 						Файлы документации</a>
 				</li>
-				<li id="{{id}}:tab-commonFiles" class=""><a href="#commonFiles" data-toggle="tab" aria-expanded="false">Сопроводительное письмо к ответу на замечания</a></li>
+				<li id="{{id}}:tab-commonFiles" class="">
+					<a id="commonFiles-ref" href="#commonFiles" data-toggle="tab" aria-expanded="false">
+						<span id="{{id}}:attachments:total_item_files_doc" class="badge badge-danger" title="Общее количество файлов в документе">{{fileCount}}
+						</span>
+					</a>
+				</li>
 			</ul>
 		</div>
-	
+
 		<div class="tab-content dialogForm">
 			<div class="tab-pane fade in active" id="documentFiles">
 				<div class="tabbable">
@@ -58,30 +132,37 @@
 
 					<div class="tab-content">
 						<div class="tab-pane fade" id="documents_pd">
-							<div id="{{id}}:documents_pd"/>
+							<div id="{{id}}:documents_pd">
+							</div>
 						</div>
 						<div class="tab-pane fade" id="documents_eng_survey">
-							<div id="{{id}}:documents_eng_survey"/>
+							<div id="{{id}}:documents_eng_survey">
+							</div>
 						</div>
 						<div class="tab-pane fade" id="documents_cost_eval_validity">
-							<div id="{{id}}:documents_cost_eval_validity"/>
+							<div id="{{id}}:documents_cost_eval_validity">
+							</div>
 						</div>
 						<div class="tab-pane fade" id="documents_modification">
-							<div id="{{id}}:documents_modification"/>
+							<div id="{{id}}:documents_modification">
+							</div>
 						</div>
 						<div class="tab-pane fade" id="documents_audit">
-							<div id="{{id}}:documents_audit"/>
+							<div id="{{id}}:documents_audit">
+							</div>
 						</div>
 					</div>
 				</div>
-			
-			</div>
-			
-			<div class="tab-pane fade" id="commonFiles">
-				<div id="{{id}}:attachments"/>
-			</div>
-			
-		</div>
 		
+			</div>
+		
+			<div class="tab-pane fade" id="commonFiles">
+				<div id="{{id}}:attachments">
+				</div>
+			</div>
+		
+		</div>
+	
 	</div>				
+	
 </div>

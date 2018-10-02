@@ -20,41 +20,29 @@ function DocFlowOutDialog_View(id,options){
 	options.controller = new DocFlowOut_Controller();
 	options.model = options.models.DocFlowOutDialog_Model;
 
-	options.templateOptions = options.templateOptions || {};
-
 	var role = window.getApp().getServVar("role_id");
 	var is_admin = (role=="admin");		
-	var files;
+	var items = [];
 	var st;
 	var model_exists = false;
-	var read_only = false;
+	options.readOnly = false;
 	if (options.model && (options.model.getRowIndex()>=0 || options.model.getNextRow()) ){			
-		files = options.model.getFieldValue("files") || [];
+		items = options.model.getFieldValue("files") || [];
 		st = options.model.getFieldValue("state");
 		model_exists = true;
 	
-		read_only = (st=="registered" && !is_admin);
+		options.readOnly = (st=="registered" && !is_admin);
 	}
-	else{
-		files = [];
+	options.templateOptions = options.templateOptions || {};
+	options.templateOptions.fileCount = 0;
+	for(var i=0;i<items.length;i++){
+		options.templateOptions.fileCount+= (items[i].files && items[i].files.length)? items[i].files.length:0;
+		if (!options.readOnly || (options.readOnly && items[i].files && items[i].files.length) ){
+			items[i].showItem = true;
+		}
 	}	
 	//********** cades plugin *******************
-	options.templateOptions.loadCadesPlugin = (!read_only && !window.getApp().getDoNotLoadCadesPlugin());
-	
-	if (options.templateOptions.loadCadesPlugin){
-		var cades = window.getApp().getCadesAPI();		
-		if (cades && !read_only){
-			options.templateOptions.pluginSupBrowser = cades.browserSupported();
-			options.templateOptions.pluginUnsupBrowser = !options.templateOptions.pluginSupBrowser;
-		
-			if (options.templateOptions.pluginSupBrowser){
-				var br = CommonHelper.getBrowser();				
-				options.templateOptions.isFirefox = (br["name"]=="Firefox");
-				options.templateOptions.isOpera = (br["name"]=="Opera" || br["name"]=="Yandex");
-				options.templateOptions.isChrome = (br["name"]=="Chrome");
-			}
-		}
-	}
+	this.m_cadesView = new Cades_View(id,options);
 	//********** cades plugin *******************		
 
 	var self = this;
@@ -205,12 +193,16 @@ function DocFlowOutDialog_View(id,options){
 
 		this.addElement(new FileUploaderDocFlowOut_View(this.getId()+":attachments",{
 			"mainView":this,
-			"readOnly":read_only,
-			"items":files,
-			"templateOptions":{"isNotSent":(st!="registered" || is_admin)},
+			"readOnly":options.readOnly,
+			"items":items,
+			"templateOptions":{
+				"isNotSent":!options.readOnly,
+				"isSent":options.readOnly,
+			},
+			"template":window.getApp().getTemplate("DocFlowAttachments"),
 			"akt1c":akt1c,
-			"order1c":order1c,
-			"getCustomFolderDefault":function(){
+			"order1c":order1c
+			/*,"getCustomFolderDefault":function(){
 				var v = self.getElement("doc_flow_types_ref").getValue();
 				if (!v && model_exists){
 					v = options.model.getFieldValue("doc_flow_types_ref");
@@ -229,7 +221,7 @@ function DocFlowOutDialog_View(id,options){
 					}	
 					return res;			
 				}
-			}
+			}*/
 		})
 		);
 	
@@ -357,36 +349,7 @@ function DocFlowOutDialog_View(id,options){
 		,new CommandBinding({"control":this.getElement("expertise_result")})		
 	]);
 	
-	//********** cades plugin ******************************
-	if (options.templateOptions.loadCadesPlugin){
-		$(".doNotCadesLoadPlugin").click(function(){
-			var checked = $("#doNotCadesLoadPlugin").is(":checked");
-			window.getApp().setDoNotLoadCadesPlugin(checked);
-		});
-		
-		if (cades && !cades.getLoaded()){
-			cades.setOnCertListFilled(function(){
-				self.cadesOnCertListFilled();
-			});
-			cades.setOnLoadSuccess(this.cadesOnLoadSuccess);
-			cades.setOnLoadError(this.cadesOnLoadError);
-		}
-		else if (cades){
-			//already loaded
-			//console.log("Cades loaded")
-			if (cades.getLoadError()){
-				this.cadesOnLoadError();
-			}
-			else{
-				this.cadesOnLoadSuccess();
-				if (cades.getCertListFilled()){
-					this.cadesOnCertListFilled();
-				}
-			}
-		}
-	}
-	//********** cades plugin ******************************
-	
+	this.m_cadesView.afterViewConstructed();	
 }
 extend(DocFlowOutDialog_View,DocFlowBaseDialog_View);
 
@@ -465,6 +428,7 @@ DocFlowOutDialog_View.prototype.setDocVis = function(){
 		this.setSubjectFromContract(params.doc_type);
 	}
 	
+	this.updateFolderVisibility();
 	/*
 	if (params.app_vis||params.contr_vis){
 		var subj = window.getApp().getPredefinedItem("doc_flow_types",params.doc_type).getDescr();
@@ -526,7 +490,8 @@ DocFlowOutDialog_View.prototype.onGetData = function(resp,cmd){
 	}
 	else{
 		this.getElement("attachments").initDownload();
-	}		
+	}
+	
 }
 
 DocFlowOutDialog_View.prototype.passToRegister = function(){
@@ -680,36 +645,18 @@ DocFlowOutDialog_View.prototype.setSubjectFromContract = function(docType){
 	this.setSubject(docType,doc_id,pm);
 }
 
-//******** CADES ***********************************
-DocFlowOutDialog_View.prototype.cadesOnCertListFilled = function(){
-	var id = this.getId();
-	//общая информация
-	var cades = window.getApp().getCadesAPI();
-	document.getElementById(id+":cspName").innerHTML = "Криптопровайдер: " + cades.getCSPName();
-	document.getElementById(id+":cspVersion").innerHTML = "версия: " + cades.getCSPVersion();
-	document.getElementById(id+":plugInVersion").innerHTML = "Версия плагина: " + cades.getPluginVersion();
-	
-	//заполнение списка сертификатов
-	this.m_certBoxControl = new EditCertificateSelect(id+":certListBox",{
-		"cades":cades
-	});
-	this.m_certBoxControl.toDOM();
-	
-	$(".certFilling").addClass("hidden");
-	$(".certReady").removeClass("hidden");
-	$(".fileSignNoSig").removeClass("hidden");
+DocFlowOutDialog_View.prototype.updateFolderVisibility = function(){
+	var tp = this.getElement("doc_flow_types_ref").getValue();
+	if (tp && tp.getKey()==window.getApp().getPredefinedItem("doc_flow_types","contr").getKey()){
+		//скрыть все оставить только исход
+		$(".docFlowFolder").addClass("hidden");		
+		var fld_id = window.getApp().getPredefinedItem("application_doc_folders","doc_flow_out").getKey();
+		var fld_n = document.getElementById(this.getId()+":attachments:folder:"+fld_id);
+		DOMHelper.show(fld_n);
+		$(document.getElementById("collapsible-control-right-group-doc-"+fld_id)).collapse("show");
+	}
+	else{
+		//все показать
+		$(".docFlowFolder").removeClass("hidden");
+	}
 }
-
-DocFlowOutDialog_View.prototype.cadesOnLoadSuccess = function(){
-	$(".cadesChecking").remove();		
-	$(".cadesInstalled").removeClass("hidden");				
-		
-}
-DocFlowOutDialog_View.prototype.cadesOnLoadError = function(){
-	$(".cadesChecking").remove();		
-	$(".cadesNotInstalled").removeClass("hidden");			
-}
-DocFlowOutDialog_View.prototype.getCertBoxControl = function(){
-	return this.m_certBoxControl;
-}
-

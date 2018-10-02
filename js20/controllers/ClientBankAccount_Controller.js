@@ -130,6 +130,7 @@ extend(ClientBankAccount_Controller,ControllerObjClient);
 	var f_opts = {};
 		
 	pm.addField(new FieldString("acc_number",f_opts));
+	
 	pm.addField(new FieldString("mode"));
 }
 

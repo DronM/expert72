@@ -67,6 +67,7 @@ function ucode2str($str) {
 class PKIManager {
 
 	const ER_VERIF_FAIL = 'Неверная подпись!';
+	const ER_DIGEST_FAIL = 'Подлинность документа не подтверждена!';
 	const ER_BROKEN_CHAIN = 'Невозможно посторить цепь сертификатов!';
 	const ER_UNABLE_LOAD_CRL = 'Невозможно обновить список отозванных сертификатов для УЦ CN=%s, ОГРН=%s';
 	const ER_CERT_FIELD_NOT_FOUND = 'Нет поля %s в объекте %s';
@@ -201,7 +202,7 @@ class PKIManager {
 			 * их может быть несколько, если в контейнере несколько подписей
 			 */
 			$issuers = [];
-			$subjects = [];
+			$subjects = [];			
 			foreach($pem_list as $pem_file){
 				$cert_data = $this->run_shell_cmd(sprintf('openssl x509 -subject_hash -issuer_hash -in "%s" -noout',$pem_file));
 				$cert_ar = explode(PHP_EOL,trim($cert_data));
@@ -673,7 +674,7 @@ class PKIManager {
 						try{
 							//-noverify
 							$verif_res = $this->run_shell_cmd(sprintf(				
-								'openssl smime -verify -content "%s" -purpose any -crl_check -out /dev/null -inform der -in "%s" -CAfile "%s"',
+								'openssl smime -verify -content "%s" -noverify -purpose any -crl_check -out /dev/null -inform der -in "%s" -CAfile "%s"',
 								$contentFile,
 								$der_file,
 								$chain_file
@@ -687,12 +688,15 @@ class PKIManager {
 								if (strpos($m,'unable to get issuer certificate')>=0){
 									$user_m = self::ER_BROKEN_CHAIN;
 								}
+								else if (strpos($m,'digest failure')>=0){
+									$user_m = self::ER_DIGEST_FAIL;
+								}							
 								else{
 									$user_m = self::ER_VERIF_FAIL;					
 								}
-								unlink($chain_file);
+								if(file_exists($chain_file))unlink($chain_file);
 								//throw new Exception($user_m);
-								$verifResult->checkError = (is_null($verifResult->checkError)? '':($verifResult->checkError.', ')).$e->getMessage();
+								$verifResult->checkError = (is_null($verifResult->checkError)? '':($verifResult->checkError.', ')). str_replace(PHP_EOL,' ',$e->getMessage());
 								$verifResult->checkPassed = FALSE;
 							}							
 						}
@@ -825,7 +829,7 @@ class PKIManager {
 	 */	
 	public function mergeSigs($sSigFile,$dSigFile,$oSigFile){
 		try{
-			$this->run_shell_cmd(sprintf(dirname(__FILE__).DIRECTORY_SEPARATOR.'cmsmerge -s %s -d %s -o %s',$sSigFile,$dSigFile,$oSigFile));
+			$this->run_shell_cmd(sprintf(dirname(__FILE__).DIRECTORY_SEPARATOR.'cmsmerge -s "%s" -d "%s" -o "%s"',$sSigFile,$dSigFile,$oSigFile));
 		}
 		finally{
 			$this->logger->dump();

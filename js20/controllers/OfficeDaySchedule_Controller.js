@@ -141,6 +141,7 @@ extend(OfficeDaySchedule_Controller,ControllerObjServer);
 	var f_opts = {};
 		
 	pm.addField(new FieldDate("day",f_opts));
+	
 	pm.addField(new FieldString("mode"));
 }
 

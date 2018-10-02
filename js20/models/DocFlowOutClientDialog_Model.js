@@ -105,7 +105,7 @@ function DocFlowOutClientDialog_Model(options){
 	filed_options.autoInc = false;	
 	
 	options.fields.doc_flow_out_client_type = new FieldEnum("doc_flow_out_client_type",filed_options);
-	filed_options.enumValues = 'app,contr_resp,contr_return,contr_other';
+	filed_options.enumValues = 'app,contr_resp,contr_return,contr_other,date_prolongate';
 	
 			
 			
@@ -144,15 +144,6 @@ function DocFlowOutClientDialog_Model(options){
 	options.fields.contract_file = new FieldJSON("contract_file",filed_options);
 	
 			
-				
-	
-	var filed_options = {};
-	filed_options.primaryKey = false;	
-	
-	filed_options.autoInc = false;	
-	
-	options.fields.contract_files = new FieldJSON("contract_files",filed_options);
-	
 				
 	
 	var filed_options = {};

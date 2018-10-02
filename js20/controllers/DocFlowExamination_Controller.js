@@ -242,6 +242,7 @@ extend(DocFlowExamination_Controller,ControllerObjServer);
 	var f_opts = {};
 		
 	pm.addField(new FieldInt("id",f_opts));
+	
 	pm.addField(new FieldString("mode"));
 }
 

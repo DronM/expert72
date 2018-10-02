@@ -128,6 +128,7 @@ class MainMenuConstructor_Controller extends ControllerSQL{
 		$pm->addParam(new FieldExtInt('id'
 		));
 		
+		
 		$this->addPublicMethod($pm);
 		$this->setObjectModelId('MainMenuConstructorDialog_Model');		
 

@@ -30,6 +30,7 @@ function DocFlowOut_Controller(options){
 	this.addGetList();
 	this.addGetObject();
 	this.add_remove_file();
+	this.add_remove_sig();
 	this.add_get_file();
 	this.add_get_file_hash();
 	this.add_get_file_sig();
@@ -39,6 +40,7 @@ function DocFlowOut_Controller(options){
 	this.add_get_next_contract_number();
 	this.add_alter_file_folder();
 	this.add_add_sig_to_file();
+	this.add_get_sig_details();
 		
 }
 extend(DocFlowOut_Controller,ControllerObjServer);
@@ -355,12 +357,39 @@ extend(DocFlowOut_Controller,ControllerObjServer);
 	var f_opts = {};
 		
 	pm.addField(new FieldInt("id",f_opts));
+	
 	pm.addField(new FieldString("mode"));
 }
 
 			DocFlowOut_Controller.prototype.add_remove_file = function(){
 	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('remove_file',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		options.maxlength = "36";
+	
+		pm.addField(new FieldString("file_id",options));
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("doc_id",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			DocFlowOut_Controller.prototype.add_remove_sig = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('remove_sig',opts);
 	
 				
 	
@@ -587,6 +616,24 @@ extend(DocFlowOut_Controller,ControllerObjServer);
 		options.required = true;
 	
 		pm.addField(new FieldInt("doc_id",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			DocFlowOut_Controller.prototype.add_get_sig_details = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('get_sig_details',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		options.maxlength = "36";
+	
+		pm.addField(new FieldString("id",options));
 	
 			
 	this.addPublicMethod(pm);

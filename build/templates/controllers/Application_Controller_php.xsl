@@ -47,7 +47,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 	const ER_NO_FILES_FOR_ZIP = 'Проект не содержит файлов!';	
 	const ER_MAKE_ZIP = 'Ошибка при создании архива!';
 	const ER_NO_BOSS = 'Не определен руководитель НАШЕГО офиса!';
-	const ER_OTHER_USER_APP = 'Wrong application!';
+	const ER_OTHER_USER_APP = 'Forbidden!';
 	const ER_APP_SENT = 'Невозможно удалять отправленное заявление!';
 	const ER_NO_SIG = 'Для файла нет ЭЦП!';
 	const ER_DOC_SENT = 'Документ отправлен на проверку. Операция невозможна.';
@@ -294,17 +294,26 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		}		
 	}
 
-	public function delete_print($appId,$docType){
+	public function delete_print($appId,$docType,$fillPercent){
 		$state = self::checkSentState($this->getDbLink(),$appId,TRUE);
 		if ($_SESSION['role_id']!='admin' &amp;&amp; $state!='filling' &amp;&amp; $state!='correcting'){
 			throw new Exception(ER_DOC_SENT);
 		}
 		$fullPath = '';
 		$fileName = '';
+		if ($fillPercent>=100){
+			$fillPercent = 99;
+		}
 		if ($this->get_print_file($appId,$docType,FALSE,$fullPath,$fileName)){
 			try{
 				$this->getDbLinkMaster()->query("BEGIN");
-				$this->getDbLinkMaster()->query(sprintf("UPDATE applications SET %s=NULL WHERE id=%d",$docType,$appId));
+				$this->getDbLinkMaster()->query(sprintf(
+					"UPDATE applications
+					SET
+						%s=NULL,
+						filled_percent=%d
+					WHERE id=%d",
+					$docType,$fillPercent,$appId));
 				
 				unlink($fullPath);
 				if(file_exists($fullPath.'.sig')){
@@ -344,7 +353,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		return $this->download_print($this->getExtDbVal($pm,'id'),'app_print_expertise',TRUE);
 	}	
 	public function delete_app_print_expertise($pm){
-		return $this->delete_print($this->getExtDbVal($pm,'id'),'app_print_expertise');
+		return $this->delete_print($this->getExtDbVal($pm,'id'),'app_print_expertise',$this->getExtDbVal($pm,'fill_percent'));
 	}
 	
 	public function download_app_print_modification($pm){
@@ -354,7 +363,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		return $this->download_print($this->getExtDbVal($pm,'id'),'app_print_modification',TRUE);
 	}
 	public function delete_app_print_modification($pm){
-		return $this->delete_print($this->getExtDbVal($pm,'id'),'app_print_modification');
+		return $this->delete_print($this->getExtDbVal($pm,'id'),'app_print_modification',$this->getExtDbVal($pm,'fill_percent'));
 	}
 	
 	public function download_app_print_audit($pm){
@@ -364,7 +373,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		return $this->download_print($this->getExtDbVal($pm,'id'),'app_print_audit',TRUE);
 	}
 	public function delete_app_print_audit($pm){
-		return $this->delete_print($this->getExtDbVal($pm,'id'),'app_print_audit');
+		return $this->delete_print($this->getExtDbVal($pm,'id'),'app_print_audit',$this->getExtDbVal($pm,'fill_percent'));
 	}
 	
 	public function download_app_print_cost_eval($pm){
@@ -374,7 +383,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		return $this->download_print($this->getExtDbVal($pm,'id'),'app_print_cost_eval',TRUE);
 	}
 	public function delete_app_print_cost_eval($pm){
-		return $this->delete_print($this->getExtDbVal($pm,'id'),'app_print_cost_eval');
+		return $this->delete_print($this->getExtDbVal($pm,'id'),'app_print_cost_eval',$this->getExtDbVal($pm,'fill_percent'));
 	}
 	public function download_auth_letter_file($pm){
 		return $this->download_print($this->getExtDbVal($pm,'id'),'auth_letter_file',FALSE);
@@ -922,12 +931,19 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		'ApplicationClientList_Model');
 	}
 
-	public static function removeFile($dbLinkMaster,$fileIdForDb){
+	public static function removeFile($dbLinkMaster,$fileIdForDb,$unlinkFile=FALSE){
 		$ar = $dbLinkMaster->query_first(sprintf(
 			"SELECT
 				f.application_id,
 				app.user_id,
-				(SELECT st.state FROM application_processes AS st WHERE st.application_id=f.application_id ORDER BY st.date_time DESC LIMIT 1) AS state
+				f.document_id,
+				(SELECT
+					st.state
+				FROM application_processes AS st
+				WHERE st.application_id=f.application_id
+				ORDER BY st.date_time DESC
+				LIMIT 1
+				) AS state
 			FROM application_document_files AS f
 			LEFT JOIN applications AS app ON app.id=f.application_id
 			WHERE f.file_id=%s",
@@ -938,7 +954,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		}
 		
 		if ($_SESSION['role_id']!='admin' &amp;&amp; $ar['user_id']!=$_SESSION['user_id']){
-			throw new Exception(self::ER_OTHER_USER_APP);
+			throw new Exception(self::ER_OTHER_USER_APP.' app_user='.$ar['user_id']);
 		}
 		
 		if ($ar['state']=='sent'){
@@ -951,12 +967,12 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			//1) Mark in DB or delete
 			//|| $ar['state']=='returned'
 			//В этом случае - непосредственное удаление, без копирования в Удаленные
-			$unlink_file = ($ar['state']=='filling' || $ar['state']=='correcting');
+			$unlink_file = ($unlinkFile || $ar['document_id']==0 || $ar['state']=='filling' || $ar['state']=='correcting');
 			if ($unlink_file){
 				$q = sprintf(
 					"DELETE FROM application_document_files
 					WHERE file_id=%s
-					RETURNING application_id,document_type,document_id,file_id,file_name,file_signed",
+					RETURNING application_id,document_type,document_id,file_path,file_id,file_name,file_signed",
 				$fileIdForDb
 				);
 			}
@@ -967,7 +983,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 						deleted = TRUE,
 						deleted_dt=now()
 					WHERE file_id=%s
-					RETURNING application_id,document_type,document_id,file_id,file_name,file_signed",
+					RETURNING application_id,document_type,document_id,file_path,file_id,file_name,file_signed",
 				$fileIdForDb
 				);
 			}
@@ -985,28 +1001,28 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			$document_type_path.= ($document_type_path=='')? '':DIRECTORY_SEPARATOR;
 			$rel_fl = self::APP_DIR_PREF.$ar['application_id'].DIRECTORY_SEPARATOR.
 				$document_type_path.
-				$ar['document_id'].DIRECTORY_SEPARATOR.
+				(($ar['document_id']==0)? $ar['file_path']:$ar['document_id']).DIRECTORY_SEPARATOR.
 				$ar['file_id'];
 				
 			if (file_exists($fl = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_fl)){
-				if (!file_exists($dest = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_dest)){
-					mkdir($dest,0777,TRUE);
-				}
 				if ($unlink_file){
 					unlink($fl);
 				}
 				else{
+					if (!file_exists($dest = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_dest)){
+						mkdir($dest,0777,TRUE);
+					}				
 					rename($fl, $dest.DIRECTORY_SEPARATOR.$ar['file_id']);
 				}
 			}
 			if (defined('FILE_STORAGE_DIR_MAIN') &amp;&amp; file_exists($fl = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$rel_fl)){
-				if (!file_exists($dest = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$rel_dest)){
-					mkdir($dest,0777,TRUE);
-				}
 				if ($unlink_file){
 					unlink($fl);
 				}
 				else{
+					if (!file_exists($dest = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$rel_dest)){
+						mkdir($dest,0777,TRUE);
+					}				
 					rename($fl, $dest.DIRECTORY_SEPARATOR.$ar['file_id']);
 				}
 				
@@ -1014,24 +1030,26 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			
 			if ($ar['file_signed']=='t'){
 				if (file_exists($fl = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_fl.self::SIG_EXT)){
-					if (!file_exists($dest = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_dest)){
-						mkdir($dest,0777,TRUE);
-					}
 					if ($unlink_file){
 						unlink($fl);
 					}
 					else{				
+						if (!file_exists($dest = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_dest)){
+							mkdir($dest,0777,TRUE);
+						}
+					
 						rename($fl, $dest.DIRECTORY_SEPARATOR.$ar['file_id'].self::SIG_EXT);
 					}
 				}
 				if (defined('FILE_STORAGE_DIR_MAIN') &amp;&amp; file_exists($fl = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$rel_fl.self::SIG_EXT)){
-					if (!file_exists($dest = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$rel_dest)){
-						mkdir($dest,0777,TRUE);
-					}
 					if ($unlink_file){
 						unlink($fl);
 					}
 					else{				
+						if (!file_exists($dest = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$rel_dest)){
+							mkdir($dest,0777,TRUE);
+						}
+					
 						rename($fl, $dest.DIRECTORY_SEPARATOR.$ar['file_id'].self::SIG_EXT);
 					}
 				}
@@ -2417,6 +2435,79 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			$this->getExtDbVal($pm,'id')
 		),'ConstrName_Model');
 	}
+	
+	public static function getSigDetailsQuery($fileIdDb){
+		return sprintf(
+		"SELECT
+			f_sig.file_id,
+			jsonb_agg(
+				jsonb_build_object(
+					'owner',u_certs.subject_cert,
+					'cert_from',u_certs.date_time_from,
+					'cert_to',u_certs.date_time_to,
+					'sign_date_time',f_sig.sign_date_time,
+					'check_result',ver.check_result,
+					'check_time',ver.check_time,
+					'error_str',ver.error_str
+				)
+			) AS signatures
+		FROM file_signatures AS f_sig
+		LEFT JOIN file_verifications AS ver ON ver.file_id=f_sig.file_id
+		LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id			
+		WHERE ver.file_id=%s
+		GROUP BY f_sig.file_id",
+		$fileIdDb
+		);
+	}
+	
+	public function get_sig_details($pm){
+		
+		$this->addNewModel(
+			self::getSigDetailsQuery($this->getExtDbVal($pm,'id')),
+			'FileSignatures_Model'
+		);	
+	}
+	
+	public function get_customer_list($pm){
+		$this->setCompleteModelId('ApplicationCustomerList_Model');
+		$this->complete($pm);
+	}
+	public function get_contractor_list($pm){
+		$this->setCompleteModelId('ApplicationContractorList_Model');
+		$this->complete($pm);
+	}
+	
+	public static function getMaxIndexSigFile($relPath,$fileId,&amp;$maxIndex){
+		$maxIndex = 0;
+		function max_ind_in_path($path,$file_id){
+			$m_ind = 0;
+			$cdir = scandir($path);
+			foreach ($cdir as $key => $value){
+				if (preg_match('/^'.$file_id.'\.sig\.s\d+$/',$value)){
+					$i = substr($value,strrpos($value,'.s')+2);
+					if ($i>$m_ind){
+						$m_ind = $i;
+					}
+				}
+			}
+			return $m_ind;
+		}
+		
+		$ind_used = TRUE;
+		if (file_exists(FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$relPath)){
+			$maxIndex = max_ind_in_path(FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$relPath,$fileId);		
+		}
+		
+		if (defined('FILE_STORAGE_DIR_MAIN' &amp;&amp; file_exists(FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$relPath))){
+			$ind2 = max_ind_in_path(FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$relPath,$fileId);
+			if($ind2>$maxIndex){
+				$maxIndex = $ind2;
+				$ind_used = FALSE;
+			}
+		}
+		return ($ind_used? FILE_STORAGE_DIR:FILE_STORAGE_DIR_MAIN) .DIRECTORY_SEPARATOR.$relPath.$fileId.'.sig.s'.$maxIndex;
+	}
+	
 	
 </xsl:template>
 

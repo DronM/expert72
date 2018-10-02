@@ -218,6 +218,7 @@ class Client_Controller extends ControllerSQL{
 		$pm->addParam(new FieldExtInt('id'
 		));
 		
+		
 		$this->addPublicMethod($pm);
 		$this->setObjectModelId('ClientDialog_Model');		
 

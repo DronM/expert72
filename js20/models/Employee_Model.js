@@ -90,6 +90,17 @@ function Employee_Model(options){
 	
 	options.fields.picture_info = new FieldJSON("picture_info",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.snils = new FieldString("snils",filed_options);
+	options.fields.snils.getValidator().setMaxLength('11');
+	
+			
 			
 			
 		Employee_Model.superclass.constructor.call(this,id,options);

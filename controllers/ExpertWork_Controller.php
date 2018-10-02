@@ -135,6 +135,7 @@ class ExpertWork_Controller extends ControllerSQL{
 		$pm->addParam(new FieldExtInt('id'
 		));
 		
+		
 		$this->addPublicMethod($pm);
 		$this->setObjectModelId('ExpertWorkList_Model');		
 

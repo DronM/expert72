@@ -6,8 +6,9 @@
  * @author Andrey Mikhalevich <katrenplus@mail.ru>, 2018
  */
 App.prototype.m_predefinedItems = {
- 	"application_doc_folders":{"contract":new RefType({"dataType":"application_doc_folders","descr":"Договорные документы","keys":{"id":1}})
+ 	"application_doc_folders":{"contract":new RefType({"dataType":"application_doc_folders","descr":"Договорные документы/Контракт","keys":{"id":1}})
 ,"result":new RefType({"dataType":"application_doc_folders","descr":"Заключение","keys":{"id":2}})
+,"doc_flow_out":new RefType({"dataType":"application_doc_folders","descr":"Исходящие","keys":{"id":3}})
 }
 ,"posts":{"dep_boss":new RefType({"dataType":"posts","descr":"Начальник отдела","keys":{"id":3}})
 }

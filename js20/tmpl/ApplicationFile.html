@@ -39,6 +39,12 @@
 	</div>
 	{{/file_deletable}}
 
+	{{#file_switchable}}
+	<div id="{{id}}_switch" class="btn btn-sm fileSwitchBtn" title="Заменить файл на другой">
+		<i class="glyphicon glyphicon-transfer"></i>	
+	</div>
+	{{/file_switchable}}
+
 	{{#out_file_id}}
 	<a id="{{id}}_outSig" href="#" class="btn btn-sm fileOutSigBtn" title="Скачать ЭЦП заказчика">ЭЦП заказчика
 	</a>
@@ -56,5 +62,35 @@
 	{{/customFolder}}
 	
 	{{/file_not_deleted}}
+	
+	{{#client_require_client_sig}}
+		{{#file_signed_by_client}}
+		<span id="{{id}}_client_sig_inf" class="badge badge-info">Документ подписан Вашей ЭЦП.</span>
+		{{/file_signed_by_client}}
+
+		{{#file_not_signed_by_client}}
+		<span id="{{id}}_client_sig_inf" class="badge badge-danger">Необходимо подписать документ Вашей ЭЦП.</span>
+		{{/file_not_signed_by_client}}					
+	{{/client_require_client_sig}}
+	
+	{{#doc_flow_in_require_client_sig}}
+		{{#file_not_signed_by_client}}
+		<span class="badge badge-danger" title="Необходимо подписать данный документ Вашей ЭЦП и отправить обратно исходящим письмом">Требуется ответное письмо с возвратом подписанного документа.</span>
+		{{/file_not_signed_by_client}}
+		{{#file_signed_by_client}}
+		<span id="{{id}}_client_sig_inf" class="badge badge-info">Документ подписан Вашей ЭЦП.</span>
+		{{/file_signed_by_client}}
+	{{/doc_flow_in_require_client_sig}}
+	
+	{{#org_require_client_sig}}
+		{{#file_signed_by_client}}
+		<span id="{{id}}_client_sig_inf" class="badge badge-info">Документ подписан заказчиком.</span>
+		{{/file_signed_by_client}}
+
+		{{#file_not_signed_by_client}}
+		<span id="{{id}}_client_sig_inf" class="badge badge-danger">Требуется ЭЦП заказчика.</span>
+		{{/file_not_signed_by_client}}	
+	{{/org_require_client_sig}}
+	
 </li>
 

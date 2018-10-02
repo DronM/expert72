@@ -509,6 +509,23 @@ class Contract_Model extends ModelSQL{
 		$f_primary_contract_reg_number=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"primary_contract_reg_number",$f_opts);
 		$this->addField($f_primary_contract_reg_number);
 		//********************
+		
+		//*** Field experts_for_notification ***
+		$f_opts = array();
+		$f_opts['id']="experts_for_notification";
+				
+		$f_experts_for_notification=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"experts_for_notification",$f_opts);
+		$this->addField($f_experts_for_notification);
+		//********************
+		
+		//*** Field contract_return_date_on_sig ***
+		$f_opts = array();
+		$f_opts['defaultValue']='FALSE';
+		$f_opts['id']="contract_return_date_on_sig";
+				
+		$f_contract_return_date_on_sig=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"contract_return_date_on_sig",$f_opts);
+		$this->addField($f_contract_return_date_on_sig);
+		//********************
 	
 		$order = new ModelOrderSQL();		
 		$this->setDefaultModelOrder($order);		

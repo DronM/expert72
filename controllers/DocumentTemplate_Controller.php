@@ -174,6 +174,7 @@ class DocumentTemplate_Controller extends ControllerSQL{
 		$pm->addParam(new FieldExtDate('create_date'
 		));
 		
+		
 		$this->addPublicMethod($pm);
 		$this->setObjectModelId('DocumentTemplate_Model');		
 

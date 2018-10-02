@@ -195,6 +195,7 @@ extend(DocumentTemplate_Controller,ControllerObjServer);
 	var f_opts = {};
 	f_opts.alias = "Дата создания";	
 	pm.addField(new FieldDate("create_date",f_opts));
+	
 	pm.addField(new FieldString("mode"));
 }
 

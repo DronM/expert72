@@ -134,14 +134,6 @@ class DocFlowOutClientDialog_Model extends ModelSQL{
 		$this->addField($f_contract_file);
 		//********************
 		
-		//*** Field contract_files ***
-		$f_opts = array();
-		$f_opts['id']="contract_files";
-				
-		$f_contract_files=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"contract_files",$f_opts);
-		$this->addField($f_contract_files);
-		//********************
-		
 		//*** Field attachment_files ***
 		$f_opts = array();
 		$f_opts['id']="attachment_files";

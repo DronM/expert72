@@ -85,6 +85,24 @@ function UserProfile_Model(options){
 	
 	filed_options.autoInc = false;	
 	
+	options.fields.cades_load_timeout = new FieldInt("cades_load_timeout",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.cades_chunk_size = new FieldInt("cades_chunk_size",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
 	options.fields.reminders_to_email = new FieldBool("reminders_to_email",filed_options);
 	
 			

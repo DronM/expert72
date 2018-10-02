@@ -115,6 +115,7 @@ extend(ReportTemplateField_Controller,ControllerObjClient);
 	var f_opts = {};
 		
 	pm.addField(new FieldString("id",f_opts));
+	
 	pm.addField(new FieldString("mode"));
 }
 

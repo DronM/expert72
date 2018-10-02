@@ -165,17 +165,27 @@ AppExpert.prototype.magnify = function(dir){
 AppExpert.prototype.getCadesAPI = function(){
 	//cades
 	if (!this.m_cades){
+		var const_list = {
+			"cades_include_certificate":null,
+			"cades_signature_type":null,
+			"cades_hash_algorithm":null
+		};
+		window.getApp().getConstantManager().get(const_list);
+	
 		this.m_cades = new CadesAPI({
 			"debug":(this.getServVar("debug")=="1"),
-			"cadesType":CadesAPI.prototype.CADESCOM_CADES_BES
-			//CADESCOM_CADES_X_LONG_TYPE_1
+			"includeCertificate":const_list.cades_include_certificate.getValue(),
+			"chunkSize":parseInt(this.getServVar("cades_chunk_size"),10),
+			"cadesType":const_list.cades_signature_type.getValue(),
+			"hashAlgorithm":const_list.cades_hash_algorithm.getValue(),
+			"loadTimeout":parseInt(this.getServVar("cades_load_timeout"),10)
 		});
 	}
 	return this.m_cades;
 }
 AppExpert.prototype.setDoNotLoadCadesPlugin = function(v){
-	console.log("Setting doNotLoadCadesPlugin to "+v)
-	//this.storageSet("doNotLoadCadesPlugin",v);
+	//console.log("Setting doNotLoadCadesPlugin to "+v)
+	this.storageSet("doNotLoadCadesPlugin",v);
 }
 AppExpert.prototype.getDoNotLoadCadesPlugin = function(){
 	return this.storageGet("doNotLoadCadesPlugin");

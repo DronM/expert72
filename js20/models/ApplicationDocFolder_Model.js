@@ -43,6 +43,16 @@ function ApplicationDocFolder_Model(options){
 	
 	options.fields.name = new FieldText("name",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	filed_options.defValue = true;
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.require_client_sig = new FieldBool("require_client_sig",filed_options);
+	
 			
 		ApplicationDocFolder_Model.superclass.constructor.call(this,id,options);
 }

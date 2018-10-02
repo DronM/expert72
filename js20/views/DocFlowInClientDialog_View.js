@@ -51,7 +51,9 @@ function DocFlowInClientDialog_View(id,options){
 		this.addElement(new EditString(id+":reg_number_out",{
 			"editContClassName":editContClassName,
 			"labelClassName":labelClassName,
-			"labelCaption":"Наш рег.номер:",
+			"labelCaption":"Рег.номер:",
+			"placeholder":"Входящий регистрационный номер Вашей учетной системе",
+			"maxLength":"15",
 			"cmdClear":false
 		}));	
 		
@@ -80,7 +82,8 @@ function DocFlowInClientDialog_View(id,options){
 		this.addElement(new FileUploaderDocFlowInClient_View(this.getId()+":attachments",{
 			"mainView":this,
 			"items":files,
-			"templateOptions":{"isNotSent":false}
+			"templateOptions":{"isNotSent":false},
+			"folderModel":options.models.ApplicationDocFolder_Model
 			})
 		);
 	};

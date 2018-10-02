@@ -56,6 +56,7 @@
 <li><a href="#Employee_Controller">Employee_Controller</a></li>
 <li><a href="#EmployeeLocalList_Controller">EmployeeLocalList_Controller</a></li>
 <li><a href="#Enum_Controller">Enum_Controller</a></li>
+<li><a href="#ExpertNotification_Controller">ExpertNotification_Controller</a></li>
 <li><a href="#ExpertWork_Controller">ExpertWork_Controller</a></li>
 <li><a href="#ExpertiseRejectType_Controller">ExpertiseRejectType_Controller</a></li>
 <li><a href="#FundSource_Controller">FundSource_Controller</a></li>
@@ -139,6 +140,8 @@
 <li><a href="#ApplicationDialog_Model">ApplicationDialog_Model</a></li>
 <li><a href="#ApplicationList_Model">ApplicationList_Model</a></li>
 <li><a href="#ApplicationClientList_Model">ApplicationClientList_Model</a></li>
+<li><a href="#ApplicationCustomerList_Model">ApplicationCustomerList_Model</a></li>
+<li><a href="#ApplicationContractorList_Model">ApplicationContractorList_Model</a></li>
 <li><a href="#ApplicationContractor_Model">ApplicationContractor_Model</a></li>
 <li><a href="#ApplicationProcess_Model">ApplicationProcess_Model</a></li>
 <li><a href="#ApplicationProcessList_Model">ApplicationProcessList_Model</a></li>
@@ -227,6 +230,7 @@
 <li><a href="#ExpertWork_Model">ExpertWork_Model</a></li>
 <li><a href="#ExpertWorkList_Model">ExpertWorkList_Model</a></li>
 <li><a href="#AccessPermission_Model">AccessPermission_Model</a></li>
+<li><a href="#ExpertNotification_Model">ExpertNotification_Model</a></li>
 <li><a href="#ViewLocal_Model">ViewLocal_Model</a></li>
 <li><a href="#ContractSection_Model">ContractSection_Model</a></li>
 <li><a href="#ClientPayment_Model">ClientPayment_Model</a></li>
@@ -237,10 +241,13 @@
 <li><a href="#EmployeeLocalList_Model">EmployeeLocalList_Model</a></li>
 <li><a href="#RepReestrExpertise_Model">RepReestrExpertise_Model</a></li>
 <li><a href="#RepReestrCostEval_Model">RepReestrCostEval_Model</a></li>
+<li><a href="#RepReestrPay_Model">RepReestrPay_Model</a></li>
+<li><a href="#RepReestrContract_Model">RepReestrContract_Model</a></li>
 <li><a href="#Service_Model">Service_Model</a></li>
 <li><a href="#FileVerification_Model">FileVerification_Model</a></li>
 <li><a href="#UserCertificate_Model">UserCertificate_Model</a></li>
 <li><a href="#FileSignatures_Model">FileSignatures_Model</a></li>
+<li><a href="#FileForSigningList_Model">FileForSigningList_Model</a></li>
 </ul>
 <div class="section-title">Enumerations</div>
 <ul>
@@ -437,6 +444,13 @@
 <p>Required:
 								Да</p>
 </div>
+<h3>fill_percent</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Да</p>
+</div>
 </div>
 <h2>download_app_print_modification</h2>
 <p>Arguments:</p>
@@ -464,6 +478,13 @@
 <p>Arguments:</p>
 <div class="content_item content_item2">
 <h3>id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Да</p>
+</div>
+<h3>fill_percent</h3>
 <p></p>
 <div class="content_item content_item3">
 <p>Type:Int</p>
@@ -503,6 +524,13 @@
 <p>Required:
 								Да</p>
 </div>
+<h3>fill_percent</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Да</p>
+</div>
 </div>
 <h2>download_app_print_cost_eval</h2>
 <p>Arguments:</p>
@@ -530,6 +558,13 @@
 <p>Arguments:</p>
 <div class="content_item content_item2">
 <h3>id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Да</p>
+</div>
+<h3>fill_percent</h3>
 <p></p>
 <div class="content_item content_item3">
 <p>Type:Int</p>
@@ -617,6 +652,21 @@
 								Да</p>
 </div>
 </div>
+<h2>get_sig_details</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Да</p>
+<p>Length:36</p>
+</div>
+</div>
+<h2>get_customer_list</h2>
+<a href="#ApplicationCustomerList_Model">Model: ApplicationCustomerList_Model</a><h2>get_contractor_list</h2>
+<a href="#ApplicationContractorList_Model">Model: ApplicationContractorList_Model</a>
 </div>
 </div>
 <div id="ApplicationClient_Controller" class="content_box">
@@ -1125,6 +1175,42 @@
 								Да</p>
 </div>
 </div>
+<h2>get_reestr_pay</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>templ</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Нет</p>
+</div>
+<h3>inline</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Нет</p>
+</div>
+</div>
+<h2>get_reestr_contract</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>templ</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Нет</p>
+</div>
+<h3>inline</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Нет</p>
+</div>
+</div>
 </div>
 </div>
 <div id="ContractSection_Controller" class="content_box">
@@ -1398,6 +1484,25 @@
 								Да</p>
 </div>
 </div>
+<h2>remove_sig</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>file_id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Да</p>
+<p>Length:36</p>
+</div>
+<h3>doc_id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Да</p>
+</div>
+</div>
 <h2>get_file</h2>
 <p>Arguments:</p>
 <div class="content_item content_item2">
@@ -1440,6 +1545,17 @@
 <p>Arguments:</p>
 <div class="content_item content_item2">
 <h3>doc_flow_type_id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Да</p>
+</div>
+</div>
+<h2>download_attachments</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>doc_flow_in_id</h3>
 <p></p>
 <div class="content_item content_item3">
 <p>Type:Int</p>
@@ -1538,6 +1654,25 @@
 								Да</p>
 </div>
 </div>
+<h2>remove_sig</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>file_id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Да</p>
+<p>Length:36</p>
+</div>
+<h3>doc_id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Да</p>
+</div>
+</div>
 <h2>get_file</h2>
 <p>Arguments:</p>
 <div class="content_item content_item2">
@@ -1576,6 +1711,18 @@
 								Да</p>
 </div>
 </div>
+<h2>get_sig_details</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Да</p>
+<p>Length:36</p>
+</div>
+</div>
 </div>
 </div>
 <div id="DocFlowOut_Controller" class="content_box">
@@ -1589,6 +1736,25 @@
 <a href="#DocFlowOut_Model">Model: DocFlowOut_Model</a><h2>get_list</h2>
 <a href="#DocFlowOutList_Model">Model: DocFlowOutList_Model</a><h2>get_object</h2>
 <a href="#DocFlowOutDialog_Model">Model: DocFlowOutDialog_Model</a><h2>remove_file</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>file_id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Да</p>
+<p>Length:36</p>
+</div>
+<h3>doc_id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Да</p>
+</div>
+</div>
+<h2>remove_sig</h2>
 <p>Arguments:</p>
 <div class="content_item content_item2">
 <h3>file_id</h3>
@@ -1750,6 +1916,18 @@
 								Да</p>
 </div>
 </div>
+<h2>get_sig_details</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Да</p>
+<p>Length:36</p>
+</div>
+</div>
 </div>
 </div>
 <div id="DocFlowOutClient_Controller" class="content_box">
@@ -1782,7 +1960,37 @@
 <p>Length:36</p>
 </div>
 </div>
-<h2>remove_contract_file</h2>
+<h2>remove_document_file</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>file_id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Да</p>
+<p>Length:36</p>
+</div>
+<h3>doc_flow_out_client_id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Да</p>
+</div>
+</div>
+<h2>get_files_for_signing</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>application_id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Да</p>
+</div>
+</div>
+<h2>delete_all_attachments</h2>
 <p>Arguments:</p>
 <div class="content_item content_item2">
 <h3>id</h3>
@@ -1792,6 +2000,10 @@
 <p>Required:
 								Да</p>
 </div>
+</div>
+<h2>get_file</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
 <h3>file_id</h3>
 <p></p>
 <div class="content_item content_item3">
@@ -1800,43 +2012,12 @@
 								Да</p>
 <p>Length:36</p>
 </div>
-</div>
-<h2>download_contract_file</h2>
-<p>Arguments:</p>
-<div class="content_item content_item2">
-<h3>id</h3>
+<h3>doc_id</h3>
 <p></p>
 <div class="content_item content_item3">
 <p>Type:Int</p>
 <p>Required:
 								Да</p>
-</div>
-<h3>file_id</h3>
-<p></p>
-<div class="content_item content_item3">
-<p>Type:String</p>
-<p>Required:
-								Да</p>
-<p>Length:36</p>
-</div>
-</div>
-<h2>download_contract_file_sig</h2>
-<p>Arguments:</p>
-<div class="content_item content_item2">
-<h3>id</h3>
-<p></p>
-<div class="content_item content_item3">
-<p>Type:Int</p>
-<p>Required:
-								Да</p>
-</div>
-<h3>file_id</h3>
-<p></p>
-<div class="content_item content_item3">
-<p>Type:String</p>
-<p>Required:
-								Да</p>
-<p>Length:36</p>
 </div>
 </div>
 </div>
@@ -2000,6 +2181,19 @@
 								Нет</p>
 </div>
 </div>
+</div>
+</div>
+<div id="ExpertNotification_Controller" class="content_box">
+<h1>ExpertNotification_Controller</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Методы:</p>
+<h2>insert</h2>
+<a href="#ExpertNotification_Model">Model: ExpertNotification_Model</a><h2>update</h2>
+<a href="#ExpertNotification_Model">Model: ExpertNotification_Model</a><h2>delete</h2>
+<a href="#ExpertNotification_Model">Model: ExpertNotification_Model</a><h2>get_list</h2>
+<a href="#ExpertNotification_Model">Model: ExpertNotification_Model</a><h2>get_object</h2>
+<a href="#ExpertNotification_Model">Model: ExpertNotification_Model</a>
 </div>
 </div>
 <div id="ExpertWork_Controller" class="content_box">
@@ -3392,6 +3586,18 @@
 <div>Precision:</div>
 </div>
 </div>
+<div id="ApplicationContractorList_Model" class="content_box">
+<h1>ApplicationContractorList_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
 <div id="ApplicationCorrection_Model" class="content_box">
 <h1>ApplicationCorrection_Model</h1>
 <div class="content_item">
@@ -3422,6 +3628,18 @@
 <div>Precision:</div>
 <h2>doc_flow_examination_id</h2>
 <div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="ApplicationCustomerList_Model" class="content_box">
+<h1>ApplicationCustomerList_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>name</h2>
+<div>Type:String</div>
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>
@@ -3708,6 +3926,12 @@
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
+<h2>require_client_sig</h2>
+<div>Type:Bool</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
 </div>
 </div>
 <div id="ApplicationDocumentFile_Model" class="content_box">
@@ -3776,6 +4000,12 @@
 <div>Precision:</div>
 <h2>deleted_dt</h2>
 <div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>file_signed_by_client</h2>
+<div>Type:Bool</div>
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>
@@ -5100,6 +5330,18 @@
 <div>Required:</div>
 <div>Length:20</div>
 <div>Precision:</div>
+<h2>experts_for_notification</h2>
+<div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>contract_return_date_on_sig</h2>
+<div>Type:Bool</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
 </div>
 </div>
 <div id="ContractDialog_Model" class="content_box">
@@ -5364,6 +5606,12 @@
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
+<h2>experts_for_notification</h2>
+<div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
 <h2>expertise_sections</h2>
 <div>Type:JSON</div>
 <div>Primary key:</div>
@@ -5522,6 +5770,12 @@
 <div>Precision:2</div>
 <h2>result_sign_expert_list</h2>
 <div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>contract_return_date_on_sig</h2>
+<div>Type:Bool</div>
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>
@@ -5708,6 +5962,12 @@
 <div>Precision:</div>
 <h2>for_all_employees</h2>
 <div>Type:Bool</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>state_for_color</h2>
+<div>Type:String</div>
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>
@@ -8124,12 +8384,6 @@
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
-<h2>contract_files</h2>
-<div>Type:JSON</div>
-<div>Primary key:</div>
-<div>Required:</div>
-<div>Length:</div>
-<div>Precision:</div>
 <h2>attachment_files</h2>
 <div>Type:JSON</div>
 <div>Primary key:</div>
@@ -9204,6 +9458,12 @@
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
+<h2>snils</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:11</div>
+<div>Precision:</div>
 </div>
 </div>
 <div id="EmployeeDialog_Model" class="content_box">
@@ -9277,6 +9537,24 @@
 <div>Length:</div>
 <div>Precision:</div>
 <h2>employees_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="ExpertNotification_Model" class="content_box">
+<h1>ExpertNotification_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>expert</h2>
 <div>Type:JSON</div>
 <div>Primary key:</div>
 <div>Required:</div>
@@ -9437,6 +9715,18 @@
 <div>Primary key:</div>
 <div>Required:TRUE</div>
 <div>Length:250</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="FileForSigningList_Model" class="content_box">
+<h1>FileForSigningList_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>attachment_files</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
 <div>Precision:</div>
 </div>
 </div>
@@ -10286,6 +10576,114 @@
 <div>Precision:</div>
 </div>
 </div>
+<div id="RepReestrContract_Model" class="content_box">
+<h1>RepReestrContract_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>ord</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>expertise_result_number</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>date</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>primary_exists</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>applicant</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>customer</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>constr_name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>expertise_cost_budget</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>expertise_cost_self_fund</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>contract_number_date</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>pay_total</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>work_start_date</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>main_expert</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>expertise_result_date_positive</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>aaa</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>akt_number_date</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>comment_text</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
 <div id="RepReestrCostEval_Model" class="content_box">
 <h1>RepReestrCostEval_Model</h1>
 <div class="content_item">
@@ -10453,6 +10851,84 @@
 <div>Length:</div>
 <div>Precision:</div>
 <h2>expertise_result_ret_date</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="RepReestrPay_Model" class="content_box">
+<h1>RepReestrPay_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>ord</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>expertise_result_number</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>applicant</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>customer</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>constr_name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>contract_number</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>work_start_date</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>expertise_cost_budget</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>expertise_cost_self_fund</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>total</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>pay_docum_number</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>pay_docum_date</h2>
 <div>Type:String</div>
 <div>Primary key:</div>
 <div>Required:</div>
@@ -11250,6 +11726,18 @@
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
+<h2>cades_load_timeout</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>cades_chunk_size</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
 </div>
 </div>
 <div id="UserCertificate_Model" class="content_box">
@@ -11267,12 +11755,6 @@
 <div>Primary key:</div>
 <div>Required:TRUE</div>
 <div>Length:40</div>
-<div>Precision:</div>
-<h2>user_id</h2>
-<div>Type:Int</div>
-<div>Primary key:</div>
-<div>Required:TRUE</div>
-<div>Length:</div>
 <div>Precision:</div>
 <h2>date_time</h2>
 <div>Type:DateTimeTZ</div>
@@ -11300,6 +11782,12 @@
 <div>Precision:</div>
 <h2>issuer_cert</h2>
 <div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>employee_id</h2>
+<div>Type:Int</div>
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>
@@ -11498,6 +11986,18 @@
 <div>Precision:</div>
 <h2>color_palette</h2>
 <div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>cades_load_timeout</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>cades_chunk_size</h2>
+<div>Type:Int</div>
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>
@@ -11932,6 +12432,8 @@
 <h2>contr_return</h2>
 <div>Description:</div>
 <h2>contr_other</h2>
+<div>Description:</div>
+<h2>date_prolongate</h2>
 <div>Description:</div>
 </div>
 </div>

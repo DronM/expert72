@@ -152,6 +152,7 @@ extend(ApplicationProcess_Controller,ControllerObjServer);
 	var f_opts = {};
 		
 	pm.addField(new FieldDateTimeTZ("date_time",f_opts));
+	
 	pm.addField(new FieldString("mode"));
 }
 

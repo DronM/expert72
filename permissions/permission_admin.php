@@ -316,6 +316,12 @@ $permissions = array();
 				
 					$permissions['Application_Controller_get_constr_name']=TRUE;
 				
+					$permissions['Application_Controller_get_sig_details']=TRUE;
+				
+					$permissions['Application_Controller_get_customer_list']=TRUE;
+				
+					$permissions['Application_Controller_get_contractor_list']=TRUE;
+				
 					$permissions['ApplicationClient_Controller_insert']=TRUE;
 				
 					$permissions['ApplicationClient_Controller_update']=TRUE;
@@ -356,6 +362,8 @@ $permissions = array();
 				
 					$permissions['DocFlowOut_Controller_remove_file']=TRUE;
 				
+					$permissions['DocFlowOut_Controller_remove_sig']=TRUE;
+				
 					$permissions['DocFlowOut_Controller_get_file']=TRUE;
 				
 					$permissions['DocFlowOut_Controller_get_file_hash']=TRUE;
@@ -374,6 +382,8 @@ $permissions = array();
 				
 					$permissions['DocFlowOut_Controller_add_sig_to_file']=TRUE;
 				
+					$permissions['DocFlowOut_Controller_get_sig_details']=TRUE;
+				
 					$permissions['DocFlowIn_Controller_insert']=TRUE;
 				
 					$permissions['DocFlowIn_Controller_update']=TRUE;
@@ -388,11 +398,15 @@ $permissions = array();
 				
 					$permissions['DocFlowIn_Controller_remove_file']=TRUE;
 				
+					$permissions['DocFlowIn_Controller_remove_sig']=TRUE;
+				
 					$permissions['DocFlowIn_Controller_get_file']=TRUE;
 				
 					$permissions['DocFlowIn_Controller_get_file_sig']=TRUE;
 				
 					$permissions['DocFlowIn_Controller_get_next_num']=TRUE;
+				
+					$permissions['DocFlowIn_Controller_download_attachments']=TRUE;
 				
 					$permissions['DocFlowInside_Controller_insert']=TRUE;
 				
@@ -408,9 +422,13 @@ $permissions = array();
 				
 					$permissions['DocFlowInside_Controller_remove_file']=TRUE;
 				
+					$permissions['DocFlowInside_Controller_remove_sig']=TRUE;
+				
 					$permissions['DocFlowInside_Controller_get_file']=TRUE;
 				
 					$permissions['DocFlowInside_Controller_get_file_sig']=TRUE;
+				
+					$permissions['DocFlowInside_Controller_get_sig_details']=TRUE;
 				
 					$permissions['DocFlowImportanceType_Controller_insert']=TRUE;
 				
@@ -614,11 +632,13 @@ $permissions = array();
 				
 					$permissions['DocFlowOutClient_Controller_remove_file']=TRUE;
 				
-					$permissions['DocFlowOutClient_Controller_remove_contract_file']=TRUE;
+					$permissions['DocFlowOutClient_Controller_remove_document_file']=TRUE;
 				
-					$permissions['DocFlowOutClient_Controller_download_contract_file']=TRUE;
+					$permissions['DocFlowOutClient_Controller_get_files_for_signing']=TRUE;
 				
-					$permissions['DocFlowOutClient_Controller_download_contract_file_sig']=TRUE;
+					$permissions['DocFlowOutClient_Controller_delete_all_attachments']=TRUE;
+				
+					$permissions['DocFlowOutClient_Controller_get_file']=TRUE;
 				
 					$permissions['DocFlowInClient_Controller_update']=TRUE;
 				
@@ -716,6 +736,10 @@ $permissions = array();
 				
 					$permissions['Contract_Controller_get_constr_name']=TRUE;
 				
+					$permissions['Contract_Controller_get_reestr_pay']=TRUE;
+				
+					$permissions['Contract_Controller_get_reestr_contract']=TRUE;
+				
 					$permissions['ExpertiseRejectType_Controller_insert']=TRUE;
 				
 					$permissions['ExpertiseRejectType_Controller_update']=TRUE;
@@ -749,6 +773,16 @@ $permissions = array();
 					$permissions['AccessPermission_Controller_get_list']=TRUE;
 				
 					$permissions['AccessPermission_Controller_get_object']=TRUE;
+				
+					$permissions['ExpertNotification_Controller_insert']=TRUE;
+				
+					$permissions['ExpertNotification_Controller_update']=TRUE;
+				
+					$permissions['ExpertNotification_Controller_delete']=TRUE;
+				
+					$permissions['ExpertNotification_Controller_get_list']=TRUE;
+				
+					$permissions['ExpertNotification_Controller_get_object']=TRUE;
 				
 					$permissions['ViewLocal_Controller_insert']=TRUE;
 				

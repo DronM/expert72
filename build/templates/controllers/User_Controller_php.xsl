@@ -80,10 +80,7 @@ class <xsl:value-of select="@id"/>_Controller extends ControllerSQL{
 			)
 		);
 		
-		$color_palette = $pm->getParamValue('color_palette');		
-		if (isset($color_palette)){
-			$_SESSION['color_palette'] = $color_palette;
-		}
+		$this->update_session_vars($pm);
 			
 	}
 	
@@ -121,7 +118,10 @@ class <xsl:value-of select="@id"/>_Controller extends ControllerSQL{
 		$_SESSION['role_id']		= $ar['role_id'];
 		$_SESSION['locale_id'] 		= $ar['locale_id'];
 		$_SESSION['user_time_locale'] 	= $ar['user_time_locale'];
-		$_SESSION['color_palette'] 	= $ar['color_palette'];				
+		$_SESSION['color_palette'] 	= $ar['color_palette'];
+		$_SESSION['cades_load_timeout'] = $ar['cades_load_timeout'];
+		$_SESSION['cades_chunk_size'] 	= $ar['cades_chunk_size'];
+						
 		if ($ar['role_id']!='client'){
 			$_SESSION['employees_ref'] = $ar['employees_ref'];
 			$_SESSION['departments_ref'] = $ar['departments_ref'];
@@ -624,10 +624,7 @@ class <xsl:value-of select="@id"/>_Controller extends ControllerSQL{
 			$_SESSION['user_name'] = $new_name;
 		}
 		
-		$color_palette = $pm->getParamValue('color_palette');		
-		if (isset($color_palette)){
-			$_SESSION['color_palette'] = $color_palette;
-		}
+		$this->update_session_vars($pm);
 	}
 	
 	public function hide($pm){
@@ -658,6 +655,19 @@ class <xsl:value-of select="@id"/>_Controller extends ControllerSQL{
 			$pref,
 			$this->getExtDbVal($pm,'id')
 		));
+	}
+	
+	private function update_session_vars($pm){
+		$session_vars = ['color_palette','cades_load_timeout','cades_chunk_size'];
+		
+		foreach($session_vars as $id){
+			$val = $pm->getParamValue($id);		
+			if (isset($val)){
+				$_SESSION[$id] = $val;
+			}
+		
+		}
+			
 	}
 	
 </xsl:template>

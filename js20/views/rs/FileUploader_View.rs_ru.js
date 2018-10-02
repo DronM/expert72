@@ -14,10 +14,12 @@ FileUploader_View.prototype.ER_FILE_EXISTS = "Файл с именем '%' уж�
 
 FileUploader_View.prototype.NT_FILE_DOWNLOADED = "Загружен файл %";
 FileUploader_View.prototype.NT_FILE_DELETED = "Файл удален.";
+FileUploader_View.prototype.NT_SIG_DELETED = "ЭЦП удалена.";
 
 FileUploader_View.prototype.FILE_DOWNLOADED_TITLE = "Файл успешно загружен.";
 
 FileUploader_View.prototype.Q_DEL_FILE = "Удалить загруженный файл?";
+FileUploader_View.prototype.Q_DEL_SIG = "Удалить вашу ЭЦП?";
 
 FileUploader_View.prototype.SIG_TITLE = "Приложен файл ЭЦП";
 

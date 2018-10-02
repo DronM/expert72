@@ -2,7 +2,7 @@
 <metadata owner="expert72">
 	<versions>
 		<version dateOpen="2017-09-27 12:09:48" dateClose="2017-12-08 10:12:08">1.001 
-		<lastBuild>2018-09-03 14:32:56</lastBuild></version>
+		<lastBuild>2018-10-02 07:16:44</lastBuild></version>
 		<version dateOpen="2017-12-08 11:12:01" dateClose="2017-12-08 11:12:04">1.002</version>
 		<version dateOpen="2017-12-08 11:12:20" dateClose="2017-12-08 11:12:20">1.0.3</version>
 		<version dateOpen="2017-12-12 11:12:07" dateClose="2017-12-12 11:12:07">1.0.4</version>
@@ -74,6 +74,7 @@
 		<version dateOpen="2018-07-26 05:07:58" dateClose="2018-08-03 05:08:32">1.0.71</version>
 		<version dateOpen="2018-08-03 05:08:34" dateClose="2018-08-07 06:08:03">1.0.72</version>
 		<version dateOpen="2018-08-07 09:08:25" dateClose="2018-09-03 14:09:33">1.0.73</version>
+		<version dateOpen="2018-10-02 12:10:04" dateClose="2018-10-02 12:10:05">1.0.74</version>
 	</versions>
 	<globalFilters>
 		<field id="user_id"/>
@@ -470,6 +471,9 @@
 			<value id="contr_other">
 				<ru descr="&#x41F;&#x440;&#x43E;&#x447;&#x435;&#x435;"/>
 			</value>
+			<value id="date_prolongate">
+				<ru descr="&#x41F;&#x440;&#x43E;&#x434;&#x43B;&#x435;&#x43D;&#x438;&#x435; &#x441;&#x440;&#x43E;&#x43A;&#x430;"/>
+			</value>
 		</enum>
 	</enums>
 	<models limitConstant="doc_per_page_count">
@@ -645,6 +649,8 @@
 			<field id="comment_text" dataType="Text" alias="&#x41A;&#x43E;&#x43C;&#x43C;&#x435;&#x43D;&#x442;&#x430;&#x440;&#x438;&#x439;"/>
 			<field id="color_palette" dataType="Text" length="" alias="&#x426;&#x432;&#x435;&#x442;&#x43E;&#x432;&#x430;&#x44F; &#x441;&#x445;&#x435;&#x43C;&#x430;"/>
 			<field id="reminders_to_email" dataType="Bool" alias="&#x414;&#x443;&#x431;&#x43B;&#x438;&#x440;&#x43E;&#x432;&#x430;&#x442;&#x44C; &#x43D;&#x430;&#x43F;&#x43E;&#x43C;&#x438;&#x43D;&#x430;&#x43D;&#x438;&#x44F; &#x43D;&#x430; &#x44D;&#x43B;&#x435;&#x43A;&#x442;&#x440;&#x43E;&#x43D;&#x43D;&#x443;&#x44E; &#x43F;&#x43E;&#x447;&#x442;&#x443;" defaultValue="TRUE"/>
+			<field id="cades_load_timeout" dataType="Int" alias="&#x41A;&#x440;&#x438;&#x43F;&#x442;&#x43E;&#x41F;&#x440;&#x43E; &#x43F;&#x43B;&#x430;&#x433;&#x438;&#x43D;: &#x412;&#x440;&#x435;&#x43C;&#x44F; &#x43E;&#x436;&#x438;&#x434;&#x430;&#x43D;&#x438;&#x44F; &#x437;&#x430;&#x433;&#x440;&#x443;&#x437;&#x43A;&#x438; &#x43F;&#x43B;&#x430;&#x433;&#x438;&#x43D;&#x430;" defaultValue="60000"/>
+			<field id="cades_chunk_size" dataType="Int" alias="&#x41A;&#x440;&#x438;&#x43F;&#x442;&#x43E;&#x41F;&#x440;&#x43E; &#x43F;&#x43B;&#x430;&#x433;&#x438;&#x43D;: &#x420;&#x430;&#x437;&#x43C;&#x435;&#x440; &#x447;&#x430;&#x441;&#x442;&#x438; &#x444;&#x430;&#x439;&#x43B;&#x430; &#x432; &#x431;&#x430;&#x439;&#x442;&#x430;&#x445; &#x43F;&#x440;&#x438; &#x43F;&#x43E;&#x442;&#x43E;&#x447;&#x43D;&#x43E;&#x439; &#x437;&#x430;&#x433;&#x440;&#x443;&#x437;&#x43A;&#x435;" defaultValue="1048576"/>
 			<index unique="TRUE" id="users_name_idx">
 				<expression>lower(name)</expression>
 			</index>
@@ -688,6 +694,8 @@
 			<field id="email" dataType="String" alias="&#x42D;&#x43B;.&#x43F;&#x43E;&#x447;&#x442;&#x430;"/>
 			<field id="phone_cel" dataType="String" length="11" alias="&#x41C;&#x43E;&#x431;.&#x442;&#x435;&#x43B;&#x435;&#x444;&#x43E;&#x43D;"/>
 			<field id="color_palette" dataType="Text" length="" alias="&#x426;&#x432;&#x435;&#x442;&#x43E;&#x432;&#x430;&#x44F; &#x441;&#x445;&#x435;&#x43C;&#x430;"/>
+			<field id="cades_load_timeout" dataType="Int"/>
+			<field id="cades_chunk_size" dataType="Int"/>
 			<field id="reminders_to_email" dataType="Bool"/>
 			<globalFilter id="user_id" fieldId="id"/>
 		</model>
@@ -969,16 +977,16 @@
 			<index id="applicatios_user_idx">
 				<field id="user_id"/>
 			</index>
-			<index id="applicatios_create_dt_idx">
+			<index id="applications_create_dt_idx">
 				<field id="create_dt"/>
 			</index>
-			<index id="applicatios_primary_application_idx">
+			<index id="applications_primary_application_idx">
 				<field id="primary_application_id"/>
 			</index>
-			<index id="applicatios_applicant_idx">
+			<index id="applications_applicant_idx">
 				<expression>(applicant-&gt;&gt;'name'::text)</expression>
 			</index>
-			<index id="applicatios_customer_idx">
+			<index id="applications_customer_name_idx">
 				<expression>(customer-&gt;&gt;'name'::text)</expression>
 			</index>
 			<globalFilter id="user_id"/>
@@ -1063,6 +1071,12 @@
 			<field id="client_type" dataType="String"/>
 			<field id="client_data" dataType="Text"/>
 		</model>
+		<model id="ApplicationCustomerList" parent="ModelSQL" dataTable="applications_customer_list" virtual="TRUE">
+			<field id="name" dataType="String"/>
+		</model>
+		<model id="ApplicationContractorList" parent="ModelSQL" dataTable="applications_contractors_list" virtual="TRUE">
+			<field id="name" dataType="String"/>
+		</model>
 		<model id="ApplicationContractor" parentJS="ModelJSON" virtual="TRUE" server="FALSE">
 			<field id="id" dataType="Int" refTable="user_clients" primaryKey="TRUE"/>
 			<field id="descr" dataType="String"/>
@@ -1113,24 +1127,33 @@
 			<field id="file_size" dataType="Int"/>
 			<field id="deleted" dataType="Bool" defaultValue="FALSE"/>
 			<field id="deleted_dt" dataType="DateTimeTZ"/>
+			<field id="file_signed_by_client" dataType="Bool" defaultValue="FALSE"/>
 			<index id="application_document_files_application_idx">
 				<field id="application_id"/>
 			</index>
 		</model>
 		<model id="ApplicationDocFolder" parent="ModelSQL" dataTable="application_doc_folders" virtual="FALSE">
 			<defaultOrder>
-				<field id="id"/>
+				<field id="name"/>
 			</defaultOrder>
 			<field id="id" dataType="Int" required="FALSE" primaryKey="TRUE"/>
 			<field id="name" dataType="Text"/>
+			<field id="require_client_sig" dataType="Bool" defaultValue="FALSE"/>
 			<predefinedItems>
 				<predefinedItem alias="contract">
 					<id>1</id>
-					<name>&#x414;&#x43E;&#x433;&#x43E;&#x432;&#x43E;&#x440;&#x43D;&#x44B;&#x435; &#x434;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;</name>
+					<require_client_sig>TRUE</require_client_sig>
+					<name>&#x414;&#x43E;&#x433;&#x43E;&#x432;&#x43E;&#x440;&#x43D;&#x44B;&#x435; &#x434;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;/&#x41A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;</name>
 				</predefinedItem>
 				<predefinedItem alias="result">
 					<id>2</id>
+					<require_client_sig>FALSE</require_client_sig>
 					<name>&#x417;&#x430;&#x43A;&#x43B;&#x44E;&#x447;&#x435;&#x43D;&#x438;&#x435;</name>
+				</predefinedItem>
+				<predefinedItem alias="doc_flow_out">
+					<id>3</id>
+					<require_client_sig>FALSE</require_client_sig>
+					<name>&#x418;&#x441;&#x445;&#x43E;&#x434;&#x44F;&#x449;&#x438;&#x435;</name>
 				</predefinedItem>
 			</predefinedItems>
 		</model>
@@ -1233,11 +1256,15 @@
 			<field id="post_id" dataType="Int" refTable="posts" refField="id"/>
 			<field id="picture" dataType="Text"/>
 			<field id="picture_info" dataType="JSON"/>
+			<field id="snils" dataType="String" length="11"/>
 			<index unique="TRUE" id="employes_name_idx">
 				<expression>lower(name)</expression>
 			</index>
 			<index unique="TRUE" id="employes_user_idx">
 				<field id="user_id"/>
+			</index>
+			<index unique="TRUE" id="employes_snils_idx">
+				<field id="snils"/>
 			</index>
 		</model>
 		<model id="EmployeeDialog" parent="ModelSQL" dataTable="employees_dialog" virtual="TRUE" baseModelId="Employee">
@@ -2058,7 +2085,6 @@
 			<field id="sent" dataType="Bool"/>
 			<field id="contract_file" dataType="JSON"/>
 			<field id="doc_flow_out_client_type" dataType="String"/>
-			<field id="contract_files" dataType="JSON"/>
 			<field id="attachment_files" dataType="JSON"/>
 			<globalFilter id="user_id"/>
 		</model>
@@ -2361,6 +2387,8 @@
 			<field id="cur_estim_cost_recommend" dataType="Float" length="15" precision="2"/>
 			<field id="result_sign_expert_list" dataType="JSONB"/>
 			<field id="primary_contract_reg_number" dataType="String" length="20"/>
+			<field id="experts_for_notification" dataType="JSONB"/>
+			<field id="contract_return_date_on_sig" dataType="Bool" defaultValue="FALSE"/>
 			<index id="contracts_reg_number_idx" unique="TRUE">
 				<field id="reg_number"/>
 			</index>
@@ -2431,6 +2459,7 @@
 			<field id="state_dt" dataType="DateTimeTZ"/>
 			<field id="state_end_date" dataType="Date"/>
 			<field id="for_all_employees" dataType="Bool"/>
+			<field id="state_for_color" dataType="String"/>
 		</model>
 		<model id="ContractDialog" parent="ModelSQL" dataTable="contracts_dialog" virtual="TRUE" baseModelId="Contract">
 			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE" required="FALSE"/>
@@ -2476,6 +2505,7 @@
 			<field id="main_departments_ref" dataType="JSON"/>
 			<field id="main_experts_ref" dataType="JSON"/>
 			<field id="permissions" dataType="JSONB"/>
+			<field id="experts_for_notification" dataType="JSONB"/>
 			<field id="expertise_sections" dataType="JSON"/>
 			<field id="total_cost_eval" dataType="Float"/>
 			<field id="limit_cost_eval" dataType="Float"/>
@@ -2503,6 +2533,7 @@
 			<field id="cur_estim_cost" dataType="Float" length="15" precision="2"/>
 			<field id="cur_estim_cost_recommend" dataType="Float" length="15" precision="2"/>
 			<field id="result_sign_expert_list" dataType="JSONB"/>
+			<field id="contract_return_date_on_sig" dataType="Bool"/>
 		</model>
 		<model id="ExpertWork" parent="ModelSQL" dataTable="expert_works" virtual="FALSE">
 			<field id="id" dataType="Int" primaryKey="TRUE" required="FALSE" autoInc="TRUE"/>
@@ -2532,6 +2563,10 @@
 		<model id="AccessPermission" parentJS="ModelJSON" virtual="TRUE" server="FALSE">
 			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE"/>
 			<field id="obj" dataType="JSON"/>
+		</model>
+		<model id="ExpertNotification" parentJS="ModelJSON" virtual="TRUE" server="FALSE">
+			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE"/>
+			<field id="expert" dataType="JSON"/>
 		</model>
 		<model id="ViewLocal" parentJS="ModelJSON" virtual="TRUE" server="FALSE">
 			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE"/>
@@ -2621,6 +2656,39 @@
 			<field id="order_document" dataType="String" alias="&#x421;&#x432;&#x435;&#x434;&#x435;&#x43D;&#x438;&#x44F; &#x43E; &#x440;&#x435;&#x448;&#x435;&#x43D;&#x438;&#x438; &#x43F;&#x43E; &#x43E;&#x431;&#x44A;&#x435;&#x43A;&#x442;&#x443;"/>
 			<field id="argument_document" dataType="String" alias="&#x421;&#x432;&#x435;&#x434;&#x435;&#x43D;&#x438;&#x44F; &#x43E;&#x431; &#x43E;&#x441;&#x43F;&#x430;&#x440;&#x438;&#x432;&#x430;&#x43D;&#x438;&#x438;"/>
 		</model>
+		<model id="RepReestrPay" parent="ModelReportSQL" virtual="TRUE" server="TRUE">
+			<field id="ord" dataType="String" alias="&#x2116;"/>
+			<field id="expertise_result_number" dataType="String" alias="&#x2116; &#x44D;&#x43A;&#x441;&#x43F;.&#x437;&#x430;&#x43A;&#x43B;&#x44E;&#x447;."/>
+			<field id="applicant" dataType="String" alias="&#x417;&#x430;&#x44F;&#x432;&#x438;&#x442;&#x435;&#x43B;&#x44C;"/>
+			<field id="customer" dataType="String" alias="&#x417;&#x430;&#x43A;&#x430;&#x437;&#x447;&#x438;&#x43A;"/>
+			<field id="constr_name" dataType="String" alias="&#x41E;&#x431;&#x44A;&#x435;&#x43A;&#x442; &#x441;&#x442;&#x440;&#x43E;&#x438;&#x442;&#x435;&#x43B;&#x44C;&#x441;&#x442;&#x432;&#x430;"/>
+			<field id="contract_number" dataType="String" alias="&#x41D;&#x43E;&#x43C;&#x435;&#x440; &#x43A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x430;"/>
+			<field id="work_start_date" dataType="String" alias="&#x414;&#x430;&#x442;&#x430; &#x43D;&#x430;&#x447;.&#x440;&#x430;&#x431;&#x43E;&#x442;"/>
+			<field id="expertise_cost_budget" dataType="String" alias="&#x421;&#x442;&#x43E;&#x438;&#x43C;&#x43E;&#x441;&#x442;&#x44C; &#x440;&#x430;&#x431;&#x43E;&#x442; &#x431;&#x44E;&#x434;&#x436;&#x435;&#x442;"/>
+			<field id="expertise_cost_self_fund" dataType="String" alias="&#x421;&#x442;&#x43E;&#x438;&#x43C;&#x43E;&#x441;&#x442;&#x44C; &#x440;&#x430;&#x431;&#x43E;&#x442; &#x441;&#x43E;&#x431;&#x441;&#x442;&#x432;.&#x441;&#x440;-&#x432;&#x430;"/>
+			<field id="total" dataType="String" alias="&#x421;&#x443;&#x43C;&#x43C;&#x430; &#x43E;&#x43F;&#x43B;&#x430;&#x442;&#x44B;"/>
+			<field id="pay_docum_number" dataType="String" alias="&#x41D;&#x43E;&#x43C;&#x435;&#x440; &#x43F;/&#x43F;"/>
+			<field id="pay_docum_date" dataType="String" alias="&#x414;&#x430;&#x442;&#x430; &#x43F;/&#x43F;"/>
+		</model>
+		<model id="RepReestrContract" parent="ModelReportSQL" virtual="TRUE" server="TRUE">
+			<field id="ord" dataType="String" alias="&#x2116;"/>
+			<field id="expertise_result_number" dataType="String" alias="&#x2116; &#x44D;&#x43A;&#x441;&#x43F;.&#x437;&#x430;&#x43A;&#x43B;&#x44E;&#x447;."/>
+			<field id="date" dataType="String" alias="&#x414;&#x430;&#x442;&#x430; &#x43F;&#x43E;&#x441;&#x442;."/>
+			<field id="primary_exists" dataType="String" alias="&#x41F;&#x43E;&#x432;&#x442;&#x43E;&#x440;"/>
+			<field id="applicant" dataType="String" alias="&#x417;&#x430;&#x44F;&#x432;&#x438;&#x442;&#x435;&#x43B;&#x44C;"/>
+			<field id="customer" dataType="String" alias="&#x417;&#x430;&#x43A;&#x430;&#x437;&#x447;&#x438;&#x43A;"/>
+			<field id="constr_name" dataType="String" alias="&#x41E;&#x431;&#x44A;&#x435;&#x43A;&#x442; &#x441;&#x442;&#x440;&#x43E;&#x438;&#x442;&#x435;&#x43B;&#x44C;&#x441;&#x442;&#x432;&#x430;"/>
+			<field id="expertise_cost_budget" dataType="String" alias="&#x421;&#x442;&#x43E;&#x438;&#x43C;&#x43E;&#x441;&#x442;&#x44C; &#x440;&#x430;&#x431;&#x43E;&#x442; &#x431;&#x44E;&#x434;&#x436;&#x435;&#x442;"/>
+			<field id="expertise_cost_self_fund" dataType="String" alias="&#x421;&#x442;&#x43E;&#x438;&#x43C;&#x43E;&#x441;&#x442;&#x44C; &#x440;&#x430;&#x431;&#x43E;&#x442; &#x441;&#x43E;&#x431;&#x441;&#x442;&#x432;.&#x441;&#x440;-&#x432;&#x430;"/>
+			<field id="contract_number_date" dataType="String" alias="&#x41D;&#x43E;&#x43C;&#x435;&#x440; &#x438; &#x434;&#x430;&#x442;&#x430; &#x43A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x430;"/>
+			<field id="pay_total" dataType="String" alias="&#x421;&#x443;&#x43C;&#x43C;&#x430; &#x43E;&#x43F;&#x43B;&#x430;&#x442;&#x44B;"/>
+			<field id="work_start_date" dataType="String" alias="&#x414;&#x430;&#x442;&#x430; &#x43D;&#x430;&#x447;.&#x440;&#x430;&#x431;&#x43E;&#x442;"/>
+			<field id="main_expert" dataType="String" alias="&#x41E;&#x442;&#x432;.&#x44D;&#x43A;&#x441;&#x43F;&#x435;&#x440;&#x442;"/>
+			<field id="expertise_result_date_positive" dataType="String" alias="&#x414;&#x430;&#x442;&#x430; &#x43F;&#x43E;&#x43B;&#x43E;&#x436;&#x438;&#x442;.&#x437;&#x430;&#x43A;&#x43B;&#x44E;&#x447;."/>
+			<field id="aaa" dataType="String" alias="&#x414;&#x430;&#x442;&#x430; &#x43D;&#x430; &#x434;&#x43E;&#x440;&#x430;&#x431;&#x43E;&#x442;&#x43A;&#x443;"/>
+			<field id="akt_number_date" dataType="String" alias="&#x410;&#x43A;&#x442;"/>
+			<field id="comment_text" dataType="String" alias="&#x41A;&#x43E;&#x43C;&#x43C;&#x435;&#x43D;&#x442;&#x430;&#x440;&#x438;&#x439;"/>
+		</model>
 		<model id="Service" parent="ModelSQL" dataTable="services" virtual="FALSE">
 			<defaultOrder>
 				<field id="id"/>
@@ -2661,15 +2729,15 @@
 		<model id="UserCertificate" parent="ModelSQL" dataTable="user_certificates" virtual="FALSE">
 			<field id="id" dataType="Int" required="TRUE" primaryKey="TRUE" autoInc="TRUE"/>
 			<field id="fingerprint" dataType="String" length="40" required="TRUE"/>
-			<field id="user_id" dataType="Int" refTable="users" refField="id" required="TRUE"/>
 			<field id="date_time" dataType="DateTimeTZ" required="TRUE"/>
 			<field id="date_time_from" dataType="DateTimeTZ" required="TRUE"/>
 			<field id="date_time_to" dataType="DateTimeTZ" required="TRUE"/>
 			<field id="subject_cert" dataType="JSONB"/>
 			<field id="issuer_cert" dataType="JSONB"/>
+			<field id="employee_id" dataType="Int" refTable="employees" refField="id"/>
 			<index id="user_certificates_fingerprint_user_idx" unique="TRUE">
 				<field id="fingerprint"/>
-				<field id="user_id"/>
+				<field id="date_time_from"/>
 			</index>
 		</model>
 		<model id="FileSignatures" parent="ModelSQL" dataTable="file_signatures" virtual="FALSE">
@@ -2681,6 +2749,9 @@
 			<index id="file_signatures_file_idx">
 				<field id="file_id"/>
 			</index>
+		</model>
+		<model id="FileForSigningList" parent="ModelSQL" server="FALSE" virtual="TRUE">
+			<field id="attachment_files" dataType="JSON"/>
 		</model>
 	</models>
 	<constants>
@@ -2698,7 +2769,10 @@
 		<constant id="reminder_refresh_interval" name="&#x41F;&#x435;&#x440;&#x438;&#x43E;&#x434; &#x43E;&#x431;&#x43D;&#x43E;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x44F; &#x43D;&#x430;&#x43F;&#x43E;&#x43C;&#x438;&#x43D;&#x430;&#x43D;&#x438;&#x439;" descr="&#x41F;&#x435;&#x440;&#x438;&#x43E;&#x434; &#x43E;&#x431;&#x43D;&#x43E;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x44F; &#x43D;&#x430;&#x43F;&#x43E;&#x43C;&#x438;&#x43D;&#x430;&#x43D;&#x438;&#x439; &#x432; &#x441;&#x435;&#x43A;&#x443;&#x43D;&#x434;&#x430;&#x445;" dataType="Int" defaultValue="15" autoload="TRUE"/>
 		<constant id="outmail_data" name="&#x414;&#x430;&#x43D;&#x43D;&#x44B;&#x435; &#x434;&#x43B;&#x44F; &#x43E;&#x442;&#x43F;&#x440;&#x430;&#x432;&#x43A;&#x438; &#x44D;&#x43B;&#x435;&#x43A;&#x442;&#x440;&#x43E;&#x43D;&#x43D;&#x43E;&#x439; &#x43F;&#x43E;&#x447;&#x442;&#x44B;" descr="&#x414;&#x430;&#x43D;&#x43D;&#x44B;&#x435; &#x434;&#x43B;&#x44F; &#x43E;&#x442;&#x43F;&#x440;&#x430;&#x432;&#x43A;&#x438; &#x44D;&#x43B;&#x435;&#x43A;&#x442;&#x440;&#x43E;&#x43D;&#x43D;&#x43E;&#x439; &#x43F;&#x43E;&#x447;&#x442;&#x44B;: &#x438;&#x43C;&#x44F; &#x438; &#x430;&#x434;&#x440;&#x435;&#x441; &#x43E;&#x442;&#x43F;&#x440;&#x430;&#x432;&#x438;&#x442;&#x435;&#x43B;&#x44F;." dataType="JSON"/>
 		<constant id="reminder_show_days" name="&#x417;&#x430; &#x43A;&#x430;&#x43A;&#x43E;&#x435; &#x43A;&#x43E;&#x43B;&#x438;&#x447;&#x435;&#x441;&#x442;&#x432;&#x43E; &#x440;&#x430;&#x431;&#x43E;&#x447;&#x438;&#x445; &#x434;&#x43D;&#x435;&#x439; &#x43F;&#x43E;&#x43A;&#x430;&#x437;&#x44B;&#x432;&#x430;&#x442;&#x44C; &#x43D;&#x430;&#x43F;&#x43E;&#x43C;&#x438;&#x43D;&#x430;&#x43D;&#x438;&#x44F;" descr="&#x41A;&#x43E;&#x43B;&#x438;&#x447;&#x435;&#x441;&#x442;&#x432;&#x43E; &#x440;&#x430;&#x431;&#x43E;&#x447;&#x438;&#x445; &#x434;&#x43D;&#x435;&#x439;, &#x437;&#x430; &#x43A;&#x43E;&#x442;&#x43E;&#x440;&#x43E;&#x435; &#x431;&#x443;&#x434;&#x443;&#x442; &#x43F;&#x43E;&#x43A;&#x430;&#x437;&#x430;&#x43D;&#x44B; &#x43D;&#x435;&#x43F;&#x440;&#x43E;&#x447;&#x438;&#x442;&#x430;&#x43D;&#x43D;&#x44B;&#x435; &#x43D;&#x430;&#x43F;&#x43E;&#x43C;&#x438;&#x43D;&#x430;&#x43D;&#x438;&#x44F;." dataType="Int" defaultValue="3" autoload="FALSE"/>
-		<constant id="reminder_show_days" name="&#x417;&#x430; &#x43A;&#x430;&#x43A;&#x43E;&#x435; &#x43A;&#x43E;&#x43B;&#x438;&#x447;&#x435;&#x441;&#x442;&#x432;&#x43E; &#x440;&#x430;&#x431;&#x43E;&#x447;&#x438;&#x445; &#x434;&#x43D;&#x435;&#x439; &#x43F;&#x43E;&#x43A;&#x430;&#x437;&#x44B;&#x432;&#x430;&#x442;&#x44C; &#x43D;&#x430;&#x43F;&#x43E;&#x43C;&#x438;&#x43D;&#x430;&#x43D;&#x438;&#x44F;" descr="&#x41A;&#x43E;&#x43B;&#x438;&#x447;&#x435;&#x441;&#x442;&#x432;&#x43E; &#x440;&#x430;&#x431;&#x43E;&#x447;&#x438;&#x445; &#x434;&#x43D;&#x435;&#x439;, &#x437;&#x430; &#x43A;&#x43E;&#x442;&#x43E;&#x440;&#x43E;&#x435; &#x431;&#x443;&#x434;&#x443;&#x442; &#x43F;&#x43E;&#x43A;&#x430;&#x437;&#x430;&#x43D;&#x44B; &#x43D;&#x435;&#x43F;&#x440;&#x43E;&#x447;&#x438;&#x442;&#x430;&#x43D;&#x43D;&#x44B;&#x435; &#x43D;&#x430;&#x43F;&#x43E;&#x43C;&#x438;&#x43D;&#x430;&#x43D;&#x438;&#x44F;." dataType="Int" defaultValue="3" autoload="FALSE"/>
+		<constant id="cades_verify_after_signing" name="&#x41A;&#x440;&#x438;&#x43F;&#x442;&#x43E;&#x41F;&#x440;&#x43E; &#x43F;&#x43B;&#x430;&#x433;&#x438;&#x43D;: &#x41F;&#x440;&#x43E;&#x432;&#x435;&#x440;&#x44F;&#x442;&#x44C; &#x43F;&#x43E;&#x434;&#x43F;&#x438;&#x441;&#x44C; &#x43F;&#x43E;&#x441;&#x43B;&#x435; &#x43F;&#x43E;&#x434;&#x43F;&#x438;&#x441;&#x430;&#x43D;&#x438;&#x44F;" descr="&#x41D;&#x443;&#x436;&#x43D;&#x43E; &#x43B;&#x438; &#x43F;&#x440;&#x43E;&#x432;&#x435;&#x440;&#x44F;&#x442;&#x44C; &#x43F;&#x43E;&#x434;&#x43F;&#x438;&#x441;&#x44C; &#x432; &#x41A;&#x440;&#x438;&#x43F;&#x442;&#x43E;&#x41F;&#x440;&#x43E; &#x43F;&#x43B;&#x430;&#x433;&#x438;&#x43D; &#x43F;&#x43E;&#x441;&#x43B;&#x435; &#x441;&#x43E;&#x437;&#x434;&#x430;&#x43D;&#x438;&#x44F;" dataType="Bool" defaultValue="TRUE" autoload="TRUE"/>
+		<constant id="cades_include_certificate" name="&#x41A;&#x440;&#x438;&#x43F;&#x442;&#x43E;&#x41F;&#x440;&#x43E; &#x43F;&#x43B;&#x430;&#x433;&#x438;&#x43D;: &#x41F;&#x43E;&#x440;&#x44F;&#x434;&#x43E;&#x43A; &#x432;&#x43B;&#x44E;&#x447;&#x435;&#x43D;&#x438;&#x44F; &#x441;&#x435;&#x440;&#x442;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x43E;&#x432; &#x432; &#x43F;&#x43E;&#x434;&#x43F;&#x438;&#x441;&#x44C;" descr="0 - &#x432;&#x43A;&#x43B;&#x44E;&#x447;&#x430;&#x442;&#x44C; &#x441;&#x435;&#x440;&#x442;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x44B; &#x43A;&#x440;&#x43E;&#x43C;&#x435; &#x433;&#x43E;&#x43B;&#x43E;&#x432;&#x43D;&#x43E;&#x433;&#x43E;, 1 - &#x432;&#x43A;&#x43B;&#x44E;&#x447;&#x430;&#x442;&#x44C; &#x432;&#x441;&#x435; &#x441;&#x435;&#x440;&#x442;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x44B;, 2 - &#x432;&#x43A;&#x43B;&#x44E;&#x447;&#x430;&#x442;&#x44C; &#x442;&#x43E;&#x43B;&#x44C;&#x43A;&#x43E; &#x441;&#x435;&#x440;&#x442;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442; &#x43F;&#x43E;&#x434;&#x43F;&#x438;&#x441;&#x430;&#x43D;&#x442;&#x430;" dataType="Int" defaultValue="1" autoload="TRUE"/>
+		<constant id="cades_signature_type" name="&#x41A;&#x440;&#x438;&#x43F;&#x442;&#x43E;&#x41F;&#x440;&#x43E; &#x43F;&#x43B;&#x430;&#x433;&#x438;&#x43D;: &#x422;&#x438;&#x43F; &#x443;&#x441;&#x43E;&#x432;&#x435;&#x440;&#x448;&#x435;&#x43D;&#x441;&#x442;&#x432;&#x43E;&#x432;&#x430;&#x43D;&#x43D;&#x43E;&#x439; &#x43F;&#x43E;&#x434;&#x43F;&#x438;&#x441;&#x438;" descr="1- &#x422;&#x438;&#x43F; &#x43F;&#x43E;&#x434;&#x43F;&#x438;&#x441;&#x438; CAdES BES, 0- &#x422;&#x438;&#x43F; &#x43F;&#x43E;&#x434;&#x43F;&#x438;&#x441;&#x438; &#x43F;&#x43E; &#x443;&#x43C;&#x43E;&#x43B;&#x447;&#x430;&#x43D;&#x438;&#x44E; (CAdES-X Long Type 1), 5- &#x422;&#x438;&#x43F; &#x43F;&#x43E;&#x434;&#x43F;&#x438;&#x441;&#x438; CAdES T, 93- &#x422;&#x438;&#x43F; &#x43F;&#x43E;&#x434;&#x43F;&#x438;&#x441;&#x438; CAdES-X Long Type 1" dataType="Int" defaultValue="1" autoload="TRUE"/>
+		<constant id="cades_hash_algorithm" name="&#x41A;&#x440;&#x438;&#x43F;&#x442;&#x43E;&#x41F;&#x440;&#x43E; &#x43F;&#x43B;&#x430;&#x433;&#x438;&#x43D;: &#x410;&#x43B;&#x433;&#x43E;&#x440;&#x438;&#x442;&#x43C; &#x445;&#x44D;&#x448;&#x438;&#x440;&#x43E;&#x432;&#x430;&#x43D;&#x438;&#x44F;" descr="100 - &#x410;&#x43B;&#x433;&#x43E;&#x440;&#x438;&#x442;&#x43C; &#x413;&#x41E;&#x421;&#x422; &#x420; 34.11-94, 101 - &#x410;&#x43B;&#x433;&#x43E;&#x440;&#x438;&#x442;&#x43C; &#x413;&#x41E;&#x421;&#x422; &#x420; 34.10-2012 256 &#x431;&#x438;&#x442;, 102 - &#x410;&#x43B;&#x433;&#x43E;&#x440;&#x438;&#x442;&#x43C; &#x413;&#x41E;&#x421;&#x422; &#x420; 34.10-2012 512 &#x431;&#x438;&#x442;" dataType="Int" defaultValue="100" autoload="TRUE"/>
 	</constants>
 	<controllers>
 		<controller id="Constant" parentId="ControllerSQL">
@@ -3040,6 +3114,7 @@
 			</publicMethod>
 			<publicMethod id="delete_app_print_expertise">
 				<field id="id" dataType="Int" required="TRUE"/>
+				<field id="fill_percent" dataType="Int" required="TRUE"/>
 			</publicMethod>
 			<publicMethod id="download_app_print_modification">
 				<field id="id" dataType="Int" required="TRUE"/>
@@ -3049,6 +3124,7 @@
 			</publicMethod>
 			<publicMethod id="delete_app_print_modification">
 				<field id="id" dataType="Int" required="TRUE"/>
+				<field id="fill_percent" dataType="Int" required="TRUE"/>
 			</publicMethod>
 			<publicMethod id="download_app_print_audit">
 				<field id="id" dataType="Int" required="TRUE"/>
@@ -3058,6 +3134,7 @@
 			</publicMethod>
 			<publicMethod id="delete_app_print_audit">
 				<field id="id" dataType="Int" required="TRUE"/>
+				<field id="fill_percent" dataType="Int" required="TRUE"/>
 			</publicMethod>
 			<publicMethod id="download_app_print_cost_eval">
 				<field id="id" dataType="Int" required="TRUE"/>
@@ -3067,6 +3144,7 @@
 			</publicMethod>
 			<publicMethod id="delete_app_print_cost_eval">
 				<field id="id" dataType="Int" required="TRUE"/>
+				<field id="fill_percent" dataType="Int" required="TRUE"/>
 			</publicMethod>
 			<publicMethod id="set_user">
 				<field id="user_id" dataType="Int" required="TRUE"/>
@@ -3087,6 +3165,23 @@
 			</publicMethod>
 			<publicMethod id="get_constr_name">
 				<field id="id" dataType="Int" required="TRUE"/>
+			</publicMethod>
+			<publicMethod id="get_sig_details">
+				<field id="id" dataType="String" length="36" required="TRUE"/>
+			</publicMethod>
+			<publicMethod id="get_customer_list" modelId="ApplicationCustomerList">
+				<field id="pattern" dataType="String"/>
+				<field id="count" dataType="Int"/>
+				<field id="ic" dataType="Int"/>
+				<field id="mid" dataType="Int"/>
+				<field id="name" dataType="String"/>
+			</publicMethod>
+			<publicMethod id="get_contractor_list" modelId="ApplicationContractorList">
+				<field id="pattern" dataType="String"/>
+				<field id="count" dataType="Int"/>
+				<field id="ic" dataType="Int"/>
+				<field id="mid" dataType="Int"/>
+				<field id="name" dataType="String"/>
 			</publicMethod>
 		</controller>
 		<controller id="ApplicationClient" parentIdJS="ControllerObjClient" server="FALSE">
@@ -3129,6 +3224,10 @@
 				<field id="file_id" dataType="String" length="36" required="TRUE"/>
 				<field id="doc_id" dataType="Int" required="TRUE"/>
 			</publicMethod>
+			<publicMethod id="remove_sig">
+				<field id="file_id" dataType="String" length="36" required="TRUE"/>
+				<field id="doc_id" dataType="Int" required="TRUE"/>
+			</publicMethod>
 			<publicMethod id="get_file">
 				<field id="file_id" dataType="String" length="36" required="TRUE"/>
 				<field id="doc_id" dataType="Int" required="TRUE"/>
@@ -3161,6 +3260,9 @@
 				<field id="sig_data" dataType="Text" required="TRUE"/>
 				<field id="doc_id" dataType="Int" required="TRUE"/>
 			</publicMethod>
+			<publicMethod id="get_sig_details">
+				<field id="id" dataType="String" length="36" required="TRUE"/>
+			</publicMethod>
 		</controller>
 		<controller id="DocFlowIn" parentId="DocFlow_Controller" parentType="user" state="TRUE">
 			<publicMethod id="insert" modelId="DocFlowIn"/>
@@ -3170,6 +3272,10 @@
 			<publicMethod id="get_object" modelId="DocFlowInDialog"/>
 			<publicMethod id="complete" patternFieldId="reg_number" modelId="DocFlowInList"/>
 			<publicMethod id="remove_file">
+				<field id="file_id" dataType="String" length="36" required="TRUE"/>
+				<field id="doc_id" dataType="Int" required="TRUE"/>
+			</publicMethod>
+			<publicMethod id="remove_sig">
 				<field id="file_id" dataType="String" length="36" required="TRUE"/>
 				<field id="doc_id" dataType="Int" required="TRUE"/>
 			</publicMethod>
@@ -3184,6 +3290,9 @@
 			<publicMethod id="get_next_num">
 				<field id="doc_flow_type_id" dataType="Int" required="TRUE"/>
 			</publicMethod>
+			<publicMethod id="download_attachments">
+				<field id="doc_flow_in_id" dataType="Int" required="TRUE"/>
+			</publicMethod>
 		</controller>
 		<controller id="DocFlowInside" parentId="DocFlow_Controller" parentType="user" state="TRUE">
 			<publicMethod id="insert" modelId="DocFlowInside"/>
@@ -3196,6 +3305,10 @@
 				<field id="file_id" dataType="String" length="36" required="TRUE"/>
 				<field id="doc_id" dataType="Int" required="TRUE"/>
 			</publicMethod>
+			<publicMethod id="remove_sig">
+				<field id="file_id" dataType="String" length="36" required="TRUE"/>
+				<field id="doc_id" dataType="Int" required="TRUE"/>
+			</publicMethod>
 			<publicMethod id="get_file">
 				<field id="file_id" dataType="String" length="36" required="TRUE"/>
 				<field id="doc_id" dataType="Int" required="TRUE"/>
@@ -3203,6 +3316,9 @@
 			<publicMethod id="get_file_sig">
 				<field id="file_id" dataType="String" length="36" required="TRUE"/>
 				<field id="doc_id" dataType="Int" required="TRUE"/>
+			</publicMethod>
+			<publicMethod id="get_sig_details">
+				<field id="id" dataType="String" length="36" required="TRUE"/>
 			</publicMethod>
 		</controller>
 		<controller id="DocFlowImportanceType" parentId="ControllerSQL">
@@ -3376,12 +3492,8 @@
 			<publicMethod id="get_list" modelId="BuildType"/>
 		</controller>
 		<controller id="DocFlowOutClient" parentId="ControllerSQL">
-			<publicMethod id="insert" modelId="DocFlowOutClient" encType="multipart" requestType="post">
-				<field id="contract_files" dataType="Text"/>
-			</publicMethod>
-			<publicMethod id="update" modelId="DocFlowOutClient" encType="multipart" requestType="post">
-				<field id="contract_files" dataType="Text"/>
-			</publicMethod>
+			<publicMethod id="insert" modelId="DocFlowOutClient"/>
+			<publicMethod id="update" modelId="DocFlowOutClient"/>
 			<publicMethod id="delete" modelId="DocFlowOutClient"/>
 			<publicMethod id="get_object" modelId="DocFlowOutClientDialog"/>
 			<publicMethod id="get_list" modelId="DocFlowOutClientList"/>
@@ -3393,17 +3505,19 @@
 				<field id="application_id" dataType="Int" required="TRUE"/>
 				<field id="file_id" dataType="String" length="36" required="TRUE"/>
 			</publicMethod>
-			<publicMethod id="remove_contract_file">
-				<field id="id" dataType="Int" required="TRUE"/>
+			<publicMethod id="remove_document_file">
 				<field id="file_id" dataType="String" length="36" required="TRUE"/>
+				<field id="doc_flow_out_client_id" dataType="Int" required="TRUE"/>
 			</publicMethod>
-			<publicMethod id="download_contract_file">
-				<field id="id" dataType="Int" required="TRUE"/>
-				<field id="file_id" dataType="String" length="36" required="TRUE"/>
+			<publicMethod id="get_files_for_signing">
+				<field id="application_id" dataType="Int" required="TRUE"/>
 			</publicMethod>
-			<publicMethod id="download_contract_file_sig">
+			<publicMethod id="delete_all_attachments">
 				<field id="id" dataType="Int" required="TRUE"/>
+			</publicMethod>
+			<publicMethod id="get_file">
 				<field id="file_id" dataType="String" length="36" required="TRUE"/>
+				<field id="doc_id" dataType="Int" required="TRUE"/>
 			</publicMethod>
 		</controller>
 		<controller id="DocFlowInClient" parentId="ControllerSQL">
@@ -3457,7 +3571,9 @@
 			<publicMethod id="insert" modelId="Contract"/>
 			<publicMethod id="update" modelId="Contract"/>
 			<publicMethod id="delete" modelId="Contract"/>
-			<publicMethod id="get_object" modelId="ContractDialog"/>
+			<publicMethod id="get_object" modelId="ContractDialog">
+				<field id="fields" dataType="String"/>
+			</publicMethod>
 			<publicMethod id="get_list" modelId="ContractList"/>
 			<publicMethod id="complete" patternFieldId="expertise_result_number" modelId="ContractList"/>
 			<publicMethod id="get_pd_list" modelId="ContractList" condFields="TRUE"/>
@@ -3512,6 +3628,14 @@
 			<publicMethod id="get_constr_name">
 				<field id="id" dataType="Int" required="TRUE"/>
 			</publicMethod>
+			<publicMethod id="get_reestr_pay" condFields="TRUE">
+				<field id="templ" dataType="String"/>
+				<field id="inline" dataType="Int"/>
+			</publicMethod>
+			<publicMethod id="get_reestr_contract" condFields="TRUE">
+				<field id="templ" dataType="String"/>
+				<field id="inline" dataType="Int"/>
+			</publicMethod>
 		</controller>
 		<controller id="ExpertiseRejectType" parentId="ControllerSQL">
 			<publicMethod id="insert" modelId="ExpertiseRejectType"/>
@@ -3549,6 +3673,13 @@
 			<publicMethod id="delete" modelId="AccessPermission"/>
 			<publicMethod id="get_list" modelId="AccessPermission"/>
 			<publicMethod id="get_object" modelId="AccessPermission"/>
+		</controller>
+		<controller id="ExpertNotification" parentIdJS="ControllerObjClient" server="FALSE">
+			<publicMethod id="insert" modelId="ExpertNotification"/>
+			<publicMethod id="update" modelId="ExpertNotification"/>
+			<publicMethod id="delete" modelId="ExpertNotification"/>
+			<publicMethod id="get_list" modelId="ExpertNotification"/>
+			<publicMethod id="get_object" modelId="ExpertNotification"/>
 		</controller>
 		<controller id="ViewLocal" parentIdJS="ControllerObjClient" server="FALSE">
 			<publicMethod id="insert" modelId="ViewLocal"/>
@@ -3715,6 +3846,7 @@
 		<permission type="allow" controllerId="DocFlowInClient" methodId="all" roleId="client"/>
 		<permission type="allow" controllerId="ClientSearch" methodId="all" roleId="client"/>
 		<permission type="allow" controllerId="PersonIdPaper" methodId="all" roleId="client"/>
+		<permission type="allow" controllerId="DocFlowOut" methodId="get_sig_details" roleId="client"/>
 	</permissions>
 	<views>
 		<view id="10000" c="User_Controller" t="UserList" f="get_list" section="&#x421;&#x43F;&#x440;&#x430;&#x432;&#x43E;&#x447;&#x43D;&#x438;&#x43A;&#x438;" descr="&#x41F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x435;&#x43B;&#x438;"/>
@@ -3759,6 +3891,8 @@
 		<view id="20014" c="DocFlowInside_Controller" t="DocFlowInsideList" f="get_list" section="&#x414;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;" descr="&#x412;&#x43D;&#x443;&#x442;&#x440;&#x435;&#x43D;&#x43D;&#x438;&#x435; &#x434;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;"/>
 		<view id="30000" c="Contract_Controller" t="RepReestrExpertise" section="&#x41E;&#x442;&#x447;&#x435;&#x442;&#x44B;" descr="&#x420;&#x435;&#x435;&#x441;&#x442;&#x440; &#x437;&#x430;&#x43A;&#x43B;&#x44E;&#x447;&#x435;&#x43D;&#x438;&#x439; &#x43F;&#x43E; &#x433;&#x43E;&#x441;.&#x44D;&#x43A;&#x441;&#x43F;&#x435;&#x440;&#x442;&#x438;&#x437;&#x435;"/>
 		<view id="30001" c="Contract_Controller" t="RepReestrCostEval" section="&#x41E;&#x442;&#x447;&#x435;&#x442;&#x44B;" descr="&#x420;&#x435;&#x435;&#x441;&#x442;&#x440; &#x437;&#x430;&#x43A;&#x43B;&#x44E;&#x447;&#x435;&#x43D;&#x438;&#x439; &#x43F;&#x43E; &#x434;&#x43E;&#x441;&#x442;&#x43E;&#x432;&#x435;&#x440;&#x43D;&#x43E;&#x441;&#x442;&#x438;"/>
+		<view id="30002" c="Contract_Controller" t="RepReestrPay" section="&#x41E;&#x442;&#x447;&#x435;&#x442;&#x44B;" descr="&#x420;&#x435;&#x435;&#x441;&#x442;&#x440; &#x43E;&#x43F;&#x43B;&#x430;&#x442;"/>
+		<view id="30003" c="Contract_Controller" t="RepReestrContract" section="&#x41E;&#x442;&#x447;&#x435;&#x442;&#x44B;" descr="&#x420;&#x435;&#x435;&#x441;&#x442;&#x440; &#x43A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x43E;&#x432; (&#x432;&#x44B;&#x431;&#x43E;&#x440;&#x43A;&#x430;)"/>
 		<view id="50000" c="User_Controller" t="UserProfile" f="get_profile" section="&#x424;&#x43E;&#x440;&#x43C;&#x44B;" descr="&#x41F;&#x440;&#x43E;&#x444;&#x438;&#x43B;&#x44C; &#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x435;&#x43B;&#x44F;"/>
 		<view id="50001" c="Client_Controller" t="ClientSearch" section="&#x424;&#x43E;&#x440;&#x43C;&#x44B;" descr="&#x41F;&#x43E;&#x438;&#x441;&#x43A; &#x43A;&#x43B;&#x438;&#x435;&#x43D;&#x442;&#x43E;&#x432;"/>
 		<view id="50003" c="DocFlowTask_Controller" t="DocFlowTaskList" f="get_list" section="&#x424;&#x43E;&#x440;&#x43C;&#x44B;" descr="&#x417;&#x430;&#x434;&#x430;&#x447;&#x438; (&#x432;&#x441;&#x435;)"/>
@@ -3824,6 +3958,8 @@
 		<serverTemplate id="ShortMessageRecipientStateList"/>
 		<serverTemplate id="RepReestrExpertise"/>
 		<serverTemplate id="RepReestrCostEval"/>
+		<serverTemplate id="RepReestrPay"/>
+		<serverTemplate id="RepReestrContract"/>
 	</serverTemplates>
 	<jsTemplates>
 		<jsTemplate id="FatalException" file="tmpl/FatalException.html"/>
@@ -3849,6 +3985,7 @@
 		<jsTemplate id="ApplicationContractor" file="tmpl/ApplicationContractor.html"/>
 		<jsTemplate id="ApplicationDocuments" file="tmpl/ApplicationDocuments.html"/>
 		<jsTemplate id="DocFlowAttachments" file="tmpl/DocFlowAttachments.html"/>
+		<jsTemplate id="DocFlowAttachmentsNoTree" file="tmpl/DocFlowAttachmentsNoTree.html"/>
 		<jsTemplate id="DocFolderAttachments" file="tmpl/DocFolderAttachments.html"/>
 		<jsTemplate id="ApplicationFile" file="tmpl/ApplicationFile.html"/>
 		<jsTemplate id="MailAttachment" file="tmpl/MailAttachment.html"/>
@@ -4222,6 +4359,7 @@
 		<jsScript file="controls/Captcha.js"/>
 		<jsScript file="controls/ViewTemplate.js"/>
 		<jsScript file="controls/ToolTip.js"/>
+		<jsScript file="controls/Cades_View.js"/>
 		<!-- **** Forms *** -->
 		<jsScript file="forms/ViewList_Form.js"/>
 		<jsScript file="forms/MainMenuConstructor_Form.js"/>
@@ -4236,6 +4374,8 @@
 		<jsScript file="forms/ApplicationDialog_Form.js"/>
 		<jsScript file="forms/ApplicationList_Form.js"/>
 		<jsScript file="forms/ApplicationClientList_Form.js"/>
+		<jsScript file="forms/ApplicationCustomerList_Form.js"/>
+		<jsScript file="forms/ApplicationContractorList_Form.js"/>
 		<jsScript file="forms/ContractList_Form.js"/>
 		<jsScript file="forms/ConstructionTypeDialog_Form.js"/>
 		<jsScript file="forms/DocFlowOutDialog_Form.js"/>
@@ -4389,6 +4529,8 @@
 		<jsScript file="views/ShortMessageChat_View.js"/>
 		<jsScript file="views/RepReestrExpertise_View.js"/>
 		<jsScript file="views/RepReestrCostEval_View.js"/>
+		<jsScript file="views/RepReestrContract_View.js"/>
+		<jsScript file="views/RepReestrPay_View.js"/>
 		<jsScript file="tmpl/App.templates.js" compressed="FALSE" standalone="FALSE"/>
 		<jsScript file="custom_controls/App.enums.js"/>
 		<jsScript file="custom_controls/App.predefinedItems.js"/>
@@ -4410,6 +4552,8 @@
 		<jsScript file="custom_controls/ClientEditRef.js"/>
 		<jsScript file="custom_controls/EditRespPerson.js"/>
 		<jsScript file="custom_controls/ApplicationClientEdit.js"/>
+		<jsScript file="custom_controls/ApplicationCustomerEditRef.js"/>
+		<jsScript file="custom_controls/ApplicationContractorEditRef.js"/>
 		<jsScript file="custom_controls/BaseContainer.js"/>
 		<jsScript file="custom_controls/ApplicationClientContainer.js"/>
 		<jsScript file="custom_controls/CompoundObjTechFeatureCont.js"/>
@@ -4462,6 +4606,7 @@
 		<jsScript file="custom_controls/ApplicationTemplateContentTree.js"/>
 		<jsScript file="custom_controls/AccessPermissionGrid.js"/>
 		<jsScript file="custom_controls/PermissionEditRef.js"/>
+		<jsScript file="custom_controls/ExpertNotificationGrid.js"/>
 		<jsScript file="custom_controls/ExpertWorkGrid.js"/>
 		<jsScript file="custom_controls/WorkHoursEdit.js"/>
 		<jsScript file="custom_controls/WorkHourEdit.js"/>
@@ -4479,6 +4624,7 @@
 		<jsScript file="custom_controls/ShortMessageRecipientGrid.js"/>
 		<jsScript file="custom_controls/ContractObjInfBtn.js"/>
 		<jsScript file="custom_controls/ContractObjInfGridCmd.js"/>
+		<jsScript file="custom_controls/DocFlowInAttachZipBtn.js"/>
 		<jsScript file="custom_controls/OfficeBankAccSelect.js"/>
 		<jsScript file="custom_controls/FileSigContainer.js"/>
 		<jsScript file="enum_controls/Enum_role_types.js"/>
@@ -4767,6 +4913,13 @@
 		<jsScript file="models/UserCertificate_Model.js"/>
 		<jsScript file="models/DocFlowFulfilment_Model.js"/>
 		<jsScript file="models/FileSignatures_Model.js"/>
+		<jsScript file="controllers/ExpertNotification_Controller.js"/>
+		<jsScript file="models/ExpertNotification_Model.js"/>
+		<jsScript file="models/RepReestrPay_Model.js"/>
+		<jsScript file="models/ApplicationCustomerList_Model.js"/>
+		<jsScript file="models/ApplicationContractorList_Model.js"/>
+		<jsScript file="models/RepReestrContract_Model.js"/>
+		<jsScript file="models/FileForSigningList_Model.js"/>
 	</jsScripts>
 	<cssScripts>
 		<cssScript file="assets/css/icons/icomoon/styles.css" compressed="TRUE" standalone="TRUE"/>

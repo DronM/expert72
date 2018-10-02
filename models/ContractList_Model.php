@@ -510,6 +510,23 @@ class ContractList_Model extends ModelSQL{
 		$this->addField($f_primary_contract_reg_number);
 		//********************
 		
+		//*** Field experts_for_notification ***
+		$f_opts = array();
+		$f_opts['id']="experts_for_notification";
+				
+		$f_experts_for_notification=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"experts_for_notification",$f_opts);
+		$this->addField($f_experts_for_notification);
+		//********************
+		
+		//*** Field contract_return_date_on_sig ***
+		$f_opts = array();
+		$f_opts['defaultValue']='FALSE';
+		$f_opts['id']="contract_return_date_on_sig";
+				
+		$f_contract_return_date_on_sig=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"contract_return_date_on_sig",$f_opts);
+		$this->addField($f_contract_return_date_on_sig);
+		//********************
+		
 		//*** Field applications_ref ***
 		$f_opts = array();
 		$f_opts['id']="applications_ref";
@@ -572,6 +589,14 @@ class ContractList_Model extends ModelSQL{
 				
 		$f_state_end_date=new FieldSQLDate($this->getDbLink(),$this->getDbName(),$this->getTableName(),"state_end_date",$f_opts);
 		$this->addField($f_state_end_date);
+		//********************
+		
+		//*** Field state_for_color ***
+		$f_opts = array();
+		$f_opts['id']="state_for_color";
+				
+		$f_state_for_color=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"state_for_color",$f_opts);
+		$this->addField($f_state_for_color);
 		//********************
 	
 		$order = new ModelOrderSQL();		

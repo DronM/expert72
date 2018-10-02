@@ -31,7 +31,7 @@
 		$dbLink->query(sprintf("DELETE FROM file_signatures WHERE file_id=%s",$dbFileId));
 		
 		foreach($verif_res->signatures AS $cert_data){
-		
+			$db_employee_id = NULL;		
 			if (isset($cert_data->subject)){
 				$subject_cert = '';
 				foreach($cert_data->subject as $prop_id=>$prop_v){
@@ -41,6 +41,24 @@
 					FieldSQLString::formatForDb($dbLink,$prop_v,$db_prop_v);
 				
 					$subject_cert.= sprintf("'%s',%s",$prop_id,$db_prop_v);
+					
+					if ($prop_id=='СНИЛС'){
+						$db_snils = NULL;
+						FieldSQLString::formatForDb($dbLink,$prop_v,$db_snils);
+					
+						if($db_snils!='null'){
+							$empl_ar = $dbLink->query_first(sprintf(						
+								"SELECT
+									id
+								FROM employees
+								WHERE snils=%s",
+							$db_snils
+							));
+							if(count($empl_ar) && $empl_ar['id']){
+								$db_employee_id = $empl_ar['id'];
+							}
+						}
+					}
 				}
 				$subject_cert = 'jsonb_build_object('.$subject_cert.')';			
 			}
@@ -69,7 +87,7 @@
 		
 			$db_sign_date_time = isset($cert_data->signedDate)? "'".date('Y-m-d H:i:s',$cert_data->signedDate)."'":'NULL';
 			$db_algorithm = isset($cert_data->algorithm)? "'".$cert_data->algorithm."'":'NULL';
-		
+	
 			$user_cert_ar = NULL;
 			if (isset($cert_data->fingerprint)){
 				$db_fingerprint = NULL;
@@ -78,21 +96,24 @@
 				$user_cert_ar = $dbLink->query_first(sprintf(
 					"INSERT INTO user_certificates
 					(fingerprint,
-					  user_id,
+					  employee_id,
 					  date_time,
 					  date_time_from,
 					  date_time_to,
 					  subject_cert,
 					  issuer_cert)
-					VALUES (%s,%d,now(),%s,%s,%s,%s)			
-					ON CONFLICT (fingerprint,user_id) DO UPDATE
-						SET date_time=now()
+					VALUES (%s,%s,now(),%s,%s,%s,%s)			
+					ON CONFLICT (fingerprint,date_time_from) DO UPDATE
+						SET
+							date_time=now(),
+							employee_id=%s
 					RETURNING id",
 					$db_fingerprint,
-					$_SESSION['user_id'],			
+					intval($db_employee_id)? $db_employee_id:'NULL',
 					$db_dateFrom,
 					$db_dateTo,
-					$subject_cert,$issuer_cert
+					$subject_cert,$issuer_cert,
+					intval($db_employee_id)? $db_employee_id:'NULL'
 				));
 			}
 			

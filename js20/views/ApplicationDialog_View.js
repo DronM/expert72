@@ -63,22 +63,7 @@ function ApplicationDialog_View(id,options){
 	options.templateOptions.checkSig = (role_id=="admin"||role_id=="lawyer");
 	
 	//********** cades plugin *******************
-	options.templateOptions.loadCadesPlugin = (!options.readOnly && !window.getApp().getDoNotLoadCadesPlugin());
-	
-	if (options.templateOptions.loadCadesPlugin){
-		var cades = window.getApp().getCadesAPI();		
-		if (cades && !options.readOnly){
-			options.templateOptions.pluginSupBrowser = cades.browserSupported();
-			options.templateOptions.pluginUnsupBrowser = !options.templateOptions.pluginSupBrowser;
-		
-			if (options.templateOptions.pluginSupBrowser){
-				var br = CommonHelper.getBrowser();				
-				options.templateOptions.isFirefox = (br["name"]=="Firefox");
-				options.templateOptions.isOpera = (br["name"]=="Opera" || br["name"]=="Yandex");
-				options.templateOptions.isChrome = (br["name"]=="Chrome");
-			}
-		}
-	}
+	this.m_cadesView = new Cades_View(id,options);
 	//********** cades plugin *******************		
 	
 	var self = this;
@@ -295,7 +280,7 @@ function ApplicationDialog_View(id,options){
 				self.deletePrint("delete_app_print_expertise",fileId,callBack);
 			},
 			"onFileDeleted":function(){
-				self.calcFillPercent();
+				self.afterPrintDeleted();
 			},
 			"onFileAdded":function(){
 				self.calcFillPercent();
@@ -699,33 +684,7 @@ function ApplicationDialog_View(id,options){
 	this.getElement("applicant").getElement("auth_letter_file").getFillPercent = this.m_getAppPrintFillPercent;
 	
 	//********** cades plugin ******************************
-	if (options.templateOptions.loadCadesPlugin){
-		$(".doNotCadesLoadPlugin").click(function(){
-			var checked = $("#doNotCadesLoadPlugin").is(":checked");
-			window.getApp().setDoNotLoadCadesPlugin(checked);
-		});
-		
-		if (cades && !cades.getLoaded()){
-			cades.setOnCertListFilled(function(){
-				self.cadesOnCertListFilled();
-			});
-			cades.setOnLoadSuccess(this.cadesOnLoadSuccess);
-			cades.setOnLoadError(this.cadesOnLoadError);
-		}
-		else if (cades){
-			//already loaded
-			//console.log("Cades loaded")
-			if (cades.getLoadError()){
-				this.cadesOnLoadError();
-			}
-			else{
-				this.cadesOnLoadSuccess();
-				if (cades.getCertListFilled()){
-					this.cadesOnCertListFilled();
-				}
-			}
-		}
-	}
+	this.m_cadesView.afterViewConstructed();
 	//********** cades plugin ******************************
 	
 }
@@ -842,15 +801,23 @@ ApplicationDialog_View.prototype.onGetData = function(resp,cmd){
 		var tab_out = new DocFlowOutClientList_View(this.getId()+":doc_flow_out",{
 			"application":app_ref,
 			"readOnly":(st!="waiting_for_contract"&&st!="waiting_for_pay"&&st!="expertise"),
-			"models":{"DocFlowOutClientList_Model":this.m_DocFlowOutClientList_Model}
+			"models":{"DocFlowOutClientList_Model":this.m_DocFlowOutClientList_Model}			
 		});
 		var dlg_m = new DocFlowOutClientDialog_Model();
 		dlg_m.setFieldValue("applications_ref",app_ref);
-		//dlg_m.setFieldValue("subject","Изменения по заявлению №"+m.getFieldValue("id")+" от "+DateHelper.format(m.getFieldValue("create_dt"),"d/m/Y"));
-		dlg_m.setFieldValue("subject","Ответы на замечания");
+		
+		if (st=="expertise"){
+			dlg_m.setFieldValue("doc_flow_out_client_type","contr_resp");
+			//dlg_m.setFieldValue("subject","Ответы на замечания");
+		}
+		else{
+			dlg_m.setFieldValue("doc_flow_out_client_type","contr_return");
+			//dlg_m.setFieldValue("subject","Возврат подписанных документов");
+		}
 		
 		dlg_m.recInsert();
 		tab_out.getElement("grid").setInsertViewOptions({
+			"fromApp":true,
 			"models":{
 				"DocFlowOutClientDialog_Model": dlg_m
 				,"ApplicationDialog_Model":this.getModel()
@@ -1231,6 +1198,7 @@ ApplicationDialog_View.prototype.deletePrint = function(printMeth,fileId,callBac
 			if (res==WindowQuestion.RES_YES){
 				var pm = self.getController().getPublicMethod(printMeth);
 				pm.setFieldValue("id",self.getElement("id").getValue());
+				pm.setFieldValue("fill_percent",self.getElement("fill_percent").getValue());				
 				pm.run({
 					"ok":callBack
 				});
@@ -1292,6 +1260,7 @@ ApplicationDialog_View.prototype.onSaveOk = function(resp){
 }
 
 //******** CADES ***********************************
+/*
 ApplicationDialog_View.prototype.cadesOnCertListFilled = function(){
 	var id = this.getId();
 	//общая информация
@@ -1320,29 +1289,34 @@ ApplicationDialog_View.prototype.cadesOnLoadError = function(){
 	$(".cadesChecking").remove();		
 	$(".cadesNotInstalled").removeClass("hidden");			
 }
+*/
 ApplicationDialog_View.prototype.getCertBoxControl = function(){
-	return this.m_certBoxControl;
+	return this.m_cadesView.getCertBoxControl();
 }
+
 ApplicationDialog_View.prototype.signPrint = function(printControl,fileId,itemId){
 	
 	var cades = window.getApp().getCadesAPI();
-	if (!cades || !cades.getCertListCount() || !this.m_certBoxControl || !this.m_certBoxControl.getSelectedCert()){
+	if (!cades || !cades.getCertListCount() || !this.getCertBoxControl() || !this.getCertBoxControl().getSelectedCert()){
 		throw new Error("Сертификат для подписи не выбран!");
 	}
 	var files = printControl.getFiles();
 	if (!files || !files.length){
 		throw new Error("Файл с данными не найден!");	
 	}
-	var cert_struc = this.m_certBoxControl.getSelectedCert()	
+	var cert_struc = this.getCertBoxControl().getSelectedCert();
 		
 	var self = this;
 	printControl.sigCont.setWait(true);
+	
+	var const_list = {"cades_verify_after_signing":null};
+	window.getApp().getConstantManager().get(const_list);
 	
 	cades.signFile(
 		files[0],
 		cert_struc.cert,
 		files[0]["name"],
-		true,
+		const_list.cades_verify_after_signing.getValue(),
 		function(signature,verRes){
 			if (!verRes.check_result && verRes.error_str){
 				window.showWarn(verRes.error_str);
@@ -1363,6 +1337,9 @@ ApplicationDialog_View.prototype.signPrint = function(printControl,fileId,itemId
 				}
 			});
 			printControl.sigCont.sigsToDOM();
+			var file_list = printControl.getFileControls();
+			file_list[0].setAttr("file_signed","true");
+			self.calcFillPercent();
 		},
 		function(er){
 			printControl.sigCont.setWait(false);
@@ -1373,4 +1350,13 @@ ApplicationDialog_View.prototype.signPrint = function(printControl,fileId,itemId
 	);
 	
 }
-
+ApplicationDialog_View.prototype.afterPrintDeleted = function(){
+	this.calcFillPercent();
+	var id = this.getElement("id").getValue();
+	if(id){
+		var pm = this.getController().getPublicMethod("update");
+		pm.setFieldValue("old_id",id);
+		pm.setFieldValue("filled_percent",this.getElement("fill_percent").getValue());				
+		pm.run();	
+	}
+}

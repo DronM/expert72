@@ -90,6 +90,7 @@ class ShortMessageRecipientState_Controller extends ControllerSQL{
 		$pm->addParam(new FieldExtInt('id'
 		));
 		
+		
 		$this->addPublicMethod($pm);
 		$this->setObjectModelId('ShortMessageRecipientState_Model');		
 

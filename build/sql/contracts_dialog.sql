@@ -122,7 +122,11 @@ CREATE OR REPLACE VIEW contracts_dialog AS
 						)
 						*/
 						(SELECT
-							string_agg(expert_works.comment_text||'('||person_init(employees.name,FALSE)||to_char(expert_works.date_time,'DD/MM/YY')||')',', ')
+							string_agg(
+								coalesce(expert_works.comment_text,'') ||
+								'(' || person_init(employees.name,FALSE) || to_char(expert_works.date_time,'DD/MM/YY') || ')'
+								,', '
+							)
 						FROM(
 							SELECT
 								expert_works.expert_id,
@@ -138,6 +142,7 @@ CREATE OR REPLACE VIEW contracts_dialog AS
 							AND expert_works.section_id=ew_last.section_id
 						LEFT JOIN employees ON employees.id=expert_works.expert_id	
 						)
+						
 					) AS sec_data
 				FROM expert_sections AS sec
 				WHERE sec.document_type=t.document_type AND construction_type_id=(app.construction_types_ref->'keys'->>'id')::int
@@ -177,7 +182,11 @@ CREATE OR REPLACE VIEW contracts_dialog AS
 		t.cur_estim_cost,
 		t.cur_estim_cost_recommend,
 		
-		t.result_sign_expert_list
+		t.result_sign_expert_list,
+		
+		t.experts_for_notification,
+		
+		t.contract_return_date_on_sig
 		
 	FROM contracts t
 	LEFT JOIN applications_dialog AS app ON app.id=t.application_id

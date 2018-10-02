@@ -24,6 +24,7 @@ DECLARE
 	v_contract_number text;
 	v_doc_flow_subject text;
 	v_contract_employee_id int;
+	v_contract_return_date timestampTZ;
 BEGIN
 	IF (TG_WHEN='BEFORE' AND TG_OP='DELETE') THEN		
 		DELETE FROM doc_flow_out_client_document_files WHERE doc_flow_out_client_id=OLD.id;
@@ -219,24 +220,49 @@ BEGIN
 					employees.user_id IN (SELECT id FROM users WHERE role_id='boss')
 				);
 				
-			ELSIF v_main_expert_id IS NOT NULL AND NEW.doc_flow_out_client_type='contr_resp' THEN
-							
-				--ЕСТЬ Контракт и есть Гл.эксперт и не возврат контракта - напоминание&&email Гл.эксперту 
+			ELSIF NEW.doc_flow_out_client_type='contr_resp' THEN
+				
+				IF v_main_expert_id IS NOT NULL THEN			
+					--напоминание&&email Гл.эксперту 
+					INSERT INTO reminders (register_docs_ref,recipient_employee_id,content,docs_ref)
+					VALUES(
+						applications_ref((SELECT applications
+									FROM applications
+									WHERE id = NEW.application_id
+						)),
+						v_main_expert_id,
+						v_doc_flow_subject,
+						doc_flow_in_ref((SELECT doc_flow_in
+									FROM doc_flow_in
+									WHERE id = v_doc_flow_in_id
+						))					
+					);
+				END IF;
+				
+				--Напоминание всем экспертам из списка
 				INSERT INTO reminders (register_docs_ref,recipient_employee_id,content,docs_ref)
-				VALUES(
+				(SELECT
 					applications_ref((SELECT applications
 								FROM applications
 								WHERE id = NEW.application_id
 					)),
-					v_main_expert_id,
+					(sub.expert_fields->'fields'->'expert'->'keys'->>'id')::int AS expert_id,
 					v_doc_flow_subject,
 					doc_flow_in_ref((SELECT doc_flow_in
 								FROM doc_flow_in
 								WHERE id = v_doc_flow_in_id
 					))					
+					
+				FROM (
+					SELECT jsonb_array_elements(experts_for_notification->'rows') AS expert_fields
+					FROM contracts
+					WHERE contracts.id=v_contract_id
+				) AS sub
+				WHERE (v_main_expert_id IS NULL) OR ((sub.expert_fields->'fields'->'expert'->'keys'->>'id')::int<>v_main_expert_id)
 				);
-				
+								
 			ELSIF NEW.doc_flow_out_client_type='contr_return' THEN	
+			
 				--Мыло отделу приема
 				INSERT INTO mail_for_sending
 				(to_addr,to_name,body,subject,email_type)
@@ -286,11 +312,14 @@ BEGIN
 				END IF;
 				
 				--Отметка даты возврата контракта && смена статуса
+				SELECT doc_flow_contract_ret_date(NEW.id) INTO v_contract_return_date;
+				
 				UPDATE contracts
 				SET
-					contract_return_date = NEW.date_time::date,
-					contract_date = NEW.date_time
-				WHERE id=v_contract_id;
+					contract_return_date = coalesce(v_contract_return_date,NEW.date_time::date),
+					contract_date = coalesce(v_contract_return_date,NEW.date_time),
+					contract_return_date_on_sig = (v_contract_return_date IS NOT NULL)
+				WHERE id=v_contract_id AND coalesce(contract_return_date_on_sig,FALSE)=FALSE;
 				
 				IF v_application_state='waiting_for_contract' THEN
 					INSERT INTO application_processes (

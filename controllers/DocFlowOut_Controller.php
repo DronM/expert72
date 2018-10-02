@@ -225,11 +225,31 @@ class DocFlowOut_Controller extends DocFlow_Controller{
 		$pm->addParam(new FieldExtInt('id'
 		));
 		
+		
 		$this->addPublicMethod($pm);
 		$this->setObjectModelId('DocFlowOutDialog_Model');		
 
 			
 		$pm = new PublicMethod('remove_file');
+		
+				
+	$opts=array();
+	
+		$opts['length']=36;
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtString('file_id',$opts));
+	
+				
+	$opts=array();
+	
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtInt('doc_id',$opts));
+	
+			
+		$this->addPublicMethod($pm);
+
+			
+		$pm = new PublicMethod('remove_sig');
 		
 				
 	$opts=array();
@@ -401,6 +421,19 @@ class DocFlowOut_Controller extends DocFlow_Controller{
 			
 		$this->addPublicMethod($pm);
 
+			
+		$pm = new PublicMethod('get_sig_details');
+		
+				
+	$opts=array();
+	
+		$opts['length']=36;
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtString('id',$opts));
+	
+			
+		$this->addPublicMethod($pm);
+
 		
 	}	
 	
@@ -510,6 +543,10 @@ class DocFlowOut_Controller extends DocFlow_Controller{
 
 	public function remove_file($pm){
 		$this->remove_afile($pm,'out');
+	}
+
+	public function remove_sig($pm){
+		$this->remove_asig($pm,'out');
 	}
 
 	public function delete($pm){
@@ -779,6 +816,59 @@ class DocFlowOut_Controller extends DocFlow_Controller{
 		header('Content-Type: text/plain');
 		echo $hash;
 		return TRUE;
+	}
+
+	public function get_sig_details($pm){
+		if ($_SESSION['role_id']=='client'){
+			//открывает только свои заявления!!!
+			$ar = $this->getDbLink()->query_first(sprintf(
+				"SELECT
+					CASE WHEN af.file_id IS NOT NULL THEN TRUE ELSE FALSE END AS user_check_passed
+				FROM application_document_files AS af
+				LEFT JOIN applications AS a ON a.id=af.application_id
+				WHERE af.file_id=%s AND a.user_id=%d",
+			$this->getExtDbVal($pm,'id'),
+			$_SESSION['user_id']
+			));			
+			if (!count($ar) || $ar['user_check_passed']!='t'){
+				throw new Exception(self::ER_OTHER_USER_APP);
+			}			
+		}
+				
+	
+		$this->addNewModel(
+			Application_Controller::getSigDetailsQuery($this->getExtDbVal($pm,'id')),
+			'FileSignatures_Model'
+		);
+	
+	}
+
+	public function get_object($pm){
+		if (!is_null($pm->getParamValue("id"))){
+			parent::get_object($pm);
+		}
+		else{
+			//new document
+			$this->addNewModel(
+			"SELECT json_agg(fld.files) As files
+			FROM (
+				SELECT
+					json_build_object(
+						'fields',
+						json_build_object(
+							'id',id,
+							'descr',name,
+							'required',false,
+							'require_client_sig',require_client_sig
+						),
+						'files','[]'::json
+					) AS files
+				FROM application_doc_folders
+				ORDER BY name
+			) AS fld",
+			'DocFlowOutDialog_Model'
+			);			
+		}
 	}
 
 

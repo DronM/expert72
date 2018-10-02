@@ -290,6 +290,7 @@ class VariantStorage_Controller extends ControllerSQL{
 		$pm->addParam(new FieldExtText('variant_name'
 		));
 		
+		
 		$this->addPublicMethod($pm);
 		$this->setObjectModelId('VariantStorage_Model');		
 

@@ -82,6 +82,22 @@ class UserProfile_Model extends ModelSQL{
 		$this->addField($f_color_palette);
 		//********************
 		
+		//*** Field cades_load_timeout ***
+		$f_opts = array();
+		$f_opts['id']="cades_load_timeout";
+				
+		$f_cades_load_timeout=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"cades_load_timeout",$f_opts);
+		$this->addField($f_cades_load_timeout);
+		//********************
+		
+		//*** Field cades_chunk_size ***
+		$f_opts = array();
+		$f_opts['id']="cades_chunk_size";
+				
+		$f_cades_chunk_size=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"cades_chunk_size",$f_opts);
+		$this->addField($f_cades_chunk_size);
+		//********************
+		
 		//*** Field reminders_to_email ***
 		$f_opts = array();
 		$f_opts['id']="reminders_to_email";

@@ -109,6 +109,7 @@ class DocFlowInClient_Controller extends ControllerSQL{
 		$pm->addParam(new FieldExtInt('id'
 		));
 		
+		
 		$this->addPublicMethod($pm);
 		$this->setObjectModelId('DocFlowInClientDialog_Model');		
 
@@ -300,6 +301,15 @@ class DocFlowInClient_Controller extends ControllerSQL{
 			$reg_number_out
 			));
 		}
+	}
+	
+	public function get_object($pm){
+		parent::get_object($pm);
+		
+		//extra model
+		$m = new ApplicationDocFolder_Model($this->getDbLink());
+		$m->select();
+		$this->addModel($m);
 	}
 	
 

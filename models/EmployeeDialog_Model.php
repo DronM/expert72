@@ -80,6 +80,15 @@ class EmployeeDialog_Model extends ModelSQL{
 		$this->addField($f_picture_info);
 		//********************
 		
+		//*** Field snils ***
+		$f_opts = array();
+		$f_opts['length']=11;
+		$f_opts['id']="snils";
+				
+		$f_snils=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"snils",$f_opts);
+		$this->addField($f_snils);
+		//********************
+		
 		//*** Field users_ref ***
 		$f_opts = array();
 		$f_opts['id']="users_ref";

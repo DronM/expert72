@@ -20,6 +20,20 @@ function DocFlowInDialog_View(id,options){
 	options.controller = new DocFlowIn_Controller();
 	options.model = options.models.DocFlowInDialog_Model;
 
+	var files = [];
+	var is_admin = (window.getApp().getServVar("role_id")=="admin");
+	this.m_notSent = false;
+	if (options.model && (options.model.getRowIndex()>=0 || options.model.getNextRow()) ){			
+		//options.templateOptions.isNotSent = !options.model.getFieldValue("sent");
+		files = options.model.getFieldValue("files") || [];
+		var st = options.model.getFieldValue("state");
+		if (options.model.getFieldValue("from_doc_flow_out_client_id") || (st && (st=="examining"||st=="acquainting"||st=="fulfilling")) ){
+			this.m_notSent = false;
+		}
+	}
+	options.templateOptions = options.templateOptions || {};
+	options.templateOptions.fileCount = (files.length&&files[0].files&&files[0].files.length)? files[0].files.length:"0";
+console.dir(files)	
 	var self = this;
 	
 	this.m_dataType = "doc_flow_in";
@@ -114,24 +128,11 @@ function DocFlowInDialog_View(id,options){
 			"labelClassName":"control-label "+bs+"4",
 			"labelCaption":"№ отправителя:"
 		}));	
-		
-		
-		var files = [];
-		var is_admin = (window.getApp().getServVar("role_id")=="admin");
-		this.m_notSent = false;
-		if (options.model && (options.model.getRowIndex()>=0 || options.model.getNextRow()) ){			
-			//options.templateOptions.isNotSent = !options.model.getFieldValue("sent");
-			files = options.model.getFieldValue("files") || [];
-			var st = options.model.getFieldValue("state");
-			if (options.model.getFieldValue("from_doc_flow_out_client_id") || (st && (st=="examining"||st=="acquainting"||st=="fulfilling")) ){
-				this.m_notSent = false;
-			}
-		}
-		
+				
 		this.addElement(new FileUploaderDocFlowIn_View(this.getId()+":attachments",{
 			"mainView":this,
 			"items":files,
-			"templateOptions":{"isNotSent": this.m_notSent}
+			"templateOptions":{"isNotSent": this.m_notSent,"downloadZip":!this.m_notSent,"downloadZipId":(id+":downloadZip")}
 			})
 		);
 		
@@ -237,6 +238,15 @@ function DocFlowInDialog_View(id,options){
 			}
 			options.templateOptions.doc_flow_in_processes_chain = chain;
 		}
+		
+		if (!this.m_notSent){
+			this.addElement(new DocFlowInAttachZipBtn(id+":downloadZip",{
+				"getDocId":function(){
+					return self.getElement("id").getValue();
+				}
+			}));	
+		}
+		
 	}
 	
 	//steps
@@ -408,6 +418,10 @@ DocFlowInDialog_View.prototype.onGetData = function(resp){
 		$(".fillClientData").attr("disabled","disabled");
 		$(".uploader-file-add").attr("disabled","disabled");
 		$("a[download_href=true]").removeAttr("disabled");		
+		var zip_b = this.getElement("downloadZip");
+		if (zip_b){
+			zip_b.setEnabled(true);
+		}
 	}
 	else{	
 		//if not sent

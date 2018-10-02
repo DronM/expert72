@@ -1,17 +1,20 @@
 <div id="{{id}}" class="panel-group panel-group-control content-group-lg">
+	<!--
 	<h4> <span id="{{id}}:total_item_files_doc" class="badge badge-danger" title="Количество файлов в разделе">{{#items}}{{files.length}}{{/items}}</span> Вложенные файлы
 	</h4>
+	-->
 	<div>
 		{{#isNotSent}}
 		<div class="alert alert-info alert-styled-left alert-bordered">
 			<div>Поддерживаются следующие форматы: {{#allowedFileExt}}<mark>{{ext}}</mark>{{/allowedFileExt}}</div>
 			<div>Максимальный размер файла для загрузки:<mark>{{maxFileSize}}</mark></div>
-			<div>Добавьте файлы и затем нажмите "загрузить".</div>
 		</div>
 		<div id="upload-container">
 			<div id="{{id}}:file-upload" style="display:inline;" class="btn bg-{{COLOR_CLASS}} uploadBtn" type="button" title="Загрузить на сервер добавленные файлы">Загрузить все файлы  <span id="{{id}}:total_upload_files" class="badge badge-danger" title="Количество файлов для загрузки">0</span></div>
 			{{#attFromTemplate}}
-			<div id="{{id}}:attFromTemplate" style="display:inline;">
+			<div style="display:inline;">
+				<div id="{{id}}:attFromTemplate">
+				</div>
 			</div>
 			{{/attFromTemplate}}
 			{{#order1c}}
@@ -36,22 +39,56 @@
 			</div> 		
 		</div>	
 		{{/isNotSent}}
-		<div class="uploader-file-list-doc" item_id="doc">
-			{{#isNotSent}}
-			
-			<div id="{{id}}:file-add" class="uploader-file-add-doc btn btn-sm" title="Добавить файл">
-				<i class="glyphicon glyphicon-plus"></i>
-				<span class="text-thin">Добавьте файлы кнопкой или перетаскиванием в эту область</span>
-			</div>
-			{{/isNotSent}}
+		<div id="{{id}}:uploader-file-list" class="uploader-file-list-doc" item_id="doc">
+			{{#downloadZip}}
+			<div id="{{downloadZipId}}"></div>
+			{{/downloadZip}}
 
 			<ul id="{{id}}:file-list_doc">
-			{{#items}}
-			{{#files}}
-				<li id="{{id}}:file_{{file_id}}">
-				</li>
-			{{/files}}
-			{{/items}}
+				{{#items}}
+				{{#showItem}}
+				<div id="{{id}}:folder:{{fields.id}}" class="panel-group panel-group-control content-group-sm docFlowFolder">
+					<div class="panel">
+						<div class="panel-heading bg-info">
+							<h6 class="panel-title">
+								<a class="collapsed" data-toggle="collapse" href="#collapsible-control-right-group-doc-{{fields.id}}" aria-expanded="false" class="file_section">
+									<span id="{{id}}:total_item_files_{{fields.id}}" class="badge badge-danger"
+										title="Количество файлов в разделе">{{files.length}}
+									</span>
+									{{#fields.require_client_sig}}
+									<span title="Требуется подписание файлов клиентами">
+										&nbsp;
+										<i class="glyphicon glyphicon-alert">
+										</i>
+										&nbsp;
+									</span>
+									{{/fields.require_client_sig}}
+									{{fields.descr}}
+								</a>
+							</h6>
+						</div>
+						<div id="collapsible-control-right-group-doc-{{fields.id}}" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+							<div class="panel-body">
+								<div class="uploader-file-list-doc" item_id="{{fields.id}}">						
+								{{#isNotSent}}
+									<div class="uploader-file-add uploader-file-add-doc btn btn-sm" title="Добавить файл к данному разделу">
+										<span class="glyphicon glyphicon-plus"/>
+										<span class="text-thin">Файлы можно добавить перетаскиванием в эту область</span>
+									</div>										
+								{{/isNotSent}}
+									<ul id="{{id}}:file-list_{{fields.id}}">
+									{{#files}}
+										<li id="{{id}}:file_{{file_id}}">
+										</li>										
+									{{/files}}
+									</ul>
+								</div>					
+							</div>
+						</div>
+					</div>
+				</div>	
+				{{/showItem}}
+				{{/items}}			
 			</ul>
 		</div>						
 	</div>

@@ -104,6 +104,12 @@ $permissions = array();
 			
 				$permissions['Application_Controller_get_constr_name']=TRUE;
 			
+				$permissions['Application_Controller_get_sig_details']=TRUE;
+			
+				$permissions['Application_Controller_get_customer_list']=TRUE;
+			
+				$permissions['Application_Controller_get_contractor_list']=TRUE;
+			
 				$permissions['Constant_Controller_set_value']=TRUE;
 			
 				$permissions['Constant_Controller_get_list']=TRUE;
@@ -194,11 +200,13 @@ $permissions = array();
 			
 				$permissions['DocFlowOutClient_Controller_remove_file']=TRUE;
 			
-				$permissions['DocFlowOutClient_Controller_remove_contract_file']=TRUE;
+				$permissions['DocFlowOutClient_Controller_remove_document_file']=TRUE;
 			
-				$permissions['DocFlowOutClient_Controller_download_contract_file']=TRUE;
+				$permissions['DocFlowOutClient_Controller_get_files_for_signing']=TRUE;
 			
-				$permissions['DocFlowOutClient_Controller_download_contract_file_sig']=TRUE;
+				$permissions['DocFlowOutClient_Controller_delete_all_attachments']=TRUE;
+			
+				$permissions['DocFlowOutClient_Controller_get_file']=TRUE;
 			
 				$permissions['DocFlowInClient_Controller_update']=TRUE;
 			
@@ -220,6 +228,8 @@ $permissions = array();
 			
 				$permissions['PersonIdPaper_Controller_complete']=TRUE;
 			
+			$permissions['DocFlowOut_Controller_get_sig_details']=TRUE;
+		
 return array_key_exists($contrId.'_'.$methId,$permissions);
 }
 ?>

@@ -122,6 +122,7 @@ class ClientPayment_Controller extends ControllerSQL{
 		$pm->addParam(new FieldExtInt('id'
 		));
 		
+		
 		$this->addPublicMethod($pm);
 		$this->setObjectModelId('ClientPayment_Model');		
 

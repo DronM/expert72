@@ -73,6 +73,13 @@ function UserProfile_View(id,options){
 		}				
 	}));	
 
+	this.addElement(new EditInt(id+":cades_load_timeout",{
+		"labelCaption":"Время загрузки плагина, (мс.)"
+	}));								
+	this.addElement(new EditInt(id+":cades_chunk_size",{
+		"labelCaption":"Размер части файла при подписании, байт"
+	}));								
+
 	this.addElement(new EditCheckBox(id+":reminders_to_email",{
 		"labelCaption":"Дублировать напоминания на электронную почту"
 	}));								
@@ -91,6 +98,8 @@ function UserProfile_View(id,options){
 		new DataBinding({"control":this.getElement("email"),"model":this.m_model}),
 		new DataBinding({"control":this.getElement("phone_cel"),"model":this.m_model}),
 		new DataBinding({"control":this.getElement("color_palette")}),
+		new DataBinding({"control":this.getElement("cades_load_timeout")}),
+		new DataBinding({"control":this.getElement("cades_chunk_size")}),
 		new DataBinding({"control":this.getElement("reminders_to_email")})
 	]);
 	
@@ -104,6 +113,8 @@ function UserProfile_View(id,options){
 		new CommandBinding({"control":this.getElement("phone_cel")}),
 		new CommandBinding({"control":this.getElement("pwd")}),
 		new CommandBinding({"control":this.getElement("color_palette")}),
+		new CommandBinding({"control":this.getElement("cades_load_timeout")}),
+		new CommandBinding({"control":this.getElement("cades_chunk_size")}),
 		new CommandBinding({"control":this.getElement("reminders_to_email")})
 	]);
 	

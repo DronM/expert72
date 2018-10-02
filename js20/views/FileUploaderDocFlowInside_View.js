@@ -18,6 +18,7 @@ function FileUploaderDocFlowInside_View(id,options){
 
 	this.m_mainView = options.mainView;
 	
+	options.uploadOnAdd = true;
 	options.templateOptions = options.templateOptions || {};
 	options.templateOptions.attFromTemplate = true;
 	
@@ -26,7 +27,7 @@ function FileUploaderDocFlowInside_View(id,options){
 	options.filePicClass = "file-pic-doc";	
 	options.fileAddClass = "uploader-file-add-doc";
 	options.fileListClass = "uploader-file-list-doc";
-	options.template = window.getApp().getTemplate("DocFlowAttachments");
+	options.template = window.getApp().getTemplate("DocFlowAttachmentsNoTree");
 	options.fileTemplate = window.getApp().getTemplate("ApplicationFile"); 
 	options.fileTemplateOptions = {
 		"docType":"doc"
@@ -87,24 +88,6 @@ FileUploaderDocFlowInside_View.prototype.upload = function(){
 	FileUploaderDocFlowInside_View.superclass.upload.call(this);
 }
 
-FileUploaderDocFlowInside_View.prototype.deleteFileFromServer = function(fileId,itemId){
-	var self = this;
-	
-	var pm = (new DocFlowInside_Controller()).getPublicMethod("remove_file");
-	pm.setFieldValue("file_id",fileId);
-	pm.setFieldValue("doc_id",this.m_mainView.getElement("id").getValue());
-	pm.run({"ok":function(){
-		window.showNote(self.NT_FILE_DELETED);
-		self.decTotalFileCount();
-		file_cont = self.getElement("file-list_"+itemId);
-		file_cont.delElement("file_"+fileId);
-		file_cont.delElement("file_"+fileId+"_del");
-		file_cont.delElement("file_"+fileId+"_href");		
-		self.decTotalFileCount();
-		self.calcFileTotals(itemId);
-	}});				
-}
-
 FileUploaderDocFlowInside_View.prototype.downloadFile = function(btnCtrl){
 //return;
 	var contr = new DocFlowInside_Controller();
@@ -112,12 +95,13 @@ FileUploaderDocFlowInside_View.prototype.downloadFile = function(btnCtrl){
 	pm.setFieldValue("file_id",btnCtrl.getAttr("file_id"));
 	pm.setFieldValue("doc_id",this.m_mainView.getElement("id").getValue());
 	pm.download();
-	if (btnCtrl.getAttr("file_signed")=="true"){
-		var pm_sig = contr.getPublicMethod("get_file_sig");
-		pm_sig.setFieldValue("file_id",btnCtrl.getAttr("file_id"));
-		pm_sig.setFieldValue("doc_id",this.m_mainView.getElement("id").getValue());
-		pm_sig.download(null,1);
-	}	
+}
+
+FileUploaderDocFlowInside_View.prototype.onSignClick = function(fileId,itemId){
+	var pm_sig = (new DocFlowInside_Controller()).getPublicMethod("get_file_sig");
+	pm_sig.setFieldValue("file_id",fileId);
+	pm_sig.setFieldValue("doc_id",this.m_mainView.getElement("id").getValue());	
+	pm_sig.download();
 }
 
 FileUploaderDocFlowInside_View.prototype.getQuerySruc = function(file){
@@ -125,7 +109,7 @@ FileUploaderDocFlowInside_View.prototype.getQuerySruc = function(file){
 	res.f = "doc_flow_file_upload";
 	res.doc_id = this.m_mainView.getElement("id").getValue();
 	res.doc_type = "inside";
-	res.file_path = "Внутренние";
+	delete res.file_path;
 	
 	/*
 	if (this.m_customFolder){
@@ -155,3 +139,13 @@ FileUploaderDocFlowInside_View.prototype.uploadAll = function(){
 	}
 }
 
+FileUploaderDocFlowInside_View.prototype.onGetSignatureDetails = function(fileId,callBack){
+	FileUploaderDocFlowInside_View.superclass.onGetSignatureDetails.call(this,fileId,callBack,(new DocFlowInside_Controller()));
+}
+FileUploaderDocFlowInside_View.prototype.deleteFileFromServer = function(fileId,itemId){
+	FileUploaderDocFlowInside_View.superclass.deleteFileFromServer.call(this,fileId,itemId,(new DocFlowInside_Controller()));
+}
+
+FileUploaderDocFlowInside_View.prototype.deleteSigFromServer = function(fileId,itemId){
+	FileUploaderDocFlowInside_View.superclass.deleteSigFromServer.call(this,fileId,itemId,new DocFlowInside_Controller());
+}

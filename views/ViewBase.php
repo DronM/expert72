@@ -93,7 +93,7 @@ class ViewBase extends ViewHTMLXSLT {
 		
 			if ($this->dbLink){
 				$contr = new Constant_Controller($this->dbLink);
-				$list = array('doc_per_page_count','grid_refresh_interval','application_check_days','reminder_refresh_interval');
+				$list = array('doc_per_page_count','grid_refresh_interval','application_check_days','reminder_refresh_interval','cades_verify_after_signing','cades_include_certificate','cades_signature_type','cades_hash_algorithm');
 				$models['ConstantValueList_Model'] = $contr->getConstantValueModel($list);						
 			}
 		}	
@@ -1076,6 +1076,7 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/Captcha.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/ViewTemplate.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/ToolTip.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/Cades_View.js'));
 		
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/ViewList_Form.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/MainMenuConstructor_Form.js'));
@@ -1090,6 +1091,8 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/ApplicationDialog_Form.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/ApplicationList_Form.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/ApplicationClientList_Form.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/ApplicationCustomerList_Form.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/ApplicationContractorList_Form.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/ContractList_Form.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/ConstructionTypeDialog_Form.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/DocFlowOutDialog_Form.js'));
@@ -1275,6 +1278,8 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ShortMessageChat_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/RepReestrExpertise_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/RepReestrCostEval_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/RepReestrContract_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/RepReestrPay_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'tmpl/App.templates.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/App.enums.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/App.predefinedItems.js'));
@@ -1296,6 +1301,8 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ClientEditRef.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/EditRespPerson.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ApplicationClientEdit.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ApplicationCustomerEditRef.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ApplicationContractorEditRef.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/BaseContainer.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ApplicationClientContainer.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/CompoundObjTechFeatureCont.js'));
@@ -1348,6 +1355,7 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ApplicationTemplateContentTree.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/AccessPermissionGrid.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/PermissionEditRef.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ExpertNotificationGrid.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ExpertWorkGrid.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/WorkHoursEdit.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/WorkHourEdit.js'));
@@ -1365,6 +1373,7 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ShortMessageRecipientGrid.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ContractObjInfBtn.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ContractObjInfGridCmd.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/DocFlowInAttachZipBtn.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/OfficeBankAccSelect.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/FileSigContainer.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/Enum_role_types.js'));
@@ -1653,6 +1662,13 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/UserCertificate_Model.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowFulfilment_Model.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/FileSignatures_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/ExpertNotification_Controller.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ExpertNotification_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/RepReestrPay_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ApplicationCustomerList_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ApplicationContractorList_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/RepReestrContract_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/FileForSigningList_Model.js'));
 	
 			if (isset($_SESSION['scriptId'])){
 				$script_id = $_SESSION['scriptId'];
@@ -1674,7 +1690,11 @@ class ViewBase extends ViewHTMLXSLT {
 			$this->getVarModel()->addField(new Field('user_name_full',DT_STRING));
 			$this->getVarModel()->addField(new Field('temp_doc_storage',DT_STRING));
 			$this->getVarModel()->addField(new Field('temp_doc_storage_hours',DT_INT));
-			$this->getVarModel()->addField(new Field('color_palette',DT_STRING));				
+			//user attrs
+			$this->getVarModel()->addField(new Field('color_palette',DT_STRING));
+			$this->getVarModel()->addField(new Field('cades_load_timeout',DT_INT));
+			$this->getVarModel()->addField(new Field('cades_chunk_size',DT_INT));
+			
 			if (defined('CUSTOM_APP_UPLOAD_SERVER')){
 				$this->getVarModel()->addField(new Field('custom_app_upload_server',DT_STRING));
 			}
@@ -1707,7 +1727,11 @@ class ViewBase extends ViewHTMLXSLT {
 		if (isset($_SESSION['role_id'])){
 			$this->setVarValue('temp_doc_storage',TEMP_DOC_STORAGE);
 			$this->setVarValue('temp_doc_storage_hours',TEMP_DOC_STORAGE_HOURS);
+			
+			//user
 			$this->setVarValue('color_palette',$_SESSION['color_palette']);
+			$this->setVarValue('cades_load_timeout',$_SESSION['cades_load_timeout']);
+			$this->setVarValue('cades_chunk_size',$_SESSION['cades_chunk_size']);
 		
 			$this->setVarValue('role_id',$_SESSION['role_id']);
 			$this->setVarValue('user_name',$_SESSION['user_name']);

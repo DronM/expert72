@@ -51,6 +51,7 @@ class MailForSending_Controller extends ControllerSQL{
 		$pm->addParam(new FieldExtInt('id'
 		));
 		
+		
 		$this->addPublicMethod($pm);
 		$this->setObjectModelId('MailForSending_Model');		
 

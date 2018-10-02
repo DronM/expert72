@@ -21,6 +21,8 @@ function ExpertWorkGrid(id,options){
 	
 	var self = this;
 	
+	this.m_contractView = options.contractView;
+	
 	CommonHelper.merge(options,{
 		"contClassName":"sectionGrid",
 		"model":model,
@@ -240,3 +242,26 @@ ExpertWorkGrid.prototype.onDeleteFile = function(fileId,callBack){
 	}	
 }
 
+ExpertWorkGrid.prototype.afterServerDelRow = function(){
+	ExpertWorkGrid.superclass.afterServerDelRow.call(this);
+}
+ExpertWorkGrid.prototype.closeEditView = function(res){
+	if (res && res.updated){
+		var self = this;
+		//(new Contract_Controller())
+		var pm = this.m_contractView.getController().getPublicMethod("get_object");
+		pm.setFieldValue("id",this.m_contractView.getElement("id").getValue());
+		pm.setFieldValue("fields","experts_for_notification");
+		pm.run({
+			"ok":function(resp){
+				var m = new ContractDialog_Model({"data":resp.getModelData("ContractDialog_Model")});
+				if (m.getNextRow()){
+					var ctrl = self.m_contractView.getElement("experts_for_notification");
+					ctrl.setInitValue(m.getFieldValue("experts_for_notification"));
+					ctrl.onRefresh();
+				}
+			}
+		});
+	}
+	ExpertWorkGrid.superclass.closeEditView.call(this,res);
+}

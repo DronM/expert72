@@ -146,6 +146,18 @@ extend(User_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	options.alias = "КриптоПро плагин: Время ожидания загрузки плагина";
+	var field = new FieldInt("cades_load_timeout",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	options.alias = "КриптоПро плагин: Размер части файла в байтах при поточной загрузке";
+	var field = new FieldInt("cades_chunk_size",options);
+	
+	pm.addField(field);
+	
 	pm.addField(new FieldInt("ret_id",{}));
 	
 	
@@ -260,6 +272,18 @@ extend(User_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	options.alias = "КриптоПро плагин: Время ожидания загрузки плагина";
+	var field = new FieldInt("cades_load_timeout",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	options.alias = "КриптоПро плагин: Размер части файла в байтах при поточной загрузке";
+	var field = new FieldInt("cades_chunk_size",options);
+	
+	pm.addField(field);
+	
 	
 }
 
@@ -318,6 +342,7 @@ extend(User_Controller,ControllerObjServer);
 	var f_opts = {};
 	f_opts.alias = "Код";	
 	pm.addField(new FieldInt("id",f_opts));
+	
 	pm.addField(new FieldString("mode"));
 }
 

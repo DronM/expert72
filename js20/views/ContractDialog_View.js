@@ -43,14 +43,17 @@ function ContractDialog_View(id,options){
 	
 	options.templateOptions.notExpert = (window.getApp().getServVar("role_id")!="expert");
 	options.templateOptions.expert = !options.templateOptions.notExpert;
+	
+	var employee_main_expert = (options.model.getFieldValue("main_experts_ref").getKey("id")==CommonHelper.unserialize(window.getApp().getServVar("employees_ref")).getKey("id"));
+	var employee_dep_boss = (options.model.getFieldValue("main_departments_ref").getKey("id")==CommonHelper.unserialize(window.getApp().getServVar("departments_ref")).getKey("id")
+			&& window.getApp().getServVar("department_boss")=="1"
+		);
 	options.templateOptions.setAccess = (
 		options.templateOptions.notExpert
 		//Это главный эксперт
-		||options.model.getFieldValue("main_experts_ref").getKey("id")==CommonHelper.unserialize(window.getApp().getServVar("employees_ref")).getKey("id")
+		||employee_main_expert
 		//Это начальник отдела
-		||(options.model.getFieldValue("main_departments_ref").getKey("id")==CommonHelper.unserialize(window.getApp().getServVar("departments_ref")).getKey("id")
-			&& window.getApp().getServVar("department_boss")=="1"
-		)
+		||employee_dep_boss
 	);
 	options.templateOptions.notSetAccess = !options.templateOptions.setAccess;
 
@@ -368,7 +371,8 @@ function ContractDialog_View(id,options){
 		
 			//Вкладка с документами
 			this.addElement(new DocFolder_View(id+":doc_folders",{
-				"items":doc_folders
+				"items":doc_folders,
+				"separateSignature":true
 			}));				
 		}
 		
@@ -392,12 +396,17 @@ function ContractDialog_View(id,options){
 		if (options.templateOptions.setAccess){				
 			//********* permissions grid ***********************
 			this.addElement(new AccessPermissionGrid(id+":permissions",{
-				"enabled":(role=="admin")
+				"enabled":(role=="admin"||employee_main_expert||role_id=="boss"||employee_dep_boss)
 			}));		
 			
 			this.addElement(new EditCheckBox(id+":for_all_employees",{
-				"labelCaption":"Контракт доступен всем:"
-				//"enabled":(role=="admin")
+				"labelCaption":"Контракт доступен всем:",
+				"enabled":(role=="admin"||employee_main_expert||role_id=="lawyer"||role_id=="boss"||employee_dep_boss)
+			}));		
+
+			//********* expert notification grid ***********************
+			this.addElement(new ExpertNotificationGrid(id+":experts_for_notification",{
+				"enabled":(role=="admin"||employee_main_expert||role_id=="boss"||employee_dep_boss)
 			}));		
 			
 		}
@@ -486,14 +495,35 @@ function ContractDialog_View(id,options){
 			"descr":"Контракт №"+options.model.getFieldValue("expertise_result_number")+" от "+DateHelper.format(options.model.getFieldValue("date_time"),"d/m/Y"),
 			"dataType":"contract"
 		});
-		var dlg_m = new DocFlowOutDialog_Model();
+		var pm = (new DocFlowOut_Controller()).getPublicMethod("get_object");
+		pm.setFieldValue("mode","insert");
+		pm.run({
+			"async":false
+		});
+		var dlg_m = pm.getController().getResponse().getModel("DocFlowOutDialog_Model");
+		dlg_m.getNextRow();
+		//var dlg_m = new DocFlowOutDialog_Model();
 		dlg_m.setFieldValue("to_contracts_ref",this_ref);
 		
 		dlg_m.setFieldValue("subject","Замечания по "+this_ref.getDescr());
 		dlg_m.setFieldValue("doc_flow_types_ref", window.getApp().getPredefinedItem("doc_flow_types","contr"));
 		dlg_m.setFieldValue("employees_ref", CommonHelper.unserialize(window.getApp().getServVar("employees_ref")) );
 		dlg_m.setFieldValue("signed_by_employees_ref",null);
-		dlg_m.recInsert();
+		/*
+		var out_fld_ref = window.getApp().getPredefinedItem("application_doc_folders","doc_flow_out");
+		dlg_m.setFieldValue("files",
+			[{
+				"files":[],
+				"fields":{
+					"id":out_fld_ref.getKey(),
+					"descr":out_fld_ref.getDescr(),
+					"required":false,
+					"require_client_sig":false
+				}
+			}]
+		);
+		*/
+		//dlg_m.recInsert();
 		tab_out.getElement("grid").setInsertViewOptions({
 			"models":{
 				"DocFlowOutDialog_Model": dlg_m
@@ -652,6 +682,7 @@ function ContractDialog_View(id,options){
 	if (options.templateOptions.setAccess){
 		read_b.push(new DataBinding({"control":this.getElement("permissions")}));
 		read_b.push(new DataBinding({"control":this.getElement("for_all_employees")}));
+		read_b.push(new DataBinding({"control":this.getElement("experts_for_notification")}));
 	}
 	
 	read_b.push(new DataBinding({"control":this.getElement("primary_contracts_ref")}));
@@ -727,6 +758,7 @@ function ContractDialog_View(id,options){
 		write_b.push(new CommandBinding({"control":this.getElement("main_experts_ref"),"fieldId":"main_expert_id"}));
 		write_b.push(new CommandBinding({"control":this.getElement("permissions"),"fieldId":"permissions"}));
 		write_b.push(new CommandBinding({"control":this.getElement("for_all_employees"),"fieldId":"for_all_employees"}));
+		write_b.push(new CommandBinding({"control":this.getElement("experts_for_notification"),"fieldId":"experts_for_notification"}));
 	}
 	this.setWriteBindings(write_b);
 	
@@ -752,13 +784,16 @@ extend(ContractDialog_View,DocumentDialog_View);//ViewObjectAjx
 
 /* private members */
 ContractDialog_View.prototype.m_grids;
-/*
-ContractDialog_View.prototype.onGetData = function(resp,cmd){
-	ContractDialog_View.superclass.toDOM.onGetData(this,resp,cmd);
 
-	var pm = this.getElement("doc_flow_in_list").getReadPublicMethod();
+ContractDialog_View.prototype.onGetData = function(resp,cmd){
+	ContractDialog_View.superclass.onGetData.call(this,resp,cmd);
+	
+	var m = this.getModel();
+	if (m.getFieldValue("contract_return_date_on_sig")){
+		DOMHelper.show(document.getElementById(this.getId()+":contract_return_date_on_sig"));
+	}
 }
-*/
+
 
 ContractDialog_View.prototype.constrTypeIsNull = function(){	
 	return this.getModel().getField("construction_types_ref").isNull();
@@ -795,7 +830,8 @@ ContractDialog_View.prototype.toDOM = function(p){
 			if (!self.m_grids[grid_id]){
 				self.m_grids[grid_id] = new ExpertWorkGrid(grid_id,{
 					"section_id":sec_id,
-					"contract_id":self.getElement("id").getValue()
+					"contract_id":self.getElement("id").getValue(),
+					"contractView":self
 				});
 				self.m_grids[grid_id].toDOM(cont);
 			}

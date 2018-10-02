@@ -27,6 +27,7 @@ function DocFlowBaseDialog_View(id,options){
 	});	
 		
 	DocFlowBaseDialog_View.superclass.constructor.call(this,id,options);
+	
 }
 extend(DocFlowBaseDialog_View,ViewObjectAjx);
 
@@ -168,5 +169,3 @@ DocFlowBaseDialog_View.prototype.checkDocFlowType = function(){
 	}
 	return tp.getValue().getKey();
 }
-
-

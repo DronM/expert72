@@ -505,6 +505,23 @@ function ContractDialog_Model(options){
 	
 	options.fields.primary_contract_reg_number = new FieldString("primary_contract_reg_number",filed_options);
 	options.fields.primary_contract_reg_number.getValidator().setMaxLength('20');
+		
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.experts_for_notification = new FieldJSONB("experts_for_notification",filed_options);
+		
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	filed_options.defValue = true;
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.contract_return_date_on_sig = new FieldBool("contract_return_date_on_sig",filed_options);
 	
 			
 			
@@ -645,6 +662,7 @@ function ContractDialog_Model(options){
 	options.fields.main_experts_ref = new FieldJSON("main_experts_ref",filed_options);
 	
 			
+			
 				
 	
 	var filed_options = {};
@@ -778,6 +796,7 @@ function ContractDialog_Model(options){
 	
 	options.fields.doc_folders = new FieldJSON("doc_folders",filed_options);
 	
+			
 			
 			
 			

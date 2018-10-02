@@ -50,6 +50,12 @@ extend(ApplicationDocFolder_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	
+	var field = new FieldBool("require_client_sig",options);
+	
+	pm.addField(field);
+	
 	
 }
 
@@ -72,6 +78,12 @@ extend(ApplicationDocFolder_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	
+	var field = new FieldBool("require_client_sig",options);
+	
+	pm.addField(field);
+	
 	
 }
 
@@ -90,6 +102,7 @@ extend(ApplicationDocFolder_Controller,ControllerObjServer);
 	var f_opts = {};
 		
 	pm.addField(new FieldInt("id",f_opts));
+	
 	pm.addField(new FieldString("mode"));
 }
 
@@ -116,7 +129,10 @@ extend(ApplicationDocFolder_Controller,ControllerObjServer);
 	var f_opts = {};
 	
 	pm.addField(new FieldText("name",f_opts));
-	pm.getField(this.PARAM_ORD_FIELDS).setValue("id");
+	var f_opts = {};
+	
+	pm.addField(new FieldBool("require_client_sig",f_opts));
+	pm.getField(this.PARAM_ORD_FIELDS).setValue("name");
 	
 }
 

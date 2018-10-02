@@ -50,6 +50,9 @@ class Employee_Controller extends ControllerSQL{
 		$param = new FieldExtJSON('picture_info'
 				,array());
 		$pm->addParam($param);
+		$param = new FieldExtString('snils'
+				,array());
+		$pm->addParam($param);
 		
 		$pm->addParam(new FieldExtInt('ret_id'));
 		
@@ -97,6 +100,10 @@ class Employee_Controller extends ControllerSQL{
 				,array(
 			));
 			$pm->addParam($param);
+		$param = new FieldExtString('snils'
+				,array(
+			));
+			$pm->addParam($param);
 		
 			$param = new FieldExtInt('id',array(
 			));
@@ -130,6 +137,7 @@ class Employee_Controller extends ControllerSQL{
 		
 		$pm->addParam(new FieldExtInt('id'
 		));
+		
 		
 		$this->addPublicMethod($pm);
 		$this->setObjectModelId('EmployeeDialog_Model');		

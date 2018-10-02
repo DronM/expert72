@@ -111,6 +111,16 @@ class User_Controller extends ControllerSQL{
 				'alias'=>'Дублировать напоминания на электронную почту'
 			));
 		$pm->addParam($param);
+		$param = new FieldExtInt('cades_load_timeout'
+				,array(
+				'alias'=>'КриптоПро плагин: Время ожидания загрузки плагина'
+			));
+		$pm->addParam($param);
+		$param = new FieldExtInt('cades_chunk_size'
+				,array(
+				'alias'=>'КриптоПро плагин: Размер части файла в байтах при поточной загрузке'
+			));
+		$pm->addParam($param);
 		
 		$pm->addParam(new FieldExtInt('ret_id'));
 		
@@ -203,6 +213,18 @@ class User_Controller extends ControllerSQL{
 				'alias'=>'Дублировать напоминания на электронную почту'
 			));
 			$pm->addParam($param);
+		$param = new FieldExtInt('cades_load_timeout'
+				,array(
+			
+				'alias'=>'КриптоПро плагин: Время ожидания загрузки плагина'
+			));
+			$pm->addParam($param);
+		$param = new FieldExtInt('cades_chunk_size'
+				,array(
+			
+				'alias'=>'КриптоПро плагин: Размер части файла в байтах при поточной загрузке'
+			));
+			$pm->addParam($param);
 		
 			$param = new FieldExtInt('id',array(
 			));
@@ -249,6 +271,7 @@ class User_Controller extends ControllerSQL{
 		
 		$pm->addParam(new FieldExtInt('id'
 		));
+		
 		
 		$this->addPublicMethod($pm);
 		$this->setObjectModelId('UserDialog_Model');		
@@ -442,10 +465,7 @@ class User_Controller extends ControllerSQL{
 			)
 		);
 		
-		$color_palette = $pm->getParamValue('color_palette');		
-		if (isset($color_palette)){
-			$_SESSION['color_palette'] = $color_palette;
-		}
+		$this->update_session_vars($pm);
 			
 	}
 	
@@ -483,7 +503,10 @@ class User_Controller extends ControllerSQL{
 		$_SESSION['role_id']		= $ar['role_id'];
 		$_SESSION['locale_id'] 		= $ar['locale_id'];
 		$_SESSION['user_time_locale'] 	= $ar['user_time_locale'];
-		$_SESSION['color_palette'] 	= $ar['color_palette'];				
+		$_SESSION['color_palette'] 	= $ar['color_palette'];
+		$_SESSION['cades_load_timeout'] = $ar['cades_load_timeout'];
+		$_SESSION['cades_chunk_size'] 	= $ar['cades_chunk_size'];
+						
 		if ($ar['role_id']!='client'){
 			$_SESSION['employees_ref'] = $ar['employees_ref'];
 			$_SESSION['departments_ref'] = $ar['departments_ref'];
@@ -1035,10 +1058,7 @@ class User_Controller extends ControllerSQL{
 			$_SESSION['user_name'] = $new_name;
 		}
 		
-		$color_palette = $pm->getParamValue('color_palette');		
-		if (isset($color_palette)){
-			$_SESSION['color_palette'] = $color_palette;
-		}
+		$this->update_session_vars($pm);
 	}
 	
 	public function hide($pm){
@@ -1069,6 +1089,19 @@ class User_Controller extends ControllerSQL{
 			$pref,
 			$this->getExtDbVal($pm,'id')
 		));
+	}
+	
+	private function update_session_vars($pm){
+		$session_vars = ['color_palette','cades_load_timeout','cades_chunk_size'];
+		
+		foreach($session_vars as $id){
+			$val = $pm->getParamValue($id);		
+			if (isset($val)){
+				$_SESSION[$id] = $val;
+			}
+		
+		}
+			
 	}
 	
 

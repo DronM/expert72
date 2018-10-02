@@ -290,6 +290,11 @@ h2 div.btn{
 #ApplicationList\:grid td[state="closed_no_expertise"]{
 	background:#42f4aa;
 }
+/*
+#ContractList\:grid td[state_for_color="no_pay"]{
+	background:#ffb41e;
+}
+*/
 
 .sectionGrid{
 	margin:15px,0px,15px,15px !important;
@@ -386,4 +391,11 @@ table,tr,td.noBorder{
 }
 .doNotCadesLoadPlugin{
 	margin:5px 5px;
+}
+
+#DocFlowOutClientList\:grid td[state="not_sent"]{
+	background:#f4415e;
+}
+#ApplicationDialog\:doc_flow_out\:grid td[state="not_sent"]{
+	background:#f4415e;
 }

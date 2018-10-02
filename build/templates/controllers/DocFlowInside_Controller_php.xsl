@@ -31,9 +31,22 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		$this->remove_afile($pm,'inside');
 	}
 
+	public function remove_sig($pm){
+		$this->remove_asig($pm,'inside');
+	}
+
 	public function delete($pm){
 		$this->delete_attachments($pm,'inside');
 	}
+	
+	public function get_sig_details($pm){
+		$this->addNewModel(
+			Application_Controller::getSigDetailsQuery($this->getExtDbVal($pm,'id')),
+			'FileSignatures_Model'
+		);
+	
+	}
+	
 
 </xsl:template>
 

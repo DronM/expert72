@@ -40,14 +40,6 @@ class UserCertificate_Model extends ModelSQL{
 		$this->addField($f_fingerprint);
 		//********************
 		
-		//*** Field user_id ***
-		$f_opts = array();
-		$f_opts['id']="user_id";
-				
-		$f_user_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"user_id",$f_opts);
-		$this->addField($f_user_id);
-		//********************
-		
 		//*** Field date_time ***
 		$f_opts = array();
 		$f_opts['id']="date_time";
@@ -86,6 +78,14 @@ class UserCertificate_Model extends ModelSQL{
 				
 		$f_issuer_cert=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"issuer_cert",$f_opts);
 		$this->addField($f_issuer_cert);
+		//********************
+		
+		//*** Field employee_id ***
+		$f_opts = array();
+		$f_opts['id']="employee_id";
+				
+		$f_employee_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"employee_id",$f_opts);
+		$this->addField($f_employee_id);
 		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}

@@ -73,6 +73,7 @@ class Constant_Controller extends ControllerSQL{
 		$pm->addParam(new FieldExtString('id'
 		));
 		
+		
 		$this->addPublicMethod($pm);
 		$this->setObjectModelId('ConstantList_Model');		
 

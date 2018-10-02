@@ -125,6 +125,7 @@ class DocFlowInside_Controller extends DocFlow_Controller{
 		$pm->addParam(new FieldExtInt('id'
 		));
 		
+		
 		$this->addPublicMethod($pm);
 		$this->setObjectModelId('DocFlowInsideDialog_Model');		
 
@@ -159,6 +160,25 @@ class DocFlowInside_Controller extends DocFlow_Controller{
 
 			
 		$pm = new PublicMethod('remove_file');
+		
+				
+	$opts=array();
+	
+		$opts['length']=36;
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtString('file_id',$opts));
+	
+				
+	$opts=array();
+	
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtInt('doc_id',$opts));
+	
+			
+		$this->addPublicMethod($pm);
+
+			
+		$pm = new PublicMethod('remove_sig');
 		
 				
 	$opts=array();
@@ -214,6 +234,19 @@ class DocFlowInside_Controller extends DocFlow_Controller{
 			
 		$this->addPublicMethod($pm);
 
+			
+		$pm = new PublicMethod('get_sig_details');
+		
+				
+	$opts=array();
+	
+		$opts['length']=36;
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtString('id',$opts));
+	
+			
+		$this->addPublicMethod($pm);
+
 		
 	}	
 	
@@ -221,9 +254,22 @@ class DocFlowInside_Controller extends DocFlow_Controller{
 		$this->remove_afile($pm,'inside');
 	}
 
+	public function remove_sig($pm){
+		$this->remove_asig($pm,'inside');
+	}
+
 	public function delete($pm){
 		$this->delete_attachments($pm,'inside');
 	}
+	
+	public function get_sig_details($pm){
+		$this->addNewModel(
+			Application_Controller::getSigDetailsQuery($this->getExtDbVal($pm,'id')),
+			'FileSignatures_Model'
+		);
+	
+	}
+	
 
 
 }

@@ -31,9 +31,10 @@ function DocFlowOutClient_Controller(options){
 	this.addGetList();
 	this.add_get_application_dialog();
 	this.add_remove_file();
-	this.add_remove_contract_file();
-	this.add_download_contract_file();
-	this.add_download_contract_file_sig();
+	this.add_remove_document_file();
+	this.add_get_files_for_signing();
+	this.add_delete_all_attachments();
+	this.add_get_file();
 		
 }
 extend(DocFlowOutClient_Controller,ControllerObjServer);
@@ -42,10 +43,6 @@ extend(DocFlowOutClient_Controller,ControllerObjServer);
 	DocFlowOutClient_Controller.superclass.addInsert.call(this);
 	
 	var pm = this.getInsert();
-	
-	pm.setRequestType('post');
-	
-	pm.setEncType(ServConnector.prototype.ENCTYPES.MULTIPART);
 	
 	var options = {};
 	options.primaryKey = true;options.autoInc = true;
@@ -103,16 +100,12 @@ extend(DocFlowOutClient_Controller,ControllerObjServer);
 	
 	var options = {};
 		
-	options.enumValues = 'app,contr_resp,contr_return,contr_other';
+	options.enumValues = 'app,contr_resp,contr_return,contr_other,date_prolongate';
 	var field = new FieldEnum("doc_flow_out_client_type",options);
 	
 	pm.addField(field);
 	
 	pm.addField(new FieldInt("ret_id",{}));
-	
-		var options = {};
-				
-		pm.addField(new FieldText("contract_files",options));
 	
 	
 }
@@ -120,10 +113,6 @@ extend(DocFlowOutClient_Controller,ControllerObjServer);
 			DocFlowOutClient_Controller.prototype.addUpdate = function(){
 	DocFlowOutClient_Controller.superclass.addUpdate.call(this);
 	var pm = this.getUpdate();
-	
-	pm.setRequestType('post');
-	
-	pm.setEncType(ServConnector.prototype.ENCTYPES.MULTIPART);
 	
 	var options = {};
 	options.primaryKey = true;options.autoInc = true;
@@ -184,15 +173,11 @@ extend(DocFlowOutClient_Controller,ControllerObjServer);
 	
 	var options = {};
 		
-	options.enumValues = 'app,contr_resp,contr_return,contr_other';
+	options.enumValues = 'app,contr_resp,contr_return,contr_other,date_prolongate';
 	
 	var field = new FieldEnum("doc_flow_out_client_type",options);
 	
 	pm.addField(field);
-	
-		var options = {};
-				
-		pm.addField(new FieldText("contract_files",options));
 	
 	
 }
@@ -212,6 +197,7 @@ extend(DocFlowOutClient_Controller,ControllerObjServer);
 	var f_opts = {};
 		
 	pm.addField(new FieldInt("id",f_opts));
+	
 	pm.addField(new FieldString("mode"));
 }
 
@@ -312,17 +298,9 @@ extend(DocFlowOutClient_Controller,ControllerObjServer);
 	this.addPublicMethod(pm);
 }
 
-			DocFlowOutClient_Controller.prototype.add_remove_contract_file = function(){
+			DocFlowOutClient_Controller.prototype.add_remove_document_file = function(){
 	var opts = {"controller":this};	
-	var pm = new PublicMethodServer('remove_contract_file',opts);
-	
-				
-	
-	var options = {};
-	
-		options.required = true;
-	
-		pm.addField(new FieldInt("id",options));
+	var pm = new PublicMethodServer('remove_document_file',opts);
 	
 				
 	
@@ -333,14 +311,22 @@ extend(DocFlowOutClient_Controller,ControllerObjServer);
 		options.maxlength = "36";
 	
 		pm.addField(new FieldString("file_id",options));
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("doc_flow_out_client_id",options));
 	
 			
 	this.addPublicMethod(pm);
 }
 
-			DocFlowOutClient_Controller.prototype.add_download_contract_file = function(){
+			DocFlowOutClient_Controller.prototype.add_get_files_for_signing = function(){
 	var opts = {"controller":this};	
-	var pm = new PublicMethodServer('download_contract_file',opts);
+	var pm = new PublicMethodServer('get_files_for_signing',opts);
 	
 				
 	
@@ -348,25 +334,15 @@ extend(DocFlowOutClient_Controller,ControllerObjServer);
 	
 		options.required = true;
 	
-		pm.addField(new FieldInt("id",options));
-	
-				
-	
-	var options = {};
-	
-		options.required = true;
-	
-		options.maxlength = "36";
-	
-		pm.addField(new FieldString("file_id",options));
+		pm.addField(new FieldInt("application_id",options));
 	
 			
 	this.addPublicMethod(pm);
 }
 
-			DocFlowOutClient_Controller.prototype.add_download_contract_file_sig = function(){
+			DocFlowOutClient_Controller.prototype.add_delete_all_attachments = function(){
 	var opts = {"controller":this};	
-	var pm = new PublicMethodServer('download_contract_file_sig',opts);
+	var pm = new PublicMethodServer('delete_all_attachments',opts);
 	
 				
 	
@@ -375,6 +351,14 @@ extend(DocFlowOutClient_Controller,ControllerObjServer);
 		options.required = true;
 	
 		pm.addField(new FieldInt("id",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			DocFlowOutClient_Controller.prototype.add_get_file = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('get_file',opts);
 	
 				
 	
@@ -385,6 +369,14 @@ extend(DocFlowOutClient_Controller,ControllerObjServer);
 		options.maxlength = "36";
 	
 		pm.addField(new FieldString("file_id",options));
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("doc_id",options));
 	
 			
 	this.addPublicMethod(pm);

@@ -57,6 +57,9 @@ function Application_Controller(options){
 	this.add_delete_auth_letter_file();
 	this.add_all_sig_report();
 	this.add_get_constr_name();
+	this.add_get_sig_details();
+	this.add_get_customer_list();
+	this.add_get_contractor_list();
 		
 }
 extend(Application_Controller,ControllerObjServer);
@@ -587,6 +590,7 @@ extend(Application_Controller,ControllerObjServer);
 	var f_opts = {};
 		
 	pm.addField(new FieldInt("id",f_opts));
+	
 	pm.addField(new FieldString("mode"));
 }
 
@@ -933,6 +937,14 @@ extend(Application_Controller,ControllerObjServer);
 	
 		pm.addField(new FieldInt("id",options));
 	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("fill_percent",options));
+	
 			
 	this.addPublicMethod(pm);
 }
@@ -980,6 +992,14 @@ extend(Application_Controller,ControllerObjServer);
 		options.required = true;
 	
 		pm.addField(new FieldInt("id",options));
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("fill_percent",options));
 	
 			
 	this.addPublicMethod(pm);
@@ -1029,6 +1049,14 @@ extend(Application_Controller,ControllerObjServer);
 	
 		pm.addField(new FieldInt("id",options));
 	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("fill_percent",options));
+	
 			
 	this.addPublicMethod(pm);
 }
@@ -1076,6 +1104,14 @@ extend(Application_Controller,ControllerObjServer);
 		options.required = true;
 	
 		pm.addField(new FieldInt("id",options));
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("fill_percent",options));
 	
 			
 	this.addPublicMethod(pm);
@@ -1188,6 +1224,100 @@ extend(Application_Controller,ControllerObjServer);
 		options.required = true;
 	
 		pm.addField(new FieldInt("id",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			Application_Controller.prototype.add_get_sig_details = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('get_sig_details',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		options.maxlength = "36";
+	
+		pm.addField(new FieldString("id",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			Application_Controller.prototype.add_get_customer_list = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('get_customer_list',opts);
+	
+				
+	
+	var options = {};
+	
+		pm.addField(new FieldString("pattern",options));
+	
+				
+	
+	var options = {};
+	
+		pm.addField(new FieldInt("count",options));
+	
+				
+	
+	var options = {};
+	
+		pm.addField(new FieldInt("ic",options));
+	
+				
+	
+	var options = {};
+	
+		pm.addField(new FieldInt("mid",options));
+	
+				
+	
+	var options = {};
+	
+		pm.addField(new FieldString("name",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			Application_Controller.prototype.add_get_contractor_list = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('get_contractor_list',opts);
+	
+				
+	
+	var options = {};
+	
+		pm.addField(new FieldString("pattern",options));
+	
+				
+	
+	var options = {};
+	
+		pm.addField(new FieldInt("count",options));
+	
+				
+	
+	var options = {};
+	
+		pm.addField(new FieldInt("ic",options));
+	
+				
+	
+	var options = {};
+	
+		pm.addField(new FieldInt("mid",options));
+	
+				
+	
+	var options = {};
+	
+		pm.addField(new FieldString("name",options));
 	
 			
 	this.addPublicMethod(pm);

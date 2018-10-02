@@ -32,6 +32,7 @@ extend(About_Controller,ControllerObjServer);
 	About_Controller.superclass.addGetObject.call(this);
 	
 	var pm = this.getGetObject();
+	
 	pm.addField(new FieldString("mode"));
 }
 
