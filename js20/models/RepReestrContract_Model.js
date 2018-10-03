@@ -47,7 +47,7 @@ function RepReestrContract_Model(options){
 	filed_options.alias = 'Дата пост.';
 	filed_options.autoInc = false;	
 	
-	options.fields.date = new FieldString("date",filed_options);
+	options.fields.date = new FieldDate("date",filed_options);
 	
 				
 	
@@ -92,7 +92,7 @@ function RepReestrContract_Model(options){
 	filed_options.alias = 'Стоимость работ бюджет';
 	filed_options.autoInc = false;	
 	
-	options.fields.expertise_cost_budget = new FieldString("expertise_cost_budget",filed_options);
+	options.fields.expertise_cost_budget = new FieldFloat("expertise_cost_budget",filed_options);
 	
 				
 	
@@ -101,7 +101,7 @@ function RepReestrContract_Model(options){
 	filed_options.alias = 'Стоимость работ собств.ср-ва';
 	filed_options.autoInc = false;	
 	
-	options.fields.expertise_cost_self_fund = new FieldString("expertise_cost_self_fund",filed_options);
+	options.fields.expertise_cost_self_fund = new FieldFloat("expertise_cost_self_fund",filed_options);
 	
 				
 	
@@ -119,7 +119,7 @@ function RepReestrContract_Model(options){
 	filed_options.alias = 'Сумма оплаты';
 	filed_options.autoInc = false;	
 	
-	options.fields.pay_total = new FieldString("pay_total",filed_options);
+	options.fields.pay_total = new FieldFloat("pay_total",filed_options);
 	
 				
 	
@@ -128,7 +128,7 @@ function RepReestrContract_Model(options){
 	filed_options.alias = 'Дата нач.работ';
 	filed_options.autoInc = false;	
 	
-	options.fields.work_start_date = new FieldString("work_start_date",filed_options);
+	options.fields.work_start_date = new FieldDate("work_start_date",filed_options);
 	
 				
 	
@@ -146,7 +146,7 @@ function RepReestrContract_Model(options){
 	filed_options.alias = 'Дата положит.заключ.';
 	filed_options.autoInc = false;	
 	
-	options.fields.expertise_result_date_positive = new FieldString("expertise_result_date_positive",filed_options);
+	options.fields.expertise_result_date_positive = new FieldDate("expertise_result_date_positive",filed_options);
 	
 				
 	
@@ -155,7 +155,7 @@ function RepReestrContract_Model(options){
 	filed_options.alias = 'Дата на доработку';
 	filed_options.autoInc = false;	
 	
-	options.fields.aaa = new FieldString("aaa",filed_options);
+	options.fields.back_to_work_date = new FieldDate("back_to_work_date",filed_options);
 	
 				
 	

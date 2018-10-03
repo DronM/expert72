@@ -8,6 +8,8 @@
 
 require_once(FRAME_WORK_PATH.'basic_classes/ModelReportSQL.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLString.php');
+require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLFloat.php');
+require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLDate.php');
  
 class RepReestrContract_Model extends ModelReportSQL{
 	
@@ -44,7 +46,7 @@ class RepReestrContract_Model extends ModelReportSQL{
 		$f_opts['alias']='Дата пост.';
 		$f_opts['id']="date";
 				
-		$f_date=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"date",$f_opts);
+		$f_date=new FieldSQLDate($this->getDbLink(),$this->getDbName(),$this->getTableName(),"date",$f_opts);
 		$this->addField($f_date);
 		//********************
 		
@@ -94,7 +96,7 @@ class RepReestrContract_Model extends ModelReportSQL{
 		$f_opts['alias']='Стоимость работ бюджет';
 		$f_opts['id']="expertise_cost_budget";
 				
-		$f_expertise_cost_budget=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expertise_cost_budget",$f_opts);
+		$f_expertise_cost_budget=new FieldSQLFloat($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expertise_cost_budget",$f_opts);
 		$this->addField($f_expertise_cost_budget);
 		//********************
 		
@@ -104,7 +106,7 @@ class RepReestrContract_Model extends ModelReportSQL{
 		$f_opts['alias']='Стоимость работ собств.ср-ва';
 		$f_opts['id']="expertise_cost_self_fund";
 				
-		$f_expertise_cost_self_fund=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expertise_cost_self_fund",$f_opts);
+		$f_expertise_cost_self_fund=new FieldSQLFloat($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expertise_cost_self_fund",$f_opts);
 		$this->addField($f_expertise_cost_self_fund);
 		//********************
 		
@@ -124,7 +126,7 @@ class RepReestrContract_Model extends ModelReportSQL{
 		$f_opts['alias']='Сумма оплаты';
 		$f_opts['id']="pay_total";
 				
-		$f_pay_total=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"pay_total",$f_opts);
+		$f_pay_total=new FieldSQLFloat($this->getDbLink(),$this->getDbName(),$this->getTableName(),"pay_total",$f_opts);
 		$this->addField($f_pay_total);
 		//********************
 		
@@ -134,7 +136,7 @@ class RepReestrContract_Model extends ModelReportSQL{
 		$f_opts['alias']='Дата нач.работ';
 		$f_opts['id']="work_start_date";
 				
-		$f_work_start_date=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"work_start_date",$f_opts);
+		$f_work_start_date=new FieldSQLDate($this->getDbLink(),$this->getDbName(),$this->getTableName(),"work_start_date",$f_opts);
 		$this->addField($f_work_start_date);
 		//********************
 		
@@ -154,18 +156,18 @@ class RepReestrContract_Model extends ModelReportSQL{
 		$f_opts['alias']='Дата положит.заключ.';
 		$f_opts['id']="expertise_result_date_positive";
 				
-		$f_expertise_result_date_positive=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expertise_result_date_positive",$f_opts);
+		$f_expertise_result_date_positive=new FieldSQLDate($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expertise_result_date_positive",$f_opts);
 		$this->addField($f_expertise_result_date_positive);
 		//********************
 		
-		//*** Field aaa ***
+		//*** Field back_to_work_date ***
 		$f_opts = array();
 		
 		$f_opts['alias']='Дата на доработку';
-		$f_opts['id']="aaa";
+		$f_opts['id']="back_to_work_date";
 				
-		$f_aaa=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"aaa",$f_opts);
-		$this->addField($f_aaa);
+		$f_back_to_work_date=new FieldSQLDate($this->getDbLink(),$this->getDbName(),$this->getTableName(),"back_to_work_date",$f_opts);
+		$this->addField($f_back_to_work_date);
 		//********************
 		
 		//*** Field akt_number_date ***

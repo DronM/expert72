@@ -555,55 +555,6 @@ ALTER TABLE users ADD COLUMN cades_load_timeout int
 		;
 		ALTER VIEW const_cades_hash_algorithm_view OWNER TO expert72;
 
-		ALTER VIEW const_cades_signature_type_view OWNER TO expert72;
-		--constant value table
-		CREATE TABLE IF NOT EXISTS const_cades_hash_algorithm
-		(name text, descr text, val int,
-			val_type text,ctrl_class text,ctrl_options json, view_class text,view_options json);
-		ALTER TABLE const_cades_hash_algorithm OWNER TO expert72;
-		INSERT INTO const_cades_hash_algorithm (name,descr,val,val_type,ctrl_class,ctrl_options,view_class,view_options) VALUES (
-			'КриптоПро плагин: Алгоритм хэширования'
-			,'100 - Алгоритм ГОСТ Р 34.11-94, 101 - Алгоритм ГОСТ Р 34.10-2012 256 бит, 102 - Алгоритм ГОСТ Р 34.10-2012 512 бит'
-			,100
-			,'Int'
-			,NULL
-			,NULL
-			,NULL
-			,NULL
-		);
-		--constant get value
-		CREATE OR REPLACE FUNCTION const_cades_hash_algorithm_val()
-		RETURNS int AS
-		$BODY$
-			SELECT val::int AS val FROM const_cades_hash_algorithm LIMIT 1;
-		$BODY$
-		LANGUAGE sql STABLE COST 100;
-		ALTER FUNCTION const_cades_hash_algorithm_val() OWNER TO expert72;
-		--constant set value
-		CREATE OR REPLACE FUNCTION const_cades_hash_algorithm_set_val(Int)
-		RETURNS void AS
-		$BODY$
-			UPDATE const_cades_hash_algorithm SET val=$1;
-		$BODY$
-		LANGUAGE sql VOLATILE COST 100;
-		ALTER FUNCTION const_cades_hash_algorithm_set_val(Int) OWNER TO expert72;
-		--edit view: all keys and descr
-		CREATE OR REPLACE VIEW const_cades_hash_algorithm_view AS
-		SELECT
-			'cades_hash_algorithm'::text AS id
-			,t.name
-			,t.descr
-		,
-		t.val::text AS val
-		,t.val_type::text AS val_type
-		,t.ctrl_class::text
-		,t.ctrl_options::json
-		,t.view_class::text
-		,t.view_options::json
-		FROM const_cades_hash_algorithm AS t
-		;
-		ALTER VIEW const_cades_hash_algorithm_view OWNER TO expert72;
-
 
 -- VIEW: user_view
 
@@ -678,6 +629,30 @@ ALTER FUNCTION public.contracts_ref(contracts)
   OWNER TO expert72;
   
 
+		INSERT INTO views
+		(id,c,f,t,section,descr,limited)
+		VALUES (
+		'30002',
+		'Contract_Controller',
+		NULL,
+		'RepReestrPay',
+		'Отчеты',
+		'Реестр оплат',
+		FALSE
+		);
+
+		INSERT INTO views
+		(id,c,f,t,section,descr,limited)
+		VALUES (
+		'30003',
+		'Contract_Controller',
+		NULL,
+		'RepReestrContract',
+		'Отчеты',
+		'Реестр контрактов (выборка)',
+		FALSE
+		);
+	
 
 --****************************************
 doc_flow_out_dialog
@@ -689,6 +664,8 @@ contracts_dialog()
 doc_flow_out_dialog()
 applications_dialog()
 doc_flow_contract_ret_date(in_doc_flow_out_client_id int)
+doc_flow_out_client_files_for_signing()
+expert_works_process()
 
 1;"Договорные документы/Контракт";TRUE
 2;"Заключение";FALSE
@@ -699,4 +676,9 @@ doc_flow_contract_ret_date(in_doc_flow_out_client_id int)
 --****************************************
 
 
+АСИНХРОННОЕ АПИ CadePlugin!!!!
+pki константы в Config.php
+bcmod!!!
+sudo apt-get install php7.0-bcmath
+sudo service apache2 restart
 

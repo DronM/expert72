@@ -15,6 +15,13 @@
 <!-- Head -->
 <xsl:template match="model[@id='Head_Model']">
 	<h3>Реестр выданных заключений по государственной экспертизе <xsl:value-of select="row/period_descr"/></h3>
+	<div>
+	<xsl:choose>
+	<xsl:when test="row/expertise_result='positive'">Только положительные заключения</xsl:when>
+	<xsl:when test="row/expertise_result='negative'">Только отрицательные заключения</xsl:when>
+	<xsl:otherwise test="row/expertise_result='negative'">Все заключения</xsl:otherwise>	
+	</xsl:choose>
+	</div>
 </xsl:template>
 
 </xsl:stylesheet>

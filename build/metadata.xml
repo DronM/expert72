@@ -2,7 +2,7 @@
 <metadata owner="expert72">
 	<versions>
 		<version dateOpen="2017-09-27 12:09:48" dateClose="2017-12-08 10:12:08">1.001 
-		<lastBuild>2018-10-02 07:16:44</lastBuild></version>
+		<lastBuild>2018-10-03 11:26:03</lastBuild></version>
 		<version dateOpen="2017-12-08 11:12:01" dateClose="2017-12-08 11:12:04">1.002</version>
 		<version dateOpen="2017-12-08 11:12:20" dateClose="2017-12-08 11:12:20">1.0.3</version>
 		<version dateOpen="2017-12-12 11:12:07" dateClose="2017-12-12 11:12:07">1.0.4</version>
@@ -75,6 +75,7 @@
 		<version dateOpen="2018-08-03 05:08:34" dateClose="2018-08-07 06:08:03">1.0.72</version>
 		<version dateOpen="2018-08-07 09:08:25" dateClose="2018-09-03 14:09:33">1.0.73</version>
 		<version dateOpen="2018-10-02 12:10:04" dateClose="2018-10-02 12:10:09">1.0.74</version>
+		<version dateOpen="2018-10-03 08:10:31" dateClose="2018-10-03 11:10:26">1.0.75</version>
 	</versions>
 	<globalFilters>
 		<field id="user_id"/>
@@ -2641,9 +2642,9 @@
 			<field id="exeprtise_type" dataType="String" alias="&#x412;&#x438;&#x434; &#x44D;&#x43A;&#x441;&#x43F;&#x435;&#x440;&#x442;&#x438;&#x437;&#x44B;"/>
 			<field id="reg_number" dataType="String" alias="&#x2116; &#x44D;&#x43A;&#x441;&#x43F;&#x435;&#x440;&#x442;&#x43D;&#x43E;&#x433;&#x43E; &#x437;&#x430;&#x43A;&#x43B;&#x44E;&#x447;&#x435;&#x43D;&#x438;&#x44F;"/>
 			<field id="expertise_result_date" dataType="String" alias="&#x414;&#x430;&#x442;&#x430; &#x437;&#x430;&#x43A;&#x43B;&#x44E;&#x447;&#x435;&#x43D;&#x438;&#x44F;"/>
-			<field id="date_time" dataType="String" alias="&#x414;&#x430;&#x442;&#x430; &#x43F;&#x440;&#x435;&#x434;&#x43E;&#x441;&#x442;&#x430;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x44F; &#x434;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x43E;&#x432;"/>
-			<field id="pay_date" dataType="String" alias="&#x414;&#x430;&#x442;&#x430; &#x432;&#x43D;&#x435;&#x441;&#x435;&#x43D;&#x438;&#x44F; &#x43F;&#x43B;&#x430;&#x442;&#x44B;"/>
-			<field id="expertise_result_ret_date" dataType="String" alias="&#x414;&#x430;&#x442;&#x430; &#x432;&#x440;&#x443;&#x447;&#x435;&#x43D;&#x438;&#x44F; &#x437;&#x430;&#x43A;&#x43B;&#x44E;&#x447;&#x435;&#x43D;&#x438;&#x44F;"/>
+			<field id="date_time" dataType="Date" alias="&#x414;&#x430;&#x442;&#x430; &#x43F;&#x440;&#x435;&#x434;&#x43E;&#x441;&#x442;&#x430;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x44F; &#x434;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x43E;&#x432;"/>
+			<field id="pay_date" dataType="Date" alias="&#x414;&#x430;&#x442;&#x430; &#x432;&#x43D;&#x435;&#x441;&#x435;&#x43D;&#x438;&#x44F; &#x43F;&#x43B;&#x430;&#x442;&#x44B;"/>
+			<field id="expertise_result_ret_date" dataType="Date" alias="&#x414;&#x430;&#x442;&#x430; &#x432;&#x440;&#x443;&#x447;&#x435;&#x43D;&#x438;&#x44F; &#x437;&#x430;&#x43A;&#x43B;&#x44E;&#x447;&#x435;&#x43D;&#x438;&#x44F;"/>
 		</model>
 		<model id="RepReestrCostEval" parent="ModelReportSQL" virtual="TRUE" server="TRUE">
 			<field id="ord" dataType="String" alias="&#x2116;"/>
@@ -2663,29 +2664,29 @@
 			<field id="customer" dataType="String" alias="&#x417;&#x430;&#x43A;&#x430;&#x437;&#x447;&#x438;&#x43A;"/>
 			<field id="constr_name" dataType="String" alias="&#x41E;&#x431;&#x44A;&#x435;&#x43A;&#x442; &#x441;&#x442;&#x440;&#x43E;&#x438;&#x442;&#x435;&#x43B;&#x44C;&#x441;&#x442;&#x432;&#x430;"/>
 			<field id="contract_number" dataType="String" alias="&#x41D;&#x43E;&#x43C;&#x435;&#x440; &#x43A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x430;"/>
-			<field id="work_start_date" dataType="String" alias="&#x414;&#x430;&#x442;&#x430; &#x43D;&#x430;&#x447;.&#x440;&#x430;&#x431;&#x43E;&#x442;"/>
-			<field id="expertise_cost_budget" dataType="String" alias="&#x421;&#x442;&#x43E;&#x438;&#x43C;&#x43E;&#x441;&#x442;&#x44C; &#x440;&#x430;&#x431;&#x43E;&#x442; &#x431;&#x44E;&#x434;&#x436;&#x435;&#x442;"/>
-			<field id="expertise_cost_self_fund" dataType="String" alias="&#x421;&#x442;&#x43E;&#x438;&#x43C;&#x43E;&#x441;&#x442;&#x44C; &#x440;&#x430;&#x431;&#x43E;&#x442; &#x441;&#x43E;&#x431;&#x441;&#x442;&#x432;.&#x441;&#x440;-&#x432;&#x430;"/>
-			<field id="total" dataType="String" alias="&#x421;&#x443;&#x43C;&#x43C;&#x430; &#x43E;&#x43F;&#x43B;&#x430;&#x442;&#x44B;"/>
+			<field id="work_start_date" dataType="Date" alias="&#x414;&#x430;&#x442;&#x430; &#x43D;&#x430;&#x447;.&#x440;&#x430;&#x431;&#x43E;&#x442;"/>
+			<field id="expertise_cost_budget" dataType="Float" alias="&#x421;&#x442;&#x43E;&#x438;&#x43C;&#x43E;&#x441;&#x442;&#x44C; &#x440;&#x430;&#x431;&#x43E;&#x442; &#x431;&#x44E;&#x434;&#x436;&#x435;&#x442;"/>
+			<field id="expertise_cost_self_fund" dataType="Float" alias="&#x421;&#x442;&#x43E;&#x438;&#x43C;&#x43E;&#x441;&#x442;&#x44C; &#x440;&#x430;&#x431;&#x43E;&#x442; &#x441;&#x43E;&#x431;&#x441;&#x442;&#x432;.&#x441;&#x440;-&#x432;&#x430;"/>
+			<field id="total" dataType="Float" alias="&#x421;&#x443;&#x43C;&#x43C;&#x430; &#x43E;&#x43F;&#x43B;&#x430;&#x442;&#x44B;"/>
 			<field id="pay_docum_number" dataType="String" alias="&#x41D;&#x43E;&#x43C;&#x435;&#x440; &#x43F;/&#x43F;"/>
-			<field id="pay_docum_date" dataType="String" alias="&#x414;&#x430;&#x442;&#x430; &#x43F;/&#x43F;"/>
+			<field id="pay_docum_date" dataType="Date" alias="&#x414;&#x430;&#x442;&#x430; &#x43F;/&#x43F;"/>
 		</model>
 		<model id="RepReestrContract" parent="ModelReportSQL" virtual="TRUE" server="TRUE">
 			<field id="ord" dataType="String" alias="&#x2116;"/>
 			<field id="expertise_result_number" dataType="String" alias="&#x2116; &#x44D;&#x43A;&#x441;&#x43F;.&#x437;&#x430;&#x43A;&#x43B;&#x44E;&#x447;."/>
-			<field id="date" dataType="String" alias="&#x414;&#x430;&#x442;&#x430; &#x43F;&#x43E;&#x441;&#x442;."/>
+			<field id="date" dataType="Date" alias="&#x414;&#x430;&#x442;&#x430; &#x43F;&#x43E;&#x441;&#x442;."/>
 			<field id="primary_exists" dataType="String" alias="&#x41F;&#x43E;&#x432;&#x442;&#x43E;&#x440;"/>
 			<field id="applicant" dataType="String" alias="&#x417;&#x430;&#x44F;&#x432;&#x438;&#x442;&#x435;&#x43B;&#x44C;"/>
 			<field id="customer" dataType="String" alias="&#x417;&#x430;&#x43A;&#x430;&#x437;&#x447;&#x438;&#x43A;"/>
 			<field id="constr_name" dataType="String" alias="&#x41E;&#x431;&#x44A;&#x435;&#x43A;&#x442; &#x441;&#x442;&#x440;&#x43E;&#x438;&#x442;&#x435;&#x43B;&#x44C;&#x441;&#x442;&#x432;&#x430;"/>
-			<field id="expertise_cost_budget" dataType="String" alias="&#x421;&#x442;&#x43E;&#x438;&#x43C;&#x43E;&#x441;&#x442;&#x44C; &#x440;&#x430;&#x431;&#x43E;&#x442; &#x431;&#x44E;&#x434;&#x436;&#x435;&#x442;"/>
-			<field id="expertise_cost_self_fund" dataType="String" alias="&#x421;&#x442;&#x43E;&#x438;&#x43C;&#x43E;&#x441;&#x442;&#x44C; &#x440;&#x430;&#x431;&#x43E;&#x442; &#x441;&#x43E;&#x431;&#x441;&#x442;&#x432;.&#x441;&#x440;-&#x432;&#x430;"/>
+			<field id="expertise_cost_budget" dataType="Float" alias="&#x421;&#x442;&#x43E;&#x438;&#x43C;&#x43E;&#x441;&#x442;&#x44C; &#x440;&#x430;&#x431;&#x43E;&#x442; &#x431;&#x44E;&#x434;&#x436;&#x435;&#x442;"/>
+			<field id="expertise_cost_self_fund" dataType="Float" alias="&#x421;&#x442;&#x43E;&#x438;&#x43C;&#x43E;&#x441;&#x442;&#x44C; &#x440;&#x430;&#x431;&#x43E;&#x442; &#x441;&#x43E;&#x431;&#x441;&#x442;&#x432;.&#x441;&#x440;-&#x432;&#x430;"/>
 			<field id="contract_number_date" dataType="String" alias="&#x41D;&#x43E;&#x43C;&#x435;&#x440; &#x438; &#x434;&#x430;&#x442;&#x430; &#x43A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x430;"/>
-			<field id="pay_total" dataType="String" alias="&#x421;&#x443;&#x43C;&#x43C;&#x430; &#x43E;&#x43F;&#x43B;&#x430;&#x442;&#x44B;"/>
-			<field id="work_start_date" dataType="String" alias="&#x414;&#x430;&#x442;&#x430; &#x43D;&#x430;&#x447;.&#x440;&#x430;&#x431;&#x43E;&#x442;"/>
+			<field id="pay_total" dataType="Float" alias="&#x421;&#x443;&#x43C;&#x43C;&#x430; &#x43E;&#x43F;&#x43B;&#x430;&#x442;&#x44B;"/>
+			<field id="work_start_date" dataType="Date" alias="&#x414;&#x430;&#x442;&#x430; &#x43D;&#x430;&#x447;.&#x440;&#x430;&#x431;&#x43E;&#x442;"/>
 			<field id="main_expert" dataType="String" alias="&#x41E;&#x442;&#x432;.&#x44D;&#x43A;&#x441;&#x43F;&#x435;&#x440;&#x442;"/>
-			<field id="expertise_result_date_positive" dataType="String" alias="&#x414;&#x430;&#x442;&#x430; &#x43F;&#x43E;&#x43B;&#x43E;&#x436;&#x438;&#x442;.&#x437;&#x430;&#x43A;&#x43B;&#x44E;&#x447;."/>
-			<field id="aaa" dataType="String" alias="&#x414;&#x430;&#x442;&#x430; &#x43D;&#x430; &#x434;&#x43E;&#x440;&#x430;&#x431;&#x43E;&#x442;&#x43A;&#x443;"/>
+			<field id="expertise_result_date_positive" dataType="Date" alias="&#x414;&#x430;&#x442;&#x430; &#x43F;&#x43E;&#x43B;&#x43E;&#x436;&#x438;&#x442;.&#x437;&#x430;&#x43A;&#x43B;&#x44E;&#x447;."/>
+			<field id="back_to_work_date" dataType="Date" alias="&#x414;&#x430;&#x442;&#x430; &#x43D;&#x430; &#x434;&#x43E;&#x440;&#x430;&#x431;&#x43E;&#x442;&#x43A;&#x443;"/>
 			<field id="akt_number_date" dataType="String" alias="&#x410;&#x43A;&#x442;"/>
 			<field id="comment_text" dataType="String" alias="&#x41A;&#x43E;&#x43C;&#x43C;&#x435;&#x43D;&#x442;&#x430;&#x440;&#x438;&#x439;"/>
 		</model>

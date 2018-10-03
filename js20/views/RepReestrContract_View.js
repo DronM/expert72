@@ -34,15 +34,16 @@ function RepReestrContract_View(id,options){
 				"control":new EditSelect(id+":filter-ctrl-date_type",{
 					"labelCaption":"Вид даты:",
 					"contClassName":"form-group-filter",
+					"addNotSelected":false,
 					"elements":[
 						new EditSelectOption(id+":filter-ctrl-date_type:"+"date_time",{
 							"value":"date_time",
 							"descr":"Дата поступления",
-							"checked":"true"
+							"checked":true
 						})
 						,new EditSelectOption(id+":filter-ctrl-date_type:"+"akt_date",{
 							"value":"akt_date",
-							"descr":"дата Акта выполненных работ"
+							"descr":"Дата акта выполненных работ"
 						})
 					]
 				}),
@@ -95,7 +96,7 @@ function RepReestrContract_View(id,options){
 		,"main_expert":{
 			"binding":new CommandBinding({
 				"control":new EmployeeEditRef(id+":filter-ctrl-main_expert",{"labelCaption":"Главный эксперт:","contClassName":"form-group-filter"}),
-				"field":new FieldInt("main_expert")
+				"field":new FieldInt("main_expert_id")
 			}),
 			"sign":"e"
 		}
@@ -104,17 +105,18 @@ function RepReestrContract_View(id,options){
 				"control":new EditSelect(id+":filter-ctrl-service",{
 					"labelCaption":"Услуга:",
 					"contClassName":"form-group-filter",
+					"addNotSelected":false,
 					"elements":[
 						new EditSelectOption(id+":filter-ctrl-service:"+"expertise",{
 							"value":"expertise",
 							"descr":"ПД,РИИ"
 						})
 						,new EditSelectOption(id+":filter-ctrl-service:"+"cost_eval_validity",{
-							"value":"expertise",
+							"value":"cost_eval_validity",
 							"descr":"Достоверность"
 						})
 						,new EditSelectOption(id+":filter-ctrl-service:"+"expertise_cost_eval_validity",{
-							"value":"expertise",
+							"value":"expertise_cost_eval_validity",
 							"descr":"ПД,РИИ и Достоверность"
 						})
 						,new EditSelectOption(id+":filter-ctrl-service:"+"audit",{

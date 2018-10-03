@@ -83,7 +83,7 @@ function RepReestrPay_Model(options){
 	filed_options.alias = 'Дата нач.работ';
 	filed_options.autoInc = false;	
 	
-	options.fields.work_start_date = new FieldString("work_start_date",filed_options);
+	options.fields.work_start_date = new FieldDate("work_start_date",filed_options);
 	
 				
 	
@@ -92,7 +92,7 @@ function RepReestrPay_Model(options){
 	filed_options.alias = 'Стоимость работ бюджет';
 	filed_options.autoInc = false;	
 	
-	options.fields.expertise_cost_budget = new FieldString("expertise_cost_budget",filed_options);
+	options.fields.expertise_cost_budget = new FieldFloat("expertise_cost_budget",filed_options);
 	
 				
 	
@@ -101,7 +101,7 @@ function RepReestrPay_Model(options){
 	filed_options.alias = 'Стоимость работ собств.ср-ва';
 	filed_options.autoInc = false;	
 	
-	options.fields.expertise_cost_self_fund = new FieldString("expertise_cost_self_fund",filed_options);
+	options.fields.expertise_cost_self_fund = new FieldFloat("expertise_cost_self_fund",filed_options);
 	
 				
 	
@@ -110,7 +110,7 @@ function RepReestrPay_Model(options){
 	filed_options.alias = 'Сумма оплаты';
 	filed_options.autoInc = false;	
 	
-	options.fields.total = new FieldString("total",filed_options);
+	options.fields.total = new FieldFloat("total",filed_options);
 	
 				
 	
@@ -128,7 +128,7 @@ function RepReestrPay_Model(options){
 	filed_options.alias = 'Дата п/п';
 	filed_options.autoInc = false;	
 	
-	options.fields.pay_docum_date = new FieldString("pay_docum_date",filed_options);
+	options.fields.pay_docum_date = new FieldDate("pay_docum_date",filed_options);
 	
 		RepReestrPay_Model.superclass.constructor.call(this,id,options);
 }

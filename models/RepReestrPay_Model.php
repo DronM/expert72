@@ -8,6 +8,8 @@
 
 require_once(FRAME_WORK_PATH.'basic_classes/ModelReportSQL.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLString.php');
+require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLFloat.php');
+require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLDate.php');
  
 class RepReestrPay_Model extends ModelReportSQL{
 	
@@ -84,7 +86,7 @@ class RepReestrPay_Model extends ModelReportSQL{
 		$f_opts['alias']='Дата нач.работ';
 		$f_opts['id']="work_start_date";
 				
-		$f_work_start_date=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"work_start_date",$f_opts);
+		$f_work_start_date=new FieldSQLDate($this->getDbLink(),$this->getDbName(),$this->getTableName(),"work_start_date",$f_opts);
 		$this->addField($f_work_start_date);
 		//********************
 		
@@ -94,7 +96,7 @@ class RepReestrPay_Model extends ModelReportSQL{
 		$f_opts['alias']='Стоимость работ бюджет';
 		$f_opts['id']="expertise_cost_budget";
 				
-		$f_expertise_cost_budget=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expertise_cost_budget",$f_opts);
+		$f_expertise_cost_budget=new FieldSQLFloat($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expertise_cost_budget",$f_opts);
 		$this->addField($f_expertise_cost_budget);
 		//********************
 		
@@ -104,7 +106,7 @@ class RepReestrPay_Model extends ModelReportSQL{
 		$f_opts['alias']='Стоимость работ собств.ср-ва';
 		$f_opts['id']="expertise_cost_self_fund";
 				
-		$f_expertise_cost_self_fund=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expertise_cost_self_fund",$f_opts);
+		$f_expertise_cost_self_fund=new FieldSQLFloat($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expertise_cost_self_fund",$f_opts);
 		$this->addField($f_expertise_cost_self_fund);
 		//********************
 		
@@ -114,7 +116,7 @@ class RepReestrPay_Model extends ModelReportSQL{
 		$f_opts['alias']='Сумма оплаты';
 		$f_opts['id']="total";
 				
-		$f_total=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"total",$f_opts);
+		$f_total=new FieldSQLFloat($this->getDbLink(),$this->getDbName(),$this->getTableName(),"total",$f_opts);
 		$this->addField($f_total);
 		//********************
 		
@@ -134,7 +136,7 @@ class RepReestrPay_Model extends ModelReportSQL{
 		$f_opts['alias']='Дата п/п';
 		$f_opts['id']="pay_docum_date";
 				
-		$f_pay_docum_date=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"pay_docum_date",$f_opts);
+		$f_pay_docum_date=new FieldSQLDate($this->getDbLink(),$this->getDbName(),$this->getTableName(),"pay_docum_date",$f_opts);
 		$this->addField($f_pay_docum_date);
 		//********************
 	$this->setLimitConstant('doc_per_page_count');

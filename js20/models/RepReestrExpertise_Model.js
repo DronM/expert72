@@ -164,7 +164,7 @@ function RepReestrExpertise_Model(options){
 	filed_options.alias = 'Дата предоставления документов';
 	filed_options.autoInc = false;	
 	
-	options.fields.date_time = new FieldString("date_time",filed_options);
+	options.fields.date_time = new FieldDate("date_time",filed_options);
 	
 				
 	
@@ -173,7 +173,7 @@ function RepReestrExpertise_Model(options){
 	filed_options.alias = 'Дата внесения платы';
 	filed_options.autoInc = false;	
 	
-	options.fields.pay_date = new FieldString("pay_date",filed_options);
+	options.fields.pay_date = new FieldDate("pay_date",filed_options);
 	
 				
 	
@@ -182,7 +182,7 @@ function RepReestrExpertise_Model(options){
 	filed_options.alias = 'Дата вручения заключения';
 	filed_options.autoInc = false;	
 	
-	options.fields.expertise_result_ret_date = new FieldString("expertise_result_ret_date",filed_options);
+	options.fields.expertise_result_ret_date = new FieldDate("expertise_result_ret_date",filed_options);
 	
 		RepReestrExpertise_Model.superclass.constructor.call(this,id,options);
 }

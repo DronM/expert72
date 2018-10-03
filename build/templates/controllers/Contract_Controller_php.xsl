@@ -632,6 +632,9 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		else if ($expertise_result=='negative'){
 			$exp_res_cond.= " AND t.expertise_result='negative'";
 		}
+		else{
+			$expertise_result = '';
+		}
 		
 		$model = new RepReestrExpertise_Model($this->getDbLink());
 		$model->query(
@@ -715,10 +718,13 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		
 		$this->addNewModel(
 			sprintf(
-			"SELECT format_period_rus(%s::date,%s::date,NULL) AS period_descr
+			"SELECT
+				format_period_rus(%s::date,%s::date,NULL) AS period_descr,
+				'%s' AS expertise_result
 			",
 			$dt_from,
-			$dt_to
+			$dt_to,
+			$expertise_result
 			),
 		'Head_Model'
 		);		
@@ -743,6 +749,9 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		}
 		else if ($expertise_result=='negative'){
 			$exp_res_cond.= " AND t.expertise_result='negative'";
+		}
+		else{
+			$expertise_result = '';
 		}
 		
 		$model = new RepReestrCostEval_Model($this->getDbLink());
@@ -797,10 +806,13 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		
 		$this->addNewModel(
 			sprintf(
-			"SELECT format_period_rus(%s::date,%s::date,NULL) AS period_descr
+			"SELECT
+				format_period_rus(%s::date,%s::date,NULL) AS period_descr,
+				'%s' AS expertise_result
 			",
 			$dt_from,
-			$dt_to
+			$dt_to,
+			$expertise_result
 			),
 		'Head_Model'
 		);		
@@ -865,10 +877,16 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 	
 		$this->addNewModel(
 			sprintf(
-			"SELECT format_period_rus(%s::date,%s::date,NULL) AS period_descr
+			"SELECT
+				format_period_rus(%s::date,%s::date,NULL) AS period_descr,
+				%s AS customer_name,
+				CASE WHEN %s IS NOT NULL THEN (SELECT name FROM clients WHERE id=%d) ELSE '' END AS client_name
 			",
 			$dt_from,
-			$dt_to
+			$dt_to,
+			$customer_name,
+			$client_id,
+			$client_id
 			),
 		'Head_Model'
 		);		
@@ -885,25 +903,74 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		if (!isset($dt_to)){
 			throw new Exception('Не задана дата окончания!');
 		}		
-	
 		$extra_cond = '';
+		
+		$date_type_par = strtolower($cond->getVal('date_type','e',DT_STRING));		
+		if ($date_type_par &amp;&amp; $date_type_par=='date_akt'){
+			$date_type = 'contracts.akt_date';
+			$date_type_descr = 'По дате акта выполненных работ';
+		}
+		else{
+			$date_type = 'contracts.date_time';
+			$date_type_descr = 'По дате поступления контракта';
+		}
+	
 		$client_id = $cond->getDbVal('client_id','e',DT_INT);
 		if ($client_id &amp;&amp; $client_id!='null'){
 			$extra_cond.= sprintf(' AND contracts.client_id=%d',$client_id);
 		}
+		
+		$main_expert_id = $cond->getDbVal('main_expert_id','e',DT_INT);
+		if ($main_expert_id &amp;&amp; $main_expert_id!='null'){
+			$extra_cond.= sprintf(' AND contracts.main_expert_id=%d',$main_expert_id);
+		}
+		
 		$customer_name = $cond->getDbVal('customer_name','e',DT_STRING);
 		if ($customer_name &amp;&amp; $customer_name!='null'){
 			$extra_cond.= sprintf(" AND app.customer->>'name'=%s",$customer_name);
 		}
+
+		$contractor_name = $cond->getDbVal('contractor_name','e',DT_STRING);
+		if ($contractor_name &amp;&amp; $contractor_name!='null'){
+			$extra_cond.= sprintf(
+				"AND (%s =ANY( ARRAY((SELECT s.contractor->>'name'
+				FROM (SELECT jsonb_array_elements(app_t.contractors) AS contractor
+					FROM applications AS app_t
+					WHERE app_t.id=app.id
+				) AS s)) ) )",
+				$contractor_name);
+		}
+
+		$service = strtolower($cond->getVal('service','e',DT_STRING));
+		$service_descr = 'Все услуги';
+		if ($service &amp;&amp; $service!='null'){
+			if ($service=='expertise'){
+				$extra_cond.= " AND (app.expertise_type='pd' OR app.expertise_type='eng_survey' OR app.expertise_type='pd_eng_survey')";
+				$service_descr = 'ПД и РИИ';
+			}
+			else if ($service=='cost_eval_validity'){
+				$extra_cond.= " AND app.cost_eval_validity";
+				$service_descr = 'Достоверность';
+			}			
+			else if ($service=='audit'){
+				$extra_cond.= " AND app.audit";
+				$service_descr = 'Аудит';
+			}
+			else if ($service=='expertise_cost_eval_validity'){
+				$extra_cond.= " AND (app.expertise_type='pd' OR app.expertise_type='eng_survey' OR app.expertise_type='pd_eng_survey' OR app.cost_eval_validity)";
+				$service_descr = 'ПД, РИИ, Достоверность';
+			}			
+		}
 		
-		$model = new RepReestrPay_Model($this->getDbLink());
+		$model = new RepReestrContract_Model($this->getDbLink());
 		$model->query(
+		//throw new Exception(
 			sprintf(
 			"SELECT
 				row_number() OVER (ORDER BY %s) AS ord,
 				contracts.expertise_result_number,
 				to_char(contracts.date_time,'DD/MM/YY') AS date,
-				(contracts.primary_contract_reg_number IS NOT NULL) AS primary_exists,				
+				(CASE WHEN contracts.primary_contract_reg_number IS NOT NULL THEN 'Повтор' ELSE '' END) AS primary_exists,				
 				app.applicant->>'name' AS applicant,
 				app.customer->>'name' AS customer,
 				contracts.constr_name,	
@@ -911,27 +978,27 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				contracts.expertise_cost_self_fund,				
 				
 				coalesce(contracts.contract_number,'')||
-					CASE contracts.contract_date IS NOT NULL THEN' от '||to_char(contracts.contract_date,'DD/MM/YY')
+					CASE WHEN contracts.contract_date IS NOT NULL THEN ' от '||to_char(contracts.contract_date,'DD/MM/YY')
 					ELSE ''
 					END
 				AS contract_number_date,
 				
-				coalesce(payments.total,0) AS total
+				coalesce(payments.total,0) AS pay_total,
 				
 				to_char(contracts.work_start_date,'DD/MM/YY') As work_start_date,
 				
-				employees.name AS main_expert,
+				person_init(employees.name,FALSE) AS main_expert,
 				
 				CASE
 					WHEN expertise_result='positive' THEN to_char(expertise_result_date,'DD/MM/YY')
 					ELSE ''
 				END AS expertise_result_date_positive,
 				
-				'дата доработки???' AS aaa,
+				'откуда брать?' AS back_to_work_date,
 				
-				AS akt_number_date,
+				coalesce(contracts.akt_number,'..')||' от '||coalesce(to_char(contracts.akt_date,'DD/MM/YY'),'..') AS akt_number_date,
 				
-				AS comment_text
+				contracts.comment_text AS comment_text
 				
 			FROM contracts
 			LEFT JOIN (
@@ -943,21 +1010,36 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			) AS payments ON contracts.id=payments.contract_id
 			LEFT JOIN applications AS app ON app.id=contracts.application_id
 			LEFT JOIN employees ON employees.id=contracts.main_expert_id
-			WHERE %s
-			ORDER %s",
-			$order_field,
-			$conditions,
-			$order_field
+			WHERE %s BETWEEN %s AND %s %s
+			ORDER BY %s",
+			$date_type,
+			$date_type,
+			$dt_from,
+			$dt_to,
+			$extra_cond,
+			$date_type
 			)
 		);
 		$this->addModel($model);
 	
 		$this->addNewModel(
 			sprintf(
-			"SELECT format_period_rus(%s::date,%s::date,NULL) AS period_descr
+			"SELECT
+				format_period_rus(%s::date,%s::date,NULL) AS period_descr,
+				%s AS customer_name,
+				%s AS contractor_name,
+				CASE WHEN %s IS NOT NULL THEN (SELECT name FROM clients WHERE id=%d) ELSE '' END AS client_name,
+				'%s' AS service_descr,
+				'%s' date_type_descr
 			",
 			$dt_from,
-			$dt_to
+			$dt_to,
+			$customer_name,
+			$contractor_name,
+			$client_id,
+			$client_id,
+			$service_descr,
+			$date_type_descr
 			),
 		'Head_Model'
 		);		
