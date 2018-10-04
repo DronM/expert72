@@ -25,7 +25,13 @@ function EmployeeDialog_View(id,options){
 	options.addElement = function(){
 		this.addElement(new EditString(id+":name",{
 			"labelCaption":this.FIELD_CAP_name,
-			"required":true
+			"required":true,
+			"maxLength":200
+		}));	
+
+		this.addElement(new EditNum(id+":snils",{
+			"labelCaption":this.FIELD_CAP_snils,
+			"maxLength":11
 		}));	
 	
 		this.addElement(new DepartmentSelect(id+":departments_ref",{
@@ -64,7 +70,7 @@ function EmployeeDialog_View(id,options){
 		,new DataBinding({"control":this.getElement("departments_ref")})
 		,new DataBinding({"control":this.getElement("posts_ref")})
 		,new DataBinding({"control":this.getElement("picture_file"),"field":this.m_model.getField("picture_info")})
-		//,"field":this.m_model.getField("department_id")
+		,new DataBinding({"control":this.getElement("snils")})
 	]);
 	
 	//write
@@ -74,6 +80,7 @@ function EmployeeDialog_View(id,options){
 		,new CommandBinding({"control":this.getElement("departments_ref"),"fieldId":"department_id"})
 		,new CommandBinding({"control":this.getElement("posts_ref"),"fieldId":"post_id"})
 		,new CommandBinding({"control":this.getElement("picture_file"),"fieldId":"picture_file"})
+		,new CommandBinding({"control":this.getElement("snils")})
 	]);
 		
 }

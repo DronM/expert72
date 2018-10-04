@@ -60,6 +60,7 @@ function Application_Controller(options){
 	this.add_get_sig_details();
 	this.add_get_customer_list();
 	this.add_get_contractor_list();
+	this.add_get_constr_name_list();
 		
 }
 extend(Application_Controller,ControllerObjServer);
@@ -1288,6 +1289,44 @@ extend(Application_Controller,ControllerObjServer);
 			Application_Controller.prototype.add_get_contractor_list = function(){
 	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('get_contractor_list',opts);
+	
+				
+	
+	var options = {};
+	
+		pm.addField(new FieldString("pattern",options));
+	
+				
+	
+	var options = {};
+	
+		pm.addField(new FieldInt("count",options));
+	
+				
+	
+	var options = {};
+	
+		pm.addField(new FieldInt("ic",options));
+	
+				
+	
+	var options = {};
+	
+		pm.addField(new FieldInt("mid",options));
+	
+				
+	
+	var options = {};
+	
+		pm.addField(new FieldString("name",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			Application_Controller.prototype.add_get_constr_name_list = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('get_constr_name_list',opts);
 	
 				
 	

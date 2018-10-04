@@ -189,8 +189,17 @@ class DocFlow_Controller extends ControllerSQL{
 				att.file_id,
 				att.file_path,
 				att.file_name,
-				(SELECT count(*) FROM file_signatures AS sig WHERE sig.file_id=att.file_id) AS sig_cnt
+				(SELECT count(*) FROM file_signatures AS sig WHERE sig.file_id=att.file_id) AS sig_cnt,
+				CASE
+					WHEN att.doc_type='doc_flow_out' THEN out.to_application_id
+					WHEN att.doc_type='doc_flow_inside' THEN ct.application_id
+					ELSE NULL
+				END AS to_application_id
+				
 			FROM doc_flow_attachments AS att
+			LEFT JOIN doc_flow_out AS out ON att.doc_type='doc_flow_out' AND att.doc_id=out.id
+			LEFT JOIN doc_flow_inside AS ins ON att.doc_type='doc_flow_inside' AND att.doc_id=ins.id
+			LEFT JOIN contracts AS ct ON ct.id=ins.contract_id
 			WHERE att.doc_id=%d AND att.file_id=%s AND att.doc_type='doc_flow_%s'",
 			$this->getExtDbVal($pm,'doc_id'),
 			$this->getExtDbVal($pm,'file_id'),
@@ -213,7 +222,8 @@ class DocFlow_Controller extends ControllerSQL{
 		);
 		
 		if(
-		!file_exists($file_doc=FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
+		($ar['to_application_id']
+		&& !file_exists($file_doc=FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
 			Application_Controller::APP_DIR_PREF.$application_id.DIRECTORY_SEPARATOR.
 			$ar['file_path'].DIRECTORY_SEPARATOR.
 			$ar['file_id'])
@@ -226,6 +236,11 @@ class DocFlow_Controller extends ControllerSQL{
 				$ar['file_path'].DIRECTORY_SEPARATOR.
 				$ar['file_id'])
 			)
+		)
+		)
+		|| (
+			!$ar['to_application_id']
+			&& !file_exists($file_doc = DOC_FLOW_FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$ar['file_id'])
 		)
 		){
 			throw new Exception(self::ER_STORAGE_FILE_NOT_FOUND);
@@ -304,17 +319,25 @@ class DocFlow_Controller extends ControllerSQL{
 			else{						
 				//find previous sig
 				$max_ind = NULL;
-				$prev_sig = Application_Controller::getMaxIndexSigFile(
-					Application_Controller::APP_DIR_PREF.$application_id.DIRECTORY_SEPARATOR.$filePath,
-					$ar['file_id'],
-					$max_ind
-				);				
+				if (!$ar['to_application_id']){
+					$prev_sig = DOC_FLOW_FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
+						$fileId.'.sig.s'.Application_Controller::getMaxIndexInDir(DOC_FLOW_FILE_STORAGE_DIR,$fileId);
+					$new_cur_sig = DOC_FLOW_FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
+						$ar['file_id'].'.sig';								
+				}
+				else{
+					$prev_sig = Application_Controller::getMaxIndexSigFile(
+						Application_Controller::APP_DIR_PREF.$application_id.DIRECTORY_SEPARATOR.$ar['file_path'],
+						$ar['file_id'],
+						$max_ind
+					);				
 				
-				$new_cur_sig = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
-					Application_Controller::APP_DIR_PREF.$application_id.DIRECTORY_SEPARATOR.
-					$filePath.DIRECTORY_SEPARATOR.
-					$ar['file_id'].'.sig';		
-						
+					$new_cur_sig = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
+						Application_Controller::APP_DIR_PREF.$application_id.DIRECTORY_SEPARATOR.
+						$ar['file_path'].DIRECTORY_SEPARATOR.
+						$ar['file_id'].'.sig';		
+				}
+				
 				if($cur_sig_exists)unlink($cur_sig);
 				rename($prev_sig,$new_cur_sig);
 			

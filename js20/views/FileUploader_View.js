@@ -1264,20 +1264,31 @@ FileUploader_View.prototype.getPublicMethodForFileDownload = function(fileId){
 	return pm;
 }
 
-FileUploader_View.prototype.signFile = function(fileId,itemId,certStruc){
-
+FileUploader_View.prototype.signFile = function(fileId,itemId){
+	var cades = window.getApp().getCadesAPI();
+	var cert_lits_ctrl = this.m_mainView.m_cadesView.getCertBoxControl();
+	if (!cades || !cades.getCertListCount() || !cert_lits_ctrl || !cert_lits_ctrl.getSelectedCert()){
+		throw new Error("Сертификат для подписи не выбран!");
+	}
+	var cert_struc = cert_lits_ctrl.getSelectedCert()
+	
 	var file_cont = this.getElement("file-list_"+itemId);
 	var file_ctrl = file_cont.getElement("file_"+fileId);
 	var cades = window.getApp().getCadesAPI();
 	var self = this;
 	if (file_ctrl.getAttr("file_uploaded")=="true"){		
+		//Проверка на случай если такой человек уже подписывал...
+		if (window.getApp().getServVar("role_id")!="client"){
+			console.log("Looking for SNILS="+cert_struc.SNILS)
+			console.log("FoundSNILS="+file_ctrl.sigCont.findSignatureBySNILS(cert_struc.SNILS))
+			if (file_ctrl.sigCont.findSignatureBySNILS(cert_struc.SNILS)){
+				throw Error("Ваша подпись уже присутствует на документе!");
+			}
+		}
+		
 		//возвращает текст
 		var pm = this.getPublicMethodForFileDownload(fileId);
-		/*
-		var pm = (new DocFlowOut_Controller()).getPublicMethod("get_file");
-		pm.setFieldValue("file_id",fileId);
-		pm.setFieldValue("doc_id",this.m_mainView.getElement("id").getValue());
-		*/
+		
 		file_ctrl.sigCont.setWait(true);		
 		pm.run({
 			"retContentType":"blob",
@@ -1290,7 +1301,7 @@ FileUploader_View.prototype.signFile = function(fileId,itemId,certStruc){
 				/*
 				cades.signHash(
 					resp,
-					certStruc.cert,
+					cert_struc.cert,
 					file_name,
 					function(signature){
 						//send signature back to server
@@ -1313,7 +1324,7 @@ FileUploader_View.prototype.signFile = function(fileId,itemId,certStruc){
 					},
 					fileId,
 					itemId,
-					certStruc,
+					cert_struc,
 					file_ctrl.sigCont,
 					function(sigFile){
 						var upl = new Resumable({
@@ -1373,7 +1384,7 @@ FileUploader_View.prototype.signFile = function(fileId,itemId,certStruc){
 					this.m_uploader.files[i],
 					fileId,
 					itemId,
-					certStruc,
+					cert_struc,
 					file_ctrl.sigCont,
 					function(sigFile){
 						self.m_uploader.addFile(sigFile);

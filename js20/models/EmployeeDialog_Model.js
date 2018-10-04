@@ -109,6 +109,7 @@ function EmployeeDialog_Model(options){
 	
 	options.fields.posts_ref = new FieldJSON("posts_ref",filed_options);
 	
+			
 				
 	
 	var filed_options = {};

@@ -1,6 +1,6 @@
 -- VIEW: employees_dialog
 
-DROP VIEW {{DB_SCHEMA}}.employees_dialog;
+--DROP VIEW {{DB_SCHEMA}}.employees_dialog;
 
 CREATE OR REPLACE VIEW {{DB_SCHEMA}}.employees_dialog AS
 	SELECT
@@ -10,6 +10,7 @@ CREATE OR REPLACE VIEW {{DB_SCHEMA}}.employees_dialog AS
 		,{{DB_SCHEMA}}.users_ref(users_join) AS users_ref
 		,{{DB_SCHEMA}}.posts_ref(posts_join) AS posts_ref
 		,{{DB_SCHEMA}}.departments_ref(departments_join) AS departments_ref
+		,t.snils
 	FROM {{DB_SCHEMA}}.employees AS t
 	LEFT JOIN {{DB_SCHEMA}}.users AS users_join ON
 		t.user_id=users_join.id

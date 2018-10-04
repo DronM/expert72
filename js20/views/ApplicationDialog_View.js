@@ -1259,37 +1259,6 @@ ApplicationDialog_View.prototype.onSaveOk = function(resp){
 	this.updateControlsFromResponse(resp);
 }
 
-//******** CADES ***********************************
-/*
-ApplicationDialog_View.prototype.cadesOnCertListFilled = function(){
-	var id = this.getId();
-	//общая информация
-	var cades = window.getApp().getCadesAPI();
-	document.getElementById(id+":cspName").innerHTML = "Криптопровайдер: " + cades.getCSPName();
-	document.getElementById(id+":cspVersion").innerHTML = "версия: " + cades.getCSPVersion();
-	document.getElementById(id+":plugInVersion").innerHTML = "Версия плагина: " + cades.getPluginVersion();
-	
-	//заполнение списка сертификатов
-	this.m_certBoxControl = new EditCertificateSelect(id+":certListBox",{
-		"cades":cades
-	});
-	this.m_certBoxControl.toDOM();
-	
-	$(".certFilling").addClass("hidden");
-	$(".certReady").removeClass("hidden");
-	$(".fileSignNoSig").removeClass("hidden");
-}
-
-ApplicationDialog_View.prototype.cadesOnLoadSuccess = function(){
-	$(".cadesChecking").remove();		
-	$(".cadesInstalled").removeClass("hidden");				
-		
-}
-ApplicationDialog_View.prototype.cadesOnLoadError = function(){
-	$(".cadesChecking").remove();		
-	$(".cadesNotInstalled").removeClass("hidden");			
-}
-*/
 ApplicationDialog_View.prototype.getCertBoxControl = function(){
 	return this.m_cadesView.getCertBoxControl();
 }

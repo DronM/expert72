@@ -49,6 +49,7 @@ function Contract_Controller(options){
 	this.add_get_constr_name();
 	this.add_get_reestr_pay();
 	this.add_get_reestr_contract();
+	this.add_get_quarter_rep();
 		
 }
 extend(Contract_Controller,ControllerObjServer);
@@ -1454,6 +1455,36 @@ extend(Contract_Controller,ControllerObjServer);
 			Contract_Controller.prototype.add_get_reestr_contract = function(){
 	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('get_reestr_contract',opts);
+	
+	pm.addField(new FieldInt(this.PARAM_COUNT));
+	pm.addField(new FieldInt(this.PARAM_FROM));
+	pm.addField(new FieldString(this.PARAM_COND_FIELDS));
+	pm.addField(new FieldString(this.PARAM_COND_SGNS));
+	pm.addField(new FieldString(this.PARAM_COND_VALS));
+	pm.addField(new FieldString(this.PARAM_COND_ICASE));
+	pm.addField(new FieldString(this.PARAM_ORD_FIELDS));
+	pm.addField(new FieldString(this.PARAM_ORD_DIRECTS));
+	pm.addField(new FieldString(this.PARAM_FIELD_SEP));
+
+				
+	
+	var options = {};
+	
+		pm.addField(new FieldString("templ",options));
+	
+				
+	
+	var options = {};
+	
+		pm.addField(new FieldInt("inline",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			Contract_Controller.prototype.add_get_quarter_rep = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('get_quarter_rep',opts);
 	
 	pm.addField(new FieldInt(this.PARAM_COUNT));
 	pm.addField(new FieldInt(this.PARAM_FROM));

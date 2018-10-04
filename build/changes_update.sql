@@ -654,6 +654,18 @@ ALTER FUNCTION public.contracts_ref(contracts)
 		);
 	
 
+		INSERT INTO views
+		(id,c,f,t,section,descr,limited)
+		VALUES (
+		'30004',
+		'Contract_Controller',
+		NULL,
+		'RepQuarter',
+		'Отчеты',
+		'Квартальный отчет',
+		FALSE
+		);
+	
 --****************************************
 doc_flow_out_dialog
 doc_flow_attachments_process()
@@ -666,6 +678,11 @@ applications_dialog()
 doc_flow_contract_ret_date(in_doc_flow_out_client_id int)
 doc_flow_out_client_files_for_signing()
 expert_works_process()
+
+
+--03/10
+employees_dialog
+applications_constr_name_list
 
 1;"Договорные документы/Контракт";TRUE
 2;"Заключение";FALSE

@@ -110,6 +110,8 @@ $permissions = array();
 			
 				$permissions['Application_Controller_get_contractor_list']=TRUE;
 			
+				$permissions['Application_Controller_get_constr_name_list']=TRUE;
+			
 				$permissions['Constant_Controller_set_value']=TRUE;
 			
 				$permissions['Constant_Controller_get_list']=TRUE;

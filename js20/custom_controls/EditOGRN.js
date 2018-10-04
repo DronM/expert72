@@ -24,7 +24,6 @@ function EditOGRN(id,options){
 	options.type = "text";
 	options.cmdSelect = false;	
 	options.maxLength =  this.m_isEnterprise? this.ENT_LEN:this.PERS_LEN;
-	//options.editMask = "99999999999999999999".substr(0,options.maxLength);
 	options.regExpression = /^[0-9]+$/;
 	options.fixLength = true;
 	options.events = options.events || {};
@@ -38,7 +37,7 @@ function EditOGRN(id,options){
 	*/
 	EditOGRN.superclass.constructor.call(this,id,options);
 }
-extend(EditOGRN,EditString);
+extend(EditOGRN,EditNum);
 
 /* Constants */
 EditOGRN.prototype.m_isEnterprise;
@@ -67,7 +66,6 @@ EditOGRN.prototype.validate = function(){
 EditOGRN.prototype.setIsEnterprise = function(v){
 	var len = (v)? this.ENT_LEN:this.PERS_LEN;
 	this.setMaxLength(len);
-	//this.setEditMask("99999999999999999999".substr(0,len));
 }
 
 EditOGRN.prototype.getIsEnterprise = function(){

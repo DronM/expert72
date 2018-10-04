@@ -18,8 +18,7 @@ function EditKPP(id,options){
 	options.type = "text";	
 	options.cmdSelect = false;
 	options.maxLength =  this.LEN;
-	//options.editMask = "99999999999999999999".substr(0,options.maxLength);
-	options.regExpression = /^[0-9]+$/;
+	//options.regExpression = /^[0-9]+$/;
 	options.fixLength = true;
 	options.events = options.events || {};
 	
@@ -30,7 +29,7 @@ function EditKPP(id,options){
 	
 	EditKPP.superclass.constructor.call(this,id,options);
 }
-extend(EditKPP,EditString);
+extend(EditKPP,EditNum);
 
 /* Constants */
 EditKPP.prototype.m_isEnterprise;

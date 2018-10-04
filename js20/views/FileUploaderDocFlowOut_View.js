@@ -182,7 +182,7 @@ FileUploaderDocFlowOut_View.prototype.onSignClick = function(fileId,itemId){
 	pm_sig.setFieldValue("doc_id",this.m_mainView.getElement("id").getValue());	
 	pm_sig.download(null,1);
 }
-
+/*
 FileUploaderDocFlowOut_View.prototype.signFile = function(fileId,itemId){
 	
 	var cades = window.getApp().getCadesAPI();
@@ -193,6 +193,7 @@ FileUploaderDocFlowOut_View.prototype.signFile = function(fileId,itemId){
 	
 	FileUploaderDocFlowOut_View.superclass.signFile.call(this,fileId,itemId,cert_lits_ctrl.getSelectedCert());
 }
+*/
 
 FileUploaderDocFlowOut_View.prototype.onGetSignatureDetails = function(fileId,callBack){
 	FileUploaderApplication_View.superclass.onGetSignatureDetails.call(this,fileId,callBack,(new DocFlowOut_Controller()));

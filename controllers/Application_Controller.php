@@ -47,6 +47,12 @@ class Application_Controller extends ControllerSQL{
 	const APP_DIR_DELETED_FILES = 'Удаленные';
 	const APP_PRINT_PREF = 'Заявления';
 	
+	const FILE_SIG_CHECK = 'ПроверкаЭЦП';
+	const FILE_APPLICATION = 'ЗаявлениеПД';
+	const FILE_COST_EVAL_VALIDITY = 'ЗаявлениеДостоверность';
+	const FILE_MODIFICATION = 'ЗаявлениеМодификация';
+	const FILE_AUDIT = 'ЗаявлениеАудит';
+	
 	const ER_STORAGE_FILE_NOT_FOUND = 'Файл не найден!';
 	const ER_APP_NOT_FOUND = 'Заявление не найдено!';
 	const ER_NO_FILES_FOR_ZIP = 'Проект не содержит файлов!';	
@@ -897,6 +903,37 @@ class Application_Controller extends ControllerSQL{
 			
 		$this->addPublicMethod($pm);
 
+			
+		$pm = new PublicMethod('get_constr_name_list');
+		
+				
+	$opts=array();
+					
+		$pm->addParam(new FieldExtString('pattern',$opts));
+	
+				
+	$opts=array();
+					
+		$pm->addParam(new FieldExtInt('count',$opts));
+	
+				
+	$opts=array();
+					
+		$pm->addParam(new FieldExtInt('ic',$opts));
+	
+				
+	$opts=array();
+					
+		$pm->addParam(new FieldExtInt('mid',$opts));
+	
+				
+	$opts=array();
+			
+		$pm->addParam(new FieldExtString('name',$opts));
+	
+			
+		$this->addPublicMethod($pm);
+
 		
 	}	
 	
@@ -1495,27 +1532,27 @@ class Application_Controller extends ControllerSQL{
 	public static function removeSigCheckReport($applicationId){
 		self::delFileFromStorage(
 			self::APP_DIR_PREF.$applicationId.DIRECTORY_SEPARATOR.
-			'ApplicationSigCheck.pdf'
+			self::FILE_SIG_CHECK.'.pdf'
 		);
 	}
 	
 	public static function removePDFFile($applicationId){
 		self::delFileFromStorage(
 			self::APP_DIR_PREF.$applicationId.DIRECTORY_SEPARATOR.
-			'Application.pdf'
+			self::FILE_APPLICATION.'.pdf'
 		);
 
 		self::delFileFromStorage(
 			self::APP_DIR_PREF.$applicationId.DIRECTORY_SEPARATOR.
-			'ApplicationCostEvalValidity.pdf'
+			self::FILE_COST_EVAL_VALIDITY.'.pdf'
 		);
 		self::delFileFromStorage(
 			self::APP_DIR_PREF.$applicationId.DIRECTORY_SEPARATOR.
-			'ApplicationModification.pdf'
+			self::FILE_MODIFICATION.'.pdf'
 		);
 		self::delFileFromStorage(
 			self::APP_DIR_PREF.$applicationId.DIRECTORY_SEPARATOR.
-			'ApplicationAudit.pdf'
+			self::FILE_AUDIT.'.pdf'
 		);
 		self::removeSigCheckReport($applicationId);
 	}
@@ -2299,7 +2336,10 @@ class Application_Controller extends ControllerSQL{
 		
 		if (
 		!file_exists(FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.self::APP_DIR_PREF.$this->getExtDbVal($pm,'id'))
-		&& (defined('FILE_STORAGE_DIR_MAIN') && !file_exists(FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.self::APP_DIR_PREF.$this->getExtDbVal($pm,'id')))
+		&& (
+			defined('FILE_STORAGE_DIR_MAIN')
+			&& !file_exists(FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.self::APP_DIR_PREF.$this->getExtDbVal($pm,'id'))
+			)
 		){
 			//нет ни одного файла
 			$this->setHeaderStatus(400);
@@ -2307,24 +2347,43 @@ class Application_Controller extends ControllerSQL{
 		}
 		
 		$templ_name = $pm->getParamValue('templ');
+		$out_file_name = '';
+		if ($templ_name=='Application'){
+			$out_file_name = self::FILE_APPLICATION;
+		}
+		else if ($templ_name=='ApplicationAudit'){
+			$out_file_name = self::FILE_AUDIT;
+		}
+		else if ($templ_name=='ApplicationCostEvalValidity'){
+			$out_file_name = self::FILE_COST_EVAL_VALIDITY;
+		}
+		else if ($templ_name=='ApplicationModification'){
+			$out_file_name = self::FILE_MODIFICATION;
+		}
+		else{
+			throw new Exception('Unknown template!');
+		}
+		
 		$rel_dir = self::APP_DIR_PREF.$this->getExtDbVal($pm,'id');
 		if (!file_exists($dir = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_dir)){
 			mkdir($dir,0775,TRUE);
 			chmod($dir, 0775);
 		}
 		
-		$rel_out_file = $rel_dir.DIRECTORY_SEPARATOR.$templ_name.".pdf";		
+		$rel_out_file = $rel_dir.DIRECTORY_SEPARATOR.$out_file_name.".pdf";		
 		$out_file = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_out_file;
 			
 		if (
 		file_exists($out_pdf=FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_out_file)
-		|| (defined('FILE_STORAGE_DIR_MAIN') && file_exists($out_pdf=FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$rel_out_file))
+		|| (defined('FILE_STORAGE_DIR_MAIN')
+			&& file_exists($out_pdf=FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$rel_out_file)
+			)
 		){
 			downloadFile(
 				$out_pdf,
 				'application/pdf',
 				(isset($_REQUEST['inline']) && $_REQUEST['inline']=='1')? 'inline;':'attachment;',
-				$templ_name.".pdf"
+				$out_file_name.".pdf"
 			);
 			return TRUE;			
 		}
@@ -2734,7 +2793,7 @@ class Application_Controller extends ControllerSQL{
 		
 		if ($_REQUEST['v']=='ViewPDF'){
 			$cont = $model->dataToXML(TRUE);
-			return $this->print_pdf($templ_name,$out_file,$cont);		
+			return $this->print_pdf($templ_name,$out_file_name,$out_file,$cont);		
 			/*
 			$xml = '<?xml version="1.0" encoding="UTF-8"?>';
 			$xml.= '<document>';
@@ -2759,7 +2818,7 @@ class Application_Controller extends ControllerSQL{
 					$out_file,
 					'application/pdf',
 					(isset($_REQUEST['inline']) && $_REQUEST['inline']=='1')? 'inline;':'attachment;',
-					$templ_name.".pdf"
+					$out_file_name.".pdf"
 				);
 			
 			}
@@ -2778,7 +2837,7 @@ class Application_Controller extends ControllerSQL{
 		}	
 	}
 	
-	private function print_pdf($templName,$outFile,&$content){
+	private function print_pdf($templName,$outFileName,$outFile,&$content){
 		$xml = '<?xml version="1.0" encoding="UTF-8"?>';
 		$xml.= '<document>';
 		$xml.= $content;
@@ -2802,7 +2861,7 @@ class Application_Controller extends ControllerSQL{
 				$outFile,
 				'application/pdf',
 				(isset($_REQUEST['inline']) && $_REQUEST['inline']=='1')? 'inline;':'attachment;',
-				$templName.".pdf"
+				$outFileName.".pdf"
 			);
 		
 		}
@@ -2929,7 +2988,7 @@ class Application_Controller extends ControllerSQL{
 			chmod($dir, 0775);
 		}
 	
-		$templ_name = 'ApplicationSigCheck';
+		$templ_name = self::FILE_SIG_CHECK;
 		$rel_out_file = $rel_dir.DIRECTORY_SEPARATOR.$templ_name.".pdf";		
 		$out_file = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_out_file;
 			
@@ -3086,7 +3145,7 @@ class Application_Controller extends ControllerSQL{
 				AS file_name
 		
 			FROM application_document_files AS app_f
-			LEFT JOIN file_verifications AS v ON app_f.file_id=v.file_id
+			print_pdfLEFT JOIN file_verifications AS v ON app_f.file_id=v.file_id
 			LEFT JOIN file_signatures AS f_sig ON f_sig.file_id=v.file_id
 			LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id
 			WHERE app_f.application_id=%d AND app_f.deleted=FALSE AND v.date_time IS NOT NULL
@@ -3246,7 +3305,7 @@ class Application_Controller extends ControllerSQL{
 		);
 		if ($_REQUEST['v']=='ViewPDF'){
 			$cont = $h->dataToXML(TRUE).html_entity_decode($m->dataToXML(TRUE));
-			return $this->print_pdf($templ_name,$out_file,$cont);
+			return $this->print_pdf('ApplicationSigCheck',$templ_name,$out_file,$cont);
 		}
 		else{
 			$this->addModel($h);
@@ -3312,30 +3371,35 @@ class Application_Controller extends ControllerSQL{
 		$this->setCompleteModelId('ApplicationContractorList_Model');
 		$this->complete($pm);
 	}
+	public function get_constr_name_list($pm){
+		$this->setCompleteModelId('ApplicationConstrNameList_Model');
+		$this->complete($pm);
+	}
+	
+	public static function getMaxIndexInDir($dir,$fileId){
+		$m_ind = 0;
+		$cdir = scandir($dir);
+		foreach ($cdir as $key => $value){
+			if (preg_match('/^'.$fileId.'\.sig\.s\d+$/',$value)){
+				$i = substr($value,strrpos($value,'.s')+2);
+				if ($i>$m_ind){
+					$m_ind = $i;
+				}
+			}
+		}
+		return $m_ind;	
+	}
 	
 	public static function getMaxIndexSigFile($relPath,$fileId,&$maxIndex){
 		$maxIndex = 0;
-		function max_ind_in_path($path,$file_id){
-			$m_ind = 0;
-			$cdir = scandir($path);
-			foreach ($cdir as $key => $value){
-				if (preg_match('/^'.$file_id.'\.sig\.s\d+$/',$value)){
-					$i = substr($value,strrpos($value,'.s')+2);
-					if ($i>$m_ind){
-						$m_ind = $i;
-					}
-				}
-			}
-			return $m_ind;
-		}
 		
 		$ind_used = TRUE;
 		if (file_exists(FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$relPath)){
-			$maxIndex = max_ind_in_path(FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$relPath,$fileId);		
+			$maxIndex = self::getMaxIndexInDir(FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$relPath,$fileId);		
 		}
 		
 		if (defined('FILE_STORAGE_DIR_MAIN' && file_exists(FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$relPath))){
-			$ind2 = max_ind_in_path(FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$relPath,$fileId);
+			$ind2 = self::getMaxIndexInDir(FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$relPath,$fileId);
 			if($ind2>$maxIndex){
 				$maxIndex = $ind2;
 				$ind_used = FALSE;

@@ -29,6 +29,10 @@
 	<xsl:if test="not(row/contractor_name='') and not(row/contractor_name='null')">
 		<div>Исполнитель: <xsl:value-of select="row/contractor_name"/></div>
 	</xsl:if>
+	<xsl:if test="not(row/main_expert_name='') and not(row/main_expert_name='null')">
+		<div>Главный эксперт: <xsl:value-of select="row/main_expert_name"/></div>
+	</xsl:if>
+	
 	<xsl:if test="not(row/service_descr='')">
 		<div>Услуга: <xsl:value-of select="row/service_descr"/></div>
 	</xsl:if>

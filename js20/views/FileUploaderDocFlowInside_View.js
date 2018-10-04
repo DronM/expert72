@@ -18,6 +18,7 @@ function FileUploaderDocFlowInside_View(id,options){
 
 	this.m_mainView = options.mainView;
 	
+	options.multiSignature = true;
 	options.uploadOnAdd = true;
 	options.templateOptions = options.templateOptions || {};
 	options.templateOptions.attFromTemplate = true;
@@ -149,3 +150,4 @@ FileUploaderDocFlowInside_View.prototype.deleteFileFromServer = function(fileId,
 FileUploaderDocFlowInside_View.prototype.deleteSigFromServer = function(fileId,itemId){
 	FileUploaderDocFlowInside_View.superclass.deleteSigFromServer.call(this,fileId,itemId,new DocFlowInside_Controller());
 }
+

@@ -172,7 +172,7 @@ FileUploaderApplication_View.prototype.setFileOptions = function(fileOpts,file){
 	fileOpts.file_date_time_formatted = DateHelper.format(DateHelper.strtotime(file.date_time),"d/m/y");	
 }
 
-
+/*
 FileUploaderApplication_View.prototype.signFile = function(fileId,itemId){
 	
 	var cades = window.getApp().getCadesAPI();
@@ -183,6 +183,7 @@ FileUploaderApplication_View.prototype.signFile = function(fileId,itemId){
 	
 	FileUploaderApplication_View.superclass.signFile.call(this,fileId,itemId,cert_lits_ctrl.getSelectedCert());
 }
+*/
 
 FileUploaderApplication_View.prototype.onSignClick = function(fileId,itemId){
 	var pm_sig = (new Application_Controller()).getPublicMethod("get_file_sig");

@@ -142,6 +142,7 @@
 <li><a href="#ApplicationClientList_Model">ApplicationClientList_Model</a></li>
 <li><a href="#ApplicationCustomerList_Model">ApplicationCustomerList_Model</a></li>
 <li><a href="#ApplicationContractorList_Model">ApplicationContractorList_Model</a></li>
+<li><a href="#ApplicationConstrNameList_Model">ApplicationConstrNameList_Model</a></li>
 <li><a href="#ApplicationContractor_Model">ApplicationContractor_Model</a></li>
 <li><a href="#ApplicationProcess_Model">ApplicationProcess_Model</a></li>
 <li><a href="#ApplicationProcessList_Model">ApplicationProcessList_Model</a></li>
@@ -243,6 +244,7 @@
 <li><a href="#RepReestrCostEval_Model">RepReestrCostEval_Model</a></li>
 <li><a href="#RepReestrPay_Model">RepReestrPay_Model</a></li>
 <li><a href="#RepReestrContract_Model">RepReestrContract_Model</a></li>
+<li><a href="#RepQuarter_Model">RepQuarter_Model</a></li>
 <li><a href="#Service_Model">Service_Model</a></li>
 <li><a href="#FileVerification_Model">FileVerification_Model</a></li>
 <li><a href="#UserCertificate_Model">UserCertificate_Model</a></li>
@@ -666,7 +668,8 @@
 </div>
 <h2>get_customer_list</h2>
 <a href="#ApplicationCustomerList_Model">Model: ApplicationCustomerList_Model</a><h2>get_contractor_list</h2>
-<a href="#ApplicationContractorList_Model">Model: ApplicationContractorList_Model</a>
+<a href="#ApplicationContractorList_Model">Model: ApplicationContractorList_Model</a><h2>get_constr_name_list</h2>
+<a href="#ApplicationConstrNameList_Model">Model: ApplicationConstrNameList_Model</a>
 </div>
 </div>
 <div id="ApplicationClient_Controller" class="content_box">
@@ -1194,6 +1197,24 @@
 </div>
 </div>
 <h2>get_reestr_contract</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>templ</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Нет</p>
+</div>
+<h3>inline</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Нет</p>
+</div>
+</div>
+<h2>get_quarter_rep</h2>
 <p>Arguments:</p>
 <div class="content_item content_item2">
 <h3>templ</h3>
@@ -3562,6 +3583,18 @@
 <div>Precision:</div>
 <h2>client_data</h2>
 <div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="ApplicationConstrNameList_Model" class="content_box">
+<h1>ApplicationConstrNameList_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>name</h2>
+<div>Type:String</div>
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>
@@ -9494,6 +9527,12 @@
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
+<h2>snils</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
 <h2>departments_ref</h2>
 <div>Type:JSON</div>
 <div>Primary key:</div>
@@ -10570,6 +10609,108 @@
 <div>Precision:</div>
 <h2>short_message_sender</h2>
 <div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="RepQuarter_Model" class="content_box">
+<h1>RepQuarter_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>ord</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>expertise_result_number</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>date</h2>
+<div>Type:Date</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>customer</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>constr_name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>work_start_date</h2>
+<div>Type:Date</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>primary_expertise_result_number</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>expertise_result</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>expertise_result_date</h2>
+<div>Type:Date</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>build_type_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>build_type_name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>expertise_type</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>in_estim_cost</h2>
+<div>Type:Float</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>in_estim_cost_recommend</h2>
+<div>Type:</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>cur_estim_cost</h2>
+<div>Type:Float</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>cur_estim_cost_recommend</h2>
+<div>Type:Float</div>
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>

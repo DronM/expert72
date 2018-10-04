@@ -2,7 +2,7 @@
 <metadata owner="expert72">
 	<versions>
 		<version dateOpen="2017-09-27 12:09:48" dateClose="2017-12-08 10:12:08">1.001 
-		<lastBuild>2018-10-03 11:32:21</lastBuild></version>
+		<lastBuild>2018-10-04 12:25:11</lastBuild></version>
 		<version dateOpen="2017-12-08 11:12:01" dateClose="2017-12-08 11:12:04">1.002</version>
 		<version dateOpen="2017-12-08 11:12:20" dateClose="2017-12-08 11:12:20">1.0.3</version>
 		<version dateOpen="2017-12-12 11:12:07" dateClose="2017-12-12 11:12:07">1.0.4</version>
@@ -77,6 +77,7 @@
 		<version dateOpen="2018-10-02 12:10:04" dateClose="2018-10-02 12:10:09">1.0.74</version>
 		<version dateOpen="2018-10-03 08:10:31" dateClose="2018-10-03 11:10:27">1.0.75</version>
 		<version dateOpen="2018-10-03 11:10:30" dateClose="2018-10-03 11:10:32">1.0.76</version>
+		<version dateOpen="2018-10-03 11:10:45" dateClose="2018-10-04 12:10:25">1.0.77</version>
 	</versions>
 	<globalFilters>
 		<field id="user_id"/>
@@ -1079,6 +1080,9 @@
 		<model id="ApplicationContractorList" parent="ModelSQL" dataTable="applications_contractors_list" virtual="TRUE">
 			<field id="name" dataType="String"/>
 		</model>
+		<model id="ApplicationConstrNameList" parent="ModelSQL" dataTable="applications_constr_name_list" virtual="TRUE">
+			<field id="name" dataType="String"/>
+		</model>
 		<model id="ApplicationContractor" parentJS="ModelJSON" virtual="TRUE" server="FALSE">
 			<field id="id" dataType="Int" refTable="user_clients" primaryKey="TRUE"/>
 			<field id="descr" dataType="String"/>
@@ -1274,6 +1278,7 @@
 			<field id="name" dataType="String"/>
 			<field id="users_ref" dataType="JSON"/>
 			<field id="posts_ref" dataType="JSON"/>
+			<field id="snils" dataType="String"/>
 			<field id="departments_ref" dataType="JSON"/>
 		</model>
 		<model id="EmployeeList" parent="ModelSQL" dataTable="employees_list" virtual="TRUE" baseModelId="Employee">
@@ -2691,6 +2696,24 @@
 			<field id="akt_number_date" dataType="String" alias="&#x410;&#x43A;&#x442;"/>
 			<field id="comment_text" dataType="String" alias="&#x41A;&#x43E;&#x43C;&#x43C;&#x435;&#x43D;&#x442;&#x430;&#x440;&#x438;&#x439;"/>
 		</model>
+		<model id="RepQuarter" parent="ModelReportSQL" virtual="TRUE" server="TRUE">
+			<field id="ord" dataType="String" alias="&#x2116;"/>
+			<field id="expertise_result_number" dataType="String" alias="&#x2116; &#x44D;&#x43A;&#x441;&#x43F;.&#x437;&#x430;&#x43A;&#x43B;&#x44E;&#x447;."/>
+			<field id="date" dataType="Date" alias="&#x414;&#x430;&#x442;&#x430; &#x43F;&#x43E;&#x441;&#x442;."/>
+			<field id="customer" dataType="String" alias="&#x417;&#x430;&#x43A;&#x430;&#x437;&#x447;&#x438;&#x43A;"/>
+			<field id="constr_name" dataType="String" alias="&#x41E;&#x431;&#x44A;&#x435;&#x43A;&#x442; &#x441;&#x442;&#x440;&#x43E;&#x438;&#x442;&#x435;&#x43B;&#x44C;&#x441;&#x442;&#x432;&#x430;"/>
+			<field id="work_start_date" dataType="Date" alias="&#x414;&#x430;&#x442;&#x430; &#x43D;&#x430;&#x447;.&#x440;&#x430;&#x431;&#x43E;&#x442;"/>
+			<field id="primary_expertise_result_number" dataType="String" alias="&#x41D;&#x43E;&#x43C;&#x435;&#x440; &#x43F;&#x435;&#x440;&#x432;&#x438;&#x447;&#x43D;&#x43E;&#x433;&#x43E; &#x437;&#x430;&#x43A;&#x43B;&#x44E;&#x447;."/>
+			<field id="expertise_result" dataType="String" alias="&#x420;&#x435;&#x437;&#x443;&#x43B;&#x44C;&#x442;&#x430;&#x442;"/>
+			<field id="expertise_result_date" dataType="Date" alias="&#x414;&#x430;&#x442;&#x430; &#x432;&#x44B;&#x434;&#x430;&#x447;&#x438; &#x440;&#x435;&#x437;&#x443;&#x43B;&#x44C;&#x442;&#x430;&#x442;&#x430;"/>
+			<field id="build_type_id" dataType="Int" alias="&#x412;&#x438;&#x434; &#x441;&#x442;&#x440;&#x43E;&#x438;&#x442;&#x435;&#x43B;&#x44C;&#x441;&#x442;&#x432;&#x430; &#x43A;&#x43E;&#x434;"/>
+			<field id="build_type_name" dataType="String" alias="&#x412;&#x438;&#x434; &#x441;&#x442;&#x440;&#x43E;&#x438;&#x442;&#x435;&#x43B;&#x44C;&#x441;&#x442;&#x432;&#x430; &#x43D;&#x430;&#x438;&#x43C;&#x435;&#x43D;&#x43E;&#x432;&#x430;&#x43D;&#x438;&#x435;"/>
+			<field id="expertise_type" dataType="String" alias="&#x412;&#x438;&#x434; &#x44D;&#x43A;&#x441;&#x43F;&#x435;&#x440;&#x442;&#x438;&#x437;&#x44B;"/>
+			<field id="in_estim_cost" dataType="Float" alias="&#x412;&#x445;&#x43E;&#x434;.&#x441;&#x43C;&#x435;&#x442;&#x43D;&#x430;&#x44F; &#x441;&#x442;&#x43E;&#x438;&#x43C;."/>
+			<field id="in_estim_cost_recommend" alias="&#x412;&#x445;&#x43E;&#x434;.&#x441;&#x43C;&#x435;&#x442;&#x43D;&#x430;&#x44F; &#x440;&#x435;&#x43A;&#x43E;&#x43C;&#x435;&#x43D;&#x434;.&#x441;&#x442;&#x43E;&#x438;&#x43C;."/>
+			<field id="cur_estim_cost" dataType="Float" alias="&#x422;&#x435;&#x43A;&#x443;&#x449;&#x430;&#x44F; &#x441;&#x43C;&#x435;&#x442;&#x43D;.&#x441;&#x442;&#x43E;&#x438;&#x43C;."/>
+			<field id="cur_estim_cost_recommend" dataType="Float" alias="&#x422;&#x435;&#x43A;&#x443;&#x449;&#x430;&#x44F; &#x440;&#x435;&#x43A;&#x43E;&#x43C;&#x435;&#x43D;&#x434;.&#x441;&#x43C;&#x435;&#x442;&#x43D;.&#x441;&#x442;&#x43E;&#x438;&#x43C;."/>
+		</model>
 		<model id="Service" parent="ModelSQL" dataTable="services" virtual="FALSE">
 			<defaultOrder>
 				<field id="id"/>
@@ -3185,6 +3208,13 @@
 				<field id="mid" dataType="Int"/>
 				<field id="name" dataType="String"/>
 			</publicMethod>
+			<publicMethod id="get_constr_name_list" modelId="ApplicationConstrNameList">
+				<field id="pattern" dataType="String"/>
+				<field id="count" dataType="Int"/>
+				<field id="ic" dataType="Int"/>
+				<field id="mid" dataType="Int"/>
+				<field id="name" dataType="String"/>
+			</publicMethod>
 		</controller>
 		<controller id="ApplicationClient" parentIdJS="ControllerObjClient" server="FALSE">
 			<publicMethod id="insert" modelId="ApplicationClient"/>
@@ -3638,6 +3668,10 @@
 				<field id="templ" dataType="String"/>
 				<field id="inline" dataType="Int"/>
 			</publicMethod>
+			<publicMethod id="get_quarter_rep" condFields="TRUE">
+				<field id="templ" dataType="String"/>
+				<field id="inline" dataType="Int"/>
+			</publicMethod>
 		</controller>
 		<controller id="ExpertiseRejectType" parentId="ControllerSQL">
 			<publicMethod id="insert" modelId="ExpertiseRejectType"/>
@@ -3895,6 +3929,7 @@
 		<view id="30001" c="Contract_Controller" t="RepReestrCostEval" section="&#x41E;&#x442;&#x447;&#x435;&#x442;&#x44B;" descr="&#x420;&#x435;&#x435;&#x441;&#x442;&#x440; &#x437;&#x430;&#x43A;&#x43B;&#x44E;&#x447;&#x435;&#x43D;&#x438;&#x439; &#x43F;&#x43E; &#x434;&#x43E;&#x441;&#x442;&#x43E;&#x432;&#x435;&#x440;&#x43D;&#x43E;&#x441;&#x442;&#x438;"/>
 		<view id="30002" c="Contract_Controller" t="RepReestrPay" section="&#x41E;&#x442;&#x447;&#x435;&#x442;&#x44B;" descr="&#x420;&#x435;&#x435;&#x441;&#x442;&#x440; &#x43E;&#x43F;&#x43B;&#x430;&#x442;"/>
 		<view id="30003" c="Contract_Controller" t="RepReestrContract" section="&#x41E;&#x442;&#x447;&#x435;&#x442;&#x44B;" descr="&#x420;&#x435;&#x435;&#x441;&#x442;&#x440; &#x43A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x43E;&#x432; (&#x432;&#x44B;&#x431;&#x43E;&#x440;&#x43A;&#x430;)"/>
+		<view id="30004" c="Contract_Controller" t="RepQuarter" section="&#x41E;&#x442;&#x447;&#x435;&#x442;&#x44B;" descr="&#x41A;&#x432;&#x430;&#x440;&#x442;&#x430;&#x43B;&#x44C;&#x43D;&#x44B;&#x439; &#x43E;&#x442;&#x447;&#x435;&#x442;"/>
 		<view id="50000" c="User_Controller" t="UserProfile" f="get_profile" section="&#x424;&#x43E;&#x440;&#x43C;&#x44B;" descr="&#x41F;&#x440;&#x43E;&#x444;&#x438;&#x43B;&#x44C; &#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x435;&#x43B;&#x44F;"/>
 		<view id="50001" c="Client_Controller" t="ClientSearch" section="&#x424;&#x43E;&#x440;&#x43C;&#x44B;" descr="&#x41F;&#x43E;&#x438;&#x441;&#x43A; &#x43A;&#x43B;&#x438;&#x435;&#x43D;&#x442;&#x43E;&#x432;"/>
 		<view id="50003" c="DocFlowTask_Controller" t="DocFlowTaskList" f="get_list" section="&#x424;&#x43E;&#x440;&#x43C;&#x44B;" descr="&#x417;&#x430;&#x434;&#x430;&#x447;&#x438; (&#x432;&#x441;&#x435;)"/>
@@ -3962,6 +3997,7 @@
 		<serverTemplate id="RepReestrCostEval"/>
 		<serverTemplate id="RepReestrPay"/>
 		<serverTemplate id="RepReestrContract"/>
+		<serverTemplate id="RepQuarter"/>
 	</serverTemplates>
 	<jsTemplates>
 		<jsTemplate id="FatalException" file="tmpl/FatalException.html"/>
@@ -4176,6 +4212,7 @@
 		<jsScript file="controls/rs/EditRefMultyType.rs_ru.js" resource="ru"/>
 		<jsScript file="controls/EditString.js"/>
 		<jsScript file="controls/EditText.js"/>
+		<jsScript file="controls/EditNum.js"/>
 		<jsScript file="controls/EditInt.js"/>
 		<jsScript file="controls/EditFloat.js"/>
 		<jsScript file="controls/EditMoney.js"/>
@@ -4532,6 +4569,7 @@
 		<jsScript file="views/RepReestrCostEval_View.js"/>
 		<jsScript file="views/RepReestrContract_View.js"/>
 		<jsScript file="views/RepReestrPay_View.js"/>
+		<jsScript file="views/RepQuarter_View.js"/>
 		<jsScript file="tmpl/App.templates.js" compressed="FALSE" standalone="FALSE"/>
 		<jsScript file="custom_controls/App.enums.js"/>
 		<jsScript file="custom_controls/App.predefinedItems.js"/>
@@ -4555,6 +4593,7 @@
 		<jsScript file="custom_controls/ApplicationClientEdit.js"/>
 		<jsScript file="custom_controls/ApplicationCustomerEditRef.js"/>
 		<jsScript file="custom_controls/ApplicationContractorEditRef.js"/>
+		<jsScript file="custom_controls/ApplicationConstrNameEdit.js"/>
 		<jsScript file="custom_controls/BaseContainer.js"/>
 		<jsScript file="custom_controls/ApplicationClientContainer.js"/>
 		<jsScript file="custom_controls/CompoundObjTechFeatureCont.js"/>
@@ -4921,6 +4960,8 @@
 		<jsScript file="models/ApplicationContractorList_Model.js"/>
 		<jsScript file="models/RepReestrContract_Model.js"/>
 		<jsScript file="models/FileForSigningList_Model.js"/>
+		<jsScript file="models/ApplicationConstrNameList_Model.js"/>
+		<jsScript file="models/RepQuarter_Model.js"/>
 	</jsScripts>
 	<cssScripts>
 		<cssScript file="assets/css/icons/icomoon/styles.css" compressed="TRUE" standalone="TRUE"/>

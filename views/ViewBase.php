@@ -431,6 +431,7 @@ class ViewBase extends ViewHTMLXSLT {
 
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/EditString.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/EditText.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/EditNum.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/EditInt.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/EditFloat.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/EditMoney.js'));
@@ -1280,6 +1281,7 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/RepReestrCostEval_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/RepReestrContract_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/RepReestrPay_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/RepQuarter_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'tmpl/App.templates.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/App.enums.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/App.predefinedItems.js'));
@@ -1303,6 +1305,7 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ApplicationClientEdit.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ApplicationCustomerEditRef.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ApplicationContractorEditRef.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ApplicationConstrNameEdit.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/BaseContainer.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ApplicationClientContainer.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/CompoundObjTechFeatureCont.js'));
@@ -1669,6 +1672,8 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ApplicationContractorList_Model.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/RepReestrContract_Model.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/FileForSigningList_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ApplicationConstrNameList_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/RepQuarter_Model.js'));
 	
 			if (isset($_SESSION['scriptId'])){
 				$script_id = $_SESSION['scriptId'];

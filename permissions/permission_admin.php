@@ -322,6 +322,8 @@ $permissions = array();
 				
 					$permissions['Application_Controller_get_contractor_list']=TRUE;
 				
+					$permissions['Application_Controller_get_constr_name_list']=TRUE;
+				
 					$permissions['ApplicationClient_Controller_insert']=TRUE;
 				
 					$permissions['ApplicationClient_Controller_update']=TRUE;
@@ -739,6 +741,8 @@ $permissions = array();
 					$permissions['Contract_Controller_get_reestr_pay']=TRUE;
 				
 					$permissions['Contract_Controller_get_reestr_contract']=TRUE;
+				
+					$permissions['Contract_Controller_get_quarter_rep']=TRUE;
 				
 					$permissions['ExpertiseRejectType_Controller_insert']=TRUE;
 				

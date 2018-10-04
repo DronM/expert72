@@ -901,6 +901,32 @@ class Contract_Controller extends ControllerSQL{
 			
 		$this->addPublicMethod($pm);
 
+			
+		$pm = new PublicMethod('get_quarter_rep');
+		
+		$pm->addParam(new FieldExtInt('count'));
+		$pm->addParam(new FieldExtInt('from'));
+		$pm->addParam(new FieldExtString('cond_fields'));
+		$pm->addParam(new FieldExtString('cond_sgns'));
+		$pm->addParam(new FieldExtString('cond_vals'));
+		$pm->addParam(new FieldExtString('cond_ic'));
+		$pm->addParam(new FieldExtString('ord_fields'));
+		$pm->addParam(new FieldExtString('ord_directs'));
+		$pm->addParam(new FieldExtString('field_sep'));
+
+				
+	$opts=array();
+					
+		$pm->addParam(new FieldExtString('templ',$opts));
+	
+				
+	$opts=array();
+					
+		$pm->addParam(new FieldExtInt('inline',$opts));
+	
+			
+		$this->addPublicMethod($pm);
+
 		
 	}	
 	
@@ -1897,7 +1923,8 @@ class Contract_Controller extends ControllerSQL{
 				%s AS contractor_name,
 				CASE WHEN %s IS NOT NULL THEN (SELECT name FROM clients WHERE id=%d) ELSE '' END AS client_name,
 				'%s' AS service_descr,
-				'%s' date_type_descr
+				'%s' date_type_descr,
+				CASE WHEN %s IS NOT NULL THEN (SELECT name FROM employees WHERE id=%d) ELSE '' END AS main_expert_name
 			",
 			$dt_from,
 			$dt_to,
@@ -1906,13 +1933,177 @@ class Contract_Controller extends ControllerSQL{
 			$client_id,
 			$client_id,
 			$service_descr,
-			$date_type_descr
+			$date_type_descr,
+			$main_expert_id,
+			$main_expert_id			
 			),
 		'Head_Model'
 		);		
 	
 	}
 	
+	public function get_quarter_rep($pm){
+		$cond = new ConditionParamsSQL($pm,$this->getDbLink());
+		$dt_from = $cond->getDbVal('date_time','ge',DT_DATE);
+		if (!isset($dt_from)){
+			throw new Exception('Не задана дата начала!');
+		}		
+		$dt_to = $cond->getDbVal('date_time','le',DT_DATE);
+		if (!isset($dt_to)){
+			throw new Exception('Не задана дата окончания!');
+		}		
+		$extra_cond = '';
+		
+		$client_id = $cond->getDbVal('client_id','e',DT_INT);
+		if ($client_id && $client_id!='null'){
+			$extra_cond.= sprintf(' AND contracts.client_id=%d',$client_id);
+		}
+
+		$build_type_id = $cond->getDbVal('build_type_id','e',DT_INT);
+		if ($build_type_id && $build_type_id!='null'){
+			$extra_cond.= sprintf(' AND app.build_type_id=%d',$build_type_id);
+		}
+		
+		$constr_name = $cond->getDbVal('constr_name','e',DT_STRING);
+		if ($constr_name && $constr_name!='null'){
+			$extra_cond.= sprintf(" AND coalesce(contracts.constr_name,app.constr_name) = %s",$constr_name);
+		}
+		
+		$main_expert_id = $cond->getDbVal('main_expert_id','e',DT_INT);
+		if ($main_expert_id && $main_expert_id!='null'){
+			$extra_cond.= sprintf(' AND contracts.main_expert_id=%d',$main_expert_id);
+		}
+		
+		$result_type_par = strtolower($cond->getVal('result_type','e',DT_STRING));		
+		$result_type_descr = '';
+		if ($result_type_par && $result_type_par=='positive'){
+			$extra_cond.= " AND expertise_result='positive'";
+			$result_type_descr = 'Только с положительным заключением';
+		}
+		else if ($result_type_par && $result_type_par=='negative'){
+			$extra_cond.= " AND expertise_result='negative'";
+			$result_type_descr = 'Только с отрицательным заключением';
+		}
+		else if ($result_type_par && $result_type_par=='primary_exists'){
+			$extra_cond.= "";
+			$result_type_descr = 'Только повторные';
+		}
+		
+		$customer_name = $cond->getDbVal('customer_name','e',DT_STRING);
+		if ($customer_name && $customer_name!='null'){
+			$extra_cond.= sprintf(" AND app.customer->>'name'=%s",$customer_name);
+		}
+
+		$contractor_name = $cond->getDbVal('contractor_name','e',DT_STRING);
+		if ($contractor_name && $contractor_name!='null'){
+			$extra_cond.= sprintf(
+				"AND (%s =ANY( ARRAY((SELECT s.contractor->>'name'
+				FROM (SELECT jsonb_array_elements(app_t.contractors) AS contractor
+					FROM applications AS app_t
+					WHERE app_t.id=app.id
+				) AS s)) ) )",
+				$contractor_name);
+		}
+		
+		$expertise_type_par = strtolower($cond->getVal('expertise_type','e',DT_STRING));		
+		$expertise_type_descr = '';
+		if ($expertise_type_par && $expertise_type_par=='pd'){
+			$extra_cond.= " AND contracts.expertise_type='pd'";
+			$expertise_type_descr = 'Проектная документация';
+		}
+		else if ($expertise_type_par && $expertise_type_par=='eng_survey'){
+			$extra_cond.= " AND contracts.expertise_type='eng_survey'";
+			$expertise_type_descr = 'Результаты инженерных изысканий';
+		}
+		else if ($expertise_type_par && $expertise_type_par=='pd_eng_survey'){
+			$extra_cond.= " AND contracts.expertise_type='pd_eng_survey'";
+			$expertise_type_descr = 'Проектная документация и результаты инженерных изысканий';
+		}
+		
+		$expertise_result = $cond->getVal('expertise_result','e',DT_STRING);		
+		$expertise_result_descr = '';
+		if ($expertise_result=='positive'){
+			$extra_cond.= " AND contracts.expertise_result='positive'";
+			$expertise_result_descr = 'Положительные заключения';
+		}
+		else if ($expertise_result=='negative'){
+			$extra_cond.= " AND contracts.expertise_result='negative'";
+			$expertise_result_descr = 'Отрицательные заключения';
+		}
+		
+		$this->addNewModel(
+			sprintf(
+			"SELECT
+				row_number() OVER (ORDER BY contracts.date_time) AS ord,
+				contracts.expertise_result_number,
+				to_char(contracts.date_time,'DD/MM/YY') AS date,
+				app.customer->>'name' AS customer,
+				contracts.constr_name,	
+				to_char(contracts.work_start_date,'DD/MM/YY') AS work_start_date,
+				coalesce(primary_ct.expertise_result_number,contracts.primary_contract_reg_number) AS primary_expertise_result_number,
+				contracts.expertise_result,
+				to_char(contracts.expertise_result_date,'DD/MM/YY') AS expertise_result_date,
+				app.build_type_id,
+				build_types.name AS build_type_name,
+				
+				contracts.expertise_type AS expertise_type,
+				
+				contracts.in_estim_cost,
+				contracts.in_estim_cost_recommend,
+				contracts.cur_estim_cost,
+				contracts.cur_estim_cost_recommend
+			FROM contracts	
+			LEFT JOIN applications AS app ON app.id=contracts.application_id
+			LEFT JOIN build_types ON build_types.id=app.build_type_id
+			LEFT JOIN contracts AS primary_ct ON primary_ct.id=contracts.primary_contract_id
+			WHERE contracts.date_time BETWEEN %s AND %s
+				AND contracts.expertise_type IS NOT NULL %s
+			ORDER BY contracts.date_time",
+			$dt_from,
+			$dt_to,
+			$extra_cond
+			),
+		'RepQuarter_Model'
+		);		
+		
+		$this->addNewModel(
+			sprintf(
+			"SELECT
+				format_period_rus(%s::date,%s::date,NULL) AS period_descr,
+				CASE WHEN %s IS NOT NULL THEN (SELECT name FROM clients WHERE id=%d) ELSE '' END AS client_name,
+				'%s' result_type_descr,
+				%s AS customer_name,
+				%s AS contractor_name,
+				%s AS constr_name,
+				CASE WHEN %s IS NOT NULL THEN (SELECT name FROM build_types WHERE id=%d) ELSE '' END AS build_type_name,
+				CASE WHEN %s IS NOT NULL THEN (SELECT name FROM employees WHERE id=%d) ELSE '' END AS main_expert_name,
+				'%s' AS expertise_type_descr,
+				'%s' AS expertise_result_descr
+			",
+			$dt_from,
+			$dt_to,
+			$client_id,
+			$client_id,
+			$result_type_descr,
+			$customer_name,
+			$contractor_name			,
+			$constr_name,
+			$build_type_id,
+			$build_type_id,
+			$main_expert_id,
+			$main_expert_id,
+			$expertise_type_descr,
+			$expertise_result_descr
+			),
+		'Head_Model'
+		);		
+
+		$this->addNewModel(
+			"SELECT * FROM build_types ORDER BY name",
+		'BuildType_Model'
+		);		
+		
+	}	
 
 }
 ?>

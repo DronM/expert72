@@ -37,6 +37,9 @@ define('CLIENT_OUT_FOLDER','Исходящие заявителя');
 
 function mkdir_or_error($dir){
 	if (!file_exists($dir)){
+		if (strlen($dir)>4096){
+			throw new Exception('Path lenght exceeds maximum value!');
+		}
 		@mkdir($dir,0775,TRUE);
 		@chmod($dir, 0775);
 		//throw new Exception('Ошибка создания директории'.( ($_SESSION['role_id']=='admin')? ' '.$dir : '') );
@@ -125,16 +128,11 @@ function merge_sig($resumable,$origFile,$newName,$appId,$fileId,$filePath){
 	)	
 	||
 	(!$appId &&
-		(!file_exists($content_file = DOC_FLOW_FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
-				$filePath.DIRECTORY_SEPARATOR.
-				$fileId
-			)
+		(!file_exists($content_file = DOC_FLOW_FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$fileId)
 		&&
-		(defined('DOC_FLOW_FILE_STORAGE_DIR_MAIN')&&
-		!file_exists($content_file = DOC_FLOW_FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
-				$filePath.DIRECTORY_SEPARATOR.
-				$fileId
-			)
+		(!defined('DOC_FLOW_FILE_STORAGE_DIR_MAIN')
+		||
+		!file_exists($content_file = DOC_FLOW_FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$fileId)
 		)
 		)
 	)		
@@ -219,6 +217,7 @@ try{
 		}
 		else{
 			//раздел документации
+			//Нет никакой проверки?!
 			$file_path = intval($_REQUEST['doc_id']);
 		}
 		
@@ -285,7 +284,7 @@ try{
 					FieldSQLString::formatForDb($dbLink,$_REQUEST['doc_type'],$db_doc_type);
 					FieldSQLString::formatForDb($dbLink,$_REQUEST['resumableFilename'],$db_fileName);
 					FieldSQLString::formatForDb($dbLink,$par_file_id,$db_file_id);
-					FieldSQLString::formatForDb($dbLink,$file_path,$db_file_path);
+					FieldSQLString::formatForDb($dbLink,$_REQUEST['file_path'],$db_file_path);
 
 					//Проверка файла в разделе по имени кроме простых вложений
 					if ($file_path!=CLIENT_OUT_FOLDER){

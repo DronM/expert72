@@ -318,3 +318,14 @@ FileSigContainer.prototype.deleteLast = function(){
 		return true;
 	}
 }
+FileSigContainer.prototype.findSignatureBySNILS = function(SNILS){
+	var res = false;
+	var elem = this.m_signatures.getElements();
+	for(var sig_id in elem){
+		if (elem[sig_id] && elem[sig_id].certInf.signature&&elem[sig_id].certInf.signature.owner&&elem[sig_id].certInf.signature.owner["СНИЛС"]==SNILS){
+			res = true;
+			break;
+		}
+	}
+	return res;
+}

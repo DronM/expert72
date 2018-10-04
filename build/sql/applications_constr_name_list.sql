@@ -10,4 +10,4 @@ CREATE OR REPLACE VIEW applications_constr_name_list AS
 	ORDER BY constr_name
 	;
 	
-ALTER VIEW applications_constr_name_list OWNER TO expert72;
+ALTER VIEW applications_constr_name_list OWNER TO ;
