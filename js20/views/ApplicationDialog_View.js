@@ -800,7 +800,7 @@ ApplicationDialog_View.prototype.onGetData = function(resp,cmd){
 		var app_ref = new RefType({"keys":{"id":m.getFieldValue("id")},"descr":m.getFieldValue("select_descr")});
 		var tab_out = new DocFlowOutClientList_View(this.getId()+":doc_flow_out",{
 			"application":app_ref,
-			"readOnly":(st!="waiting_for_contract"&&st!="waiting_for_pay"&&st!="expertise"),
+			"readOnly":false,//(st!="waiting_for_contract"&&st!="waiting_for_pay"&&st!="expertise"),
 			"models":{"DocFlowOutClientList_Model":this.m_DocFlowOutClientList_Model}			
 		});
 		var dlg_m = new DocFlowOutClientDialog_Model();

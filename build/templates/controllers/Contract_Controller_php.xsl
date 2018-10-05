@@ -96,7 +96,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 							jsonb_build_object(
 								'id',adf.file_id,
 								'owner',NULL,
-								'create_dt',NULL,
+								'sign_date_time',NULL,
 								'check_result',NULL,
 								'check_time',NULL,
 								'error_str',NULL
@@ -111,23 +111,33 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			LEFT JOIN doc_flow_out_client_reg_numbers AS reg ON reg.doc_flow_out_client_id=m.id
 			LEFT JOIN (
 				SELECT
+					files_t.file_id,
+					jsonb_agg(files_t.signatures) AS signatures
+				FROM
+				(SELECT
 					f_sig.file_id,
-					jsonb_agg(
-						jsonb_build_object(
-							'owner',u_certs.subject_cert,
-							'create_dt',f_sig.sign_date_time,
-							'check_result',ver.check_result,
-							'check_time',ver.check_time,
-							'error_str',ver.error_str
-						)
-					) As signatures
+					jsonb_build_object(
+						'owner',u_certs.subject_cert,
+						'sign_date_time',f_sig.sign_date_time,
+						'check_result',ver.check_result,
+						'check_time',ver.check_time,
+						'error_str',ver.error_str,
+						'cert_from',u_certs.date_time_from,
+						'cert_to',u_certs.date_time_to
+					) AS signatures
 				FROM file_signatures AS f_sig
 				LEFT JOIN file_verifications AS ver ON ver.file_id=f_sig.file_id
 				LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id
-				GROUP BY f_sig.file_id
+				ORDER BY f_sig.sign_date_time
+				) AS files_t
+				GROUP BY files_t.file_id
 			) AS sign ON sign.file_id=adf.file_id			
-			WHERE adf.application_id=%d
-			ORDER BY adf.document_type,adf.document_id,adf.file_name,adf.deleted_dt ASC NULLS LAST",
+			WHERE adf.application_id=%d AND adf.document_id>0
+			ORDER BY
+				adf.document_type,
+				adf.document_id,
+				adf.file_name,
+				adf.deleted_dt ASC NULLS LAST",
 		$ar_obj['application_id']
 		));
 		

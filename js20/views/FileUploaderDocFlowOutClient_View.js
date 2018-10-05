@@ -56,17 +56,15 @@ FileUploaderDocFlowOutClient_View.prototype.deleteFileFromServer = function(file
 }
 
 FileUploaderDocFlowOutClient_View.prototype.downloadFile = function(btnCtrl){
-//return;
-	var contr = new Application_Controller();
-	var pm = contr.getPublicMethod("get_file");
+	var pm = (new Application_Controller()).getPublicMethod("get_file");
 	pm.setFieldValue("id",btnCtrl.getAttr("file_id"));
 	pm.download();
-	//signature
-	if (btnCtrl.getAttr("file_signed")=="true"){
-		var pm_sig = contr.getPublicMethod("get_file_sig");
-		pm_sig.setFieldValue("id",btnCtrl.getAttr("file_id"));
-		pm_sig.download(null,1);
-	}
+}
+
+FileUploaderDocFlowOutClient_View.prototype.onSignClick = function(fileId,itemId){
+	var pm_sig = (new Application_Controller()).getPublicMethod("get_file_sig");
+	pm_sig.setFieldValue("id",fileId);
+	pm_sig.download();
 }
 
 FileUploaderDocFlowOutClient_View.prototype.getQuerySruc = function(file){

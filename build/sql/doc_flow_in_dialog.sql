@@ -73,18 +73,20 @@ CREATE OR REPLACE VIEW doc_flow_in_dialog AS
 
 	LEFT JOIN (
 		SELECT
-			t.doc_flow_out_client_id AS client_doc_id,
-			json_agg(
-				json_build_object(
-					'file_id',app_f.file_id,
-					'file_name',app_f.file_name,
-					'file_size',app_f.file_size,
-					'file_signed',app_f.file_signed,
-					'file_uploaded','true',
-					'file_path',app_f.file_path
-					,'signatures',sign.signatures
-				)
-			) AS attachments			
+			files_t.doc_flow_out_client_id AS client_doc_id,
+			json_agg(files_t.attachments) AS attachments
+		FROM
+		(SELECT
+			t.doc_flow_out_client_id,
+			json_build_object(
+				'file_id',app_f.file_id,
+				'file_name',app_f.file_name,
+				'file_size',app_f.file_size,
+				'file_signed',app_f.file_signed,
+				'file_uploaded','true',
+				'file_path',app_f.file_path
+				,'signatures',sign.signatures
+			) AS attachments
 		FROM doc_flow_out_client_document_files AS t
 		LEFT JOIN application_document_files AS app_f ON app_f.file_id = t.file_id
 		LEFT JOIN file_verifications AS f_ver ON f_ver.file_id=t.file_id
@@ -107,16 +109,13 @@ CREATE OR REPLACE VIEW doc_flow_in_dialog AS
 			FROM file_signatures AS f_sig
 			LEFT JOIN file_verifications AS ver ON ver.file_id=f_sig.file_id
 			LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id
-			GROUP BY f_sig.file_id,f_sig.sign_date_time,ver.check_result,ver.check_time,ver.error_str,
-			u_certs.subject_cert,
-			u_certs.date_time_from,
-			u_certs.date_time_to
-
-			ORDER BY f_sig.file_id,f_sig.sign_date_time
+			ORDER BY f_sig.sign_date_time
 			) AS sub
 			GROUP BY  sub.file_id		
-		)  AS sign ON sign.file_id=t.file_id
-		GROUP BY t.doc_flow_out_client_id		
+		)  AS sign ON sign.file_id=t.file_id		
+		ORDER BY app_f.file_path,app_f.file_name
+		) AS files_t
+		GROUP BY files_t.doc_flow_out_client_id		
 	) AS files2 ON files2.client_doc_id = doc_flow_in.from_doc_flow_out_client_id
 	
 	LEFT JOIN (

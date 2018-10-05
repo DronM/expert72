@@ -684,6 +684,20 @@ expert_works_process()
 employees_dialog
 applications_constr_name_list
 
+04/10
+doc_flow_out_client_dialog
+doc_flow_out_dialog
+doc_flow_in_client_dialog
+doc_flow_in_dialog
+
+
+05/10
+applications_dialog
+
+
+FieldSQLFloat.php
+FieldSQLInt.php
+
 1;"Договорные документы/Контракт";TRUE
 2;"Заключение";FALSE
 3;"Исходящие";FALSE

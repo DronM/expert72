@@ -480,7 +480,7 @@ class DocFlowIn_Controller extends DocFlow_Controller{
 
 			ob_clean();
 			$mime = getMimeTypeOnExt($fl_name);
-			downloadFile($file_zip, $mime,'attachment;','Файлы по вход.документу №'.$ar['reg_number']);
+			downloadFile($file_zip, $mime,'attachment;','Файлы по вход.документу №'.$ar['reg_number'].'.zip');
 			return TRUE;
 	
 			while($file = $this->getDbLink()->fetch_array($qid)){

@@ -11,6 +11,7 @@
  * @param {string} id - Object identifier
  * @param {object} options
  * @param {bool} [options.multiSignature=false]
+ * @param {int} options.maxSugnatureCount 
  * @param {function} options.onSignFile
  * @param {function} options.onSignClick
  * @param {string} options.fileId
@@ -26,6 +27,7 @@ function FileSigContainer(id,options){
 	this.m_fileId = options.fileId;
 	this.m_itemId = options.itemId;
 	this.m_multiSignature = (options.multiSignature!=undefined)? options.multiSignature:false;
+	this.m_maxSugnatureCount = options.maxSugnatureCount;
 	
 	this.m_readOnly = (options.readOnly!=undefined)? options.readOnly : false;
 	
@@ -116,7 +118,7 @@ FileSigContainer.prototype.addSignature = function(signature){
 	}
 		
 	ctrl.certInf = new ToolTip({
-		"wait":1000,
+		"wait":300,
 		"onHover":function(e){
 			if (this.signature){
 				if(this.signature.check_result==undefined && !this.signature.owner && self.m_onGetSignatureDetails && self.m_onGetFileUploaded(self.m_fileId,self.m_itemId)){
@@ -153,7 +155,10 @@ FileSigContainer.prototype.sigsToDOM = function(){
 		if (cades){	
 			var cert_cnt = cades.getCertListCount();		
 			var sig_cnt = this.m_signatures.getCount();
-			var vs=(cert_cnt && (!sig_cnt || this.m_multiSignature) );
+			var vs= (
+				(!this.m_maxSugnatureCount || sig_cnt<this.m_maxSugnatureCount)
+				&& ( cert_cnt && (!sig_cnt || this.m_multiSignature) )
+			);
 			var self = this;
 			
 			this.m_addSignControl = new ControlContainer(this.getId()+":addSign","SPAN",{
@@ -252,7 +257,7 @@ FileSigContainer.prototype.showSignatureDetails = function(toolTip,e){
 			if (signature.cert_to&&DateHelper.strtotime(signature.cert_to)<DateHelper.time()){
 				expir = '<div class="badge badge-danger">Просрочена</div>';
 			}
-			cert = "<div>Действует с "+DateHelper.format(DateHelper.strtotime(signature.cert_from),"d/m/Y")+" до "+DateHelper.format(DateHelper.strtotime(signature.cert_to),"d/m/Y")+
+			cert = "<div>Сертификат с "+DateHelper.format(DateHelper.strtotime(signature.cert_from),"d/m/Y")+" до "+DateHelper.format(DateHelper.strtotime(signature.cert_to),"d/m/Y")+
 					expir+
 			"</div>";
 		}
@@ -264,7 +269,7 @@ FileSigContainer.prototype.showSignatureDetails = function(toolTip,e){
 			'</div>'+
 			(org.length? org:"") +
 			(pers.length? pers:"") +
-			(signature.sign_date_time? "<div>Подписан: "+DateHelper.format(sign_date_time_d,"d/m/Y H:i")+"</div>":"")+
+			(signature.sign_date_time? "<div><strong>Подписан: "+DateHelper.format(sign_date_time_d,"d/m/Y H:i")+"</strong></div>":"")+
 			cert+						
 		"</div>";
 	}

@@ -101,26 +101,6 @@ CREATE OR REPLACE VIEW contracts_dialog AS
 						'section_id',sec.section_id,
 						'section_name',sec.section_name,
 						'experts_list',
-						/*
-						(
-							SELECT string_agg(sub.name||'('||
-								CASE WHEN EXTRACT(DAY FROM sub.d)<10 THEN '0'||EXTRACT(DAY FROM sub.d)::text ELSE EXTRACT(DAY FROM sub.d)::text END ||
-								'/'||
-								CASE WHEN EXTRACT(MONTH FROM sub.d)<10 THEN '0'||EXTRACT(MONTH FROM sub.d)::text ELSE EXTRACT(MONTH FROM sub.d)::text END ||	
-								')'||') '||sub.comment_text
-							,',')
-							FROM (
-							SELECT
-								person_init(employees.name,FALSE) AS name,
-								max(expert_works.date_time)::date AS d,
-								expert_works.comment_text
-							FROM expert_works
-							LEFT JOIN employees ON employees.id=expert_works.expert_id
-							WHERE contract_id=t.id AND section_id=sec.section_id
-							GROUP BY employees.name,expert_works.comment_text
-							) AS sub	
-						)
-						*/
 						(SELECT
 							string_agg(
 								coalesce(expert_works.comment_text,'') ||

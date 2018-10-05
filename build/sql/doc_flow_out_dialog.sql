@@ -60,10 +60,9 @@ CREATE OR REPLACE VIEW doc_flow_out_dialog AS
 				FROM file_signatures AS f_sig
 				LEFT JOIN file_verifications AS ver ON ver.file_id=f_sig.file_id
 				LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id
-				GROUP BY f_sig.file_id,ver.date_time
-				ORDER BY ver.date_time
+				GROUP BY f_sig.file_id,f_sig.sign_date_time
+				ORDER BY f_sig.sign_date_time
 				--ТАКАЯ СОРТИРОВКА ЧТОБЫ НЕ БЫЛО ПРОБЛЕМ У УДАЛЕНИЕМ!!!
-				
 			) AS sign ON sign.file_id=t.file_id			
 			WHERE t.doc_type='doc_flow_out'::data_types AND t.doc_id=doc_flow_out.id
 			GROUP BY t.file_path

@@ -18,7 +18,8 @@
  * @param {function} options.setFileOptions
  * @param {bool} [options.allowSignature=true]
  * @param {string} options.customFolder
- * @param {bool} [options.includeFilePath=false]
+ * @param {bool} [options.includeFilePath=false] для не иерархической структуры
+ * @param {string} options.defaultFilePath для отображения при includeFilePath=true DocFolderClient_View
  * @param {function} options.getCustomFolderDefault
  * @param {bool} [options.multiSignature=false]
  * @param {bool} options.readOnly
@@ -42,6 +43,7 @@ function FileUploader_View(id,options){
 	this.m_customFolder = options.customFolder;
 	this.m_getCustomFolderDefault = options.getCustomFolderDefault;
 	this.m_includeFilePath = (options.includeFilePath!=undefined)? options.includeFilePath : false;
+	this.m_defaultFilePath = options.defaultFilePath;
 	
 	this.m_clientReqSigInf = (options.clientReqSigInf!=undefined)? options.clientReqSigInf:false;
 	
@@ -314,7 +316,7 @@ FileUploader_View.prototype.addFileToContainer = function(container,itemFile,ite
 	}
 
 	if (this.m_includeFilePath){
-		templateOptions.file_path = itemFile.file_path+"/ ";
+		templateOptions.file_path = (itemFile.file_path? itemFile.file_path : this.m_defaultFilePath)+"/ ";
 	}
 	
 	if (this.m_setFileOptions){
@@ -355,6 +357,7 @@ FileUploader_View.prototype.addFileToContainer = function(container,itemFile,ite
 	}
 	*/
 	
+	//Больше не используется!!!
 	if (cust_folder){	
 		var incl_id = this.getId()+":file_"+itemFile.file_id+":include";
 		var vis = (self.m_getCustomFolderDefault || (itemFile.file_path&&itemFile.file_path.length&&itemFile.file_path!="Исходящие") )? true:false;
@@ -456,6 +459,7 @@ FileUploader_View.prototype.addFileToContainer = function(container,itemFile,ite
 			"itemId":itemId,
 			"signatures":CommonHelper.unserialize(itemFile.signatures),//array!
 			"multiSignature":this.m_multiSignature,
+			"maxSugnatureCount":(this.setFileSignedByClient!=undefined)? 2:undefined,
 			"readOnly":this.m_readOnly,
 			"onSignFile":function(fileId,itemId){
 				self.signFile(fileId,itemId);
@@ -471,9 +475,6 @@ FileUploader_View.prototype.addFileToContainer = function(container,itemFile,ite
 			}
 		});
 		file_ctrl.sigCont.toDOM(file_ctrl.getNode());
-		if (this.setFileSignedByClient){
-			file_ctrl.sigCont.setAddSignVisible(false);
-		}
 		/*		
 		container.addElement(new Button(this.getId()+":file_"+itemFile.file_id+"_sign",{
 			"attrs":{"file_id":itemFile.file_id,"item_id":itemId},
@@ -591,10 +592,7 @@ FileUploader_View.prototype.deleteFileFromServer = function(fileId,itemId,contro
 	pm.run({"ok":function(){
 		window.showNote(self.NT_FILE_DELETED);
 		self.decTotalFileCount();
-		file_cont = self.getElement("file-list_"+itemId);
-		file_cont.delElement("file_"+fileId);
-		file_cont.delElement("file_"+fileId+"_del");
-		file_cont.delElement("file_"+fileId+"_href");		
+		this.deleteFileCont(fileId,itemId);
 		self.decTotalFileCount();
 		self.calcFileTotals(itemId);
 	}});				
@@ -730,12 +728,16 @@ FileUploader_View.prototype.deleteFile = function(fileId,itemId){
 
 FileUploader_View.prototype.deleteLocalFileFromUpload = function(fileId,itemId){
 	this.deleteFileFromUpload(fileId);
+	this.deleteFileCont(fileId,itemId);
+	this.calcFileTotals(itemId);			
+}
+
+FileUploader_View.prototype.deleteFileCont = function(fileId,itemId){
 	var file_cont = this.getElement("file-list_"+itemId);
 	file_cont.delElement("file_"+fileId);
 	file_cont.delElement("file_"+fileId+"_del");
 	file_cont.delElement("file_"+fileId+"_switch");
 	file_cont.delElement("file_"+fileId+"_href");
-	this.calcFileTotals(itemId);			
 }
 
 FileUploader_View.prototype.deleteFileFromUpload = function(fileId){
@@ -1349,12 +1351,15 @@ FileUploader_View.prototype.signFile = function(fileId,itemId){
 							if (message.trim().length){		
 								self.fireFileError(file,message);
 							}
-							else if(self.m_onlySignature && self.setFileSignedByClient){
-								self.setFileSignedByClient(file.file_id,true);
+							else{
+								if(self.m_onlySignature && self.setFileSignedByClient){
+									self.setFileSignedByClient(file.file_id,true);
+								}
+								self.setFileSigned(fileId);
+								file_ctrl.sigCont.addSignature(sigFile.signature);
+								file_ctrl.sigCont.sigsToDOM();
+							
 							}
-							self.setFileSigned(fileId);
-							file_ctrl.sigCont.addSignature(sigFile.signature);
-							file_ctrl.sigCont.sigsToDOM();
 							file_ctrl.sigCont.setWait(false);
 						});
 

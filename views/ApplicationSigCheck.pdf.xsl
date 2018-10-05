@@ -152,7 +152,12 @@ https://www.webucator.com/tutorial/learn-xsl-fo
 		</fo:table-cell>
 		<fo:table-cell border-width="0.2mm" border-style="solid">>
 			<fo:block>
-				<xsl:value-of select="error_str"/>
+				<xsl:choose>
+				<xsl:when test="check_result='false'">
+					<xsl:value-of select="error_str"/>
+				</xsl:when>
+				<xsl:otherwise>ОК</xsl:otherwise>
+				</xsl:choose>
 			</fo:block>
 		</fo:table-cell>
 		<fo:table-cell border-width="0.2mm" border-style="solid">

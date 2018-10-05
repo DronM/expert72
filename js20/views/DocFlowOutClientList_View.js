@@ -61,7 +61,6 @@ function DocFlowOutClientList_View(id,options){
 	var grid_filters = [];		
 	if (options.application){
 		//вызов из заявления - всегда фильтр
-		//вызов из заявления - всегда фильтр
 		grid_filters.push({
 			"field":"application_id",
 			"sign":"e",
@@ -151,7 +150,7 @@ function DocFlowOutClientList_View(id,options){
 			})
 		);
 	}
-	
+
 	this.addElement(new GridAjx(id+":grid",{
 		"model":model,
 		"keyIds":["id"],

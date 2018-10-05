@@ -21,6 +21,7 @@ function DocFolderClient_View(id,options){
 	options.customFolder = false;
 	options.template = window.getApp().getTemplate("DocFlowAttachmentsNoTree");
 	options.allowOnlySignedFiles = true;	
+	options.defaultFilePath = "Исходящие заявителя";
 	
 	DocFolderClient_View.superclass.constructor.call(this,id,options);
 	

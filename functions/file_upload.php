@@ -176,6 +176,23 @@ function merge_sig($resumable,$origFile,$newName,$appId,$fileId,$filePath){
 	rename($merged_sig,$newName);
 }
  
+/** validation
+ */ 
+function get_doc_flow_out_client_id_for_db($dbLink,$appIdForDb,$docFlowOutClientIdPar){
+	$db_doc_flow_out_client_id = NULL;
+	FieldSQLInt::formatForDb($docFlowOutClientIdPar,$db_doc_flow_out_client_id);
+	if ($db_doc_flow_out_client_id=='null'){
+		throw new Exception(ER_NO_DOC);
+	}
+	
+	$ar = $dbLink->query_first(sprintf("SELECT (application_id=%d) AS app_checked FROM doc_flow_out_client WHERE id=%d",$appIdForDb,$db_doc_flow_out_client_id));
+	if (!count($ar) || $ar['app_checked']!='t'){
+		throw new Exception(ER_NO_DOC);
+	}
+	
+	return $db_doc_flow_out_client_id;
+}
+ 
 try{ 
 	/**
 	 * Еще есть необязательные:
@@ -207,20 +224,27 @@ try{
 		}
 				
 		$file_path = '';
+		
+		/** Из этой переменной значение пойдет в БД
+		 * При doc_type==documents в БД пойдет CLIENT_OUT_FOLDER
+		 */
+		$file_path_par = $_REQUEST['file_path'];
+		
 		if ($sig_add){
 			check_app_folder($dbLink);
-			$file_path = $_REQUEST['file_path'];
+			$file_path = $file_path_par;
 		}
 		else if ($_REQUEST['doc_type']=='documents'){
 			//исх.письмо
 			$file_path = CLIENT_OUT_FOLDER;
+			$file_path_par = CLIENT_OUT_FOLDER;
 		}
 		else{
 			//раздел документации
 			//Нет никакой проверки?!
 			$file_path = intval($_REQUEST['doc_id']);
 		}
-		
+
 		$par_file_id = $_REQUEST['file_id'];
 		$par_app_id = intval($_REQUEST['application_id']);
 				
@@ -284,7 +308,7 @@ try{
 					FieldSQLString::formatForDb($dbLink,$_REQUEST['doc_type'],$db_doc_type);
 					FieldSQLString::formatForDb($dbLink,$_REQUEST['resumableFilename'],$db_fileName);
 					FieldSQLString::formatForDb($dbLink,$par_file_id,$db_file_id);
-					FieldSQLString::formatForDb($dbLink,$_REQUEST['file_path'],$db_file_path);
+					FieldSQLString::formatForDb($dbLink,$file_path_par,$db_file_path);
 
 					//Проверка файла в разделе по имени кроме простых вложений
 					if ($file_path!=CLIENT_OUT_FOLDER){
@@ -327,11 +351,12 @@ try{
 				
 					//Если есть парамтер doc_flow_out_client_id значит грузим из исходящего письма клиента - ставим отметку!!!
 					if (isset($_REQUEST['doc_flow_out_client_id'])){
-						$db_doc_flow_out_client_id = NULL;
-						FieldSQLInt::formatForDb($_REQUEST['doc_flow_out_client_id'],$db_doc_flow_out_client_id);
-						if ($db_doc_flow_out_client_id=='null'){
-							throw new Exception(ER_NO_DOC);
-						}
+						$db_doc_flow_out_client_id = get_doc_flow_out_client_id_for_db(
+								$dbLink,
+								$db_app_id,
+								$_REQUEST['doc_flow_out_client_id']
+						);
+						
 						$dbLink->query(sprintf(		
 						"INSERT INTO doc_flow_out_client_document_files (file_id,doc_flow_out_client_id)
 						VALUES (%s,%d)",
@@ -342,14 +367,14 @@ try{
 					rename_or_error($orig_file,$new_name);
 				}
 				else if ($sig_add){					
-					if (!isset($_REQUEST['doc_flow_out_client_id'])){
-						throw new Exception('doc_flow_out_client_id is missing');
-					}
-					$db_doc_flow_out_client_id = NULL;
-					FieldSQLInt::formatForDb($_REQUEST['doc_flow_out_client_id'],$db_doc_flow_out_client_id);
+					$db_doc_flow_out_client_id = get_doc_flow_out_client_id_for_db(
+							$dbLink,
+							$db_app_id,
+							$_REQUEST['doc_flow_out_client_id']
+					);
 					
 					//browser signature, always in base64
-					if (file_exists($new_name)){
+					if (file_exists($new_name)){					
 						merge_sig($resumable,$orig_file,$new_name,$par_app_id,$par_file_id,$file_path);
 						//
 						FieldSQLString::formatForDb($dbLink,$par_file_id,$db_file_id);

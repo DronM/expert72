@@ -445,6 +445,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				LEFT JOIN file_verifications AS ver ON ver.file_id=f_sig.file_id
 				LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id
 				GROUP BY f_sig.file_id
+				-- Здесь Всегда одна подпись, можно без сортировки!!!
 			) AS sign ON sign.file_id=adf.file_id			
 			WHERE adf.application_id=%d %s
 			ORDER BY adf.document_type,adf.document_id,adf.file_name,adf.deleted_dt ASC NULLS LAST",
@@ -2278,7 +2279,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				AS file_name
 		
 			FROM application_document_files AS app_f
-			print_pdfLEFT JOIN file_verifications AS v ON app_f.file_id=v.file_id
+			LEFT JOIN file_verifications AS v ON app_f.file_id=v.file_id
 			LEFT JOIN file_signatures AS f_sig ON f_sig.file_id=v.file_id
 			LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id
 			WHERE app_f.application_id=%d AND app_f.deleted=FALSE AND v.date_time IS NOT NULL

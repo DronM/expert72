@@ -21,7 +21,8 @@ function DocFlowInDialog_View(id,options){
 	options.model = options.models.DocFlowInDialog_Model;
 
 	var files = [];
-	var is_admin = (window.getApp().getServVar("role_id")=="admin");
+	var role_id = window.getApp().getServVar("role_id");
+	var is_admin = (role_id=="admin");
 	this.m_notSent = false;
 	if (options.model && (options.model.getRowIndex()>=0 || options.model.getNextRow()) ){			
 		//options.templateOptions.isNotSent = !options.model.getFieldValue("sent");
@@ -33,7 +34,7 @@ function DocFlowInDialog_View(id,options){
 	}
 	options.templateOptions = options.templateOptions || {};
 	options.templateOptions.fileCount = (files.length&&files[0].files&&files[0].files.length)? files[0].files.length:"0";
-console.dir(files)	
+
 	var self = this;
 	
 	this.m_dataType = "doc_flow_in";
@@ -194,6 +195,7 @@ console.dir(files)
 		});		
 		
 		this.addElement(new ButtonCmd(id+":cmdExamination",{
+			"visible":(role_id=="admin" || role_id=="lawyer"),
 			"onClick":function(){
 				self.checkForUploadFileCount();				
 				if (self.getModified()){
@@ -210,6 +212,7 @@ console.dir(files)
 		}));
 
 		this.addElement(new ButtonCmd(id+":cmdDocFlowOut",{
+			"visible":(role_id=="admin" || role_id=="lawyer"),
 			"onClick":function(){
 				self.checkForUploadFileCount();				
 				if (self.getModified()){

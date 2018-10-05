@@ -296,9 +296,11 @@ class DocFlowOutClient_Controller extends ControllerSQL{
 		if ($ar['user_check_passed']!='t'){
 			throw new Exception(Application_Controller::ER_NO_DOC);
 		}
-		if ($ar['state']!='waiting_for_contract' && $ar['state']!='waiting_for_pay' && $ar['state']!='expertise'){
+		/*
+		if ($this->getExtVal($pm,'sent')=='true' && $ar['state']!='waiting_for_contract' && $ar['state']!='waiting_for_pay' && $ar['state']!='expertise'){
 			throw new Exception(self::ER_WRONG_STATE);
 		}
+		*/
 		
 		if ($this->getExtVal($pm,'sent')=='true'){
 			throw new Exception(self::ER_NO_ATTACHMENTS);
@@ -376,9 +378,11 @@ class DocFlowOutClient_Controller extends ControllerSQL{
 				throw new Exception(Application_Controller::ER_NO_DOC);
 			}
 			
+			/*
 			if ($ar['state']!='waiting_for_contract' && $ar['state']!='waiting_for_pay' && $ar['state']!='expertise'){
 				throw new Exception(self::ER_WRONG_STATE);
 			}
+			*/
 		
 			if ($this->getExtVal($pm,'sent')=='true' && $ar['doc_flow_out_client_sent']=='t'){
 				throw new Exception(self::ER_DOC_SENT);

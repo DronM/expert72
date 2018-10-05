@@ -24,28 +24,33 @@ CREATE OR REPLACE VIEW doc_flow_in_client_dialog AS
 					)
 				FROM (
 					SELECT jsonb_array_elements(t.files) AS attachment
+					--ORDER BY t.files->>'file_path'					
 				) AS s
-				LEFT JOIN application_document_files AS app_f ON app_f.file_id=s.attachment->>'file_id'
+				LEFT JOIN
+					application_document_files AS app_f ON app_f.file_id=s.attachment->>'file_id'
 				LEFT JOIN (
 					SELECT
+						files_t.file_id,
+						jsonb_agg(files_t.signatures) AS signatures
+					FROM
+					(SELECT
 						f_sig.file_id,
-						jsonb_agg(
-							jsonb_build_object(
-								'owner',u_certs.subject_cert,
-								'cert_from',u_certs.date_time_from,
-								'cert_to',u_certs.date_time_to,
-								'sign_date_time',f_sig.sign_date_time,
-								'check_result',ver.check_result,
-								'check_time',ver.check_time,
-								'error_str',ver.error_str
-							)
-						) As signatures
+						jsonb_build_object(
+							'owner',u_certs.subject_cert,
+							'cert_from',u_certs.date_time_from,
+							'cert_to',u_certs.date_time_to,
+							'sign_date_time',f_sig.sign_date_time,
+							'check_result',ver.check_result,
+							'check_time',ver.check_time,
+							'error_str',ver.error_str
+						) AS signatures
 					FROM file_signatures AS f_sig
 					LEFT JOIN file_verifications AS ver ON ver.file_id=f_sig.file_id
 					LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id
-					GROUP BY f_sig.file_id
-				) AS sign ON sign.file_id=s.attachment->>'file_id'
-				
+					ORDER BY f_sig.sign_date_time
+					) AS files_t
+					GROUP BY files_t.file_id
+				) AS sign ON sign.file_id=s.attachment->>'file_id'				
 				)
 			)
 		) AS files,

@@ -162,7 +162,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 
 			ob_clean();
 			$mime = getMimeTypeOnExt($fl_name);
-			downloadFile($file_zip, $mime,'attachment;','Файлы по вход.документу №'.$ar['reg_number']);
+			downloadFile($file_zip, $mime,'attachment;','Файлы по вход.документу №'.$ar['reg_number'].'.zip');
 			return TRUE;
 	
 			while($file = $this->getDbLink()->fetch_array($qid)){

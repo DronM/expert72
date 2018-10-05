@@ -160,26 +160,30 @@ CREATE OR REPLACE VIEW applications_dialog AS
 		FROM application_document_files adf
 		LEFT JOIN application_doc_folders AS app_fd ON app_fd.name=adf.file_path
 		LEFT JOIN doc_flow_out AS adf_out ON adf_out.to_application_id=adf.application_id AND adf_out.doc_flow_type_id=(pdfn_doc_flow_types_app_resp()->'keys'->>'id')::int
-		LEFT JOIN doc_flow_attachments AS adf_att ON adf_att.doc_type='doc_flow_out' AND adf_att.doc_id=adf_out.id AND adf_att.file_name=adf.file_name
+		--LEFT JOIN doc_flow_attachments AS adf_att ON adf_att.doc_type='doc_flow_out' AND adf_att.doc_id=adf_out.id AND adf_att.file_name=adf.file_name
 		LEFT JOIN file_verifications AS f_ver ON f_ver.file_id=adf.file_id
 		LEFT JOIN (
 			SELECT
+				files_t.file_id,
+				jsonb_agg(files_t.signatures) AS signatures
+			FROM
+			(SELECT
 				f_sig.file_id,
-				jsonb_agg(
-					jsonb_build_object(
-						'owner',u_certs.subject_cert,
-						'cert_from',u_certs.date_time_from,
-						'cert_to',u_certs.date_time_to,
-						'sign_date_time',f_sig.sign_date_time,
-						'check_result',ver.check_result,
-						'check_time',ver.check_time,
-						'error_str',ver.error_str
-					)
-				) As signatures
+				jsonb_build_object(
+					'owner',u_certs.subject_cert,
+					'cert_from',u_certs.date_time_from,
+					'cert_to',u_certs.date_time_to,
+					'sign_date_time',f_sig.sign_date_time,
+					'check_result',ver.check_result,
+					'check_time',ver.check_time,
+					'error_str',ver.error_str
+				) AS signatures
 			FROM file_signatures AS f_sig
 			LEFT JOIN file_verifications AS ver ON ver.file_id=f_sig.file_id
 			LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id
-			GROUP BY f_sig.file_id
+			ORDER BY f_sig.sign_date_time
+			) AS files_t
+			GROUP BY files_t.file_id
 		) AS sign ON sign.file_id=f_ver.file_id
 		WHERE adf.document_type='documents'
 		GROUP BY adf.application_id,adf.file_path,app_fd.id
