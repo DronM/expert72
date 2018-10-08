@@ -11,6 +11,7 @@ require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLInt.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLString.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLFloat.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLDate.php');
+require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLBool.php');
  
 class RepQuarter_Model extends ModelReportSQL{
 	
@@ -139,6 +140,16 @@ class RepQuarter_Model extends ModelReportSQL{
 				
 		$f_expertise_type=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expertise_type",$f_opts);
 		$this->addField($f_expertise_type);
+		//********************
+		
+		//*** Field cost_eval_validity ***
+		$f_opts = array();
+		
+		$f_opts['alias']='Достоверность';
+		$f_opts['id']="cost_eval_validity";
+				
+		$f_cost_eval_validity=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"cost_eval_validity",$f_opts);
+		$this->addField($f_cost_eval_validity);
 		//********************
 		
 		//*** Field in_estim_cost ***

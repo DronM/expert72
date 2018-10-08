@@ -194,3 +194,22 @@ FileUploaderApplication_View.prototype.onSignClick = function(fileId,itemId){
 FileUploaderApplication_View.prototype.onGetSignatureDetails = function(fileId,callBack){
 	FileUploaderApplication_View.superclass.onGetSignatureDetails.call(this,fileId,callBack,(new Application_Controller()));
 }
+
+FileUploaderApplication_View.prototype.fireFileError = function(file,message){
+	FileUploaderApplication_View.superclass.fireFileError.call(this,file,message);
+	if (file.signature){	
+		//Нет уже на сервере, удален т.к. подпись не загрузилась!
+		var file_cont = this.getElement("file-list_"+file.doc_id);	
+		var file_ctrl = file_cont.getElement("file_"+file.file_id);
+		var pic = DOMHelper.getElementsByAttr(this.m_filePicClass+" glyphicon glyphicon-ok", file_ctrl.getNode(), "class", true)[0];
+		if(pic){
+			pic.className = this.m_filePicClass+" glyphicon glyphicon-remove-circle";
+			pic.setAttribute("title",this.ER_FILE_DOWNLOAD);
+		}			
+		file_cont.delElement("file_"+file.file_id+"_del");
+		file_cont.delElement("file_"+file.file_id+"_switch");		
+		file_ctrl.sigCont.deleteLast();
+		file_ctrl.setAttr("file_uploaded","false");
+		window.showWarn("Файл "+file.fileName.replace(".sig","")+" удален, так как не удалось загрузить подпись!");
+	}
+}

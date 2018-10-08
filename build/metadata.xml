@@ -2,7 +2,7 @@
 <metadata owner="expert72">
 	<versions>
 		<version dateOpen="2017-09-27 12:09:48" dateClose="2017-12-08 10:12:08">1.001 
-		<lastBuild>2018-10-05 13:32:23</lastBuild></version>
+		<lastBuild>2018-10-08 11:43:34</lastBuild></version>
 		<version dateOpen="2017-12-08 11:12:01" dateClose="2017-12-08 11:12:04">1.002</version>
 		<version dateOpen="2017-12-08 11:12:20" dateClose="2017-12-08 11:12:20">1.0.3</version>
 		<version dateOpen="2017-12-12 11:12:07" dateClose="2017-12-12 11:12:07">1.0.4</version>
@@ -79,6 +79,7 @@
 		<version dateOpen="2018-10-03 11:10:30" dateClose="2018-10-03 11:10:32">1.0.76</version>
 		<version dateOpen="2018-10-03 11:10:45" dateClose="2018-10-04 12:10:26">1.0.77</version>
 		<version dateOpen="2018-10-04 12:10:45" dateClose="2018-10-05 13:10:32">1.0.78</version>
+		<version dateOpen="2018-10-05 13:10:33" dateClose="2018-10-08 11:10:43">1.0.79</version>
 	</versions>
 	<globalFilters>
 		<field id="user_id"/>
@@ -1425,6 +1426,7 @@
 			<field id="file_signed" dataType="Bool"/>
 			<field id="file_date" dataType="DateTime" defaultValue="now()"/>
 			<field id="file_path" dataType="Text"/>
+			<field id="employee_id" dataType="Int" refTable="employees" refField="id"/>
 			<index id="doc_flow_attachments_doc_idx" unique="FALSE">
 				<field id="doc_type"/>
 				<field id="doc_id"/>
@@ -2710,6 +2712,7 @@
 			<field id="build_type_id" dataType="Int" alias="&#x412;&#x438;&#x434; &#x441;&#x442;&#x440;&#x43E;&#x438;&#x442;&#x435;&#x43B;&#x44C;&#x441;&#x442;&#x432;&#x430; &#x43A;&#x43E;&#x434;"/>
 			<field id="build_type_name" dataType="String" alias="&#x412;&#x438;&#x434; &#x441;&#x442;&#x440;&#x43E;&#x438;&#x442;&#x435;&#x43B;&#x44C;&#x441;&#x442;&#x432;&#x430; &#x43D;&#x430;&#x438;&#x43C;&#x435;&#x43D;&#x43E;&#x432;&#x430;&#x43D;&#x438;&#x435;"/>
 			<field id="expertise_type" dataType="String" alias="&#x412;&#x438;&#x434; &#x44D;&#x43A;&#x441;&#x43F;&#x435;&#x440;&#x442;&#x438;&#x437;&#x44B;"/>
+			<field id="cost_eval_validity" dataType="Bool" alias="&#x414;&#x43E;&#x441;&#x442;&#x43E;&#x432;&#x435;&#x440;&#x43D;&#x43E;&#x441;&#x442;&#x44C;"/>
 			<field id="in_estim_cost" dataType="Float" alias="&#x412;&#x445;&#x43E;&#x434;.&#x441;&#x43C;&#x435;&#x442;&#x43D;&#x430;&#x44F; &#x441;&#x442;&#x43E;&#x438;&#x43C;."/>
 			<field id="in_estim_cost_recommend" alias="&#x412;&#x445;&#x43E;&#x434;.&#x441;&#x43C;&#x435;&#x442;&#x43D;&#x430;&#x44F; &#x440;&#x435;&#x43A;&#x43E;&#x43C;&#x435;&#x43D;&#x434;.&#x441;&#x442;&#x43E;&#x438;&#x43C;."/>
 			<field id="cur_estim_cost" dataType="Float" alias="&#x422;&#x435;&#x43A;&#x443;&#x449;&#x430;&#x44F; &#x441;&#x43C;&#x435;&#x442;&#x43D;.&#x441;&#x442;&#x43E;&#x438;&#x43C;."/>
@@ -2751,6 +2754,7 @@
 			<field id="check_time" dataType="Float" length="15" precision="4"/>
 			<field id="error_str" dataType="Text"/>
 			<field id="hash_gost94" dataType="Text"/>
+			<field id="user_id" dataType="Int" refTable="users" refField="id"/>
 		</model>
 		<model id="UserCertificate" parent="ModelSQL" dataTable="user_certificates" virtual="FALSE">
 			<field id="id" dataType="Int" required="TRUE" primaryKey="TRUE" autoInc="TRUE"/>

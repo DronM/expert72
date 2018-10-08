@@ -79,6 +79,15 @@ function FileVerification_Model(options){
 	
 	options.fields.hash_gost94 = new FieldText("hash_gost94",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.user_id = new FieldInt("user_id",filed_options);
+	
 		FileVerification_Model.superclass.constructor.call(this,id,options);
 }
 extend(FileVerification_Model,ModelXML);

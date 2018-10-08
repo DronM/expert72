@@ -1,0 +1,83 @@
+06/10/2018 08:00 Called verifySig
+06/10/2018 08:00 Called get_issuer
+06/10/2018 08:00 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1560/Договорные документы/Контракт/e4174f08-8e5e-433c-9166-3a51fed3ad4e.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1560/Договорные документы/Контракт/5bb8253dd27a0."i }'
+06/10/2018 08:00 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1560/Договорные документы/Контракт/5bb8253dd27a0.1" -noout
+06/10/2018 08:00 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1560/Договорные документы/Контракт/5bb8253dd27a0.2" -noout
+06/10/2018 08:00 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1560/Договорные документы/Контракт/5bb8253dd27a0.3" -noout
+06/10/2018 08:00 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1560/Договорные документы/Контракт/e4174f08-8e5e-433c-9166-3a51fed3ad4e.der" -noout -cmsout -print
+06/10/2018 08:00 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1560/Договорные документы/Контракт/5bb8253dd27a0.1" -noout -nameopt multiline
+06/10/2018 08:00 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1560/Договорные документы/Контракт/5bb8253dd27a0.1" -noout
+06/10/2018 08:00 Called get_ca_list_file
+06/10/2018 08:00 Called get_ca_certs progComplexAlias=АО "ПФ "СКБ Контур",caOGRN=1026605606620
+06/10/2018 08:00 Certificate found, making pem
+06/10/2018 08:00 Called run_shell_cmd openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/AD7758D649BE895DD179D9A9DE255AD60BD51A4D.b64" -out "/home/andrey/www/htdocs/expert72/pki/AD7758D649BE895DD179D9A9DE255AD60BD51A4D.der"
+06/10/2018 08:00 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/AD7758D649BE895DD179D9A9DE255AD60BD51A4D.der" -noout
+06/10/2018 08:00 Adding certificate pem with crl to chain file
+06/10/2018 08:00 Looking for parent certificate
+06/10/2018 08:00 Called get_ca_certs progComplexAlias=Головной удостоверяющий центр,caOGRN=1047702026701
+06/10/2018 08:00 Certificate found, making pem
+06/10/2018 08:00 Called run_shell_cmd openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.b64" -out "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der"
+06/10/2018 08:00 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der" -noout
+06/10/2018 08:00 Adding certificate pem with crl to chain file
+06/10/2018 08:00 Certificate found, making pem
+06/10/2018 08:00 Called run_shell_cmd openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/699CA433E4B8E49069171558DE10BD170E12F0E4.b64" -out "/home/andrey/www/htdocs/expert72/pki/699CA433E4B8E49069171558DE10BD170E12F0E4.der"
+06/10/2018 08:00 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/699CA433E4B8E49069171558DE10BD170E12F0E4.der" -noout
+06/10/2018 08:00 Adding certificate pem with crl to chain file
+06/10/2018 08:00 Looking for parent certificate
+06/10/2018 08:00 Called get_ca_certs progComplexAlias=Минкомсвязь России,caOGRN=1047702026701
+06/10/2018 08:00 Certificate found, making pem
+06/10/2018 08:00 Called run_shell_cmd openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/9BA648660733ED7A550BCEA03A20E14B8F25C99B.b64" -out "/home/andrey/www/htdocs/expert72/pki/9BA648660733ED7A550BCEA03A20E14B8F25C99B.der"
+06/10/2018 08:00 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/9BA648660733ED7A550BCEA03A20E14B8F25C99B.der" -noout
+06/10/2018 08:00 Adding certificate pem with crl to chain file
+06/10/2018 08:00 Looking for parent certificate
+06/10/2018 08:00 Called get_ca_certs progComplexAlias=Головной удостоверяющий центр,caOGRN=1047702026701
+06/10/2018 08:00 Certificate found, making pem
+06/10/2018 08:00 Called run_shell_cmd openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.b64" -out "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der"
+06/10/2018 08:00 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der" -noout
+06/10/2018 08:00 Adding certificate pem with crl to chain file
+06/10/2018 08:00 Certificate found, making pem
+06/10/2018 08:00 Called run_shell_cmd openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/4BC6DC14D97010C41A26E058AD851F81C842415A.b64" -out "/home/andrey/www/htdocs/expert72/pki/4BC6DC14D97010C41A26E058AD851F81C842415A.der"
+06/10/2018 08:00 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/4BC6DC14D97010C41A26E058AD851F81C842415A.der" -noout
+06/10/2018 08:00 Adding certificate pem with crl to chain file
+06/10/2018 08:00 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1560/Договорные документы/Контракт/e4174f08-8e5e-433c-9166-3a51fed3ad4e" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1560/Договорные документы/Контракт/e4174f08-8e5e-433c-9166-3a51fed3ad4e.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/7fd73385.chain.pem"
+06/10/2018 08:00 Verification failure
+3073877692:error:21075075:PKCS7 routines:PKCS7_verify:certificate verify error:pk7_smime.c:342:Verify error:unable to get certificate CRL
+
+06/10/2018 08:00 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1560/Договорные документы/Контракт/5bb8253dd27a0.3" -noout -nameopt multiline
+06/10/2018 08:00 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1560/Договорные документы/Контракт/5bb8253dd27a0.3" -noout
+06/10/2018 08:00 Called get_ca_list_file
+06/10/2018 08:00 Called get_ca_certs progComplexAlias=ООО "КОМПАНИЯ "ТЕНЗОР",caOGRN=1027600787994
+06/10/2018 08:00 Certificate found, making pem
+06/10/2018 08:00 Called run_shell_cmd openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/4D28BC02373048A2F5CA7261C4C687FE0AA05676.b64" -out "/home/andrey/www/htdocs/expert72/pki/4D28BC02373048A2F5CA7261C4C687FE0AA05676.der"
+06/10/2018 08:00 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/4D28BC02373048A2F5CA7261C4C687FE0AA05676.der" -noout
+06/10/2018 08:00 Adding certificate pem with crl to chain file
+06/10/2018 08:00 Looking for parent certificate
+06/10/2018 08:00 Called get_ca_certs progComplexAlias=Головной удостоверяющий центр,caOGRN=1047702026701
+06/10/2018 08:00 Certificate found, making pem
+06/10/2018 08:00 Called run_shell_cmd openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.b64" -out "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der"
+06/10/2018 08:00 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der" -noout
+06/10/2018 08:00 Adding certificate pem with crl to chain file
+06/10/2018 08:00 Certificate found, making pem
+06/10/2018 08:00 Called run_shell_cmd openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/9075A8C2AADE976BFD0CA4FC55E3442FB2809CFE.b64" -out "/home/andrey/www/htdocs/expert72/pki/9075A8C2AADE976BFD0CA4FC55E3442FB2809CFE.der"
+06/10/2018 08:00 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/9075A8C2AADE976BFD0CA4FC55E3442FB2809CFE.der" -noout
+06/10/2018 08:00 Adding certificate pem with crl to chain file
+06/10/2018 08:00 Looking for parent certificate
+06/10/2018 08:00 Called get_ca_certs progComplexAlias=Минкомсвязь России,caOGRN=1047702026701
+06/10/2018 08:00 Certificate found, making pem
+06/10/2018 08:00 Called run_shell_cmd openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/9BA648660733ED7A550BCEA03A20E14B8F25C99B.b64" -out "/home/andrey/www/htdocs/expert72/pki/9BA648660733ED7A550BCEA03A20E14B8F25C99B.der"
+06/10/2018 08:00 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/9BA648660733ED7A550BCEA03A20E14B8F25C99B.der" -noout
+06/10/2018 08:00 Adding certificate pem with crl to chain file
+06/10/2018 08:00 Looking for parent certificate
+06/10/2018 08:00 Called get_ca_certs progComplexAlias=Головной удостоверяющий центр,caOGRN=1047702026701
+06/10/2018 08:00 Certificate found, making pem
+06/10/2018 08:00 Called run_shell_cmd openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.b64" -out "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der"
+06/10/2018 08:00 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der" -noout
+06/10/2018 08:00 Adding certificate pem with crl to chain file
+06/10/2018 08:00 Certificate found, making pem
+06/10/2018 08:00 Called run_shell_cmd openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/4BC6DC14D97010C41A26E058AD851F81C842415A.b64" -out "/home/andrey/www/htdocs/expert72/pki/4BC6DC14D97010C41A26E058AD851F81C842415A.der"
+06/10/2018 08:00 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/4BC6DC14D97010C41A26E058AD851F81C842415A.der" -noout
+06/10/2018 08:00 Adding certificate pem with crl to chain file
+06/10/2018 08:00 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1560/Договорные документы/Контракт/e4174f08-8e5e-433c-9166-3a51fed3ad4e" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1560/Договорные документы/Контракт/e4174f08-8e5e-433c-9166-3a51fed3ad4e.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/768bb33c.chain.pem"
+06/10/2018 08:00 Verification failure
+3073640124:error:21075075:PKCS7 routines:PKCS7_verify:certificate verify error:pk7_smime.c:342:Verify error:unable to get local issuer certificate
+

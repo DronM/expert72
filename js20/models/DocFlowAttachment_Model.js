@@ -99,6 +99,15 @@ function DocFlowAttachment_Model(options){
 	
 	options.fields.file_path = new FieldText("file_path",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.employee_id = new FieldInt("employee_id",filed_options);
+	
 			
 		DocFlowAttachment_Model.superclass.constructor.call(this,id,options);
 }

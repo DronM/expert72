@@ -134,6 +134,15 @@ function RepQuarter_Model(options){
 	
 	var filed_options = {};
 	filed_options.primaryKey = false;	
+	filed_options.alias = 'Достоверность';
+	filed_options.autoInc = false;	
+	
+	options.fields.cost_eval_validity = new FieldBool("cost_eval_validity",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
 	filed_options.alias = 'Вход.сметная стоим.';
 	filed_options.autoInc = false;	
 	

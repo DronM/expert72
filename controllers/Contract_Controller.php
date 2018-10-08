@@ -2029,6 +2029,10 @@ class Contract_Controller extends ControllerSQL{
 			$extra_cond.= " AND contracts.expertise_type='pd_eng_survey'";
 			$expertise_type_descr = 'Проектная документация и результаты инженерных изысканий';
 		}
+		else if ($expertise_type_par && $expertise_type_par=='cost_eval_validity'){
+			$extra_cond.= " AND app.cost_eval_validity";
+			$expertise_type_descr = 'Достоверность';
+		}
 		
 		$expertise_result = $cond->getVal('expertise_result','e',DT_STRING);		
 		$expertise_result_descr = '';
@@ -2057,6 +2061,7 @@ class Contract_Controller extends ControllerSQL{
 				build_types.name AS build_type_name,
 				
 				contracts.expertise_type AS expertise_type,
+				app.cost_eval_validity,
 				
 				contracts.in_estim_cost,
 				contracts.in_estim_cost_recommend,
@@ -2066,8 +2071,7 @@ class Contract_Controller extends ControllerSQL{
 			LEFT JOIN applications AS app ON app.id=contracts.application_id
 			LEFT JOIN build_types ON build_types.id=app.build_type_id
 			LEFT JOIN contracts AS primary_ct ON primary_ct.id=contracts.primary_contract_id
-			WHERE contracts.date_time BETWEEN %s AND %s
-				AND contracts.expertise_type IS NOT NULL %s
+			WHERE contracts.date_time BETWEEN %s AND %s %s
 			ORDER BY contracts.date_time",
 			$dt_from,
 			$dt_to,

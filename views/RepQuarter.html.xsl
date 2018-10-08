@@ -79,7 +79,7 @@
 				<td rowspan="2">Дата отриц.зак.</td>
 				<td rowspan="2">Дата положит.зак.</td>
 				<td colspan="{$build_type_count}">Вид строительства</td>
-				<td colspan="3">Вид экспертизы</td>
+				<td colspan="4">Вид экспертизы</td>
 				<td rowspan="2">Вход.см.стоимость</td>
 				<td rowspan="2">Вход.реком.см.стоимость</td>
 				<td rowspan="2">Тек.см.стоимость</td>
@@ -93,6 +93,7 @@
 				<td>ПД</td>
 				<td>РИИ</td>
 				<td>ПД и РИИ</td>
+				<td>Дост-ть</td>
 			</tr>
 		</thead>
 	
@@ -175,6 +176,9 @@
 		</td>
 		<td align="center">
 		<xsl:if test="expertise_type='pd_eng_survey'"><i class="glyphicon glyphicon-ok"/> </xsl:if>
+		</td>
+		<td align="center">
+		<xsl:if test="cost_eval_validity='true'"><i class="glyphicon glyphicon-ok"/> </xsl:if>
 		</td>
 		
 		<td align="right">

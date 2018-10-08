@@ -666,6 +666,9 @@ ALTER FUNCTION public.contracts_ref(contracts)
 		FALSE
 		);
 	
+ALTER TABLE file_verifications ADD COLUMN user_id int REFERENCES users(id);
+ALTER TABLE doc_flow_attachments ADD COLUMN employee_id int REFERENCES employees(id);
+	
 --****************************************
 doc_flow_out_dialog
 doc_flow_attachments_process()
@@ -697,6 +700,8 @@ applications_dialog
 
 FieldSQLFloat.php
 FieldSQLInt.php
+Field.php
+FieldXML.php
 
 1;"Договорные документы/Контракт";TRUE
 2;"Заключение";FALSE
@@ -709,6 +714,7 @@ FieldSQLInt.php
 
 АСИНХРОННОЕ АПИ CadePlugin!!!!
 pki константы в Config.php
+PKI_SIG_ERROR
 bcmod!!!
 sudo apt-get install php7.0-bcmath
 sudo service apache2 restart

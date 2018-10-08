@@ -24,6 +24,7 @@ require_once('common/downloader.php');
 require_once(ABSOLUTE_PATH.'functions/Morpher.php');
 
 require_once(FRAME_WORK_PATH.'basic_classes/ModelVars.php');
+require_once(FRAME_WORK_PATH.'basic_classes/FieldXML.php');
 
 require_once('common/file_func.php');
 require_once('common/short_name.php');
@@ -106,46 +107,56 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		
 		//data
 		if (!move_uploaded_file($files['tmp_name'][$data_ind],$dir.DIRECTORY_SEPARATOR.$file_id)){
-			throw new Exception('Ошибка загрузки заявления о '.$ER_PRINT_FILE_CNT_END[$id].'.');
+			throw new Exception('Ошибка загрузки заявления по '.$ER_PRINT_FILE_CNT_END[$id].'.');
 		}
 		
 		//sig
 		if (!move_uploaded_file($files['tmp_name'][$sig_ind],$dir.DIRECTORY_SEPARATOR.$file_id.'.sig')){
-			throw new Exception('Ошибка загрузки подписи заявления о '.$ER_PRINT_FILE_CNT_END[$id].'.');
+			throw new Exception('Ошибка загрузки подписи заявления по '.$ER_PRINT_FILE_CNT_END[$id].'.');
 		}
 	
 		//проверка ЭЦП
 		$sig_ar = NULL;
 		$pki_man = new PKIManager(PKI_PATH,PKI_CRL_VALIDITY,'error');		
-		try{
-			$db_file_id = "'".$file_id."'";
-			$verif_res = pki_log_sig_check(
-				$dir.DIRECTORY_SEPARATOR.$file_id.'.sig',
-				$dir.DIRECTORY_SEPARATOR.$file_id,				
-				$db_file_id,
-				$pki_man,$this->getDbLinkMaster()
-			);
-			$sig_ar = $this->getDbLinkMaster()->query_first(sprintf(
-			"SELECT
-				f_sig.file_id,
-				jsonb_agg(
-					jsonb_build_object(
-						'owner',u_certs.subject_cert,
-						'cert_from',u_certs.date_time_from,
-						'cert_to',u_certs.date_time_to,
-						'sign_date_time',f_sig.sign_date_time,
-						'check_result',ver.check_result,
-						'check_time',ver.check_time,
-						'error_str',ver.error_str
-					)
-				) AS signatures
-			FROM file_signatures AS f_sig
-			LEFT JOIN file_verifications AS ver ON ver.file_id=f_sig.file_id
-			LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id			
-			WHERE ver.file_id=%s
-			GROUP BY f_sig.file_id",
-			$db_file_id
-			));
+		$db_file_id = "'".$file_id."'";
+		$verif_res = pki_log_sig_check(
+			$dir.DIRECTORY_SEPARATOR.$file_id.'.sig',
+			$dir.DIRECTORY_SEPARATOR.$file_id,				
+			$db_file_id,
+			$pki_man,$this->getDbLinkMaster()
+		);
+		if (
+		!$verif_res->checkPassed
+		&amp;&amp;
+		(PKI_SIG_ERROR=='ALL'
+			|| (PKI_SIG_ERROR=='NO_CERT' &amp;&amp; !count($verif_res->signatures) )
+		)
+		){
+			throw new Exception('Ошибка проверки подписи заявления по '.$ER_PRINT_FILE_CNT_END[$id].': '.$verif_res->checkError);
+		}
+		
+		$sig_ar = $this->getDbLinkMaster()->query_first(sprintf(
+		"SELECT
+			f_sig.file_id,
+			jsonb_agg(
+				jsonb_build_object(
+					'owner',u_certs.subject_cert,
+					'cert_from',u_certs.date_time_from,
+					'cert_to',u_certs.date_time_to,
+					'sign_date_time',f_sig.sign_date_time,
+					'check_result',ver.check_result,
+					'check_time',ver.check_time,
+					'error_str',ver.error_str
+				)
+			) AS signatures
+		FROM file_signatures AS f_sig
+		LEFT JOIN file_verifications AS ver ON ver.file_id=f_sig.file_id
+		LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id			
+		WHERE ver.file_id=%s
+		GROUP BY f_sig.file_id",
+		$db_file_id
+		));
+		/*
 			if (!count($sig_ar) || !isset($sig_ar['signatures'])){
 				$sig_ar['signatures'] = sprintf('[{
 					"sign_date_time":"%s",
@@ -178,7 +189,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			);
 			
 		}
-		
+		*/
 		$fileParams[$id] = sprintf(
 			'[{
 				"name":"%s",
@@ -956,7 +967,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			WHERE f.file_id=%s",
 		$fileIdForDb
 		));
-		if (!count($ar)){
+		if (!count($ar) || !$ar['application_id']){
 			throw new Exception(self::ER_STORAGE_FILE_NOT_FOUND);
 		}
 		
@@ -1117,7 +1128,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		}
 		try{
 			if (!is_array($ar) || !count($ar)){
-				throw new Exception(self::ER_OTHER_USER_APP);	
+				throw new Exception(self::ER_STORAGE_FILE_NOT_FOUND);	
 			}
 		
 			if ($sig &amp;&amp; $ar['file_signed']!='t'){
@@ -1532,6 +1543,13 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		));
 		self::checkApp($ar);
 		
+		/*
+		 * Экранирование больше-меньше для вывода в XML кавычки как есть
+		 */
+		foreach($ar as $fid=>$fv){
+			$ar[$fid] = htmlspecialchars($fv,ENT_NOQUOTES|ENT_HTML401);
+		}
+		
 		$boss_name = '';
 		$boss_post = '';
 		$resp_m = json_decode($ar['office_responsable_persons'],TRUE);		
@@ -1915,7 +1933,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		foreach($ar as $f_id=>$f_val){
 			array_push(
 				$m_fields,
-				new Field($f_id,DT_STRING,array('value'=>$f_val))
+				new FieldXML($f_id,DT_STRING,array('value'=>$f_val))
 			);
 		}
 		
@@ -1928,43 +1946,6 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		if ($_REQUEST['v']=='ViewPDF'){
 			$cont = $model->dataToXML(TRUE);
 			return $this->print_pdf($templ_name,$out_file_name,$out_file,$cont);		
-			/*
-			$xml = '&lt;?xml version="1.0" encoding="UTF-8"?&gt;';
-			$xml.= '&lt;document&gt;';
-			$xml.= $model->dataToXML(TRUE);
-			$xml.= '&lt;/document&gt;';
-			$xml_file = OUTPUT_PATH.uniqid().".xml";
-			file_put_contents($xml_file,$xml);
-			//FOP
-			try{			
-				$xslt_file = USER_VIEWS_PATH.$templ_name.".pdf.xsl";
-				$out_file_tmp = OUTPUT_PATH.uniqid().".pdf";
-				exec(sprintf(PDF_CMD_TEMPLATE,$xml_file, $xslt_file, $out_file_tmp));
-					
-				if (!file_exists($out_file_tmp)){
-					$this->setHeaderStatus(400);
-					throw new Exception('Ошибка формирования файла!');
-				}
-				
-				rename($out_file_tmp, $out_file);
-				ob_clean();
-				downloadFile(
-					$out_file,
-					'application/pdf',
-					(isset($_REQUEST['inline']) &amp;&amp; $_REQUEST['inline']=='1')? 'inline;':'attachment;',
-					$out_file_name.".pdf"
-				);
-			
-			}
-			finally{
-				unlink($xml_file);
-				if (file_exists($out_file_tmp)){
-					rename($out_file_tmp, $out_file);
-				}
-			}		
-		
-			return TRUE;
-			*/
 		}
 		else{
 			$this->addModel($model);
@@ -1979,32 +1960,35 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		$xml_file = OUTPUT_PATH.uniqid().".xml";
 		file_put_contents($xml_file,$xml);
 		//FOP
-		try{			
-			$xslt_file = USER_VIEWS_PATH.$templName.".pdf.xsl";
-			$out_file_tmp = OUTPUT_PATH.uniqid().".pdf";
-			exec(sprintf(PDF_CMD_TEMPLATE,$xml_file, $xslt_file, $out_file_tmp));
-				
-			if (!file_exists($out_file_tmp)){
-				$this->setHeaderStatus(400);
-				throw new Exception('Ошибка формирования файла!');
-			}
+		$xslt_file = USER_VIEWS_PATH.$templName.".pdf.xsl";
+		$out_file_tmp = OUTPUT_PATH.uniqid().".pdf";
+		$cmd = sprintf(PDF_CMD_TEMPLATE,$xml_file, $xslt_file, $out_file_tmp);
+		exec($cmd);
 			
-			rename($out_file_tmp, $outFile);
-			ob_clean();
-			downloadFile(
-				$outFile,
-				'application/pdf',
-				(isset($_REQUEST['inline']) &amp;&amp; $_REQUEST['inline']=='1')? 'inline;':'attachment;',
-				$outFileName.".pdf"
-			);
-		
-		}
-		finally{
-			unlink($xml_file);
-			if (file_exists($out_file_tmp)){
-				rename($out_file_tmp, $outFile);
+		if (!file_exists($out_file_tmp)){
+			$this->setHeaderStatus(400);
+			$m = NULL;
+			if (DEBUG){
+				$m = 'Ошибка формирования файла! CMD='.$cmd;
 			}
-		}		
+			else{
+				$m = 'Ошибка формирования файла!';
+			}
+			throw new Exception($m);
+		}
+		
+		rename($out_file_tmp, $outFile);
+		ob_clean();
+		downloadFile(
+			$outFile,
+			'application/pdf',
+			(isset($_REQUEST['inline']) &amp;&amp; $_REQUEST['inline']=='1')? 'inline;':'attachment;',
+			$outFileName.".pdf"
+		);
+		unlink($xml_file);
+		if (file_exists($out_file_tmp)){
+			rename($out_file_tmp, $outFile);
+		}
 	
 		return TRUE;
 	

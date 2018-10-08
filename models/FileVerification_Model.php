@@ -7,6 +7,7 @@
  */
 
 require_once(FRAME_WORK_PATH.'basic_classes/ModelSQL.php');
+require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLInt.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLString.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLText.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLFloat.php');
@@ -71,6 +72,14 @@ class FileVerification_Model extends ModelSQL{
 				
 		$f_hash_gost94=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"hash_gost94",$f_opts);
 		$this->addField($f_hash_gost94);
+		//********************
+		
+		//*** Field user_id ***
+		$f_opts = array();
+		$f_opts['id']="user_id";
+				
+		$f_user_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"user_id",$f_opts);
+		$this->addField($f_user_id);
 		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}

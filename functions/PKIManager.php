@@ -2,7 +2,7 @@
 require_once(dirname(__FILE__).'/../Config.php');
 require_once('common/Logger.php');
 
-/*
+/**
  * Converts large numbers
  * http://php.net/manual/ru/function.dechex.php
  */
@@ -60,17 +60,19 @@ function ucode2str($str) {
 	return $str;     
 }
 
-/*
+/**
  * УЦ грузятся из CA_LIST_URL
  *
  */
 class PKIManager {
 
 	const ER_VERIF_FAIL = 'Неверная подпись!';
-	const ER_DIGEST_FAIL = 'Подлинность документа не подтверждена!';
+	const ER_DIGEST_FAIL = 'Подлинность подписи не подтверждена!';
 	const ER_BROKEN_CHAIN = 'Невозможно посторить цепь сертификатов!';
 	const ER_UNABLE_LOAD_CRL = 'Невозможно обновить список отозванных сертификатов для УЦ CN=%s, ОГРН=%s';
 	const ER_CERT_FIELD_NOT_FOUND = 'Нет поля %s в объекте %s';
+	const ER_NO_CERT_FOUND = 'Не найдено ни одного сертификата!';
+	const ER_CERT_EXPIRED = 'Сертификат просрочен!';
 
 	const CA_LIST_URL = 'https://e-trust.gosuslugi.ru/CA/DownloadTSL?schemaVersion=0';		
 	const DEF_CRL_VALIDITY = 86400;//24*60*60
@@ -153,27 +155,19 @@ class PKIManager {
 		return DateTime::createFromFormat('Y-m-d H:i:s', $d);
 	}
 	
-	/*
+	/**
 	 * @rapam {string} sigFile
 	 * @rapam {string} derFile
 	 * @rapam {array} pemFiles
-	 * @descr pem файлов может быть много - сколько подписей в контейнере
+	 * @descr pem файлов может быть много - сколько подписей в контейнере. Оставляем только сертификаты подписантов, цепь построим сами!!!
 	 */
 	private function parseSigFile($sigFile,&$derFile,&$pemFiles){
-		$this->logger->add('Called get_issuer','note');
+		$this->logger->add('parseSigFile','note');
 		
 		$derFile = $this->replace_extension($sigFile,'der');				
 		
 		//проверяем файл
 		$need_decode = $this->isBase64Encoded($sigFile);
-		/*
-		$handle = @fopen($sigFile, "r");
-		if ($handle===FALSE){
-			throw new Exception('Unable to open sig file!');
-		}
-		$need_decode = (@fread($handle,strlen(self::SIG_HEADER))==self::SIG_HEADER);
-		fclose($handle);
-		*/
 		// декодируем подпись из base64 - получаем подпись в бинарном формате
 		if ($need_decode){
 			$this->decodeSigFromBase64($sigFile,$derFile);
@@ -191,7 +185,7 @@ class PKIManager {
 		$pem_list = glob($pat.".*");
 		if (!count($pem_list)){
 			$this->logger->add('Unable to get certificates from bundle '.$sigFile,'error');
-			throw new Exception(self::ER_BROKEN_CHAIN);		
+			throw new Exception(self::ER_NO_CERT_FOUND);		
 		}
 		else if (count($pem_list)==1){
 			array_push($pemFiles,$pat.'.1');
@@ -232,6 +226,8 @@ class PKIManager {
 				}
 			}
 		}
+		//Only signer certificates!!!
+		$this->logger->add('Found signer certificates:'.count($pemFiles),'note');
 	}
 	
 	public function update_ca_certs(){
@@ -295,7 +291,7 @@ class PKIManager {
 		}
 	}
 	
-	/*	 
+	/**	 
  	 * @param {string} chainFile файл для проверки, в который собираются все сертификаты цепи с вместе CRL
 	 * @param {String} progComplexAlias УдостоверяющийЦентр->ПрограммноАппаратныеКомплексы->ПрограммноАппаратныйКомплекс->Псевдоним
 	 * @param {XMLElement} caData
@@ -541,7 +537,7 @@ class PKIManager {
 		return $res;
 	}
 	
-	/*
+	/**
 	 * Возвращает пользовательскую структуру сертификата
 	 */
 	public function getCertInf($pemFile,&$subject,&$issuer){
@@ -557,31 +553,44 @@ class PKIManager {
 		}	
 	}
 	
-	/*
+	/**
 	 * @returns {stdClass}
 	 *		{bool} checkResult,
 	 *		{float} checkTime,
 	 *		{string} checkError
 	 *		{array of stdClass} signature
 	 *			subject,issuer,dateFrom,dateTo
+	 * @param{string} sigFile Full path to signature file
+	 * @param{string} contentFile Full path to data file
+	 * @param{bool} [notRemoveTempFiles=FALSE] Leave temporary pem,der files for debugging purposes
 	 */	
-	public function verifySig($sigFile,$contentFile){
+	public function verifySig($sigFile,$contentFile,$notRemoveTempFiles=FALSE){
 		$verifResult = new stdClass();
 		$verifResult->checkPassed = TRUE;
 		$verifResult->checkTime = microtime(TRUE);
 		$verifResult->checkError = NULL;
 		$verifResult->signatures = [];
 		try{
+			$der_file = '';
+			$pem_files = [];//for many signers!
+			$chain_file_for_verif = NULL;
 			try{
 				$this->logger->add('Called verifySig','note');
 		
-				$der_file = '';
-				$pem_files = [];//этих может быть несколько!
 				$this->parseSigFile($sigFile,$der_file,$pem_files);
 				
 				$sig_attrs = $this->getSigAttributes($der_file,TRUE);
 				
+				if (!count($pem_files)){
+					throw new Exception(self::ER_NO_CERT_FOUND);
+				}
+				
+				/** build chains to signer certificates, add all certificates with CRL for verification
+				 * If there is one signer (1 pem file with certificate) then one chain file on issuer_hash can be used
+				 * If there are more than one signer, unique chain for this sig container should be used!
+				 */				
 				foreach($pem_files as $pem_file){
+					$this->logger->add('Parsing pem file '.$pem_file,'note');
 					try{	
 						$cert_data = new stdClass();		
 						$cert_data->signedDate = NULL;
@@ -671,46 +680,85 @@ class PKIManager {
 							}
 						}
 			
-						try{
-							//-noverify
-							$verif_res = $this->run_shell_cmd(sprintf(				
-								'openssl smime -verify -content "%s" -noverify -purpose any -crl_check -out /dev/null -inform der -in "%s" -CAfile "%s"',
-								$contentFile,
-								$der_file,
-								$chain_file
-							));
-						}
-						catch(Exception $e){
-							$user_m = '';
-							$m = $e->getMessage();	
-										
-							if (strpos($m,'certificate has expired')===FALSE){
-								if (strpos($m,'unable to get issuer certificate')>=0){
-									$user_m = self::ER_BROKEN_CHAIN;
-								}
-								else if (strpos($m,'digest failure')>=0){
-									$user_m = self::ER_DIGEST_FAIL;
-								}							
-								else{
-									$user_m = self::ER_VERIF_FAIL;					
-								}
-								if(file_exists($chain_file))unlink($chain_file);
-								//throw new Exception($user_m);
-								$verifResult->checkError = (is_null($verifResult->checkError)? '':($verifResult->checkError.', ')). str_replace(PHP_EOL,' ',$e->getMessage());
-								$verifResult->checkPassed = FALSE;
-							}							
-						}
-						
 						array_push($verifResult->signatures,$cert_data);
 					}
 					finally{
-						if (file_exists($pem_file)) unlink($pem_file);
+						if (file_exists($pem_file)){						
+							if(!$notRemoveTempFiles){
+								unlink($pem_file);
+							}
+							else{
+								$this->logger->add('Temporary pem file is not removed '.$pem_file,'note');
+							}									
+						}
+					}
+					
+				
+					if (count($pem_files)==1){
+						$chain_file_for_verif = $chain_file;
+					}
+					else{
+						//combine all chains from all certificates
+						if (is_null($chain_file_for_verif)){
+							$chain_file_for_verif = $this->pkiPath.uniqid().'chain.pem';
+						}
+						file_put_contents($chain_file_for_verif, file_get_contents($chain_file), FILE_APPEND);
 					}
 				}
+				
+				//verification
+				try{
+					//-noverify
+					$verif_res = $this->run_shell_cmd(sprintf(				
+						'openssl smime -verify -content "%s" -purpose any -crl_check -out /dev/null -inform der -in "%s" -CAfile "%s"',
+						$contentFile,
+						$der_file,
+						$chain_file_for_verif
+					));
+				}
+				catch(Exception $e){
+					$user_m = str_replace(PHP_EOL,' ',$e->getMessage());
+					if (strpos($user_m,'certificate has expired')!==FALSE){
+						$user_m = self::ER_CERT_EXPIRED;
+					}
+					else if (strpos($user_m,'digest failure')!==FALSE){
+						$user_m = self::ER_DIGEST_FAIL;
+					}							
+					else if (strpos($user_m,'unable to get issuer certificate')!==FALSE){
+						$user_m = self::ER_BROKEN_CHAIN;
+					}
+					else{
+						$user_m = self::ER_VERIF_FAIL;					
+					}
+					if(file_exists($chain_file)){
+						if(!$notRemoveTempFiles){
+							unlink($chain_file);
+						}
+						else{
+							$this->logger->add('Chain file is not removed on error '.$chain_file,'note');
+						}									
+					}
+					
+					$verifResult->checkError = (is_null($verifResult->checkError)? '':($verifResult->checkError.', ')). $user_m;
+					$verifResult->checkPassed = FALSE;
+				}
+				
+				
 			}
 			finally{
-				if (file_exists($der_file)) unlink($der_file);
-	
+				if (file_exists($der_file)){
+					if(!$notRemoveTempFiles){
+						unlink($der_file);
+					}
+					else{
+						$this->logger->add('Temporary der file is not removed '.$der_file,'note');
+					}													
+				}
+				
+				if (!is_null($chain_file_for_verif) && count($pem_files)>1 && !$notRemoveTempFiles && file_exists($chain_file_for_verif)){
+					unlink($chain_file_for_verif);
+				}
+				
 				$this->logger->dump();
 	
 				$verifResult->checkTime = microtime(TRUE) - $verifResult->checkTime;

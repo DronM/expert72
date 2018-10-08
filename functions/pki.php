@@ -11,21 +11,24 @@
 		
 		$dbLink->query(sprintf(		
 		"INSERT INTO file_verifications
-		(file_id,date_time,check_time,check_result,error_str)
-		VALUES (%s,now(),%f,%s,%s)
+		(file_id,date_time,check_time,check_result,error_str,user_id)
+		VALUES (%s,now(),%f,%s,%s,%d)
 		ON CONFLICT (file_id) DO UPDATE
 		SET
 			date_time = now(),
 			check_time = %f,
 			check_result = %s,
-			error_str = %s",
+			error_str = %s,
+			user_id=%d",
 		$dbFileId,
 		$verif_res->checkTime,
 		$db_checkPassed,
 		$db_checkError,
+		$_SESSION['user_id'],
 		$verif_res->checkTime,
 		$db_checkPassed,
-		$db_checkError
+		$db_checkError,
+		$_SESSION['user_id']
 		));
 		
 		$dbLink->query(sprintf("DELETE FROM file_signatures WHERE file_id=%s",$dbFileId));

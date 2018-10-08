@@ -91,6 +91,10 @@ function RepQuarter_View(id,options){
 							"value":"pd_eng_survey",
 							"descr":"Проектная документация и Результаты инженерных изысканий"
 						})
+						,new EditSelectOption(id+":filter-ctrl-service:"+"cost_eval_validity",{
+							"value":"cost_eval_validity",
+							"descr":"Достоверность"
+						})
 					]
 				}),
 				"field":new FieldString("expertise_type")
