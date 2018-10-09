@@ -857,7 +857,7 @@ class PKIManager {
 		return $ret;
 	}
 	
-	/*
+	/**
 	 * @param {string} sigFile
 	 * @param {string} derFile
 	 */
@@ -870,21 +870,21 @@ class PKIManager {
 		}					
 	}
 	
-	/*
+	/**
 	 * @param {string} sSigFile source sig file id der format
 	 * @param {string} dSigFile destinations sig file id der format
 	 * @param {string} oSigFile output sig file id der format
 	 */	
 	public function mergeSigs($sSigFile,$dSigFile,$oSigFile){
 		try{
-			$this->run_shell_cmd(sprintf(dirname(__FILE__).DIRECTORY_SEPARATOR.'cmsmerge -s "%s" -d "%s" -o "%s"',$sSigFile,$dSigFile,$oSigFile));
+			$this->run_shell_cmd(sprintf($this->pkiPath.'cmsmerge -s "%s" -d "%s" -o "%s"',$sSigFile,$dSigFile,$oSigFile));
 		}
 		finally{
 			$this->logger->dump();
 		}					
 	}
 	
-	/*
+	/**
 	 */
 	public function isBase64Encoded($sigFile){
 		try{

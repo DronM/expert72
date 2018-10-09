@@ -396,17 +396,17 @@ function ContractDialog_View(id,options){
 		if (options.templateOptions.setAccess){				
 			//********* permissions grid ***********************
 			this.addElement(new AccessPermissionGrid(id+":permissions",{
-				"enabled":(role=="admin"||employee_main_expert||role_id=="boss"||employee_dep_boss)
+				"enabled":(role=="admin"||employee_main_expert||role=="boss"||employee_dep_boss)
 			}));		
 			
 			this.addElement(new EditCheckBox(id+":for_all_employees",{
 				"labelCaption":"Контракт доступен всем:",
-				"enabled":(role=="admin"||employee_main_expert||role_id=="lawyer"||role_id=="boss"||employee_dep_boss)
+				"enabled":(role=="admin"||employee_main_expert||role=="lawyer"||role=="boss"||employee_dep_boss)
 			}));		
 
 			//********* expert notification grid ***********************
 			this.addElement(new ExpertNotificationGrid(id+":experts_for_notification",{
-				"enabled":(role=="admin"||employee_main_expert||role_id=="boss"||employee_dep_boss)
+				"enabled":(role=="admin"||employee_main_expert||role=="boss"||employee_dep_boss)
 			}));		
 			
 		}

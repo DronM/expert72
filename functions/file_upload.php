@@ -166,7 +166,7 @@ function merge_sig($resumable,$origFile,$newName,$appId,$fileId,$filePath){
 	else{
 		$der_file = $origFile;
 	}
-	//throw new Exception('der_file='.$der_file.' newName='.$newName);
+	//throw new Exception('der_file='.$der_file.' newName='.$newName.' merged_sig='.$merged_sig);
 	$pki_man->mergeSigs($der_file,$newName,$merged_sig);
 	
 	$max_ind = NULL;
@@ -636,6 +636,7 @@ try{
 					//browser signature, always in base64					
 					if (file_exists($new_name)){
 						$app_id = (isset($ar)&&isset($ar['to_application_id']))? $ar['to_application_id']:0;
+						
 						merge_sig($resumable,$orig_file,$new_name,$app_id,$par_file_id,$file_path);
 						//merge contents with existing file
 					}

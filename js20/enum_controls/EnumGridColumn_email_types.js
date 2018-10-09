@@ -41,6 +41,8 @@ function EnumGridColumn_email_types(options){
 	options.multyLangValues["ru"]["contr_return"] = "Возврат подписанного контракта";
 
 	options.multyLangValues["ru"]["expert_work_change"] = "Изменния по локальным заключениям";
+
+	options.multyLangValues["ru"]["ca_update_error"] = "Ошибка обновления головных сертификатов";
 EnumGridColumn_email_types.superclass.constructor.call(this,options);
 	
 }

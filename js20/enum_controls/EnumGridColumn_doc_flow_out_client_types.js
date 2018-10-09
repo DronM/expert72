@@ -25,6 +25,8 @@ function EnumGridColumn_doc_flow_out_client_types(options){
 	options.multyLangValues["ru"]["contr_return"] = "Возврат контракта";
 
 	options.multyLangValues["ru"]["contr_other"] = "Прочее";
+
+	options.multyLangValues["ru"]["date_prolongate"] = "Продление срока";
 EnumGridColumn_doc_flow_out_client_types.superclass.constructor.call(this,options);
 	
 }
