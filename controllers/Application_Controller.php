@@ -2414,6 +2414,7 @@ class Application_Controller extends ControllerSQL{
 		 * Экранирование больше-меньше для вывода в XML кавычки как есть
 		 */
 		foreach($ar as $fid=>$fv){
+			//ENT_NOQUOTES|
 			$ar[$fid] = htmlspecialchars($fv,ENT_NOQUOTES|ENT_HTML401);
 		}
 		
@@ -2840,6 +2841,7 @@ class Application_Controller extends ControllerSQL{
 			}
 			else{
 				$m = 'Ошибка формирования файла!';
+				unlink($xml_file);
 			}
 			throw new Exception($m);
 		}

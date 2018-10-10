@@ -30,6 +30,9 @@ require_once(USER_CONTROLLERS_PATH.'Application_Controller.php');
 require_once(USER_CONTROLLERS_PATH.'DocFlow_Controller.php');
 
 class DocFlowInClient_Controller extends ControllerSQL{
+
+	const ER_STORAGE_FILE_NOT_FOUND = 'Файл не найден!@1001';
+
 	public function __construct($dbLinkMaster=NULL,$dbLink=NULL){
 		parent::__construct($dbLinkMaster,$dbLink);
 			

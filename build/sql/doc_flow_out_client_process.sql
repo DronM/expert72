@@ -319,7 +319,8 @@ BEGIN
 					contract_return_date = coalesce(v_contract_return_date,NEW.date_time::date),
 					contract_date = coalesce(v_contract_return_date,NEW.date_time),
 					contract_return_date_on_sig = (v_contract_return_date IS NOT NULL)
-				WHERE id=v_contract_id AND coalesce(contract_return_date_on_sig,FALSE)=FALSE;
+				WHERE id=v_contract_id AND contract_return_date IS NULL;
+				--coalesce(contract_return_date_on_sig,FALSE)=FALSE;
 				
 				IF v_application_state='waiting_for_contract' THEN
 					INSERT INTO application_processes (

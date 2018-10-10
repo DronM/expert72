@@ -275,6 +275,15 @@ try{
 			}
 		
 			$orig_file = $resumable->uploadFolder.DIRECTORY_SEPARATOR.$_REQUEST['resumableFilename'];
+			
+			$upload_folder_main = NULL;
+			if (defined('FILE_STORAGE_DIR_MAIN')){
+				$upload_folder_main = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.
+					Application_Controller::APP_DIR_PREF.$par_app_id.DIRECTORY_SEPARATOR.
+					(($_REQUEST['doc_type']=='documents')? '':Application_Controller::dirNameOnDocType($_REQUEST['doc_type']).DIRECTORY_SEPARATOR).
+					$file_path;
+			}
+						
 			$db_doc_flow_out_client_id = NULL;
 			try{
 				$orig_file_size = filesize($orig_file);
@@ -384,14 +393,15 @@ try{
 					);
 					
 					//browser signature, always in base64
-					if (file_exists($new_name)){					
+					
+					if (file_exists($new_sig_name = $new_name) || (!is_null($upload_folder_main)&&file_exists($new_sig_name = $upload_folder_main.DIRECTORY_SEPARATOR.$par_file_id.'.sig')) ){
 						//Подписание НАШЕГО документа клиентом
 						FieldSQLString::formatForDb($dbLink,$par_file_id,$db_file_id);
 						if ($db_file_id=='null'){
 							throw new Exception(ER_COMMON);
 						}
-						
-						merge_sig($resumable,$orig_file,$new_name,$par_app_id,$par_file_id,$file_path);
+						//throw new Exception('resumable='.$resumable.' orig_file='.$orig_file.' par_app_id='.$par_app_id.' par_file_id='.$par_file_id.' file_path'.$file_path);
+						merge_sig($resumable,$orig_file,$new_sig_name,$par_app_id,$par_file_id,$file_path);
 						//
 						try{
 							$dbLink->query('BEGIN');							
@@ -426,8 +436,12 @@ try{
 								
 				//Если загружено все (файл + данные), делаем проверку подписи
 				if (				
-				file_exists($file_doc = $resumable->uploadFolder.DIRECTORY_SEPARATOR.$par_file_id)
-				&&file_exists($file_doc_sig = $resumable->uploadFolder.DIRECTORY_SEPARATOR.$par_file_id.'.sig')
+				(file_exists($file_doc = $resumable->uploadFolder.DIRECTORY_SEPARATOR.$par_file_id)
+					|| (!is_null($upload_folder_main) && file_exists($file_doc = $upload_folder_main.DIRECTORY_SEPARATOR.$par_file_id) )
+				)
+				&&(file_exists($file_doc_sig = $resumable->uploadFolder.DIRECTORY_SEPARATOR.$par_file_id.'.sig')
+					|| (!is_null($upload_folder_main) && file_exists($file_doc_sig = $upload_folder_main.DIRECTORY_SEPARATOR.$par_file_id.'.sig') )
+				)
 				){
 				
 					try{

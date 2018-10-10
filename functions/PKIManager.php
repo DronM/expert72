@@ -580,7 +580,10 @@ class PKIManager {
 				$this->parseSigFile($sigFile,$der_file,$pem_files);
 				
 				$sig_attrs = $this->getSigAttributes($der_file,TRUE);
-				
+				/*echo var_dump($sig_attrs);
+				echo '</br>';
+				echo '</br>';
+				*/
 				if (!count($pem_files)){
 					throw new Exception(self::ER_NO_CERT_FOUND);
 				}
@@ -805,6 +808,7 @@ class PKIManager {
 			else if ($serial_found && strpos($line,'serialNumber:')!==FALSE){
 				$p=strpos($line,':')+1;
 				$cur_serial = dec2hex(trim(substr($line,$p)));
+				if (strlen($cur_serial)==31)$cur_serial='0'.$cur_serial;
 				$res[$cur_serial] = new stdClass();
 				$res[$cur_serial]->signedDate = NULL;
 				$res[$cur_serial]->algorithm = NULL;				
@@ -877,6 +881,7 @@ class PKIManager {
 	 */	
 	public function mergeSigs($sSigFile,$dSigFile,$oSigFile){
 		try{
+			//file_put_contents(OUTPUT_PATH.'cmsmerge',sprintf($this->pkiPath.'cmsmerge -s "%s" -d "%s" -o "%s"',$sSigFile,$dSigFile,$oSigFile));
 			$this->run_shell_cmd(sprintf($this->pkiPath.'cmsmerge -s "%s" -d "%s" -o "%s"',$sSigFile,$dSigFile,$oSigFile));
 		}
 		finally{

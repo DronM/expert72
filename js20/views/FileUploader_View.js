@@ -1406,6 +1406,7 @@ FileUploader_View.prototype.onSignClick = function(fileId,itemId){
 }
 
 FileUploader_View.prototype.onGetSignatureDetails = function(fileId,callBack,controller){
+	if(!controller)return;
 	var pm = controller.getPublicMethod("get_sig_details");
 	pm.setFieldValue("id",fileId);
 	pm.run({"ok":function(resp){

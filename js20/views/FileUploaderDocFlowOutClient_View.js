@@ -32,17 +32,11 @@ FileUploaderDocFlowOutClient_View.prototype.checkRequiredFiles = function(){
 	//NO required documents
 }
 
-FileUploaderDocFlowOutClient_View.prototype.deleteFileFromServer = function(fileId,itemId){
-	var doc_id = this.m_mainView.getElement("id").getValue();
-	if (!doc_id){
-		//something wrong - document has downloaded files but not inserted???
-		throw new Error("Документ не выбран!");
-	}
-	
+FileUploaderDocFlowOutClient_View.prototype.deleteFileFromServerContinue = function(docId,fileId,itemId){
 	var self = this;	
 	var pm = (new DocFlowOutClient_Controller()).getPublicMethod("remove_document_file");
 	pm.setFieldValue("file_id",fileId);
-	pm.setFieldValue("doc_flow_out_client_id",doc_id);
+	pm.setFieldValue("doc_flow_out_client_id",docId);
 	pm.run({"ok":function(){
 		window.showNote(self.NT_FILE_DELETED);
 		self.decTotalFileCount();
@@ -53,6 +47,20 @@ FileUploaderDocFlowOutClient_View.prototype.deleteFileFromServer = function(file
 		self.decTotalFileCount();
 		self.calcFileTotals(itemId);
 	}});				
+}
+
+FileUploaderDocFlowOutClient_View.prototype.deleteFileFromServer = function(fileId,itemId){
+	var doc_id = this.m_mainView.getElement("id").getValue();
+	if (!doc_id){
+			var self = this;
+			this.m_mainView.saveObject(function(){
+				var doc_id = self.m_mainView.getElement("id").getValue();
+				self.deleteFileFromServerContinue(doc_id,fileId,itemId);
+			});
+	}
+	else{
+		this.deleteFileFromServerContinue(doc_id,fileId,itemId);
+	}
 }
 
 FileUploaderDocFlowOutClient_View.prototype.downloadFile = function(btnCtrl){

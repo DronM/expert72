@@ -1,10 +1,18 @@
 <?php
 /*
-$d = strtotime('Aug 28 07:23:50 2018 GMT');
-echo date('d/m/Y H:i:s',$d);
-return;	
+function dec2hex($number){
+    $hexvalues = array('0','1','2','3','4','5','6','7',
+               '8','9','A','B','C','D','E','F');
+    $hexval = '';
+     while($number != '0'){
+        $hexval = $hexvalues[bcmod($number,'16')].$hexval;
+        $number = bcdiv($number,'16',0);
+    }
+    return $hexval;
+}
+echo dec2hex('2429033231916172176376404571619655682');
+return;
 */
-
 	require_once('functions/PKIManager.php');
 	$pki_man = new PKIManager(PKI_PATH,PKI_CRL_VALIDITY,'debug');
 	//$der_file = '/home/andrey/www/htdocs/expert72/client_files/Заявление№1532/Исходящие/3a453276-a31e-4691-be43-8a7d0cfcea4a.der';
@@ -27,9 +35,10 @@ return;
 	exit;
 	*/
 	//echo $pki_man->getIssuier(OUTPUT_PATH.'test.pdf.sig')['CN'];
-	//$verif_res = $pki_man->verifySig('/home/andrey/www/htdocs/expert72/client_files/Заявление№1560/Договорные документы/Контракт/e4174f08-8e5e-433c-9166-3a51fed3ad4e.sig','/home/andrey/www/htdocs/expert72/client_files/Заявление№1560/Договорные документы/Контракт/e4174f08-8e5e-433c-9166-3a51fed3ad4e');
+	$verif_res = $pki_man->verifySig('/home/andrey/www/htdocs/expert72/client_files/Заявление№1560/Договорные документы/Контракт/e4174f08-8e5e-433c-9166-3a51fed3ad4e.sig','/home/andrey/www/htdocs/expert72/client_files/Заявление№1560/Договорные документы/Контракт/e4174f08-8e5e-433c-9166-3a51fed3ad4e');
 	
-	$verif_res = $pki_man->verifySig('/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/1.doc.sig','/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/1.doc');
+	//$verif_res = $pki_man->verifySig('/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/5d418f6a-c3aa-42a4-a759-201e08fc0c06.sig','/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/5d418f6a-c3aa-42a4-a759-201e08fc0c06',TRUE);
+	
 	//$verif_res = $pki_man->verifySig('/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Заключение.pdf.sig','/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Заключение.pdf');
 	//$verif_res = $pki_man->verifySig('/home/andrey/www/htdocs/expert72/client_files/Заявление№1560/ПД/1/1a740690-5894-40d3-867a-68dfb65ff00a.sig','/home/andrey/www/htdocs/expert72/client_files/Заявление№1560/ПД/1/1a740690-5894-40d3-867a-68dfb65ff00a');
 	

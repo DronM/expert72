@@ -1155,7 +1155,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		$this->addNewModel(
 			sprintf(
 			"SELECT
-				row_number() OVER (ORDER BY contracts.date_time) AS ord,
+				row_number() OVER (ORDER BY contracts.expertise_result_date) AS ord,
 				contracts.expertise_result_number,
 				to_char(contracts.date_time,'DD/MM/YY') AS date,
 				app.customer->>'name' AS customer,
@@ -1178,8 +1178,9 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			LEFT JOIN applications AS app ON app.id=contracts.application_id
 			LEFT JOIN build_types ON build_types.id=app.build_type_id
 			LEFT JOIN contracts AS primary_ct ON primary_ct.id=contracts.primary_contract_id
-			WHERE contracts.date_time BETWEEN %s AND %s %s
-			ORDER BY contracts.date_time",
+			WHERE contracts.expertise_result_date BETWEEN %s AND (%s::timestamp+'1 day'::interval-'1 second'::interval)
+			%s
+			ORDER BY contracts.expertise_result_date",
 			$dt_from,
 			$dt_to,
 			$extra_cond

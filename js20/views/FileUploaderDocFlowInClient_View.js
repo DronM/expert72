@@ -119,3 +119,7 @@ FileUploaderDocFlowInClient_View.prototype.onFillTemplateOptions = function(opts
 	opts.file_signed_by_client = itemFile.file_signed_by_client;
 	opts.file_not_signed_by_client = !itemFile.file_signed_by_client;
 }
+
+FileUploaderDocFlowInClient_View.prototype.onGetSignatureDetails = function(fileId,callBack){
+	FileUploaderDocFlowInClient_View.superclass.onGetSignatureDetails.call(this,fileId,callBack,(new DocFlowOut_Controller()));
+}

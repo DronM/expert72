@@ -48,7 +48,7 @@ function DocFlowApprovement_View(id,options){
 			if (list_closed && !list.rows[i].fields.closed){
 				list_closed = false;
 			}
-			if (!employee_in_list && cur_employee_id==list.rows[i].fields.employee.getKey()){
+			if (!employee_in_list && list.rows[i].fields&&list.rows[i].fields.employee && cur_employee_id==list.rows[i].fields.employee.getKey()){
 				employee_in_list = true;
 				employee_closed = list.rows[i].fields.closed;
 				employee_step = list.rows[i].fields.step;

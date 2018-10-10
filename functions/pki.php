@@ -88,7 +88,7 @@
 			$db_dateFrom = isset($cert_data->dateFrom)? "'".date('Y-m-d',$cert_data->dateFrom)."'":'NULL';
 			$db_dateTo = isset($cert_data->dateTo)? "'".date('Y-m-d',$cert_data->dateTo)."'":'NULL';		
 		
-			$db_sign_date_time = isset($cert_data->signedDate)? "'".date('Y-m-d H:i:s',$cert_data->signedDate)."'":'NULL';
+			$db_sign_date_time = isset($cert_data->signedDate)? "'".date('Y-m-d H:i:s',$cert_data->signedDate)."'":'now()';
 			$db_algorithm = isset($cert_data->algorithm)? "'".$cert_data->algorithm."'":'NULL';
 	
 			$user_cert_ar = NULL;

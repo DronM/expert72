@@ -1547,6 +1547,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		 * Экранирование больше-меньше для вывода в XML кавычки как есть
 		 */
 		foreach($ar as $fid=>$fv){
+			//ENT_NOQUOTES|
 			$ar[$fid] = htmlspecialchars($fv,ENT_NOQUOTES|ENT_HTML401);
 		}
 		
@@ -1973,6 +1974,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			}
 			else{
 				$m = 'Ошибка формирования файла!';
+				unlink($xml_file);
 			}
 			throw new Exception($m);
 		}

@@ -2,7 +2,7 @@
 <metadata owner="expert72">
 	<versions>
 		<version dateOpen="2017-09-27 12:09:48" dateClose="2017-12-08 10:12:08">1.001 
-		<lastBuild>2018-10-09 09:57:46</lastBuild></version>
+		<lastBuild>2018-10-10 07:06:34</lastBuild></version>
 		<version dateOpen="2017-12-08 11:12:01" dateClose="2017-12-08 11:12:04">1.002</version>
 		<version dateOpen="2017-12-08 11:12:20" dateClose="2017-12-08 11:12:20">1.0.3</version>
 		<version dateOpen="2017-12-12 11:12:07" dateClose="2017-12-12 11:12:07">1.0.4</version>
@@ -81,6 +81,8 @@
 		<version dateOpen="2018-10-04 12:10:45" dateClose="2018-10-05 13:10:32">1.0.78</version>
 		<version dateOpen="2018-10-05 13:10:33" dateClose="2018-10-08 11:10:43">1.0.79</version>
 		<version dateOpen="2018-10-08 11:10:44" dateClose="2018-10-09 09:10:57">1.0.80</version>
+		<version dateOpen="2018-10-09 11:10:14" dateClose="2018-10-09 12:10:19">1.0.81</version>
+		<version dateOpen="2018-10-09 12:10:21" dateClose="2018-10-10 07:10:06">1.0.82</version>
 	</versions>
 	<globalFilters>
 		<field id="user_id"/>
@@ -1152,7 +1154,7 @@
 				<predefinedItem alias="contract">
 					<id>1</id>
 					<require_client_sig>TRUE</require_client_sig>
-					<name>&#x414;&#x43E;&#x433;&#x43E;&#x432;&#x43E;&#x440;&#x43D;&#x44B;&#x435; &#x434;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;/&#x41A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;</name>
+					<name>&#x414;&#x43E;&#x433;&#x43E;&#x432;&#x43E;&#x440;&#x43D;&#x44B;&#x435; &#x434;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;</name>
 				</predefinedItem>
 				<predefinedItem alias="result">
 					<id>2</id>

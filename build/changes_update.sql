@@ -719,3 +719,67 @@ bcmod!!!
 sudo apt-get install php7.0-bcmath
 sudo service apache2 restart
 
+
+
+--**********************************
+ОБНОВЛЕНИЕ сертификатов
+insert into user_certificates
+(fingerprint,date_time,date_time_from,date_time_to,subject_cert,issuer_cert)
+(SELECT DISTINCT ON (md5(file_verification.subject_cert::text))
+'hash:'||md5(file_verification.subject_cert::text),
+file_verification.date_time,
+file_verification.date_from,
+file_verification.date_to,
+file_verification.subject_cert,
+file_verification.issuer_cert
+
+FROM file_verification
+WHERE file_verification.subject_cert IS NOT NULL
+)
+
+insert into file_signatures
+(file_id,user_certificate_id,sign_date_time,algorithm)
+(SELECT 
+file_verification.file_id,
+certs.id,
+NULL,
+'GOST R 34.11-94'
+FROM file_verification
+LEFT JOIN (
+	SELECT id,fingerprint
+	FROM user_certificates
+) AS certs ON certs.fingerprint='hash:'||md5(file_verification.subject_cert::text)
+WHERE file_verification.subject_cert IS NOT NULL
+)
+
+
+insert into file_verifications
+(file_id,date_time,check_result,check_time,error_str)
+(SELECT 
+file_verification.file_id,
+file_verification.date_time,
+file_verification.check_result,
+file_verification.check_time,
+file_verification.error_str
+
+FROM file_verification
+LEFT JOIN (
+	SELECT id,fingerprint
+	FROM user_certificates
+) AS certs ON certs.fingerprint='hash:'||md5(file_verification.subject_cert::text)
+WHERE file_verification.subject_cert IS NOT NULL AND file_verification.file_id NOT IN (SELECT t.file_id FROM file_verifications t)
+)
+
+
+update
+file_signatures
+SET sign_date_time=sel.date_time
+FROM
+(SELECT 
+file_signatures.id,
+user_certificates.date_time AS date_time
+FROM file_signatures
+LEFT JOIN user_certificates ON user_certificates.id=file_signatures.user_certificate_id
+where file_signatures.sign_date_time is null
+) AS sel
+WHERE sel.id=file_signatures.id AND file_signatures.sign_date_time is null
