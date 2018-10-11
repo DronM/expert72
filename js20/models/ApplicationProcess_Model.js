@@ -51,7 +51,7 @@ function ApplicationProcess_Model(options){
 	filed_options.autoInc = false;	
 	
 	options.fields.state = new FieldEnum("state",filed_options);
-	filed_options.enumValues = 'filling,correcting,sent,checking,returned,closed_no_expertise,waiting_for_contract,waiting_for_pay,expertise,closed';
+	filed_options.enumValues = 'filling,correcting,sent,checking,returned,closed_no_expertise,waiting_for_contract,waiting_for_pay,expertise,closed,archive';
 	options.fields.state.getValidator().setRequired(true);
 	
 				

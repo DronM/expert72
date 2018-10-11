@@ -70,7 +70,7 @@ class DocFlowExamination_Controller extends ControllerSQL{
 				,array());
 		$pm->addParam($param);
 		
-				$param = new FieldExtEnum('application_resolution_state',',','filling,correcting,sent,checking,returned,closed_no_expertise,waiting_for_contract,waiting_for_pay,expertise,closed'
+				$param = new FieldExtEnum('application_resolution_state',',','filling,correcting,sent,checking,returned,closed_no_expertise,waiting_for_contract,waiting_for_pay,expertise,closed,archive'
 				,array());
 		$pm->addParam($param);
 		
@@ -140,7 +140,7 @@ class DocFlowExamination_Controller extends ControllerSQL{
 			));
 			$pm->addParam($param);
 		
-				$param = new FieldExtEnum('application_resolution_state',',','filling,correcting,sent,checking,returned,closed_no_expertise,waiting_for_contract,waiting_for_pay,expertise,closed'
+				$param = new FieldExtEnum('application_resolution_state',',','filling,correcting,sent,checking,returned,closed_no_expertise,waiting_for_contract,waiting_for_pay,expertise,closed,archive'
 				,array(
 			));
 			$pm->addParam($param);

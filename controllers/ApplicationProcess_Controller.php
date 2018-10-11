@@ -36,7 +36,7 @@ class ApplicationProcess_Controller extends ControllerSQL{
 				,array('required'=>TRUE));
 		$pm->addParam($param);
 		
-				$param = new FieldExtEnum('state',',','filling,correcting,sent,checking,returned,closed_no_expertise,waiting_for_contract,waiting_for_pay,expertise,closed'
+				$param = new FieldExtEnum('state',',','filling,correcting,sent,checking,returned,closed_no_expertise,waiting_for_contract,waiting_for_pay,expertise,closed,archive'
 				,array('required'=>TRUE));
 		$pm->addParam($param);
 		$param = new FieldExtInt('user_id'
@@ -71,7 +71,7 @@ class ApplicationProcess_Controller extends ControllerSQL{
 			));
 			$pm->addParam($param);
 		
-				$param = new FieldExtEnum('state',',','filling,correcting,sent,checking,returned,closed_no_expertise,waiting_for_contract,waiting_for_pay,expertise,closed'
+				$param = new FieldExtEnum('state',',','filling,correcting,sent,checking,returned,closed_no_expertise,waiting_for_contract,waiting_for_pay,expertise,closed,archive'
 				,array(
 			));
 			$pm->addParam($param);

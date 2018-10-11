@@ -237,20 +237,21 @@ FileSigContainer.prototype.showSignatureDetails = function(toolTip,e){
 				DateHelper.strtotime(signature.sign_date_time) : signature.sign_date_time;
 		}
 		var org="";
-		org=add_field(signature.owner["ИНН"],org);
-		org=add_field(signature.owner["ОГРН"],org);
-		org=add_field(signature.owner["Организация"],org);				
-		org+= org.length? "</div>":"";
-
 		var pers="";
-		pers=add_field(signature.owner["Фамилия"],pers,null,true);
-		pers=add_field(signature.owner["Имя"],pers," ",true);
-		pers=add_field(signature.owner["Должность"],pers);
-		pers=add_field(signature.owner["СНИЛС"],pers);
-		pers=add_field(signature.owner["Адрес"],pers);				
-		pers=add_field(signature.owner["Эл.почта"],pers);
-		pers+= pers.length? "</div>":"";
-
+		if (signature.owner){
+			org=add_field(signature.owner["ИНН"],org);
+			org=add_field(signature.owner["ОГРН"],org);
+			org=add_field(signature.owner["Организация"],org);				
+			org+= org.length? "</div>":"";
+		
+			pers=add_field(signature.owner["Фамилия"],pers,null,true);
+			pers=add_field(signature.owner["Имя"],pers," ",true);
+			pers=add_field(signature.owner["Должность"],pers);
+			pers=add_field(signature.owner["СНИЛС"],pers);
+			pers=add_field(signature.owner["Адрес"],pers);				
+			pers=add_field(signature.owner["Эл.почта"],pers);
+			pers+= pers.length? "</div>":"";
+		}
 		var cert = "";
 		if (signature.cert_from && signature.cert_to){
 			var expir = "";

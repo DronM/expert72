@@ -16,13 +16,13 @@ function EditBankAcc(id,options){
 	
 	options.type = "text";
 	options.maxLength = 20;
-	options.editMask = "99999999999999999999";
+	//options.editMask = "99999999999999999999";
 	options.fixLength = true;
 	options.cmdSelect = false;
 	
 	EditBankAcc.superclass.constructor.call(this,id,options);
 }
-extend(EditBankAcc,EditString);
+extend(EditBankAcc,EditNum);
 
 /* Constants */
 

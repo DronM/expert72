@@ -783,3 +783,7 @@ LEFT JOIN user_certificates ON user_certificates.id=file_signatures.user_certifi
 where file_signatures.sign_date_time is null
 ) AS sel
 WHERE sel.id=file_signatures.id AND file_signatures.sign_date_time is null
+
+
+
+EXP_SIGS_NO_VER

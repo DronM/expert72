@@ -290,6 +290,10 @@ h2 div.btn{
 #ApplicationList\:grid td[state="closed_no_expertise"]{
 	background:#42f4aa;
 }
+#ApplicationList\:grid td[state="archive"]{
+	background:#42f4aa;
+}
+
 /*
 #ContractList\:grid td[state_for_color="no_pay"]{
 	background:#ffb41e;

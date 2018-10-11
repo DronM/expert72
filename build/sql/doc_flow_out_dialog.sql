@@ -11,80 +11,7 @@ CREATE OR REPLACE VIEW doc_flow_out_dialog AS
 		doc_flow_in_ref(doc_flow_in) AS doc_flow_in_ref,
 		
 		--****************************
-		(SELECT json_agg(doc_files.attachments)
-		FROM (
-
-			WITH file_q AS (
-			SELECT
-				t.file_path,
-				json_agg(
-					json_build_object(
-						'file_id',t.file_id,
-						'file_name',t.file_name,
-						'file_size',t.file_size,
-						'file_signed',t.file_signed,
-						'file_uploaded','true',
-						'file_path',t.file_path,
-						'signatures',--sign.signatures
-						CASE
-							WHEN sign.signatures IS NULL AND f_ver.file_id IS NOT NULL THEN
-								jsonb_build_array(
-									jsonb_build_object(
-										'sign_date_time',f_ver.date_time,
-										'check_result',f_ver.check_result,
-										'error_str',f_ver.error_str
-									)
-								)
-							ELSE sign.signatures
-						END
-					)
-				) AS attachments			
-			FROM doc_flow_attachments AS t
-			LEFT JOIN file_verifications AS f_ver ON f_ver.file_id=t.file_id
-			LEFT JOIN (
-				SELECT
-					f_sig.file_id,
-					jsonb_agg(
-						jsonb_build_object(
-							'owner',u_certs.subject_cert,
-							'cert_from',u_certs.date_time_from,
-							'cert_to',u_certs.date_time_to,
-							'sign_date_time',f_sig.sign_date_time,
-							'check_result',ver.check_result,
-							'check_time',ver.check_time,
-							'error_str',ver.error_str,
-							'employee_id',u_certs.employee_id,
-							'verif_date_time',ver.date_time
-						)
-					) As signatures
-				FROM file_signatures AS f_sig
-				LEFT JOIN file_verifications AS ver ON ver.file_id=f_sig.file_id
-				LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id
-				GROUP BY f_sig.file_id,f_sig.sign_date_time
-				ORDER BY f_sig.sign_date_time
-				--ТАКАЯ СОРТИРОВКА ЧТОБЫ НЕ БЫЛО ПРОБЛЕМ У УДАЛЕНИЕМ!!!
-			) AS sign ON sign.file_id=t.file_id			
-			WHERE t.doc_type='doc_flow_out'::data_types AND t.doc_id=doc_flow_out.id
-			GROUP BY t.file_path
-			)
-
-			SELECT
-				json_build_object(
-					'fields',json_build_object(
-						'id',fld.id,
-						'descr',fld.name,
-						'required',false,
-						'require_client_sig',fld.require_client_sig
-					),
-					'files',coalesce((SELECT file_q.attachments
-						FROM file_q
-						WHERE file_q.file_path=fld.name),
-						'[]'::json)
-				) AS attachments
-			FROM application_doc_folders AS fld
-			ORDER BY fld.name
-			) AS doc_files
-		) AS files,		
+		folders.files AS files,
 		---***************************
 		st.state AS state,
 		st.date_time AS state_dt,
@@ -115,18 +42,41 @@ CREATE OR REPLACE VIEW doc_flow_out_dialog AS
 	LEFT JOIN employees AS employees2 ON employees2.id=doc_flow_out.signed_by_employee_id
 	
 	
-	/*
 	LEFT JOIN (
 		SELECT
-			t.doc_id,
+			t.doc_flow_out_id AS doc_id,
+			max(t.date_time) AS date_time
+		FROM doc_flow_out_processes t
+		GROUP BY t.doc_flow_out_id
+	) AS h_max ON h_max.doc_id=doc_flow_out.id
+	LEFT JOIN doc_flow_out_processes st
+		ON st.doc_flow_out_id=h_max.doc_id AND st.date_time = h_max.date_time
+	
+	LEFT JOIN
+		(
+		SELECT
+			doc_att.doc_id,
 			json_agg(
 				json_build_object(
-					'file_id',t.file_id,
-					'file_name',t.file_name,
-					'file_size',t.file_size,
-					'file_signed',t.file_signed,
+					'fields',json_build_object('id',doc_att.folder_id,'descr',doc_att.folder_descr),
+					'parent_id',NULL,
+					'files',doc_att.files
+				)
+			) AS files
+		FROM
+		(SELECT
+			att.doc_id,
+			att.file_path AS folder_descr,
+			app_fd.id AS folder_id,
+			json_agg(
+				json_build_object(
+					'file_id',att.file_id,
+					'file_name',att.file_name,
+					'file_size',att.file_size,
+					'file_signed',att.file_signed,
 					'file_uploaded','true',
-					'file_path',t.file_path,
+					'file_path',att.file_path,
+					'date_time',f_ver.date_time,
 					'signatures',--sign.signatures
 					CASE
 						WHEN sign.signatures IS NULL AND f_ver.file_id IS NOT NULL THEN
@@ -138,46 +88,44 @@ CREATE OR REPLACE VIEW doc_flow_out_dialog AS
 								)
 							)
 						ELSE sign.signatures
-					END
+					END,
+					'file_signed_by_client',FALSE,
+					'require_client_sig',app_fd.require_client_sig
 				)
-			) AS attachments			
-		FROM doc_flow_attachments AS t
-		LEFT JOIN file_verifications AS f_ver ON f_ver.file_id=t.file_id
+			) AS files
+		FROM doc_flow_attachments att
+		LEFT JOIN application_doc_folders AS app_fd ON app_fd.name=att.file_path
+		LEFT JOIN file_verifications AS f_ver ON f_ver.file_id=att.file_id
 		LEFT JOIN (
 			SELECT
+				files_t.file_id,
+				jsonb_agg(files_t.signatures) AS signatures
+			FROM
+			(SELECT
 				f_sig.file_id,
-				jsonb_agg(
-					jsonb_build_object(
-						'owner',u_certs.subject_cert,
-						'cert_from',u_certs.date_time_from,
-						'cert_to',u_certs.date_time_to,
-						'sign_date_time',f_sig.sign_date_time,
-						'check_result',ver.check_result,
-						'check_time',ver.check_time,
-						'error_str',ver.error_str,
-						'employee_id',u_certs.employee_id
-					)
-				) As signatures
+				jsonb_build_object(
+					'owner',u_certs.subject_cert,
+					'cert_from',u_certs.date_time_from,
+					'cert_to',u_certs.date_time_to,
+					'sign_date_time',f_sig.sign_date_time,
+					'check_result',ver.check_result,
+					'check_time',ver.check_time,
+					'error_str',ver.error_str
+				) AS signatures
 			FROM file_signatures AS f_sig
 			LEFT JOIN file_verifications AS ver ON ver.file_id=f_sig.file_id
 			LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id
-			GROUP BY f_sig.file_id,ver.date_time
-			ORDER BY ver.date_time
-		) AS sign ON sign.file_id=t.file_id			
-		WHERE t.doc_type='doc_flow_out'::data_types
-		GROUP BY t.doc_id		
-	) AS files ON files.doc_id = doc_flow_out.id
-	*/
-	
-	LEFT JOIN (
-		SELECT
-			t.doc_flow_out_id AS doc_id,
-			max(t.date_time) AS date_time
-		FROM doc_flow_out_processes t
-		GROUP BY t.doc_flow_out_id
-	) AS h_max ON h_max.doc_id=doc_flow_out.id
-	LEFT JOIN doc_flow_out_processes st
-		ON st.doc_flow_out_id=h_max.doc_id AND st.date_time = h_max.date_time
+			ORDER BY f_sig.sign_date_time
+			) AS files_t
+			GROUP BY files_t.file_id
+		) AS sign ON sign.file_id=f_ver.file_id
+		WHERE att.doc_type='doc_flow_out'
+		GROUP BY att.doc_id,app_fd.id,att.file_path
+		ORDER BY app_fd.id
+		)  AS doc_att
+		
+		GROUP BY doc_att.doc_id
+	) AS folders ON folders.doc_id=doc_flow_out.id
 	
 	;
 	

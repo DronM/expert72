@@ -57,13 +57,17 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 	
 		Application_Controller::checkApp($ar);
 		if ($ar['user_check_passed']!='t'){
-			throw new Exception(Application_Controller::ER_NO_DOC);
+			throw new Exception(self::ER_NO_DOC);
 		}
-		/*
-		if ($this->getExtVal($pm,'sent')=='true' &amp;&amp; $ar['state']!='waiting_for_contract' &amp;&amp; $ar['state']!='waiting_for_pay' &amp;&amp; $ar['state']!='expertise'){
+		
+		if (
+			$ar['state']=='archive'
+		||
+			($ar['state']=='closed' &amp;&amp; $this->getExtVal($pm,'doc_flow_out_client_type')!='contr_return')
+		){
 			throw new Exception(self::ER_WRONG_STATE);
 		}
-		*/
+		
 		
 		if ($this->getExtVal($pm,'sent')=='true'){
 			throw new Exception(self::ER_NO_ATTACHMENTS);
@@ -140,17 +144,20 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			if ($ar['user_check_passed']!='t'){
 				throw new Exception(Application_Controller::ER_NO_DOC);
 			}
-			
-			/*
-			if ($ar['state']!='waiting_for_contract' &amp;&amp; $ar['state']!='waiting_for_pay' &amp;&amp; $ar['state']!='expertise'){
-				throw new Exception(self::ER_WRONG_STATE);
-			}
-			*/
-		
+
 			if ($this->getExtVal($pm,'sent')=='true' &amp;&amp; $ar['doc_flow_out_client_sent']=='t'){
 				throw new Exception(self::ER_DOC_SENT);
 			}	
-
+			
+			if (
+			$ar['state']=='archive'
+			|| (	$ar['state']=='closed'
+				&amp;&amp; ($ar['doc_flow_out_client_type']!='contr_return' || $this->getExtVal($pm,'doc_flow_out_client_type')=='contr_return')
+				)
+			){
+				throw new Exception(self::ER_WRONG_STATE);
+			}
+		
 			/*
 			if ($ar['doc_flow_out_client_type']=='contr_return' &amp;&amp; $ar['state']!='expertise'){
 				throw new Exception(self::ER_WRONG_STATE);

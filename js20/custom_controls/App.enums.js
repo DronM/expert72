@@ -52,7 +52,8 @@
 ,"ru_waiting_for_contract":"Контракт по заявлению"
 ,"ru_waiting_for_pay":"Ожидание оплаты"
 ,"ru_expertise":"Экспертиза проекта"
-,"ru_closed":"Заключение"
+,"ru_closed":"Выдано заключение"
+,"ru_archive":"В архиве"
 }
 
 		,"responsable_person_types":{"ru_boss":"Руководитель"

@@ -36,7 +36,9 @@ function EnumGridColumn_application_states(options){
 
 	options.multyLangValues["ru"]["expertise"] = "Экспертиза проекта";
 
-	options.multyLangValues["ru"]["closed"] = "Заключение";
+	options.multyLangValues["ru"]["closed"] = "Выдано заключение";
+
+	options.multyLangValues["ru"]["archive"] = "В архиве";
 EnumGridColumn_application_states.superclass.constructor.call(this,options);
 	
 }

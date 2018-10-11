@@ -40,7 +40,7 @@
 	{{/file_deletable}}
 
 	{{#file_switchable}}
-	<div id="{{id}}_switch" class="btn btn-sm fileSwitchBtn" title="Заменить файл на другой">
+	<div id="{{id}}_switch" class="btn btn-sm fileSwitchBtn {{#file_not_uploaded}}hidden{{/file_not_uploaded}}" title="Заменить файл на другой">
 		<i class="glyphicon glyphicon-transfer"></i>	
 	</div>
 	{{/file_switchable}}

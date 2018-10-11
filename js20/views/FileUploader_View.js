@@ -592,7 +592,7 @@ FileUploader_View.prototype.deleteFileFromServer = function(fileId,itemId,contro
 	pm.run({"ok":function(){
 		window.showNote(self.NT_FILE_DELETED);
 		self.decTotalFileCount();
-		this.deleteFileCont(fileId,itemId);
+		self.deleteFileCont(fileId,itemId);
 		self.decTotalFileCount();
 		self.calcFileTotals(itemId);
 	}});				
@@ -674,23 +674,25 @@ FileUploader_View.prototype.deleteFile = function(fileId,itemId){
 			for(var sig_id in sig_cont){
 				last_sig = sig_cont[sig_id];
 			}
-			last_sig.getCertOwnerDescr(function(sig_owner){
-				var sig_owner_employee_id = (last_sig&&last_sig.certInf&&last_sig.certInf.signature&&last_sig.certInf.signature.employee_id)? parseInt(last_sig.certInf.signature.employee_id,10):null;
-				if (user_role=="admin" || !sig_owner_employee_id || sig_owner_employee_id==window.getApp().getServVar("employees_ref").getKey()){
-					WindowQuestion.show({
-						"text":("Удалить ЭЦП, владелец: "+sig_owner),
-						"no":false,
-						"callBack":function(res){
-							if (res==WindowQuestion.RES_YES){
-								self.deleteSigFromServer(fileId,itemId);
+			if (last_sig){
+				last_sig.getCertOwnerDescr(function(sig_owner){
+					var sig_owner_employee_id = (last_sig.certInf&&last_sig.certInf.signature&&last_sig.certInf.signature.employee_id)? parseInt(last_sig.certInf.signature.employee_id,10):null;
+					if (user_role=="admin" || !sig_owner_employee_id || sig_owner_employee_id==window.getApp().getServVar("employees_ref").getKey()){
+						WindowQuestion.show({
+							"text":("Удалить ЭЦП, владелец: "+sig_owner),
+							"no":false,
+							"callBack":function(res){
+								if (res==WindowQuestion.RES_YES){
+									self.deleteSigFromServer(fileId,itemId);
+								}
 							}
-						}
-					});
-				}
-				else{
-					window.showError("Владелец подписи "+sig_owner+". Вам запрещено удалять чужую подпись!");
-				}			
-			});
+						});
+					}
+					else{
+						window.showError("Владелец подписи "+sig_owner+". Вам запрещено удалять чужую подпись!");
+					}			
+				});
+			}
 		}
 		else{
 			WindowQuestion.show({
@@ -1083,11 +1085,15 @@ FileUploader_View.prototype.initDownload = function(){
 		else{
 			if (!file.signature){
 				window.showNote(CommonHelper.format(self.NT_FILE_DOWNLOADED,[file.fileName]));
-				var file_ctrl = self.getElement("file-list_"+file.doc_id).getElement("file_"+file.file_id);
+				var file_cont = self.getElement("file-list_"+file.doc_id);
+				var file_ctrl = file_cont.getElement("file_"+file.file_id);
 				file_ctrl.setAttr("file_uploaded","true");
 				var pic = DOMHelper.getElementsByAttr(self.m_filePicClass, file_ctrl.getNode(), "class", true)[0];
 				pic.className = "glyphicon glyphicon-ok";
 				pic.setAttribute("title",self.FILE_DOWNLOADED_TITLE);
+				if (self.m_allowFileSwitch){
+					DOMHelper.show(file_cont.getElement("file_"+file.file_id+"_switch").getNode());
+				}
 				
 				file.file_uploaded = true;	
 				self.m_uploadedFileIds.push(file.file_id);

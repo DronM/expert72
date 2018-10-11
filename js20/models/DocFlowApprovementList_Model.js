@@ -148,7 +148,7 @@ function DocFlowApprovementList_Model(options){
 	filed_options.autoInc = false;	
 	
 	options.fields.contract_state = new FieldEnum("contract_state",filed_options);
-	filed_options.enumValues = 'filling,correcting,sent,checking,returned,closed_no_expertise,waiting_for_contract,waiting_for_pay,expertise,closed';
+	filed_options.enumValues = 'filling,correcting,sent,checking,returned,closed_no_expertise,waiting_for_contract,waiting_for_pay,expertise,closed,archive';
 	
 		DocFlowApprovementList_Model.superclass.constructor.call(this,id,options);
 }

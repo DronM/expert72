@@ -121,7 +121,7 @@ extend(DocFlowExamination_Controller,ControllerObjServer);
 	
 	var options = {};
 		
-	options.enumValues = 'filling,correcting,sent,checking,returned,closed_no_expertise,waiting_for_contract,waiting_for_pay,expertise,closed';
+	options.enumValues = 'filling,correcting,sent,checking,returned,closed_no_expertise,waiting_for_contract,waiting_for_pay,expertise,closed,archive';
 	var field = new FieldEnum("application_resolution_state",options);
 	
 	pm.addField(field);
@@ -218,7 +218,7 @@ extend(DocFlowExamination_Controller,ControllerObjServer);
 	
 	var options = {};
 		
-	options.enumValues = 'filling,correcting,sent,checking,returned,closed_no_expertise,waiting_for_contract,waiting_for_pay,expertise,closed';
+	options.enumValues = 'filling,correcting,sent,checking,returned,closed_no_expertise,waiting_for_contract,waiting_for_pay,expertise,closed,archive';
 	
 	var field = new FieldEnum("application_resolution_state",options);
 	

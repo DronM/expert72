@@ -294,13 +294,17 @@ class DocFlowOutClient_Controller extends ControllerSQL{
 	
 		Application_Controller::checkApp($ar);
 		if ($ar['user_check_passed']!='t'){
-			throw new Exception(Application_Controller::ER_NO_DOC);
+			throw new Exception(self::ER_NO_DOC);
 		}
-		/*
-		if ($this->getExtVal($pm,'sent')=='true' && $ar['state']!='waiting_for_contract' && $ar['state']!='waiting_for_pay' && $ar['state']!='expertise'){
+		
+		if (
+			$ar['state']=='archive'
+		||
+			($ar['state']=='closed' && $this->getExtVal($pm,'doc_flow_out_client_type')!='contr_return')
+		){
 			throw new Exception(self::ER_WRONG_STATE);
 		}
-		*/
+		
 		
 		if ($this->getExtVal($pm,'sent')=='true'){
 			throw new Exception(self::ER_NO_ATTACHMENTS);
@@ -377,17 +381,20 @@ class DocFlowOutClient_Controller extends ControllerSQL{
 			if ($ar['user_check_passed']!='t'){
 				throw new Exception(Application_Controller::ER_NO_DOC);
 			}
-			
-			/*
-			if ($ar['state']!='waiting_for_contract' && $ar['state']!='waiting_for_pay' && $ar['state']!='expertise'){
-				throw new Exception(self::ER_WRONG_STATE);
-			}
-			*/
-		
+
 			if ($this->getExtVal($pm,'sent')=='true' && $ar['doc_flow_out_client_sent']=='t'){
 				throw new Exception(self::ER_DOC_SENT);
 			}	
-
+			
+			if (
+			$ar['state']=='archive'
+			|| (	$ar['state']=='closed'
+				&& ($ar['doc_flow_out_client_type']!='contr_return' || $this->getExtVal($pm,'doc_flow_out_client_type')=='contr_return')
+				)
+			){
+				throw new Exception(self::ER_WRONG_STATE);
+			}
+		
 			/*
 			if ($ar['doc_flow_out_client_type']=='contr_return' && $ar['state']!='expertise'){
 				throw new Exception(self::ER_WRONG_STATE);

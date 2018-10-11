@@ -247,15 +247,13 @@ DocFlowOutClientDialog_View.prototype.onAppClear = function(){
 }
 
 DocFlowOutClientDialog_View.prototype.onAppSelect = function(fields){
-	/*
-	if (fields.application_state.getValue()!="waiting_for_contract"
-	&&fields.application_state.getValue()!="waiting_for_pay"
-	&&fields.application_state.getValue()!="expertise"
+	
+	if (fields.application_state.getValue()=="archive"
 	){
 		this.getElement("applications_ref").reset();
 		throw new Error("Неверный статус заявления!");
 	}
-	*/
+	
 	var pm = this.getController().getPublicMethod("get_application_dialog");
 	pm.setFieldValue("application_id",fields.id.getValue());
 	pm.setFieldValue("id",this.getElement("id").getValue());

@@ -2412,12 +2412,12 @@ class Application_Controller extends ControllerSQL{
 		
 		/*
 		 * Экранирование больше-меньше для вывода в XML кавычки как есть
-		 */
+		
 		foreach($ar as $fid=>$fv){
 			//ENT_NOQUOTES|
 			$ar[$fid] = htmlspecialchars($fv,ENT_NOQUOTES|ENT_HTML401);
 		}
-		
+		*/
 		$boss_name = '';
 		$boss_post = '';
 		$resp_m = json_decode($ar['office_responsable_persons'],TRUE);		
@@ -2456,9 +2456,9 @@ class Application_Controller extends ControllerSQL{
 		foreach($featrures_m['rows'] as $row){
 			$feature_val = (array_key_exists('value',$row['fields']))? $row['fields']['value'] : '';
 			if (strlen($feature_val)){
-				$ar['constr_technical_features'].=sprintf('<feature name="%s" value="%s"/>',
+				$ar['constr_technical_features'].=sprintf('<feature><name>%s</name><value>%s</value></feature>',
 					$row['fields']['name'],
-					$feature_val
+					htmlspecialchars($feature_val)
 				);
 			}
 		}
@@ -3392,7 +3392,7 @@ class Application_Controller extends ControllerSQL{
 				$ind_used = FALSE;
 			}
 		}
-		return ($ind_used? FILE_STORAGE_DIR:FILE_STORAGE_DIR_MAIN) .DIRECTORY_SEPARATOR.$relPath.$fileId.'.sig.s'.$maxIndex;
+		return ($ind_used? FILE_STORAGE_DIR:FILE_STORAGE_DIR_MAIN) .DIRECTORY_SEPARATOR.$relPath.DIRECTORY_SEPARATOR.$fileId.'.sig.s'.$maxIndex;
 	}
 	
 	

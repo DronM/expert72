@@ -159,7 +159,7 @@ function DocFlowExamination_Model(options){
 	filed_options.autoInc = false;	
 	
 	options.fields.application_resolution_state = new FieldEnum("application_resolution_state",filed_options);
-	filed_options.enumValues = 'filling,correcting,sent,checking,returned,closed_no_expertise,waiting_for_contract,waiting_for_pay,expertise,closed';
+	filed_options.enumValues = 'filling,correcting,sent,checking,returned,closed_no_expertise,waiting_for_contract,waiting_for_pay,expertise,closed,archive';
 	
 			
 			

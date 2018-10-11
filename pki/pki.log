@@ -133,3 +133,964 @@
 10/10/2018 06:04 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/4BC6DC14D97010C41A26E058AD851F81C842415A.der" -noout
 10/10/2018 06:04 Adding certificate pem with crl to chain file
 10/10/2018 06:04 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1560/Договорные документы/Контракт/e4174f08-8e5e-433c-9166-3a51fed3ad4e" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1560/Договорные документы/Контракт/e4174f08-8e5e-433c-9166-3a51fed3ad4e.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/5bbd501e9b058chain.pem"
+10/10/2018 11:01 Called verifySig
+10/10/2018 11:01 parseSigFile
+10/10/2018 11:01 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/96e74d1d-ee95-496e-8f3e-8cc5b3b0bc0e.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/96e74d1d-ee95-496e-8f3e-8cc5b3b0bc0e.der"
+10/10/2018 11:01 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/96e74d1d-ee95-496e-8f3e-8cc5b3b0bc0e.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/5bbd959da2eac."i }'
+10/10/2018 11:01 Found signer certificates:1
+10/10/2018 11:01 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/96e74d1d-ee95-496e-8f3e-8cc5b3b0bc0e.der" -noout -cmsout -print
+10/10/2018 11:01 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/5bbd959da2eac.1
+10/10/2018 11:01 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/5bbd959da2eac.1" -noout -nameopt multiline
+10/10/2018 11:01 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/5bbd959da2eac.1" -noout
+10/10/2018 11:01 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/96e74d1d-ee95-496e-8f3e-8cc5b3b0bc0e" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/96e74d1d-ee95-496e-8f3e-8cc5b3b0bc0e.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/7fd73385.chain.pem"
+10/10/2018 11:02 Called verifySig
+10/10/2018 11:02 parseSigFile
+10/10/2018 11:02 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/09-01-01 Утилизация ТБО 40(48).xlsx.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/09-01-01 Утилизация ТБО 40(48).xlsx.der"
+10/10/2018 11:02 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/09-01-01 Утилизация ТБО 40(48).xlsx.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/5bbd960fa2d30."i }'
+10/10/2018 11:02 Found signer certificates:1
+10/10/2018 11:02 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/09-01-01 Утилизация ТБО 40(48).xlsx.der" -noout -cmsout -print
+10/10/2018 11:02 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/5bbd960fa2d30.1
+10/10/2018 11:02 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/5bbd960fa2d30.1" -noout -nameopt multiline
+10/10/2018 11:02 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/5bbd960fa2d30.1" -noout
+10/10/2018 11:02 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/96e74d1d-ee95-496e-8f3e-8cc5b3b0bc0e" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/09-01-01 Утилизация ТБО 40(48).xlsx.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/7fd73385.chain.pem"
+10/10/2018 11:02 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/96e74d1d-ee95-496e-8f3e-8cc5b3b0bc0e.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/96e74d1d-ee95-496e-8f3e-8cc5b3b0bc0e.sig.der"
+10/10/2018 11:02 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/09-01-01 Утилизация ТБО 40(48).xlsx.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/96e74d1d-ee95-496e-8f3e-8cc5b3b0bc0e.der"
+10/10/2018 11:02 Called run_shell_cmd /home/andrey/www/htdocs/expert72/pki/cmsmerge -s "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/96e74d1d-ee95-496e-8f3e-8cc5b3b0bc0e.der" -d "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/96e74d1d-ee95-496e-8f3e-8cc5b3b0bc0e.sig" -o "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/96e74d1d-ee95-496e-8f3e-8cc5b3b0bc0e.mrg"
+10/10/2018 11:02 Called verifySig
+10/10/2018 11:02 parseSigFile
+10/10/2018 11:02 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/96e74d1d-ee95-496e-8f3e-8cc5b3b0bc0e.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/5bbd960ff3ef2."i }'
+10/10/2018 11:02 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/5bbd960ff3ef2.1" -noout
+10/10/2018 11:02 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/5bbd960ff3ef2.2" -noout
+10/10/2018 11:02 Found signer certificates:1
+10/10/2018 11:02 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/96e74d1d-ee95-496e-8f3e-8cc5b3b0bc0e.der" -noout -cmsout -print
+10/10/2018 11:02 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/5bbd960ff3ef2.2
+10/10/2018 11:02 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/5bbd960ff3ef2.2" -noout -nameopt multiline
+10/10/2018 11:02 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/5bbd960ff3ef2.2" -noout
+10/10/2018 11:02 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/96e74d1d-ee95-496e-8f3e-8cc5b3b0bc0e" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/96e74d1d-ee95-496e-8f3e-8cc5b3b0bc0e.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/7fd73385.chain.pem"
+10/10/2018 11:03 Called verifySig
+10/10/2018 11:03 parseSigFile
+10/10/2018 11:03 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/ИсхДанСмета.pdf.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/.pdf.der"
+10/10/2018 11:03 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/.pdf.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/5bbd9616d1382."i }'
+10/10/2018 11:03 Found signer certificates:1
+10/10/2018 11:03 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/.pdf.der" -noout -cmsout -print
+10/10/2018 11:03 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/5bbd9616d1382.1
+10/10/2018 11:03 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/5bbd9616d1382.1" -noout -nameopt multiline
+10/10/2018 11:03 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/5bbd9616d1382.1" -noout
+10/10/2018 11:03 Called get_ca_list_file
+10/10/2018 11:03 Called get_ca_certs progComplexAlias=ООО "УЦ ТЕНЗОР",caOGRN=1067604081710
+10/10/2018 11:03 Certificate found, making pem
+10/10/2018 11:03 Called run_shell_cmd openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/1A53B1E74DD2873942808958C5B6AA7BA15FFF12.b64" -out "/home/andrey/www/htdocs/expert72/pki/1A53B1E74DD2873942808958C5B6AA7BA15FFF12.der"
+10/10/2018 11:03 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/1A53B1E74DD2873942808958C5B6AA7BA15FFF12.der" -noout
+10/10/2018 11:03 Called run_shell_cmd openssl x509 -in "/home/andrey/www/htdocs/expert72/pki/1A53B1E74DD2873942808958C5B6AA7BA15FFF12.der" -inform der -outform pem -out "/home/andrey/www/htdocs/expert72/pki/1A53B1E74DD2873942808958C5B6AA7BA15FFF12.pem"
+10/10/2018 11:03 CRL urls exist
+10/10/2018 11:03 Called run_shell_cmd wget -O "/home/andrey/www/htdocs/expert72/pki/1A53B1E74DD2873942808958C5B6AA7BA15FFF12.crl.der" http://tax5.tensor.ru/pub/crl/uc_tensor-2017.crl
+10/10/2018 11:03 Called run_shell_cmd openssl crl -in "/home/andrey/www/htdocs/expert72/pki/1A53B1E74DD2873942808958C5B6AA7BA15FFF12.crl.der" -inform DER -out "/home/andrey/www/htdocs/expert72/pki/1A53B1E74DD2873942808958C5B6AA7BA15FFF12.crl"
+10/10/2018 11:03 Appending crl to pem file
+10/10/2018 11:03 Adding certificate pem with crl to chain file
+10/10/2018 11:03 Looking for parent certificate
+10/10/2018 11:03 Called get_ca_certs progComplexAlias=Головной удостоверяющий центр,caOGRN=1047702026701
+10/10/2018 11:03 Certificate found, making pem
+10/10/2018 11:03 Called run_shell_cmd openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.b64" -out "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der"
+10/10/2018 11:03 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der" -noout
+10/10/2018 11:03 Adding certificate pem with crl to chain file
+10/10/2018 11:03 Certificate found, making pem
+10/10/2018 11:03 Called run_shell_cmd openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/EBA1BEF7C8C171674CDFBA19F4D54C2452D88A90.b64" -out "/home/andrey/www/htdocs/expert72/pki/EBA1BEF7C8C171674CDFBA19F4D54C2452D88A90.der"
+10/10/2018 11:03 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/EBA1BEF7C8C171674CDFBA19F4D54C2452D88A90.der" -noout
+10/10/2018 11:03 Called run_shell_cmd openssl x509 -in "/home/andrey/www/htdocs/expert72/pki/EBA1BEF7C8C171674CDFBA19F4D54C2452D88A90.der" -inform der -outform pem -out "/home/andrey/www/htdocs/expert72/pki/EBA1BEF7C8C171674CDFBA19F4D54C2452D88A90.pem"
+10/10/2018 11:03 CRL urls exist
+10/10/2018 11:03 Called run_shell_cmd wget -O "/home/andrey/www/htdocs/expert72/pki/EBA1BEF7C8C171674CDFBA19F4D54C2452D88A90.crl.der" http://tax5.tensor.ru/pub/crl/uc_tensor_2-2018.crl
+10/10/2018 11:03 Called run_shell_cmd openssl crl -in "/home/andrey/www/htdocs/expert72/pki/EBA1BEF7C8C171674CDFBA19F4D54C2452D88A90.crl.der" -inform DER -out "/home/andrey/www/htdocs/expert72/pki/EBA1BEF7C8C171674CDFBA19F4D54C2452D88A90.crl"
+10/10/2018 11:03 Appending crl to pem file
+10/10/2018 11:03 Adding certificate pem with crl to chain file
+10/10/2018 11:03 Looking for parent certificate
+10/10/2018 11:03 Called get_ca_certs progComplexAlias=Головной удостоверяющий центр,caOGRN=1047702026701
+10/10/2018 11:03 Certificate found, making pem
+10/10/2018 11:03 Called run_shell_cmd openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.b64" -out "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der"
+10/10/2018 11:03 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der" -noout
+10/10/2018 11:03 Adding certificate pem with crl to chain file
+10/10/2018 11:03 Certificate found, making pem
+10/10/2018 11:03 Called run_shell_cmd openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/EAAD465F0211EFE05E612E067B0F9382AB321A25.b64" -out "/home/andrey/www/htdocs/expert72/pki/EAAD465F0211EFE05E612E067B0F9382AB321A25.der"
+10/10/2018 11:03 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/EAAD465F0211EFE05E612E067B0F9382AB321A25.der" -noout
+10/10/2018 11:03 Called run_shell_cmd openssl x509 -in "/home/andrey/www/htdocs/expert72/pki/EAAD465F0211EFE05E612E067B0F9382AB321A25.der" -inform der -outform pem -out "/home/andrey/www/htdocs/expert72/pki/EAAD465F0211EFE05E612E067B0F9382AB321A25.pem"
+10/10/2018 11:03 CRL urls exist
+10/10/2018 11:03 Called run_shell_cmd wget -O "/home/andrey/www/htdocs/expert72/pki/EAAD465F0211EFE05E612E067B0F9382AB321A25.crl.der" http://tax5.tensor.ru/pub/crl/uc_tensor-2018_gost2012.crl
+10/10/2018 11:03 Called run_shell_cmd openssl crl -in "/home/andrey/www/htdocs/expert72/pki/EAAD465F0211EFE05E612E067B0F9382AB321A25.crl.der" -inform DER -out "/home/andrey/www/htdocs/expert72/pki/EAAD465F0211EFE05E612E067B0F9382AB321A25.crl"
+10/10/2018 11:03 Appending crl to pem file
+10/10/2018 11:03 Adding certificate pem with crl to chain file
+10/10/2018 11:03 Looking for parent certificate
+10/10/2018 11:03 Called get_ca_certs progComplexAlias=Минкомсвязь России,caOGRN=1047702026701
+10/10/2018 11:03 Certificate found, making pem
+10/10/2018 11:03 Called run_shell_cmd openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/9BA648660733ED7A550BCEA03A20E14B8F25C99B.b64" -out "/home/andrey/www/htdocs/expert72/pki/9BA648660733ED7A550BCEA03A20E14B8F25C99B.der"
+10/10/2018 11:03 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/9BA648660733ED7A550BCEA03A20E14B8F25C99B.der" -noout
+10/10/2018 11:03 Adding certificate pem with crl to chain file
+10/10/2018 11:03 Looking for parent certificate
+10/10/2018 11:03 Called get_ca_certs progComplexAlias=Головной удостоверяющий центр,caOGRN=1047702026701
+10/10/2018 11:03 Certificate found, making pem
+10/10/2018 11:03 Called run_shell_cmd openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.b64" -out "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der"
+10/10/2018 11:03 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der" -noout
+10/10/2018 11:03 Adding certificate pem with crl to chain file
+10/10/2018 11:03 Certificate found, making pem
+10/10/2018 11:03 Called run_shell_cmd openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/4BC6DC14D97010C41A26E058AD851F81C842415A.b64" -out "/home/andrey/www/htdocs/expert72/pki/4BC6DC14D97010C41A26E058AD851F81C842415A.der"
+10/10/2018 11:03 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/4BC6DC14D97010C41A26E058AD851F81C842415A.der" -noout
+10/10/2018 11:03 Adding certificate pem with crl to chain file
+10/10/2018 11:03 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/0e873b32-bbe6-4c15-b35f-a5cada8f126e" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/.pdf.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/68e8f933.chain.pem"
+10/10/2018 11:03 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/0e873b32-bbe6-4c15-b35f-a5cada8f126e.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/0e873b32-bbe6-4c15-b35f-a5cada8f126e.sig.der"
+10/10/2018 11:03 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/ИсхДанСмета.pdf.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/0e873b32-bbe6-4c15-b35f-a5cada8f126e.der"
+10/10/2018 11:03 Called run_shell_cmd /home/andrey/www/htdocs/expert72/pki/cmsmerge -s "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/0e873b32-bbe6-4c15-b35f-a5cada8f126e.der" -d "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/0e873b32-bbe6-4c15-b35f-a5cada8f126e.sig" -o "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/0e873b32-bbe6-4c15-b35f-a5cada8f126e.mrg"
+10/10/2018 11:03 Called verifySig
+10/10/2018 11:03 parseSigFile
+10/10/2018 11:03 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/0e873b32-bbe6-4c15-b35f-a5cada8f126e.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/5bbd962233ad2."i }'
+10/10/2018 11:03 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/5bbd962233ad2.1" -noout
+10/10/2018 11:03 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/5bbd962233ad2.2" -noout
+10/10/2018 11:03 Found signer certificates:1
+10/10/2018 11:03 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/0e873b32-bbe6-4c15-b35f-a5cada8f126e.der" -noout -cmsout -print
+10/10/2018 11:03 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/5bbd962233ad2.2
+10/10/2018 11:03 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/5bbd962233ad2.2" -noout -nameopt multiline
+10/10/2018 11:03 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/5bbd962233ad2.2" -noout
+10/10/2018 11:03 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/0e873b32-bbe6-4c15-b35f-a5cada8f126e" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/0e873b32-bbe6-4c15-b35f-a5cada8f126e.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/68e8f933.chain.pem"
+10/10/2018 11:08 Called verifySig
+10/10/2018 11:08 parseSigFile
+10/10/2018 11:08 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Заключение/e78597ef-d5f9-49d5-b43c-80bf45424027.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Заключение/e78597ef-d5f9-49d5-b43c-80bf45424027.der"
+10/10/2018 11:08 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Заключение/e78597ef-d5f9-49d5-b43c-80bf45424027.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Заключение/5bbd97656f9a1."i }'
+10/10/2018 11:08 Found signer certificates:1
+10/10/2018 11:08 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Заключение/e78597ef-d5f9-49d5-b43c-80bf45424027.der" -noout -cmsout -print
+10/10/2018 11:08 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Заключение/5bbd97656f9a1.1
+10/10/2018 11:08 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Заключение/5bbd97656f9a1.1" -noout -nameopt multiline
+10/10/2018 11:08 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Заключение/5bbd97656f9a1.1" -noout
+10/10/2018 11:08 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Заключение/e78597ef-d5f9-49d5-b43c-80bf45424027" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Заключение/e78597ef-d5f9-49d5-b43c-80bf45424027.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/7fd73385.chain.pem"
+10/10/2018 11:11 Called verifySig
+10/10/2018 11:11 parseSigFile
+10/10/2018 11:11 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/0bac1174-7bd9-4937-a78c-bc81c822ecfd.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/0bac1174-7bd9-4937-a78c-bc81c822ecfd.der"
+10/10/2018 11:11 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/0bac1174-7bd9-4937-a78c-bc81c822ecfd.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/5bbd980aee902."i }'
+10/10/2018 11:11 Found signer certificates:1
+10/10/2018 11:11 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/0bac1174-7bd9-4937-a78c-bc81c822ecfd.der" -noout -cmsout -print
+10/10/2018 11:11 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/5bbd980aee902.1
+10/10/2018 11:11 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/5bbd980aee902.1" -noout -nameopt multiline
+10/10/2018 11:11 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/5bbd980aee902.1" -noout
+10/10/2018 11:11 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/0bac1174-7bd9-4937-a78c-bc81c822ecfd" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/0bac1174-7bd9-4937-a78c-bc81c822ecfd.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/7fd73385.chain.pem"
+10/10/2018 11:11 Called verifySig
+10/10/2018 11:11 parseSigFile
+10/10/2018 11:11 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Заключение/3d07ce39-1aeb-4ab7-95d1-b358030864b9.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Заключение/3d07ce39-1aeb-4ab7-95d1-b358030864b9.der"
+10/10/2018 11:11 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Заключение/3d07ce39-1aeb-4ab7-95d1-b358030864b9.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Заключение/5bbd98114200e."i }'
+10/10/2018 11:11 Found signer certificates:1
+10/10/2018 11:11 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Заключение/3d07ce39-1aeb-4ab7-95d1-b358030864b9.der" -noout -cmsout -print
+10/10/2018 11:11 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Заключение/5bbd98114200e.1
+10/10/2018 11:11 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Заключение/5bbd98114200e.1" -noout -nameopt multiline
+10/10/2018 11:11 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Заключение/5bbd98114200e.1" -noout
+10/10/2018 11:11 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Заключение/3d07ce39-1aeb-4ab7-95d1-b358030864b9" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Заключение/3d07ce39-1aeb-4ab7-95d1-b358030864b9.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/7fd73385.chain.pem"
+10/10/2018 11:24 Called verifySig
+10/10/2018 11:24 parseSigFile
+10/10/2018 11:24 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/СМ.ПЗ 40(48).doc.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/.ПЗ 40(48).doc.der"
+10/10/2018 11:24 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/.ПЗ 40(48).doc.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/5bbd9b179275a."i }'
+10/10/2018 11:24 Found signer certificates:1
+10/10/2018 11:24 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/.ПЗ 40(48).doc.der" -noout -cmsout -print
+10/10/2018 11:24 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/5bbd9b179275a.1
+10/10/2018 11:24 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/5bbd9b179275a.1" -noout -nameopt multiline
+10/10/2018 11:24 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/5bbd9b179275a.1" -noout
+10/10/2018 11:24 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/0bac1174-7bd9-4937-a78c-bc81c822ecfd" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/.ПЗ 40(48).doc.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/7fd73385.chain.pem"
+10/10/2018 11:24 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/0bac1174-7bd9-4937-a78c-bc81c822ecfd.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/0bac1174-7bd9-4937-a78c-bc81c822ecfd.sig.der"
+10/10/2018 11:24 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/СМ.ПЗ 40(48).doc.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/0bac1174-7bd9-4937-a78c-bc81c822ecfd.der"
+10/10/2018 11:24 Called run_shell_cmd /home/andrey/www/htdocs/expert72/pki/cmsmerge -s "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/0bac1174-7bd9-4937-a78c-bc81c822ecfd.der" -d "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/0bac1174-7bd9-4937-a78c-bc81c822ecfd.sig" -o "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/0bac1174-7bd9-4937-a78c-bc81c822ecfd.mrg"
+10/10/2018 11:24 Called verifySig
+10/10/2018 11:24 parseSigFile
+10/10/2018 11:24 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/0bac1174-7bd9-4937-a78c-bc81c822ecfd.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/5bbd9b17d355c."i }'
+10/10/2018 11:24 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/5bbd9b17d355c.1" -noout
+10/10/2018 11:24 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/5bbd9b17d355c.2" -noout
+10/10/2018 11:24 Found signer certificates:1
+10/10/2018 11:24 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/0bac1174-7bd9-4937-a78c-bc81c822ecfd.der" -noout -cmsout -print
+10/10/2018 11:24 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/5bbd9b17d355c.2
+10/10/2018 11:24 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/5bbd9b17d355c.2" -noout -nameopt multiline
+10/10/2018 11:24 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/5bbd9b17d355c.2" -noout
+10/10/2018 11:24 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/0bac1174-7bd9-4937-a78c-bc81c822ecfd" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/0bac1174-7bd9-4937-a78c-bc81c822ecfd.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/7fd73385.chain.pem"
+10/10/2018 11:31 Called verifySig
+10/10/2018 11:31 parseSigFile
+10/10/2018 11:31 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/СМ.ПЗ 40(48).doc.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/.ПЗ 40(48).doc.der"
+10/10/2018 11:31 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/.ПЗ 40(48).doc.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/5bbd9cc74651b."i }'
+10/10/2018 11:31 Found signer certificates:1
+10/10/2018 11:31 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/.ПЗ 40(48).doc.der" -noout -cmsout -print
+10/10/2018 11:31 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/5bbd9cc74651b.1
+10/10/2018 11:31 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/5bbd9cc74651b.1" -noout -nameopt multiline
+10/10/2018 11:31 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/5bbd9cc74651b.1" -noout
+10/10/2018 11:31 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/0bac1174-7bd9-4937-a78c-bc81c822ecfd" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/.ПЗ 40(48).doc.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/7fd73385.chain.pem"
+10/10/2018 11:31 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/СМ.ПЗ 40(48).doc.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/0bac1174-7bd9-4937-a78c-bc81c822ecfd.der"
+10/10/2018 11:31 Called run_shell_cmd /home/andrey/www/htdocs/expert72/pki/cmsmerge -s "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/0bac1174-7bd9-4937-a78c-bc81c822ecfd.der" -d "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/0bac1174-7bd9-4937-a78c-bc81c822ecfd.sig" -o "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/0bac1174-7bd9-4937-a78c-bc81c822ecfd.mrg"
+10/10/2018 11:31 Called verifySig
+10/10/2018 11:31 parseSigFile
+10/10/2018 11:31 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/0bac1174-7bd9-4937-a78c-bc81c822ecfd.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/5bbd9cc77e4fb."i }'
+10/10/2018 11:31 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/5bbd9cc77e4fb.1" -noout
+10/10/2018 11:31 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/5bbd9cc77e4fb.2" -noout
+10/10/2018 11:31 Found signer certificates:1
+10/10/2018 11:31 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/0bac1174-7bd9-4937-a78c-bc81c822ecfd.der" -noout -cmsout -print
+10/10/2018 11:31 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/5bbd9cc77e4fb.2
+10/10/2018 11:31 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/5bbd9cc77e4fb.2" -noout -nameopt multiline
+10/10/2018 11:31 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/5bbd9cc77e4fb.2" -noout
+10/10/2018 11:31 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/0bac1174-7bd9-4937-a78c-bc81c822ecfd" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1561/Договорные документы/Контракт/0bac1174-7bd9-4937-a78c-bc81c822ecfd.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/7fd73385.chain.pem"
+10/10/2018 16:47 Called verifySig
+10/10/2018 16:47 parseSigFile
+10/10/2018 16:47 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/1/20b5ddfb-2015-49d5-a774-c3f101eaa848.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/1/20b5ddfb-2015-49d5-a774-c3f101eaa848.der"
+10/10/2018 16:47 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/1/20b5ddfb-2015-49d5-a774-c3f101eaa848.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/1/5bbde6d6ae3a8."i }'
+10/10/2018 16:47 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/1/5bbde6d6ae3a8.1" -noout
+10/10/2018 16:47 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/1/5bbde6d6ae3a8.2" -noout
+10/10/2018 16:47 Found signer certificates:1
+10/10/2018 16:47 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/1/20b5ddfb-2015-49d5-a774-c3f101eaa848.der" -noout -cmsout -print
+10/10/2018 16:47 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/1/5bbde6d6ae3a8.2
+10/10/2018 16:47 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/1/5bbde6d6ae3a8.2" -noout -nameopt multiline
+10/10/2018 16:47 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/1/5bbde6d6ae3a8.2" -noout
+10/10/2018 16:47 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/1/20b5ddfb-2015-49d5-a774-c3f101eaa848" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/1/20b5ddfb-2015-49d5-a774-c3f101eaa848.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/768bb33c.chain.pem"
+10/10/2018 16:49 Called verifySig
+10/10/2018 16:49 parseSigFile
+10/10/2018 16:49 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c.der"
+10/10/2018 16:49 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbde752782c8."i }'
+10/10/2018 16:49 Found signer certificates:1
+10/10/2018 16:49 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c.der" -noout -cmsout -print
+10/10/2018 16:49 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbde752782c8.1
+10/10/2018 16:49 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbde752782c8.1" -noout -nameopt multiline
+10/10/2018 16:49 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbde752782c8.1" -noout
+10/10/2018 16:49 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/7fd73385.chain.pem"
+10/10/2018 16:49 Called verifySig
+10/10/2018 16:49 parseSigFile
+10/10/2018 16:49 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Счет/eadad844-4ee1-42b3-ad64-a603c0457534.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Счет/eadad844-4ee1-42b3-ad64-a603c0457534.der"
+10/10/2018 16:49 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Счет/eadad844-4ee1-42b3-ad64-a603c0457534.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Счет/5bbde7613a01d."i }'
+10/10/2018 16:49 Found signer certificates:1
+10/10/2018 16:49 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Счет/eadad844-4ee1-42b3-ad64-a603c0457534.der" -noout -cmsout -print
+10/10/2018 16:49 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Счет/5bbde7613a01d.1
+10/10/2018 16:49 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Счет/5bbde7613a01d.1" -noout -nameopt multiline
+10/10/2018 16:49 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Счет/5bbde7613a01d.1" -noout
+10/10/2018 16:49 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Счет/eadad844-4ee1-42b3-ad64-a603c0457534" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Счет/eadad844-4ee1-42b3-ad64-a603c0457534.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/7fd73385.chain.pem"
+10/10/2018 16:57 Called verifySig
+10/10/2018 16:57 parseSigFile
+10/10/2018 16:57 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Счет/09-01-01 Утилизация ТБО 40(48).xlsx.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Счет/09-01-01 Утилизация ТБО 40(48).xlsx.der"
+10/10/2018 16:57 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Счет/09-01-01 Утилизация ТБО 40(48).xlsx.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Счет/5bbde927e7f68."i }'
+10/10/2018 16:57 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Счет/5bbde927e7f68.1" -noout
+10/10/2018 16:57 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Счет/5bbde927e7f68.2" -noout
+10/10/2018 16:57 Found signer certificates:1
+10/10/2018 16:57 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Счет/09-01-01 Утилизация ТБО 40(48).xlsx.der" -noout -cmsout -print
+10/10/2018 16:57 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Счет/5bbde927e7f68.2
+10/10/2018 16:57 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Счет/5bbde927e7f68.2" -noout -nameopt multiline
+10/10/2018 16:57 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Счет/5bbde927e7f68.2" -noout
+10/10/2018 16:57 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Счет/eadad844-4ee1-42b3-ad64-a603c0457534" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Счет/09-01-01 Утилизация ТБО 40(48).xlsx.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/768bb33c.chain.pem"
+10/10/2018 16:57 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Счет/eadad844-4ee1-42b3-ad64-a603c0457534.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Счет/eadad844-4ee1-42b3-ad64-a603c0457534.sig.der"
+10/10/2018 16:57 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Счет/09-01-01 Утилизация ТБО 40(48).xlsx.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Счет/eadad844-4ee1-42b3-ad64-a603c0457534.der"
+10/10/2018 16:57 Called run_shell_cmd /home/andrey/www/htdocs/expert72/pki/cmsmerge -s "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Счет/eadad844-4ee1-42b3-ad64-a603c0457534.der" -d "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Счет/eadad844-4ee1-42b3-ad64-a603c0457534.sig" -o "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Счет/eadad844-4ee1-42b3-ad64-a603c0457534.mrg"
+10/10/2018 16:57 Called verifySig
+10/10/2018 16:57 parseSigFile
+10/10/2018 16:57 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Счет/eadad844-4ee1-42b3-ad64-a603c0457534.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Счет/5bbde9287d893."i }'
+10/10/2018 16:57 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Счет/5bbde9287d893.1" -noout
+10/10/2018 16:57 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Счет/5bbde9287d893.2" -noout
+10/10/2018 16:57 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Счет/5bbde9287d893.3" -noout
+10/10/2018 16:57 Found signer certificates:2
+10/10/2018 16:57 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Счет/eadad844-4ee1-42b3-ad64-a603c0457534.der" -noout -cmsout -print
+10/10/2018 16:57 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Счет/5bbde9287d893.1
+10/10/2018 16:57 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Счет/5bbde9287d893.1" -noout -nameopt multiline
+10/10/2018 16:57 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Счет/5bbde9287d893.1" -noout
+10/10/2018 16:57 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Счет/5bbde9287d893.3
+10/10/2018 16:57 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Счет/5bbde9287d893.3" -noout -nameopt multiline
+10/10/2018 16:57 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Счет/5bbde9287d893.3" -noout
+10/10/2018 16:57 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Счет/eadad844-4ee1-42b3-ad64-a603c0457534" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Счет/eadad844-4ee1-42b3-ad64-a603c0457534.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/5bbde928a8a58chain.pem"
+10/10/2018 16:57 Called verifySig
+10/10/2018 16:57 parseSigFile
+10/10/2018 16:57 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/ССР в тек ценах Упорово - Сводный сметный расчет1.xls.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/ в тек ценах Упорово - Сводный сметный расчет1.xls.der"
+10/10/2018 16:57 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/ в тек ценах Упорово - Сводный сметный расчет1.xls.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbde9308c321."i }'
+10/10/2018 16:57 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbde9308c321.1" -noout
+10/10/2018 16:57 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbde9308c321.2" -noout
+10/10/2018 16:57 Found signer certificates:1
+10/10/2018 16:57 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/ в тек ценах Упорово - Сводный сметный расчет1.xls.der" -noout -cmsout -print
+10/10/2018 16:57 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbde9308c321.2
+10/10/2018 16:57 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbde9308c321.2" -noout -nameopt multiline
+10/10/2018 16:57 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbde9308c321.2" -noout
+10/10/2018 16:57 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/ в тек ценах Упорово - Сводный сметный расчет1.xls.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/768bb33c.chain.pem"
+10/10/2018 16:57 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c.sig.der"
+10/10/2018 16:57 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/ССР в тек ценах Упорово - Сводный сметный расчет1.xls.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c.der"
+10/10/2018 16:57 Called run_shell_cmd /home/andrey/www/htdocs/expert72/pki/cmsmerge -s "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c.der" -d "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c.sig" -o "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c.mrg"
+10/10/2018 16:57 Called verifySig
+10/10/2018 16:57 parseSigFile
+10/10/2018 16:57 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbde9311f5b1."i }'
+10/10/2018 16:57 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbde9311f5b1.1" -noout
+10/10/2018 16:57 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbde9311f5b1.2" -noout
+10/10/2018 16:57 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbde9311f5b1.3" -noout
+10/10/2018 16:57 Found signer certificates:2
+10/10/2018 16:57 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c.der" -noout -cmsout -print
+10/10/2018 16:57 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbde9311f5b1.1
+10/10/2018 16:57 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbde9311f5b1.1" -noout -nameopt multiline
+10/10/2018 16:57 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbde9311f5b1.1" -noout
+10/10/2018 16:57 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbde9311f5b1.3
+10/10/2018 16:57 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbde9311f5b1.3" -noout -nameopt multiline
+10/10/2018 16:57 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbde9311f5b1.3" -noout
+10/10/2018 16:57 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/5bbde931338e5chain.pem"
+10/10/2018 17:18 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/ССР в тек ценах Упорово - Сводный сметный расчет1.xls.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c.sig"
+10/10/2018 17:18 Called verifySig
+10/10/2018 17:18 parseSigFile
+10/10/2018 17:18 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdee2ebc4ab."i }'
+10/10/2018 17:18 Found signer certificates:1
+10/10/2018 17:18 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c.der" -noout -cmsout -print
+10/10/2018 17:18 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdee2ebc4ab.1
+10/10/2018 17:18 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdee2ebc4ab.1" -noout -nameopt multiline
+10/10/2018 17:18 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdee2ebc4ab.1" -noout
+10/10/2018 17:18 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/7fd73385.chain.pem"
+10/10/2018 17:20 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/ССР в тек ценах Упорово - Сводный сметный расчет1.xls.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c.sig"
+10/10/2018 17:20 Called verifySig
+10/10/2018 17:20 parseSigFile
+10/10/2018 17:20 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdee7f7df03."i }'
+10/10/2018 17:20 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdee7f7df03.1" -noout
+10/10/2018 17:20 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdee7f7df03.2" -noout
+10/10/2018 17:20 Found signer certificates:1
+10/10/2018 17:20 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c.der" -noout -cmsout -print
+10/10/2018 17:20 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdee7f7df03.2
+10/10/2018 17:20 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdee7f7df03.2" -noout -nameopt multiline
+10/10/2018 17:20 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdee7f7df03.2" -noout
+10/10/2018 17:20 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/768bb33c.chain.pem"
+10/10/2018 17:20 Called verifySig
+10/10/2018 17:20 parseSigFile
+10/10/2018 17:20 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/ССР в тек ценах Упорово - Сводный сметный расчет1.xls.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/ в тек ценах Упорово - Сводный сметный расчет1.xls.der"
+10/10/2018 17:20 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/ в тек ценах Упорово - Сводный сметный расчет1.xls.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdee9493ae6."i }'
+10/10/2018 17:20 Found signer certificates:1
+10/10/2018 17:20 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/ в тек ценах Упорово - Сводный сметный расчет1.xls.der" -noout -cmsout -print
+10/10/2018 17:20 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdee9493ae6.1
+10/10/2018 17:20 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdee9493ae6.1" -noout -nameopt multiline
+10/10/2018 17:20 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdee9493ae6.1" -noout
+10/10/2018 17:20 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/ в тек ценах Упорово - Сводный сметный расчет1.xls.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/7fd73385.chain.pem"
+10/10/2018 17:20 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/ССР в тек ценах Упорово - Сводный сметный расчет1.xls.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c.der"
+10/10/2018 17:20 Called run_shell_cmd /home/andrey/www/htdocs/expert72/pki/cmsmerge -s "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c.der" -d "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c.sig" -o "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c.mrg"
+10/10/2018 17:20 Called verifySig
+10/10/2018 17:20 parseSigFile
+10/10/2018 17:20 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdee94d4574."i }'
+10/10/2018 17:20 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdee94d4574.1" -noout
+10/10/2018 17:20 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdee94d4574.2" -noout
+10/10/2018 17:20 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdee94d4574.3" -noout
+10/10/2018 17:20 Found signer certificates:2
+10/10/2018 17:20 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c.der" -noout -cmsout -print
+10/10/2018 17:20 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdee94d4574.2
+10/10/2018 17:20 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdee94d4574.2" -noout -nameopt multiline
+10/10/2018 17:20 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdee94d4574.2" -noout
+10/10/2018 17:20 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdee94d4574.3
+10/10/2018 17:20 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdee94d4574.3" -noout -nameopt multiline
+10/10/2018 17:20 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdee94d4574.3" -noout
+10/10/2018 17:20 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/5bbdee94f16f6chain.pem"
+10/10/2018 17:23 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/ССР в тек ценах Упорово - Сводный сметный расчет1.xls.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c.sig"
+10/10/2018 17:23 Called verifySig
+10/10/2018 17:23 parseSigFile
+10/10/2018 17:23 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdef4ab6564."i }'
+10/10/2018 17:23 Found signer certificates:1
+10/10/2018 17:23 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c.der" -noout -cmsout -print
+10/10/2018 17:23 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdef4ab6564.1
+10/10/2018 17:23 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdef4ab6564.1" -noout -nameopt multiline
+10/10/2018 17:23 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdef4ab6564.1" -noout
+10/10/2018 17:23 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/7fd73385.chain.pem"
+10/10/2018 17:25 Called verifySig
+10/10/2018 17:25 parseSigFile
+10/10/2018 17:25 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/ССР в тек ценах Упорово - Сводный сметный расчет1.xls.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/ в тек ценах Упорово - Сводный сметный расчет1.xls.der"
+10/10/2018 17:25 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/ в тек ценах Упорово - Сводный сметный расчет1.xls.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdefd319e1f."i }'
+10/10/2018 17:25 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdefd319e1f.1" -noout
+10/10/2018 17:25 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdefd319e1f.2" -noout
+10/10/2018 17:25 Found signer certificates:1
+10/10/2018 17:25 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/ в тек ценах Упорово - Сводный сметный расчет1.xls.der" -noout -cmsout -print
+10/10/2018 17:25 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdefd319e1f.2
+10/10/2018 17:25 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdefd319e1f.2" -noout -nameopt multiline
+10/10/2018 17:25 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdefd319e1f.2" -noout
+10/10/2018 17:25 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/ в тек ценах Упорово - Сводный сметный расчет1.xls.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/768bb33c.chain.pem"
+10/10/2018 17:25 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/ССР в тек ценах Упорово - Сводный сметный расчет1.xls.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c.der"
+10/10/2018 17:25 Called run_shell_cmd /home/andrey/www/htdocs/expert72/pki/cmsmerge -s "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c.der" -d "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c.sig" -o "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c.mrg"
+10/10/2018 17:25 Called verifySig
+10/10/2018 17:25 parseSigFile
+10/10/2018 17:25 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdefd3a0753."i }'
+10/10/2018 17:25 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdefd3a0753.1" -noout
+10/10/2018 17:25 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdefd3a0753.2" -noout
+10/10/2018 17:25 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdefd3a0753.3" -noout
+10/10/2018 17:25 Found signer certificates:2
+10/10/2018 17:25 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c.der" -noout -cmsout -print
+10/10/2018 17:25 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdefd3a0753.1
+10/10/2018 17:25 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdefd3a0753.1" -noout -nameopt multiline
+10/10/2018 17:25 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdefd3a0753.1" -noout
+10/10/2018 17:25 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdefd3a0753.3
+10/10/2018 17:25 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdefd3a0753.3" -noout -nameopt multiline
+10/10/2018 17:25 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdefd3a0753.3" -noout
+10/10/2018 17:25 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/5bbdefd3b3b2dchain.pem"
+10/10/2018 17:35 Called verifySig
+10/10/2018 17:35 parseSigFile
+10/10/2018 17:35 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/ССР в тек ценах Упорово - Сводный сметный расчет1.xls.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/ в тек ценах Упорово - Сводный сметный расчет1.xls.der"
+10/10/2018 17:35 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/ в тек ценах Упорово - Сводный сметный расчет1.xls.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdf22fdc828."i }'
+10/10/2018 17:35 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdf22fdc828.1" -noout
+10/10/2018 17:35 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdf22fdc828.2" -noout
+10/10/2018 17:35 Found signer certificates:1
+10/10/2018 17:35 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/ в тек ценах Упорово - Сводный сметный расчет1.xls.der" -noout -cmsout -print
+10/10/2018 17:35 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdf22fdc828.2
+10/10/2018 17:35 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdf22fdc828.2" -noout -nameopt multiline
+10/10/2018 17:35 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdf22fdc828.2" -noout
+10/10/2018 17:35 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/ в тек ценах Упорово - Сводный сметный расчет1.xls.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/768bb33c.chain.pem"
+10/10/2018 17:36 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/ССР в тек ценах Упорово - Сводный сметный расчет1.xls.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c.der"
+10/10/2018 17:36 Called run_shell_cmd /home/andrey/www/htdocs/expert72/pki/cmsmerge -s "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c.der" -d "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c.sig" -o "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c.mrg"
+10/10/2018 17:36 Called verifySig
+10/10/2018 17:36 parseSigFile
+10/10/2018 17:36 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdf2307862c."i }'
+10/10/2018 17:36 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdf2307862c.1" -noout
+10/10/2018 17:36 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdf2307862c.2" -noout
+10/10/2018 17:36 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdf2307862c.3" -noout
+10/10/2018 17:36 Found signer certificates:2
+10/10/2018 17:36 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c.der" -noout -cmsout -print
+10/10/2018 17:36 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdf2307862c.1
+10/10/2018 17:36 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdf2307862c.1" -noout -nameopt multiline
+10/10/2018 17:36 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdf2307862c.1" -noout
+10/10/2018 17:36 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdf2307862c.3
+10/10/2018 17:36 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdf2307862c.3" -noout -nameopt multiline
+10/10/2018 17:36 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdf2307862c.3" -noout
+10/10/2018 17:36 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/5bbdf2308d7cdchain.pem"
+10/10/2018 17:37 Called verifySig
+10/10/2018 17:37 parseSigFile
+10/10/2018 17:37 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/ССР в тек ценах Упорово - Сводный сметный расчет1.xls.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/ в тек ценах Упорово - Сводный сметный расчет1.xls.der"
+10/10/2018 17:37 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/ в тек ценах Упорово - Сводный сметный расчет1.xls.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdf26d65aab."i }'
+10/10/2018 17:37 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdf26d65aab.1" -noout
+10/10/2018 17:37 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdf26d65aab.2" -noout
+10/10/2018 17:37 Found signer certificates:1
+10/10/2018 17:37 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/ в тек ценах Упорово - Сводный сметный расчет1.xls.der" -noout -cmsout -print
+10/10/2018 17:37 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdf26d65aab.2
+10/10/2018 17:37 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdf26d65aab.2" -noout -nameopt multiline
+10/10/2018 17:37 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdf26d65aab.2" -noout
+10/10/2018 17:37 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/ в тек ценах Упорово - Сводный сметный расчет1.xls.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/768bb33c.chain.pem"
+10/10/2018 17:37 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/ССР в тек ценах Упорово - Сводный сметный расчет1.xls.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c.der"
+10/10/2018 17:37 Called run_shell_cmd /home/andrey/www/htdocs/expert72/pki/cmsmerge -s "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c.der" -d "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c.sig" -o "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c.mrg"
+10/10/2018 17:37 Called verifySig
+10/10/2018 17:37 parseSigFile
+10/10/2018 17:37 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdf26e0218b."i }'
+10/10/2018 17:37 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdf26e0218b.1" -noout
+10/10/2018 17:37 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdf26e0218b.2" -noout
+10/10/2018 17:37 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdf26e0218b.3" -noout
+10/10/2018 17:37 Found signer certificates:2
+10/10/2018 17:37 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c.der" -noout -cmsout -print
+10/10/2018 17:37 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdf26e0218b.1
+10/10/2018 17:37 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdf26e0218b.1" -noout -nameopt multiline
+10/10/2018 17:37 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdf26e0218b.1" -noout
+10/10/2018 17:37 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdf26e0218b.3
+10/10/2018 17:37 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdf26e0218b.3" -noout -nameopt multiline
+10/10/2018 17:37 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/5bbdf26e0218b.3" -noout
+10/10/2018 17:37 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Контракт/61e81e89-401d-4d7e-8f1e-177f499db42c.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/5bbdf26e17fbachain.pem"
+10/10/2018 17:38 Called verifySig
+10/10/2018 17:38 parseSigFile
+10/10/2018 17:38 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/fb8539e8-e16e-4374-a4a0-6bfc0d43b6c5.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/fb8539e8-e16e-4374-a4a0-6bfc0d43b6c5.der"
+10/10/2018 17:38 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/fb8539e8-e16e-4374-a4a0-6bfc0d43b6c5.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf2d005dbe."i }'
+10/10/2018 17:38 Found signer certificates:1
+10/10/2018 17:38 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/fb8539e8-e16e-4374-a4a0-6bfc0d43b6c5.der" -noout -cmsout -print
+10/10/2018 17:38 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf2d005dbe.1
+10/10/2018 17:38 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf2d005dbe.1" -noout -nameopt multiline
+10/10/2018 17:38 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf2d005dbe.1" -noout
+10/10/2018 17:38 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/fb8539e8-e16e-4374-a4a0-6bfc0d43b6c5" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/fb8539e8-e16e-4374-a4a0-6bfc0d43b6c5.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/7fd73385.chain.pem"
+10/10/2018 17:38 Called verifySig
+10/10/2018 17:38 parseSigFile
+10/10/2018 17:38 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/02523b15-0c3c-4314-8895-7f70bdb2f867.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/02523b15-0c3c-4314-8895-7f70bdb2f867.der"
+10/10/2018 17:38 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/02523b15-0c3c-4314-8895-7f70bdb2f867.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf2d06d8fb."i }'
+10/10/2018 17:38 Found signer certificates:1
+10/10/2018 17:38 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/02523b15-0c3c-4314-8895-7f70bdb2f867.der" -noout -cmsout -print
+10/10/2018 17:38 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf2d06d8fb.1
+10/10/2018 17:38 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf2d06d8fb.1" -noout -nameopt multiline
+10/10/2018 17:38 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf2d06d8fb.1" -noout
+10/10/2018 17:38 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/02523b15-0c3c-4314-8895-7f70bdb2f867" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/02523b15-0c3c-4314-8895-7f70bdb2f867.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/7fd73385.chain.pem"
+10/10/2018 17:38 Called verifySig
+10/10/2018 17:38 parseSigFile
+10/10/2018 17:38 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/b2a6ec01-c14c-4f7d-9ccd-655efc7708c2.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/b2a6ec01-c14c-4f7d-9ccd-655efc7708c2.der"
+10/10/2018 17:38 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/b2a6ec01-c14c-4f7d-9ccd-655efc7708c2.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf2d11a73c."i }'
+10/10/2018 17:38 Found signer certificates:1
+10/10/2018 17:38 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/b2a6ec01-c14c-4f7d-9ccd-655efc7708c2.der" -noout -cmsout -print
+10/10/2018 17:38 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf2d11a73c.1
+10/10/2018 17:38 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf2d11a73c.1" -noout -nameopt multiline
+10/10/2018 17:38 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf2d11a73c.1" -noout
+10/10/2018 17:38 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/b2a6ec01-c14c-4f7d-9ccd-655efc7708c2" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/b2a6ec01-c14c-4f7d-9ccd-655efc7708c2.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/7fd73385.chain.pem"
+10/10/2018 17:44 Called verifySig
+10/10/2018 17:44 parseSigFile
+10/10/2018 17:44 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/ССР в тек ценах Упорово - Сводный сметный расчет1.xls.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/ в тек ценах Упорово - Сводный сметный расчет1.xls.der"
+10/10/2018 17:44 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/ в тек ценах Упорово - Сводный сметный расчет1.xls.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf42690caf."i }'
+10/10/2018 17:44 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf42690caf.1" -noout
+10/10/2018 17:44 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf42690caf.2" -noout
+10/10/2018 17:44 Found signer certificates:1
+10/10/2018 17:44 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/ в тек ценах Упорово - Сводный сметный расчет1.xls.der" -noout -cmsout -print
+10/10/2018 17:44 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf42690caf.2
+10/10/2018 17:44 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf42690caf.2" -noout -nameopt multiline
+10/10/2018 17:44 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf42690caf.2" -noout
+10/10/2018 17:44 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/fb8539e8-e16e-4374-a4a0-6bfc0d43b6c5" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/ в тек ценах Упорово - Сводный сметный расчет1.xls.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/768bb33c.chain.pem"
+10/10/2018 17:44 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/fb8539e8-e16e-4374-a4a0-6bfc0d43b6c5.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/fb8539e8-e16e-4374-a4a0-6bfc0d43b6c5.sig.der"
+10/10/2018 17:44 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/ССР в тек ценах Упорово - Сводный сметный расчет1.xls.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/fb8539e8-e16e-4374-a4a0-6bfc0d43b6c5.der"
+10/10/2018 17:44 Called run_shell_cmd /home/andrey/www/htdocs/expert72/pki/cmsmerge -s "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/fb8539e8-e16e-4374-a4a0-6bfc0d43b6c5.der" -d "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/fb8539e8-e16e-4374-a4a0-6bfc0d43b6c5.sig" -o "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/fb8539e8-e16e-4374-a4a0-6bfc0d43b6c5.mrg"
+10/10/2018 17:44 Called verifySig
+10/10/2018 17:44 parseSigFile
+10/10/2018 17:44 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/fb8539e8-e16e-4374-a4a0-6bfc0d43b6c5.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf42723421."i }'
+10/10/2018 17:44 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf42723421.1" -noout
+10/10/2018 17:44 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf42723421.2" -noout
+10/10/2018 17:44 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf42723421.3" -noout
+10/10/2018 17:44 Found signer certificates:2
+10/10/2018 17:44 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/fb8539e8-e16e-4374-a4a0-6bfc0d43b6c5.der" -noout -cmsout -print
+10/10/2018 17:44 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf42723421.1
+10/10/2018 17:44 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf42723421.1" -noout -nameopt multiline
+10/10/2018 17:44 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf42723421.1" -noout
+10/10/2018 17:44 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf42723421.3
+10/10/2018 17:44 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf42723421.3" -noout -nameopt multiline
+10/10/2018 17:44 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf42723421.3" -noout
+10/10/2018 17:44 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/fb8539e8-e16e-4374-a4a0-6bfc0d43b6c5" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/fb8539e8-e16e-4374-a4a0-6bfc0d43b6c5.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/5bbdf4273722achain.pem"
+10/10/2018 17:44 Called verifySig
+10/10/2018 17:44 parseSigFile
+10/10/2018 17:44 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/09-01-01 Утилизация ТБО 40(48).xlsx.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/09-01-01 Утилизация ТБО 40(48).xlsx.der"
+10/10/2018 17:44 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/09-01-01 Утилизация ТБО 40(48).xlsx.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf43f6adff."i }'
+10/10/2018 17:44 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf43f6adff.1" -noout
+10/10/2018 17:44 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf43f6adff.2" -noout
+10/10/2018 17:44 Found signer certificates:1
+10/10/2018 17:44 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/09-01-01 Утилизация ТБО 40(48).xlsx.der" -noout -cmsout -print
+10/10/2018 17:44 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf43f6adff.2
+10/10/2018 17:44 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf43f6adff.2" -noout -nameopt multiline
+10/10/2018 17:44 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf43f6adff.2" -noout
+10/10/2018 17:44 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/02523b15-0c3c-4314-8895-7f70bdb2f867" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/09-01-01 Утилизация ТБО 40(48).xlsx.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/768bb33c.chain.pem"
+10/10/2018 17:44 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/02523b15-0c3c-4314-8895-7f70bdb2f867.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/02523b15-0c3c-4314-8895-7f70bdb2f867.sig.der"
+10/10/2018 17:44 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/09-01-01 Утилизация ТБО 40(48).xlsx.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/02523b15-0c3c-4314-8895-7f70bdb2f867.der"
+10/10/2018 17:44 Called run_shell_cmd /home/andrey/www/htdocs/expert72/pki/cmsmerge -s "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/02523b15-0c3c-4314-8895-7f70bdb2f867.der" -d "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/02523b15-0c3c-4314-8895-7f70bdb2f867.sig" -o "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/02523b15-0c3c-4314-8895-7f70bdb2f867.mrg"
+10/10/2018 17:44 Called verifySig
+10/10/2018 17:44 parseSigFile
+10/10/2018 17:44 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/02523b15-0c3c-4314-8895-7f70bdb2f867.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf43ff3ae6."i }'
+10/10/2018 17:44 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf43ff3ae6.1" -noout
+10/10/2018 17:44 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf43ff3ae6.2" -noout
+10/10/2018 17:44 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf43ff3ae6.3" -noout
+10/10/2018 17:44 Found signer certificates:2
+10/10/2018 17:44 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/02523b15-0c3c-4314-8895-7f70bdb2f867.der" -noout -cmsout -print
+10/10/2018 17:44 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf43ff3ae6.1
+10/10/2018 17:44 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf43ff3ae6.1" -noout -nameopt multiline
+10/10/2018 17:44 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf43ff3ae6.1" -noout
+10/10/2018 17:44 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf43ff3ae6.3
+10/10/2018 17:44 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf43ff3ae6.3" -noout -nameopt multiline
+10/10/2018 17:44 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf43ff3ae6.3" -noout
+10/10/2018 17:44 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/02523b15-0c3c-4314-8895-7f70bdb2f867" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/02523b15-0c3c-4314-8895-7f70bdb2f867.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/5bbdf440259b8chain.pem"
+10/10/2018 17:44 Called verifySig
+10/10/2018 17:44 parseSigFile
+10/10/2018 17:44 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/СМ.ПЗ 40(48).doc.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/.ПЗ 40(48).doc.der"
+10/10/2018 17:44 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/.ПЗ 40(48).doc.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf443ca9c6."i }'
+10/10/2018 17:44 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf443ca9c6.1" -noout
+10/10/2018 17:44 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf443ca9c6.2" -noout
+10/10/2018 17:44 Found signer certificates:1
+10/10/2018 17:44 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/.ПЗ 40(48).doc.der" -noout -cmsout -print
+10/10/2018 17:44 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf443ca9c6.2
+10/10/2018 17:44 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf443ca9c6.2" -noout -nameopt multiline
+10/10/2018 17:44 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf443ca9c6.2" -noout
+10/10/2018 17:44 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/b2a6ec01-c14c-4f7d-9ccd-655efc7708c2" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/.ПЗ 40(48).doc.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/768bb33c.chain.pem"
+10/10/2018 17:44 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/b2a6ec01-c14c-4f7d-9ccd-655efc7708c2.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/b2a6ec01-c14c-4f7d-9ccd-655efc7708c2.sig.der"
+10/10/2018 17:44 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/СМ.ПЗ 40(48).doc.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/b2a6ec01-c14c-4f7d-9ccd-655efc7708c2.der"
+10/10/2018 17:44 Called run_shell_cmd /home/andrey/www/htdocs/expert72/pki/cmsmerge -s "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/b2a6ec01-c14c-4f7d-9ccd-655efc7708c2.der" -d "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/b2a6ec01-c14c-4f7d-9ccd-655efc7708c2.sig" -o "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/b2a6ec01-c14c-4f7d-9ccd-655efc7708c2.mrg"
+10/10/2018 17:44 Called verifySig
+10/10/2018 17:44 parseSigFile
+10/10/2018 17:44 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/b2a6ec01-c14c-4f7d-9ccd-655efc7708c2.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf4445a587."i }'
+10/10/2018 17:44 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf4445a587.1" -noout
+10/10/2018 17:44 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf4445a587.2" -noout
+10/10/2018 17:44 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf4445a587.3" -noout
+10/10/2018 17:44 Found signer certificates:2
+10/10/2018 17:44 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/b2a6ec01-c14c-4f7d-9ccd-655efc7708c2.der" -noout -cmsout -print
+10/10/2018 17:44 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf4445a587.1
+10/10/2018 17:44 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf4445a587.1" -noout -nameopt multiline
+10/10/2018 17:44 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf4445a587.1" -noout
+10/10/2018 17:44 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf4445a587.3
+10/10/2018 17:44 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf4445a587.3" -noout -nameopt multiline
+10/10/2018 17:44 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf4445a587.3" -noout
+10/10/2018 17:44 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/b2a6ec01-c14c-4f7d-9ccd-655efc7708c2" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/b2a6ec01-c14c-4f7d-9ccd-655efc7708c2.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/5bbdf44473441chain.pem"
+10/10/2018 17:45 Called verifySig
+10/10/2018 17:45 parseSigFile
+10/10/2018 17:45 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/СМ.ПЗ 40(48).doc.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/.ПЗ 40(48).doc.der"
+10/10/2018 17:45 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/.ПЗ 40(48).doc.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf46ba092d."i }'
+10/10/2018 17:45 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf46ba092d.1" -noout
+10/10/2018 17:45 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf46ba092d.2" -noout
+10/10/2018 17:45 Found signer certificates:1
+10/10/2018 17:45 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/.ПЗ 40(48).doc.der" -noout -cmsout -print
+10/10/2018 17:45 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf46ba092d.2
+10/10/2018 17:45 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf46ba092d.2" -noout -nameopt multiline
+10/10/2018 17:45 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf46ba092d.2" -noout
+10/10/2018 17:45 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/b2a6ec01-c14c-4f7d-9ccd-655efc7708c2" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/.ПЗ 40(48).doc.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/768bb33c.chain.pem"
+10/10/2018 17:45 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/СМ.ПЗ 40(48).doc.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/b2a6ec01-c14c-4f7d-9ccd-655efc7708c2.der"
+10/10/2018 17:45 Called run_shell_cmd /home/andrey/www/htdocs/expert72/pki/cmsmerge -s "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/b2a6ec01-c14c-4f7d-9ccd-655efc7708c2.der" -d "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/b2a6ec01-c14c-4f7d-9ccd-655efc7708c2.sig" -o "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/b2a6ec01-c14c-4f7d-9ccd-655efc7708c2.mrg"
+10/10/2018 17:45 Called verifySig
+10/10/2018 17:45 parseSigFile
+10/10/2018 17:45 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/b2a6ec01-c14c-4f7d-9ccd-655efc7708c2.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf46c3037b."i }'
+10/10/2018 17:45 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf46c3037b.1" -noout
+10/10/2018 17:45 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf46c3037b.2" -noout
+10/10/2018 17:45 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf46c3037b.3" -noout
+10/10/2018 17:45 Found signer certificates:2
+10/10/2018 17:45 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/b2a6ec01-c14c-4f7d-9ccd-655efc7708c2.der" -noout -cmsout -print
+10/10/2018 17:45 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf46c3037b.1
+10/10/2018 17:45 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf46c3037b.1" -noout -nameopt multiline
+10/10/2018 17:45 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf46c3037b.1" -noout
+10/10/2018 17:45 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf46c3037b.3
+10/10/2018 17:45 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf46c3037b.3" -noout -nameopt multiline
+10/10/2018 17:45 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf46c3037b.3" -noout
+10/10/2018 17:45 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/b2a6ec01-c14c-4f7d-9ccd-655efc7708c2" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/b2a6ec01-c14c-4f7d-9ccd-655efc7708c2.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/5bbdf46c4a03cchain.pem"
+10/10/2018 17:51 Called verifySig
+10/10/2018 17:51 parseSigFile
+10/10/2018 17:51 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/b95ee738-83a8-4191-9f05-cdd0ddf80938.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/b95ee738-83a8-4191-9f05-cdd0ddf80938.der"
+10/10/2018 17:51 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/b95ee738-83a8-4191-9f05-cdd0ddf80938.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf5ec6c72d."i }'
+10/10/2018 17:51 Found signer certificates:1
+10/10/2018 17:51 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/b95ee738-83a8-4191-9f05-cdd0ddf80938.der" -noout -cmsout -print
+10/10/2018 17:51 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf5ec6c72d.1
+10/10/2018 17:51 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf5ec6c72d.1" -noout -nameopt multiline
+10/10/2018 17:51 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf5ec6c72d.1" -noout
+10/10/2018 17:51 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/b95ee738-83a8-4191-9f05-cdd0ddf80938" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/b95ee738-83a8-4191-9f05-cdd0ddf80938.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/7fd73385.chain.pem"
+10/10/2018 17:55 Called verifySig
+10/10/2018 17:55 parseSigFile
+10/10/2018 17:55 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/9873fc4d-1f99-495d-a9d8-636b02e09be0.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/9873fc4d-1f99-495d-a9d8-636b02e09be0.der"
+10/10/2018 17:55 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/9873fc4d-1f99-495d-a9d8-636b02e09be0.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf6b181611."i }'
+10/10/2018 17:55 Found signer certificates:1
+10/10/2018 17:55 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/9873fc4d-1f99-495d-a9d8-636b02e09be0.der" -noout -cmsout -print
+10/10/2018 17:55 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf6b181611.1
+10/10/2018 17:55 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf6b181611.1" -noout -nameopt multiline
+10/10/2018 17:55 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/5bbdf6b181611.1" -noout
+10/10/2018 17:55 Called get_ca_list_file
+10/10/2018 17:55 Called get_ca_certs progComplexAlias=ГКУ ТО "ЦИТТО",caOGRN=1087232038794
+10/10/2018 17:55 Certificate found, making pem
+10/10/2018 17:55 Called run_shell_cmd openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/75D7DBF73F8F287E539CD42924FF48F7DA8DDDD1.b64" -out "/home/andrey/www/htdocs/expert72/pki/75D7DBF73F8F287E539CD42924FF48F7DA8DDDD1.der"
+10/10/2018 17:55 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/75D7DBF73F8F287E539CD42924FF48F7DA8DDDD1.der" -noout
+10/10/2018 17:55 Called run_shell_cmd openssl x509 -in "/home/andrey/www/htdocs/expert72/pki/75D7DBF73F8F287E539CD42924FF48F7DA8DDDD1.der" -inform der -outform pem -out "/home/andrey/www/htdocs/expert72/pki/75D7DBF73F8F287E539CD42924FF48F7DA8DDDD1.pem"
+10/10/2018 17:55 CRL urls exist
+10/10/2018 17:55 Called run_shell_cmd wget -O "/home/andrey/www/htdocs/expert72/pki/75D7DBF73F8F287E539CD42924FF48F7DA8DDDD1.crl.der" http://ca.72to.ru/files/upload/uc-citto-2018.crl
+10/10/2018 17:55 Called run_shell_cmd openssl crl -in "/home/andrey/www/htdocs/expert72/pki/75D7DBF73F8F287E539CD42924FF48F7DA8DDDD1.crl.der" -inform DER -out "/home/andrey/www/htdocs/expert72/pki/75D7DBF73F8F287E539CD42924FF48F7DA8DDDD1.crl"
+10/10/2018 17:55 Appending crl to pem file
+10/10/2018 17:55 Adding certificate pem with crl to chain file
+10/10/2018 17:55 Looking for parent certificate
+10/10/2018 17:55 Called get_ca_certs progComplexAlias=Головной удостоверяющий центр,caOGRN=1047702026701
+10/10/2018 17:55 Certificate found, making pem
+10/10/2018 17:55 Called run_shell_cmd openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.b64" -out "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der"
+10/10/2018 17:55 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der" -noout
+10/10/2018 17:55 Called run_shell_cmd openssl x509 -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der" -inform der -outform pem -out "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.pem"
+10/10/2018 17:55 CRL urls exist
+10/10/2018 17:55 Called run_shell_cmd wget -O "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.crl.der" http://rostelecom.ru/cdp/guc.crl
+10/10/2018 17:55 Called run_shell_cmd openssl crl -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.crl.der" -inform DER -out "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.crl"
+10/10/2018 17:55 Appending crl to pem file
+10/10/2018 17:55 Adding certificate pem with crl to chain file
+10/10/2018 17:55 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/9873fc4d-1f99-495d-a9d8-636b02e09be0" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие/9873fc4d-1f99-495d-a9d8-636b02e09be0.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/ef6dfa07.chain.pem"
+10/10/2018 17:59 Called verifySig
+10/10/2018 17:59 parseSigFile
+10/10/2018 17:59 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/2/a542f3cc-2df0-46f9-bf2e-0e4a2c6a0dcd.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/2/a542f3cc-2df0-46f9-bf2e-0e4a2c6a0dcd.der"
+10/10/2018 17:59 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/2/a542f3cc-2df0-46f9-bf2e-0e4a2c6a0dcd.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/2/5bbdf7957b99f."i }'
+10/10/2018 17:59 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/2/5bbdf7957b99f.1" -noout
+10/10/2018 17:59 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/2/5bbdf7957b99f.2" -noout
+10/10/2018 17:59 Found signer certificates:1
+10/10/2018 17:59 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/2/a542f3cc-2df0-46f9-bf2e-0e4a2c6a0dcd.der" -noout -cmsout -print
+10/10/2018 17:59 Called verifySig
+10/10/2018 17:59 parseSigFile
+10/10/2018 17:59 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/2/ef1596ae-cd6f-4007-bef2-a15440ce75c8.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/2/ef1596ae-cd6f-4007-bef2-a15440ce75c8.der"
+10/10/2018 17:59 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/2/ef1596ae-cd6f-4007-bef2-a15440ce75c8.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/2/5bbdf795f16e7."i }'
+10/10/2018 17:59 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/2/5bbdf795f16e7.1" -noout
+10/10/2018 17:59 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/2/5bbdf795f16e7.2" -noout
+10/10/2018 17:59 Found signer certificates:1
+10/10/2018 17:59 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/2/ef1596ae-cd6f-4007-bef2-a15440ce75c8.der" -noout -cmsout -print
+10/10/2018 17:59 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/2/5bbdf7957b99f.2
+10/10/2018 17:59 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/2/5bbdf7957b99f.2" -noout -nameopt multiline
+10/10/2018 17:59 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/2/5bbdf7957b99f.2" -noout
+10/10/2018 17:59 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/2/a542f3cc-2df0-46f9-bf2e-0e4a2c6a0dcd" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/2/a542f3cc-2df0-46f9-bf2e-0e4a2c6a0dcd.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/768bb33c.chain.pem"
+10/10/2018 17:59 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/2/5bbdf795f16e7.2
+10/10/2018 17:59 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/2/5bbdf795f16e7.2" -noout -nameopt multiline
+10/10/2018 17:59 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/2/5bbdf795f16e7.2" -noout
+10/10/2018 17:59 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/2/ef1596ae-cd6f-4007-bef2-a15440ce75c8" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/2/ef1596ae-cd6f-4007-bef2-a15440ce75c8.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/768bb33c.chain.pem"
+10/10/2018 17:59 Called verifySig
+10/10/2018 17:59 parseSigFile
+10/10/2018 17:59 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/1/c98fc3f9-5dd1-4543-8a76-28f219afdd21.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/1/c98fc3f9-5dd1-4543-8a76-28f219afdd21.der"
+10/10/2018 17:59 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/1/c98fc3f9-5dd1-4543-8a76-28f219afdd21.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/1/5bbdf7b29e8d5."i }'
+10/10/2018 17:59 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/1/5bbdf7b29e8d5.1" -noout
+10/10/2018 17:59 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/1/5bbdf7b29e8d5.2" -noout
+10/10/2018 17:59 Found signer certificates:1
+10/10/2018 17:59 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/1/c98fc3f9-5dd1-4543-8a76-28f219afdd21.der" -noout -cmsout -print
+10/10/2018 17:59 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/1/5bbdf7b29e8d5.2
+10/10/2018 17:59 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/1/5bbdf7b29e8d5.2" -noout -nameopt multiline
+10/10/2018 17:59 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/1/5bbdf7b29e8d5.2" -noout
+10/10/2018 17:59 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/1/c98fc3f9-5dd1-4543-8a76-28f219afdd21" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/1/c98fc3f9-5dd1-4543-8a76-28f219afdd21.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/768bb33c.chain.pem"
+10/10/2018 17:59 Called verifySig
+10/10/2018 17:59 parseSigFile
+10/10/2018 17:59 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие заявителя/d86f0fc8-a720-4dd2-b877-01922c72875f.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие заявителя/d86f0fc8-a720-4dd2-b877-01922c72875f.der"
+10/10/2018 17:59 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие заявителя/d86f0fc8-a720-4dd2-b877-01922c72875f.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие заявителя/5bbdf7cbad7d1."i }'
+10/10/2018 17:59 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие заявителя/5bbdf7cbad7d1.1" -noout
+10/10/2018 17:59 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие заявителя/5bbdf7cbad7d1.2" -noout
+10/10/2018 17:59 Found signer certificates:1
+10/10/2018 17:59 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие заявителя/d86f0fc8-a720-4dd2-b877-01922c72875f.der" -noout -cmsout -print
+10/10/2018 17:59 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие заявителя/5bbdf7cbad7d1.2
+10/10/2018 17:59 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие заявителя/5bbdf7cbad7d1.2" -noout -nameopt multiline
+10/10/2018 17:59 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие заявителя/5bbdf7cbad7d1.2" -noout
+10/10/2018 17:59 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие заявителя/d86f0fc8-a720-4dd2-b877-01922c72875f" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Исходящие заявителя/d86f0fc8-a720-4dd2-b877-01922c72875f.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/768bb33c.chain.pem"
+10/10/2018 18:03 Called verifySig
+10/10/2018 18:03 parseSigFile
+10/10/2018 18:03 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Заключение/58dcde03-38a5-4e82-8518-07c36c399594.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Заключение/58dcde03-38a5-4e82-8518-07c36c399594.der"
+10/10/2018 18:03 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Заключение/58dcde03-38a5-4e82-8518-07c36c399594.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Заключение/5bbdf886472dc."i }'
+10/10/2018 18:03 Found signer certificates:1
+10/10/2018 18:03 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Заключение/58dcde03-38a5-4e82-8518-07c36c399594.der" -noout -cmsout -print
+10/10/2018 18:03 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Заключение/5bbdf886472dc.1
+10/10/2018 18:03 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Заключение/5bbdf886472dc.1" -noout -nameopt multiline
+10/10/2018 18:03 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Заключение/5bbdf886472dc.1" -noout
+10/10/2018 18:03 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Заключение/58dcde03-38a5-4e82-8518-07c36c399594" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Заключение/58dcde03-38a5-4e82-8518-07c36c399594.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/ef6dfa07.chain.pem"
+10/10/2018 18:03 Called verifySig
+10/10/2018 18:03 parseSigFile
+10/10/2018 18:03 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Заключение/bfa68516-c79b-4dc9-a496-2b851b48e5f7.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Заключение/bfa68516-c79b-4dc9-a496-2b851b48e5f7.der"
+10/10/2018 18:03 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Заключение/bfa68516-c79b-4dc9-a496-2b851b48e5f7.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Заключение/5bbdf894b8aa7."i }'
+10/10/2018 18:03 Found signer certificates:1
+10/10/2018 18:03 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Заключение/bfa68516-c79b-4dc9-a496-2b851b48e5f7.der" -noout -cmsout -print
+10/10/2018 18:03 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Заключение/5bbdf894b8aa7.1
+10/10/2018 18:03 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Заключение/5bbdf894b8aa7.1" -noout -nameopt multiline
+10/10/2018 18:03 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Заключение/5bbdf894b8aa7.1" -noout
+10/10/2018 18:03 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Заключение/bfa68516-c79b-4dc9-a496-2b851b48e5f7" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Заключение/bfa68516-c79b-4dc9-a496-2b851b48e5f7.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/7fd73385.chain.pem"
+10/10/2018 18:03 Called verifySig
+10/10/2018 18:03 parseSigFile
+10/10/2018 18:03 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Заключение/729f3aa9-e7e4-4240-a7d1-5b648c7e027b.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Заключение/729f3aa9-e7e4-4240-a7d1-5b648c7e027b.der"
+10/10/2018 18:03 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Заключение/729f3aa9-e7e4-4240-a7d1-5b648c7e027b.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Заключение/5bbdf8a54222c."i }'
+10/10/2018 18:03 Found signer certificates:1
+10/10/2018 18:03 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Заключение/729f3aa9-e7e4-4240-a7d1-5b648c7e027b.der" -noout -cmsout -print
+10/10/2018 18:03 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Заключение/5bbdf8a54222c.1
+10/10/2018 18:03 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Заключение/5bbdf8a54222c.1" -noout -nameopt multiline
+10/10/2018 18:03 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Заключение/5bbdf8a54222c.1" -noout
+10/10/2018 18:03 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Заключение/729f3aa9-e7e4-4240-a7d1-5b648c7e027b" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Заключение/729f3aa9-e7e4-4240-a7d1-5b648c7e027b.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/7fd73385.chain.pem"
+10/10/2018 18:03 Called verifySig
+10/10/2018 18:03 parseSigFile
+10/10/2018 18:03 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Акт выполненных работ/8411214f-7a3a-4bd6-99fd-b896bc1fadc2.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Акт выполненных работ/8411214f-7a3a-4bd6-99fd-b896bc1fadc2.der"
+10/10/2018 18:03 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Акт выполненных работ/8411214f-7a3a-4bd6-99fd-b896bc1fadc2.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Акт выполненных работ/5bbdf8bbe2c91."i }'
+10/10/2018 18:03 Found signer certificates:1
+10/10/2018 18:03 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Акт выполненных работ/8411214f-7a3a-4bd6-99fd-b896bc1fadc2.der" -noout -cmsout -print
+10/10/2018 18:03 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Акт выполненных работ/5bbdf8bbe2c91.1
+10/10/2018 18:03 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Акт выполненных работ/5bbdf8bbe2c91.1" -noout -nameopt multiline
+10/10/2018 18:03 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Акт выполненных работ/5bbdf8bbe2c91.1" -noout
+10/10/2018 18:03 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Акт выполненных работ/8411214f-7a3a-4bd6-99fd-b896bc1fadc2" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Акт выполненных работ/8411214f-7a3a-4bd6-99fd-b896bc1fadc2.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/7fd73385.chain.pem"
+10/10/2018 18:05 Called verifySig
+10/10/2018 18:05 parseSigFile
+10/10/2018 18:05 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Акт выполненных работ/09-01-01 Утилизация ТБО 40(48).xlsx.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Акт выполненных работ/09-01-01 Утилизация ТБО 40(48).xlsx.der"
+10/10/2018 18:05 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Акт выполненных работ/09-01-01 Утилизация ТБО 40(48).xlsx.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Акт выполненных работ/5bbdf92707170."i }'
+10/10/2018 18:05 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Акт выполненных работ/5bbdf92707170.1" -noout
+10/10/2018 18:05 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Акт выполненных работ/5bbdf92707170.2" -noout
+10/10/2018 18:05 Found signer certificates:1
+10/10/2018 18:05 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Акт выполненных работ/09-01-01 Утилизация ТБО 40(48).xlsx.der" -noout -cmsout -print
+10/10/2018 18:05 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Акт выполненных работ/5bbdf92707170.2
+10/10/2018 18:05 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Акт выполненных работ/5bbdf92707170.2" -noout -nameopt multiline
+10/10/2018 18:05 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Акт выполненных работ/5bbdf92707170.2" -noout
+10/10/2018 18:05 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Акт выполненных работ/8411214f-7a3a-4bd6-99fd-b896bc1fadc2" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Акт выполненных работ/09-01-01 Утилизация ТБО 40(48).xlsx.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/768bb33c.chain.pem"
+10/10/2018 18:05 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Акт выполненных работ/8411214f-7a3a-4bd6-99fd-b896bc1fadc2.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Акт выполненных работ/8411214f-7a3a-4bd6-99fd-b896bc1fadc2.sig.der"
+10/10/2018 18:05 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Акт выполненных работ/09-01-01 Утилизация ТБО 40(48).xlsx.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Акт выполненных работ/8411214f-7a3a-4bd6-99fd-b896bc1fadc2.der"
+10/10/2018 18:05 Called run_shell_cmd /home/andrey/www/htdocs/expert72/pki/cmsmerge -s "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Акт выполненных работ/8411214f-7a3a-4bd6-99fd-b896bc1fadc2.der" -d "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Акт выполненных работ/8411214f-7a3a-4bd6-99fd-b896bc1fadc2.sig" -o "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Акт выполненных работ/8411214f-7a3a-4bd6-99fd-b896bc1fadc2.mrg"
+10/10/2018 18:05 Called verifySig
+10/10/2018 18:05 parseSigFile
+10/10/2018 18:05 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Акт выполненных работ/8411214f-7a3a-4bd6-99fd-b896bc1fadc2.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Акт выполненных работ/5bbdf927a446f."i }'
+10/10/2018 18:05 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Акт выполненных работ/5bbdf927a446f.1" -noout
+10/10/2018 18:05 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Акт выполненных работ/5bbdf927a446f.2" -noout
+10/10/2018 18:05 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Акт выполненных работ/5bbdf927a446f.3" -noout
+10/10/2018 18:05 Found signer certificates:2
+10/10/2018 18:05 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Акт выполненных работ/8411214f-7a3a-4bd6-99fd-b896bc1fadc2.der" -noout -cmsout -print
+10/10/2018 18:05 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Акт выполненных работ/5bbdf927a446f.1
+10/10/2018 18:05 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Акт выполненных работ/5bbdf927a446f.1" -noout -nameopt multiline
+10/10/2018 18:05 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Акт выполненных работ/5bbdf927a446f.1" -noout
+10/10/2018 18:05 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Акт выполненных работ/5bbdf927a446f.3
+10/10/2018 18:05 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Акт выполненных работ/5bbdf927a446f.3" -noout -nameopt multiline
+10/10/2018 18:05 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Акт выполненных работ/5bbdf927a446f.3" -noout
+10/10/2018 18:05 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Акт выполненных работ/8411214f-7a3a-4bd6-99fd-b896bc1fadc2" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Договорные документы/Акт выполненных работ/8411214f-7a3a-4bd6-99fd-b896bc1fadc2.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/5bbdf927f0c31chain.pem"
+11/10/2018 06:24 Called verifySig
+11/10/2018 06:24 parseSigFile
+11/10/2018 06:24 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Заключение/bea49c5c-c412-4a60-a9ff-00336a6f3c84.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Заключение/bea49c5c-c412-4a60-a9ff-00336a6f3c84.der"
+11/10/2018 06:24 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Заключение/bea49c5c-c412-4a60-a9ff-00336a6f3c84.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Заключение/5bbea65047135."i }'
+11/10/2018 06:24 Found signer certificates:1
+11/10/2018 06:24 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Заключение/bea49c5c-c412-4a60-a9ff-00336a6f3c84.der" -noout -cmsout -print
+11/10/2018 06:24 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Заключение/5bbea65047135.1
+11/10/2018 06:24 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Заключение/5bbea65047135.1" -noout -nameopt multiline
+11/10/2018 06:24 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Заключение/5bbea65047135.1" -noout
+11/10/2018 06:24 Called get_ca_list_file
+11/10/2018 06:24 Called get_ca_certs progComplexAlias=АО "ПФ "СКБ Контур",caOGRN=1026605606620
+11/10/2018 06:24 Certificate found, making pem
+11/10/2018 06:24 Called run_shell_cmd openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/AD7758D649BE895DD179D9A9DE255AD60BD51A4D.b64" -out "/home/andrey/www/htdocs/expert72/pki/AD7758D649BE895DD179D9A9DE255AD60BD51A4D.der"
+11/10/2018 06:24 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/AD7758D649BE895DD179D9A9DE255AD60BD51A4D.der" -noout
+11/10/2018 06:24 Called run_shell_cmd openssl x509 -in "/home/andrey/www/htdocs/expert72/pki/AD7758D649BE895DD179D9A9DE255AD60BD51A4D.der" -inform der -outform pem -out "/home/andrey/www/htdocs/expert72/pki/AD7758D649BE895DD179D9A9DE255AD60BD51A4D.pem"
+11/10/2018 06:24 CRL urls exist
+11/10/2018 06:24 Called run_shell_cmd wget -O "/home/andrey/www/htdocs/expert72/pki/AD7758D649BE895DD179D9A9DE255AD60BD51A4D.crl.der" http://cdp.skbkontur.ru/cdp/kontur-q-2017.crl
+11/10/2018 06:24 Called run_shell_cmd openssl crl -in "/home/andrey/www/htdocs/expert72/pki/AD7758D649BE895DD179D9A9DE255AD60BD51A4D.crl.der" -inform DER -out "/home/andrey/www/htdocs/expert72/pki/AD7758D649BE895DD179D9A9DE255AD60BD51A4D.crl"
+11/10/2018 06:24 Appending crl to pem file
+11/10/2018 06:24 Adding certificate pem with crl to chain file
+11/10/2018 06:24 Looking for parent certificate
+11/10/2018 06:24 Called get_ca_certs progComplexAlias=Головной удостоверяющий центр,caOGRN=1047702026701
+11/10/2018 06:24 Certificate found, making pem
+11/10/2018 06:24 Called run_shell_cmd openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.b64" -out "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der"
+11/10/2018 06:24 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der" -noout
+11/10/2018 06:24 Adding certificate pem with crl to chain file
+11/10/2018 06:24 Certificate found, making pem
+11/10/2018 06:24 Called run_shell_cmd openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/699CA433E4B8E49069171558DE10BD170E12F0E4.b64" -out "/home/andrey/www/htdocs/expert72/pki/699CA433E4B8E49069171558DE10BD170E12F0E4.der"
+11/10/2018 06:24 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/699CA433E4B8E49069171558DE10BD170E12F0E4.der" -noout
+11/10/2018 06:24 Called run_shell_cmd openssl x509 -in "/home/andrey/www/htdocs/expert72/pki/699CA433E4B8E49069171558DE10BD170E12F0E4.der" -inform der -outform pem -out "/home/andrey/www/htdocs/expert72/pki/699CA433E4B8E49069171558DE10BD170E12F0E4.pem"
+11/10/2018 06:24 CRL urls exist
+11/10/2018 06:24 Called run_shell_cmd wget -O "/home/andrey/www/htdocs/expert72/pki/699CA433E4B8E49069171558DE10BD170E12F0E4.crl.der" http://cdp.skbkontur.ru/cdp/skbkontur-q-2018.crl
+11/10/2018 06:24 Called run_shell_cmd openssl crl -in "/home/andrey/www/htdocs/expert72/pki/699CA433E4B8E49069171558DE10BD170E12F0E4.crl.der" -inform DER -out "/home/andrey/www/htdocs/expert72/pki/699CA433E4B8E49069171558DE10BD170E12F0E4.crl"
+11/10/2018 06:24 Appending crl to pem file
+11/10/2018 06:24 Adding certificate pem with crl to chain file
+11/10/2018 06:24 Looking for parent certificate
+11/10/2018 06:24 Called get_ca_certs progComplexAlias=Минкомсвязь России,caOGRN=1047702026701
+11/10/2018 06:24 Certificate found, making pem
+11/10/2018 06:24 Called run_shell_cmd openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/9BA648660733ED7A550BCEA03A20E14B8F25C99B.b64" -out "/home/andrey/www/htdocs/expert72/pki/9BA648660733ED7A550BCEA03A20E14B8F25C99B.der"
+11/10/2018 06:24 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/9BA648660733ED7A550BCEA03A20E14B8F25C99B.der" -noout
+11/10/2018 06:24 Called run_shell_cmd openssl x509 -in "/home/andrey/www/htdocs/expert72/pki/9BA648660733ED7A550BCEA03A20E14B8F25C99B.der" -inform der -outform pem -out "/home/andrey/www/htdocs/expert72/pki/9BA648660733ED7A550BCEA03A20E14B8F25C99B.pem"
+11/10/2018 06:24 CRL urls exist
+11/10/2018 06:24 Called run_shell_cmd wget -O "/home/andrey/www/htdocs/expert72/pki/9BA648660733ED7A550BCEA03A20E14B8F25C99B.crl.der" http://reestr-pki.ru/cdp/vguc1_6.crl
+11/10/2018 06:24 Called run_shell_cmd openssl crl -in "/home/andrey/www/htdocs/expert72/pki/9BA648660733ED7A550BCEA03A20E14B8F25C99B.crl.der" -inform DER -out "/home/andrey/www/htdocs/expert72/pki/9BA648660733ED7A550BCEA03A20E14B8F25C99B.crl"
+11/10/2018 06:24 Appending crl to pem file
+11/10/2018 06:24 Adding certificate pem with crl to chain file
+11/10/2018 06:24 Looking for parent certificate
+11/10/2018 06:24 Called get_ca_certs progComplexAlias=Головной удостоверяющий центр,caOGRN=1047702026701
+11/10/2018 06:24 Certificate found, making pem
+11/10/2018 06:24 Called run_shell_cmd openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.b64" -out "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der"
+11/10/2018 06:24 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der" -noout
+11/10/2018 06:24 Adding certificate pem with crl to chain file
+11/10/2018 06:24 Certificate found, making pem
+11/10/2018 06:24 Called run_shell_cmd openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/4BC6DC14D97010C41A26E058AD851F81C842415A.b64" -out "/home/andrey/www/htdocs/expert72/pki/4BC6DC14D97010C41A26E058AD851F81C842415A.der"
+11/10/2018 06:24 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/4BC6DC14D97010C41A26E058AD851F81C842415A.der" -noout
+11/10/2018 06:24 Called run_shell_cmd openssl x509 -in "/home/andrey/www/htdocs/expert72/pki/4BC6DC14D97010C41A26E058AD851F81C842415A.der" -inform der -outform pem -out "/home/andrey/www/htdocs/expert72/pki/4BC6DC14D97010C41A26E058AD851F81C842415A.pem"
+11/10/2018 06:24 CRL urls exist
+11/10/2018 06:24 Called run_shell_cmd wget -O "/home/andrey/www/htdocs/expert72/pki/4BC6DC14D97010C41A26E058AD851F81C842415A.crl.der" http://reestr-pki.ru/cdp/guc_gost12.crl
+11/10/2018 06:24 Called run_shell_cmd openssl crl -in "/home/andrey/www/htdocs/expert72/pki/4BC6DC14D97010C41A26E058AD851F81C842415A.crl.der" -inform DER -out "/home/andrey/www/htdocs/expert72/pki/4BC6DC14D97010C41A26E058AD851F81C842415A.crl"
+11/10/2018 06:24 Appending crl to pem file
+11/10/2018 06:24 Adding certificate pem with crl to chain file
+11/10/2018 06:24 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Заключение/bea49c5c-c412-4a60-a9ff-00336a6f3c84" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Заключение/bea49c5c-c412-4a60-a9ff-00336a6f3c84.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/7fd73385.chain.pem"
+11/10/2018 06:24 Called verifySig
+11/10/2018 06:24 parseSigFile
+11/10/2018 06:24 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Акт выполненных работ/dab7b4aa-9ada-44d9-bb93-8c6f11bee245.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Акт выполненных работ/dab7b4aa-9ada-44d9-bb93-8c6f11bee245.der"
+11/10/2018 06:24 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Акт выполненных работ/dab7b4aa-9ada-44d9-bb93-8c6f11bee245.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Акт выполненных работ/5bbea66a13902."i }'
+11/10/2018 06:24 Found signer certificates:1
+11/10/2018 06:24 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Акт выполненных работ/dab7b4aa-9ada-44d9-bb93-8c6f11bee245.der" -noout -cmsout -print
+11/10/2018 06:24 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Акт выполненных работ/5bbea66a13902.1
+11/10/2018 06:24 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Акт выполненных работ/5bbea66a13902.1" -noout -nameopt multiline
+11/10/2018 06:24 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Акт выполненных работ/5bbea66a13902.1" -noout
+11/10/2018 06:24 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Акт выполненных работ/dab7b4aa-9ada-44d9-bb93-8c6f11bee245" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Акт выполненных работ/dab7b4aa-9ada-44d9-bb93-8c6f11bee245.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/7fd73385.chain.pem"
+11/10/2018 06:27 Called verifySig
+11/10/2018 06:27 parseSigFile
+11/10/2018 06:27 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Контракт/СМ.ПЗ 40(48).doc.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Контракт/.ПЗ 40(48).doc.der"
+11/10/2018 06:27 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Контракт/.ПЗ 40(48).doc.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Контракт/5bbea70912191."i }'
+11/10/2018 06:27 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Контракт/5bbea70912191.1" -noout
+11/10/2018 06:27 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Контракт/5bbea70912191.2" -noout
+11/10/2018 06:27 Found signer certificates:1
+11/10/2018 06:27 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Контракт/.ПЗ 40(48).doc.der" -noout -cmsout -print
+11/10/2018 06:27 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Контракт/5bbea70912191.2
+11/10/2018 06:27 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Контракт/5bbea70912191.2" -noout -nameopt multiline
+11/10/2018 06:27 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Контракт/5bbea70912191.2" -noout
+11/10/2018 06:27 Called get_ca_list_file
+11/10/2018 06:27 Called get_ca_certs progComplexAlias=ООО "КОМПАНИЯ "ТЕНЗОР",caOGRN=1027600787994
+11/10/2018 06:27 Certificate found, making pem
+11/10/2018 06:27 Called run_shell_cmd openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/4D28BC02373048A2F5CA7261C4C687FE0AA05676.b64" -out "/home/andrey/www/htdocs/expert72/pki/4D28BC02373048A2F5CA7261C4C687FE0AA05676.der"
+11/10/2018 06:27 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/4D28BC02373048A2F5CA7261C4C687FE0AA05676.der" -noout
+11/10/2018 06:27 Called run_shell_cmd openssl x509 -in "/home/andrey/www/htdocs/expert72/pki/4D28BC02373048A2F5CA7261C4C687FE0AA05676.der" -inform der -outform pem -out "/home/andrey/www/htdocs/expert72/pki/4D28BC02373048A2F5CA7261C4C687FE0AA05676.pem"
+11/10/2018 06:27 CRL urls exist
+11/10/2018 06:27 Called run_shell_cmd wget -O "/home/andrey/www/htdocs/expert72/pki/4D28BC02373048A2F5CA7261C4C687FE0AA05676.crl.der" http://tax4.tensor.ru/tensorca-2017_cp/certenroll/tensorca-2017_cp.crl
+11/10/2018 06:27 Called run_shell_cmd openssl crl -in "/home/andrey/www/htdocs/expert72/pki/4D28BC02373048A2F5CA7261C4C687FE0AA05676.crl.der" -inform DER -out "/home/andrey/www/htdocs/expert72/pki/4D28BC02373048A2F5CA7261C4C687FE0AA05676.crl"
+11/10/2018 06:27 Appending crl to pem file
+11/10/2018 06:27 Adding certificate pem with crl to chain file
+11/10/2018 06:27 Looking for parent certificate
+11/10/2018 06:27 Called get_ca_certs progComplexAlias=Головной удостоверяющий центр,caOGRN=1047702026701
+11/10/2018 06:27 Certificate found, making pem
+11/10/2018 06:27 Called run_shell_cmd openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.b64" -out "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der"
+11/10/2018 06:27 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der" -noout
+11/10/2018 06:27 Adding certificate pem with crl to chain file
+11/10/2018 06:27 Certificate found, making pem
+11/10/2018 06:27 Called run_shell_cmd openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/9075A8C2AADE976BFD0CA4FC55E3442FB2809CFE.b64" -out "/home/andrey/www/htdocs/expert72/pki/9075A8C2AADE976BFD0CA4FC55E3442FB2809CFE.der"
+11/10/2018 06:27 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/9075A8C2AADE976BFD0CA4FC55E3442FB2809CFE.der" -noout
+11/10/2018 06:27 Called run_shell_cmd openssl x509 -in "/home/andrey/www/htdocs/expert72/pki/9075A8C2AADE976BFD0CA4FC55E3442FB2809CFE.der" -inform der -outform pem -out "/home/andrey/www/htdocs/expert72/pki/9075A8C2AADE976BFD0CA4FC55E3442FB2809CFE.pem"
+11/10/2018 06:27 CRL urls exist
+11/10/2018 06:27 Called run_shell_cmd wget -O "/home/andrey/www/htdocs/expert72/pki/9075A8C2AADE976BFD0CA4FC55E3442FB2809CFE.crl.der" http://tax4.tensor.ru/tensorca-2018_cp_gost2012/certenroll/tensorca-2018_cp_gost2012.crl
+11/10/2018 06:27 Called run_shell_cmd openssl crl -in "/home/andrey/www/htdocs/expert72/pki/9075A8C2AADE976BFD0CA4FC55E3442FB2809CFE.crl.der" -inform DER -out "/home/andrey/www/htdocs/expert72/pki/9075A8C2AADE976BFD0CA4FC55E3442FB2809CFE.crl"
+11/10/2018 06:27 Appending crl to pem file
+11/10/2018 06:27 Adding certificate pem with crl to chain file
+11/10/2018 06:27 Looking for parent certificate
+11/10/2018 06:27 Called get_ca_certs progComplexAlias=Минкомсвязь России,caOGRN=1047702026701
+11/10/2018 06:27 Certificate found, making pem
+11/10/2018 06:27 Called run_shell_cmd openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/9BA648660733ED7A550BCEA03A20E14B8F25C99B.b64" -out "/home/andrey/www/htdocs/expert72/pki/9BA648660733ED7A550BCEA03A20E14B8F25C99B.der"
+11/10/2018 06:27 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/9BA648660733ED7A550BCEA03A20E14B8F25C99B.der" -noout
+11/10/2018 06:27 Adding certificate pem with crl to chain file
+11/10/2018 06:27 Looking for parent certificate
+11/10/2018 06:27 Called get_ca_certs progComplexAlias=Головной удостоверяющий центр,caOGRN=1047702026701
+11/10/2018 06:27 Certificate found, making pem
+11/10/2018 06:27 Called run_shell_cmd openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.b64" -out "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der"
+11/10/2018 06:27 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der" -noout
+11/10/2018 06:27 Adding certificate pem with crl to chain file
+11/10/2018 06:27 Certificate found, making pem
+11/10/2018 06:27 Called run_shell_cmd openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/4BC6DC14D97010C41A26E058AD851F81C842415A.b64" -out "/home/andrey/www/htdocs/expert72/pki/4BC6DC14D97010C41A26E058AD851F81C842415A.der"
+11/10/2018 06:27 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/4BC6DC14D97010C41A26E058AD851F81C842415A.der" -noout
+11/10/2018 06:27 Adding certificate pem with crl to chain file
+11/10/2018 06:27 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Контракт/bd95f944-8e85-47f6-9860-90ac03bd8b2a" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Контракт/.ПЗ 40(48).doc.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/768bb33c.chain.pem"
+11/10/2018 06:27 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Контракт/bd95f944-8e85-47f6-9860-90ac03bd8b2a.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Контракт/bd95f944-8e85-47f6-9860-90ac03bd8b2a.sig.der"
+11/10/2018 06:27 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Контракт/СМ.ПЗ 40(48).doc.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Контракт/bd95f944-8e85-47f6-9860-90ac03bd8b2a.der"
+11/10/2018 06:27 Called run_shell_cmd /home/andrey/www/htdocs/expert72/pki/cmsmerge -s "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Контракт/bd95f944-8e85-47f6-9860-90ac03bd8b2a.der" -d "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Контракт/bd95f944-8e85-47f6-9860-90ac03bd8b2a.sig" -o "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Контракт/bd95f944-8e85-47f6-9860-90ac03bd8b2a.mrg"
+11/10/2018 06:27 Called verifySig
+11/10/2018 06:27 parseSigFile
+11/10/2018 06:27 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Контракт/bd95f944-8e85-47f6-9860-90ac03bd8b2a.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Контракт/5bbea70bb0855."i }'
+11/10/2018 06:27 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Контракт/5bbea70bb0855.1" -noout
+11/10/2018 06:27 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Контракт/5bbea70bb0855.2" -noout
+11/10/2018 06:27 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Контракт/5bbea70bb0855.3" -noout
+11/10/2018 06:27 Found signer certificates:2
+11/10/2018 06:27 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Контракт/bd95f944-8e85-47f6-9860-90ac03bd8b2a.der" -noout -cmsout -print
+11/10/2018 06:27 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Контракт/5bbea70bb0855.1
+11/10/2018 06:27 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Контракт/5bbea70bb0855.1" -noout -nameopt multiline
+11/10/2018 06:27 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Контракт/5bbea70bb0855.1" -noout
+11/10/2018 06:27 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Контракт/5bbea70bb0855.3
+11/10/2018 06:27 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Контракт/5bbea70bb0855.3" -noout -nameopt multiline
+11/10/2018 06:27 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Контракт/5bbea70bb0855.3" -noout
+11/10/2018 06:27 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Контракт/bd95f944-8e85-47f6-9860-90ac03bd8b2a" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Контракт/bd95f944-8e85-47f6-9860-90ac03bd8b2a.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/5bbea70bcf4f0chain.pem"
+11/10/2018 06:27 Called verifySig
+11/10/2018 06:27 parseSigFile
+11/10/2018 06:27 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Акт выполненных работ/09-01-01 Утилизация ТБО 40(48).xlsx.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Акт выполненных работ/09-01-01 Утилизация ТБО 40(48).xlsx.der"
+11/10/2018 06:27 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Акт выполненных работ/09-01-01 Утилизация ТБО 40(48).xlsx.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Акт выполненных работ/5bbea7116b770."i }'
+11/10/2018 06:27 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Акт выполненных работ/5bbea7116b770.1" -noout
+11/10/2018 06:27 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Акт выполненных работ/5bbea7116b770.2" -noout
+11/10/2018 06:27 Found signer certificates:1
+11/10/2018 06:27 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Акт выполненных работ/09-01-01 Утилизация ТБО 40(48).xlsx.der" -noout -cmsout -print
+11/10/2018 06:27 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Акт выполненных работ/5bbea7116b770.2
+11/10/2018 06:27 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Акт выполненных работ/5bbea7116b770.2" -noout -nameopt multiline
+11/10/2018 06:27 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Акт выполненных работ/5bbea7116b770.2" -noout
+11/10/2018 06:27 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Акт выполненных работ/dab7b4aa-9ada-44d9-bb93-8c6f11bee245" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Акт выполненных работ/09-01-01 Утилизация ТБО 40(48).xlsx.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/768bb33c.chain.pem"
+11/10/2018 06:27 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Акт выполненных работ/dab7b4aa-9ada-44d9-bb93-8c6f11bee245.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Акт выполненных работ/dab7b4aa-9ada-44d9-bb93-8c6f11bee245.sig.der"
+11/10/2018 06:27 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Акт выполненных работ/09-01-01 Утилизация ТБО 40(48).xlsx.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Акт выполненных работ/dab7b4aa-9ada-44d9-bb93-8c6f11bee245.der"
+11/10/2018 06:27 Called run_shell_cmd /home/andrey/www/htdocs/expert72/pki/cmsmerge -s "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Акт выполненных работ/dab7b4aa-9ada-44d9-bb93-8c6f11bee245.der" -d "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Акт выполненных работ/dab7b4aa-9ada-44d9-bb93-8c6f11bee245.sig" -o "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Акт выполненных работ/dab7b4aa-9ada-44d9-bb93-8c6f11bee245.mrg"
+11/10/2018 06:27 Called verifySig
+11/10/2018 06:27 parseSigFile
+11/10/2018 06:27 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Акт выполненных работ/dab7b4aa-9ada-44d9-bb93-8c6f11bee245.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Акт выполненных работ/5bbea71209c9a."i }'
+11/10/2018 06:27 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Акт выполненных работ/5bbea71209c9a.1" -noout
+11/10/2018 06:27 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Акт выполненных работ/5bbea71209c9a.2" -noout
+11/10/2018 06:27 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Акт выполненных работ/5bbea71209c9a.3" -noout
+11/10/2018 06:27 Found signer certificates:2
+11/10/2018 06:27 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Акт выполненных работ/dab7b4aa-9ada-44d9-bb93-8c6f11bee245.der" -noout -cmsout -print
+11/10/2018 06:27 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Акт выполненных работ/5bbea71209c9a.1
+11/10/2018 06:27 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Акт выполненных работ/5bbea71209c9a.1" -noout -nameopt multiline
+11/10/2018 06:27 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Акт выполненных работ/5bbea71209c9a.1" -noout
+11/10/2018 06:27 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Акт выполненных работ/5bbea71209c9a.3
+11/10/2018 06:27 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Акт выполненных работ/5bbea71209c9a.3" -noout -nameopt multiline
+11/10/2018 06:27 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Акт выполненных работ/5bbea71209c9a.3" -noout
+11/10/2018 06:27 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Акт выполненных работ/dab7b4aa-9ada-44d9-bb93-8c6f11bee245" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1562/Договорные документы/Акт выполненных работ/dab7b4aa-9ada-44d9-bb93-8c6f11bee245.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/5bbea712350eechain.pem"
+11/10/2018 06:53 Called verifySig
+11/10/2018 06:53 parseSigFile
+11/10/2018 06:53 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/1/7abeecf9-4576-41db-bc2b-b35f65f23f4d.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/1/7abeecf9-4576-41db-bc2b-b35f65f23f4d.der"
+11/10/2018 06:53 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/1/7abeecf9-4576-41db-bc2b-b35f65f23f4d.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/1/5bbead1a6e98a."i }'
+11/10/2018 06:53 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/1/5bbead1a6e98a.1" -noout
+11/10/2018 06:53 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/1/5bbead1a6e98a.2" -noout
+11/10/2018 06:53 Found signer certificates:1
+11/10/2018 06:53 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/1/7abeecf9-4576-41db-bc2b-b35f65f23f4d.der" -noout -cmsout -print
+11/10/2018 06:53 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/1/5bbead1a6e98a.2
+11/10/2018 06:53 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/1/5bbead1a6e98a.2" -noout -nameopt multiline
+11/10/2018 06:53 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/1/5bbead1a6e98a.2" -noout
+11/10/2018 06:53 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/1/7abeecf9-4576-41db-bc2b-b35f65f23f4d" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/1/7abeecf9-4576-41db-bc2b-b35f65f23f4d.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/768bb33c.chain.pem"
+11/10/2018 07:00 Called verifySig
+11/10/2018 07:00 parseSigFile
+11/10/2018 07:00 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/1/171187a1-486c-49c9-b10d-92e0b3c1cd23.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/1/171187a1-486c-49c9-b10d-92e0b3c1cd23.der"
+11/10/2018 07:00 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/1/171187a1-486c-49c9-b10d-92e0b3c1cd23.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/1/5bbeaec40ea46."i }'
+11/10/2018 07:00 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/1/5bbeaec40ea46.1" -noout
+11/10/2018 07:00 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/1/5bbeaec40ea46.2" -noout
+11/10/2018 07:00 Found signer certificates:1
+11/10/2018 07:00 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/1/171187a1-486c-49c9-b10d-92e0b3c1cd23.der" -noout -cmsout -print
+11/10/2018 07:00 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/1/5bbeaec40ea46.2
+11/10/2018 07:00 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/1/5bbeaec40ea46.2" -noout -nameopt multiline
+11/10/2018 07:00 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/1/5bbeaec40ea46.2" -noout
+11/10/2018 07:00 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/1/171187a1-486c-49c9-b10d-92e0b3c1cd23" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1563/Достоверность/1/171187a1-486c-49c9-b10d-92e0b3c1cd23.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/768bb33c.chain.pem"
+11/10/2018 07:02 Called verifySig
+11/10/2018 07:02 parseSigFile
+11/10/2018 07:02 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1560/ПД/1/ad7ad5ca-63b3-470a-988d-eced0b329d93.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1560/ПД/1/ad7ad5ca-63b3-470a-988d-eced0b329d93.der"
+11/10/2018 07:02 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1560/ПД/1/ad7ad5ca-63b3-470a-988d-eced0b329d93.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1560/ПД/1/5bbeaf29b971e."i }'
+11/10/2018 07:02 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1560/ПД/1/5bbeaf29b971e.1" -noout
+11/10/2018 07:02 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1560/ПД/1/5bbeaf29b971e.2" -noout
+11/10/2018 07:02 Found signer certificates:1
+11/10/2018 07:02 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1560/ПД/1/ad7ad5ca-63b3-470a-988d-eced0b329d93.der" -noout -cmsout -print
+11/10/2018 07:02 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1560/ПД/1/5bbeaf29b971e.2
+11/10/2018 07:02 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1560/ПД/1/5bbeaf29b971e.2" -noout -nameopt multiline
+11/10/2018 07:02 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1560/ПД/1/5bbeaf29b971e.2" -noout
+11/10/2018 07:02 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1560/ПД/1/ad7ad5ca-63b3-470a-988d-eced0b329d93" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1560/ПД/1/ad7ad5ca-63b3-470a-988d-eced0b329d93.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/768bb33c.chain.pem"
+11/10/2018 07:03 Called verifySig
+11/10/2018 07:03 parseSigFile
+11/10/2018 07:03 Called run_shell_cmd openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1560/ПД/1/6b9bf02b-2d7b-447f-baa9-f43ec88d8331.sig" -out "/home/andrey/www/htdocs/expert72/client_files/Заявление№1560/ПД/1/6b9bf02b-2d7b-447f-baa9-f43ec88d8331.der"
+11/10/2018 07:03 Called run_shell_cmd openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1560/ПД/1/6b9bf02b-2d7b-447f-baa9-f43ec88d8331.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/client_files/Заявление№1560/ПД/1/5bbeaf5d1d14c."i }'
+11/10/2018 07:03 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1560/ПД/1/5bbeaf5d1d14c.1" -noout
+11/10/2018 07:03 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1560/ПД/1/5bbeaf5d1d14c.2" -noout
+11/10/2018 07:03 Found signer certificates:1
+11/10/2018 07:03 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1560/ПД/1/6b9bf02b-2d7b-447f-baa9-f43ec88d8331.der" -noout -cmsout -print
+11/10/2018 07:03 Parsing pem file /home/andrey/www/htdocs/expert72/client_files/Заявление№1560/ПД/1/5bbeaf5d1d14c.2
+11/10/2018 07:03 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1560/ПД/1/5bbeaf5d1d14c.2" -noout -nameopt multiline
+11/10/2018 07:03 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1560/ПД/1/5bbeaf5d1d14c.2" -noout
+11/10/2018 07:03 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1560/ПД/1/6b9bf02b-2d7b-447f-baa9-f43ec88d8331" -purpose any -crl_check -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1560/ПД/1/6b9bf02b-2d7b-447f-baa9-f43ec88d8331.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/768bb33c.chain.pem"

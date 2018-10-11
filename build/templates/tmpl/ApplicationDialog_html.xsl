@@ -147,6 +147,9 @@ Edit template instead.
 						<div id="{{{{id}}}}:inf_closed" class="hidden appState">
 							<h5 class="no-margin text-semibold">Отправлено заключение.</h5>
 						</div>
+						<div id="{{{{id}}}}:inf_archive" class="hidden appState">
+							<h5 class="no-margin text-semibold">Передано в архив.</h5>
+						</div>						
 						<div id="{{{{id}}}}:inf_closed_no_expertise" class="hidden appState">
 							<h5 class="no-margin text-semibold">Заявление закрыто без проведения экспертизы.</h5>
 						</div>					

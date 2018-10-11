@@ -21,6 +21,7 @@ DECLARE
 	v_dep_email text;
 	v_recip_department_id int;
 	v_application_state application_states;
+	v_application_state_dt timestampTZ;
 	v_contract_number text;
 	v_doc_flow_subject text;
 	v_contract_employee_id int;
@@ -45,6 +46,7 @@ BEGIN
 				contracts.main_expert_id,
 				dep.email,
 				st.state,
+				st.date_time,
 				contracts.contract_number,
 				contracts.employee_id
 			INTO
@@ -56,6 +58,7 @@ BEGIN
 				v_main_expert_id,
 				v_dep_email,
 				v_application_state,
+				v_application_state_dt,
 				v_contract_number,
 				v_contract_employee_id
 			FROM applications AS app
@@ -321,8 +324,10 @@ BEGIN
 					contract_return_date_on_sig = (v_contract_return_date IS NOT NULL)
 				WHERE id=v_contract_id AND contract_return_date IS NULL;
 				--coalesce(contract_return_date_on_sig,FALSE)=FALSE;
+				--RAISE EXCEPTION 'v_application_state=%',v_application_state;
 				
-				IF v_application_state='waiting_for_contract' THEN
+				IF v_application_state='waiting_for_contract'
+				OR v_application_state='closed' THEN
 					INSERT INTO application_processes (
 						application_id,
 						date_time,
@@ -332,8 +337,11 @@ BEGIN
 					)
 					VALUES (
 						NEW.application_id,
-						NEW.date_time,
-						'waiting_for_pay'::application_states,
+						greatest(NEW.date_time,v_application_state_dt+'1 second'::interval),
+						CASE
+							WHEN v_application_state='waiting_for_contract' THEN 'waiting_for_pay'::application_states
+							ELSE 'archive'::application_states
+						END,
 						NEW.user_id,
 						NULL
 					);			

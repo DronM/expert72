@@ -190,6 +190,7 @@ class DocFlow_Controller extends ControllerSQL{
 				att.file_path,
 				att.file_name,
 				(SELECT count(*) FROM file_signatures AS sig WHERE sig.file_id=att.file_id) AS sig_cnt,
+				(SELECT count(*) FROM file_verifications AS v WHERE v.file_id=att.file_id) AS ver_cnt,
 				CASE
 					WHEN att.doc_type='doc_flow_out' THEN out.to_application_id
 					WHEN att.doc_type='doc_flow_inside' THEN ct.application_id
@@ -205,7 +206,7 @@ class DocFlow_Controller extends ControllerSQL{
 			$this->getExtDbVal($pm,'file_id'),
 			$type
 		));
-		if (!count($ar) || $ar['sig_cnt']==0){
+		if (!count($ar) || $ar['ver_cnt']==0){
 			throw new Exception(self::ER_STORAGE_FILE_NOT_FOUND);
 		}
 		

@@ -1873,7 +1873,7 @@ class Contract_Controller extends ControllerSQL{
 				row_number() OVER (ORDER BY %s) AS ord,
 				contracts.expertise_result_number,
 				to_char(contracts.date_time,'DD/MM/YY') AS date,
-				(CASE WHEN contracts.primary_contract_reg_number IS NOT NULL THEN 'Повтор' ELSE '' END) AS primary_exists,				
+				(CASE WHEN coalesce(primary_ct.expertise_result_number,contracts.primary_contract_reg_number) IS NOT NULL THEN 'Повтор' ELSE '' END) AS primary_exists,				
 				app.applicant->>'name' AS applicant,
 				app.customer->>'name' AS customer,
 				contracts.constr_name,	
@@ -1893,11 +1893,11 @@ class Contract_Controller extends ControllerSQL{
 				person_init(employees.name,FALSE) AS main_expert,
 				
 				CASE
-					WHEN expertise_result='positive' THEN to_char(expertise_result_date,'DD/MM/YY')
+					WHEN contracts.expertise_result='positive' THEN to_char(contracts.expertise_result_date,'DD/MM/YY')
 					ELSE ''
 				END AS expertise_result_date_positive,
 				
-				'откуда брать?' AS back_to_work_date,
+				coalesce(primary_ct.expertise_result_number,contracts.primary_contract_reg_number) AS back_to_work_date,
 				
 				coalesce(contracts.akt_number,'..')||' от '||coalesce(to_char(contracts.akt_date,'DD/MM/YY'),'..') AS akt_number_date,
 				
@@ -1913,6 +1913,7 @@ class Contract_Controller extends ControllerSQL{
 			) AS payments ON contracts.id=payments.contract_id
 			LEFT JOIN applications AS app ON app.id=contracts.application_id
 			LEFT JOIN employees ON employees.id=contracts.main_expert_id
+			LEFT JOIN contracts AS primary_ct ON primary_ct.id=contracts.primary_contract_id
 			WHERE %s BETWEEN %s AND %s %s
 			ORDER BY %s",
 			$date_type,
