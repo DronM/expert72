@@ -295,7 +295,7 @@ doc_flow_out_client_process()
 При загрузке в Хроме при попытке скачать файл иногда сначала выдавалась ошибка, но файл скачивался
 
 
-1.0.84
+1.0.84 14/10/18
 PKIManager:
 	Константа для проверки подписей PKI_MEMORY_LIMIT
 	Заголовок сертификата для определения кодировки
@@ -307,7 +307,7 @@ PKIManager:
 
 Удаление одного из исполнителей
 
--Заявление Заполнение исполнителя по...
+Заявление Заполнение исполнителя по...
 
 doc_flow_out_client_dialog
 doc_flow_out_client_files_for_signing
@@ -320,6 +320,8 @@ ON doc_flow_out_client
 FOR EACH ROW
 EXECUTE PROCEDURE doc_flow_out_client_process();
 
+
+1.0.85
 
 
 
