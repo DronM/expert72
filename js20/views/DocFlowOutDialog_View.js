@@ -229,7 +229,11 @@ function DocFlowOutDialog_View(id,options){
 		options.controlOk = new ButtonOK(id+":cmdOk",{
 			"onClick":function(){
 				self.checkForUploadFileCount();
-				self.onOK();
+				self.onOK(function(resp,errCode,errStr){
+					self.getControlOK().setEnabled(true);
+					self.setError(window.getApp().formatError(errCode,errStr));
+				});
+				
 			}
 		});		
 		this.addElement(new ButtonCmd(id+":cmdApprove",{

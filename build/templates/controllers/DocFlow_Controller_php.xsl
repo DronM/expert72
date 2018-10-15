@@ -325,11 +325,20 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 						$ar['file_id'].'.sig';		
 				}
 				
-				if($cur_sig_exists)unlink($cur_sig);
-				rename($prev_sig,$new_cur_sig);
+				if (file_exists($prev_sig)){
+					if($cur_sig_exists)unlink($cur_sig);
+					rename($prev_sig,$new_cur_sig);
+				}
 			
 				$pki_man = new PKIManager(PKI_PATH,PKI_CRL_VALIDITY,PKI_MODE);
-				pki_log_sig_check($new_cur_sig, $file_doc, $this->getExtDbVal($pm,'file_id'), $pki_man, $this->getDbLinkMaster());
+				$verif_res = pki_log_sig_check($new_cur_sig, $file_doc, $this->getExtDbVal($pm,'file_id'), $pki_man, $this->getDbLinkMaster());
+				if (
+					!$verif_res->checkPassed
+					&amp;&amp;
+					( PKI_SIG_ERROR=='ALL' || (PKI_SIG_ERROR=='NO_CERT' &amp;&amp; !count($verif_res->signatures) ) )
+				){
+					throw new Exception(sprintf(ER_VERIF_SIG,$verif_res->checkError));
+				}		
 			}
 			
 			$this->getDbLinkMaster()->query("COMMIT");

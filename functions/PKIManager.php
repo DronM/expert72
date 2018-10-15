@@ -1,4 +1,8 @@
 <?php
+if (defined('PKI_MEMORY_LIMIT')){
+	ini_set('memory_limit', PKI_MEMORY_LIMIT);
+}
+
 require_once(dirname(__FILE__).'/../Config.php');
 require_once('common/Logger.php');
 
@@ -85,7 +89,7 @@ class PKIManager {
 	const SUBJ_FLD_OGRNIP = '1.2.643.100.5';
 	const SUBJ_FLD_GIVEN_NAME = '2.5.4.65';
 	const SUBJ_FLD_POST_ADDR = '2.5.4.16';
-	const SIG_HEADER = '-----BEGIN CMS-----';
+	const SIG_HEADER = '----';
 	
 	private $pkiPath;
 	
@@ -95,6 +99,11 @@ class PKIManager {
 	
 	//CRL validity in seconds
 	private $crlValidity;
+
+	private function run_shell_cmd2($command){		
+		$this->logger->add('Called run_shell_cmd2 '.$command,'note');
+		exec($command);
+	}
 
 	private function run_shell_cmd($command){		
 		$this->logger->add('Called run_shell_cmd '.$command,'note');
@@ -115,7 +124,7 @@ class PKIManager {
 			$env = array_merge($_ENV, $envopts);
 		}
 		$resource = proc_open($command, $descriptorspec, $pipes, OUTPUT_PATH, $env);
-
+		
 		$stdout = stream_get_contents($pipes[1]);
 		$stderr = stream_get_contents($pipes[2]);
 		foreach ($pipes as $pipe) {
@@ -127,7 +136,7 @@ class PKIManager {
 			$this->logger->add($stderr,'error');
 			throw new Exception($stderr);
 		}
-
+		
 		return $stdout;	
 	}
 
@@ -165,23 +174,23 @@ class PKIManager {
 		$this->logger->add('parseSigFile','note');
 		
 		$derFile = $this->replace_extension($sigFile,'der');				
-		
-		//проверяем файл
-		$need_decode = $this->isBase64Encoded($sigFile);
-		// декодируем подпись из base64 - получаем подпись в бинарном формате
-		if ($need_decode){
-			$this->decodeSigFromBase64($sigFile,$derFile);
+		if (!file_exists($derFile)){
+			//проверяем файл
+			$need_decode = $this->isBase64Encoded($sigFile);
+			// декодируем подпись из base64 - получаем подпись в бинарном формате
+			if ($need_decode){
+				$this->decodeSigFromBase64($sigFile,$derFile);
+			}
+			else{
+				//der = sig
+				symlink($sigFile,$derFile);
+			}
 		}
-		else{
-			//der = sig
-			symlink($sigFile,$derFile);
-		}
-		
 		// извлекаем сертификаты из подписи
 		//Получаем несколько файлов, в каждом 1 сертификат
 		$id = uniqid();		
 		$pat = dirname($sigFile).DIRECTORY_SEPARATOR.$id;
-		$this->run_shell_cmd(sprintf('openssl pkcs7 -in "%s" -print_certs -inform DER -outform pem | awk \'/BEGIN/ { i++; } /BEGIN/, /END/ { print > "%s."i }\'',$derFile,$pat));
+		$this->run_shell_cmd2(sprintf('openssl pkcs7 -in "%s" -print_certs -inform DER -outform pem | awk \'/BEGIN/ { i++; } /BEGIN/, /END/ { print > "%s."i }\'',$derFile,$pat));
 		$pem_list = glob($pat.".*");
 		if (!count($pem_list)){
 			$this->logger->add('Unable to get certificates from bundle '.$sigFile,'error');
@@ -260,7 +269,7 @@ class PKIManager {
 								$der = $this->pkiPath.$fingerprint.'.der';
 								try{
 									file_put_contents($b64, $sert->Данные);
-									$this->run_shell_cmd(sprintf('openssl base64 -d -A -in "%s" -out "%s"',$b64,$der));
+									$this->run_shell_cmd2(sprintf('openssl base64 -d -A -in "%s" -out "%s"',$b64,$der));
 									$cert_fields = $this->run_shell_cmd(sprintf('openssl x509 -hash -issuer_hash -inform der -in "%s" -noout',$der));
 									$cert_fields_ar = explode(PHP_EOL,trim($cert_fields));
 									if (count($cert_fields_ar)<2){
@@ -272,7 +281,7 @@ class PKIManager {
 									$issuer_hash = $cert_fields_ar[1];
 									$pem = $this->pkiPath.$hash.'.pem';
 									//Генерим pem
-									$this->run_shell_cmd(sprintf('openssl x509 -in "%s" -inform der -outform pem -out "%s"',$der,$pem));
+									$this->run_shell_cmd2(sprintf('openssl x509 -in "%s" -inform der -outform pem -out "%s"',$der,$pem));
 							
 									file_put_contents($flag, '');
 								}
@@ -346,7 +355,7 @@ class PKIManager {
 								try{
 									//pem
 									file_put_contents($b64, $sert->Данные);
-									$this->run_shell_cmd(sprintf('openssl base64 -d -A -in "%s" -out "%s"',$b64,$der));
+									$this->run_shell_cmd2(sprintf('openssl base64 -d -A -in "%s" -out "%s"',$b64,$der));
 								
 									$cert_fields = $this->run_shell_cmd(sprintf('openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "%s" -noout',$der));
 									$cert_fields_ar = explode(PHP_EOL,trim($cert_fields));
@@ -367,7 +376,7 @@ class PKIManager {
 									$pem = $this->pkiPath.$fingerprint.'.pem';
 									if (!file_exists($pem) || filemtime($pem)<$crl_invalid_time ){								
 										//Генерим новый pem с сертификатом и качаем новый список
-										$this->run_shell_cmd(sprintf('openssl x509 -in "%s" -inform der -outform pem -out "%s"',$der,$pem));
+										$this->run_shell_cmd2(sprintf('openssl x509 -in "%s" -inform der -outform pem -out "%s"',$der,$pem));
 									
 										//Помещаем crl данные в файл с сертификатом hash.pem										
 										if (count($crl_ar)){
@@ -379,9 +388,9 @@ class PKIManager {
 												foreach($crl_ar as $crl_url){
 													$er = FALSE;
 													try{										
-														$this->run_shell_cmd(sprintf('wget -O "%s" %s',$crl_der,$crl_url));
+														$this->run_shell_cmd2(sprintf('wget -O "%s" %s',$crl_der,$crl_url));
 													}
-													catch(Exception $e){									
+													catch(Exception $e){
 														$er = TRUE;
 													}
 													if ($er)continue;//try next crl url
@@ -393,7 +402,7 @@ class PKIManager {
 													$this->logger->add($m,'error');
 													throw new Exception($m);
 												}									
-												$this->run_shell_cmd(sprintf('openssl crl -in "%s" -inform DER -out "%s"',$crl_der,$crl_pem));
+												$this->run_shell_cmd2(sprintf('openssl crl -in "%s" -inform DER -out "%s"',$crl_der,$crl_pem));
 												
 												$this->logger->add('Appending crl to pem file','note');
 												file_put_contents($pem, file_get_contents($crl_pem),FILE_APPEND);
@@ -448,8 +457,8 @@ class PKIManager {
 	private function gen_cert_fromb64($b64File){
 		$der = $this->replace_extension($b64File,'der');
 		$pem = $this->replace_extension($b64File,'pem');
-		$this->run_shell_cmd(sprintf('openssl base64 -d -A -in "%s" -out "%s"',$b64File,$der));
-		$this->run_shell_cmd(sprintf('openssl x509 -in "%s" -inform der -outform pem -out "%s"',$der,$pem));
+		$this->run_shell_cmd2(sprintf('openssl base64 -d -A -in "%s" -out "%s"',$b64File,$der));
+		$this->run_shell_cmd2(sprintf('openssl x509 -in "%s" -inform der -outform pem -out "%s"',$der,$pem));
 	}	
 	
 	private function subj_fld_alias($fld){
@@ -565,6 +574,8 @@ class PKIManager {
 	 * @param{bool} [notRemoveTempFiles=FALSE] Leave temporary pem,der files for debugging purposes
 	 */	
 	public function verifySig($sigFile,$contentFile,$notRemoveTempFiles=FALSE){
+	//$this->setLogLevel('debug');
+	//$notRemoveTempFiles=TRUE;
 		$verifResult = new stdClass();
 		$verifResult->checkPassed = TRUE;
 		$verifResult->checkTime = microtime(TRUE);
@@ -584,6 +595,7 @@ class PKIManager {
 				echo '</br>';
 				echo '</br>';
 				*/
+				
 				if (!count($pem_files)){
 					throw new Exception(self::ER_NO_CERT_FOUND);
 				}
@@ -652,7 +664,6 @@ class PKIManager {
 						$chain_file = $this->pkiPath.$issuer_hash.'.chain.pem';
 
 						$crl_invalid_time = time() - $this->crlValidity;
-			
 						if (!file_exists($chain_file) || filemtime($chain_file)<$crl_invalid_time ){
 							if(file_exists($chain_file)) unlink($chain_file);
 							$tries = 2;
@@ -711,16 +722,18 @@ class PKIManager {
 				
 				//verification
 				try{
-					//-noverify
-					$verif_res = $this->run_shell_cmd(sprintf(				
-						'openssl smime -verify -content "%s" -purpose any -crl_check -out /dev/null -inform der -in "%s" -CAfile "%s"',
+					//-noverify -crl_check -CRLfile -crl_download					
+					$this->run_shell_cmd(sprintf(
+						'openssl smime -verify -content "%s" -noverify -purpose any -out /dev/null -inform der -in "%s" -CAfile "%s"',
 						$contentFile,
 						$der_file,
 						$chain_file_for_verif
 					));
+					
 				}
 				catch(Exception $e){
 					$user_m = str_replace(PHP_EOL,' ',$e->getMessage());
+					$this->logger->add('Verification error:'.$user_m,'error');
 					if (strpos($user_m,'certificate has expired')!==FALSE){
 						$user_m = self::ER_CERT_EXPIRED;
 					}
@@ -751,10 +764,11 @@ class PKIManager {
 			finally{
 				if (file_exists($der_file)){
 					if(!$notRemoveTempFiles){
+						$this->logger->add('Deleting der file '.$der_file,'debug');
 						unlink($der_file);
 					}
 					else{
-						$this->logger->add('Temporary der file is not removed '.$der_file,'note');
+						$this->logger->add('Temporary der file is not removed '.$der_file,'debug');
 					}													
 				}
 				
@@ -867,7 +881,7 @@ class PKIManager {
 	 */
 	public function decodeSigFromBase64($sigFile,$derFile){
 		try{
-			$this->run_shell_cmd(sprintf('openssl enc -d -base64 -in "%s" -out "%s"',$sigFile,$derFile));
+			$this->run_shell_cmd2(sprintf('openssl enc -d -base64 -in "%s" -out "%s"',$sigFile,$derFile));
 		}
 		finally{
 			$this->logger->dump();
@@ -882,7 +896,7 @@ class PKIManager {
 	public function mergeSigs($sSigFile,$dSigFile,$oSigFile){
 		try{
 			//file_put_contents(OUTPUT_PATH.'cmsmerge',sprintf($this->pkiPath.'cmsmerge -s "%s" -d "%s" -o "%s"',$sSigFile,$dSigFile,$oSigFile));
-			$this->run_shell_cmd(sprintf($this->pkiPath.'cmsmerge -s "%s" -d "%s" -o "%s"',$sSigFile,$dSigFile,$oSigFile));
+			$this->run_shell_cmd2(sprintf($this->pkiPath.'cmsmerge -s "%s" -d "%s" -o "%s"',$sSigFile,$dSigFile,$oSigFile));
 		}
 		finally{
 			$this->logger->dump();

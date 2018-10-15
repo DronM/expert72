@@ -105,7 +105,7 @@ function DocFlowOutClientDialog_Model(options){
 	filed_options.autoInc = false;	
 	
 	options.fields.doc_flow_out_client_type = new FieldEnum("doc_flow_out_client_type",filed_options);
-	filed_options.enumValues = 'app,contr_resp,contr_return,contr_other,date_prolongate';
+	filed_options.enumValues = 'app,contr_resp,contr_return,contr_other,date_prolongate,app_contr_revoke';
 	
 			
 			
@@ -152,6 +152,15 @@ function DocFlowOutClientDialog_Model(options){
 	filed_options.autoInc = false;	
 	
 	options.fields.attachment_files = new FieldJSON("attachment_files",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.attachment_files_only_sigs = new FieldJSON("attachment_files_only_sigs",filed_options);
 	
 			
 		DocFlowOutClientDialog_Model.superclass.constructor.call(this,id,options);

@@ -10,8 +10,84 @@ CREATE OR REPLACE VIEW doc_flow_out_dialog AS
 		applications_ref(applications) AS to_applications_ref,
 		doc_flow_in_ref(doc_flow_in) AS doc_flow_in_ref,
 		
-		--****************************
-		folders.files AS files,
+		/**
+		 * !!!Нужны ВСЕ папки всегда!!!
+		 */
+		(
+		SELECT
+			json_agg(
+				json_build_object(
+					'fields',json_build_object(
+						'id',doc_att.folder_id,
+						'descr',doc_att.folder_descr,
+						'require_client_sig',doc_att.require_client_sig
+					),
+					'parent_id',NULL,
+					'files',CASE WHEN (doc_att.files->(0)->'file_id')::text ='null' THEN '[]'::json ELSE doc_att.files END
+				)
+			) AS files
+		FROM
+		(SELECT
+			app_fd.name AS folder_descr,
+			app_fd.id AS folder_id,
+			app_fd.require_client_sig,
+			json_agg(
+				json_build_object(
+					'file_id',att.file_id,
+					'file_name',att.file_name,
+					'file_size',att.file_size,
+					'file_signed',att.file_signed,
+					'file_uploaded','true',
+					'file_path',att.file_path,
+					'date_time',f_ver.date_time,
+					'signatures',--sign.signatures
+					CASE
+						WHEN sign.signatures IS NULL AND f_ver.file_id IS NOT NULL THEN
+							jsonb_build_array(
+								jsonb_build_object(
+									'sign_date_time',f_ver.date_time,
+									'check_result',f_ver.check_result,
+									'error_str',f_ver.error_str
+								)
+							)
+						ELSE sign.signatures
+					END,
+					'file_signed_by_client',(SELECT t1.file_signed_by_client FROM application_document_files t1 WHERE t1.file_id=att.file_id),
+					'require_client_sig',app_fd.require_client_sig
+				)
+			) AS files
+		FROM application_doc_folders AS app_fd
+		LEFT JOIN doc_flow_attachments AS att ON
+			att.file_path=app_fd.name AND att.doc_type='doc_flow_out' AND att.doc_id=doc_flow_out.id
+		LEFT JOIN file_verifications AS f_ver ON f_ver.file_id=att.file_id
+		LEFT JOIN (
+			SELECT
+				files_t.file_id,
+				jsonb_agg(files_t.signatures) AS signatures
+			FROM
+			(SELECT
+				f_sig.file_id,
+				jsonb_build_object(
+					'owner',u_certs.subject_cert,
+					'cert_from',u_certs.date_time_from,
+					'cert_to',u_certs.date_time_to,
+					'sign_date_time',f_sig.sign_date_time,
+					'check_result',ver.check_result,
+					'check_time',ver.check_time,
+					'error_str',ver.error_str
+				) AS signatures
+			FROM file_signatures AS f_sig
+			LEFT JOIN file_verifications AS ver ON ver.file_id=f_sig.file_id
+			LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id
+			ORDER BY f_sig.sign_date_time
+			) AS files_t
+			GROUP BY files_t.file_id
+		) AS sign ON sign.file_id=f_ver.file_id
+		GROUP BY app_fd.id,att.file_path,app_fd.require_client_sig
+		ORDER BY app_fd.name
+		)  AS doc_att
+		) AS files,
+		
 		---***************************
 		st.state AS state,
 		st.date_time AS state_dt,
@@ -51,82 +127,6 @@ CREATE OR REPLACE VIEW doc_flow_out_dialog AS
 	) AS h_max ON h_max.doc_id=doc_flow_out.id
 	LEFT JOIN doc_flow_out_processes st
 		ON st.doc_flow_out_id=h_max.doc_id AND st.date_time = h_max.date_time
-	
-	LEFT JOIN
-		(
-		SELECT
-			doc_att.doc_id,
-			json_agg(
-				json_build_object(
-					'fields',json_build_object('id',doc_att.folder_id,'descr',doc_att.folder_descr),
-					'parent_id',NULL,
-					'files',doc_att.files
-				)
-			) AS files
-		FROM
-		(SELECT
-			att.doc_id,
-			att.file_path AS folder_descr,
-			app_fd.id AS folder_id,
-			json_agg(
-				json_build_object(
-					'file_id',att.file_id,
-					'file_name',att.file_name,
-					'file_size',att.file_size,
-					'file_signed',att.file_signed,
-					'file_uploaded','true',
-					'file_path',att.file_path,
-					'date_time',f_ver.date_time,
-					'signatures',--sign.signatures
-					CASE
-						WHEN sign.signatures IS NULL AND f_ver.file_id IS NOT NULL THEN
-							jsonb_build_array(
-								jsonb_build_object(
-									'sign_date_time',f_ver.date_time,
-									'check_result',f_ver.check_result,
-									'error_str',f_ver.error_str
-								)
-							)
-						ELSE sign.signatures
-					END,
-					'file_signed_by_client',FALSE,
-					'require_client_sig',app_fd.require_client_sig
-				)
-			) AS files
-		FROM doc_flow_attachments att
-		LEFT JOIN application_doc_folders AS app_fd ON app_fd.name=att.file_path
-		LEFT JOIN file_verifications AS f_ver ON f_ver.file_id=att.file_id
-		LEFT JOIN (
-			SELECT
-				files_t.file_id,
-				jsonb_agg(files_t.signatures) AS signatures
-			FROM
-			(SELECT
-				f_sig.file_id,
-				jsonb_build_object(
-					'owner',u_certs.subject_cert,
-					'cert_from',u_certs.date_time_from,
-					'cert_to',u_certs.date_time_to,
-					'sign_date_time',f_sig.sign_date_time,
-					'check_result',ver.check_result,
-					'check_time',ver.check_time,
-					'error_str',ver.error_str
-				) AS signatures
-			FROM file_signatures AS f_sig
-			LEFT JOIN file_verifications AS ver ON ver.file_id=f_sig.file_id
-			LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id
-			ORDER BY f_sig.sign_date_time
-			) AS files_t
-			GROUP BY files_t.file_id
-		) AS sign ON sign.file_id=f_ver.file_id
-		WHERE att.doc_type='doc_flow_out'
-		GROUP BY att.doc_id,app_fd.id,att.file_path
-		ORDER BY app_fd.id
-		)  AS doc_att
-		
-		GROUP BY doc_att.doc_id
-	) AS folders ON folders.doc_id=doc_flow_out.id
-	
 	;
 	
 ALTER VIEW doc_flow_out_dialog OWNER TO ;

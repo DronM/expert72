@@ -5,24 +5,35 @@
 CREATE OR REPLACE FUNCTION doc_flow_out_client_files_for_signing(in_application_id int)
   RETURNS jsonb AS
 $$
+	/*
 	SELECT
-		jsonb_build_object(
-			'files',
-			jsonb_agg(t.attachments)
-		) AS attachment_files
+		CASE WHEN t.attachments IS NULL THEN NULL
+		ELSE
+			jsonb_build_object(
+				'files',
+				t.attachments
+			)
+		END
+		AS attachment_files
 	FROM (
-
+	*/
 		SELECT
 			jsonb_build_object(
-				'file_id',app_f.file_id,
-				'file_name',app_f.file_name,
-				'file_size',app_f.file_size,
-				'file_signed',app_f.file_signed,
-				'file_uploaded','true',
-				'file_path',app_f.file_path,				
-				'file_signed_by_client',app_f.file_signed_by_client,
-				'signatures',sign.signatures				
-			) AS attachments
+				'files',		
+				jsonb_agg(		
+					jsonb_build_object(
+						'file_id',app_f.file_id,
+						'file_name',app_f.file_name,
+						'file_size',app_f.file_size,
+						'file_signed',app_f.file_signed,
+						'file_uploaded','true',
+						'file_path',app_f.file_path,				
+						'file_signed_by_client',app_f.file_signed_by_client,
+						'signatures',sign.signatures				
+					)
+				)
+			)
+			AS attachments
 		FROM application_document_files AS app_f
 		LEFT JOIN application_doc_folders AS fld ON fld.name=app_f.file_path
 		LEFT JOIN (
@@ -49,7 +60,7 @@ $$
 			AND NOT coalesce(app_f.file_signed_by_client,FALSE)
 			AND NOT coalesce(app_f.deleted,FALSE)
 			AND fld.require_client_sig
-	) AS t
+	--) AS t
 	;
 $$
   LANGUAGE sql STABLE

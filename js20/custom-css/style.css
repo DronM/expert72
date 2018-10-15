@@ -317,6 +317,13 @@ h2 div.btn{
 .uploadedByThis{
 	background:#8ff442;
 }
+.notUploaded{
+	background:#ffdd89;
+}
+.notSignedNotUploaded{
+	background:#ffa889;
+}
+
 .appFileDeleted{
 	text-decoration: line-through;
 }

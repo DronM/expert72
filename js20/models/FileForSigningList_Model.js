@@ -29,7 +29,7 @@ function FileForSigningList_Model(options){
 	
 	filed_options.autoInc = false;	
 	
-	options.fields.attachment_files = new FieldJSON("attachment_files",filed_options);
+	options.fields.attachment_files_only_sigs = new FieldJSON("attachment_files_only_sigs",filed_options);
 	
 		FileForSigningList_Model.superclass.constructor.call(this,id,options);
 }

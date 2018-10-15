@@ -992,13 +992,7 @@ class Application_Controller extends ControllerSQL{
 			$db_file_id,
 			$pki_man,$this->getDbLinkMaster()
 		);
-		if (
-		!$verif_res->checkPassed
-		&&
-		(PKI_SIG_ERROR=='ALL'
-			|| (PKI_SIG_ERROR=='NO_CERT' && !count($verif_res->signatures) )
-		)
-		){
+		if (pki_fatal_error($verif_res)){
 			throw new Exception('Ошибка проверки подписи заявления по '.$ER_PRINT_FILE_CNT_END[$id].': '.$verif_res->checkError);
 		}
 		

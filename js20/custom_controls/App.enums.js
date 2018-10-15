@@ -161,9 +161,10 @@
 
 		,"doc_flow_out_client_types":{"ru_app":"Заявление"
 ,"ru_contr_resp":"Ответы на замечания по контракту"
-,"ru_contr_return":"Возврат контракта"
+,"ru_contr_return":"Возврат подписанных документов"
 ,"ru_contr_other":"Прочее"
 ,"ru_date_prolongate":"Продление срока"
+,"ru_app_contr_revoke":"Отзыв заявления/контракта"
 }
 
 	

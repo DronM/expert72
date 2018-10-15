@@ -106,16 +106,25 @@
 	
 		<div class="tabbable">
 			<ul id="documentTabs" class="nav nav-tabs nav-tabs-highlight">				
-				<li class="active" id="{{id}}:documentFiles-toggle">
+				<li class="active" id="{{id}}:tab-documentFiles-toggle">
 					<a href="#documentFiles" data-toggle="tab" aria-expanded="true">
 						Файлы документации</a>
 				</li>
-				<li id="{{id}}:tab-commonFiles" class="">
-					<a id="commonFiles-ref" href="#commonFiles" data-toggle="tab" aria-expanded="false">
-						<span id="{{id}}:attachments:total_item_files_doc" class="badge badge-danger" title="Общее количество файлов в документе">{{fileCount}}
+				<li id="{{id}}:tab-commonFilesOnlySigs-toggle" class="">
+					<a href="#commonFilesOnlySigs" data-toggle="tab" aria-expanded="false">
+						Документы для подписания
+						<span id="{{id}}:attachments_only_sigs:total_item_files_doc" class="badge badge-danger" title="Общее количество файлов в документе">{{fileCountOnlySigs}}
 						</span>
 					</a>
 				</li>
+				
+				<li id="{{id}}:tab-commonFiles-toggle" class="">
+					<a href="#commonFiles" data-toggle="tab" aria-expanded="false">
+						Сопроводительные письма
+						<span id="{{id}}:attachments:total_item_files_doc" class="badge badge-danger" title="Общее количество файлов в документе">{{fileCount}}
+						</span>
+					</a>
+				</li>				
 			</ul>
 		</div>
 
@@ -158,6 +167,10 @@
 		
 			<div class="tab-pane fade" id="commonFiles">
 				<div id="{{id}}:attachments">
+				</div>
+			</div>
+			<div class="tab-pane fade" id="commonFilesOnlySigs">
+				<div id="{{id}}:attachments_only_sigs">
 				</div>
 			</div>
 		

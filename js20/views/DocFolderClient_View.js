@@ -20,11 +20,9 @@ function DocFolderClient_View(id,options){
 	
 	options.customFolder = false;
 	options.template = window.getApp().getTemplate("DocFlowAttachmentsNoTree");
-	options.allowOnlySignedFiles = true;	
 	options.defaultFilePath = "Исходящие заявителя";
 	
 	DocFolderClient_View.superclass.constructor.call(this,id,options);
-	
 }
 extend(DocFolderClient_View,FileUploaderDocFlowOut_View);
 
@@ -54,14 +52,14 @@ DocFolderClient_View.prototype.setFileSignedByClient = function(fileId,fileSigne
 	file_ctrl.m_fileSignedByClient = fileSigned;
 	
 	var n = document.getElementById(this.getId()+":file_"+fileId+"_client_sig_inf");
-	if (!fileSigned){
+	if (!fileSigned && n){
 		n.className = "badge badge-danger"
 		DOMHelper.setText(n,"Необходимо подписать документ Вашей ЭЦП.");	
 		if(file_ctrl.sigCont.deleteLast()){
 			file_ctrl.sigCont.sigsToDOM();	
 		}
 	}
-	else{
+	else if (n){
 		n.className = "badge badge-info"
 		DOMHelper.setText(n,"Документ подписан Вашей ЭЦП.");	
 	}
@@ -71,14 +69,14 @@ DocFolderClient_View.prototype.setFileSignedByClient = function(fileId,fileSigne
 DocFolderClient_View.prototype.deleteFileFromServer = function(fileId,itemId){
 	var self = this;
 	
-	var is_contract_sig = (this.m_mainView.getElement("doc_flow_out_client_type").getValue()=="contr_return");
+	//var is_contract_sig = (this.m_mainView.getElement("doc_flow_out_client_type").getValue()=="contr_return");
 	var pm = (new DocFlowOutClient_Controller()).getPublicMethod("remove_file");
 	pm.setFieldValue("application_id",this.m_mainView.getElement("applications_ref").getValue().getKey());
 	pm.setFieldValue("file_id",fileId);
 	
 	pm.run({
 		"ok":function(){
-			if (!is_contract_sig){
+			if (!self.m_onlySignature){
 				self.afterDeleteAttachment(fileId,itemId);
 			}
 			else{

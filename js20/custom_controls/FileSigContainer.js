@@ -11,7 +11,7 @@
  * @param {string} id - Object identifier
  * @param {object} options
  * @param {bool} [options.multiSignature=false]
- * @param {int} options.maxSugnatureCount 
+ * @param {int} options.maxSignatureCount 
  * @param {function} options.onSignFile
  * @param {function} options.onSignClick
  * @param {string} options.fileId
@@ -27,7 +27,7 @@ function FileSigContainer(id,options){
 	this.m_fileId = options.fileId;
 	this.m_itemId = options.itemId;
 	this.m_multiSignature = (options.multiSignature!=undefined)? options.multiSignature:false;
-	this.m_maxSugnatureCount = options.maxSugnatureCount;
+	this.m_maxSignatureCount = options.maxSignatureCount;
 	
 	this.m_readOnly = (options.readOnly!=undefined)? options.readOnly : false;
 	
@@ -156,7 +156,7 @@ FileSigContainer.prototype.sigsToDOM = function(){
 			var cert_cnt = cades.getCertListCount();		
 			var sig_cnt = this.m_signatures.getCount();
 			var vs= (
-				(!this.m_maxSugnatureCount || sig_cnt<this.m_maxSugnatureCount)
+				(!this.m_maxSignatureCount || sig_cnt<this.m_maxSignatureCount)
 				&& ( cert_cnt && (!sig_cnt || this.m_multiSignature) )
 			);
 			var self = this;
@@ -335,3 +335,8 @@ FileSigContainer.prototype.findSignatureBySNILS = function(SNILS){
 	}
 	return res;
 }
+
+FileSigContainer.prototype.setMaxSignatureCount = function(v){
+	this.m_maxSignatureCount = v;
+}
+

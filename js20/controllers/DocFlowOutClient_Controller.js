@@ -100,7 +100,7 @@ extend(DocFlowOutClient_Controller,ControllerObjServer);
 	
 	var options = {};
 		
-	options.enumValues = 'app,contr_resp,contr_return,contr_other,date_prolongate';
+	options.enumValues = 'app,contr_resp,contr_return,contr_other,date_prolongate,app_contr_revoke';
 	var field = new FieldEnum("doc_flow_out_client_type",options);
 	
 	pm.addField(field);
@@ -173,7 +173,7 @@ extend(DocFlowOutClient_Controller,ControllerObjServer);
 	
 	var options = {};
 		
-	options.enumValues = 'app,contr_resp,contr_return,contr_other,date_prolongate';
+	options.enumValues = 'app,contr_resp,contr_return,contr_other,date_prolongate,app_contr_revoke';
 	
 	var field = new FieldEnum("doc_flow_out_client_type",options);
 	

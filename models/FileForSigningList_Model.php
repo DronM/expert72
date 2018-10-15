@@ -18,12 +18,12 @@ class FileForSigningList_Model extends ModelSQL{
 		
 		$this->setTableName("");
 			
-		//*** Field attachment_files ***
+		//*** Field attachment_files_only_sigs ***
 		$f_opts = array();
-		$f_opts['id']="attachment_files";
+		$f_opts['id']="attachment_files_only_sigs";
 				
-		$f_attachment_files=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"attachment_files",$f_opts);
-		$this->addField($f_attachment_files);
+		$f_attachment_files_only_sigs=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"attachment_files_only_sigs",$f_opts);
+		$this->addField($f_attachment_files_only_sigs);
 		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}

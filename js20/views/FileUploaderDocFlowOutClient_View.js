@@ -87,10 +87,10 @@ FileUploaderDocFlowOutClient_View.prototype.getQuerySruc = function(file){
 }
 
 FileUploaderDocFlowOutClient_View.prototype.setFileOptions = function(fileOpts,file){
-	if (file.doc_flow_out){
+	if (file.doc_flow_out || !file.file_uploaded){
 		//id,date_time,reg_number
 		//console.log("file.doc_flow_out.id="+file.doc_flow_out.id)
-		if (file.doc_flow_out.id==this.m_mainView.getModel().getFieldValue("id")){
+		if (!file.file_uploaded || file.doc_flow_out.id==this.m_mainView.getModel().getFieldValue("id")){
 			fileOpts.refTitle = "Загружен этим документом";	
 			fileOpts.refClass = "uploadedByThis";	
 		}

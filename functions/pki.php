@@ -1,5 +1,14 @@
 <?php
 	require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLString.php');
+	require_once(dirname(__FILE__).'/../Config.php');
+	
+	function pki_fatal_error(&$verifRes) {
+		return (
+			!$verifRes->checkPassed
+			&&
+			( PKI_SIG_ERROR=='ALL' || (PKI_SIG_ERROR=='NO_CERT' && !count($verifRes->signatures) ) )
+		);
+	}
 	
 	function pki_log_sig_check($fileDocSig, $fileDoc,$dbFileId,&$pkiMan,&$dbLink){
 		//$pkiMan->setLogLevel('error');

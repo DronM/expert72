@@ -1,4 +1,5 @@
 <div id="{{id}}" class="{{panelClass}}">
+
 	<div class="panel-heading">
 		<h6 class="panel-title">
 			<span class="text-semibold app-client-header">{{IND}}) Сведения об исполнителе</span>
@@ -16,9 +17,9 @@
 			</ul>
 		</div>
 	</div>
-	
-	<div class="panel-body" style="display: block;">		
-		{{#isClient}}
+	{{#isClient}}
+	<div class="panel">
+		
 		<div class="dropdown">
 			<button class="btn bg-{{colorClass}} dropdown-toggle fillClientData pull-right" type="button" data-toggle="dropdown">Заполнить
 				<span class="caret"></span>
@@ -30,7 +31,9 @@
 				<li><a id="{{id}}:fillOnClientList" href="#">Выбрать из списка клиентов</a></li>
 			</ul>
 		</div> 
-		{{/isClient}}
+	</div>
+	{{/isClient}}	
+	<div class="panel-body" style="display: block;">		
 			
 		<div id="{{id}}:client_type">
 		</div>
@@ -84,6 +87,6 @@
 			</div>	
 		</div>
 	
-	</div>
+	</div>	
 </div>
 

@@ -51,7 +51,8 @@ BaseContainer.prototype.getValueJSON = function(){
 	var o_ar = [];
 	var elements = this.m_container.getElements();
 	for (var id in elements){
-		o_ar.push(elements[id].getValueJSON());
+		if (elements[id])
+			o_ar.push(elements[id].getValueJSON());
 	}
 	return o_ar;
 }
@@ -115,7 +116,8 @@ BaseContainer.prototype.setInitValue = function(v){
 BaseContainer.prototype.setValid = function(){
 	var elements = this.m_container.getElements();
 	for (var id in elements){
-		elements[id].setValid();
+		if (elements[id])
+			elements[id].setValid();
 	}
 }
 
@@ -128,7 +130,7 @@ BaseContainer.prototype.getModified = function(){
 	var res = false;
 	var elements = this.m_container.getElements();
 	for (var id in elements){
-		if (elements[id].getModified()){
+		if (!elements[id] || elements[id].getModified()){
 			res = true;
 			break;
 		}
@@ -140,7 +142,7 @@ BaseContainer.prototype.isNull = function(){
 	var res = true;
 	var elements = this.m_container.getElements();
 	for (var id in elements){
-		if (!elements[id].isNull()){
+		if (elements[id] && !elements[id].isNull()){
 			res = false;
 			break;
 		}

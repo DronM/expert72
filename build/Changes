@@ -295,6 +295,33 @@ doc_flow_out_client_process()
 При загрузке в Хроме при попытке скачать файл иногда сначала выдавалась ошибка, но файл скачивался
 
 
+1.0.84
+PKIManager:
+	Константа для проверки подписей PKI_MEMORY_LIMIT
+	Заголовок сертификата для определения кодировки
+
+
+Отправка письма клиентом: При ошибке не показывала ошибку
+
+Новый тип исходящего письма клиента - Отзыв контракта/заключения
+
+Удаление одного из исполнителей
+
+-Заявление Заполнение исполнителя по...
+
+doc_flow_out_client_dialog
+doc_flow_out_client_files_for_signing
+doc_flow_out_client_process
+
+DROP TRIGGER doc_flow_out_client_before_trigger ON doc_flow_out_client;
+CREATE TRIGGER doc_flow_out_client_before_trigger
+BEFORE DELETE OR INSERT OR UPDATE
+ON doc_flow_out_client
+FOR EACH ROW
+EXECUTE PROCEDURE doc_flow_out_client_process();
+
+
+
 
 //**********************************************************
 МИНИМАЛЬНО ПОДДЕРЖИВАКМЫЙ IE - 10!!!

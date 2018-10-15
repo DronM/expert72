@@ -164,9 +164,18 @@ FileUploaderApplication_View.prototype.setFileOptions = function(fileOpts,file){
 		fileOpts.refClass = "uploadedAfterPost";	
 	}
 	else{
-	
-		fileOpts.refTitle = "Загружен при подаче заявления";
-		fileOpts.refClass = "";	
+		if (file.file_uploaded){
+			fileOpts.refTitle = "Загружен при подаче заявления";
+			fileOpts.refClass = "";	
+		}
+		else if (file.file_signed){
+			fileOpts.refTitle = this.TITLE_NOT_UPLOADED;
+			fileOpts.refClass = this.CLASS_NOT_UPLOADED;			
+		}
+		else{
+			fileOpts.refTitle = "Необходимо добавить подпись и загрузить файл";
+			fileOpts.refClass = "notSignedNotUploaded";			
+		}
 	}
 		
 	fileOpts.file_date_time_formatted = DateHelper.format(DateHelper.strtotime(file.date_time),"d/m/y");	

@@ -27,13 +27,20 @@ DECLARE
 	v_contract_employee_id int;
 	v_contract_return_date timestampTZ;
 BEGIN
-	IF (TG_WHEN='BEFORE' AND TG_OP='DELETE') THEN		
+	IF TG_WHEN='BEFORE' AND ( TG_OP='INSERT' OR TG_OP='UPDATE') THEN		
+		IF NEW.sent AND (TG_OP='INSERT' OR coalesce(OLD.sent,FALSE)=FALSE ) THEN
+			NEW.date_time = now();
+		END IF;
+		
+		RETURN NEW;
+		
+	ELSIF (TG_WHEN='BEFORE' AND TG_OP='DELETE') THEN		
 		DELETE FROM doc_flow_out_client_document_files WHERE doc_flow_out_client_id=OLD.id;
 		RETURN OLD;
 		
 	ELSIF (TG_WHEN='AFTER' AND (TG_OP='INSERT' OR TG_OP='UPDATE')) THEN			
 		IF
-		( (TG_OP='INSERT' AND NEW.sent) OR (TG_OP='UPDATE' AND NEW.sent AND NOT OLD.sent) )
+		( (TG_OP='INSERT' AND NEW.sent) OR (TG_OP='UPDATE' AND NEW.sent AND NOT coalesce(OLD.sent,FALSE)) )
 		AND (NOT const_client_lk_val() OR const_debug_val()) THEN
 			--main programm
 			--*********** Исходные данные *************************
@@ -130,6 +137,10 @@ BEGIN
 				v_doc_flow_subject = NEW.subject||', контракт №'||v_contract_number||', '||(v_applicant->>'name')::text;
 			ELSE
 				v_doc_flow_subject = NEW.subject;
+				IF v_contract_number IS NOT NULL THEN
+					v_doc_flow_subject = v_doc_flow_subject ||', контракт №'||v_contract_number;
+				END IF;
+				v_doc_flow_subject = v_doc_flow_subject ||', '||(v_applicant->>'name')::text;
 			END IF;
 			
 			

@@ -31,6 +31,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 	const ER_WRONG_STATE = 'Невозможно отправить исходящий документ по заявлению с данным статусом!';
 	const ER_NO_ATTACHMENTS = 'У документа нет вложений!';
 	const ER_NO_DOC_FILE = 'Файл с данными не найден!';
+	const ER_VERIF_SIG = 'Ошибка проверки подписи:%s';
 
 	public function __construct($dbLinkMaster=NULL,$dbLink=NULL){
 		parent::__construct($dbLinkMaster,$dbLink);<xsl:apply-templates/>
@@ -41,7 +42,18 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 </xsl:template>
 
 <xsl:template name="extra_methods">
-
+	/*
+	private function check_reg_number($regNumberForDb){
+		$ar = $this->getDbLink()->query_first(sprintf(
+			"SELECT
+				TRUE AS reg_number_exists
+			FROM doc_flow_out_client
+			WHERE reg_number=%s",
+			$regNumberForDb
+		));
+	
+	}
+	*/
 	public function insert($pm){
 		//check app state
 		$app_id = $this->getExtDbVal($pm,'application_id');
@@ -141,8 +153,8 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			));
 	
 			Application_Controller::checkApp($ar);
-			if ($ar['user_check_passed']!='t'){
-				throw new Exception(Application_Controller::ER_NO_DOC);
+			if ($_SESSION['role_id']!='admin' &amp;&amp; $ar['user_check_passed']!='t'){
+				throw new Exception(self::ER_NO_DOC);
 			}
 
 			if ($this->getExtVal($pm,'sent')=='true' &amp;&amp; $ar['doc_flow_out_client_sent']=='t'){
@@ -359,7 +371,10 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 					unlink($file);
 					
 					$pki_man = new PKIManager(PKI_PATH,PKI_CRL_VALIDITY,PKI_MODE);
-					pki_log_sig_check($file_sig, $file_doc, $file_id_for_db, $pki_man, $dbLinkMaster);
+					$verif_res = pki_log_sig_check($file_sig, $file_doc, $file_id_for_db, $pki_man, $dbLinkMaster);
+					if (pki_fatal_error($verif_res)){
+						throw new Exception(sprintf(seld::ER_VERIF_SIG,$verif_res->checkError));
+					}
 					
 					$dbLinkMaster->query("COMMIT");
 				}
@@ -493,8 +508,10 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 						unlink($file);
 					}
 										
-					pki_log_sig_check($file_sig, $file_doc, "'".$ar['file_id']."'", $pki_man, $dbLinkMaster);
-					
+					$verif_res = pki_log_sig_check($file_sig, $file_doc, "'".$ar['file_id']."'", $pki_man, $dbLinkMaster);
+					if (pki_fatal_error($verif_res)){
+						throw new Exception(sprintf(seld::ER_VERIF_SIG,$verif_res->checkError));
+					}
 				}
 				else{
 					$dbLinkMaster->query(sprintf(
@@ -567,7 +584,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 
 	private function add_files_for_signing($applicationId){			
 		$this->addNewModel(sprintf(
-		"SELECT jsonb_agg(doc_flow_out_client_files_for_signing(%d)) AS attachment_files",
+		"SELECT jsonb_agg(doc_flow_out_client_files_for_signing(%d)) AS attachment_files_only_sigs",
 		$applicationId,
 		$_SESSION['user_id']
 		),"FileForSigningList_Model");
