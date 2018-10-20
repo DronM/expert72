@@ -92,6 +92,9 @@ class DocFlowIn_Controller extends DocFlow_Controller{
 		$param = new FieldExtBool('from_client_app'
 				,array());
 		$pm->addParam($param);
+		$param = new FieldExtJSONB('corrected_sections'
+				,array());
+		$pm->addParam($param);
 		
 		$pm->addParam(new FieldExtInt('ret_id'));
 		
@@ -183,6 +186,10 @@ class DocFlowIn_Controller extends DocFlow_Controller{
 			));
 			$pm->addParam($param);
 		$param = new FieldExtBool('from_client_app'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtJSONB('corrected_sections'
 				,array(
 			));
 			$pm->addParam($param);

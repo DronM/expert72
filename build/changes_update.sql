@@ -786,4 +786,24 @@ WHERE sel.id=file_signatures.id AND file_signatures.sign_date_time is null
 
 
 
-EXP_SIGS_NO_VER
+--*********************************************
+UPDATE doc_flow_in
+SET corrected_sections=sections.section
+FROM
+(SELECT
+	paths.id,
+	jsonb_agg(jsonb_build_object('name',paths.file_path)) AS section
+FROM
+(select
+	DISTINCT ON (doc_flow_in.id,app_f.file_path)
+	doc_flow_in.id,
+	app_f.file_path
+from doc_flow_in
+LEFT JOIN doc_flow_out_client AS doc ON doc.id=doc_flow_in.from_doc_flow_out_client_id
+LEFT JOIN doc_flow_out_client_document_files AS doc_f ON doc_f.doc_flow_out_client_id=doc_flow_in.from_doc_flow_out_client_id
+LEFT JOIN application_document_files AS app_f ON app_f.file_id=doc_f.file_id
+where doc_flow_in.from_doc_flow_out_client_id is not null AND doc.doc_flow_out_client_type='contr_resp' AND app_f.document_id<>0
+order by doc_flow_in.id,app_f.file_path
+) AS paths
+GROUP BY paths.id) AS sections
+WHERE doc_flow_in.id=sections.id

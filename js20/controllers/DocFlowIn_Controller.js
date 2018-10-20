@@ -165,6 +165,12 @@ extend(DocFlowIn_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	
+	var field = new FieldJSONB("corrected_sections",options);
+	
+	pm.addField(field);
+	
 	pm.addField(new FieldInt("ret_id",{}));
 	
 	
@@ -297,6 +303,12 @@ extend(DocFlowIn_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	
+	var field = new FieldJSONB("corrected_sections",options);
+	
+	pm.addField(field);
+	
 	
 }
 
@@ -376,6 +388,9 @@ extend(DocFlowIn_Controller,ControllerObjServer);
 	var f_opts = {};
 	
 	pm.addField(new FieldJSON("state_register_doc",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldText("corrected_sections",f_opts));
 	pm.getField(this.PARAM_ORD_FIELDS).setValue("date_time");
 	
 }

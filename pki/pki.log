@@ -96,3 +96,344 @@
 14/10/2018 09:37 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1566/Договорные документы/Контракт/5bc2c8105771f.3" -noout
 14/10/2018 09:37 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1566/Договорные документы/Контракт/9f1357af-d7cf-4dbb-813f-a15c5b4a833b" -noverify -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/client_files/Заявление№1566/Договорные документы/Контракт/9f1357af-d7cf-4dbb-813f-a15c5b4a833b.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/5bc2c8108a36echain.pem"
 14/10/2018 09:37 Deleting der file /home/andrey/www/htdocs/expert72/client_files/Заявление№1566/Договорные документы/Контракт/9f1357af-d7cf-4dbb-813f-a15c5b4a833b.der
+19/10/2018 10:34 Called verifySig
+19/10/2018 10:34 parseSigFile
+19/10/2018 10:34 Called run_shell_cmd2 openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/260-Д Договор Тюменгипроводхоз одновременно.pdf.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/5bc96cf01c006."i }'
+19/10/2018 10:34 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/5bc96cf01c006.1" -noout
+19/10/2018 10:34 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/5bc96cf01c006.2" -noout
+19/10/2018 10:34 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/5bc96cf01c006.3" -noout
+19/10/2018 10:34 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/5bc96cf01c006.4" -noout
+19/10/2018 10:34 Found signer certificates:1
+19/10/2018 10:34 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/260-Д Договор Тюменгипроводхоз одновременно.pdf.der" -noout -cmsout -print
+19/10/2018 10:34 Parsing pem file /home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/5bc96cf01c006.4
+19/10/2018 10:34 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/5bc96cf01c006.4" -noout -nameopt multiline
+19/10/2018 10:34 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/5bc96cf01c006.4" -noout
+19/10/2018 10:34 Called get_ca_list_file
+19/10/2018 10:34 Called get_ca_certs progComplexAlias=UC-CITTO,caOGRN=1087232038794
+19/10/2018 10:34 Certificate found, making pem
+19/10/2018 10:34 Called run_shell_cmd2 openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/DBC10D9795B15CAFD681062349CE196BA356C204.b64" -out "/home/andrey/www/htdocs/expert72/pki/DBC10D9795B15CAFD681062349CE196BA356C204.der"
+19/10/2018 10:34 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/DBC10D9795B15CAFD681062349CE196BA356C204.der" -noout
+19/10/2018 10:34 Called run_shell_cmd2 openssl x509 -in "/home/andrey/www/htdocs/expert72/pki/DBC10D9795B15CAFD681062349CE196BA356C204.der" -inform der -outform pem -out "/home/andrey/www/htdocs/expert72/pki/DBC10D9795B15CAFD681062349CE196BA356C204.pem"
+19/10/2018 10:34 CRL urls exist
+19/10/2018 10:34 Called run_shell_cmd2 wget -O "/home/andrey/www/htdocs/expert72/pki/DBC10D9795B15CAFD681062349CE196BA356C204.crl.der" http://ca.72to.ru/files/upload/uc-citto-2015.crl
+19/10/2018 10:34 Called run_shell_cmd2 openssl crl -in "/home/andrey/www/htdocs/expert72/pki/DBC10D9795B15CAFD681062349CE196BA356C204.crl.der" -inform DER -out "/home/andrey/www/htdocs/expert72/pki/DBC10D9795B15CAFD681062349CE196BA356C204.crl"
+19/10/2018 10:34 Appending crl to pem file
+19/10/2018 10:34 Adding certificate pem with crl to chain file
+19/10/2018 10:34 Looking for parent certificate
+19/10/2018 10:34 Called get_ca_certs progComplexAlias=УЦ 1 ИС ГУЦ,caOGRN=1047702026701
+19/10/2018 10:34 Certificate found, making pem
+19/10/2018 10:34 Called run_shell_cmd2 openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/9E78A331020E528C046FFD57704A21B7D2241CB3.b64" -out "/home/andrey/www/htdocs/expert72/pki/9E78A331020E528C046FFD57704A21B7D2241CB3.der"
+19/10/2018 10:34 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/9E78A331020E528C046FFD57704A21B7D2241CB3.der" -noout
+19/10/2018 10:34 Adding certificate pem with crl to chain file
+19/10/2018 10:34 Looking for parent certificate
+19/10/2018 10:34 Called get_ca_certs progComplexAlias=Головной удостоверяющий центр,caOGRN=1047702026701
+19/10/2018 10:34 Certificate found, making pem
+19/10/2018 10:34 Called run_shell_cmd2 openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.b64" -out "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der"
+19/10/2018 10:34 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der" -noout
+19/10/2018 10:34 Adding certificate pem with crl to chain file
+19/10/2018 10:34 Certificate found, making pem
+19/10/2018 10:34 Called run_shell_cmd2 openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/9D05A704C8C1E565ACDE5878FE0BB96EC53C2A40.b64" -out "/home/andrey/www/htdocs/expert72/pki/9D05A704C8C1E565ACDE5878FE0BB96EC53C2A40.der"
+19/10/2018 10:34 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/9D05A704C8C1E565ACDE5878FE0BB96EC53C2A40.der" -noout
+19/10/2018 10:34 Adding certificate pem with crl to chain file
+19/10/2018 10:34 Looking for parent certificate
+19/10/2018 10:34 Called get_ca_certs progComplexAlias=Головной удостоверяющий центр,caOGRN=1047702026701
+19/10/2018 10:34 Certificate found, making pem
+19/10/2018 10:34 Called run_shell_cmd2 openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.b64" -out "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der"
+19/10/2018 10:34 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der" -noout
+19/10/2018 10:34 Adding certificate pem with crl to chain file
+19/10/2018 10:34 Certificate found, making pem
+19/10/2018 10:34 Called run_shell_cmd2 openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/0408435EB90E5C8796A160E69E4BFAC453435D1D.b64" -out "/home/andrey/www/htdocs/expert72/pki/0408435EB90E5C8796A160E69E4BFAC453435D1D.der"
+19/10/2018 10:34 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/0408435EB90E5C8796A160E69E4BFAC453435D1D.der" -noout
+19/10/2018 10:34 Adding certificate pem with crl to chain file
+19/10/2018 10:34 Looking for parent certificate
+19/10/2018 10:34 Called get_ca_certs progComplexAlias=Головной удостоверяющий центр,caOGRN=1047702026701
+19/10/2018 10:34 Certificate found, making pem
+19/10/2018 10:34 Called run_shell_cmd2 openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.b64" -out "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der"
+19/10/2018 10:34 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der" -noout
+19/10/2018 10:34 Adding certificate pem with crl to chain file
+19/10/2018 10:34 Certificate found, making pem
+19/10/2018 10:34 Called run_shell_cmd2 openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/0932E483C4420E668F64D360006D0BEB0BFACCA7.b64" -out "/home/andrey/www/htdocs/expert72/pki/0932E483C4420E668F64D360006D0BEB0BFACCA7.der"
+19/10/2018 10:34 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/0932E483C4420E668F64D360006D0BEB0BFACCA7.der" -noout
+19/10/2018 10:34 Adding certificate pem with crl to chain file
+19/10/2018 10:34 Looking for parent certificate
+19/10/2018 10:34 Called get_ca_certs progComplexAlias=Головной удостоверяющий центр,caOGRN=1047702026701
+19/10/2018 10:34 Certificate found, making pem
+19/10/2018 10:34 Called run_shell_cmd2 openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.b64" -out "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der"
+19/10/2018 10:34 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der" -noout
+19/10/2018 10:34 Adding certificate pem with crl to chain file
+19/10/2018 10:34 Certificate found, making pem
+19/10/2018 10:34 Called run_shell_cmd2 openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/AE8DB67480F0D3B3674B806BEE8A319BF7F13953.b64" -out "/home/andrey/www/htdocs/expert72/pki/AE8DB67480F0D3B3674B806BEE8A319BF7F13953.der"
+19/10/2018 10:34 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/AE8DB67480F0D3B3674B806BEE8A319BF7F13953.der" -noout
+19/10/2018 10:34 Called run_shell_cmd2 openssl x509 -in "/home/andrey/www/htdocs/expert72/pki/AE8DB67480F0D3B3674B806BEE8A319BF7F13953.der" -inform der -outform pem -out "/home/andrey/www/htdocs/expert72/pki/AE8DB67480F0D3B3674B806BEE8A319BF7F13953.pem"
+19/10/2018 10:34 CRL urls exist
+19/10/2018 10:34 Called run_shell_cmd2 wget -O "/home/andrey/www/htdocs/expert72/pki/AE8DB67480F0D3B3674B806BEE8A319BF7F13953.crl.der" http://ca.72to.ru/files/upload/uc-citto-2016.crl
+19/10/2018 10:34 Called run_shell_cmd2 openssl crl -in "/home/andrey/www/htdocs/expert72/pki/AE8DB67480F0D3B3674B806BEE8A319BF7F13953.crl.der" -inform DER -out "/home/andrey/www/htdocs/expert72/pki/AE8DB67480F0D3B3674B806BEE8A319BF7F13953.crl"
+19/10/2018 10:34 Appending crl to pem file
+19/10/2018 10:34 Adding certificate pem with crl to chain file
+19/10/2018 10:34 Looking for parent certificate
+19/10/2018 10:34 Called get_ca_certs progComplexAlias=УЦ 1 ИС ГУЦ,caOGRN=1047702026701
+19/10/2018 10:34 Certificate found, making pem
+19/10/2018 10:34 Called run_shell_cmd2 openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/9E78A331020E528C046FFD57704A21B7D2241CB3.b64" -out "/home/andrey/www/htdocs/expert72/pki/9E78A331020E528C046FFD57704A21B7D2241CB3.der"
+19/10/2018 10:34 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/9E78A331020E528C046FFD57704A21B7D2241CB3.der" -noout
+19/10/2018 10:34 Adding certificate pem with crl to chain file
+19/10/2018 10:34 Looking for parent certificate
+19/10/2018 10:34 Called get_ca_certs progComplexAlias=Головной удостоверяющий центр,caOGRN=1047702026701
+19/10/2018 10:34 Certificate found, making pem
+19/10/2018 10:34 Called run_shell_cmd2 openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.b64" -out "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der"
+19/10/2018 10:34 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der" -noout
+19/10/2018 10:34 Adding certificate pem with crl to chain file
+19/10/2018 10:34 Certificate found, making pem
+19/10/2018 10:34 Called run_shell_cmd2 openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/9D05A704C8C1E565ACDE5878FE0BB96EC53C2A40.b64" -out "/home/andrey/www/htdocs/expert72/pki/9D05A704C8C1E565ACDE5878FE0BB96EC53C2A40.der"
+19/10/2018 10:34 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/9D05A704C8C1E565ACDE5878FE0BB96EC53C2A40.der" -noout
+19/10/2018 10:34 Adding certificate pem with crl to chain file
+19/10/2018 10:34 Looking for parent certificate
+19/10/2018 10:34 Called get_ca_certs progComplexAlias=Головной удостоверяющий центр,caOGRN=1047702026701
+19/10/2018 10:34 Certificate found, making pem
+19/10/2018 10:34 Called run_shell_cmd2 openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.b64" -out "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der"
+19/10/2018 10:34 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der" -noout
+19/10/2018 10:34 Adding certificate pem with crl to chain file
+19/10/2018 10:34 Certificate found, making pem
+19/10/2018 10:34 Called run_shell_cmd2 openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/0408435EB90E5C8796A160E69E4BFAC453435D1D.b64" -out "/home/andrey/www/htdocs/expert72/pki/0408435EB90E5C8796A160E69E4BFAC453435D1D.der"
+19/10/2018 10:34 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/0408435EB90E5C8796A160E69E4BFAC453435D1D.der" -noout
+19/10/2018 10:34 Adding certificate pem with crl to chain file
+19/10/2018 10:34 Looking for parent certificate
+19/10/2018 10:34 Called get_ca_certs progComplexAlias=Головной удостоверяющий центр,caOGRN=1047702026701
+19/10/2018 10:34 Certificate found, making pem
+19/10/2018 10:34 Called run_shell_cmd2 openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.b64" -out "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der"
+19/10/2018 10:34 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der" -noout
+19/10/2018 10:34 Adding certificate pem with crl to chain file
+19/10/2018 10:34 Certificate found, making pem
+19/10/2018 10:34 Called run_shell_cmd2 openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/0932E483C4420E668F64D360006D0BEB0BFACCA7.b64" -out "/home/andrey/www/htdocs/expert72/pki/0932E483C4420E668F64D360006D0BEB0BFACCA7.der"
+19/10/2018 10:34 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/0932E483C4420E668F64D360006D0BEB0BFACCA7.der" -noout
+19/10/2018 10:34 Adding certificate pem with crl to chain file
+19/10/2018 10:34 Looking for parent certificate
+19/10/2018 10:34 Called get_ca_certs progComplexAlias=Головной удостоверяющий центр,caOGRN=1047702026701
+19/10/2018 10:34 Certificate found, making pem
+19/10/2018 10:34 Called run_shell_cmd2 openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.b64" -out "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der"
+19/10/2018 10:34 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der" -noout
+19/10/2018 10:34 Adding certificate pem with crl to chain file
+19/10/2018 10:34 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/260-Д Договор Тюменгипроводхоз одновременно.pdf" -noverify -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/260-Д Договор Тюменгипроводхоз одновременно.pdf.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/9e757460.chain.pem"
+19/10/2018 10:34 Deleting der file /home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/260-Д Договор Тюменгипроводхоз одновременно.pdf.der
+19/10/2018 11:25 Called verifySig
+19/10/2018 11:25 parseSigFile
+19/10/2018 11:25 Called run_shell_cmd2 openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/260-Д Договор Тюменгипроводхоз одновременно.pdf.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/5bc978d41b7ce."i }'
+19/10/2018 11:25 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/5bc978d41b7ce.1" -noout
+19/10/2018 11:25 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/5bc978d41b7ce.2" -noout
+19/10/2018 11:25 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/5bc978d41b7ce.3" -noout
+19/10/2018 11:25 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/5bc978d41b7ce.4" -noout
+19/10/2018 11:25 Found signer certificates:1
+19/10/2018 11:25 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/260-Д Договор Тюменгипроводхоз одновременно.pdf.der" -noout -cmsout -print
+19/10/2018 11:25 Parsing pem file /home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/5bc978d41b7ce.4
+19/10/2018 11:25 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/5bc978d41b7ce.4" -noout -nameopt multiline
+19/10/2018 11:25 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/5bc978d41b7ce.4" -noout
+19/10/2018 11:25 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/260-Д Договор Тюменгипроводхоз одновременно.pdf" -noverify -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/260-Д Договор Тюменгипроводхоз одновременно.pdf.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/9e757460.chain.pem"
+19/10/2018 11:25 Deleting der file /home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/260-Д Договор Тюменгипроводхоз одновременно.pdf.der
+19/10/2018 11:27 Called verifySig
+19/10/2018 11:27 parseSigFile
+19/10/2018 11:27 Called run_shell_cmd2 openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/260-Д Договор Тюменгипроводхоз одновременно.pdf.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/5bc9793b89feb."i }'
+19/10/2018 11:27 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/5bc9793b89feb.1" -noout
+19/10/2018 11:27 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/5bc9793b89feb.2" -noout
+19/10/2018 11:27 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/5bc9793b89feb.3" -noout
+19/10/2018 11:27 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/5bc9793b89feb.4" -noout
+19/10/2018 11:27 Found signer certificates:1
+19/10/2018 11:27 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/260-Д Договор Тюменгипроводхоз одновременно.pdf.der" -noout -cmsout -print
+19/10/2018 11:27 Parsing pem file /home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/5bc9793b89feb.4
+19/10/2018 11:27 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/5bc9793b89feb.4" -noout -nameopt multiline
+19/10/2018 11:27 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/5bc9793b89feb.4" -noout
+19/10/2018 11:27 Called get_ca_list_file
+19/10/2018 11:27 Called get_ca_certs progComplexAlias=UC-CITTO,caOGRN=1087232038794
+19/10/2018 11:27 Certificate found, making pem
+19/10/2018 11:27 Called run_shell_cmd2 openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/DBC10D9795B15CAFD681062349CE196BA356C204.b64" -out "/home/andrey/www/htdocs/expert72/pki/DBC10D9795B15CAFD681062349CE196BA356C204.der"
+19/10/2018 11:27 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/DBC10D9795B15CAFD681062349CE196BA356C204.der" -noout
+19/10/2018 11:27 Called run_shell_cmd2 openssl x509 -in "/home/andrey/www/htdocs/expert72/pki/DBC10D9795B15CAFD681062349CE196BA356C204.der" -inform der -outform pem -out "/home/andrey/www/htdocs/expert72/pki/DBC10D9795B15CAFD681062349CE196BA356C204.pem"
+19/10/2018 11:27 CRL urls exist
+19/10/2018 11:27 Called run_shell_cmd2 wget -O "/home/andrey/www/htdocs/expert72/pki/DBC10D9795B15CAFD681062349CE196BA356C204.crl.der" http://ca.72to.ru/files/upload/uc-citto-2015.crl
+19/10/2018 11:27 Called run_shell_cmd2 openssl crl -in "/home/andrey/www/htdocs/expert72/pki/DBC10D9795B15CAFD681062349CE196BA356C204.crl.der" -inform DER -out "/home/andrey/www/htdocs/expert72/pki/DBC10D9795B15CAFD681062349CE196BA356C204.crl"
+19/10/2018 11:27 Appending crl to pem file
+19/10/2018 11:27 Adding certificate pem with crl to chain file
+19/10/2018 11:27 Looking for parent certificate
+19/10/2018 11:27 Called get_ca_certs progComplexAlias=УЦ 1 ИС ГУЦ,caOGRN=1047702026701
+19/10/2018 11:27 Certificate found, making pem
+19/10/2018 11:27 Called run_shell_cmd2 openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/9E78A331020E528C046FFD57704A21B7D2241CB3.b64" -out "/home/andrey/www/htdocs/expert72/pki/9E78A331020E528C046FFD57704A21B7D2241CB3.der"
+19/10/2018 11:27 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/9E78A331020E528C046FFD57704A21B7D2241CB3.der" -noout
+19/10/2018 11:27 Called run_shell_cmd2 openssl x509 -in "/home/andrey/www/htdocs/expert72/pki/9E78A331020E528C046FFD57704A21B7D2241CB3.der" -inform der -outform pem -out "/home/andrey/www/htdocs/expert72/pki/9E78A331020E528C046FFD57704A21B7D2241CB3.pem"
+19/10/2018 11:27 CRL urls exist
+19/10/2018 11:27 Called run_shell_cmd2 wget -O "/home/andrey/www/htdocs/expert72/pki/9E78A331020E528C046FFD57704A21B7D2241CB3.crl.der" http://rostelecom.ru/cdp/vguc1.crl
+19/10/2018 11:27 Called run_shell_cmd2 openssl crl -in "/home/andrey/www/htdocs/expert72/pki/9E78A331020E528C046FFD57704A21B7D2241CB3.crl.der" -inform DER -out "/home/andrey/www/htdocs/expert72/pki/9E78A331020E528C046FFD57704A21B7D2241CB3.crl"
+19/10/2018 11:27 Appending crl to pem file
+19/10/2018 11:27 Adding certificate pem with crl to chain file
+19/10/2018 11:27 Looking for parent certificate
+19/10/2018 11:27 Called get_ca_certs progComplexAlias=Головной удостоверяющий центр,caOGRN=1047702026701
+19/10/2018 11:27 Certificate found, making pem
+19/10/2018 11:27 Called run_shell_cmd2 openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.b64" -out "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der"
+19/10/2018 11:27 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der" -noout
+19/10/2018 11:27 Called run_shell_cmd2 openssl x509 -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der" -inform der -outform pem -out "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.pem"
+19/10/2018 11:27 CRL urls exist
+19/10/2018 11:27 Called run_shell_cmd2 wget -O "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.crl.der" http://rostelecom.ru/cdp/guc.crl
+19/10/2018 11:27 Called run_shell_cmd2 openssl crl -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.crl.der" -inform DER -out "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.crl"
+19/10/2018 11:27 Appending crl to pem file
+19/10/2018 11:27 Adding certificate pem with crl to chain file
+19/10/2018 11:27 Certificate found, making pem
+19/10/2018 11:27 Called run_shell_cmd2 openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/9D05A704C8C1E565ACDE5878FE0BB96EC53C2A40.b64" -out "/home/andrey/www/htdocs/expert72/pki/9D05A704C8C1E565ACDE5878FE0BB96EC53C2A40.der"
+19/10/2018 11:27 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/9D05A704C8C1E565ACDE5878FE0BB96EC53C2A40.der" -noout
+19/10/2018 11:27 Called run_shell_cmd2 openssl x509 -in "/home/andrey/www/htdocs/expert72/pki/9D05A704C8C1E565ACDE5878FE0BB96EC53C2A40.der" -inform der -outform pem -out "/home/andrey/www/htdocs/expert72/pki/9D05A704C8C1E565ACDE5878FE0BB96EC53C2A40.pem"
+19/10/2018 11:27 CRL urls exist
+19/10/2018 11:27 Called run_shell_cmd2 wget -O "/home/andrey/www/htdocs/expert72/pki/9D05A704C8C1E565ACDE5878FE0BB96EC53C2A40.crl.der" http://reestr-pki.ru/cdp/vguc1_3.crl
+19/10/2018 11:27 Called run_shell_cmd2 openssl crl -in "/home/andrey/www/htdocs/expert72/pki/9D05A704C8C1E565ACDE5878FE0BB96EC53C2A40.crl.der" -inform DER -out "/home/andrey/www/htdocs/expert72/pki/9D05A704C8C1E565ACDE5878FE0BB96EC53C2A40.crl"
+19/10/2018 11:27 Appending crl to pem file
+19/10/2018 11:27 Adding certificate pem with crl to chain file
+19/10/2018 11:27 Looking for parent certificate
+19/10/2018 11:27 Called get_ca_certs progComplexAlias=Головной удостоверяющий центр,caOGRN=1047702026701
+19/10/2018 11:27 Certificate found, making pem
+19/10/2018 11:27 Called run_shell_cmd2 openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.b64" -out "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der"
+19/10/2018 11:27 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der" -noout
+19/10/2018 11:27 Adding certificate pem with crl to chain file
+19/10/2018 11:27 Certificate found, making pem
+19/10/2018 11:27 Called run_shell_cmd2 openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/0408435EB90E5C8796A160E69E4BFAC453435D1D.b64" -out "/home/andrey/www/htdocs/expert72/pki/0408435EB90E5C8796A160E69E4BFAC453435D1D.der"
+19/10/2018 11:27 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/0408435EB90E5C8796A160E69E4BFAC453435D1D.der" -noout
+19/10/2018 11:27 Called run_shell_cmd2 openssl x509 -in "/home/andrey/www/htdocs/expert72/pki/0408435EB90E5C8796A160E69E4BFAC453435D1D.der" -inform der -outform pem -out "/home/andrey/www/htdocs/expert72/pki/0408435EB90E5C8796A160E69E4BFAC453435D1D.pem"
+19/10/2018 11:27 CRL urls exist
+19/10/2018 11:27 Called run_shell_cmd2 wget -O "/home/andrey/www/htdocs/expert72/pki/0408435EB90E5C8796A160E69E4BFAC453435D1D.crl.der" http://reestr-pki.ru/cdp/vguc1_4.crl
+19/10/2018 11:27 Called run_shell_cmd2 openssl crl -in "/home/andrey/www/htdocs/expert72/pki/0408435EB90E5C8796A160E69E4BFAC453435D1D.crl.der" -inform DER -out "/home/andrey/www/htdocs/expert72/pki/0408435EB90E5C8796A160E69E4BFAC453435D1D.crl"
+19/10/2018 11:27 Appending crl to pem file
+19/10/2018 11:27 Adding certificate pem with crl to chain file
+19/10/2018 11:27 Looking for parent certificate
+19/10/2018 11:27 Called get_ca_certs progComplexAlias=Головной удостоверяющий центр,caOGRN=1047702026701
+19/10/2018 11:27 Certificate found, making pem
+19/10/2018 11:27 Called run_shell_cmd2 openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.b64" -out "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der"
+19/10/2018 11:27 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der" -noout
+19/10/2018 11:27 Adding certificate pem with crl to chain file
+19/10/2018 11:27 Certificate found, making pem
+19/10/2018 11:27 Called run_shell_cmd2 openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/0932E483C4420E668F64D360006D0BEB0BFACCA7.b64" -out "/home/andrey/www/htdocs/expert72/pki/0932E483C4420E668F64D360006D0BEB0BFACCA7.der"
+19/10/2018 11:27 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/0932E483C4420E668F64D360006D0BEB0BFACCA7.der" -noout
+19/10/2018 11:27 Called run_shell_cmd2 openssl x509 -in "/home/andrey/www/htdocs/expert72/pki/0932E483C4420E668F64D360006D0BEB0BFACCA7.der" -inform der -outform pem -out "/home/andrey/www/htdocs/expert72/pki/0932E483C4420E668F64D360006D0BEB0BFACCA7.pem"
+19/10/2018 11:27 CRL urls exist
+19/10/2018 11:27 Called run_shell_cmd2 wget -O "/home/andrey/www/htdocs/expert72/pki/0932E483C4420E668F64D360006D0BEB0BFACCA7.crl.der" http://reestr-pki.ru/cdp/vguc1_5.crl
+19/10/2018 11:27 Called run_shell_cmd2 openssl crl -in "/home/andrey/www/htdocs/expert72/pki/0932E483C4420E668F64D360006D0BEB0BFACCA7.crl.der" -inform DER -out "/home/andrey/www/htdocs/expert72/pki/0932E483C4420E668F64D360006D0BEB0BFACCA7.crl"
+19/10/2018 11:27 Appending crl to pem file
+19/10/2018 11:27 Adding certificate pem with crl to chain file
+19/10/2018 11:27 Looking for parent certificate
+19/10/2018 11:27 Called get_ca_certs progComplexAlias=Головной удостоверяющий центр,caOGRN=1047702026701
+19/10/2018 11:27 Certificate found, making pem
+19/10/2018 11:27 Called run_shell_cmd2 openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.b64" -out "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der"
+19/10/2018 11:27 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der" -noout
+19/10/2018 11:27 Adding certificate pem with crl to chain file
+19/10/2018 11:27 Certificate found, making pem
+19/10/2018 11:27 Called run_shell_cmd2 openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/AE8DB67480F0D3B3674B806BEE8A319BF7F13953.b64" -out "/home/andrey/www/htdocs/expert72/pki/AE8DB67480F0D3B3674B806BEE8A319BF7F13953.der"
+19/10/2018 11:27 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/AE8DB67480F0D3B3674B806BEE8A319BF7F13953.der" -noout
+19/10/2018 11:27 Called run_shell_cmd2 openssl x509 -in "/home/andrey/www/htdocs/expert72/pki/AE8DB67480F0D3B3674B806BEE8A319BF7F13953.der" -inform der -outform pem -out "/home/andrey/www/htdocs/expert72/pki/AE8DB67480F0D3B3674B806BEE8A319BF7F13953.pem"
+19/10/2018 11:27 CRL urls exist
+19/10/2018 11:27 Called run_shell_cmd2 wget -O "/home/andrey/www/htdocs/expert72/pki/AE8DB67480F0D3B3674B806BEE8A319BF7F13953.crl.der" http://ca.72to.ru/files/upload/uc-citto-2016.crl
+19/10/2018 11:27 Called run_shell_cmd2 openssl crl -in "/home/andrey/www/htdocs/expert72/pki/AE8DB67480F0D3B3674B806BEE8A319BF7F13953.crl.der" -inform DER -out "/home/andrey/www/htdocs/expert72/pki/AE8DB67480F0D3B3674B806BEE8A319BF7F13953.crl"
+19/10/2018 11:27 Appending crl to pem file
+19/10/2018 11:27 Adding certificate pem with crl to chain file
+19/10/2018 11:27 Looking for parent certificate
+19/10/2018 11:27 Called get_ca_certs progComplexAlias=УЦ 1 ИС ГУЦ,caOGRN=1047702026701
+19/10/2018 11:27 Certificate found, making pem
+19/10/2018 11:27 Called run_shell_cmd2 openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/9E78A331020E528C046FFD57704A21B7D2241CB3.b64" -out "/home/andrey/www/htdocs/expert72/pki/9E78A331020E528C046FFD57704A21B7D2241CB3.der"
+19/10/2018 11:27 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/9E78A331020E528C046FFD57704A21B7D2241CB3.der" -noout
+19/10/2018 11:27 Adding certificate pem with crl to chain file
+19/10/2018 11:27 Looking for parent certificate
+19/10/2018 11:27 Called get_ca_certs progComplexAlias=Головной удостоверяющий центр,caOGRN=1047702026701
+19/10/2018 11:27 Certificate found, making pem
+19/10/2018 11:27 Called run_shell_cmd2 openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.b64" -out "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der"
+19/10/2018 11:27 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der" -noout
+19/10/2018 11:27 Adding certificate pem with crl to chain file
+19/10/2018 11:27 Certificate found, making pem
+19/10/2018 11:27 Called run_shell_cmd2 openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/9D05A704C8C1E565ACDE5878FE0BB96EC53C2A40.b64" -out "/home/andrey/www/htdocs/expert72/pki/9D05A704C8C1E565ACDE5878FE0BB96EC53C2A40.der"
+19/10/2018 11:27 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/9D05A704C8C1E565ACDE5878FE0BB96EC53C2A40.der" -noout
+19/10/2018 11:27 Adding certificate pem with crl to chain file
+19/10/2018 11:27 Looking for parent certificate
+19/10/2018 11:27 Called get_ca_certs progComplexAlias=Головной удостоверяющий центр,caOGRN=1047702026701
+19/10/2018 11:27 Certificate found, making pem
+19/10/2018 11:27 Called run_shell_cmd2 openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.b64" -out "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der"
+19/10/2018 11:27 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der" -noout
+19/10/2018 11:27 Adding certificate pem with crl to chain file
+19/10/2018 11:27 Certificate found, making pem
+19/10/2018 11:27 Called run_shell_cmd2 openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/0408435EB90E5C8796A160E69E4BFAC453435D1D.b64" -out "/home/andrey/www/htdocs/expert72/pki/0408435EB90E5C8796A160E69E4BFAC453435D1D.der"
+19/10/2018 11:27 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/0408435EB90E5C8796A160E69E4BFAC453435D1D.der" -noout
+19/10/2018 11:27 Adding certificate pem with crl to chain file
+19/10/2018 11:27 Looking for parent certificate
+19/10/2018 11:27 Called get_ca_certs progComplexAlias=Головной удостоверяющий центр,caOGRN=1047702026701
+19/10/2018 11:27 Certificate found, making pem
+19/10/2018 11:27 Called run_shell_cmd2 openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.b64" -out "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der"
+19/10/2018 11:27 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der" -noout
+19/10/2018 11:27 Adding certificate pem with crl to chain file
+19/10/2018 11:27 Certificate found, making pem
+19/10/2018 11:27 Called run_shell_cmd2 openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/0932E483C4420E668F64D360006D0BEB0BFACCA7.b64" -out "/home/andrey/www/htdocs/expert72/pki/0932E483C4420E668F64D360006D0BEB0BFACCA7.der"
+19/10/2018 11:27 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/0932E483C4420E668F64D360006D0BEB0BFACCA7.der" -noout
+19/10/2018 11:27 Adding certificate pem with crl to chain file
+19/10/2018 11:27 Looking for parent certificate
+19/10/2018 11:27 Called get_ca_certs progComplexAlias=Головной удостоверяющий центр,caOGRN=1047702026701
+19/10/2018 11:27 Certificate found, making pem
+19/10/2018 11:27 Called run_shell_cmd2 openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.b64" -out "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der"
+19/10/2018 11:27 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der" -noout
+19/10/2018 11:27 Adding certificate pem with crl to chain file
+19/10/2018 11:27 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/260-Д Договор Тюменгипроводхоз одновременно.pdf" -noverify -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/260-Д Договор Тюменгипроводхоз одновременно.pdf.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/9e757460.chain.pem"
+19/10/2018 11:27 Deleting der file /home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/260-Д Договор Тюменгипроводхоз одновременно.pdf.der
+19/10/2018 11:42 Called verifySig
+19/10/2018 11:42 parseSigFile
+19/10/2018 11:42 Called run_shell_cmd2 openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/Акт об оказании услуг № 328 от 19.10.2018.pdf.sig" -out "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/ об оказании услуг № 328 от 19.10.2018.pdf.der"
+19/10/2018 11:42 Called run_shell_cmd2 openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/ об оказании услуг № 328 от 19.10.2018.pdf.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END/ { print > "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/5bc97ce6d91c3."i }'
+19/10/2018 11:42 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/5bc97ce6d91c3.1" -noout
+19/10/2018 11:42 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/5bc97ce6d91c3.2" -noout
+19/10/2018 11:42 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/5bc97ce6d91c3.3" -noout
+19/10/2018 11:42 Found signer certificates:1
+19/10/2018 11:42 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/ об оказании услуг № 328 от 19.10.2018.pdf.der" -noout -cmsout -print
+19/10/2018 11:42 Parsing pem file /home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/5bc97ce6d91c3.3
+19/10/2018 11:42 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/5bc97ce6d91c3.3" -noout -nameopt multiline
+19/10/2018 11:42 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/5bc97ce6d91c3.3" -noout
+19/10/2018 11:42 Called get_ca_list_file
+19/10/2018 11:42 Called get_ca_certs progComplexAlias=ООО "КОМПАНИЯ "ТЕНЗОР",caOGRN=1027600787994
+19/10/2018 11:42 Certificate found, making pem
+19/10/2018 11:42 Called run_shell_cmd2 openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/4D28BC02373048A2F5CA7261C4C687FE0AA05676.b64" -out "/home/andrey/www/htdocs/expert72/pki/4D28BC02373048A2F5CA7261C4C687FE0AA05676.der"
+19/10/2018 11:42 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/4D28BC02373048A2F5CA7261C4C687FE0AA05676.der" -noout
+19/10/2018 11:42 Called run_shell_cmd2 openssl x509 -in "/home/andrey/www/htdocs/expert72/pki/4D28BC02373048A2F5CA7261C4C687FE0AA05676.der" -inform der -outform pem -out "/home/andrey/www/htdocs/expert72/pki/4D28BC02373048A2F5CA7261C4C687FE0AA05676.pem"
+19/10/2018 11:42 CRL urls exist
+19/10/2018 11:42 Called run_shell_cmd2 wget -O "/home/andrey/www/htdocs/expert72/pki/4D28BC02373048A2F5CA7261C4C687FE0AA05676.crl.der" http://tax4.tensor.ru/tensorca-2017_cp/certenroll/tensorca-2017_cp.crl
+19/10/2018 11:42 Called run_shell_cmd2 openssl crl -in "/home/andrey/www/htdocs/expert72/pki/4D28BC02373048A2F5CA7261C4C687FE0AA05676.crl.der" -inform DER -out "/home/andrey/www/htdocs/expert72/pki/4D28BC02373048A2F5CA7261C4C687FE0AA05676.crl"
+19/10/2018 11:42 Appending crl to pem file
+19/10/2018 11:42 Adding certificate pem with crl to chain file
+19/10/2018 11:42 Looking for parent certificate
+19/10/2018 11:42 Called get_ca_certs progComplexAlias=Головной удостоверяющий центр,caOGRN=1047702026701
+19/10/2018 11:42 Certificate found, making pem
+19/10/2018 11:42 Called run_shell_cmd2 openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.b64" -out "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der"
+19/10/2018 11:42 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der" -noout
+19/10/2018 11:42 Adding certificate pem with crl to chain file
+19/10/2018 11:42 Certificate found, making pem
+19/10/2018 11:42 Called run_shell_cmd2 openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/9075A8C2AADE976BFD0CA4FC55E3442FB2809CFE.b64" -out "/home/andrey/www/htdocs/expert72/pki/9075A8C2AADE976BFD0CA4FC55E3442FB2809CFE.der"
+19/10/2018 11:42 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/9075A8C2AADE976BFD0CA4FC55E3442FB2809CFE.der" -noout
+19/10/2018 11:42 Called run_shell_cmd2 openssl x509 -in "/home/andrey/www/htdocs/expert72/pki/9075A8C2AADE976BFD0CA4FC55E3442FB2809CFE.der" -inform der -outform pem -out "/home/andrey/www/htdocs/expert72/pki/9075A8C2AADE976BFD0CA4FC55E3442FB2809CFE.pem"
+19/10/2018 11:42 CRL urls exist
+19/10/2018 11:42 Called run_shell_cmd2 wget -O "/home/andrey/www/htdocs/expert72/pki/9075A8C2AADE976BFD0CA4FC55E3442FB2809CFE.crl.der" http://tax4.tensor.ru/tensorca-2018_cp_gost2012/certenroll/tensorca-2018_cp_gost2012.crl
+19/10/2018 11:42 Called run_shell_cmd2 openssl crl -in "/home/andrey/www/htdocs/expert72/pki/9075A8C2AADE976BFD0CA4FC55E3442FB2809CFE.crl.der" -inform DER -out "/home/andrey/www/htdocs/expert72/pki/9075A8C2AADE976BFD0CA4FC55E3442FB2809CFE.crl"
+19/10/2018 11:42 Appending crl to pem file
+19/10/2018 11:42 Adding certificate pem with crl to chain file
+19/10/2018 11:42 Looking for parent certificate
+19/10/2018 11:42 Called get_ca_certs progComplexAlias=Минкомсвязь России,caOGRN=1047702026701
+19/10/2018 11:42 Certificate found, making pem
+19/10/2018 11:42 Called run_shell_cmd2 openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/9BA648660733ED7A550BCEA03A20E14B8F25C99B.b64" -out "/home/andrey/www/htdocs/expert72/pki/9BA648660733ED7A550BCEA03A20E14B8F25C99B.der"
+19/10/2018 11:42 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/9BA648660733ED7A550BCEA03A20E14B8F25C99B.der" -noout
+19/10/2018 11:42 Called run_shell_cmd2 openssl x509 -in "/home/andrey/www/htdocs/expert72/pki/9BA648660733ED7A550BCEA03A20E14B8F25C99B.der" -inform der -outform pem -out "/home/andrey/www/htdocs/expert72/pki/9BA648660733ED7A550BCEA03A20E14B8F25C99B.pem"
+19/10/2018 11:42 CRL urls exist
+19/10/2018 11:42 Called run_shell_cmd2 wget -O "/home/andrey/www/htdocs/expert72/pki/9BA648660733ED7A550BCEA03A20E14B8F25C99B.crl.der" http://reestr-pki.ru/cdp/vguc1_6.crl
+19/10/2018 11:42 Called run_shell_cmd2 openssl crl -in "/home/andrey/www/htdocs/expert72/pki/9BA648660733ED7A550BCEA03A20E14B8F25C99B.crl.der" -inform DER -out "/home/andrey/www/htdocs/expert72/pki/9BA648660733ED7A550BCEA03A20E14B8F25C99B.crl"
+19/10/2018 11:42 Appending crl to pem file
+19/10/2018 11:42 Adding certificate pem with crl to chain file
+19/10/2018 11:42 Looking for parent certificate
+19/10/2018 11:42 Called get_ca_certs progComplexAlias=Головной удостоверяющий центр,caOGRN=1047702026701
+19/10/2018 11:42 Certificate found, making pem
+19/10/2018 11:42 Called run_shell_cmd2 openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.b64" -out "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der"
+19/10/2018 11:42 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/8CAE88BBFD404A7A53630864F9033606E1DC45E2.der" -noout
+19/10/2018 11:42 Adding certificate pem with crl to chain file
+19/10/2018 11:42 Certificate found, making pem
+19/10/2018 11:42 Called run_shell_cmd2 openssl base64 -d -A -in "/home/andrey/www/htdocs/expert72/pki/4BC6DC14D97010C41A26E058AD851F81C842415A.b64" -out "/home/andrey/www/htdocs/expert72/pki/4BC6DC14D97010C41A26E058AD851F81C842415A.der"
+19/10/2018 11:42 Called run_shell_cmd openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "/home/andrey/www/htdocs/expert72/pki/4BC6DC14D97010C41A26E058AD851F81C842415A.der" -noout
+19/10/2018 11:42 Called run_shell_cmd2 openssl x509 -in "/home/andrey/www/htdocs/expert72/pki/4BC6DC14D97010C41A26E058AD851F81C842415A.der" -inform der -outform pem -out "/home/andrey/www/htdocs/expert72/pki/4BC6DC14D97010C41A26E058AD851F81C842415A.pem"
+19/10/2018 11:42 CRL urls exist
+19/10/2018 11:42 Called run_shell_cmd2 wget -O "/home/andrey/www/htdocs/expert72/pki/4BC6DC14D97010C41A26E058AD851F81C842415A.crl.der" http://reestr-pki.ru/cdp/guc_gost12.crl
+19/10/2018 11:42 Called run_shell_cmd2 openssl crl -in "/home/andrey/www/htdocs/expert72/pki/4BC6DC14D97010C41A26E058AD851F81C842415A.crl.der" -inform DER -out "/home/andrey/www/htdocs/expert72/pki/4BC6DC14D97010C41A26E058AD851F81C842415A.crl"
+19/10/2018 11:42 Appending crl to pem file
+19/10/2018 11:42 Adding certificate pem with crl to chain file
+19/10/2018 11:42 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/Акт об оказании услуг № 328 от 19.10.2018.pdf" -noverify -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/ об оказании услуг № 328 от 19.10.2018.pdf.der" -CAfile "/home/andrey/www/htdocs/expert72/pki/768bb33c.chain.pem"
+19/10/2018 11:42 Deleting der file /home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/ об оказании услуг № 328 от 19.10.2018.pdf.der

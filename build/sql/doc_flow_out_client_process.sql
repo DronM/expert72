@@ -26,16 +26,23 @@ DECLARE
 	v_doc_flow_subject text;
 	v_contract_employee_id int;
 	v_contract_return_date timestampTZ;
+	v_corrected_sections_t text;
+	v_corrected_sections_o jsonb;
 BEGIN
 	IF TG_WHEN='BEFORE' AND ( TG_OP='INSERT' OR TG_OP='UPDATE') THEN		
-		IF NEW.sent AND (TG_OP='INSERT' OR coalesce(OLD.sent,FALSE)=FALSE ) THEN
-			NEW.date_time = now();
+		IF (const_client_lk_val() OR const_debug_val())
+		AND (NEW.sent AND (TG_OP='INSERT' OR coalesce(OLD.sent,FALSE)=FALSE ))
+		THEN
+			NEW.date_time = now();			
 		END IF;
 		
 		RETURN NEW;
 		
-	ELSIF (TG_WHEN='BEFORE' AND TG_OP='DELETE') THEN		
-		DELETE FROM doc_flow_out_client_document_files WHERE doc_flow_out_client_id=OLD.id;
+	ELSIF (TG_WHEN='BEFORE' AND TG_OP='DELETE') THEN	
+		IF (const_client_lk_val() OR const_debug_val())	THEN
+			DELETE FROM doc_flow_out_client_document_files WHERE doc_flow_out_client_id=OLD.id;
+		END IF;
+		
 		RETURN OLD;
 		
 	ELSIF (TG_WHEN='AFTER' AND (TG_OP='INSERT' OR TG_OP='UPDATE')) THEN			
@@ -134,6 +141,27 @@ BEGIN
 			IF NEW.doc_flow_out_client_type='contr_return' THEN
 				v_doc_flow_subject = NEW.subject||' №'||v_contract_number||', '||(v_applicant->>'name')::text;
 			ELSIF NEW.doc_flow_out_client_type='contr_resp' THEN
+				--Разделы с изменениями для ответов на замечания
+				SELECT
+					string_agg(paths.file_path,','),
+					jsonb_agg(paths.section_o)
+				INTO v_corrected_sections_t,v_corrected_sections_o
+				FROM
+				(
+					SELECT 
+					app_f.file_path,
+					jsonb_build_object(
+						'name',app_f.file_path,
+						'deleted',sum(CASE WHEN doc_f.is_new THEN 0 ELSE 1 END),
+						'added',sum(CASE WHEN doc_f.is_new THEN 1 ELSE 0 END)
+					) AS section_o
+					FROM doc_flow_out_client_document_files AS doc_f
+					LEFT JOIN application_document_files AS app_f ON app_f.file_id=doc_f.file_id
+					WHERE doc_f.doc_flow_out_client_id=NEW.id AND app_f.document_id<>0
+					GROUP BY app_f.file_path
+					ORDER BY app_f.file_path
+				) AS paths;
+				
 				v_doc_flow_subject = NEW.subject||', контракт №'||v_contract_number||', '||(v_applicant->>'name')::text;
 			ELSE
 				v_doc_flow_subject = NEW.subject;
@@ -142,7 +170,6 @@ BEGIN
 				END IF;
 				v_doc_flow_subject = v_doc_flow_subject ||', '||(v_applicant->>'name')::text;
 			END IF;
-			
 			
 			--Новое входяее письмо всегда						
 			INSERT INTO doc_flow_in (
@@ -155,7 +182,8 @@ BEGIN
 				subject,content,
 				recipient,
 				from_doc_flow_out_client_id,
-				from_client_app				
+				from_client_app,
+				corrected_sections
 			)
 			VALUES (
 				v_from_date_time,
@@ -176,7 +204,8 @@ BEGIN
 				NEW.content,
 				(SELECT departments_ref(departments) FROM departments WHERE id=v_recip_department_id),
 				NEW.id,
-				TRUE
+				TRUE,
+				v_corrected_sections_o
 			)
 			RETURNING id,recipient,reg_number
 			INTO v_doc_flow_in_id,v_recipient,v_reg_number;
@@ -235,7 +264,7 @@ BEGIN
 				);
 				
 			ELSIF NEW.doc_flow_out_client_type='contr_resp' THEN
-				
+				--ответы на замечания
 				IF v_main_expert_id IS NOT NULL THEN			
 					--напоминание&&email Гл.эксперту 
 					INSERT INTO reminders (register_docs_ref,recipient_employee_id,content,docs_ref)
@@ -245,7 +274,7 @@ BEGIN
 									WHERE id = NEW.application_id
 						)),
 						v_main_expert_id,
-						v_doc_flow_subject,
+						v_doc_flow_subject||' Разделы:'||v_corrected_sections_t,
 						doc_flow_in_ref((SELECT doc_flow_in
 									FROM doc_flow_in
 									WHERE id = v_doc_flow_in_id
@@ -261,7 +290,7 @@ BEGIN
 								WHERE id = NEW.application_id
 					)),
 					(sub.expert_fields->'fields'->'expert'->'keys'->>'id')::int AS expert_id,
-					v_doc_flow_subject,
+					v_doc_flow_subject||' Разделы:'||v_corrected_sections_t,
 					doc_flow_in_ref((SELECT doc_flow_in
 								FROM doc_flow_in
 								WHERE id = v_doc_flow_in_id
@@ -274,9 +303,9 @@ BEGIN
 				) AS sub
 				WHERE (v_main_expert_id IS NULL) OR ((sub.expert_fields->'fields'->'expert'->'keys'->>'id')::int<>v_main_expert_id)
 				);
-								
+				
 			ELSIF NEW.doc_flow_out_client_type='contr_return' THEN	
-			
+				--Возврат подписанных документов
 				--Мыло отделу приема
 				INSERT INTO mail_for_sending
 				(to_addr,to_name,body,subject,email_type)
@@ -378,7 +407,9 @@ BEGIN
 					ARRAY[
 						ROW('applicant', (v_applicant->>'name')::text)::template_value,
 						ROW('constr_name',v_constr_name)::template_value,
-						ROW('id',NEW.application_id)::template_value
+						ROW('application_id',NEW.application_id)::template_value,
+						ROW('contract_id',v_contract_id)::template_value,						
+						ROW('sections',v_corrected_sections_t)::template_value
 					],
 					(SELECT v FROM templ)
 				) AS mes_body,		

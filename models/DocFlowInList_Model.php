@@ -162,6 +162,14 @@ class DocFlowInList_Model extends ModelSQL{
 		$f_state_register_doc=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"state_register_doc",$f_opts);
 		$this->addField($f_state_register_doc);
 		//********************
+		
+		//*** Field corrected_sections ***
+		$f_opts = array();
+		$f_opts['id']="corrected_sections";
+				
+		$f_corrected_sections=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"corrected_sections",$f_opts);
+		$this->addField($f_corrected_sections);
+		//********************
 	
 		$order = new ModelOrderSQL();		
 		$this->setDefaultModelOrder($order);		

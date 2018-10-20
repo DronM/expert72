@@ -1674,6 +1674,7 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/FileForSigningList_Model.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ApplicationConstrNameList_Model.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/RepQuarter_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowOutCorrection_Model.js'));
 	
 			if (isset($_SESSION['scriptId'])){
 				$script_id = $_SESSION['scriptId'];

@@ -1,6 +1,6 @@
 -- VIEW: doc_flow_in_dialog
 
---DROP VIEW doc_flow_in_dialog;
+DROP VIEW doc_flow_in_dialog;
 
 CREATE OR REPLACE VIEW doc_flow_in_dialog AS
 	SELECT
@@ -113,6 +113,7 @@ CREATE OR REPLACE VIEW doc_flow_in_dialog AS
 			) AS sub
 			GROUP BY  sub.file_id		
 		)  AS sign ON sign.file_id=t.file_id		
+		WHERE coalesce(app_f.deleted,FALSE)=FALSE
 		ORDER BY app_f.file_path,app_f.file_name
 		) AS files_t
 		GROUP BY files_t.doc_flow_out_client_id		

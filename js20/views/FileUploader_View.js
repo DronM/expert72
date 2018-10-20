@@ -107,6 +107,9 @@ function FileUploader_View(id,options){
 	options.templateOptions.allowedFileExt	= this.m_allowedFileExt;
 	options.templateOptions.maxFileSize	= CommonHelper.byteFormat(this.m_maxFileSize);
 	
+	options.templateOptions.onlySignature = this.m_onlySignature;
+	options.templateOptions.notOnlySignature = !this.m_onlySignature;
+		
 	var self = this;
 	options.addElement = options.addElement || function(){
 		this.addElement(new Control(id+":file-upload","TEMPLATE",{
@@ -115,7 +118,18 @@ function FileUploader_View(id,options){
 					self.uploadAll();
 				}
 			}
-		}))
+		}));
+		
+		if (!this.m_uploadOnAdd && document.getElementById(id+":file-sign-all")){			
+			this.addElement(new Control(id+":file-sign-all","TEMPLATE",{
+				"events":{
+					"click":function(){
+						self.signAllFiles();
+					}
+				}
+			}));
+			
+		}
 	}
 	
 	this.setCustomUploadServer(options.customUploadServer);
@@ -198,7 +212,7 @@ FileUploader_View.prototype.upload = function(){
 			var no_sig_idlists = [];
 			var signed_idlists = {};
 			for (var i=0;i<this.m_uploader.files.length;i++){
-				if (!this.m_uploader.files[i].signature){					
+				if (!this.m_uploader.files[i].signature){
 					var nm_ar = this.m_uploader.files[i].fileName.split(".");
 					var nm_ext = nm_ar.length? nm_ar[nm_ar.length-1] : "";
 					var is_idlist = (new RegExp("^.+ *- *УЛ *\."+nm_ext+"$","i")).test(this.m_uploader.files[i].fileName);
@@ -477,13 +491,13 @@ FileUploader_View.prototype.addFileToContainer = function(container,itemFile,ite
 	if (templateOptions.separateSignature){
 		var sigs = CommonHelper.unserialize(itemFile.signatures);
 		var max_sig_count;
-		if (this.m_onlySignature&&this.setFileSignedByClient!=undefined){
+		if (sigs&&this.m_onlySignature&&this.setFileSignedByClient!=undefined){
 			max_sig_count = sigs.length;
 			if (!file_ctrl.m_fileSignedByClient){
 				max_sig_count++;
 			}
 		}
-		console.log("Id="+this.getId()+" max_sig_count="+max_sig_count)
+		//console.log("Id="+this.getId()+" max_sig_count="+max_sig_count)
 		file_ctrl.sigCont = new FileSigContainer(this.getId()+":file_"+itemFile.file_id+":sigList",{
 			"fileId":itemFile.file_id,
 			"itemId":itemId,
@@ -1199,7 +1213,7 @@ FileUploader_View.prototype.initDownload = function(){
 	});			
 	
 	this.m_uploader.on("progress",function(){
-		self.setProgressPercent(Math.round(self.m_uploader.progress()*100));
+		self.setProgressPercent(Math.round(self.m_uploader.progress()*100),"загрузка ");
 	});
 
 }
@@ -1258,9 +1272,10 @@ FileUploader_View.prototype.setCustomUploadServer = function(v){
 	}
 }
 
-FileUploader_View.prototype.setProgressPercent = function(percent){	
+FileUploader_View.prototype.setProgressPercent = function(percent,oper){	
 	$(document.getElementById(this.getId()+":upload-progress")).find(".progress-bar").attr("style", "width:"+percent+"%");
-	$(document.getElementById(this.getId()+":upload-progress-val")).text(percent+"%");
+	//((oper!=undefined)? oper:"") + 
+	$(document.getElementById(this.getId()+":upload-progress-val")).text( percent+"%");
 }
 
 FileUploader_View.prototype.progressInit = function(){	
@@ -1304,7 +1319,7 @@ FileUploader_View.prototype.doFileSigning = function(cades,fileToSign,fileId,ite
 					"Имя":certStruc.ownerSecondName
 				}
 			};
-			self.setProgressPercent(100);
+			//self.setProgressPercent(100);
 			callBack.call(self,sig_file);
 		},
 		function(er){
@@ -1312,7 +1327,7 @@ FileUploader_View.prototype.doFileSigning = function(cades,fileToSign,fileId,ite
 			window.showError(er);
 		},
 		function(percentLoaded){
-			self.setProgressPercent(percentLoaded);
+			self.setProgressPercent(percentLoaded,"подписание ");
 		}
 	);
 }
@@ -1340,6 +1355,62 @@ FileUploader_View.prototype.signFile = function(fileId,itemId){
 	else{
 		this.signFileContinue(fileId,itemId);
 	}
+}
+
+/**
+ * Все неподписанные и незагруженные
+ */
+FileUploader_View.prototype.signAllFilesContinue = function(filesForSigning){
+
+	for (var i=0;i<filesForSigning.length;i++){
+		this.signFileContinue(filesForSigning[i].file_id,filesForSigning[i].doc_id);
+	}	
+}
+
+FileUploader_View.prototype.signAllFiles = function(){
+	var cades = window.getApp().getCadesAPI();
+	var cert_lits_ctrl = this.m_mainView.m_cadesView.getCertBoxControl();
+	if (!cades || !cades.getCertListCount() || !cert_lits_ctrl || !cert_lits_ctrl.getSelectedCert()){
+		throw new Error("Сертификат для подписи не выбран!");
+	}
+	var cert = cert_lits_ctrl.getSelectedCert();
+	
+	var files_for_signing = [];
+	for (var i=0;i<this.m_uploader.files.length;i++){
+		if (!this.m_uploader.files[i].signature){
+			var href = document.getElementById(this.getId()+":file_"+this.m_uploader.files[i].file_id+"_href");
+			if (href){
+				if (DOMHelper.getAttr(href,"file_signed")!="true"){
+					files_for_signing.push({
+						"file_id":this.m_uploader.files[i].file_id,
+						"doc_id":this.m_uploader.files[i].doc_id
+					});
+				}	
+			}
+		}
+	}	
+	if (!files_for_signing.length){
+		throw new Error("Файлов для подписания не найдено!");
+	}
+	
+	var self = this;
+	WindowQuestion.show({
+		"text":"Подписать файлы ("+files_for_signing.length+"шт.) выбранной подписью ("+cert.descr+") ?",
+		"no":false,
+		"callBack":function(res){
+			if (res==WindowQuestion.RES_YES){
+				if (self.m_mainView&&!self.m_mainView.getElement("id").getValue()){
+					//not inserted yet
+					self.insertObject(function(){
+						self.signAllFilesContinue(files_for_signing);
+					});
+				}
+				else{
+					self.signAllFilesContinue(files_for_signing);
+				}
+			}
+		}
+	});
 }
 
 FileUploader_View.prototype.signFileContinue = function(fileId,itemId){
@@ -1526,11 +1597,23 @@ FileUploader_View.prototype.setOnlySignature = function(v){
 FileUploader_View.prototype.setUploadOnAdd = function(v){
 	this.m_uploadOnAdd = v;
 	var n = document.getElementById(this.getId()+":file-upload");
+	var n2 = document.getElementById(this.getId()+":file-sign-all");
 	if (this.m_uploadOnAdd){
 		DOMHelper.hide(n);
+		if (n2)DOMHelper.hide(n2);
 	}
 	else{
 		DOMHelper.show(n);
+		if (n2){
+			var cades = window.getApp().getCadesAPI();
+			if (cades){
+				var cert_lits_ctrl = this.m_mainView.m_cadesView.getCertBoxControl();
+				if (cert_lits_ctrl){
+					var cert_struc = cert_lits_ctrl.getSelectedCert();
+					if(cert_struc)DOMHelper.show(n2);
+				}
+			}
+		}
 	}
 }
 FileUploader_View.prototype.getIncludeFilePath = function(){

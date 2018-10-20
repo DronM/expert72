@@ -9,6 +9,7 @@
 require_once(FRAME_WORK_PATH.'basic_classes/ModelSQL.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLInt.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLString.php');
+require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLBool.php');
  
 class DocFlowOutClientDocumentFile_Model extends ModelSQL{
 	
@@ -31,10 +32,29 @@ class DocFlowOutClientDocumentFile_Model extends ModelSQL{
 		
 		//*** Field doc_flow_out_client_id ***
 		$f_opts = array();
+		$f_opts['primaryKey'] = TRUE;
 		$f_opts['id']="doc_flow_out_client_id";
 				
 		$f_doc_flow_out_client_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"doc_flow_out_client_id",$f_opts);
 		$this->addField($f_doc_flow_out_client_id);
+		//********************
+		
+		//*** Field is_new ***
+		$f_opts = array();
+		$f_opts['defaultValue']='TRUE';
+		$f_opts['id']="is_new";
+				
+		$f_is_new=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"is_new",$f_opts);
+		$this->addField($f_is_new);
+		//********************
+		
+		//*** Field signature ***
+		$f_opts = array();
+		$f_opts['defaultValue']='FALSE';
+		$f_opts['id']="signature";
+				
+		$f_signature=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"signature",$f_opts);
+		$this->addField($f_signature);
 		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}

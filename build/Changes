@@ -321,7 +321,46 @@ FOR EACH ROW
 EXECUTE PROCEDURE doc_flow_out_client_process();
 
 
-1.0.85
+1.0.85 20/10/18
+0) Исправлен косяк: неверное имя файла при загрузке документации - имя подписи вместе с sig!!!
+1) Исходящее письмо клиента не спрашивает о незагруженных файлах
+2) Подписание нескольких файлов, единый прогрессор
+3) Кнопка "Подписать все"
+4) Редактирование для админа отправленных писем - можно все: удалять добавлять
+5) Исходящее письмо клиента при возврате документов: при открытии сохраненного виден ключ. После подписания виден ключ(?)
+6) Письмо при ответах на замечания: какие разделы изменены
+
+doc_flow_registrations_process
+doc_flow_in_client_dialog
+doc_flow_out_client_process
+
+doc_flow_in_list
+doc_flow_in_dialog
+
+DROP VIEW doc_flow_in_list;
+DROP VIEW doc_flow_in_dialog;
+ALTER TABLE public.doc_flow_in DROP COLUMN corrected_sections;
+ALTER TABLE public.doc_flow_in ADD COLUMN corrected_sections jsonb;
+
+UPDATE email_templates
+SET template = 'Ответы на замечания. Заявитель:[applicant], объект: [constr_name].
+Измененные разделы: [sections]
+Ссылка на заявление http://192.168.1.134/expert72/index.php?c=Contract_Controller&f=get_object&t=ContractDialog&mode=edit&v=Child&id=[contract_id]',
+fields = '{"id" : "ReportTemplateField_Model", "rows" : "[{\"fields\":{\"id\":\"applicant\",\"descr\":\"Заявитель\"}},{\"fields\":{\"id\":\"constr_name\",\"descr\":\"Адрес строительства\"},{\"fields\":{\"id\":\"contract_id\",\"descr\":\"Идентификатор контракта\"}},{\"fields\":{\"id\":\"sections\",\"descr\":\"Измененные секции\"}}]"}'
+WHERE email_type='app_change'
+
+ALTER TABLE public.doc_flow_out_client_document_files ADD COLUMN is_new bool NOT NULL default true;
+ALTER TABLE public.doc_flow_out_client_document_files ADD COLUMN signature bool NOT NULL default false;
+ALTER TABLE public.doc_flow_out_client_document_files DROP CONSTRAINT doc_flow_out_client_document_files_pkey;
+ALTER TABLE public.doc_flow_out_client_document_files
+  ADD CONSTRAINT doc_flow_out_client_document_files_pkey PRIMARY KEY(file_id,doc_flow_out_client_id);
+
+
+
+
+
+
+
 
 
 
@@ -331,12 +370,8 @@ IE9 работает но верстка кривая
 IE8 - закрыт доступ
 ToDo
 
-+ Время на хостинге +3?
-
-- Заполнение заявления: Типа добавил исполнителя, а при удалении - ошибка
-
-- Загрузка файла с кривым именем: EOL(13,10)
-
+- Сделать правильную работу ГУИ при подписании, загрузке. Отметка об удачной загрузке только после подписания.
+- Пришли подписанные документы: 2 сообщения. Эксперты жалуются, что получают по несколько сообщений. Проверить ссылку в рабочей программе.
 - IE10 не работает кнопка Все фнкции и Фильтр в таблицах
 - IE10 ошибки FatalException
 
@@ -350,16 +385,18 @@ ToDo
 
 -2 мастер сервера ??? непонятно надо или нет
 
+
 + Номер счета банка в заявлении ___ убрать!!!
 + Согласования добавить фильтр по статусу контракта
 + Спец символы в JSON полях
-
 + Проверка контейнера с двумя подписями
-
 + Раскраска контрактов
 + ЭЦП на сайте (подписание) заказчиками
 + ЭЦП на сайте (подписание) нами
 + Добавить статус Заявления архив. Ставится руками, запрещает любые исходящие письма заявителя
++ Время на хостинге +3?
++ Заполнение заявления: Типа добавил исполнителя, а при удалении - ошибка
++ Загрузка файла с кривым именем: EOL(13,10): так такой проблемы. файлы распознаются как разные bad(13)name.pdf и bad(13)name.pdf.sig
 
 
 

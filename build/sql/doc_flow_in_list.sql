@@ -33,8 +33,12 @@ CREATE OR REPLACE VIEW doc_flow_in_list AS
 			WHEN doc_flow_in.from_application_id IS NOT NULL THEN
 				applications.constr_name
 			ELSE ''
-		END AS sender_construction_name				
+		END AS sender_construction_name,
 		
+		(SELECT
+			string_agg(sections.section->>'name',', ')
+		FROM (SELECT jsonb_array_elements(doc_flow_in.corrected_sections) AS section) AS sections
+		) AS corrected_sections
 		
 	FROM doc_flow_in
 	LEFT JOIN applications ON applications.id=doc_flow_in.from_application_id

@@ -194,6 +194,14 @@ class DocFlowIn_Model extends ModelSQL{
 		$f_from_client_app=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"from_client_app",$f_opts);
 		$this->addField($f_from_client_app);
 		//********************
+		
+		//*** Field corrected_sections ***
+		$f_opts = array();
+		$f_opts['id']="corrected_sections";
+				
+		$f_corrected_sections=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"corrected_sections",$f_opts);
+		$this->addField($f_corrected_sections);
+		//********************
 	
 		$order = new ModelOrderSQL();		
 		$this->setDefaultModelOrder($order);		

@@ -25,6 +25,23 @@
 		</div>
 	</div>			
 	
+	{{#fromApp}}
+	<div class="alert alert-info alert-styled-left">
+		<ul>
+			<h6>Измененные разделы документации:</h6>
+			{{#corrected_sections}}
+			<li>
+				<span class="badge badge-danger" title="Удаленные файлы">{{deleted}}
+				</span>				
+				<span class="badge badge-info" title="Добавленные файлы">{{added}}
+				</span>				
+				{{name}}
+			</li>
+			{{/corrected_sections}}
+		</ul>
+	</div>
+	{{/fromApp}}
+	
 	<div class="row">
 		<div class="{{bsCol}}6">
 			<div id="{{id}}:from_addr_name"/>

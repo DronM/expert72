@@ -49,3 +49,10 @@ CREATE UNIQUE INDEX user_certificates_fingerprint_user_idx
   
   
 
+
+select file_name,substring(file_name from 1 for position('.sig' in file_name)-1) from application_document_files where position('.sig' in file_name)>0 AND date_time::date=now()::date
+/*
+update application_document_files
+set file_name=substring(file_name from 1 for position('.sig' in file_name)-1)
+where position('.sig' in file_name)>0 AND date_time::date=now()::date
+*/

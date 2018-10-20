@@ -180,6 +180,15 @@ function DocFlowInList_Model(options){
 	
 	options.fields.state_register_doc = new FieldJSON("state_register_doc",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.corrected_sections = new FieldText("corrected_sections",filed_options);
+	
 		DocFlowInList_Model.superclass.constructor.call(this,id,options);
 }
 extend(DocFlowInList_Model,ModelXML);

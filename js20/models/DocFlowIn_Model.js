@@ -211,6 +211,15 @@ function DocFlowIn_Model(options){
 	
 	options.fields.from_client_app = new FieldBool("from_client_app",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.corrected_sections = new FieldJSONB("corrected_sections",filed_options);
+	
 			
 			
 			

@@ -64,7 +64,7 @@ BEGIN
 					user_id,
 					subject,
 					content,
-					files,
+					--files,
 					doc_flow_type_id,
 					doc_flow_out_id
 				)		
@@ -76,7 +76,7 @@ BEGIN
 					--t.to_contract_id
 					t.subject,
 					t.content,
-					(SELECT
+					/*(SELECT
 						jsonb_agg(
 							json_build_object(
 								'file_id',at.file_id,
@@ -90,7 +90,7 @@ BEGIN
 							)
 							)
 					FROM doc_flow_attachments AS at WHERE at.doc_type='doc_flow_out' AND at.doc_id=t.id
-					),
+					),*/
 					t.doc_flow_type_id,
 					v_doc_flow_out_id
 				

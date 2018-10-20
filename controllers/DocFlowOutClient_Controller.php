@@ -407,6 +407,10 @@ class DocFlowOutClient_Controller extends ControllerSQL{
 				throw new Exception(self::ER_WRONG_STATE);
 			}
 		
+			if ($ar['doc_flow_out_client_type']=='contr_resp'){
+				$db_link = $this->getDbLink();
+				Application_Controller::checkIULs($db_link,$app_id);
+			}		
 			/*
 			if ($ar['doc_flow_out_client_type']=='contr_return' && $ar['state']!='expertise'){
 				throw new Exception(self::ER_WRONG_STATE);
@@ -547,24 +551,30 @@ class DocFlowOutClient_Controller extends ControllerSQL{
 			(contr_docs.file_id IS NOT NULL) AS contr_return,
 			app_f.file_path,
 			app_f.file_id,
-			(doc_files.file_id IS NOT NULL) AS this_app_file
+			(doc_files.file_id IS NOT NULL) AS this_app_file,
+			doc_files.signature,
+			coalesce(doc.sent,FALSE) AS doc_sent
+			
 		FROM applications AS app
 		LEFT JOIN application_document_files AS app_f ON app_f.application_id=app.id AND app_f.file_id=%s
 		LEFT JOIN doc_flow_attachments AS contr_docs ON contr_docs.file_id=app_f.file_id
 		LEFT JOIN doc_flow_out_client_document_files AS doc_files ON doc_files.file_id=app_f.file_id
+		LEFT JOIN doc_flow_out_client AS doc ON doc.id=doc_files.doc_flow_out_client_id
 		WHERE app.id=%d",
 		$file_id_for_db,
 		$this->getExtDbVal($pm,'application_id')
 		));
+		
 		if (!count($ar)
 		|| ($_SESSION['role_id']!='admin' && $ar['user_id']!=$_SESSION['user_id'])
 		|| $ar['this_app_file']!='t'
-		|| ($ar['contr_return']=='t' && $ar['file_signed_by_client']!='t')
+		|| $ar['doc_sent']=='t'
 		){
 			throw new Exception('Forbidden!');
 		}
 
-		if ($ar['contr_return']=='t'){
+		if ($ar['contr_return']=='t' && $ar['signature']=='t'){
+		
 			//Возврат контракта
 			$rel_file_doc = DIRECTORY_SEPARATOR.
 				Application_Controller::APP_DIR_PREF.$ar['application_id'].DIRECTORY_SEPARATOR.
@@ -626,17 +636,16 @@ class DocFlowOutClient_Controller extends ControllerSQL{
 			}			
 		}
 		else{
-			//Прочие вложения
+			//Прочие вложения, непосредственное удаление
 			
 			try{
 				$dbLinkMaster= $this->getDbLinkMaster();
 			
 				$dbLinkMaster->query("BEGIN");
 						
-				Application_Controller::removeFile($dbLinkMaster, $file_id_for_db);		
+				Application_Controller::removeFile($dbLinkMaster, $file_id_for_db,TRUE);		
 			
 				$dbLinkMaster->query(sprintf("DELETE FROM doc_flow_out_client_document_files WHERE file_id=%s", $file_id_for_db));
-				$dbLinkMaster->query(sprintf("DELETE FROM application_document_files WHERE file_id=%s", $file_id_for_db));
 			
 				$dbLinkMaster->query("COMMIT");
 			}
@@ -696,7 +705,8 @@ class DocFlowOutClient_Controller extends ControllerSQL{
 					app_f.document_id,
 					app_f.document_type,
 					app_f.file_signed,
-					app_f.deleted
+					app_f.deleted,
+					doc_f.signature
 				FROM doc_flow_out_client_document_files AS doc_f
 				LEFT JOIN application_document_files AS app_f ON app_f.file_id=doc_f.file_id
 				WHERE doc_f.doc_flow_out_client_id=%d",
@@ -709,7 +719,7 @@ class DocFlowOutClient_Controller extends ControllerSQL{
 			}
 			
 			while($ar= $dbLinkMaster->fetch_array($q_id)){
-				if ($doc_attrs['doc_flow_out_client_type']=='contr_return'){
+				if ($doc_attrs['doc_flow_out_client_type']=='contr_return' && $ar['signature']=='t'){
 					$rel_file_doc = DIRECTORY_SEPARATOR.
 						Application_Controller::APP_DIR_PREF.$doc_attrs['application_id'].DIRECTORY_SEPARATOR.
 						$ar['file_path'].DIRECTORY_SEPARATOR.$ar['file_id'];
@@ -859,11 +869,14 @@ class DocFlowOutClient_Controller extends ControllerSQL{
 			//Добавлен ЭТИМ документом!!!
 			$ar = $dbLinkMaster->query_first(sprintf(
 				"SELECT
-					TRUE AS unlink_file
+					(doc_flow_out_client_id=%d) AS unlink_file
 				FROM doc_flow_out_client_document_files
-				WHERE file_id=%s",
-			$file_id_for_db));
-			$unlink_file = (count($ar) && $ar['unlink_file']=='t')? TRUE:FALSE;
+				WHERE file_id=%s",			
+			$doc_flow_out_client_id_for_db,
+			$file_id_for_db
+			));
+			
+			$unlink_file = (count($ar) && $ar['unlink_file']=='t');
 					
 			Application_Controller::removeFile($dbLinkMaster, $file_id_for_db,$unlink_file);		
 		
@@ -874,8 +887,8 @@ class DocFlowOutClient_Controller extends ControllerSQL{
 				//просто пометили на удаление - отметим принадлежность к этому письму
 				$dbLinkMaster->query(sprintf(
 					"INSERT INTO doc_flow_out_client_document_files
-					(file_id,doc_flow_out_client_id)
-					VALUES (%s,%d)",
+					(file_id,doc_flow_out_client_id,is_new)
+					VALUES (%s,%d,FALSE)",
 				$file_id_for_db,
 				$doc_flow_out_client_id_for_db
 				));

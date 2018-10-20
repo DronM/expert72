@@ -1296,7 +1296,8 @@ class Application_Controller extends ControllerSQL{
 								
 			FROM application_document_files AS adf
 			LEFT JOIN file_verifications AS f_ver ON f_ver.file_id=adf.file_id
-			LEFT JOIN doc_flow_out_client_document_files AS mdf ON mdf.file_id=adf.file_id
+			--LEFT JOIN doc_flow_out_client_document_files AS mdf ON mdf.file_id=adf.file_id
+			LEFT JOIN (SELECT DISTINCT ON (cf.file_id) cf.file_id,cf.doc_flow_out_client_id FROM doc_flow_out_client_document_files cf) AS mdf ON mdf.file_id=adf.file_id
 			LEFT JOIN doc_flow_out_client AS m ON m.id=mdf.doc_flow_out_client_id
 			LEFT JOIN doc_flow_out_client_reg_numbers AS reg ON reg.doc_flow_out_client_id=m.id
 			LEFT JOIN (
@@ -1741,6 +1742,8 @@ class Application_Controller extends ControllerSQL{
 				if ($ar['file_count']==0){
 					throw new Exception(self::ER_NO_ATT);
 				}				
+				
+				self::checkIULs($this->getDbLinkMaster(),$this->getExtDbVal($pm,'old_id'));
 				
 				$resAr = [];
 				$this->set_state(
@@ -3389,6 +3392,42 @@ class Application_Controller extends ControllerSQL{
 		return ($ind_used? FILE_STORAGE_DIR:FILE_STORAGE_DIR_MAIN) .DIRECTORY_SEPARATOR.$relPath.DIRECTORY_SEPARATOR.$fileId.'.sig.s'.$maxIndex;
 	}
 	
+	public static function checkIULs(&$dbLink,$docId){
+		$qid = $dbLink->query(sprintf(
+			"SELECT
+				app_f.file_id,
+				app_f.file_path,
+				app_f.document_type,
+				app_f.file_name	
+			FROM application_document_files AS app_f
+			WHERE app_f.application_id=%d
+				AND NOT coalesce(app_f.file_signed,FALSE)
+				AND
+				( SELECT t.file_name FROM application_document_files t
+				WHERE
+					t.file_id<>app_f.file_id AND t.application_id=app_f.application_id
+					AND
+					lower(t.file_name) ~ ('^'||(SELECT f_name FROM file_name_explode(lower(app_f.file_name)) AS (f_name text,f_ext text))||' *- *ул *\.'||(SELECT f_ext FROM file_name_explode(lower(app_f.file_name)) AS (f_name text,f_ext text))||'$')
+				) IS NULL
+			ORDER BY app_f.document_type,app_f.file_path,app_f.file_name",
+		$docId
+		));
+		
+		$err_str = '';
+		while($file = $dbLink->fetch_array($qid)){
+			if (!strlen($err_str)){
+				$err_str = 'У следующих файлов нет ни подписи ни информационно-удостоверяющего листа: ';
+			}
+			else{
+				$err_str.= ', ';
+			}
+			$err_str.= self::dirNameOnDocType($file['document_type']).'/'.$file['file_path'].'/'.$file['file_name'];
+		}
+		
+		if (strlen($err_str)){
+			throw new Exception($err_str);
+		}
+	}
 	
 
 }

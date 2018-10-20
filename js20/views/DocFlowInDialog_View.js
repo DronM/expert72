@@ -24,6 +24,7 @@ function DocFlowInDialog_View(id,options){
 	var role_id = window.getApp().getServVar("role_id");
 	var is_admin = (role_id=="admin");
 	this.m_notSent = false;
+	options.templateOptions = options.templateOptions || {};
 	if (options.model && (options.model.getRowIndex()>=0 || options.model.getNextRow()) ){			
 		//options.templateOptions.isNotSent = !options.model.getFieldValue("sent");
 		files = options.model.getFieldValue("files") || [];
@@ -31,8 +32,11 @@ function DocFlowInDialog_View(id,options){
 		if (options.model.getFieldValue("from_doc_flow_out_client_id") || (st && (st=="examining"||st=="acquainting"||st=="fulfilling")) ){
 			this.m_notSent = false;
 		}
-	}
-	options.templateOptions = options.templateOptions || {};
+		
+		var sec = options.model.getField("corrected_sections");
+		options.templateOptions.fromApp = (!options.model.getField("from_application_id").isNull() && !sec.isNull());
+		options.templateOptions.corrected_sections = sec.getValue();
+	}	
 	options.templateOptions.fileCount = (files.length&&files[0].files&&files[0].files.length)? files[0].files.length:"0";
 
 	var self = this;

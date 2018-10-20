@@ -2,7 +2,7 @@
 <metadata owner="expert72">
 	<versions>
 		<version dateOpen="2017-09-27 12:09:48" dateClose="2017-12-08 10:12:08">1.001 
-		<lastBuild>2018-10-15 07:18:11</lastBuild></version>
+		<lastBuild>2018-10-20 06:58:45</lastBuild></version>
 		<version dateOpen="2017-12-08 11:12:01" dateClose="2017-12-08 11:12:04">1.002</version>
 		<version dateOpen="2017-12-08 11:12:20" dateClose="2017-12-08 11:12:20">1.0.3</version>
 		<version dateOpen="2017-12-12 11:12:07" dateClose="2017-12-12 11:12:07">1.0.4</version>
@@ -85,6 +85,7 @@
 		<version dateOpen="2018-10-09 12:10:21" dateClose="2018-10-10 07:10:06">1.0.82</version>
 		<version dateOpen="2018-10-10 07:10:07" dateClose="2018-10-11 07:10:20">1.0.83</version>
 		<version dateOpen="2018-10-12 10:10:56" dateClose="2018-10-15 07:10:18">1.0.84</version>
+		<version dateOpen="2018-10-15 07:10:21" dateClose="2018-10-20 06:10:58">1.0.85</version>
 	</versions>
 	<globalFilters>
 		<field id="user_id"/>
@@ -1575,6 +1576,7 @@
 			<field id="recipient" dataType="JSONB"/>
 			<field id="comment_text" dataType="Text"/>
 			<field id="from_client_app" dataType="Bool" defaultValue="FALSE"/>
+			<field id="corrected_sections" dataType="JSONB"/>
 			<index id="doc_flow_in_date_time_idx">
 				<field id="date_time"/>
 			</index>
@@ -1610,6 +1612,7 @@
 			<field id="state_dt" dataType="DateTimeTZ"/>
 			<field id="state_end_dt" dataType="DateTimeTZ"/>
 			<field id="state_register_doc" dataType="JSON"/>
+			<field id="corrected_sections" dataType="Text"/>
 		</model>
 		<model id="DocFlowInDialog" parent="ModelSQL" dataTable="doc_flow_in_dialog" virtual="TRUE">
 			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE" required="FALSE"/>
@@ -1639,6 +1642,7 @@
 			<field id="from_client_app" dataType="Bool" defaultValue="FALSE"/>
 			<field id="doc_flow_in_processes_chain" dataType="JSON"/>
 			<field id="from_doc_flow_out_client_id" dataType="Int"/>
+			<field id="corrected_sections" dataType="JSON"/>
 		</model>
 		<model id="DocFlowInProcess" parent="ModelSQL" dataTable="doc_flow_in_processes" virtual="FALSE">
 			<field id="doc_flow_in_id" dataType="Int" refTable="doc_flow_in" refField="id" required="TRUE" primaryKey="TRUE"/>
@@ -2112,7 +2116,9 @@
 		</model>
 		<model id="DocFlowOutClientDocumentFile" parent="ModelSQL" dataTable="doc_flow_out_client_document_files" virtual="FALSE">
 			<field id="file_id" dataType="String" length="36" required="TRUE" primaryKey="TRUE"/>
-			<field id="doc_flow_out_client_id" dataType="Int" refTable="doc_flow_out_client" refField="id" required="TRUE"/>
+			<field id="doc_flow_out_client_id" dataType="Int" refTable="doc_flow_out_client" refField="id" required="TRUE" primaryKey="TRUE"/>
+			<field id="is_new" dataType="Bool" defaultValue="TRUE"/>
+			<field id="signature" dataType="Bool" defaultValue="FALSE"/>
 			<index id="doc_flow_out_client_document_files_doc_idx">
 				<field id="doc_flow_out_client_id"/>
 			</index>
@@ -2149,6 +2155,9 @@
 			</index>
 			<index id="doc_flow_in_application_idx">
 				<field id="application_id"/>
+			</index>
+			<index id="doc_flow_in_client_doc_flow_out_idx">
+				<field id="doc_flow_out_id"/>
 			</index>
 			<globalFilter id="user_id"/>
 		</model>
@@ -2794,6 +2803,13 @@
 		</model>
 		<model id="FileForSigningList" parent="ModelSQL" server="FALSE" virtual="TRUE">
 			<field id="attachment_files_only_sigs" dataType="JSON"/>
+		</model>
+		<model id="DocFlowOutCorrection" parent="ModelSQL" dataTable="doc_flow_out_corrections" virtual="FALSE">
+			<field id="doc_flow_out_id" dataType="Int" required="TRUE" primaryKey="TRUE"/>
+			<field id="file_id" dataType="String" length="36" required="TRUE" primaryKey="TRUE"/>
+			<field id="is_new" dataType="Bool" primaryKey="TRUE"/>
+			<field id="date_time" dataType="DateTimeTZ" required="TRUE"/>
+			<field id="employee_id" dataType="Int" refTable="employees" refField="id" required="TRUE"/>
 		</model>
 	</models>
 	<constants>
@@ -4979,6 +4995,7 @@
 		<jsScript file="models/FileForSigningList_Model.js"/>
 		<jsScript file="models/ApplicationConstrNameList_Model.js"/>
 		<jsScript file="models/RepQuarter_Model.js"/>
+		<jsScript file="models/DocFlowOutCorrection_Model.js"/>
 	</jsScripts>
 	<cssScripts>
 		<cssScript file="assets/css/icons/icomoon/styles.css" compressed="TRUE" standalone="TRUE"/>

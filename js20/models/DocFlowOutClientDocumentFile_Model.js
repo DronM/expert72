@@ -36,12 +36,32 @@ function DocFlowOutClientDocumentFile_Model(options){
 				
 	
 	var filed_options = {};
-	filed_options.primaryKey = false;	
+	filed_options.primaryKey = true;	
 	
 	filed_options.autoInc = false;	
 	
 	options.fields.doc_flow_out_client_id = new FieldInt("doc_flow_out_client_id",filed_options);
 	options.fields.doc_flow_out_client_id.getValidator().setRequired(true);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	filed_options.defValue = true;
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.is_new = new FieldBool("is_new",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	filed_options.defValue = true;
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.signature = new FieldBool("signature",filed_options);
 	
 			
 		DocFlowOutClientDocumentFile_Model.superclass.constructor.call(this,id,options);

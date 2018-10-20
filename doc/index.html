@@ -250,6 +250,7 @@
 <li><a href="#UserCertificate_Model">UserCertificate_Model</a></li>
 <li><a href="#FileSignatures_Model">FileSignatures_Model</a></li>
 <li><a href="#FileForSigningList_Model">FileForSigningList_Model</a></li>
+<li><a href="#DocFlowOutCorrection_Model">DocFlowOutCorrection_Model</a></li>
 </ul>
 <div class="section-title">Enumerations</div>
 <ul>
@@ -7349,6 +7350,12 @@
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
+<h2>corrected_sections</h2>
+<div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
 </div>
 </div>
 <div id="DocFlowInClient_Model" class="content_box">
@@ -7745,6 +7752,12 @@
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
+<h2>corrected_sections</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
 </div>
 </div>
 <div id="DocFlowInList_Model" class="content_box">
@@ -7849,6 +7862,12 @@
 <div>Precision:</div>
 <h2>state_register_doc</h2>
 <div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>corrected_sections</h2>
+<div>Type:Text</div>
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>
@@ -8449,8 +8468,20 @@
 <div>Precision:</div>
 <h2>doc_flow_out_client_id</h2>
 <div>Type:Int</div>
-<div>Primary key:</div>
+<div>Primary key:TRUE</div>
 <div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>is_new</h2>
+<div>Type:Bool</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>signature</h2>
+<div>Type:Bool</div>
+<div>Primary key:</div>
+<div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
 </div>
@@ -8536,6 +8567,42 @@
 <div>Primary key:</div>
 <div>Required:TRUE</div>
 <div>Length:15</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="DocFlowOutCorrection_Model" class="content_box">
+<h1>DocFlowOutCorrection_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>doc_flow_out_id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>file_id</h2>
+<div>Type:String</div>
+<div>Primary key:TRUE</div>
+<div>Required:TRUE</div>
+<div>Length:36</div>
+<div>Precision:</div>
+<h2>is_new</h2>
+<div>Type:Bool</div>
+<div>Primary key:TRUE</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>date_time</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>employee_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
 <div>Precision:</div>
 </div>
 </div>

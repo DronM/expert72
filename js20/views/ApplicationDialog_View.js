@@ -474,7 +474,7 @@ function ApplicationDialog_View(id,options){
 			"onClick":function(){
 				if (self.getForUploadFileCount()){
 					WindowQuestion.show({
-						"text":"Есть незагруженные файлы документации, продолжить?",
+						"text":"Есть незагруженные файлы документации, закрыть документ и отказаться от загрузки?",
 						"cancel":false,
 						"callBack":function(res){			
 							if (res==WindowQuestion.RES_YES){
@@ -808,11 +808,9 @@ ApplicationDialog_View.prototype.onGetData = function(resp,cmd){
 		
 		if (st=="expertise"){
 			dlg_m.setFieldValue("doc_flow_out_client_type","contr_resp");
-			//dlg_m.setFieldValue("subject","Ответы на замечания");
 		}
 		else{
 			dlg_m.setFieldValue("doc_flow_out_client_type","contr_return");
-			//dlg_m.setFieldValue("subject","Возврат подписанных документов");
 		}
 		
 		dlg_m.recInsert();

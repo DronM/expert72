@@ -35,7 +35,8 @@ return;
 	exit;
 	*/
 	//echo $pki_man->getIssuier(OUTPUT_PATH.'test.pdf.sig')['CN'];
-	//$verif_res = $pki_man->verifySig('/home/andrey/www/htdocs/expert72/client_files/Заявление№1566/Договорные документы/Контракт/9f1357af-d7cf-4dbb-813f-a15c5b4a833b.sig','/home/andrey/www/htdocs/expert72/client_files/Заявление№1566/Договорные документы/Контракт/9f1357af-d7cf-4dbb-813f-a15c5b4a833b');
+	$verif_res = $pki_man->verifySig('/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/Акт об оказании услуг № 328 от 19.10.2018.pdf.sig','/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/Акт об оказании услуг № 328 от 19.10.2018.pdf');
+	/*
 	$verif_res = pki_log_sig_check(
 		'/home/andrey/www/htdocs/expert72/client_files/Заявление№1566/Договорные документы/Контракт/9f1357af-d7cf-4dbb-813f-a15c5b4a833b.sig',
 		'/home/andrey/www/htdocs/expert72/client_files/Заявление№1566/Договорные документы/Контракт/9f1357af-d7cf-4dbb-813f-a15c5b4a833b',
@@ -43,7 +44,7 @@ return;
 		$pki_man,
 		$dbLink
 	);
-
+	*/
 	
 	//$verif_res = $pki_man->verifySig('/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/222/Ответы на замечания_11.10.2018.pdf.sig','/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/222/Ответы на замечания_11.10.2018.pdf',TRUE);
 	

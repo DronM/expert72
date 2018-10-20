@@ -541,8 +541,48 @@ class DocFlowOut_Controller extends DocFlow_Controller{
 		}	
 	}
 
+	public static function isDocSent($docId,&$dbLink){
+		$ar = $dbLink->query_first(sprintf(
+			"SELECT state
+			FROM doc_flow_out_processes
+			WHERE doc_flow_out_id=%d
+			ORDER BY date_time DESC
+			LIMIT 1",
+			$docId
+		));
+		
+		return (is_array($ar) && count($ar) && $ar['state']=='registered');
+	}
+
 	public function remove_file($pm){
-		$this->remove_afile($pm,'out');
+	
+		$is_sent = self::isDocSent($this->getExtDbVal($pm,'doc_id'),$this->getDbLink());
+		if ($_SESSION['role_id']!='admin' && $is_sent){
+			throw new Exception('Forbidden!');
+		}
+		
+		try{
+			$this->getDbLinkMaster()->query('BEGIN');
+			
+			$this->remove_afile($pm,'out');
+			
+			if ($is_sent){
+				$this->getDbLinkMaster()->query(sprintf(
+					"INSERT INTO doc_flow_out_corrections
+					(doc_flow_out_id,file_id,date_time,employee_id,is_new)
+					VALUES (%d,%s,now(),%d,FALSE)",
+					$this->getExtDbVal($pm,'doc_id'),
+					$this->getExtDbVal($pm,'file_id'),
+					intval(json_decode($_SESSION['employees_ref'])->keys->id)
+				));
+			}
+			
+			$this->getDbLinkMaster()->query('COMMIT');
+		}
+		catch(Exception $e){
+			$this->getDbLinkMaster()->query('ROLLBACK');
+			throw $e;
+		}		
 	}
 
 	public function remove_sig($pm){

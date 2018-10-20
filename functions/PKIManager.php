@@ -305,6 +305,7 @@ class PKIManager {
 	 * @param {String} progComplexAlias УдостоверяющийЦентр->ПрограммноАппаратныеКомплексы->ПрограммноАппаратныйКомплекс->Псевдоним
 	 * @param {XMLElement} caData
 	 * @param {array} addedCerts full certificate chain of stdClass
+	 * @param {int} oldestCertTime
 	 
 	 *
 	 * Рекурсивно собирает все сертификаты цепи и создает pem файлы
@@ -312,7 +313,7 @@ class PKIManager {
 	 *
 	 * @returns {bool} TRUE - if cert is found
 	 */
-	private function get_ca_certs($chainFile,$progComplexAlias,$caOGRN,&$caData,&$addedCerts){
+	private function get_ca_certs($chainFile,$progComplexAlias,$caOGRN,&$caData,&$addedCerts,&$oldestCertTime){
 	
 		$this->logger->add(sprintf(
 			'Called get_ca_certs progComplexAlias=%s,caOGRN=%s',
@@ -413,7 +414,10 @@ class PKIManager {
 											}
 										}
 									}
-									
+									$pem_time = filemtime($pem);
+									if ($oldestCertTime > $pem_time){
+										$oldestCertTime = $pem_time;
+									}
 									//pem with CRL
 									$this->logger->add('Adding certificate pem with crl to chain file','note');
 									file_put_contents($chainFile, file_get_contents($pem), FILE_APPEND);									
@@ -425,7 +429,7 @@ class PKIManager {
 								
 								if ($issuer_hash!=$hash){
 									$this->logger->add('Looking for parent certificate','note');
-									if (!$this->get_ca_certs($chainFile,$issuer_ar['CN'],$issuer_ar[self::SUBJ_FLD_OGRN],$caData,$addedCerts)){
+									if (!$this->get_ca_certs($chainFile,$issuer_ar['CN'],$issuer_ar[self::SUBJ_FLD_OGRN],$caData,$addedCerts,$oldestCertTime)){
 										$this->logger->add('Could not find certificate','error');
 										throw new Exception(self::ER_BROKEN_CHAIN);
 									}
@@ -599,7 +603,8 @@ class PKIManager {
 				if (!count($pem_files)){
 					throw new Exception(self::ER_NO_CERT_FOUND);
 				}
-				
+				$crl_expir_tries = 1;
+			chain_build:	
 				/** build chains to signer certificates, add all certificates with CRL for verification
 				 * If there is one signer (1 pem file with certificate) then one chain file on issuer_hash can be used
 				 * If there are more than one signer, unique chain for this sig container should be used!
@@ -666,6 +671,8 @@ class PKIManager {
 						$crl_invalid_time = time() - $this->crlValidity;
 						if (!file_exists($chain_file) || filemtime($chain_file)<$crl_invalid_time ){
 							if(file_exists($chain_file)) unlink($chain_file);
+							
+							$oldest_cert_time = time();
 							$tries = 2;
 							$ca_found = FALSE;
 							while(!$ca_found && $tries){
@@ -678,7 +685,7 @@ class PKIManager {
 										throw new Exception(self::ER_BROKEN_CHAIN);
 									}
 									$added_certs = [];
-									$ca_found = $this->get_ca_certs($chain_file,$issuer['CN'],$issuer[self::SUBJ_FLD_OGRN],$ca_data,$added_certs);
+									$ca_found = $this->get_ca_certs($chain_file,$issuer['CN'],$issuer[self::SUBJ_FLD_OGRN],$ca_data,$added_certs,$oldest_cert_time);
 									if (!$ca_found && !$new_ca_list){
 										unlink($ca_list_file);
 									}
@@ -692,6 +699,7 @@ class PKIManager {
 								$this->logger->add('CA not found after all tries, cert issuer CN='.$issuer['CN'].' ОГРН='.$issuer[self::SUBJ_FLD_OGRN],'error');
 								throw new Exception(self::ER_BROKEN_CHAIN);
 							}
+							touch($chain_file,$oldest_cert_time);
 						}
 			
 						array_push($verifResult->signatures,$cert_data);
@@ -716,7 +724,7 @@ class PKIManager {
 						if (is_null($chain_file_for_verif)){
 							$chain_file_for_verif = $this->pkiPath.uniqid().'chain.pem';
 						}
-						file_put_contents($chain_file_for_verif, file_get_contents($chain_file), FILE_APPEND);
+						file_put_contents($chain_file_for_verif, file_get_contents($chain_file), FILE_APPEND);						
 					}
 				}
 				
@@ -734,7 +742,12 @@ class PKIManager {
 				catch(Exception $e){
 					$user_m = str_replace(PHP_EOL,' ',$e->getMessage());
 					$this->logger->add('Verification error:'.$user_m,'error');
-					if (strpos($user_m,'certificate has expired')!==FALSE){
+					
+					if (strpos($user_m,'CRL has expired')!==FALSE && $crl_expir_tries){
+						$crl_expir_tries--;
+						goto chain_build;
+					}
+					else if (strpos($user_m,'certificate has expired')!==FALSE){
 						$user_m = self::ER_CERT_EXPIRED;
 					}
 					else if (strpos($user_m,'digest failure')!==FALSE){

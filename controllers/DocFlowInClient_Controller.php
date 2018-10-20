@@ -193,45 +193,34 @@ class DocFlowInClient_Controller extends ControllerSQL{
 				
 		$ar = $this->getDbLink()->query_first(sprintf(
 			"SELECT
-				files,
-				application_id
+				att_f.file_id,
+				att_f.file_name,
+				att_f.file_path,
+				doc_flow_in_client.application_id
 			FROM doc_flow_in_client
-			WHERE id=%d".$user_constr,
-			$this->getExtDbVal($pm,'doc_id')
+			LEFT JOIN doc_flow_attachments AS att_f ON att_f.doc_type='doc_flow_out' AND att_f.doc_id=doc_flow_in_client.doc_flow_out_id
+			WHERE doc_flow_in_client.id=%d AND att_f.file_id=%s".$user_constr,
+			$this->getExtDbVal($pm,'doc_id'),
+			$this->getExtDbVal($pm,'file_id')
 		));
-		if (!count($ar) || !count($files=json_decode($ar['files']))){
+		if (!count($ar) || !$ar['application_id']){
 			throw new Exception(self::ER_STORAGE_FILE_NOT_FOUND);
 		}
-		$file_id = $this->getExtVal($pm,'file_id');
-		$new_files = [];
-		$found = FALSE;
-		$file_name = NULL;
-		$file_path = NULL;
-		foreach($files as $file){
-			if ($file->file_id==$file_id){
-				$file_name = $file->file_name;
-				$file_path = $file->file_path;
-				$found = TRUE;
-			}
-			else{
-				array_push($new_files,$file);
-			}
-		}
+		
 		//
 		$rel_file = Application_Controller::APP_DIR_PREF.$ar['application_id'].DIRECTORY_SEPARATOR.
-				($file_path? $file_path : DocFlow_Controller::getDefAppDir('out') ) .DIRECTORY_SEPARATOR.
-				$file_id.($isSig? '.sig':'');
-		if (!$found ||
-			(!file_exists($fl = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_file)
+				($ar['file_path']? $ar['file_path'] : DocFlow_Controller::getDefAppDir('out') ) .DIRECTORY_SEPARATOR.
+				$ar['file_id'].($isSig? '.sig':'');
+		if (
+			!file_exists($fl = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_file)
 			&& ( defined('FILE_STORAGE_DIR_MAIN') && !file_exists($fl = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$rel_file) )
-			) 
 		){
 			throw new Exception(self::ER_STORAGE_FILE_NOT_FOUND);
 		}
 	
-		$mime = getMimeTypeOnExt($file_name);
+		$mime = getMimeTypeOnExt($ar['file_name']);
 		ob_clean();
-		downloadFile($fl, $mime,'attachment;',$file_name.($isSig? '.sig':''));
+		downloadFile($fl, $mime,'attachment;',$ar['file_name'].($isSig? '.sig':''));
 		return TRUE;	
 	}
 

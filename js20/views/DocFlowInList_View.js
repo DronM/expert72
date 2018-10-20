@@ -180,6 +180,15 @@ function DocFlowInList_View(id,options){
 				})
 			]
 		})
+
+		,new GridCellHead(id+":grid:head:corrected_sections",{
+			"value":"Измененные разделы",
+			"columns":[
+				new GridColumn({
+					"field":model.getField("corrected_sections")
+				})
+			]
+		})
 		
 	];	
 	

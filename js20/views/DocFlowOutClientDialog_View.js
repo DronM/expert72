@@ -228,6 +228,26 @@ function DocFlowOutClientDialog_View(id,options){
 			}
 		});
 		options.cmdSave = true;
+		
+		options.controlCancel = new ButtonCancel(id+":cmdCancel",{
+			"onClick":function(){
+				if (self.getForUploadFileCount()){
+					WindowQuestion.show({
+						"text":"Есть незагруженные вложения, закрыть документ и отказаться от загрузки?",
+						"cancel":false,
+						"callBack":function(res){			
+							if (res==WindowQuestion.RES_YES){
+								self.onCancel();
+							}
+						}
+					});
+				}				
+				else{
+					self.onCancel();
+				}				
+			}
+		});		
+		
 	}
 	
 	DocFlowOutClientDialog_View.superclass.constructor.call(this,id,options);

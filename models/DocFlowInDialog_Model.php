@@ -246,6 +246,14 @@ class DocFlowInDialog_Model extends ModelSQL{
 		$f_from_doc_flow_out_client_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"from_doc_flow_out_client_id",$f_opts);
 		$this->addField($f_from_doc_flow_out_client_id);
 		//********************
+		
+		//*** Field corrected_sections ***
+		$f_opts = array();
+		$f_opts['id']="corrected_sections";
+				
+		$f_corrected_sections=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"corrected_sections",$f_opts);
+		$this->addField($f_corrected_sections);
+		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}
 

@@ -39,11 +39,7 @@ FileUploaderDocFlowOutClient_View.prototype.deleteFileFromServerContinue = funct
 	pm.setFieldValue("doc_flow_out_client_id",docId);
 	pm.run({"ok":function(){
 		window.showNote(self.NT_FILE_DELETED);
-		self.decTotalFileCount();
-		file_cont = self.getElement("file-list_"+itemId);
-		file_cont.delElement("file_"+fileId);
-		file_cont.delElement("file_"+fileId+"_del");
-		file_cont.delElement("file_"+fileId+"_href");
+		self.deleteFileCont(fileId,itemId);
 		self.decTotalFileCount();
 		self.calcFileTotals(itemId);
 	}});				
