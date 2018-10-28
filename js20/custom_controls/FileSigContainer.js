@@ -51,6 +51,7 @@ FileSigContainer.prototype.IMG_WAIT = "fa fa-spinner fa-spin";
 FileSigContainer.prototype.IMG_KEY = "icon-key";
 FileSigContainer.prototype.ADD_SIG_TITLE = "Подписать файл выбранной подписью";
 FileSigContainer.prototype.SIG_PROCESS_TITLE = "Подписать файл выбранной подписью";
+FileSigContainer.prototype.SIG_ERR_CLASS = "border-danger";
 
 /* private members */
 FileSigContainer.prototype.m_addSignControl;
@@ -70,10 +71,13 @@ FileSigContainer.prototype.m_itemId;
  */
 FileSigContainer.prototype.addSignature = function(signature){
 	if (!signature||!signature.sign_date_time)return;
+	
+	var self = this;
+	
 	//this.m_signatures.getId()+":"+signature.id
 	var sig_ind = this.m_signatures.getCount()+1;
 	var ctrl = new ControlContainer(this.m_signatures.getId()+":"+sig_ind,"SPAN",{
-		"className": ("btn btn-sm fileSigInfoBtn" + ((signature&&(signature.check_result||signature.check_result==undefined))? "":" border-danger") ),
+		"className": ("btn btn-sm fileSigInfoBtn" + ((signature&&(signature.check_result||signature.check_result==undefined))? "":(" "+this.SIG_ERR_CLASS)) ),
 		"events":{
 			"click":function(e){
 				if (self.m_onSignClick){
@@ -82,8 +86,15 @@ FileSigContainer.prototype.addSignature = function(signature){
 			}
 		}
 	});
+	ctrl.setValid = function(v){
+		if (v){
+			DOMHelper.delClass(this.m_node,self.SIG_ERR_CLASS);
+		}
+		else{
+			DOMHelper.addClass(this.m_node,self.SIG_ERR_CLASS);
+		}
+	}
 	
-	var self = this;
 	/**
 	 * Есть свойство this.certInf.signature содержащее структуру подписи
 	 */
@@ -228,7 +239,7 @@ FileSigContainer.prototype.showSignatureDetails = function(toolTip,e){
 		}
 		return str;
 	}
-
+	var cont;
 	if (signature.check_result){				
 		//Подпись проверена - ОК
 		var sign_date_time_s;

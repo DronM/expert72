@@ -1,0 +1,21 @@
+							$url = str_replace('http://','',$url);
+							$url = str_replace('https://','',$url);
+							if (substr($url,strlen($url)-1)=='/'){
+								$url = substr($url,0,strlen($url)-1);
+							}
+							$id = uniqid();		
+							$pat = $this->pkiPath.$id;
+							$this->logger->add('URL recognized as resource','debug');
+							$this->run_shell_cmd2(sprintf('openssl s_client -showcerts -connect %s:%d < /dev/null | awk \'/BEGIN/ { i++; } /BEGIN/, /END/ { print > "%s."i }\'',$url,443,$pat));
+							$pem_list = glob($pat.".*");
+							foreach($pem_list as $pem_file){
+								$cert_data = $this->run_shell_cmd(sprintf('openssl x509 -subject_hash -in "%s" -noout',$pem_file));
+								$cert_ar = explode(PHP_EOL,trim($cert_data));									
+								if (!count($cert_ar)){
+									$this->logger->add('Unable to get certificate data from '.$cert_data,'error');
+									throw new Exception(self::ER_BROKEN_CHAIN);
+								}
+								$this->logger->add('Got certificate with hash:'.$cert_ar[0],'debug');						
+								rename($pem_file,$this->pkiPath.$cert_ar[0].'.crt');									
+							}
+

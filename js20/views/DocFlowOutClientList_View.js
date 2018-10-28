@@ -151,7 +151,7 @@ function DocFlowOutClientList_View(id,options){
 		);
 	}
 
-	this.addElement(new GridAjx(id+":grid",{
+	grid = new GridAjx(id+":grid",{
 		"model":model,
 		"keyIds":["id"],
 		"controller":contr,
@@ -180,7 +180,60 @@ function DocFlowOutClientList_View(id,options){
 		"refreshInterval":0,
 		"rowSelect":false,
 		"focus":true
-	}));		
+	});
+	this.addElement(grid);	
+	
+	this.m_grid_closeEditWinObj = grid.closeEditWinObj;
+	grid.closeEditWinObj = function(res,winId){
+		self.m_correctionsCach = {};
+		self.m_grid_closeEditWinObj.call(self.getElement("grid"),res,winId);
+	}
+	
+	this.m_correctionsCach = {};
+	
+	var self = this;
+	this.m_toolTip = new ToolTip({
+		"wait":300,
+		"onHover":function(e){
+			var tr = DOMHelper.getParentByTagName(e.target,"tr");
+			if (!tr)return;
+			var grid = self.getElement("grid");
+			grid.setModelToCurrentRow(tr);
+			var row = grid.getModel().getFields();
+			if (row.doc_flow_out_client_type.getValue()=="contr_resp"){
+				var cach_id = "id_"+row.id.getValue();
+				if (self.m_correctionsCach[cach_id]){
+					self.showCorrections(self.m_correctionsCach[cach_id],e);
+				}
+				else{
+					var pm = grid.getReadPublicMethod().getController().getPublicMethod("get_correction_list");
+					pm.setFieldValue("id",row.id.getValue());
+					pm.run({
+						"ok":function(resp){
+							var m = resp.getModel("DocFlowOutClientCorrectionList_Model");
+							if (m&&m.getNextRow()){
+								v = m.getFieldValue("corrected_sections");
+								if (v&&v.length){
+									var tmpl = window.getApp().getTemplate("DocFlowOutClientCorrectionList");
+									Mustache.parse(tmpl);
+									self.m_correctionsCach[cach_id] = Mustache.render(
+										tmpl,
+										{
+											"corrected_sections":v
+										}
+									);
+									self.showCorrections(self.m_correctionsCach[cach_id],e);
+								}
+							}
+						}
+					});
+				}
+				//
+			}
+		},
+		"node":grid.getNode()
+	});
+		
 }
 extend(DocFlowOutClientList_View,ViewAjxList);
 
@@ -193,4 +246,8 @@ extend(DocFlowOutClientList_View,ViewAjxList);
 
 
 /* public methods */
+DocFlowOutClientList_View.prototype.showCorrections = function(cont,e){
+	this.m_toolTip.popup(cont,{"event":e,"width":1500});
+
+}
 

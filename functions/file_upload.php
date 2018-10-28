@@ -22,6 +22,12 @@ use Monolog\Handler\PHPConsoleHandler;
 
 $session = new SessManager();
 $session->start_session('_s', $dbLink,$dbLink);
+//setting locale
+if (isset($_SESSION['user_time_locale'])){
+	$dbLink->query(sprintf("SET TIME ZONE '%s'",$_SESSION['user_time_locale']));
+	//php locale		
+	date_default_timezone_set($_SESSION['user_time_locale']);
+}
  
 $request = new SimpleRequest();
 $response = new SimpleResponse();
@@ -37,8 +43,9 @@ define('ER_MAX_SIZE_EXCEEDED', 'Превышение максимального 
 define('ER_BAD_EXT', 'Неверное расширение файла!');
 define('ER_FILE_EXISTS_IN_FOLDER', 'Файл с таким именем уже присутствует в разделе %s данного заявления!');
 define('ER_SIGNED','Документ уже подписан!');
+define('ER_SNILS_EXISTS','Документ уже подписан физическим лицом %s');
 
-define('PKI_MODE','error');
+define('PKI_MODE','debug');
 define('DIR_MAX_LENGTH',500);
 define('CLIENT_OUT_FOLDER','Исходящие заявителя');
 
@@ -77,8 +84,9 @@ function prolongate_session() {
 }
 
 function pki_throw_error(&$verifRres) {
+	//throw new Exception(sprintf(ER_VERIF_SIG,"Какая-то ошибка проверки подписи"));
 	if (pki_fatal_error($verifRres)){
-		throw new Exception(sprintf(ER_VERIF_SIG,$verif_res->checkError));
+		throw new Exception(sprintf(ER_VERIF_SIG,$verifRres->checkError));
 	}		
 
 }
@@ -111,6 +119,39 @@ function merge_sig($uploadFolder,$contentFile,$origFile,$newName,$fileId,$dbFile
 	//verify new signature first	
 	$verif_res = $pki_man->verifySig($origFile,$contentFile);
 	pki_throw_error($verif_res);
+	
+	//SNILS 
+	$q_id = $dbLink->query(sprintf(
+	"SELECT
+		empl.snils
+	FROM file_signatures AS sig
+	LEFT JOIN user_certificates AS certs ON certs.id=sig.user_certificate_id
+	LEFT JOIN employees AS empl ON empl.id=certs.employee_id
+	WHERE sig.file_id=%s AND certs.employee_id IS NOT NULL",
+	$dbFileId
+	));
+	$used_snils = [];
+	$cnt = 0;		
+	while($ar = $dbLink->fetch_array($q_id)){
+		$used_snils[$ar['snils']] = TRUE;
+		$cnt++;
+	}
+	if ($cnt){
+		foreach($verif_res->signatures as $sig){
+			if (isset($sig->subject)&&is_array($sig->subject)&&array_key_exists('СНИЛС',$sig->subject)&&array_key_exists($sig->subject['СНИЛС'],$used_snils)){
+				$arg = '';
+				if (array_key_exists('Фамилия',$sig->subject)){
+					$arg = $sig->subject['Фамилия'];
+					if (array_key_exists('Имя',$sig->subject)){
+						$arg.= ' '.$sig->subject['Имя'];
+					}
+				}
+				$arg.= ($arg=='')? '':', ';
+				$arg.= 'СНИЛС:'.$sig->subject['СНИЛС'];
+				throw new Exception(sprintf(ER_SNILS_EXISTS,$arg));
+			}
+		}
+	}
 	
 	//merge contents with existing file
 	if ($pki_man->isBase64Encoded($newName)){
@@ -285,6 +326,8 @@ try{
 				
 				if (!$sig_add && !$is_sig){
 					//data file
+					//if($_REQUEST['resumableFilename']=='ССР в тек ценах Упорово - Сводный сметный расчет1.xls')
+					//	throw new Exception("Ошибка связи при загрузке данных");
 					$orig_ext = strtolower(pathinfo($_REQUEST['resumableFilename'], PATHINFO_EXTENSION));
 					if (!in_array($orig_ext,$_SESSION['client_download_file_types_ar'])){					
 						throw new Exception(ER_BAD_EXT);
@@ -296,8 +339,11 @@ try{
 					
 					$ul_exists = !$file_signed;
 				}
-				else if (!$sig_add){
+				else if (!$sig_add){				
 					//signature
+					//if($_REQUEST['resumableFilename']=='СМ.ПЗ 40(48).doc.sig' || $_REQUEST['resumableFilename']=='СМ.ПЗ 40(48).doc')
+					//	throw new Exception("Ошибка связи при загрузке подписи");
+					
 					rename_or_error($orig_file,$new_name);
 				}	
 								
@@ -317,7 +363,7 @@ try{
 				)
 				)
 				){
-				
+					$sig_checked = FALSE;
 					try{
 						FieldSQLString::formatForDb($dbLink,$par_file_id,$db_file_id);
 						if ($db_file_id=='null'){
@@ -325,14 +371,15 @@ try{
 							throw new Exception(ER_COMMON);
 						}
 						
-						if (!$ul_exists)
-							check_signature($dbLink,$file_doc,$file_doc_sig,$db_file_id);
-
 						if ($sig_add){
 							/**
 							 * Добавление подписи клиента в НАШ документ, подписание в браузере или через файл
 							 * Здесь всегда полный комплект - файл + ЭЦП
+							 * Добавляем только 100% проверенные ЭЦП, а не косяки
 							 */
+						
+							check_signature($dbLink,$file_doc,$file_doc_sig,$db_file_id);
+							
 							$db_doc_flow_out_client_id = get_doc_flow_out_client_id_for_db(
 									$dbLink,
 									$db_app_id,
@@ -447,15 +494,23 @@ try{
 								$dbLink->query('ROLLBACK');
 								throw $e;
 							}
+							
+							/**
+							 * Теперь данные о файле в базе
+							 * Надо провеить ЭЦП,
+							 * Если фатальная ошибка, файл оставим загруженным, а в ГУИ отметитим кривости подписи
+							 */
+							$sig_checked = TRUE;
+							if (!$ul_exists)
+								check_signature($dbLink,$file_doc,$file_doc_sig,$db_file_id);							
+							
 						}						
 					}
 					catch(Exception $e){
-						if (!$sig_add){
-							//Косяк проверки/БД - удалим файл и все что с ним связано!
-							//файлы документации,прочие вложения,везде нужны файлы+ЭЦП, так что смело все удаляем
-							//if (file_exists($file_doc))unlink($file_doc);
-							//if (file_exists($file_doc_sig))unlink($file_doc_sig);
-						
+						if (!$sig_add && !$sig_checked){
+							//Косяк БД - удалим файл и все что с ним связано!
+							if (file_exists($file_doc))unlink($file_doc);
+							if (file_exists($file_doc_sig))unlink($file_doc_sig);						
 						}
 						throw $e;
 					}

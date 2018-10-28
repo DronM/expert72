@@ -127,3 +127,7 @@ sudo iptables -D f2b-sshd -s 92.255.164.139/32 -j REJECT --reject-with icmp-port
 
 
 sudo -u admin sshfs -o allow_other,reconnect,ServerAliveInterval=15,ServerAliveCountMax=17280 admin@192.168.1.101:/data/backup /mnt/backup
+
+
+crontab
+wget -O crypto_plugin.txt https://www.cryptopro.ru/sites/default/files/products/cades/latest_2_0.txt

@@ -935,6 +935,37 @@ class Application_Controller extends ControllerSQL{
 			
 		$this->addPublicMethod($pm);
 
+			
+		$pm = new PublicMethod('remove_unregistered_data_file');
+		
+				
+	$opts=array();
+	
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtInt('id',$opts));
+	
+				
+	$opts=array();
+	
+		$opts['length']=36;
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtString('file_id',$opts));
+	
+				
+	$opts=array();
+	
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtInt('doc_id',$opts));
+	
+				
+	$opts=array();
+	
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtString('doc_type',$opts));
+	
+			
+		$this->addPublicMethod($pm);
+
 		
 	}	
 	
@@ -1285,10 +1316,10 @@ class Application_Controller extends ControllerSQL{
 						jsonb_build_array(
 							jsonb_build_object(
 								'owner',NULL,
-								'sign_date_time',NULL,
-								'check_result',NULL,
-								'check_time',NULL,
-								'error_str',NULL
+								'sign_date_time',f_ver.date_time,
+								'check_result',f_ver.check_result,
+								'check_time',f_ver.check_time,
+								'error_str',f_ver.error_str
 							)
 						)
 					ELSE sign.signatures
@@ -3392,7 +3423,7 @@ class Application_Controller extends ControllerSQL{
 		return ($ind_used? FILE_STORAGE_DIR:FILE_STORAGE_DIR_MAIN) .DIRECTORY_SEPARATOR.$relPath.DIRECTORY_SEPARATOR.$fileId.'.sig.s'.$maxIndex;
 	}
 	
-	public static function checkIULs(&$dbLink,$docId){
+	public static function checkIULs(&$dbLink,$appId,$outClientId=NULL){
 		$qid = $dbLink->query(sprintf(
 			"SELECT
 				app_f.file_id,
@@ -3409,8 +3440,17 @@ class Application_Controller extends ControllerSQL{
 					AND
 					lower(t.file_name) ~ ('^'||(SELECT f_name FROM file_name_explode(lower(app_f.file_name)) AS (f_name text,f_ext text))||' *- *ул *\.'||(SELECT f_ext FROM file_name_explode(lower(app_f.file_name)) AS (f_name text,f_ext text))||'$')
 				) IS NULL
+				AND app_f.document_type<>'documents'
+				%s
 			ORDER BY app_f.document_type,app_f.file_path,app_f.file_name",
-		$docId
+		$appId,
+		(	is_null($outClientId)? '':sprintf('AND (app_f.file_id IN (
+				SELECT
+					cl_f.file_id
+				FROM doc_flow_out_client_document_files AS cl_f
+				WHERE cl_f.doc_flow_out_client_id=%d
+				) )',$outClientId)
+		)
 		));
 		
 		$err_str = '';
@@ -3426,6 +3466,46 @@ class Application_Controller extends ControllerSQL{
 		
 		if (strlen($err_str)){
 			throw new Exception($err_str);
+		}
+	}
+	
+	public function remove_unregistered_data_file($pm){
+		$app_id = $this->getExtDbVal($pm,'id');		
+	
+		$state = self::checkSentState($this->getDbLink(),$app_id,TRUE);
+		$ar = $this->getDbLink()->query_first(sprintf(
+			"SELECT
+				TRUE AS file_exists
+			FROM application_document_files
+			WHERE file_id=%s AND application_id=%d",		
+		$this->getExtDbVal($pm,'file_id'),
+		$app_id
+		));
+		
+		if (is_array($ar) && count($ar) && $ar['file_exists']=='t'){
+			throw new Exception(self::ER_STORAGE_FILE_NOT_FOUND);
+		}
+		
+		$rel_fl = self::APP_DIR_PREF.$app_id.DIRECTORY_SEPARATOR.
+			self::dirNameOnDocType($this->getExtVal($pm,'doc_type')).DIRECTORY_SEPARATOR.
+			$this->getExtVal($pm,'doc_id').DIRECTORY_SEPARATOR.
+			$this->getExtVal($pm,'file_id');
+
+		$data_file_exists = (
+			file_exists($data_file = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_fl)
+			|| (defined('FILE_STORAGE_DIR_MAIN') && file_exists($data_file = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$rel_fl))
+		);
+		$sig_file_exists = (
+			file_exists($sig_file = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_fl.self::SIG_EXT)
+			|| (defined('FILE_STORAGE_DIR_MAIN') && file_exists($sig_file = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$rel_fl.self::SIG_EXT))
+		);
+			
+		if (
+			($data_file_exists && !$sig_file_exists)
+			||(!$data_file_exists && $sig_file_exists)
+		){
+			if($data_file_exists)unlink($data_file);
+			if($sig_file_exists)unlink($sig_file);
 		}
 	}
 	

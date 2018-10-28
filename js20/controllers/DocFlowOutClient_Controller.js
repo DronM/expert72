@@ -35,6 +35,8 @@ function DocFlowOutClient_Controller(options){
 	this.add_get_files_for_signing();
 	this.add_delete_all_attachments();
 	this.add_get_file();
+	this.add_check_type();
+	this.add_get_correction_list();
 		
 }
 extend(DocFlowOutClient_Controller,ControllerObjServer);
@@ -377,6 +379,46 @@ extend(DocFlowOutClient_Controller,ControllerObjServer);
 		options.required = true;
 	
 		pm.addField(new FieldInt("doc_id",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			DocFlowOutClient_Controller.prototype.add_check_type = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('check_type',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("application_id",options));
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldString("doc_flow_out_client_type",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			DocFlowOutClient_Controller.prototype.add_get_correction_list = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('get_correction_list',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("id",options));
 	
 			
 	this.addPublicMethod(pm);

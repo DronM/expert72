@@ -296,6 +296,9 @@ class DocFlow_Controller extends ControllerSQL{
 			}
 		}
 		
+		//В случае если удалились все подписи. Т.е. был 1 sig с многими подписями, подложенный руками
+		$all_sigs_deleted = FALSE;
+		
 		//можно удалить последнюю ЭЦП
 		try{
 			$this->getDbLinkMaster()->query("BEGIN");
@@ -343,16 +346,24 @@ class DocFlow_Controller extends ControllerSQL{
 					if($cur_sig_exists)unlink($cur_sig);
 					rename($prev_sig,$new_cur_sig);
 				}
+				else if ($max_ind==0){
+					//no index file, delete sig
+					if($cur_sig_exists)unlink($cur_sig);
+					$this->getDbLinkMaster()->query(sprintf("DELETE FROM file_verifications WHERE file_id=%s",$this->getExtDbVal($pm,'file_id')));
+					$all_sigs_deleted = TRUE;
+				}
 			
-				$pki_man = new PKIManager(PKI_PATH,PKI_CRL_VALIDITY,PKI_MODE);
-				$verif_res = pki_log_sig_check($new_cur_sig, $file_doc, $this->getExtDbVal($pm,'file_id'), $pki_man, $this->getDbLinkMaster());
-				if (
-					!$verif_res->checkPassed
-					&&
-					( PKI_SIG_ERROR=='ALL' || (PKI_SIG_ERROR=='NO_CERT' && !count($verif_res->signatures) ) )
-				){
-					throw new Exception(sprintf(ER_VERIF_SIG,$verif_res->checkError));
-				}		
+				if (file_exists($new_cur_sig)){
+					$pki_man = new PKIManager(PKI_PATH,PKI_CRL_VALIDITY,PKI_MODE);
+					$verif_res = pki_log_sig_check($new_cur_sig, $file_doc, $this->getExtDbVal($pm,'file_id'), $pki_man, $this->getDbLinkMaster());
+					if (
+						!$verif_res->checkPassed
+						&&
+						( PKI_SIG_ERROR=='ALL' || (PKI_SIG_ERROR=='NO_CERT' && !count($verif_res->signatures) ) )
+					){
+						throw new Exception(sprintf(ER_VERIF_SIG,$verif_res->checkError));
+					}		
+				}
 			}
 			
 			$this->getDbLinkMaster()->query("COMMIT");
@@ -361,7 +372,19 @@ class DocFlow_Controller extends ControllerSQL{
 		catch(Exception $e){
 			$this->getDbLinkMaster()->query("ROLLBACK");
 			throw $e;
-		}	
+		}
+		if ($all_sigs_deleted){
+			$this->addModel(new ModelVars(
+				array('name'=>'Vars',
+					'id'=>'SigRemoveResult_Model',
+					'values'=>array(
+						new Field('all_sigs_deleted',DT_BOOL,
+							array('value'=>TRUE)
+						)
+					)
+				)
+			));		
+		}
 	}
 	
 	/**

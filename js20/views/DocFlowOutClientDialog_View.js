@@ -128,34 +128,21 @@ function DocFlowOutClientDialog_View(id,options){
 			"events":{
 				"change":function(){
 					var v = this.getValue();
-					var ctrl = self.getElement("attachments");
-					if (self.getElement("id").getValue() && (ctrl.getForUploadFileCount() + ctrl.getTotalFileCount())){
-						var this_ctrl = this;
-						var tp = self.getElement("doc_flow_out_client_type").getValue();
-						var msg = (tp=="contr_return")?
-							"Загруженные электронно цифровые подписи необходимо удалть, продолжить?" :
-							"Вложенные файлы с другим типом письма необходимо удалить, продолжить?";
-						WindowQuestion.show({
-							"text":msg,
-							"cancel":false,
-							"callBack":function(res){			
-								if (res==WindowQuestion.RES_YES){
-									this_ctrl.setAttr("prevval",v);
-									self.onChangeType(true);
-								}
-								else{
-									var prev_val = this_ctrl.getAttr("prevvval");
-									if (!prev_val){
-										prev_val = this_ctrl.getAttr("initvalue");
-										this_ctrl.setAttr("prevval",prev_val);
-									}
-									this_ctrl.setValue(prev_val);
-								}
+					var app = self.getElement("applications_ref").getValue();
+					var this_ctrl = this;
+					if (app){
+						//unsent doc check
+						var pm = new DocFlowOutClient_Controller().getPublicMethod("check_type");
+						pm.setFieldValue("application_id",app.getKey());
+						pm.setFieldValue("doc_flow_out_client_type",v);
+						pm.run({
+							"all":function(){
+								self.changeTypeContinue(v,this_ctrl);
 							}
 						});
 					}
 					else{
-						self.onChangeType();
+						self.changeTypeContinue(v,this_ctrl);	
 					}
 				}			
 			}
@@ -545,4 +532,36 @@ DocFlowOutClientDialog_View.prototype.onSaveOk = function(resp){
 	DocFlowOutClientDialog_View.superclass.onSaveOk.call(this,resp);
 	
 	this.getElement("doc_flow_out_client_type").setEnabled(false);
+}
+
+DocFlowOutClientDialog_View.prototype.changeTypeContinue = function(v,ctrlContext){
+	var ctrl = this.getElement("attachments");
+	if (this.getElement("id").getValue() && (ctrl.getForUploadFileCount() + ctrl.getTotalFileCount())){
+		var tp = this.getElement("doc_flow_out_client_type").getValue();
+		var msg = (tp=="contr_return")?
+			"Загруженные электронно цифровые подписи необходимо удалть, продолжить?" :
+			"Вложенные файлы с другим типом письма необходимо удалить, продолжить?";
+		WindowQuestion.show({
+			"text":msg,
+			"cancel":false,
+			"callBack":function(res){			
+				if (res==WindowQuestion.RES_YES){
+					ctrlContext.setAttr("prevval",v);
+					this.onChangeType(true);
+				}
+				else{
+					var prev_val = ctrlContext.getAttr("prevvval");
+					if (!prev_val){
+						prev_val = ctrlContext.getAttr("initvalue");
+						ctrlContext.setAttr("prevval",prev_val);
+					}
+					ctrlContext.setValue(prev_val);
+				}
+			}
+		});
+	}
+	else{
+		this.onChangeType();
+	}
+
 }

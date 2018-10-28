@@ -61,6 +61,7 @@ function Application_Controller(options){
 	this.add_get_customer_list();
 	this.add_get_contractor_list();
 	this.add_get_constr_name_list();
+	this.add_remove_unregistered_data_file();
 		
 }
 extend(Application_Controller,ControllerObjServer);
@@ -1357,6 +1358,48 @@ extend(Application_Controller,ControllerObjServer);
 	var options = {};
 	
 		pm.addField(new FieldString("name",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			Application_Controller.prototype.add_remove_unregistered_data_file = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('remove_unregistered_data_file',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("id",options));
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		options.maxlength = "36";
+	
+		pm.addField(new FieldString("file_id",options));
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("doc_id",options));
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldString("doc_type",options));
 	
 			
 	this.addPublicMethod(pm);

@@ -45,26 +45,28 @@ CREATE OR REPLACE VIEW doc_flow_inside_dialog AS
 		LEFT JOIN file_verifications AS f_ver ON f_ver.file_id=t.file_id
 		LEFT JOIN (
 			SELECT
+				files_t.file_id,
+				json_agg(files_t.signatures) AS signatures
+			FROM			
+			(SELECT
 				f_sig.file_id,
-				jsonb_agg(
-					jsonb_build_object(
-						'owner',u_certs.subject_cert,
-						'cert_from',u_certs.date_time_from,
-						'cert_to',u_certs.date_time_to,
-						'sign_date_time',f_sig.sign_date_time,
-						'check_result',ver.check_result,
-						'check_time',ver.check_time,
-						'error_str',ver.error_str,
-						'employee_id',u_certs.employee_id,
-						'verif_date_time',ver.date_time
-					)
+				jsonb_build_object(
+					'owner',u_certs.subject_cert,
+					'cert_from',u_certs.date_time_from,
+					'cert_to',u_certs.date_time_to,
+					'sign_date_time',f_sig.sign_date_time,
+					'check_result',ver.check_result,
+					'check_time',ver.check_time,
+					'error_str',ver.error_str,
+					'employee_id',u_certs.employee_id,
+					'verif_date_time',ver.date_time
 				) As signatures
 			FROM file_signatures AS f_sig
 			LEFT JOIN file_verifications AS ver ON ver.file_id=f_sig.file_id
 			LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id
-			GROUP BY f_sig.file_id,ver.date_time
-			ORDER BY ver.date_time
-			--ТАКАЯ СОРТИРОВКА ЧТОБЫ НЕ БЫЛО ПРОБЛЕМ У УДАЛЕНИЕМ!!!
+			ORDER BY f_sig.sign_date_time
+			) AS files_t
+			GROUP BY files_t.file_id
 		) AS sign ON sign.file_id=t.file_id
 	WHERE t.doc_type='doc_flow_inside'::data_types
 	GROUP BY t.doc_id

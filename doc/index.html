@@ -201,6 +201,7 @@
 <li><a href="#DocFlowOutClient_Model">DocFlowOutClient_Model</a></li>
 <li><a href="#DocFlowOutClientList_Model">DocFlowOutClientList_Model</a></li>
 <li><a href="#DocFlowOutClientDialog_Model">DocFlowOutClientDialog_Model</a></li>
+<li><a href="#DocFlowOutClientCorrectionList_Model">DocFlowOutClientCorrectionList_Model</a></li>
 <li><a href="#DocFlowOutClientDocumentFile_Model">DocFlowOutClientDocumentFile_Model</a></li>
 <li><a href="#DocFlowOutClientRegNumber_Model">DocFlowOutClientRegNumber_Model</a></li>
 <li><a href="#DocFlowInClient_Model">DocFlowInClient_Model</a></li>
@@ -670,7 +671,39 @@
 <h2>get_customer_list</h2>
 <a href="#ApplicationCustomerList_Model">Model: ApplicationCustomerList_Model</a><h2>get_contractor_list</h2>
 <a href="#ApplicationContractorList_Model">Model: ApplicationContractorList_Model</a><h2>get_constr_name_list</h2>
-<a href="#ApplicationConstrNameList_Model">Model: ApplicationConstrNameList_Model</a>
+<a href="#ApplicationConstrNameList_Model">Model: ApplicationConstrNameList_Model</a><h2>remove_unregistered_data_file</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Да</p>
+</div>
+<h3>file_id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Да</p>
+<p>Length:36</p>
+</div>
+<h3>doc_id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Да</p>
+</div>
+<h3>doc_type</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Да</p>
+</div>
+</div>
 </div>
 </div>
 <div id="ApplicationClient_Controller" class="content_box">
@@ -2035,6 +2068,35 @@
 <p>Length:36</p>
 </div>
 <h3>doc_id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Да</p>
+</div>
+</div>
+<h2>check_type</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>application_id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Да</p>
+</div>
+<h3>doc_flow_out_client_type</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Да</p>
+</div>
+</div>
+<h2>get_correction_list</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>id</h3>
 <p></p>
 <div class="content_item content_item3">
 <p>Type:Int</p>
@@ -8366,6 +8428,18 @@
 <div>Precision:</div>
 </div>
 </div>
+<div id="DocFlowOutClientCorrectionList_Model" class="content_box">
+<h1>DocFlowOutClientCorrectionList_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>corrected_sections</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
 <div id="DocFlowOutClientDialog_Model" class="content_box">
 <h1>DocFlowOutClientDialog_Model</h1>
 <div class="content_item">
@@ -8540,6 +8614,12 @@
 <div>Precision:</div>
 <h2>sent</h2>
 <div>Type:Bool</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>doc_flow_out_client_type</h2>
+<div>Type:String</div>
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>

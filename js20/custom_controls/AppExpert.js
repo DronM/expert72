@@ -178,7 +178,8 @@ AppExpert.prototype.getCadesAPI = function(){
 			"chunkSize":parseInt(this.getServVar("cades_chunk_size"),10),
 			"cadesType":const_list.cades_signature_type.getValue(),
 			"hashAlgorithm":const_list.cades_hash_algorithm.getValue(),
-			"loadTimeout":parseInt(this.getServVar("cades_load_timeout"),10)
+			"loadTimeout":parseInt(this.getServVar("cades_load_timeout"),10),
+			"plugin_version":this.getServVar("cryptopro_plugin")
 		});
 	}
 	return this.m_cades;

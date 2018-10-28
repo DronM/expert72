@@ -324,6 +324,8 @@ $permissions = array();
 				
 					$permissions['Application_Controller_get_constr_name_list']=TRUE;
 				
+					$permissions['Application_Controller_remove_unregistered_data_file']=TRUE;
+				
 					$permissions['ApplicationClient_Controller_insert']=TRUE;
 				
 					$permissions['ApplicationClient_Controller_update']=TRUE;
@@ -641,6 +643,10 @@ $permissions = array();
 					$permissions['DocFlowOutClient_Controller_delete_all_attachments']=TRUE;
 				
 					$permissions['DocFlowOutClient_Controller_get_file']=TRUE;
+				
+					$permissions['DocFlowOutClient_Controller_check_type']=TRUE;
+				
+					$permissions['DocFlowOutClient_Controller_get_correction_list']=TRUE;
 				
 					$permissions['DocFlowInClient_Controller_update']=TRUE;
 				

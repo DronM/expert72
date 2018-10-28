@@ -127,6 +127,7 @@ class ViewBase extends ViewHTMLXSLT {
 				$this->getVarModel()->addField(new Field('custom_app_upload_server',DT_STRING));
 			}
 		}
+		$this->getVarModel()->addField(new Field('cryptopro_plugin',DT_STRING));
 		
 		<!-- custom vars-->
 		$this->getVarModel()->insert();
@@ -180,6 +181,13 @@ class ViewBase extends ViewHTMLXSLT {
 				$this->setVarValue('department_boss',$_SESSION['department_boss']);
 				$this->setVarValue('recipient_states_ref',$_SESSION['recipient_states_ref']);
 			}
+			
+			//wget -O crypto_plugin.txt https://www.cryptopro.ru/sites/default/files/products/cades/latest_2_0.txt
+			$pl_ver = '';
+			if (file_exists($pl=ABSOLUTE_PATH.'cryptopro_plugin.txt')){
+				$pl_ver = trim(file_get_contents($pl));
+			}
+			$this->setVarValue('cryptopro_plugin',$pl_ver);
 		}
 		
 		//Global Filters

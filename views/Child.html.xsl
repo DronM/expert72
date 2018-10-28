@@ -10,8 +10,6 @@
 	<head>
 		<xsl:call-template name="initHead"/>
 		
-		<title>CRM</title>
-		
 		<script>		
 			function beforeUnload(e){
 				if (window.m_childForms){

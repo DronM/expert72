@@ -1,0 +1,89 @@
+--SET TIME ZONE 'Asia/Yekaterinburg';
+/*
+INSERT INTO public.application_document_files(
+            file_id, application_id, document_id, document_type, date_time, 
+            file_name, file_path, file_signed, deleted, deleted_dt, file_size)
+    VALUES ('bf31242d-1bc7-4297-ae7d-dd3a5d60f25e', 2031, 1,'pd', '2018-08-20', 
+            'bf31242d-1bc7-4297-ae7d-dd3a5d60f25e','Раздел 1. Пояснительная записка',
+            TRUE,TRUE,'2018-08-20',0)
+INSERT INTO public.file_signatures(
+            file_id, sign_date_time)
+    VALUES ('bf31242d-1bc7-4297-ae7d-dd3a5d60f25e', '2018-08-20');
+INSERT INTO public.file_verifications(
+            file_id, date_time, check_result, check_time)
+    VALUES ('bf31242d-1bc7-4297-ae7d-dd3a5d60f25e','2018-08-20',TRUE,0);
+            
+*/
+/*
+INSERT INTO public.application_document_files(
+            file_id, application_id, document_id, document_type, date_time, 
+            file_name, file_path, file_signed, deleted, deleted_dt, file_size)
+    VALUES ('22c6ce42-67a1-4b43-8258-7f879d8efe21', 2031, 2,'pd', '2018-08-20', 
+            '22c6ce42-67a1-4b43-8258-7f879d8efe21','Раздел 2. Схема планировочной организации земельного участка',
+            TRUE,TRUE,'2018-08-20',0)
+INSERT INTO public.file_signatures(
+            file_id, sign_date_time)
+    VALUES ('22c6ce42-67a1-4b43-8258-7f879d8efe21', '2018-08-20');
+INSERT INTO public.file_verifications(
+            file_id, date_time, check_result, check_time)
+    VALUES ('22c6ce42-67a1-4b43-8258-7f879d8efe21','2018-08-20',TRUE,0);
+            
+*/
+/*
+INSERT INTO public.application_document_files(
+            file_id, application_id, document_id, document_type, date_time, 
+            file_name, file_path, file_signed, deleted, deleted_dt, file_size)
+    VALUES ('ce7f05c2-d2eb-4ebf-bd31-5d01b9c92e2e', 2031, 2,'pd', '2018-08-20', 
+            'ce7f05c2-d2eb-4ebf-bd31-5d01b9c92e2e','Раздел 2. Схема планировочной организации земельного участка',
+            TRUE,TRUE,'2018-08-20',0);
+INSERT INTO public.file_signatures(
+            file_id, sign_date_time)
+    VALUES ('ce7f05c2-d2eb-4ebf-bd31-5d01b9c92e2e', '2018-08-20');
+INSERT INTO public.file_verifications(
+            file_id, date_time, check_result, check_time)
+    VALUES ('ce7f05c2-d2eb-4ebf-bd31-5d01b9c92e2e','2018-08-20',TRUE,0);
+*/
+/*
+INSERT INTO public.application_document_files(
+            file_id, application_id, document_id, document_type, date_time, 
+            file_name, file_path, file_signed, deleted, deleted_dt, file_size)
+    VALUES ('ad1f3ee9-aac2-478e-bffc-777c8d9272bd', 2031, 3,'pd', '2018-08-20', 
+            'ad1f3ee9-aac2-478e-bffc-777c8d9272bd','Раздел 3. Архитектурные решения',
+            TRUE,TRUE,'2018-08-20',0);
+INSERT INTO public.file_signatures(
+            file_id, sign_date_time)
+    VALUES ('ad1f3ee9-aac2-478e-bffc-777c8d9272bd', '2018-08-20');
+INSERT INTO public.file_verifications(
+            file_id, date_time, check_result, check_time)
+    VALUES ('ad1f3ee9-aac2-478e-bffc-777c8d9272bd','2018-08-20',TRUE,0);
+
+INSERT INTO public.application_document_files(
+            file_id, application_id, document_id, document_type, date_time, 
+            file_name, file_path, file_signed, deleted, deleted_dt, file_size)
+    VALUES ('ab326112-63ac-485d-a824-7b1536a6fa80', 2031, 4,'pd', '2018-08-20', 
+            'ab326112-63ac-485d-a824-7b1536a6fa80','Раздел 3. Раздел 4. Конструктивные и объемно планировочные решения',
+            TRUE,TRUE,'2018-08-20',0);
+INSERT INTO public.file_signatures(
+            file_id, sign_date_time)
+    VALUES ('ab326112-63ac-485d-a824-7b1536a6fa80', '2018-08-20');
+INSERT INTO public.file_verifications(
+            file_id, date_time, check_result, check_time)
+    VALUES ('ab326112-63ac-485d-a824-7b1536a6fa80','2018-08-20',TRUE,0);
+*/
+INSERT INTO public.application_document_files(
+            file_id, application_id, document_id, document_type, date_time, 
+            file_name, file_path, file_signed, deleted, deleted_dt, file_size)
+    VALUES ('8e46bfcc-fe54-4b61-87de-f9e9bac6af04', 2031, 10,'pd', '2018-08-20', 
+            '8e46bfcc-fe54-4b61-87de-f9e9bac6af04','Раздел 10. Мероприятия по обеспечению доступа инвалидов',
+            TRUE,TRUE,'2018-08-20',0);
+INSERT INTO public.file_signatures(
+            file_id, sign_date_time)
+    VALUES ('8e46bfcc-fe54-4b61-87de-f9e9bac6af04', '2018-08-20');
+INSERT INTO public.file_verifications(
+            file_id, date_time, check_result, check_time)
+    VALUES ('8e46bfcc-fe54-4b61-87de-f9e9bac6af04','2018-08-20',TRUE,0);
+
+
+
+
+--DELETE FROM application_document_files WHERE file_id='ad1f3ee9-aac2-478e-bffc-777c8d9272bd'

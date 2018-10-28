@@ -794,6 +794,7 @@ ApplicationDialog_View.prototype.onGetData = function(resp,cmd){
 	var st = m.getFieldValue("application_state");
 	
 	var mes_id = "inf_"+st;
+	var self = this;
 	
 	if (cmd!="insert"){
 		//add doc flow elements
@@ -803,23 +804,27 @@ ApplicationDialog_View.prototype.onGetData = function(resp,cmd){
 			"readOnly":(st=="archive"),
 			"models":{"DocFlowOutClientList_Model":this.m_DocFlowOutClientList_Model}			
 		});
-		var dlg_m = new DocFlowOutClientDialog_Model();
-		dlg_m.setFieldValue("applications_ref",app_ref);
+		tab_out.getElement("grid").setInsertViewOptions(function(){
+			var m = self.getModel();
+			var app_ref = new RefType({"keys":{"id":m.getFieldValue("id")},"descr":m.getFieldValue("select_descr")});
+			var dlg_m = new DocFlowOutClientDialog_Model();
+			dlg_m.setFieldValue("applications_ref",app_ref);
 		
-		if (st=="expertise"){
-			dlg_m.setFieldValue("doc_flow_out_client_type","contr_resp");
-		}
-		else{
-			dlg_m.setFieldValue("doc_flow_out_client_type","contr_return");
-		}
-		
-		dlg_m.recInsert();
-		tab_out.getElement("grid").setInsertViewOptions({
-			"fromApp":true,
-			"models":{
-				"DocFlowOutClientDialog_Model": dlg_m
-				,"ApplicationDialog_Model":this.getModel()
+			if (st=="expertise"){
+				dlg_m.setFieldValue("doc_flow_out_client_type","contr_resp");
 			}
+			else{
+				dlg_m.setFieldValue("doc_flow_out_client_type","contr_return");
+			}		
+			dlg_m.recInsert();
+		
+			return {
+				"fromApp":true,
+				"models":{
+					"DocFlowOutClientDialog_Model": dlg_m
+					,"ApplicationDialog_Model":self.getModel()
+				}
+			};
 		});
 		tab_out.toDOM();
 		this.addElement(tab_out);

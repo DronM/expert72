@@ -32,6 +32,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 	const ER_NO_ATTACHMENTS = 'У документа нет вложений!';
 	const ER_NO_DOC_FILE = 'Файл с данными не найден!';
 	const ER_VERIF_SIG = 'Ошибка проверки подписи:%s';
+	const ER_UNSENT_DOC_EXISTS = 'По данному заявлению уже есть неотправленный документ с таким видом письма от %s';
 
 	public function __construct($dbLinkMaster=NULL,$dbLink=NULL){
 		parent::__construct($dbLinkMaster,$dbLink);<xsl:apply-templates/>
@@ -58,6 +59,9 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		//check app state
 		$app_id = $this->getExtDbVal($pm,'application_id');
 		
+		//Проверка на существование других неотправленных писем в таким же типом
+		$this->check_unsent_doc($this->getExtDbVal($pm,'application_id'),$this->getExtDbVal($pm,'doc_flow_out_client_type'));
+					
 		$ar = $this->getDbLink()->query_first(sprintf("SELECT
 			application_processes_last(%d) AS state,
 			(SELECT ap.user_id=%d FROM applications AS ap WHERE ap.id=%d) AS user_check_passed
@@ -83,7 +87,8 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		
 		if ($this->getExtVal($pm,'sent')=='true'){
 			throw new Exception(self::ER_NO_ATTACHMENTS);
-		}	
+		}
+		
 		$pm->setParamValue("user_id",$_SESSION['user_id']);
 		$inserted_id_ar = parent::insert($pm);
 		return $inserted_id_ar;
@@ -172,7 +177,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		
 			if ($ar['doc_flow_out_client_type']=='contr_resp'){
 				$db_link = $this->getDbLink();
-				Application_Controller::checkIULs($db_link,$app_id);
+				Application_Controller::checkIULs($db_link,$app_id,$this->getExtDbVal($pm,'old_id'));
 			}		
 			/*
 			if ($ar['doc_flow_out_client_type']=='contr_return' &amp;&amp; $ar['state']!='expertise'){
@@ -469,7 +474,8 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 					app_f.document_type,
 					app_f.file_signed,
 					app_f.deleted,
-					doc_f.signature
+					doc_f.signature,
+					coalesce(doc_f.is_new) AS is_new
 				FROM doc_flow_out_client_document_files AS doc_f
 				LEFT JOIN application_document_files AS app_f ON app_f.file_id=doc_f.file_id
 				WHERE doc_f.doc_flow_out_client_id=%d",
@@ -524,30 +530,42 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 					}
 				}
 				else{
-					$dbLinkMaster->query(sprintf(
-						"DELETE FROM application_document_files WHERE file_id=%s",
-					"'".$ar['file_id']."'"
-					));
-					$file_rel = DIRECTORY_SEPARATOR.Application_Controller::APP_DIR_PREF.$doc_attrs['application_id'].DIRECTORY_SEPARATOR.
-						(($ar['document_type']!='documents')? (Application_Controller::dirNameOnDocType($ar['document_type']).$ar['document_id']) : $ar['file_path']).DIRECTORY_SEPARATOR.
-						$ar['file_id'];
-					$unlink_file = ($ar['document_type']=='documents' || $ar['deleted']!='t');
+					if ($ar['document_type']!='documents' &amp;&amp; $ar['deleted']=='t'){
+						$file_rel = DIRECTORY_SEPARATOR.Application_Controller::APP_DIR_PREF.$doc_attrs['application_id'].DIRECTORY_SEPARATOR.
+							Application_Controller::APP_DIR_DELETED_FILES.DIRECTORY_SEPARATOR.$ar['file_id'];
+						$restor_file_rel = DIRECTORY_SEPARATOR.Application_Controller::APP_DIR_PREF.$doc_attrs['application_id'].DIRECTORY_SEPARATOR.
+							(($ar['document_type']!='documents')? (Application_Controller::dirNameOnDocType($ar['document_type']).DIRECTORY_SEPARATOR.$ar['document_id']) : $ar['file_path']).DIRECTORY_SEPARATOR.
+							$ar['file_id'];
+							
+						$unlink_file = FALSE;
+					}
+					else{
+						$file_rel = DIRECTORY_SEPARATOR.Application_Controller::APP_DIR_PREF.$doc_attrs['application_id'].DIRECTORY_SEPARATOR.
+							(($ar['document_type']!='documents')? (Application_Controller::dirNameOnDocType($ar['document_type']).DIRECTORY_SEPARATOR.$ar['document_id']) : $ar['file_path']).DIRECTORY_SEPARATOR.
+							$ar['file_id'];
+						$unlink_file = TRUE;
+					}
+					
 					if (
 					file_exists($file=FILE_STORAGE_DIR.$file_rel)
 					|| (defined('FILE_STORAGE_DIR_MAIN') &amp;&amp; file_exists($file=FILE_STORAGE_DIR_MAIN.$file_rel))
 					){							
 						if ($unlink_file){
 							unlink($file);
+							$dbLinkMaster->query(sprintf(
+								"DELETE FROM application_document_files WHERE file_id=%s",
+							"'".$ar['file_id']."'"
+							));
+							
 						}
 						else{
 							//move back to documentation
-							rename($file,
-								FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
-								Application_Controller::APP_DIR_PREF.$doc_attrs['application_id'].DIRECTORY_SEPARATOR.
-								Application_Controller::dirNameOnDocType($ar['document_type']).DIRECTORY_SEPARATOR.
-								$ar['file_id']
-							);
+							$dbLinkMaster->query(sprintf(
+								"UPDATE application_document_files SET deleted=FALSE WHERE file_id=%s",
+							"'".$ar['file_id']."'"
+							));
 							
+							rename($file,FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$restor_file_rel);							
 						}										
 					}								
 
@@ -563,13 +581,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 						}
 						else{
 							//move back to documentation
-							rename($file,
-								FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
-								Application_Controller::APP_DIR_PREF.$doc_attrs['application_id'].DIRECTORY_SEPARATOR.
-								Application_Controller::dirNameOnDocType($ar['document_type']).DIRECTORY_SEPARATOR.
-								$ar['file_id'].'.sig'
-							);
-							
+							rename($file,FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$restor_file_rel.'.sig');							
 						}										
 					}								
 				}
@@ -662,6 +674,51 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			$dbLinkMaster->query("ROLLBACK");
 			throw $e;
 		}
+	}
+	
+	private function check_unsent_doc($appId,$docFlowOutClientTypeForDb){
+		//Проверка на существование других неотправленных писем в таким же типом
+		$ar = $this->getDbLink()->query_first(sprintf(
+			"SELECT
+				id,
+				to_char(date_time,'DD/MM/YY') date_time
+			FROM doc_flow_out_client
+			WHERE application_id=%d AND doc_flow_out_client_type=%s AND coalesce(sent,FALSE)=FALSE",
+		$appId,
+		$docFlowOutClientTypeForDb
+		));
+		if (is_array($ar) &amp;&amp; count($ar) &amp;&amp; $ar['id']){
+			throw new Exception(sprintf(self::ER_UNSENT_DOC_EXISTS,$ar['date_time']));
+		}
+	}
+	
+	public function check_type($pm){
+		$this->check_unsent_doc($this->getExtDbVal($pm,'application_id'),$this->getExtDbVal($pm,'doc_flow_out_client_type'));
+	}
+	
+	public function get_correction_list($pm){
+		$this->addNewModel(sprintf(
+			"SELECT
+				jsonb_agg(paths.section_o) AS corrected_sections
+			FROM
+			(
+				SELECT 
+				app_f.file_path,
+				jsonb_build_object(
+					'name',app_f.file_path,
+					'deleted',sum(CASE WHEN doc_f.is_new THEN 0 ELSE 1 END),
+					'added',sum(CASE WHEN doc_f.is_new THEN 1 ELSE 0 END)
+				) AS section_o
+				FROM doc_flow_out_client_document_files AS doc_f
+				LEFT JOIN application_document_files AS app_f ON app_f.file_id=doc_f.file_id
+				WHERE doc_f.doc_flow_out_client_id=%d AND app_f.document_id&lt;&gt;0
+				GROUP BY app_f.file_path
+				ORDER BY app_f.file_path
+			) AS paths",
+		$this->getExtDbVal($pm,'id')
+		),
+		"DocFlowOutClientCorrectionList_Model");
+	
 	}
 	
 </xsl:template>

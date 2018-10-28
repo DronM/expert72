@@ -1,6 +1,6 @@
 -- VIEW: doc_flow_out_client_list
 
-DROP VIEW doc_flow_out_client_list;
+--DROP VIEW doc_flow_out_client_list;
 
 CREATE OR REPLACE VIEW doc_flow_out_client_list AS
 	SELECT
@@ -12,7 +12,8 @@ CREATE OR REPLACE VIEW doc_flow_out_client_list AS
 		applications_ref(applications) AS applications_ref,
 		t.application_id,
 		t.sent,
-		cl_in_regs.reg_number AS reg_number_in
+		cl_in_regs.reg_number AS reg_number_in,
+		t.doc_flow_out_client_type
 		
 	FROM doc_flow_out_client t
 	LEFT JOIN applications ON applications.id=t.application_id

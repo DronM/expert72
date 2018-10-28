@@ -116,7 +116,7 @@ class ViewBase extends ViewHTMLXSLT {
 			
 		
 		if (!DEBUG){			
-			$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/core/libraries/jquery.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/core/libraries/bootstrap.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/plugins/loaders/blockui.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/core/app.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/bootstrap-datepicker/bootstrap-datepicker.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/bootstrap-datepicker/bootstrap-datepicker.ru.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/mustache/mustache.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/jshash-2.2/md5-min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/cadesplugin/es6-promise.min.js'));
+			$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/core/libraries/jquery.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/core/libraries/bootstrap.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/plugins/loaders/blockui.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'assets/js/core/app.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/bootstrap-datepicker/bootstrap-datepicker.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/bootstrap-datepicker/bootstrap-datepicker.ru.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/mustache/mustache.min.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/jshash-2.2/md5-min.js'));
 			$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'lib.js'));
 			$script_id = VERSION;
 		}
@@ -145,7 +145,7 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/DragnDrop/DragObject.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/DragnDrop/DropTarget.js'));
 		
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/cadesplugin/es6-promise.min.js'));
+		
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/cadesplugin/cadesplugin_api.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/cadesplugin/CertificateAdjuster.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/cadesplugin/CadesAPI.js'));
@@ -1675,6 +1675,7 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ApplicationConstrNameList_Model.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/RepQuarter_Model.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowOutCorrection_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowOutClientCorrectionList_Model.js'));
 	
 			if (isset($_SESSION['scriptId'])){
 				$script_id = $_SESSION['scriptId'];
@@ -1705,6 +1706,7 @@ class ViewBase extends ViewHTMLXSLT {
 				$this->getVarModel()->addField(new Field('custom_app_upload_server',DT_STRING));
 			}
 		}
+		$this->getVarModel()->addField(new Field('cryptopro_plugin',DT_STRING));
 		
 		
 		$this->getVarModel()->insert();
@@ -1758,6 +1760,13 @@ class ViewBase extends ViewHTMLXSLT {
 				$this->setVarValue('department_boss',$_SESSION['department_boss']);
 				$this->setVarValue('recipient_states_ref',$_SESSION['recipient_states_ref']);
 			}
+			
+			//wget -O crypto_plugin.txt https://www.cryptopro.ru/sites/default/files/products/cades/latest_2_0.txt
+			$pl_ver = '';
+			if (file_exists($pl=ABSOLUTE_PATH.'cryptopro_plugin.txt')){
+				$pl_ver = trim(file_get_contents($pl));
+			}
+			$this->setVarValue('cryptopro_plugin',$pl_ver);
 		}
 		
 		//Global Filters

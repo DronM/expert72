@@ -204,21 +204,16 @@ FileUploaderApplication_View.prototype.onGetSignatureDetails = function(fileId,c
 	FileUploaderApplication_View.superclass.onGetSignatureDetails.call(this,fileId,callBack,(new Application_Controller()));
 }
 
-FileUploaderApplication_View.prototype.fireFileError = function(file,message){
-	FileUploaderApplication_View.superclass.fireFileError.call(this,file,message);
-	if (file.signature){	
-		//Нет уже на сервере, удален т.к. подпись не загрузилась!
-		var file_cont = this.getElement("file-list_"+file.doc_id);	
-		var file_ctrl = file_cont.getElement("file_"+file.file_id);
-		var pic = DOMHelper.getElementsByAttr(this.m_filePicClass+" glyphicon glyphicon-ok", file_ctrl.getNode(), "class", true)[0];
-		if(pic){
-			pic.className = this.m_filePicClass+" glyphicon glyphicon-remove-circle";
-			pic.setAttribute("title",this.ER_FILE_DOWNLOAD);
-		}			
-		file_cont.delElement("file_"+file.file_id+"_del");
-		file_cont.delElement("file_"+file.file_id+"_switch");		
-		file_ctrl.sigCont.deleteLast();
-		file_ctrl.setAttr("file_uploaded","false");
-		window.showWarn("Файл "+file.fileName.replace(".sig","")+" удален, так как не удалось загрузить подпись!");
-	}
+FileUploaderApplication_View.prototype.removeUnregisteredFile = function(fileId,docId){
+	var pm = (new Application_Controller()).getPublicMethod("remove_unregistered_data_file");
+	pm.setFieldValue("file_id",fileId);
+	pm.setFieldValue("id",this.m_mainView.getElement("id").getValue());
+	pm.setFieldValue("doc_id",docId);
+	pm.setFieldValue("doc_type",this.m_documentType);		
+	pm.run();
 }
+/*
+FileUploaderApplication_View.prototype.fireFileError = function(file,message){
+}
+
+*/

@@ -94,23 +94,6 @@ FileUploaderDocFlowOut_View.prototype.deleteSigFromServer = function(fileId,item
 }
 FileUploaderDocFlowOut_View.prototype.deleteFileFromServer = function(fileId,itemId){
 	FileUploaderDocFlowOut_View.superclass.deleteFileFromServer.call(this,fileId,itemId,(new DocFlowOut_Controller()));
-	/*
-	var self = this;
-	
-	var pm = (new DocFlowOut_Controller()).getPublicMethod("remove_file");
-	pm.setFieldValue("file_id",fileId);
-	pm.setFieldValue("doc_id",this.m_mainView.getElement("id").getValue());
-	pm.run({"ok":function(){
-		window.showNote(self.NT_FILE_DELETED);
-		self.decTotalFileCount();
-		file_cont = self.getElement("file-list_"+itemId);
-		file_cont.delElement("file_"+fileId);
-		file_cont.delElement("file_"+fileId+"_del");
-		file_cont.delElement("file_"+fileId+"_href");		
-		self.decTotalFileCount();
-		self.calcFileTotals(itemId);
-	}});
-	*/				
 }
 
 FileUploaderDocFlowOut_View.prototype.downloadFile = function(btnCtrl){

@@ -258,7 +258,7 @@ FileUploaderContract_View исправлено options.allowFileDownload = true;
 
 1.0.79 08/10
 1) Проверка нескольких подписей в контейнере
-2) Квартадбный отчет: добавлена достоверность
+2) Квартальный отчет: добавлена достоверность
 
 
 1.0.80 09/10
@@ -330,31 +330,18 @@ EXECUTE PROCEDURE doc_flow_out_client_process();
 5) Исходящее письмо клиента при возврате документов: при открытии сохраненного виден ключ. После подписания виден ключ(?)
 6) Письмо при ответах на замечания: какие разделы изменены
 
-doc_flow_registrations_process
-doc_flow_in_client_dialog
-doc_flow_out_client_process
 
-doc_flow_in_list
-doc_flow_in_dialog
-
-DROP VIEW doc_flow_in_list;
-DROP VIEW doc_flow_in_dialog;
-ALTER TABLE public.doc_flow_in DROP COLUMN corrected_sections;
-ALTER TABLE public.doc_flow_in ADD COLUMN corrected_sections jsonb;
-
-UPDATE email_templates
-SET template = 'Ответы на замечания. Заявитель:[applicant], объект: [constr_name].
-Измененные разделы: [sections]
-Ссылка на заявление http://192.168.1.134/expert72/index.php?c=Contract_Controller&f=get_object&t=ContractDialog&mode=edit&v=Child&id=[contract_id]',
-fields = '{"id" : "ReportTemplateField_Model", "rows" : "[{\"fields\":{\"id\":\"applicant\",\"descr\":\"Заявитель\"}},{\"fields\":{\"id\":\"constr_name\",\"descr\":\"Адрес строительства\"},{\"fields\":{\"id\":\"contract_id\",\"descr\":\"Идентификатор контракта\"}},{\"fields\":{\"id\":\"sections\",\"descr\":\"Измененные секции\"}}]"}'
-WHERE email_type='app_change'
-
-ALTER TABLE public.doc_flow_out_client_document_files ADD COLUMN is_new bool NOT NULL default true;
-ALTER TABLE public.doc_flow_out_client_document_files ADD COLUMN signature bool NOT NULL default false;
-ALTER TABLE public.doc_flow_out_client_document_files DROP CONSTRAINT doc_flow_out_client_document_files_pkey;
-ALTER TABLE public.doc_flow_out_client_document_files
-  ADD CONSTRAINT doc_flow_out_client_document_files_pkey PRIMARY KEY(file_id,doc_flow_out_client_id);
-
+1.0.86 28/10/18
+0)Восстановление удаленных файлов при удалении неотправленного письма клиента
+1)Повторная подпись, котороль по СНИЛС на клиенте и на сервере
+2)Подписание в Yandex,OPERA,IE10 проверено
+3)Удаление подписи, когда их было несколько в файле
+4) Запрет на создание новых исходящих клиента, если уже есть такой же документ с таким же типом по заявлению
+doc_flow_out_client_list
+5)Информация по обновлению плагина
+wget -O crypto_plugin.txt https://www.cryptopro.ru/sites/default/files/products/cades/latest_2_0.txt
+6)Нормальная проверка подписей со всей цепью
+7)ГУИ при ошибках загрузки (данные,подпись),ошибки проверки ЭЦП
 
 
 

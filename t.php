@@ -15,27 +15,16 @@ return;
 */
 	require_once('functions/PKIManager.php');
 	$pki_man = new PKIManager(PKI_PATH,PKI_CRL_VALIDITY,'debug');
-	//$der_file = '/home/andrey/www/htdocs/expert72/client_files/Заявление№1532/Исходящие/3a453276-a31e-4691-be43-8a7d0cfcea4a.der';
-	//$new_name = '/home/andrey/www/htdocs/expert72/client_files/Заявление№1532/Исходящие/3a453276-a31e-4691-be43-8a7d0cfcea4a.sig';
-	//$merged_sig = '/home/andrey/www/htdocs/expert72/client_files/Заявление№1532/Исходящие/3a453276-a31e-4691-be43-8a7d0cfcea4a.mrg';
-	//$pki_man->mergeSigs($der_file,$new_name,$merged_sig);
+	//$certData = new stdClass();
+	//$pki_man->getCertInf('/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/5bcbfc353d0b3.1',$certData);
+	//var_dump($certData);
+	//exit;
+	//$verif_res = $pki_man->verifySig('/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/744000cf-3b5f-42eb-8dfa-1fda59b88871.sig','/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/744000cf-3b5f-42eb-8dfa-1fda59b88871',TRUE,FALSE,FALSE);
+	//$verif_res = $pki_man->verifySig('/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/260-Д Договор Тюменгипроводхоз одновременно.pdf.sig','/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/260-Д Договор Тюменгипроводхоз одновременно.pdf');
+	$verif_res = $pki_man->verifySig('/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/1/Z -72-1-0223-18.pdf.sig','/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/1/Z -72-1-0223-18.pdf',FALSE,FALSE,FALSE);
+	//$pki_man->makeCACertificates();
+	//exit;
 	
-	//$res = $pki_man->getSigAttributes('/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/09-01-01 Утилизация ТБО 40(48).xlsx.sig',FALSE);
-	//$res = $pki_man->getSigAttributes('/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/1/1.sig',FALSE);
-	/*
-	$res = $pki_man->getSigAttributes('/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Заключение/Z -72-1-0169-18.pdf.sig',FALSE);
-	var_dump($res);
-	echo '</BR></BR>';
-	foreach($res as $cert){
-		echo '<div>New Signature</div>';
-		echo 'Date='.date('d/m/Y h:i',$cert->signedDate).'</BR>';
-		echo 'Algorithm='.$cert->algorithm.'</BR>';
-		echo '</BR></BR>';
-	}
-	exit;
-	*/
-	//echo $pki_man->getIssuier(OUTPUT_PATH.'test.pdf.sig')['CN'];
-	$verif_res = $pki_man->verifySig('/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/Акт об оказании услуг № 328 от 19.10.2018.pdf.sig','/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/Акт об оказании услуг № 328 от 19.10.2018.pdf');
 	/*
 	$verif_res = pki_log_sig_check(
 		'/home/andrey/www/htdocs/expert72/client_files/Заявление№1566/Договорные документы/Контракт/9f1357af-d7cf-4dbb-813f-a15c5b4a833b.sig',
