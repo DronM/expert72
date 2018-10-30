@@ -45,7 +45,7 @@ define('ER_FILE_EXISTS_IN_FOLDER', 'Файл с таким именем уже �
 define('ER_SIGNED','Документ уже подписан!');
 define('ER_SNILS_EXISTS','Документ уже подписан физическим лицом %s');
 
-define('PKI_MODE','debug');
+define('PKI_MODE','error');
 define('DIR_MAX_LENGTH',500);
 define('CLIENT_OUT_FOLDER','Исходящие заявителя');
 
@@ -63,7 +63,7 @@ function mkdir_or_error($dir){
 }
 
 function rename_or_error($orig_file,$new_name){
-	if (rename($orig_file,$new_name)===FALSE){
+	if (@rename($orig_file,$new_name)===FALSE){
 		throw new Exception(ER_COMMON);
 	}
 	chmod($new_name, 0664);					
@@ -113,6 +113,9 @@ function check_app_folder($dbLink){
 	}
 }
  
+/**
+ * returns new name of old signature file
+ */ 
 function merge_sig($uploadFolder,$contentFile,$origFile,$newName,$fileId,$dbFileId,&$dbLink){
 	$pki_man = new PKIManager(PKI_PATH,PKI_CRL_VALIDITY,PKI_MODE);
 	
@@ -177,7 +180,9 @@ function merge_sig($uploadFolder,$contentFile,$origFile,$newName,$fileId,$dbFile
 	
 	$max_ind = NULL;
 	Application_Controller::getMaxIndexSigFile(dirname($newName),$fileId,$max_ind);
-	rename_or_error($newName,$newName.'.s'.($max_ind+1));//rename old signature,leave all?!
+	//new name of old signature file
+	$old_sig_new_name = $newName.'.s'.($max_ind+1);
+	rename_or_error($newName,$old_sig_new_name);//rename old signature,leave all?!
 	
 	unlink($origFile);
 	if ($der_file && file_exists($der_file)){
@@ -187,7 +192,9 @@ function merge_sig($uploadFolder,$contentFile,$origFile,$newName,$fileId,$dbFile
 	
 	//save all signatures to db
 	$verif_res = pki_log_sig_check($newName, $contentFile, $dbFileId, $pki_man, $dbLink);
-	pki_throw_error($verif_res);		
+	pki_throw_error($verif_res);
+	
+	return $old_sig_new_name;		
 }
  
 /** validation
@@ -301,7 +308,7 @@ try{
 						
 			$db_doc_flow_out_client_id = NULL;
 			try{
-				$orig_file_size = filesize($orig_file);
+				$orig_file_size = @filesize($orig_file);
 				if (!$orig_file_size){
 					error_log("Загрузка заявления, пустой размер загружаемого файла AppId=".$db_app_id);
 					throw new Exception(ER_COMMON);
@@ -363,66 +370,67 @@ try{
 				)
 				)
 				){
-					$sig_checked = FALSE;
-					try{
-						FieldSQLString::formatForDb($dbLink,$par_file_id,$db_file_id);
-						if ($db_file_id=='null'){
-							error_log('Загрузка заявления, ошибка загрузки файла документации: Параметр db_file_id=null, заявление '.$db_app_id);
-							throw new Exception(ER_COMMON);
+					FieldSQLString::formatForDb($dbLink,$par_file_id,$db_file_id);
+					if ($db_file_id=='null'){
+						error_log('Загрузка заявления, ошибка загрузки файла документации: Параметр db_file_id=null, заявление '.$db_app_id);
+						throw new Exception(ER_COMMON);
+					}
+					
+					if ($sig_add){
+						/**
+						 * Добавление подписи клиента в НАШ документ, подписание в браузере или через файл
+						 * Добавляем только 100% проверенные ЭЦП, а не косяки
+						 */
+					
+						check_signature($dbLink,$file_doc,$file_doc_sig,$db_file_id);
+						
+						$db_doc_flow_out_client_id = get_doc_flow_out_client_id_for_db(
+								$dbLink,
+								$db_app_id,
+								$_REQUEST['doc_flow_out_client_id']
+						);
+						$ar = $dbLink->query_first(sprintf(		
+						"SELECT TRUE AS signed FROM doc_flow_out_client_document_files WHERE file_id=%s",
+						$db_file_id
+						));
+			
+						if (count($ar) && $ar['signed']=='t'){
+							throw new Exception(ER_SIGNED);
 						}
-						
-						if ($sig_add){
-							/**
-							 * Добавление подписи клиента в НАШ документ, подписание в браузере или через файл
-							 * Здесь всегда полный комплект - файл + ЭЦП
-							 * Добавляем только 100% проверенные ЭЦП, а не косяки
-							 */
-						
-							check_signature($dbLink,$file_doc,$file_doc_sig,$db_file_id);
-							
-							$db_doc_flow_out_client_id = get_doc_flow_out_client_id_for_db(
-									$dbLink,
-									$db_app_id,
-									$_REQUEST['doc_flow_out_client_id']
-							);
-							$ar = $dbLink->query_first(sprintf(		
-							"SELECT TRUE AS signed FROM doc_flow_out_client_document_files WHERE file_id=%s",
+			
+						//throw new Exception('resumable='.$resumable.' orig_file='.$orig_file.' db_app_id='.$db_app_id.' par_file_id='.$par_file_id.' file_path'.$file_path);
+						$old_sig_new_name = merge_sig($resumable->uploadFolder,$file_doc,$orig_file,$file_doc_sig,$par_file_id,$db_file_id,$dbLink);
+						//
+						try{
+							$dbLink->query('BEGIN');							
+					
+							$dbLink->query(sprintf(
+							"UPDATE application_document_files
+							SET file_signed_by_client = TRUE
+							WHERE file_id=%s",
 							$db_file_id
 							));
 				
-							if (count($ar) && $ar['signed']=='t'){
-								throw new Exception(ER_SIGNED);
-							}
-				
-							//throw new Exception('resumable='.$resumable.' orig_file='.$orig_file.' db_app_id='.$db_app_id.' par_file_id='.$par_file_id.' file_path'.$file_path);
-							merge_sig($resumable->uploadFolder,$file_doc,$orig_file,$file_doc_sig,$par_file_id,$db_file_id,$dbLink);
-							//
-							try{
-								$dbLink->query('BEGIN');							
-						
-								$dbLink->query(sprintf(
-								"UPDATE application_document_files
-								SET file_signed_by_client = TRUE
-								WHERE file_id=%s",
-								$db_file_id
-								));
-					
-								$dbLink->query(sprintf(		
-								"INSERT INTO doc_flow_out_client_document_files (file_id,doc_flow_out_client_id,is_new,signature)
-								VALUES (%s,%d,TRUE,TRUE)",
-								$db_file_id,$db_doc_flow_out_client_id
-								));
-												
-								$dbLink->query('COMMIT');
-							}
-							catch(Exception $e){
-								$dbLink->query('ROLLBACK');
-								throw $e;
-							}
-						
+							$dbLink->query(sprintf(		
+							"INSERT INTO doc_flow_out_client_document_files (file_id,doc_flow_out_client_id,is_new,signature)
+							VALUES (%s,%d,TRUE,TRUE)",
+							$db_file_id,$db_doc_flow_out_client_id
+							));
+											
+							$dbLink->query('COMMIT');
 						}
-						else{
-							//Все в базу данных
+						catch(Exception $e){
+							$dbLink->query('ROLLBACK');
+							
+							//back to old sig
+							//rename_or_error($old_sig_new_name,);
+							throw $e;
+						}
+					
+					}
+					else{
+						//Все в базу данных
+						try{
 							$par_file_name = $_REQUEST['resumableFilename'];
 							if($is_sig){
 								$par_file_name = substr($par_file_name,0,strlen($par_file_name)-4);
@@ -432,7 +440,7 @@ try{
 							$db_doc_type = NULL;
 							$db_doc_id = NULL;					
 							$db_file_path = NULL;
-						
+					
 							FieldSQLInt::formatForDb($_REQUEST['doc_id'],$db_doc_id);
 							FieldSQLString::formatForDb($dbLink,$_REQUEST['doc_type'],$db_doc_type);
 							FieldSQLString::formatForDb($dbLink,$par_file_name,$db_fileName);
@@ -456,87 +464,81 @@ try{
 									throw new Exception(sprintf(ER_FILE_EXISTS_IN_FOLDER,$db_file_path));
 								}
 							}		
-					
-							try{
-								$dbLink->query('BEGIN');
-								$dbLink->query(sprintf(		
-								"INSERT INTO application_document_files
-								(file_id,application_id,document_type,document_id,file_size,file_name,file_path,file_signed)
-								VALUES
-								(%s,%d,%s::document_types,%d,%d,%s,%s,%s)",
-									$db_file_id,
-									$db_app_id,
-									$db_doc_type,
-									$db_doc_id,				
-									$orig_file_size,
-									$db_fileName,
-									$db_file_path,
-									($ul_exists? 'FALSE':'TRUE')
-								));
-		
-								//Если есть парамтер doc_flow_out_client_id значит грузим из исходящего письма клиента - ставим отметку!!!
-								if (isset($_REQUEST['doc_flow_out_client_id'])){
-									$db_doc_flow_out_client_id = get_doc_flow_out_client_id_for_db(
-											$dbLink,
-											$db_app_id,
-											$_REQUEST['doc_flow_out_client_id']
-									);
 						
-									$dbLink->query(sprintf(		
-									"INSERT INTO doc_flow_out_client_document_files (file_id,doc_flow_out_client_id,is_new)
-									VALUES (%s,%d,TRUE)",
-									$db_file_id,$db_doc_flow_out_client_id
-									));
-								}
-								$dbLink->query('COMMIT');
-							}	
-							catch(Exception $e){
-								$dbLink->query('ROLLBACK');
-								throw $e;
-							}
-							
-							/**
-							 * Теперь данные о файле в базе
-							 * Надо провеить ЭЦП,
-							 * Если фатальная ошибка, файл оставим загруженным, а в ГУИ отметитим кривости подписи
-							 */
-							$sig_checked = TRUE;
-							if (!$ul_exists)
-								check_signature($dbLink,$file_doc,$file_doc_sig,$db_file_id);							
-							
-						}						
-					}
-					catch(Exception $e){
-						if (!$sig_add && !$sig_checked){
-							//Косяк БД - удалим файл и все что с ним связано!
-							if (file_exists($file_doc))unlink($file_doc);
-							if (file_exists($file_doc_sig))unlink($file_doc_sig);						
-						}
-						throw $e;
-					}
-				
-					if (isset($_REQUEST['original_file_id'])){
-						//Загружен новый файл с подписью - удаление оригинального файлы, который заменили
-						$db_original_file_id = NULL;
-						FieldSQLString::formatForDb($dbLink,$_REQUEST['original_file_id'],$db_original_file_id);
-						if ($db_original_file_id!='null'){
-							Application_Controller::removeFile($dbLink,$db_original_file_id);
-							
+							$dbLink->query('BEGIN');
+							$dbLink->query(sprintf(		
+							"INSERT INTO application_document_files
+							(file_id,application_id,document_type,document_id,file_size,file_name,file_path,file_signed)
+							VALUES
+							(%s,%d,%s::document_types,%d,%d,%s,%s,%s)",
+								$db_file_id,
+								$db_app_id,
+								$db_doc_type,
+								$db_doc_id,				
+								$orig_file_size,
+								$db_fileName,
+								$db_file_path,
+								($ul_exists? 'FALSE':'TRUE')
+							));
+	
+							//Если есть парамтер doc_flow_out_client_id значит грузим из исходящего письма клиента - ставим отметку!!!
 							if (isset($_REQUEST['doc_flow_out_client_id'])){
 								$db_doc_flow_out_client_id = get_doc_flow_out_client_id_for_db(
 										$dbLink,
 										$db_app_id,
 										$_REQUEST['doc_flow_out_client_id']
 								);
-							
+					
 								$dbLink->query(sprintf(		
 								"INSERT INTO doc_flow_out_client_document_files (file_id,doc_flow_out_client_id,is_new)
-								VALUES (%s,%d,FALSE)",
-								$db_original_file_id,$db_doc_flow_out_client_id
+								VALUES (%s,%d,TRUE)",
+								$db_file_id,$db_doc_flow_out_client_id
 								));
 							}
+							
+							if (isset($_REQUEST['original_file_id'])){
+								//Загружен новый файл с подписью - удаление оригинального файлы, который заменили
+								$db_original_file_id = NULL;
+								FieldSQLString::formatForDb($dbLink,$_REQUEST['original_file_id'],$db_original_file_id);
+								if ($db_original_file_id!='null'){
+									Application_Controller::removeFile($dbLink,$db_original_file_id);
+							
+									if (isset($_REQUEST['doc_flow_out_client_id'])){
+										$db_doc_flow_out_client_id = get_doc_flow_out_client_id_for_db(
+												$dbLink,
+												$db_app_id,
+												$_REQUEST['doc_flow_out_client_id']
+										);
+							
+										$dbLink->query(sprintf(		
+										"INSERT INTO doc_flow_out_client_document_files (file_id,doc_flow_out_client_id,is_new)
+										VALUES (%s,%d,FALSE)",
+										$db_original_file_id,$db_doc_flow_out_client_id
+										));
+									}
+								}
+							}
+							
+							$dbLink->query('COMMIT');
+						}	
+						catch(Exception $e){
+							$dbLink->query('ROLLBACK');
+							
+							//Косяк БД - удалим файл и подпись
+							unlink($file_doc);
+							unlink($file_doc_sig);						
+							
+							throw $e;
 						}
-					}
+						
+						/**
+						 * Теперь данные о файле в базе
+						 * Надо провеить ЭЦП,
+						 * Если фатальная ошибка, файл оставим загруженным, а в ГУИ отметитим кривости подписи
+						 */
+						if (!$ul_exists)
+							check_signature($dbLink,$file_doc,$file_doc_sig,$db_file_id);
+					}				
 				}
 				else if ($sig_add){
 					//signature MUST exist already!!!

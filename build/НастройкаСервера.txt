@@ -26,8 +26,6 @@ NO_PUBKEY
 sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys ВСТАВИТЬ_КЛЮЧ
 Повторить sudo apt-get update
 
-
-
 sudo apt-get install nginx
 
 Создать 2 папки
@@ -94,7 +92,8 @@ psql -c "CREATE USER rep REPLICATION LOGIN CONNECTION LIMIT 1 ENCRYPTED PASSWORD
 #*************************************************
 
 
-
+#******************* Удаленная файловая система *****************************
+# Перенос данных на второй сервер
 sudo chmod 777 $(find /media/storage/Documents -type d)
 rsync -az -e ssh /usr/share/client_files/Documents/ andrey@92.255.164.139:/media/storage/Documents
 rsync -az -e ssh /var/lib/postgresql/10/main/ postgres@expertiza72.ru:/var/lib/postgresql/10/main
@@ -122,12 +121,14 @@ sshfs#andrey@92.255.164.139/media/storage /mnt/rstorage
 
 rsync -az -e ssh /usr/share/client_files/* andrey@92.255.164.139:/media/storage
 
-sudo iptables -D f2b-sshd -s 92.255.164.139/32 -j REJECT --reject-with icmp-port-unreachable
-
-
-
 sudo -u admin sshfs -o allow_other,reconnect,ServerAliveInterval=15,ServerAliveCountMax=17280 admin@192.168.1.101:/data/backup /mnt/backup
 
 
-crontab
-wget -O crypto_plugin.txt https://www.cryptopro.ru/sites/default/files/products/cades/latest_2_0.txt
+#Удаление правила из файервола по второму серверу, как то заблочил
+sudo iptables -D f2b-sshd -s 92.255.164.139/32 -j REJECT --reject-with icmp-port-unreachable
+
+
+#Обновление версии плагина раз в неделю
+sudo crontab -e
+wget -O /var/www/html/lk/crypto_plugin.txt https://www.cryptopro.ru/sites/default/files/products/cades/latest_2_0.txt
+wget -O /var/www/html/lk/crypto_plugin.txt https://www.cryptopro.ru/sites/default/files/products/cades/latest_2_0.txt

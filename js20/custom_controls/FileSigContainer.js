@@ -240,7 +240,7 @@ FileSigContainer.prototype.showSignatureDetails = function(toolTip,e){
 		return str;
 	}
 	var cont;
-	if (signature.check_result){				
+	if (signature.check_result!=undefined && signature.owner){				
 		//Подпись проверена - ОК
 		var sign_date_time_s;
 		if (signature.sign_date_time){
@@ -273,12 +273,26 @@ FileSigContainer.prototype.showSignatureDetails = function(toolTip,e){
 					expir+
 			"</div>";
 		}
-
-		cont ='<div>' +
+	
+		var check_res = "";
+		if (signature.check_result){
+			check_res = 
 			'<div>'+
 				'<i class="glyphicon glyphicon-ok"></i>'+
 				' <strong>Подпись проверена</strong>'+
-			'</div>'+
+			'</div>';			
+		}
+		else{
+			check_res = 
+			'<div>'+
+				'<i class="glyphicon glyphicon-remove"></i>'+
+				' <strong>Ошибка проверки подписи</strong>'+
+				(signature.error_str? "<div>"+signature.error_str+"</div>" : "")+
+			'</div>';					
+		}
+		
+		cont ='<div>' +
+			check_res+
 			(org.length? org:"") +
 			(pers.length? pers:"") +
 			(signature.sign_date_time? "<div><strong>Подписан: "+DateHelper.format(sign_date_time_d,"d/m/Y H:i")+"</strong></div>":"")+
@@ -316,7 +330,7 @@ FileSigContainer.prototype.showSignatureDetails = function(toolTip,e){
 		"</div>";
 	}
 	else{
-		//Подпись проверена - ОШИБКА
+		//Подпись проверена - ОШИБКА и нет сертификатов
 		cont ='<div>' +
 			'<i class="glyphicon glyphicon-remove"></i>'+
 			' <strong>Ошибка проверки подписи</strong>'+

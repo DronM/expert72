@@ -1779,8 +1779,10 @@ FileUploader_View.prototype.fireFileError = function(file,message,uploadSig){
 		mes = (file.signature? this.ER_SIG_DOWNLOAD:this.ER_FILE_DOWNLOAD)+" "+data_file.fileName+". "+message;
 		if (file_ctrl){
 			var pic = DOMHelper.getElementsByAttr(this.m_filePicClass, file_ctrl.getNode(), "class", true)[0];
-			pic.className = this.m_filePicClass+" glyphicon glyphicon-ban-circle";
-			pic.setAttribute("title",this.ER_FILE_DOWNLOAD);
+			if(pic){
+				pic.className = this.m_filePicClass+" glyphicon glyphicon-ban-circle";
+				pic.setAttribute("title",this.ER_FILE_DOWNLOAD);			
+			}
 		}		
 	}
 	/*

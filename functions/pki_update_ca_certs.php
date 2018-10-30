@@ -4,10 +4,10 @@
 	require_once("ExpertEmailSender.php");
 	
 	$pki_man = new PKIManager(PKI_PATH);
-	$pki_man->update_ca_certs();
+	$pki_man->makeCACertificates();
 	/*
 	try{
-		$pki_man->update_ca_certs();
+		$pki_man->makeCACertificates();
 	}
 	catch(Exception $e){
 		ExpertEmailSender::regMail($dbLink,sprintf("email_ca_update_error('%s')",$e->getMessage()),NULL,'ca_update_error');

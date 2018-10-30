@@ -3724,17 +3724,17 @@ PopUpMenu.prototype.createItem=function(item){var self=this;var callback=item.on
 elem.m_node.appendChild(document.createTextNode(" "+item.caption));return new ControlContainer(null,"li",{"className":"nav-item","elements":[elem]});}
 PopUpMenu.prototype.createSeparator=function(){return new Control(null,"div",{"attrs":{"style":"borderTop='1px dotted #CCCCCC';fontSize='0px';height='0px';"}})} 
 function PopOver(id,options){options=options||{};options.template=window.getApp().getTemplate("PopOver");options.addElement=function(){this.addElement(new Control(id+":title","DIV",{"value":options.caption}));this.addElement(new ControlContainer(id+":content","DIV",{"elements":options.contentElements}));}
-this.m_onHide=options.onHide;PopOver.superclass.constructor.call(this,id,"TEMPLATE",options);var self=this;this.m_evHide=function(event){event=EventHelper.fixMouseEvent(event);if(event.pageX<self.m_posMinX||event.pageX>self.m_posMaxX||event.pageY<self.m_posMinY||event.pageY>self.m_posMaxY){var el=event.target;var other_popover=false;el=el.parentNode;while(el){if(DOMHelper.hasClass(el,"popover")||DOMHelper.hasClass(el,"datepicker")){other_popover=true;break;}
+this.m_onHide=options.onHide;PopOver.superclass.constructor.call(this,id,"TEMPLATE",options);var self=this;this.m_evHide=function(event){if(!self.m_ieHack)return;event=EventHelper.fixMouseEvent(event);if(event.pageX<self.m_posMinX||event.pageX>self.m_posMaxX||event.pageY<self.m_posMinY||event.pageY>self.m_posMaxY){var el=event.target;var other_popover=false;el=el.parentNode;while(el){if(DOMHelper.hasClass(el,"popover")||DOMHelper.hasClass(el,"datepicker")){other_popover=true;break;}
 el=el.parentNode;}
 if(!other_popover&&self.getVisible()){self.setVisible(false);event.stopPropagation();}}}}
 extend(PopOver,ControlContainer);PopOver.prototype.setPosition=function(e,fixToElement){var x,y;if(fixToElement){var rect=fixToElement.getBoundingClientRect();y=rect.top+$(fixToElement).outerHeight();x=rect.left;}
 else{x=e.pageX;y=e.pageY;}
-var n=this.getNode();n.style.display="block";n.style.position="absolute";n.style.top=y+'px';n.style.left=x+'px';}
+var n=this.getNode();n.style.position="absolute";n.style.top=y+"px";n.style.left=x+"px";n.style.zIndex="2";n.style.display="block";}
 PopOver.prototype.setVisible=function(v){PopOver.superclass.setVisible.call(this,v);if(v){this.addClick();}
 else{this.delClick();if(this.m_onHide){this.m_onHide();}}}
-PopOver.prototype.addClick=function(){EventHelper.add(document,"click",this.m_evHide,true);}
+PopOver.prototype.addClick=function(){EventHelper.add(document,"click",this.m_evHide,true);this.m_ieHack=true;}
 PopOver.prototype.delClick=function(){EventHelper.del(document,"click",this.m_evHide,true);}
-PopOver.prototype.toDOM=function(e,fixToElement){this.setPosition(e,fixToElement);PopOver.superclass.toDOM.call(this,document.body);var rect=this.m_node.getBoundingClientRect();this.m_posMinY=rect.top;this.m_posMaxY=rect.top+$(this.m_node).outerHeight();this.m_posMinX=rect.left;this.m_posMaxX=rect.left+$(this.m_node).outerWidth();this.m_zIndex=parseInt($(this.m_node).css("z-index"),10);this.addClick();}
+PopOver.prototype.toDOM=function(e,fixToElement){PopOver.superclass.toDOM.call(this,document.body);this.setPosition(e,fixToElement);var rect=this.m_node.getBoundingClientRect();this.m_posMinY=rect.top;this.m_posMaxY=rect.top+$(this.m_node).outerHeight();this.m_posMinX=rect.left;this.m_posMaxX=rect.left+$(this.m_node).outerWidth();this.m_zIndex=parseInt($(this.m_node).css("z-index"),10);this.addClick();}
 PopOver.prototype.delDOM=function(){PopOver.superclass.delDOM.call(this);this.delClick();} 
 function PeriodSelect(id,options){options=options||{};var self=this;options.events={"click":function(e){self.onClick(e);}};options.attrs=options.attrs||{};options.attrs.style="cursor:pointer;";options.value=options.value||options.period||this.PERIOD_ALIASES[0];PeriodSelect.superclass.constructor.call(this,id,"A",options);}
 extend(PeriodSelect,Control);PeriodSelect.prototype.PERIOD_ALIASES=["all","day","week","month","quarter","year"];PeriodSelect.prototype.CLASS_SELECTED="alert-success";PeriodSelect.prototype.m_pop;PeriodSelect.prototype.onClick=function(e){if(!this.m_pop){var self=this;var cont_el=[];var cur=this.getValue();for(var i=0;i<this.PERIOD_ALIASES.length;i++){cont_el.push(new Control(CommonHelper.uniqid(),"P",{"className":"forSelect"+((cur==this.PERIOD_ALIASES[i])?" "+this.CLASS_SELECTED:""),"value":this.PERIODS[i],"attrs":{"period":this.PERIOD_ALIASES[i],"style":"cursor:pointer;"},"events":{"click":function(e){self.m_pop.setVisible(false);var par=e.target.parentNode;for(var j=0;j<par.childNodes.length;j++){if(par.childNodes[j]==e.target){DOMHelper.addClass(e.target,self.CLASS_SELECTED);}
@@ -4096,7 +4096,7 @@ this.deleteFileFromUpload(file.file_id);}}
 else if(file.signature&&this.m_uploadOnAdd){if(file_ctrl){file_ctrl.sigCont.deleteLast();}
 this.deleteFileFromUpload(file.file_id,file.doc_id);mes=this.ER_SIG_DOWNLOAD+" "+data_file.fileName+" "+message;}
 else if(this.m_uploadOnAdd){this.deleteLocalFileFromUpload(file.file_id,file.doc_id);mes=this.ER_FILE_DOWNLOAD+" "+data_file.fileName+" "+message;}
-else{mes=(file.signature?this.ER_SIG_DOWNLOAD:this.ER_FILE_DOWNLOAD)+" "+data_file.fileName+". "+message;if(file_ctrl){var pic=DOMHelper.getElementsByAttr(this.m_filePicClass,file_ctrl.getNode(),"class",true)[0];pic.className=this.m_filePicClass+" glyphicon glyphicon-ban-circle";pic.setAttribute("title",this.ER_FILE_DOWNLOAD);}}
+else{mes=(file.signature?this.ER_SIG_DOWNLOAD:this.ER_FILE_DOWNLOAD)+" "+data_file.fileName+". "+message;if(file_ctrl){var pic=DOMHelper.getElementsByAttr(this.m_filePicClass,file_ctrl.getNode(),"class",true)[0];if(pic){pic.className=this.m_filePicClass+" glyphicon glyphicon-ban-circle";pic.setAttribute("title",this.ER_FILE_DOWNLOAD);}}}
 window.showError(mes);}
 FileUploader_View.prototype.setFileUploaded=function(file){if(!file)return;var data_file=file.signature?file.data_file:file;window.showNote(CommonHelper.format(this.NT_FILE_DOWNLOADED,[(this.m_uploadOnAdd?file.fileName:data_file.fileName)]));var file_cont=this.getElement("file-list_"+file.doc_id);var file_ctrl=file_cont.getElement("file_"+file.file_id);file_ctrl.setAttr("file_uploaded","true");var pic=DOMHelper.getElementsByAttr(this.m_filePicClass,file_ctrl.getNode(),"class",true)[0];if(pic){pic.className="glyphicon glyphicon-ok";pic.setAttribute("title",this.FILE_DOWNLOADED_TITLE);}
 if(this.m_allowFileSwitch){DOMHelper.show(file_cont.getElement("file_"+file.file_id+"_switch").getNode());}
@@ -5391,12 +5391,16 @@ FileSigContainer.prototype.getSignatureCount=function(){return this.m_signatures
 FileSigContainer.prototype.getSignatures=function(){return this.m_signatures;}
 FileSigContainer.prototype.showSignatureDetails=function(toolTip,e){var signature=toolTip.signature;var add_field=function(field,str,sep,bld){sep=sep?sep:", ";if(field){str+=str.length?sep:"<div>";str+=(bld?("<strong>"+field+"</strong>"):field);}
 return str;}
-var cont;if(signature.check_result){var sign_date_time_s;if(signature.sign_date_time){sign_date_time_d=(typeof(signature.sign_date_time)=="string")?DateHelper.strtotime(signature.sign_date_time):signature.sign_date_time;}
+var cont;if(signature.check_result!=undefined&&signature.owner){var sign_date_time_s;if(signature.sign_date_time){sign_date_time_d=(typeof(signature.sign_date_time)=="string")?DateHelper.strtotime(signature.sign_date_time):signature.sign_date_time;}
 var org="";var pers="";if(signature.owner){org=add_field(signature.owner["ИНН"],org);org=add_field(signature.owner["ОГРН"],org);org=add_field(signature.owner["Организация"],org);org+=org.length?"</div>":"";pers=add_field(signature.owner["Фамилия"],pers,null,true);pers=add_field(signature.owner["Имя"],pers," ",true);pers=add_field(signature.owner["Должность"],pers);pers=add_field(signature.owner["СНИЛС"],pers);pers=add_field(signature.owner["Адрес"],pers);pers=add_field(signature.owner["Эл.почта"],pers);pers+=pers.length?"</div>":"";}
 var cert="";if(signature.cert_from&&signature.cert_to){var expir="";if(signature.cert_to&&DateHelper.strtotime(signature.cert_to)<DateHelper.time()){expir='<div class="badge badge-danger">Просрочена</div>';}
 cert="<div>Сертификат с "+DateHelper.format(DateHelper.strtotime(signature.cert_from),"d/m/Y")+" до "+DateHelper.format(DateHelper.strtotime(signature.cert_to),"d/m/Y")+
 expir+"</div>";}
-cont='<div>'+'<div>'+'<i class="glyphicon glyphicon-ok"></i>'+' <strong>Подпись проверена</strong>'+'</div>'+
+var check_res="";if(signature.check_result){check_res='<div>'+'<i class="glyphicon glyphicon-ok"></i>'+' <strong>Подпись проверена</strong>'+'</div>';}
+else{check_res='<div>'+'<i class="glyphicon glyphicon-remove"></i>'+' <strong>Ошибка проверки подписи</strong>'+
+(signature.error_str?"<div>"+signature.error_str+"</div>":"")+'</div>';}
+cont='<div>'+
+check_res+
 (org.length?org:"")+
 (pers.length?pers:"")+
 (signature.sign_date_time?"<div><strong>Подписан: "+DateHelper.format(sign_date_time_d,"d/m/Y H:i")+"</strong></div>":"")+

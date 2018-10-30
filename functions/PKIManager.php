@@ -80,6 +80,8 @@ class PKIManager {
 	const ER_BAD_CERT = 'Неверная структура сертификата!';
 	const ER_UNABLE_LOAD_CA_CERT = 'Невозможно установить сертификат удостоверяющего центра %s';
 	const ER_CERT_REVOC = 'Сертификат, выданный %s отозван';
+	const ER_NO_CRL = 'Невозможно получить список отозванных сертификатов!';
+	const ER_REVOKED = 'Сертификат владелец:%s, издатель:%s отозван!';
 
 	const CA_LIST_URL = 'https://e-trust.gosuslugi.ru/CA/DownloadTSL?schemaVersion=0';		
 	const DEF_CRL_VALIDITY = 86400;//24*60*60
@@ -369,6 +371,7 @@ class PKIManager {
 	 *			{array} CRL
 	 *			{string} subjectHash
 	 *			{string} issuerHash
+	 *			{string} OCSP
 	 */
 	public function getCertInf($pemFile,&$certData){
 		$cert_str = $this->run_shell_cmd(sprintf('openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "%s" -noout',$pemFile));
@@ -410,7 +413,10 @@ class PKIManager {
 		}
 		
 		//ocsp_uri
-		$ocsp_uri = $this->parse_fields('/',$cert_ar[6]);
+		$certData->OCSP = NULL;
+		if (strpos($cert_ar[6],'http')!==FALSE){
+			$certData->OCSP = $cert_ar[6];
+		}
 	
 		//subject issuer
 		$cert_lines = $this->run_shell_cmd(sprintf('openssl x509 -subject -issuer -inform pem -in "%s" -noout -nameopt multiline',$pemFile));
@@ -456,7 +462,7 @@ class PKIManager {
 			
 	}
 	
-	private function build_chain($onlineRevocCheck,&$certData,&$includedHashes){
+	private function build_chain($certFile,$onlineRevocCheck,&$certData,&$includedHashes){
 	
 		if (array_key_exists($certData->issuerHash,$includedHashes)){
 			//already included
@@ -501,9 +507,25 @@ class PKIManager {
 		}
 		
 		//CRLs
-		
-		if ($onlineRevocCheck){
-			throw new Exception('Not implemented!');
+		if ($onlineRevocCheck && $certData->OCSP){
+			$this->logger->add('OCSP checking '.$certData->OCSP,'debug');
+			$crl_res = $this->run_shell_cmd(sprintf('openssl ocsp -issuer "%s" -cert "%s" -url %s',
+				$issuer_pem,
+				$certFile,
+				$certData->OCSP
+			));
+			$crl_res_ar = explode(PHP_EOL,trim($crl_res));
+			$crl_passed = FALSE;
+			foreach($crl_res_ar as $crl_str){
+				if (strpos($crl_str,': good')!==FALSE){
+					$crl_passed = TRUE;
+					break;
+				}
+			}
+			if (!$crl_passed){
+				$this->logger->add('OCSP not passed: владелец:'.$certData->subject['Наименование'].' issuer:'.$certData->issuer['Наименование'],'debug');
+				throw new Exception(sprintf(self::ER_REVOKED,$certData->subject['Наименование'],$certData->issuer['Наименование']));
+			}
 		}
 		else if (isset($certData->CRL) && is_array($certData->CRL)){
 			
@@ -538,13 +560,16 @@ class PKIManager {
 			}
 			
 		}
+		else{
+			$this->logger->add('No CRL link for '.$crl_pem,'error');	
+		}
 		
 		$includedHashes[$certData->issuerHash] = TRUE;
 		$issuer_data = new stdClass();
 		$this->getCertInf($issuer_pem,$issuer_data);
 			
 		if ($issuer_data->subjectHash!=$issuer_data->issuerHash){
-			$this->build_chain($onlineRevocCheck,$issuer_data,$includedHashes);
+			$this->build_chain($issuer_pem,$onlineRevocCheck,$issuer_data,$includedHashes);
 		}		
 	}
 	
@@ -605,7 +630,7 @@ class PKIManager {
 					
 					if (!$noChainVerification){
 						$included_hases = [];
-						$this->build_chain($onlineRevocCheck,$cert_data,$included_hases);						
+						$this->build_chain($pem_file,$onlineRevocCheck,$cert_data,$included_hases);						
 					}
 						
 				}
@@ -614,11 +639,14 @@ class PKIManager {
 				try{
 					//-noverify -crl_check -CRLfile crl_check_all					
 					$verif_cmd = sprintf(
-						'openssl smime -verify -crl_check_all -content "%s" -purpose any -out /dev/null -inform der -in "%s"',
+						'openssl smime -verify -content "%s" -purpose any -out /dev/null -inform der -in "%s"',
 						$contentFile,
 						$der_file
 						
 					);
+					if (!$onlineRevocCheck){
+						$verif_cmd.= ' -crl_check_all';
+					}
 					if (!$noChainVerification){
 						$verif_cmd.=sprintf(' -CApath "%s"',$this->pkiPath);
 					}
@@ -635,6 +663,9 @@ class PKIManager {
 						$crl_expir_tries--;
 						$crl_invalid_time = time();
 						goto chain_build;
+					}
+					else if (strpos($user_m,'unable to get certificate CRL')!==FALSE){
+						$user_m = self::ER_NO_CRL;
 					}
 					else if (strpos($user_m,'certificate has expired')!==FALSE){
 						$user_m = self::ER_CERT_EXPIRED;
@@ -802,7 +833,8 @@ class PKIManager {
 			if ($handle===FALSE){
 				throw new Exception('Unable to open sig file!');
 			}	
-			$is_base64 = (@fread($handle,strlen(self::SIG_HEADER))==self::SIG_HEADER);
+			$start_s = @fread($handle,strlen(self::SIG_HEADER));
+			$is_base64 = ($start_s==self::SIG_HEADER || substr($start_s,0,2)=='MI');
 			fclose($handle);
 		}
 		finally{

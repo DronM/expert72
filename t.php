@@ -21,7 +21,7 @@ return;
 	//exit;
 	//$verif_res = $pki_man->verifySig('/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/744000cf-3b5f-42eb-8dfa-1fda59b88871.sig','/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/744000cf-3b5f-42eb-8dfa-1fda59b88871',TRUE,FALSE,FALSE);
 	//$verif_res = $pki_man->verifySig('/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/260-Д Договор Тюменгипроводхоз одновременно.pdf.sig','/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/260-Д Договор Тюменгипроводхоз одновременно.pdf');
-	$verif_res = $pki_man->verifySig('/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/1/Z -72-1-0223-18.pdf.sig','/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/1/Z -72-1-0223-18.pdf',FALSE,FALSE,FALSE);
+	$verif_res = $pki_man->verifySig('/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/Информационно-удостоверяющий лист ИУЛ ПЗ.pdf.sig','/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/Информационно-удостоверяющий лист ИУЛ ПЗ.pdf',FALSE,TRUE,FALSE);
 	//$pki_man->makeCACertificates();
 	//exit;
 	
