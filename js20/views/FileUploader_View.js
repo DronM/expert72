@@ -115,7 +115,9 @@ function FileUploader_View(id,options){
 		this.addElement(new Control(id+":file-upload","TEMPLATE",{
 			"events":{
 				"click":function(){
-					self.uploadAll();
+					if (this.getEnabled()){
+						self.uploadAll();
+					}
 				}
 			}
 		}));
@@ -124,7 +126,9 @@ function FileUploader_View(id,options){
 			this.addElement(new Control(id+":file-sign-all","TEMPLATE",{
 				"events":{
 					"click":function(){
-						self.signAllFiles();
+						if (this.getEnabled()){
+							self.signAllFiles();
+						}
 					}
 				}
 			}));
@@ -263,7 +267,15 @@ FileUploader_View.prototype.upload = function(){
 }
 
 FileUploader_View.prototype.uploadAll = function(){
-	this.upload();
+	//block signing
+	var sign_exists = document.getElementById(id+":file-sign-all");
+	if (sign_exists)this.getElement("file-sign-all").setEnabled(false);
+	try{
+		this.upload();
+	}
+	finally{
+		if (sign_exists)this.getElement("file-sign-all").setEnabled(true);
+	}
 }
 
 FileUploader_View.prototype.insertObject = function(callBack){
@@ -1282,53 +1294,29 @@ FileUploader_View.prototype.makeSigFile = function(cades,verRes,signature,fileTo
 /**
  * @param {object} fileToSign uploader object of file,file_path,fileName
  */
-FileUploader_View.prototype.doFileSigning = function(cades,fileToSign,fileId,itemId,certStruc,sigContControl,callBack){	
+FileUploader_View.prototype.doFileSigning = function(cades,fileToSign,fileId,itemId,certStruc,sigContControl,progressFunc,callBack){	
 	var self = this;
 	sigContControl.setWait(true);
 	this.progressInit();
 	
 	var const_list = {"cades_verify_after_signing":null};
 	window.getApp().getConstantManager().get(const_list);
-debugger	
+	
 	cades.signFile(
 		fileToSign.file,
 		certStruc.cert,
 		fileToSign.fileName,
 		const_list.cades_verify_after_signing.getValue(),
-		function(signature,verRes){
-			sigContControl.setWait(false);
+		function(signature,verRes){			
 			var sig_file = self.makeSigFile(cades,verRes,signature,fileToSign,fileId,itemId,certStruc);
-			/*
-			if (!verRes.check_result && verRes.error_str){
-				window.showWarn(verRes.error_str);
-			}
-			
-			var sig_file = cades.makeSigFile(signature,fileToSign.fileName+".sig");			
-			
-			//fill file_path && doc_id
-			sig_file.doc_id = itemId;
-			sig_file.file_path = fileToSign.file_path;						
-			sig_file.signature = {
-				"check_result":verRes.check_result,
-				"error_str":verRes.error_str,
-				"sign_date_time":verRes.sign_date_time,
-				"owner":{
-					"Организация":certStruc.owner,
-					"Фамилия":certStruc.ownerFirstName,
-					"Имя":certStruc.ownerSecondName
-				}
-			};
-			*/
-			//self.setProgressPercent(100);
-			callBack.call(self,sig_file);
+			sigContControl.setWait(false);
+			callBack.call(self,sig_file);			
 		},
 		function(er){
 			sigContControl.setWait(false);
 			window.showError(er);
 		},
-		function(percentLoaded){
-			self.setProgressPercent(percentLoaded,"подписание ");
-		}
+		progressFunc
 	);
 }
 
@@ -1345,15 +1333,69 @@ FileUploader_View.prototype.signFile = function(fileId,itemId){
 	if (!cades || !cades.getCertListCount() || !cert_lits_ctrl || !cert_lits_ctrl.getSelectedCert()){
 		throw new Error("Сертификат для подписи не выбран!");
 	}
+	var self = this;
 	if (this.m_mainView&&!this.m_mainView.getElement("id").getValue()){
-		//not inserted yet
-		var self = this;
+		//not inserted yet		
 		this.insertObject(function(){
-			self.signFileContinue(fileId,itemId);
+			self.signFileContinue(fileId,itemId,function(percentLoaded){
+				self.setProgressPercent(percentLoaded,"подписание ");
+			});
 		});
 	}
 	else{
-		this.signFileContinue(fileId,itemId);
+		this.signFileContinue(fileId,itemId,function(percentLoaded){
+				self.setProgressPercent(percentLoaded,"подписание ");
+			});
+	}
+}
+
+//
+FileUploader_View.prototype.signAllFilesContinueIteration = function(filesForSigning,ind,totalSize,sizeDone,signFileSizes){
+	if (ind==filesForSigning.length){
+		DOMHelper.hide(document.getElementById(this.getId()+":total_files_for_sign"));
+		this.getElement("file-upload").setEnabled(true);
+		this.getElement("file-sign-all").setEnabled(true);
+	}
+	else{
+		if (ind==0){
+			//initialize
+			this.getElement("file-sign-all").setEnabled(false);
+			this.getElement("file-upload").setEnabled(false);			
+			var n = document.getElementById(this.getId()+":total_files_for_sign");
+			DOMHelper.setText(n,filesForSigning.length);
+			DOMHelper.show(n);	
+			//total size			
+			totalSize = 0;
+			signFileSizes = [];
+			sizeDone = 0;
+			for (var i=0;i<filesForSigning.length;i++){
+				signFileSizes[filesForSigning[i].file_id] = 0;
+				var file_cont = this.getElement("file-list_"+filesForSigning[i].doc_id);
+				var file_ctrl = file_cont.getElement("file_"+filesForSigning[i].file_id);
+				file_ctrl.sigCont.setWait(true);
+			}
+			for (var i=0;i<this.m_uploader.files.length;i++){
+				if (signFileSizes[this.m_uploader.files[i].file_id]!==undefined){
+					signFileSizes[this.m_uploader.files[i].file_id] = this.m_uploader.files[i].file.size;
+					totalSize+= this.m_uploader.files[i].file.size;
+				}
+			}
+		}	
+		var self = this;
+		this.signFileContinue(filesForSigning[ind].file_id,filesForSigning[ind].doc_id,
+			function(percentLoaded){
+				var curr_size_done = signFileSizes[filesForSigning[ind].file_id] * percentLoaded / 100;
+				var tot_percent = Math.round( (sizeDone + curr_size_done) / totalSize * 100 );
+				self.setProgressPercent(tot_percent,"подписание ");
+			},
+			function(){
+				var n = document.getElementById(self.getId()+":total_files_for_sign");
+				DOMHelper.setText(n,(filesForSigning.length-ind-1));	
+				sizeDone+= signFileSizes[filesForSigning[ind].file_id];
+							
+				self.signAllFilesContinueIteration(filesForSigning,ind+1,totalSize,sizeDone,signFileSizes);
+			}
+		);
 	}
 }
 
@@ -1361,10 +1403,8 @@ FileUploader_View.prototype.signFile = function(fileId,itemId){
  * Все неподписанные и незагруженные
  */
 FileUploader_View.prototype.signAllFilesContinue = function(filesForSigning){
-
-	for (var i=0;i<filesForSigning.length;i++){
-		this.signFileContinue(filesForSigning[i].file_id,filesForSigning[i].doc_id);
-	}	
+	//block uploading
+	this.signAllFilesContinueIteration(filesForSigning,0,0,0,null);
 }
 
 FileUploader_View.prototype.signAllFiles = function(){
@@ -1464,7 +1504,7 @@ FileUploader_View.prototype.uploadSigFile = function(sigFile,fileId,itemId){
 	}						
 }
 
-FileUploader_View.prototype.signFileContinue = function(fileId,itemId){
+FileUploader_View.prototype.signFileContinue = function(fileId,itemId,progressFunc,callBack){
 	var cades = window.getApp().getCadesAPI();
 	var cert_lits_ctrl = this.m_mainView.m_cadesView.getCertBoxControl();
 	var cert_struc = cert_lits_ctrl.getSelectedCert()
@@ -1526,55 +1566,9 @@ FileUploader_View.prototype.signFileContinue = function(fileId,itemId){
 					itemId,
 					cert_struc,
 					file_ctrl.sigCont,
+					progressFunc,
 					function(sigFile){
 						self.uploadSigFile(sigFile,fileId,itemId);
-						/*
-						var upl = new Resumable({
-							"target": (self.m_customUploadServer? self.m_customUploadServer:"") + "functions/file_upload.php",
-							"testChunks": true,
-							"query":function(file,chunk){
-								file.sig_add = true;
-								var struc = self.getQuerySruc(file);
-								//console.dir(struc)
-								//if(file_ctrl.m_filePath)struc.file_path = file_ctrl.m_filePath;
-								return struc;
-							}
-						});
-						upl.on("fileAdded", function(file, event){
-							file.file_id = fileId;
-							file.doc_id = itemId;
-							file.signature = true;
-							file.file_path = self.getFilePath(itemId);
-							upl.upload();
-						});
-						upl.on("fileError", function(file, message){
-							self.fireFileError(file,message);
-						});
-						upl.on("fileSuccess", function(file, message){
-							if (message.trim().length){		
-								self.fireFileError(file,message);
-							}
-							else{
-								if(self.m_onlySignature && self.setFileSignedByClient){
-									self.setFileSignedByClient(file.file_id,true);
-								}
-								self.setFileSigned(fileId,itemId);
-								file_ctrl.sigCont.addSignature(sigFile.signature);
-								file_ctrl.sigCont.sigsToDOM();
-							
-							}
-							file_ctrl.sigCont.setWait(false);
-						});
-
-						if (self.m_mainView&&!self.m_mainView.getElement("id").getValue()){
-							self.insertObject(function(){
-								upl.addFile(sigFile);
-							});
-						}
-						else{
-							upl.addFile(sigFile);
-						}						
-						*/
 					}
 				);
 				
@@ -1594,8 +1588,12 @@ FileUploader_View.prototype.signFileContinue = function(fileId,itemId){
 					itemId,
 					cert_struc,
 					file_ctrl.sigCont,
+					progressFunc,
 					function(sigFile){
 						self.m_uploader.addFile(sigFile);
+						if (callBack){
+							callBack.call(self);
+						}
 					}
 				);
 			
@@ -1713,10 +1711,16 @@ FileUploader_View.prototype.onUploadComplete = function(){
 	}
 	
 	this.calcFileTotals(null);
+	
+	this.getElement("file-upload").setEnabled(true);
+	if (document.getElementById(this.getId()+":total_files_for_sign"))this.getElement("file-sign-all").setEnabled(true);	
 }
 
 FileUploader_View.prototype.onUploadStart = function(){
 	//new files
+	this.getElement("file-upload").setEnabled(false);
+	if (document.getElementById(this.getId()+":total_files_for_sign"))this.getElement("file-sign-all").setEnabled(false);
+	
 	var el = $("."+this.m_filePicClass);
 	el.toggleClass("glyphicon glyphicon-cloud-upload glyphicon-ban-circle",false);
 	el.toggleClass("fa fa-spinner fa-spin");						
@@ -1763,9 +1767,9 @@ FileUploader_View.prototype.fireFileError = function(file,message,uploadSig){
 		}
 	}
 	else if (file.signature && this.m_uploadOnAdd){	
-		if (file_ctrl){
+		/*if (file_ctrl){
 			file_ctrl.sigCont.deleteLast();
-		}
+		}*/
 		this.deleteFileFromUpload(file.file_id,file.doc_id);
 		mes = this.ER_SIG_DOWNLOAD+" "+data_file.fileName+" "+message;
 		
@@ -1816,17 +1820,20 @@ FileUploader_View.prototype.setFileUploaded = function(file){
 	window.showNote(CommonHelper.format(this.NT_FILE_DOWNLOADED,[(this.m_uploadOnAdd? file.fileName:data_file.fileName)]));
 	var file_cont = this.getElement("file-list_"+file.doc_id);
 	var file_ctrl = file_cont.getElement("file_"+file.file_id);
-	file_ctrl.setAttr("file_uploaded","true");
+	if (file_ctrl){
+		file_ctrl.setAttr("file_uploaded","true");
 	
-	var pic = DOMHelper.getElementsByAttr(this.m_filePicClass, file_ctrl.getNode(), "class", true)[0];
-	if (pic){
-		pic.className = "glyphicon glyphicon-ok";
-		pic.setAttribute("title",this.FILE_DOWNLOADED_TITLE);
+		var pic = DOMHelper.getElementsByAttr(this.m_filePicClass, file_ctrl.getNode(), "class", true)[0];
+		if (pic){
+			pic.className = "glyphicon glyphicon-ok";
+			pic.setAttribute("title",this.FILE_DOWNLOADED_TITLE);
+		}
 	}
+	
 	if (this.m_allowFileSwitch){
 		DOMHelper.show(file_cont.getElement("file_"+file.file_id+"_switch").getNode());
 	}
-	
+		
 	var href = document.getElementById(this.getId()+":file_"+file.file_id+"_href");
 	if (href){
 		DOMHelper.setAttr(href,"title",this.TITLE_UPLOADED);

@@ -77,6 +77,9 @@ class DocFlow_Controller extends ControllerSQL{
 		return $res;
 	}
 
+	/**
+	 * Called from DocFlowOut_Controller->delete,DocFlowInside_Controller->delete
+	 */
 	public function delete_attachments($pm,$type){
 		$old_state = $this->get_state($this->getExtDbVal($pm,'id'),$type);
 		if ($old_state!='dirt_copy' && $_SESSION['role_id']!='admin'){
@@ -93,7 +96,7 @@ class DocFlow_Controller extends ControllerSQL{
 						at.file_id,
 						at.file_signed,
 						at.file_path,
-						ct.application_id AS to_application_id
+						ct.application_id AS app_id
 					FROM doc_flow_attachments AS at
 					LEFT JOIN doc_flow_inside AS ins ON at.doc_type='doc_flow_inside' AND at.doc_id=ins.id
 					LEFT JOIN contracts AS ct ON ct.id=ins.contract_id
@@ -102,17 +105,29 @@ class DocFlow_Controller extends ControllerSQL{
 				));
 			}
 			else if ($type=='out'){
+				//проверка на отправленное письмо клиента с подписанным документом
 				$q_id = $this->getDbLink()->query(sprintf(
 					"SELECT
 						at.file_id,
 						at.file_signed,
 						at.file_path,
-						out.to_application_id
+						out.to_application_id AS app_id,
+						coalesce(app_f.file_signed_by_client,FALSE) AS file_signed_by_client,
+						coalesce(cl_doc.sent,FALSE) AS client_doc_sent
 					FROM doc_flow_attachments AS at
 					LEFT JOIN doc_flow_out AS out ON at.doc_type='doc_flow_out' AND at.doc_id=out.id
+					LEFT JOIN application_document_files AS app_f ON app_f.file_id=at.file_id
+					LEFT JOIN doc_flow_out_client_document_files AS cl_f ON cl_f.file_id=at.file_id
+					LEFT JOIN doc_flow_out_client AS cl_doc ON cl_doc.id=cl_f.doc_flow_out_client_id
 					WHERE doc_id=%d AND doc_type='doc_flow_out'::data_types",
 					$this->getExtDbVal($pm,'id')
 				));
+				while($ar = $this->getDbLink()->fetch_array()){
+					if ($ar['client_doc_sent']=='t'){
+						throw new Exception('Один из файлов подписан и отправлен клиентом!');
+					}
+				}
+				$this->getDbLink()->data_seek(0,$q_id);
 			}		
 			else{
 				$q_id = $this->getDbLink()->query(sprintf(
@@ -120,41 +135,38 @@ class DocFlow_Controller extends ControllerSQL{
 						at.file_id,
 						at.file_signed,
 						at.file_path,
-						NULL AS to_application_id
+						NULL AS to_application_id AS app_id
 					FROM doc_flow_attachments AS at
 					WHERE doc_id=%d AND doc_type='doc_flow_in'::data_types",
 					$this->getExtDbVal($pm,'id')
 				));
 			}		
 			while($ar = $this->getDbLink()->fetch_array()){
-				$fl = NULL;
-				if ($ar['to_application_id']){
-					//Файл из папки заявления
-					if (
-					file_exists($fl = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
-						Application_Controller::APP_DIR_PREF.$ar['to_application_id'].DIRECTORY_SEPARATOR.
-						$ar['file_path'].
-						DIRECTORY_SEPARATOR.$this->getExtVal($pm,'file_id'))
-					||(defined('FILE_STORAGE_DIR_MAIN')
-					&& file_exists($fl = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.
-						Application_Controller::APP_DIR_PREF.$ar['to_application_id'].DIRECTORY_SEPARATOR.
-						$ar['file_path'].
-						DIRECTORY_SEPARATOR.$this->getExtVal($pm,'file_id'))
-					)
-					){
-						unlink($fl);
+				$rel_dir = ($ar['app_id'])? (Application_Controller::APP_DIR_PREF.$ar['app_id'].DIRECTORY_SEPARATOR.$ar['file_path']) : '';
+				$rel_file = ( (strlen($rel_dir))? ($rel_dir.DIRECTORY_SEPARATOR) : '') .$ar['file_id'];
+				
+				$this->remove_file_from_all_servers($ar['app_id'],$rel_file);
+				if ($ar['file_signed']){
+					$this->remove_file_from_all_servers($ar['app_id'],$rel_file.'.sig');
+					//all temp sig.s(1)
+					$max_index = 0;
+					if ($ar['app_id']){						
+						Application_Controller::getMaxIndexSigFile($rel_dir,$ar['file_id'],$max_index);
+					}
+					else{
+						$max_index = Application_Controller::getMaxIndexInDir(DOC_FLOW_FILE_STORAGE_DIR,$ar['file_id']);
+						if (defined('DOC_FLOW_FILE_STORAGE_DIR_MAIN')){
+							$max_index2 = Application_Controller::getMaxIndexInDir(DOC_FLOW_FILE_STORAGE_DIR_MAIN,$ar['file_id']);
+							if ($max_index2 > $max_index){
+								$max_index = $max_index2;
+							}
+						}
+					}
+					for($i=1;$i<=$max_index; $i++){
+						$this->remove_file_from_all_servers($ar['app_id'],$rel_file.'.sig.s'.$i);
 					}
 				}
-				else{
-					//Общий документооборот
-					if (file_exists($fl = DOC_FLOW_FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$this->getExtVal($pm,'file_id'))){
-						unlink($fl);
-					}
-				}
-			
-				if ($ar['file_signed'] && file_exists($fl.='.sig')){
-					unlink($fl);			
-				}
+				
 			}			
 
 			$this->getDbLinkMaster()->query(sprintf(
@@ -172,6 +184,17 @@ class DocFlow_Controller extends ControllerSQL{
 			$this->getDbLinkMaster()->query("ROLLBACK");
 			throw $e;
 		}		
+	}
+	
+	protected function remove_file_from_all_servers($appId,$relFile){
+		if ($appId){
+			if (file_exists($fl = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$relFile))unlink($fl);
+			if (defined('FILE_STORAGE_DIR_MAIN') && file_exists($fl = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$relFile))unlink($fl);
+		}
+		else{
+			if (file_exists($fl = DOC_FLOW_FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$relFile))unlink($fl);
+			if (defined('DOC_FLOW_FILE_STORAGE_DIR_MAIN') && file_exists($fl = DOC_FLOW_FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$relFile))unlink($fl);
+		}	
 	}
 	
 	/**
@@ -194,12 +217,14 @@ class DocFlow_Controller extends ControllerSQL{
 				CASE
 					WHEN att.doc_type='doc_flow_out' THEN out.to_application_id
 					WHEN att.doc_type='doc_flow_inside' THEN ct.application_id
+					WHEN att.doc_type='doc_flow_in' THEN doc_in.from_application_id
 					ELSE NULL
-				END AS to_application_id
+				END AS app_id
 				
 			FROM doc_flow_attachments AS att
 			LEFT JOIN doc_flow_out AS out ON att.doc_type='doc_flow_out' AND att.doc_id=out.id
 			LEFT JOIN doc_flow_inside AS ins ON att.doc_type='doc_flow_inside' AND att.doc_id=ins.id
+			LEFT JOIN doc_flow_in AS doc_in ON att.doc_type='doc_flow_in' AND att.doc_id=doc_in.id
 			LEFT JOIN contracts AS ct ON ct.id=ins.contract_id
 			WHERE att.doc_id=%d AND att.file_id=%s AND att.doc_type='doc_flow_%s'",
 			$this->getExtDbVal($pm,'doc_id'),
@@ -210,43 +235,33 @@ class DocFlow_Controller extends ControllerSQL{
 			throw new Exception(self::ER_STORAGE_FILE_NOT_FOUND);
 		}
 		
-		$cur_sig = NULL;
-		$application_id = NULL;
-		$cur_sig_exists = $this->get_doc_file(
-			$this->getExtDbVal($pm,'doc_id'),
-			$type,
-			$ar['file_path'],
-			$ar['file_id'],
-			TRUE,
-			$cur_sig,
-			$application_id
-		);
+		$rel_dir = ($ar['app_id'])? (Application_Controller::APP_DIR_PREF.$ar['app_id'].DIRECTORY_SEPARATOR.$ar['file_path']) : '';
+		$data_rel_file = ((strlen($rel_dir))? ($rel_dir.DIRECTORY_SEPARATOR):'') .$ar['file_id'];
+		$sig_rel_file = $data_rel_file.'.sig';
 		
+		//Data file
 		if(
-		($ar['to_application_id']
-		&& !file_exists($file_doc=FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
-			Application_Controller::APP_DIR_PREF.$application_id.DIRECTORY_SEPARATOR.
-			$ar['file_path'].DIRECTORY_SEPARATOR.
-			$ar['file_id'])
+		($ar['app_id']
+		&& !file_exists($file_doc=FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$data_rel_file)
 		&&
-		(!defined('FILE_STORAGE_DIR_MAIN')
+			(!defined('FILE_STORAGE_DIR_MAIN')
 			||
-			(defined('FILE_STORAGE_DIR_MAIN') &&
-			!file_exists($file_doc=FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.
-				Application_Controller::APP_DIR_PREF.$application_id.DIRECTORY_SEPARATOR.
-				$ar['file_path'].DIRECTORY_SEPARATOR.
-				$ar['file_id'])
+			!file_exists($file_doc=FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$data_rel_file)
 			)
 		)
-		)
 		|| (
-			!$ar['to_application_id']
-			&& !file_exists($file_doc = DOC_FLOW_FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$ar['file_id'])
+			!$ar['app_id']
+			&& !file_exists($file_doc = DOC_FLOW_FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$data_rel_file)
+			&&
+			(!defined('DOC_FLOW_FILE_STORAGE_DIR_MAIN')
+				||
+				!file_exists($file_doc=DOC_FLOW_FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$data_rel_file)
+			)			
 		)
 		){
 			throw new Exception(self::ER_STORAGE_FILE_NOT_FOUND);
 		}				
-		
+
 		if ($_SESSION['role_id']!='admin'){
 			$state = $this->get_state($id,$type);
 			if ($state=='registered' && $_SESSION['role_id']!='admin'){
@@ -296,7 +311,6 @@ class DocFlow_Controller extends ControllerSQL{
 			}
 		}
 		
-		//В случае если удалились все подписи. Т.е. был 1 sig с многими подписями, подложенный руками
 		$all_sigs_deleted = FALSE;
 		
 		//можно удалить последнюю ЭЦП
@@ -318,52 +332,50 @@ class DocFlow_Controller extends ControllerSQL{
 					$this->getExtDbVal($pm,'file_id')
 				));
 				
-				if($cur_sig_exists)unlink($cur_sig);
+				//current sig from all servers
+				$this->remove_file_from_all_servers($ar['app_id'],$sig_rel_file);
+				
+				$all_sigs_deleted = TRUE;
 			}
 			else{						
 				//find previous sig
 				$max_ind = NULL;
-				if (!$ar['to_application_id']){
-					$prev_sig = DOC_FLOW_FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
-						$fileId.'.sig.s'.Application_Controller::getMaxIndexInDir(DOC_FLOW_FILE_STORAGE_DIR,$fileId);
-					$new_cur_sig = DOC_FLOW_FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
-						$ar['file_id'].'.sig';								
+				if (!$ar['app_id']){
+					$dir = DOC_FLOW_FILE_STORAGE_DIR;
+					$max_ind = Application_Controller::getMaxIndexInDir(DOC_FLOW_FILE_STORAGE_DIR,$ar['file_id']);
+					if (defined('DOC_FLOW_FILE_STORAGE_DIR_MAIN')){
+						$max_ind2 = Application_Controller::getMaxIndexInDir(DOC_FLOW_FILE_STORAGE_DIR_MAIN,$ar['file_id']);
+						if ($max_ind2>$max_ind){
+							$max_ind = $max_ind2;
+							$dir = DOC_FLOW_FILE_STORAGE_DIR_MAIN;
+						}
+					}
+					
+					$prev_sig = $dir.DIRECTORY_SEPARATOR.$sig_rel_file.'.s'.$max_ind;
+					$new_cur_sig = DOC_FLOW_FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$sig_rel_file;
 				}
 				else{
-					$prev_sig = Application_Controller::getMaxIndexSigFile(
-						Application_Controller::APP_DIR_PREF.$application_id.DIRECTORY_SEPARATOR.$ar['file_path'],
-						$ar['file_id'],
-						$max_ind
-					);				
-				
-					$new_cur_sig = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
-						Application_Controller::APP_DIR_PREF.$application_id.DIRECTORY_SEPARATOR.
-						$ar['file_path'].DIRECTORY_SEPARATOR.
-						$ar['file_id'].'.sig';		
+					$prev_sig = Application_Controller::getMaxIndexSigFile($rel_dir,$ar['file_id'],$max_ind);				
+					$new_cur_sig = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$sig_rel_file;
 				}
+
+				//current sig from all servers
+				$this->remove_file_from_all_servers($ar['app_id'],$sig_rel_file);
 				
-				if (file_exists($prev_sig)){
-					if($cur_sig_exists)unlink($cur_sig);
-					rename($prev_sig,$new_cur_sig);
+				if ($max_ind && file_exists($prev_sig)){
+					//found sig with index sig.s(1)
+					//sig.s(1) -> .sig
+					exec(sprintf('mv "%s" "%s"',$prev_sig,$new_cur_sig));
+					
+					$pki_man = new PKIManager(PKI_PATH,PKI_CRL_VALIDITY,PKI_MODE);
+					$db_link = $this->getDbLinkMaster();
+					pki_log_sig_check($new_cur_sig, $file_doc, $this->getExtDbVal($pm,'file_id'), $pki_man, $db_link);
 				}
-				else if ($max_ind==0){
-					//no index file, delete sig
-					if($cur_sig_exists)unlink($cur_sig);
+				else if (!$max_ind){
+					//no index file
 					$this->getDbLinkMaster()->query(sprintf("DELETE FROM file_verifications WHERE file_id=%s",$this->getExtDbVal($pm,'file_id')));
 					$all_sigs_deleted = TRUE;
-				}
-			
-				if (file_exists($new_cur_sig)){
-					$pki_man = new PKIManager(PKI_PATH,PKI_CRL_VALIDITY,PKI_MODE);
-					$verif_res = pki_log_sig_check($new_cur_sig, $file_doc, $this->getExtDbVal($pm,'file_id'), $pki_man, $this->getDbLinkMaster());
-					if (
-						!$verif_res->checkPassed
-						&&
-						( PKI_SIG_ERROR=='ALL' || (PKI_SIG_ERROR=='NO_CERT' && !count($verif_res->signatures) ) )
-					){
-						throw new Exception(sprintf(ER_VERIF_SIG,$verif_res->checkError));
-					}		
-				}
+				}			
 			}
 			
 			$this->getDbLinkMaster()->query("COMMIT");
@@ -387,59 +399,6 @@ class DocFlow_Controller extends ControllerSQL{
 		}
 	}
 	
-	/**
-	 * @param {int} docIdForDb
-	 * @param {string} type in,out,inside
-	 * @param {string} filePath
-	 * @param {string} fileId
-	 * @param {bool} isSig
-	 * @param {sring} fl
-	 * @param {sring} applicationId
-	 * @returns {bool} file existance
-	 */
-	private function get_doc_file($docIdForDb,$type,$filePath,$fileId,$isSig,&$fl,&$applicationId){
-		if ($type=='out' || $type=='inside'){
-			$q = '';
-			if ($type=='out'){
-				$q = sprintf(
-					"SELECT to_application_id
-					FROM doc_flow_out
-					WHERE id=%d",
-					$docIdForDb
-				);
-			}
-			else{
-				$q = sprintf(
-					"SELECT ct.application_id AS to_application_id
-					FROM doc_flow_inside AS ins
-					LEFT JOIN contracts AS ct ON ct.id=ins.contract_id
-					WHERE ins.id=%d",
-					$docIdForDb
-				);
-			}
-			$app_ar = $this->getDbLink()->query_first($q);
-			if (count($app_ar) && ($applicationId = $app_ar['to_application_id']) ){
-				$rel_fl = Application_Controller::APP_DIR_PREF.$applicationId.DIRECTORY_SEPARATOR.
-				$filePath.DIRECTORY_SEPARATOR.$fileId. ($isSig? '.sig':'');
-			
-				if (
-				file_exists($fl = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_fl)
-				|| (
-					defined('FILE_STORAGE_DIR_MAIN')
-					&& file_exists($fl = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$rel_fl)
-				)
-				){
-					return TRUE;
-				}
-			}
-		}
-		
-		if (!$fl){
-			$fl = DOC_FLOW_FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$fileId. ($isSig? '.sig':'');
-		}
-		
-		return file_exists($fl);	
-	}
 	
 	
 	protected function remove_afile($pm,$type){
@@ -502,6 +461,7 @@ class DocFlow_Controller extends ControllerSQL{
 			
 			$fl = NULL;
 			$app_id = NULL;
+			$rel_file = NULL;
 			if ($this->get_doc_file(
 				$this->getExtDbVal($pm,'doc_id'),
 				$type,
@@ -509,7 +469,8 @@ class DocFlow_Controller extends ControllerSQL{
 				$ar['file_id'],
 				FALSE,
 				$fl,
-				$app_id
+				$app_id,
+				$rel_file
 			)){
 				unlink($fl);
 			}

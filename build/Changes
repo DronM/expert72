@@ -349,6 +349,15 @@ wget -O crypto_plugin.txt https://www.cryptopro.ru/sites/default/files/products/
 2) PKIManager работа с CRL
 3) FileUploader_View.js 1782, pic empty??
 
+
+1.0.88 31/10 поставил только js
+1) Непонятные ошибка в гуи setFileUploaded
+2) Исправлены ошибки гуи при подписании всех файлов одновременно
+
+
+2) User_Controller ошибка при подтверждении мыла, описка в имени таблицы
+3) mv вместо rename при загрузке подписи
+
 IE10 не работает кнопка Все фнкции и Фильтр в таблицах
 
 

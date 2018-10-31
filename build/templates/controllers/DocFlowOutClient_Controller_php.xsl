@@ -385,11 +385,8 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 					}
 					unlink($file);
 					
-					$pki_man = new PKIManager(PKI_PATH,PKI_CRL_VALIDITY,PKI_MODE);
-					$verif_res = pki_log_sig_check($file_sig, $file_doc, $file_id_for_db, $pki_man, $dbLinkMaster);
-					if (pki_fatal_error($verif_res)){
-						throw new Exception(sprintf(seld::ER_VERIF_SIG,$verif_res->checkError));
-					}
+					$pki_man = new PKIManager(PKI_PATH,PKI_CRL_VALIDITY,'error');
+					pki_log_sig_check($file_sig, $file_doc, $file_id_for_db, $pki_man, $dbLinkMaster);
 					
 					$dbLinkMaster->query("COMMIT");
 				}

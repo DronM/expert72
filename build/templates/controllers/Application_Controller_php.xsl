@@ -119,11 +119,13 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		$sig_ar = NULL;
 		$pki_man = new PKIManager(PKI_PATH,PKI_CRL_VALIDITY,'error');		
 		$db_file_id = "'".$file_id."'";
+		$db_link = $this->getDbLinkMaster();
 		$verif_res = pki_log_sig_check(
 			$dir.DIRECTORY_SEPARATOR.$file_id.'.sig',
 			$dir.DIRECTORY_SEPARATOR.$file_id,				
 			$db_file_id,
-			$pki_man,$this->getDbLinkMaster()
+			$pki_man,
+			$db_link
 		);
 		if (pki_fatal_error($verif_res)){
 			throw new Exception('Ошибка проверки подписи заявления по '.$ER_PRINT_FILE_CNT_END[$id].': '.$verif_res->checkError);
@@ -2229,7 +2231,8 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			|| (defined('FILE_STORAGE_DIR_MAIN') &amp;&amp; file_exists($file_doc_sig = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$rel_dir.DIRECTORY_SEPARATOR.$file['file_path'].self::SIG_EXT) )
 			)			
 			){
-				pki_log_sig_check($file_doc_sig, $file_doc, "'".$file['file_id']."'", $pki_man,$this->getDbLinkMaster());
+				$db_link = $this->getDbLinkMaster();
+				pki_log_sig_check($file_doc_sig, $file_doc, "'".$file['file_id']."'", $pki_man,$db_link);
 			}
 		}		
 	

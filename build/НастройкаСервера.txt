@@ -32,6 +32,8 @@ sudo apt-get install nginx
 /etc/nginx/sites-available
 /etc/nginx/sites-enabled
 
+fastcgi_read_timeout 3600;
+
 Настраиваемые параметры
 
 sudo service nginx start/stop/reload/restart

@@ -8,6 +8,7 @@ $dbLink->technicalemail = TECH_EMAIL;
 $dbLink->reportError = DEBUG;
 $dbLink->productionConnectError = 'Ошибка подключения к серверу базы данных.@105';
 $dbLink->productionSQLError	= 'Ошибка при выполнении запроса к базе данных.@106';		
+if (defined('QUERY_LOG_FILE'))$dbLink->logfile = QUERY_LOG_FILE;
 
 /*conneсtion*/
 $dbLink->server		= DB_SERVER_MASTER;

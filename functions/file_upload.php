@@ -63,10 +63,8 @@ function mkdir_or_error($dir){
 }
 
 function rename_or_error($orig_file,$new_name){
-	if (@rename($orig_file,$new_name)===FALSE){
-		throw new Exception(ER_COMMON);
-	}
-	chmod($new_name, 0664);					
+	exec(sprintf('mv "%s" "%s"',$orig_file,$new_name));
+	//chmod($new_name, 0664);					
 }
  
 function prolongate_session() {
@@ -114,30 +112,30 @@ function check_app_folder($dbLink){
 }
  
 /**
- * returns new name of old signature file
  */ 
-function merge_sig($uploadFolder,$contentFile,$origFile,$newName,$fileId,$dbFileId,&$dbLink){
+function merge_sig($contentFile,$origFile,$newName,$fileId,$dbFileId,&$dbLink){
 	$pki_man = new PKIManager(PKI_PATH,PKI_CRL_VALIDITY,PKI_MODE);
 	
-	//verify new signature first	
+	//verify new signature first, throw error
 	$verif_res = $pki_man->verifySig($origFile,$contentFile);
 	pki_throw_error($verif_res);
 	
-	//SNILS 
+	//SNILS verification
 	$q_id = $dbLink->query(sprintf(
 	"SELECT
-		empl.snils
+		certs.subject_cert->>'СНИЛС' AS snils
 	FROM file_signatures AS sig
 	LEFT JOIN user_certificates AS certs ON certs.id=sig.user_certificate_id
-	LEFT JOIN employees AS empl ON empl.id=certs.employee_id
-	WHERE sig.file_id=%s AND certs.employee_id IS NOT NULL",
+	WHERE sig.file_id=%s  AND certs.subject_cert IS NOT NULL",
 	$dbFileId
 	));
 	$used_snils = [];
 	$cnt = 0;		
 	while($ar = $dbLink->fetch_array($q_id)){
-		$used_snils[$ar['snils']] = TRUE;
-		$cnt++;
+		if (isset($ar['snils']) && strlen($ar['snils'])){
+			$used_snils[$ar['snils']] = TRUE;
+			$cnt++;
+		}
 	}
 	if ($cnt){
 		foreach($verif_res->signatures as $sig){
@@ -167,34 +165,48 @@ function merge_sig($uploadFolder,$contentFile,$origFile,$newName,$fileId,$dbFile
 	}
 	$need_decode = $pki_man->isBase64Encoded($origFile);
 	$der_file = NULL;
-	$merged_sig = $uploadFolder.DIRECTORY_SEPARATOR.$fileId.'.mrg';
+	$merged_sig = OUTPUT_PATH.$fileId.'.mrg';
 	if ($need_decode){
-		$der_file = $uploadFolder.DIRECTORY_SEPARATOR.$fileId.'.der';							
+		$der_file = OUTPUT_PATH.$fileId.'.der';							
 		$pki_man->decodeSigFromBase64($origFile,$der_file);
 	}
 	else{
 		$der_file = $origFile;
 	}
-	//throw new Exception('der_file='.$der_file.' newName='.$newName.' merged_sig='.$merged_sig);
-	$pki_man->mergeSigs($newName,$der_file,$merged_sig);
 	
 	$max_ind = NULL;
 	Application_Controller::getMaxIndexSigFile(dirname($newName),$fileId,$max_ind);
 	//new name of old signature file
 	$old_sig_new_name = $newName.'.s'.($max_ind+1);
-	rename_or_error($newName,$old_sig_new_name);//rename old signature,leave all?!
 	
-	unlink($origFile);
-	if ($der_file && file_exists($der_file)){
-		unlink($der_file);
+	try{
+		$pki_man->mergeSigs($newName,$der_file,$merged_sig);
+		rename_or_error($newName,$old_sig_new_name);//rename old signature to index
+		try{			
+			rename_or_error($merged_sig,$newName);//merged signature to actual sig		
+		}
+		catch(Exception $e){
+			//отменить все и ошибку
+			rename_or_error($old_sig_new_name,$newName);//Back rename from index to sig
+			unlink($old_sig_new_name);
+			throw $e;
+		}
+			
+		//После мерджа исключений не должно быть, чтобы все оставить в базе		
+		try{	
+			//new file verification
+			pki_log_sig_check($newName, $contentFile, $dbFileId, $pki_man, $dbLink);	
+		}
+		catch(Exception $e){
+		}
+		
 	}
-	rename_or_error($merged_sig,$newName);
+	finally{
+		if(file_exists($merged_sig))unlink($merged_sig);
+		if(file_exists($origFile))unlink($origFile);
+		if ($der_file && file_exists($der_file))unlink($der_file);		
+	}
 	
-	//save all signatures to db
-	$verif_res = pki_log_sig_check($newName, $contentFile, $dbFileId, $pki_man, $dbLink);
-	pki_throw_error($verif_res);
-	
-	return $old_sig_new_name;		
 }
  
 /** validation
@@ -297,6 +309,10 @@ try{
 			}
 		
 			$orig_file = $resumable->uploadFolder.DIRECTORY_SEPARATOR.$_REQUEST['resumableFilename'];
+			if (!file_exists($orig_file)){
+				error_log("Загрузка заявления, isUploadComplete BUT no file=".$orig_file);
+				throw new Exception(ER_COMMON);
+			}
 			
 			$upload_folder_main = NULL;
 			if (defined('FILE_STORAGE_DIR_MAIN')){
@@ -318,7 +334,7 @@ try{
 				Application_Controller::checkSentState($dbLink,$db_app_id,TRUE);
 
 				if ($_SESSION['client_download_file_max_size']<$orig_file_size){
-					error_log('Загрузка заявления, №'.$db_app_id.' ER_MAX_SIZE_EXCEEDED');
+					error_log('Загрузка заявления, №'.$db_app_id.' ER_MAX_SIZE_EXCEEDED size='.$orig_file_size);
 					throw new Exception(ER_MAX_SIZE_EXCEEDED);
 				}
 		
@@ -397,9 +413,7 @@ try{
 						if (count($ar) && $ar['signed']=='t'){
 							throw new Exception(ER_SIGNED);
 						}
-			
-						//throw new Exception('resumable='.$resumable.' orig_file='.$orig_file.' db_app_id='.$db_app_id.' par_file_id='.$par_file_id.' file_path'.$file_path);
-						$old_sig_new_name = merge_sig($resumable->uploadFolder,$file_doc,$orig_file,$file_doc_sig,$par_file_id,$db_file_id,$dbLink);
+									
 						//
 						try{
 							$dbLink->query('BEGIN');							
@@ -416,17 +430,16 @@ try{
 							VALUES (%s,%d,TRUE,TRUE)",
 							$db_file_id,$db_doc_flow_out_client_id
 							));
+							
+							//При любых ошибках все отменяем				
+							merge_sig($file_doc,$orig_file,$file_doc_sig,$par_file_id,$db_file_id,$dbLink);
 											
 							$dbLink->query('COMMIT');
 						}
 						catch(Exception $e){
 							$dbLink->query('ROLLBACK');
-							
-							//back to old sig
-							//rename_or_error($old_sig_new_name,);
 							throw $e;
 						}
-					
 					}
 					else{
 						//Все в базу данных
@@ -765,30 +778,38 @@ try{
 						throw new Exception(ER_DATA_FILE_MISSING);
 					}
 					
-					if (file_exists($new_name)){
-						merge_sig($resumable->uploadFolder,$content_file,$orig_file,$new_name,$par_file_id,$db_file_id,$dbLink);
-						//merge contents with existing file
-					}
-					else{					
-						//first signature
-						$pki_man = new PKIManager(PKI_PATH,PKI_CRL_VALIDITY,PKI_MODE);
-						$need_decode = $pki_man->isBase64Encoded($orig_file);
-						if ($need_decode){							
-							$pki_man->decodeSigFromBase64($orig_file,$new_name);
-							unlink($orig_file);
+					try{
+						$dbLink->query('BEGIN');
+						$dbLink->query(sprintf(
+							"UPDATE doc_flow_attachments
+							SET file_signed = TRUE
+							WHERE file_id=%s",
+						$db_file_id
+						));
+
+						if (file_exists($new_name)){
+							//merge contents with existing file
+							merge_sig($content_file,$orig_file,$new_name,$par_file_id,$db_file_id,$dbLink);							
 						}
-						else{
-							rename_or_error($orig_file,$new_name);
+						else{					
+							//first signature
+							$pki_man = new PKIManager(PKI_PATH,PKI_CRL_VALIDITY,PKI_MODE);
+							$need_decode = $pki_man->isBase64Encoded($orig_file);
+							if ($need_decode){							
+								$pki_man->decodeSigFromBase64($orig_file,$new_name);
+								unlink($orig_file);
+							}
+							else{
+								rename_or_error($orig_file,$new_name);
+							}					
 						}
-					
+						
+						$dbLink->query('COMMIT');
 					}
-										
-					$dbLink->query(sprintf(
-						"UPDATE doc_flow_attachments
-						SET file_signed = TRUE
-						WHERE file_id=%s",
-					$db_file_id
-					));
+					catch(Exception $e){
+						$dbLink->query('ROLLBACK');
+						throw $e;
+					}
 				}
 				else{
 					rename_or_error($orig_file,$new_name);

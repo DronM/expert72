@@ -72,11 +72,11 @@ CREATE OR REPLACE VIEW doc_flow_out_client_dialog AS
 		LEFT JOIN (
 			SELECT
 				sign_t.file_id,
-				jsonb_agg(sign_t.signatures) AS signatures
+				json_agg(sign_t.signatures) AS signatures
 			FROM
 			(SELECT
 				f_sig.file_id,
-				jsonb_build_object(
+				json_build_object(
 					'owner',u_certs.subject_cert,
 					'cert_from',u_certs.date_time_from,
 					'cert_to',u_certs.date_time_to,
@@ -104,7 +104,7 @@ CREATE OR REPLACE VIEW doc_flow_out_client_dialog AS
 		FROM
 		(SELECT
 			out_f.doc_flow_out_client_id,
-			jsonb_build_object(
+			json_build_object(
 				'file_id',app_f.file_id,
 				'file_name',app_f.file_name,
 				'file_size',app_f.file_size,
@@ -120,11 +120,11 @@ CREATE OR REPLACE VIEW doc_flow_out_client_dialog AS
 		LEFT JOIN (
 			SELECT
 				sign_t.file_id,
-				jsonb_agg(sign_t.signatures) AS signatures
+				json_agg(sign_t.signatures) AS signatures
 			FROM
 			(SELECT
 				f_sig.file_id,
-				jsonb_build_object(
+				json_build_object(
 					'owner',u_certs.subject_cert,
 					'cert_from',u_certs.date_time_from,
 					'cert_to',u_certs.date_time_to,

@@ -565,7 +565,7 @@ class <xsl:value-of select="@id"/>_Controller extends ControllerSQL{
 		try{
 			$this->getDbLinkMaster()->query('BEGIN');
 			$ar = $this->getDbLinkMaster()->query_first(sprintf(
-				"UPDATE user_email_confiramtions
+				"UPDATE user_email_confirmations
 				SET confirmed=TRUE
 				WHERE key=%s AND confirmed=FALSE
 				RETURNING user_id",

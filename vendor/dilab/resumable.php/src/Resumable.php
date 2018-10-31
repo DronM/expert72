@@ -290,12 +290,12 @@ class Resumable
 
         //$destFile = new File($destFile, true);
         foreach ($chunkFiles as $chunkFile) {
-        	if (!file_exists($chunkFile)){
+        	/*if (!file_exists($chunkFile)){
         		if (file_exists($destFile)){
         			unlink($destFile);
         		}
         		break;
-        	}
+        	}*/
         	file_put_contents(
         		$destFile,
         		file_get_contents($chunkFile),

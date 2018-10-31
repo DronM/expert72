@@ -507,63 +507,71 @@ class PKIManager {
 		}
 		
 		//CRLs
+		$crl_passed = FALSE;
 		if ($onlineRevocCheck && $certData->OCSP){
 			$this->logger->add('OCSP checking '.$certData->OCSP,'debug');
-			$crl_res = $this->run_shell_cmd(sprintf('openssl ocsp -issuer "%s" -cert "%s" -url %s',
-				$issuer_pem,
-				$certFile,
-				$certData->OCSP
-			));
-			$crl_res_ar = explode(PHP_EOL,trim($crl_res));
-			$crl_passed = FALSE;
-			foreach($crl_res_ar as $crl_str){
-				if (strpos($crl_str,': good')!==FALSE){
-					$crl_passed = TRUE;
-					break;
-				}
+			$crl_res = '';
+			try{
+				$crl_res = $this->run_shell_cmd(sprintf('openssl ocsp -issuer "%s" -cert "%s" -url %s',
+					$issuer_pem,
+					$certFile,
+					$certData->OCSP
+				));
 			}
-			if (!$crl_passed){
-				$this->logger->add('OCSP not passed: владелец:'.$certData->subject['Наименование'].' issuer:'.$certData->issuer['Наименование'],'debug');
-				throw new Exception(sprintf(self::ER_REVOKED,$certData->subject['Наименование'],$certData->issuer['Наименование']));
+			catch(Exception $e){			
 			}
-		}
-		else if (isset($certData->CRL) && is_array($certData->CRL)){
 			
-			$crl_pem = $this->pkiPath.$certData->issuerHash.'.r0';
-			$this->logger->add('Looking for CRL file '.$crl_pem,'debug');
-			
-			if (!($crl_pem_exists=file_exists($crl_pem)) || (filemtime($crl_pem))<$crl_invalid_time ){
-				//new CRL
-				$this->logger->add('Trying to download new CRL file','debug');
-				if($crl_pem_exists) unlink($crl_pem);
-				$crl_der = $this->pkiPath.$certData->issuerHash.'.r0.der';
-				try{
-					foreach($certData->CRL as $url){
-						try{
-							$this->run_shell_cmd2(sprintf('wget -O "%s" %s',$crl_der,$url));
-					
-							if (file_exists($crl_der)){
-								$this->run_shell_cmd2(sprintf('openssl crl -in "%s" -inform DER -out "%s"',$crl_der,$crl_pem));
-					
-								break;
-							}
-						}
-						catch(Exception $e){
-							$this->logger->add('Could not download CRL file','debug');
-						}
+			if (strlen($crl_res)){
+				$crl_res_ar = explode(PHP_EOL,trim($crl_res));				
+				foreach($crl_res_ar as $crl_str){
+					if (strpos($crl_str,': good')!==FALSE){
+						$crl_passed = TRUE;
+						break;
 					}
 				}
-				finally{
-					if (file_exists($crl_der))unlink($crl_der);
+				if (!$crl_passed){
+					$this->logger->add('OCSP not passed: владелец:'.$certData->subject['Наименование'].' issuer:'.$certData->issuer['Наименование'],'debug');
+					throw new Exception(sprintf(self::ER_REVOKED,$certData->subject['Наименование'],$certData->issuer['Наименование']));
 				}
-				
 			}
-			
-		}
-		else{
-			$this->logger->add('No CRL link for '.$crl_pem,'error');	
 		}
 		
+		if (!$crl_passed ){
+			$crl_pem = $this->pkiPath.$certData->issuerHash.'.r0';
+			if (isset($certData->CRL) && is_array($certData->CRL)){
+				$this->logger->add('Looking for CRL file '.$crl_pem,'debug');
+			
+				if (!($crl_pem_exists=file_exists($crl_pem)) || (filemtime($crl_pem))<$crl_invalid_time ){
+					//new CRL
+					$this->logger->add('Trying to download new CRL file','debug');
+					if($crl_pem_exists) unlink($crl_pem);
+					$crl_der = $this->pkiPath.$certData->issuerHash.'.r0.der';
+					try{
+						foreach($certData->CRL as $url){
+							try{
+								$this->run_shell_cmd2(sprintf('wget -O "%s" %s',$crl_der,$url));
+					
+								if (file_exists($crl_der)){
+									$this->run_shell_cmd2(sprintf('openssl crl -in "%s" -inform DER -out "%s"',$crl_der,$crl_pem));
+					
+									break;
+								}
+							}
+							catch(Exception $e){
+								$this->logger->add('Could not download CRL file','debug');
+							}
+						}
+					}
+					finally{
+						if (file_exists($crl_der))unlink($crl_der);
+					}
+				
+				}			
+			}
+			else{
+				$this->logger->add('No CRL link for '.$crl_pem,'error');	
+			}
+		}		
 		$includedHashes[$certData->issuerHash] = TRUE;
 		$issuer_data = new stdClass();
 		$this->getCertInf($issuer_pem,$issuer_data);

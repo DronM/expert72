@@ -12,7 +12,7 @@
 	
 	function pki_log_sig_check($fileDocSig, $fileDoc,$dbFileId,&$pkiMan,&$dbLink,$passExpired=FALSE){
 		//$pkiMan->setLogLevel('error');
-		$verif_res = $pkiMan->verifySig($fileDocSig, $fileDoc,$passExpired,TRUE,FALSE);
+		$verif_res = $pkiMan->verifySig($fileDocSig, $fileDoc,TRUE,TRUE,FALSE);
 		
 		$db_checkError = NULL;
 		FieldSQLString::formatForDb($dbLink,$verif_res->checkError,$db_checkError);
