@@ -51,9 +51,9 @@
 				}
 				window.isChild = true;
 				<xsl:call-template name="checkForError"/>
-				if (window.opener &amp;&amp; window.opener.initForm &amp;&amp; !window.opener.paramsInitialized){
+				/*if (window.opener &amp;&amp; window.opener.initForm &amp;&amp; !window.paramsInitialized){
 					window.opener.initForm();
-				}
+				}*/
 				showView();				
 			}
 		</script>

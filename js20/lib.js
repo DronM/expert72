@@ -3421,8 +3421,7 @@ window.paramsInitialized=false;if(CommonHelper.isIE()&&CommonHelper.getIEVersion
 else{this.m_WindowForm=window.open(url,this.m_name,(this.m_name=="_blank")?"":win_opts);}
 if(!this.m_WindowForm){throw new Error(this.ER_OPEN);}
 if(url==""&&this.m_content){this.m_WindowForm.document.write(this.m_content);}
-var self=this;window.initForm=function(){self.initForm();}
-if(!window.paramsInitialized)this.initForm();return this.m_WindowForm;}
+this.initForm();return this.m_WindowForm;}
 WindowForm.prototype.initForm=function(){var self=this;this.m_WindowForm.onClose=function(res){if(self.m_onClose){self.m_onClose.call(self,self.m_WindowForm.closeResult);self.m_WindowForm.onClose=undefined;}}
 this.m_WindowForm.getParam=function(id){return self.getParam(id);}
 this.m_WindowForm.getApp=function(){return window.getApp();}
