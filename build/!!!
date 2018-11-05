@@ -1,0 +1,5 @@
+--select * from application_document_files where file_id='5edf5480-3ce8-465d-97fc-844eeefb4a23'
+--update application_document_files set file_signed_by_client=TRUE where file_id='12b92b79-9668-4d1f-a913-a8cd9ae18f4d'
+--select * from doc_flow_out_client_document_files where file_id='46e1cf3c-9b93-4d44-9919-14431f5d8ca3'
+insert into doc_flow_out_client_document_files (file_id,doc_flow_out_client_id,signature) values('12b92b79-9668-4d1f-a913-a8cd9ae18f4d',1891,TRUE);
+--12b92b79-9668-4d1f-a913-a8cd9ae18f4d

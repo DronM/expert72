@@ -63,7 +63,7 @@ function mkdir_or_error($dir){
 }
 
 function rename_or_error($orig_file,$new_name){
-	exec(sprintf('mv "%s" "%s"',$orig_file,$new_name));
+	exec(sprintf('mv -f "%s" "%s"',$orig_file,$new_name));
 	//chmod($new_name, 0664);					
 }
  
@@ -112,8 +112,15 @@ function check_app_folder($dbLink){
 }
  
 /**
+ * @param {string} relDir file location relative directory
+ * @param {string} contentFile full path to data file, on any server
+ * @param {string} origFile full path to temporary uploaded file
+ * @param {string} newName full path to .sig file, on any server
+ * @param {string} fileId file identifier
+ * @param {string} dbFileId same as fileId but with quotes
+ * @param {object} dbLink
  */ 
-function merge_sig($contentFile,$origFile,$newName,$fileId,$dbFileId,&$dbLink){
+function merge_sig($relDir,$contentFile,$origFile,$newName,$fileId,$dbFileId,&$dbLink){
 	$pki_man = new PKIManager(PKI_PATH,PKI_CRL_VALIDITY,PKI_MODE);
 	
 	//verify new signature first, throw error
@@ -158,14 +165,14 @@ function merge_sig($contentFile,$origFile,$newName,$fileId,$dbFileId,&$dbLink){
 	if ($pki_man->isBase64Encoded($newName)){
 		$new_name_der = $newName.'.der';
 		$pki_man->decodeSigFromBase64($newName,$new_name_der);
-		if (unlink($newName)===FALSE){
-			throw new Exception(ER_COMMON);
-		}
 		rename_or_error($new_name_der,$newName);
 	}
 	$need_decode = $pki_man->isBase64Encoded($origFile);
 	$der_file = NULL;
-	$merged_sig = OUTPUT_PATH.$fileId.'.mrg';
+	
+	//new merged .sig on local server
+	$merged_sig = ( (strlen($relDir))? (FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$relDir) : DOC_FLOW_FILE_STORAGE_DIR) .$fileId.'.mrg';
+	
 	if ($need_decode){
 		$der_file = OUTPUT_PATH.$fileId.'.der';							
 		$pki_man->decodeSigFromBase64($origFile,$der_file);
@@ -175,7 +182,7 @@ function merge_sig($contentFile,$origFile,$newName,$fileId,$dbFileId,&$dbLink){
 	}
 	
 	$max_ind = NULL;
-	Application_Controller::getMaxIndexSigFile(dirname($newName),$fileId,$max_ind);
+	Application_Controller::getMaxIndexSigFile($relDir,$fileId,$max_ind);
 	//new name of old signature file
 	$old_sig_new_name = $newName.'.s'.($max_ind+1);
 	
@@ -188,7 +195,6 @@ function merge_sig($contentFile,$origFile,$newName,$fileId,$dbFileId,&$dbLink){
 		catch(Exception $e){
 			//отменить все и ошибку
 			rename_or_error($old_sig_new_name,$newName);//Back rename from index to sig
-			unlink($old_sig_new_name);
 			throw $e;
 		}
 			
@@ -286,11 +292,10 @@ try{
 			$file_path = intval($_REQUEST['doc_id']);
 		}
 
-		$resumable->uploadFolder =
-			FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
-			Application_Controller::APP_DIR_PREF.$db_app_id.DIRECTORY_SEPARATOR.
+		$rel_dir = Application_Controller::APP_DIR_PREF.$db_app_id.DIRECTORY_SEPARATOR.
 			(($_REQUEST['doc_type']=='documents')? '':Application_Controller::dirNameOnDocType($_REQUEST['doc_type']).DIRECTORY_SEPARATOR).
 			$file_path;			
+		$resumable->uploadFolder = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_dir;			
 			
 		mkdir_or_error($resumable->uploadFolder);
 	
@@ -432,7 +437,7 @@ try{
 							));
 							
 							//При любых ошибках все отменяем				
-							merge_sig($file_doc,$orig_file,$file_doc_sig,$par_file_id,$db_file_id,$dbLink);
+							merge_sig($rel_dir,$file_doc,$orig_file,$file_doc_sig,$par_file_id,$db_file_id,$dbLink);
 											
 							$dbLink->query('COMMIT');
 						}
@@ -494,7 +499,9 @@ try{
 								($ul_exists? 'FALSE':'TRUE')
 							));
 	
-							//Если есть парамтер doc_flow_out_client_id значит грузим из исходящего письма клиента - ставим отметку!!!
+							/** Если есть парамтер doc_flow_out_client_id значит грузим из исходящего письма клиента
+							 * - ставим отметку!!!
+							 */
 							if (isset($_REQUEST['doc_flow_out_client_id'])){
 								$db_doc_flow_out_client_id = get_doc_flow_out_client_id_for_db(
 										$dbLink,
@@ -509,20 +516,22 @@ try{
 								));
 							}
 							
-							if (isset($_REQUEST['original_file_id'])){
+							if (isset($_REQUEST['original_file_id'])&&isset($_REQUEST['doc_flow_out_client_id'])){
 								//Загружен новый файл с подписью - удаление оригинального файлы, который заменили
 								$db_original_file_id = NULL;
 								FieldSQLString::formatForDb($dbLink,$_REQUEST['original_file_id'],$db_original_file_id);
 								if ($db_original_file_id!='null'){
-									Application_Controller::removeFile($dbLink,$db_original_file_id);
+									//if uploaded by this same document - actual unlinking!
+									$ar = $dbLink->query_first(sprintf(		
+									"SELECT TRUE AS present
+									FROM doc_flow_out_client_document_files
+									WHERE file_id=%s AND doc_flow_out_client_id=%d",
+									$db_original_file_id,$db_doc_flow_out_client_id
+									));
+									$unlink_file = (count($ar) && $ar['present']=='t');
+									Application_Controller::removeFile($dbLink,$db_original_file_id,$unlink_file);
 							
-									if (isset($_REQUEST['doc_flow_out_client_id'])){
-										$db_doc_flow_out_client_id = get_doc_flow_out_client_id_for_db(
-												$dbLink,
-												$db_app_id,
-												$_REQUEST['doc_flow_out_client_id']
-										);
-							
+									if (!$unlink_file){
 										$dbLink->query(sprintf(		
 										"INSERT INTO doc_flow_out_client_document_files (file_id,doc_flow_out_client_id,is_new)
 										VALUES (%s,%d,FALSE)",
@@ -595,6 +604,7 @@ try{
 		$par_file_id = $_REQUEST['file_id'];
 		
 		$upload_folder_main = NULL;		
+		$rel_dir = '';
 		//Определим куда поместить файл в заявление или отдельно
 		if ($_REQUEST['doc_type']=='out'||$_REQUEST['doc_type']=='inside'){
 			if ($_REQUEST['doc_type']=='out'){
@@ -617,9 +627,8 @@ try{
 				throw new Exception(DocFlow_Controller::ER_NOT_FOUND);
 			}
 			else if ($ar['to_application_id']){
-				$resumable->uploadFolder =
-					FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
-					Application_Controller::APP_DIR_PREF.$ar['to_application_id'].DIRECTORY_SEPARATOR.$file_path;
+				$rel_dir = Application_Controller::APP_DIR_PREF.$ar['to_application_id'].DIRECTORY_SEPARATOR.$file_path;
+				$resumable->uploadFolder = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_dir;
 					
 				//удалить zip
 				Application_Controller::removeAllZipFile($ar['to_application_id']);
@@ -789,7 +798,7 @@ try{
 
 						if (file_exists($new_name)){
 							//merge contents with existing file
-							merge_sig($content_file,$orig_file,$new_name,$par_file_id,$db_file_id,$dbLink);							
+							merge_sig($rel_dir,$content_file,$orig_file,$new_name,$par_file_id,$db_file_id,$dbLink);							
 						}
 						else{					
 							//first signature

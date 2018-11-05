@@ -38,6 +38,7 @@ class DocFlowOutClient_Controller extends ControllerSQL{
 	const ER_NO_DOC_FILE = 'Файл с данными не найден!';
 	const ER_VERIF_SIG = 'Ошибка проверки подписи:%s';
 	const ER_UNSENT_DOC_EXISTS = 'По данному заявлению уже есть неотправленный документ с таким видом письма от %s';
+	const ER_COULD_NOT_REMOVE_SIG = 'Ошибка при удалении подписи заказчика!';
 
 	public function __construct($dbLinkMaster=NULL,$dbLink=NULL){
 		parent::__construct($dbLinkMaster,$dbLink);
@@ -322,6 +323,17 @@ class DocFlowOutClient_Controller extends ControllerSQL{
 	
 	}
 	*/
+	protected function remove_file_from_all_servers($appId,$relFile){
+		if ($appId){
+			if (file_exists($fl = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$relFile))unlink($fl);
+			if (defined('FILE_STORAGE_DIR_MAIN') && file_exists($fl = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$relFile))unlink($fl);
+		}
+		else{
+			if (file_exists($fl = DOC_FLOW_FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$relFile))unlink($fl);
+			if (defined('DOC_FLOW_FILE_STORAGE_DIR_MAIN') && file_exists($fl = DOC_FLOW_FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$relFile))unlink($fl);
+		}	
+	}
+	
 	public function insert($pm){
 		//check app state
 		$app_id = $this->getExtDbVal($pm,'application_id');
@@ -611,61 +623,54 @@ class DocFlowOutClient_Controller extends ControllerSQL{
 		if ($ar['contr_return']=='t' && $ar['signature']=='t'){
 		
 			//Возврат контракта
-			$rel_file_doc = DIRECTORY_SEPARATOR.
-				Application_Controller::APP_DIR_PREF.$ar['application_id'].DIRECTORY_SEPARATOR.
-				$ar['file_path'].DIRECTORY_SEPARATOR.$ar['file_id'];
+			$rel_dir = Application_Controller::APP_DIR_PREF.$ar['application_id'].DIRECTORY_SEPARATOR.$ar['file_path'];
 			
-			$rel_file = $rel_file_doc.'.sig'.'.s1';
+			$max_index = NULL;
+			$old_sig_file = Application_Controller::getMaxIndexSigFile($rel_dir,$ar['file_id'],$max_index);
+			if (!$max_index){
+				//что-то пошло не так - нет файла подписи sig.s(1)
+				throw new Exception(self::ER_COULD_NOT_REMOVE_SIG);
+			}
 
 			if (
-			!file_exists($file_doc=FILE_STORAGE_DIR.$rel_file_doc)
+			!file_exists($file_doc=FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_dir.DIRECTORY_SEPARATOR.$ar['file_id'])
 			&&
 			(
 				!defined('FILE_STORAGE_DIR_MAIN')
-				|| !file_exists($file_doc=FILE_STORAGE_DIR_MAIN.$rel_file_doc)
+				|| !file_exists($file_doc=FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$rel_dir.DIRECTORY_SEPARATOR.$ar['file_id'])
 			)
 			){				
 				throw new Exception(self::ER_NO_DOC_FILE);
 			}			
 			
-			if (
-			file_exists($file=FILE_STORAGE_DIR.$rel_file)
-			|| (defined('FILE_STORAGE_DIR_MAIN') && file_exists($file=FILE_STORAGE_DIR_MAIN.$rel_file))
-			){
-				try{
-					$dbLinkMaster= $this->getDbLinkMaster();
+			try{
+				$dbLinkMaster= $this->getDbLinkMaster();
+		
+				$dbLinkMaster->query("BEGIN");
 			
-					$dbLinkMaster->query("BEGIN");
+				$dbLinkMaster->query(sprintf(
+					"UPDATE application_document_files
+					SET file_signed_by_client=FALSE
+					WHERE file_id=%s",
+				$file_id_for_db
+				));				
+			
+				$dbLinkMaster->query(sprintf("DELETE FROM doc_flow_out_client_document_files WHERE file_id=%s", $file_id_for_db));
 				
-					$dbLinkMaster->query(sprintf(
-						"UPDATE application_document_files
-						SET file_signed_by_client=FALSE
-						WHERE file_id=%s",
-					$file_id_for_db
-					));				
+				$sig_file = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_dir.DIRECTORY_SEPARATOR.$ar['file_id'].'.sig';
+				exec(sprintf('mv -f "%s" "%s"',$old_sig_file,$sig_file));
+				if (defined('FILE_STORAGE_DIR_MAIN') && file_exists($fl=FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$rel_dir.DIRECTORY_SEPARATOR.$ar['file_id'].'.sig'))unlink($fl);
 				
-					$dbLinkMaster->query(sprintf("DELETE FROM doc_flow_out_client_document_files WHERE file_id=%s", $file_id_for_db));
-					
-					$file_sig = substr($file,0,strlen($file)-3);
-					if (rename($file,$file_sig)===FALSE){
-						throw new Exception('Error restoring signature file!');
-					}
-					unlink($file);
-					
-					$pki_man = new PKIManager(PKI_PATH,PKI_CRL_VALIDITY,'error');
-					pki_log_sig_check($file_sig, $file_doc, $file_id_for_db, $pki_man, $dbLinkMaster);
-					
-					$dbLinkMaster->query("COMMIT");
-				}
-				catch(Exception $e){
-					$dbLinkMaster->query("ROLLBACK");
-					throw $e;
-				}
-					
+				$pki_man = new PKIManager(PKI_PATH,PKI_CRL_VALIDITY,'error');
+				pki_log_sig_check($sig_file, $file_doc, $file_id_for_db, $pki_man, $dbLinkMaster);
+				
+				$dbLinkMaster->query("COMMIT");
 			}
-			else{
-				throw new Exception('Ошибка удаления файла подписи!');	
-			}			
+			catch(Exception $e){
+				$dbLinkMaster->query("ROLLBACK");
+				throw $e;
+			}
+			
 		}
 		else{
 			//Прочие вложения, непосредственное удаление
@@ -748,50 +753,48 @@ class DocFlowOutClient_Controller extends ControllerSQL{
 			
 			$pki_man = NULL;			
 			if ($doc_attrs['doc_flow_out_client_type']=='contr_return'){
-				$pki_man = new PKIManager(PKI_PATH,PKI_CRL_VALIDITY,PKI_MODE);							
+				$pki_man = new PKIManager(PKI_PATH,PKI_CRL_VALIDITY,'error');							
 			}
 			
 			while($ar= $dbLinkMaster->fetch_array($q_id)){
 				if ($doc_attrs['doc_flow_out_client_type']=='contr_return' && $ar['signature']=='t'){
-					$rel_file_doc = DIRECTORY_SEPARATOR.
-						Application_Controller::APP_DIR_PREF.$doc_attrs['application_id'].DIRECTORY_SEPARATOR.
-						$ar['file_path'].DIRECTORY_SEPARATOR.$ar['file_id'];
-			
-					$rel_file = $rel_file_doc.'.sig'.'.s1';					
+					if ($ar['file_path']){
+						$rel_dir = Application_Controller::APP_DIR_PREF.$doc_attrs['application_id'].DIRECTORY_SEPARATOR.$ar['file_path'];
+						$data_rel_file = $rel_dir.DIRECTORY_SEPARATOR.$ar['file_id'];
+						$sig_rel_file = $data_rel_file.'.sig';
 					
-					if (
-					!file_exists($file_doc=FILE_STORAGE_DIR.$rel_file_doc)
-					&&
-					(
-						!defined('FILE_STORAGE_DIR_MAIN')
-						|| !file_exists($file_doc=FILE_STORAGE_DIR_MAIN.$rel_file_doc)
-					)
-					){				
-						throw new Exception(self::ER_NO_DOC_FILE);
-					}			
+						if (
+						!file_exists($file_doc=FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$data_rel_file)
+						&&
+							(!defined('FILE_STORAGE_DIR_MAIN')
+							|| !file_exists($file_doc=FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$data_rel_file)
+							)
+						){				
+							throw new Exception(self::ER_NO_DOC_FILE);
+						}			
+					
+						//find previous sig
+						$max_ind = NULL;
+						$prev_sig = Application_Controller::getMaxIndexSigFile($rel_dir,$ar['file_id'],$max_ind);
+						if (!$max_ind){
+							throw new Exception(self::ER_COULD_NOT_REMOVE_SIG);
+						}
+
+						//current .sig from all servers
+						$this->remove_file_from_all_servers($doc_attrs['application_id'],$sig_rel_file);
+					
+						//sig.s(1) -> .sig
+						$file_sig = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$sig_rel_file;
+						exec(sprintf('mv -f "%s" "%s"',$prev_sig,$file_sig));					
+						pki_log_sig_check($file_sig, $file_doc, "'".$ar['file_id']."'", $pki_man, $dbLinkMaster);
+					}
 					
 					$dbLinkMaster->query(sprintf(
 						"UPDATE application_document_files
 						SET file_signed_by_client=FALSE
-						WHERE file_id=%s",
-					"'".$ar['file_id']."'"
+						WHERE file_id='%s'",
+					$ar['file_id']
 					));
-											
-					if (
-					file_exists($file=FILE_STORAGE_DIR.$rel_file)
-					|| (defined('FILE_STORAGE_DIR_MAIN') && file_exists($file=FILE_STORAGE_DIR_MAIN.$rel_file))
-					){						
-						$file_sig = substr($file,0,strlen($file)-3);
-						if (rename($file,$file_sig)===FALSE){
-							throw new Exception('Error restoring signature file!');
-						}
-						unlink($file);
-					}
-										
-					$verif_res = pki_log_sig_check($file_sig, $file_doc, "'".$ar['file_id']."'", $pki_man, $dbLinkMaster);
-					if (pki_fatal_error($verif_res)){
-						throw new Exception(sprintf(seld::ER_VERIF_SIG,$verif_res->checkError));
-					}
 				}
 				else{
 					if ($ar['document_type']!='documents' && $ar['deleted']=='t'){

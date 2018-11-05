@@ -83,9 +83,30 @@ FileUploaderDocFlowOutClient_View.prototype.getQuerySruc = function(file){
 }
 
 FileUploaderDocFlowOutClient_View.prototype.setFileOptions = function(fileOpts,file){
+	if (file.doc_flow_out){
+		if (!file.file_uploaded){
+			fileOpts.refTitle = this.TITLE_NOT_UPLOADED;	
+			fileOpts.refClass = this.CLASS_NOT_UPLOADED;	
+		}
+		else if (file.doc_flow_out.id==this.m_mainView.getModel().getFieldValue("id")){
+			fileOpts.refTitle = "Загружен этим документом";	
+			fileOpts.refClass = "uploadedByThis";	
+		}
+		else{
+			fileOpts.refTitle = 
+				(file.doc_flow_out.reg_number&&file.doc_flow_out.reg_number!="null")?
+					("Загружен документом №"+file.doc_flow_out.reg_number+" от "+DateHelper.format(DateHelper.strtotime(file.doc_flow_out.date_time),"d/m/y"))
+					: ("Загружен неотправленным документом от "+DateHelper.format(DateHelper.strtotime(file.doc_flow_out.date_time),"d/m/y"))
+					;	
+			fileOpts.refClass = "uploadedAfterPost";	
+		}
+		fileOpts.file_date_time_formatted = DateHelper.format(DateHelper.strtotime(file.date_time),"d/m/y");	
+	}
+	else{
+		FileUploaderDocFlowOutClient_View.superclass.setFileOptions.call(this,fileOpts,file);
+	}	
+	/*
 	if (file.doc_flow_out || !file.file_uploaded){
-		//id,date_time,reg_number
-		//console.log("file.doc_flow_out.id="+file.doc_flow_out.id)
 		if (!file.file_uploaded || file.doc_flow_out.id==this.m_mainView.getModel().getFieldValue("id")){
 			fileOpts.refTitle = "Загружен этим документом";	
 			fileOpts.refClass = "uploadedByThis";	
@@ -102,4 +123,5 @@ FileUploaderDocFlowOutClient_View.prototype.setFileOptions = function(fileOpts,f
 	}
 		
 	fileOpts.file_date_time_formatted = DateHelper.format(DateHelper.strtotime(file.date_time),"d/m/y");	
+	*/
 }

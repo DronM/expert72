@@ -82,6 +82,7 @@ class PKIManager {
 	const ER_CERT_REVOC = 'Сертификат, выданный %s отозван';
 	const ER_NO_CRL = 'Невозможно получить список отозванных сертификатов!';
 	const ER_REVOKED = 'Сертификат владелец:%s, издатель:%s отозван!';
+	const ER_INNER = 'Внутренняя ошибка!';
 
 	const CA_LIST_URL = 'https://e-trust.gosuslugi.ru/CA/DownloadTSL?schemaVersion=0';		
 	const DEF_CRL_VALIDITY = 86400;//24*60*60
@@ -211,8 +212,15 @@ class PKIManager {
 	}
 
 	private function replace_extension($filename, $new_extension) {
-		$info = pathinfo($filename, PATHINFO_FILENAME);
-		return dirname($filename).DIRECTORY_SEPARATOR.$info.'.'.$new_extension;
+		$filename_ar = explode('.',$filename);
+		if (!count($filename_ar)){
+			$this->logger->add('Could not find file extension for '.$filename,'error');	
+			throw new Exception(self::ER_INNER);
+		}
+		array_splice($filename_ar,count($filename_ar)-1);
+		return implode('.',$filename_ar).'.'.$new_extension;
+		//$info = pathinfo($filename, PATHINFO_FILENAME);
+		//return dirname($filename).DIRECTORY_SEPARATOR.$info.'.'.$new_extension;
 	}
 	
 	private function parse_fields($delim,$txt){
@@ -297,12 +305,12 @@ class PKIManager {
 				//der = sig
 				symlink($sigFile,$derFile);
 			}
-		}
+		}		
 		// извлекаем сертификаты из подписи
 		//Получаем несколько файлов, в каждом 1 сертификат
 		$id = uniqid();		
 		$pat = dirname($sigFile).DIRECTORY_SEPARATOR.$id;
-		$this->run_shell_cmd2(sprintf('openssl pkcs7 -in "%s" -print_certs -inform DER -outform pem | awk \'/BEGIN/ { i++; } /BEGIN/, /END/ { print > "%s."i }\'',$derFile,$pat));
+		$this->run_shell_cmd2(sprintf('openssl pkcs7 -in "%s" -print_certs -inform DER -outform pem | awk \'/BEGIN/ { i++; } /BEGIN/, /END CERT/ { print > "%s."i }\'',$derFile,$pat));
 		$pem_list = glob($pat.".*");
 		if (!count($pem_list)){
 			$this->logger->add('Unable to get certificates from bundle '.$sigFile,'error');
@@ -839,7 +847,7 @@ class PKIManager {
 		try{
 			$handle = @fopen($sigFile, "r");
 			if ($handle===FALSE){
-				throw new Exception('Unable to open sig file!');
+				throw new Exception('isBase64Encoded:unable to open sig file!');
 			}	
 			$start_s = @fread($handle,strlen(self::SIG_HEADER));
 			$is_base64 = ($start_s==self::SIG_HEADER || substr($start_s,0,2)=='MI');

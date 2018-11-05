@@ -64,6 +64,26 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 	}
 
 	/**
+	 * $ar app_id,file_id,file_path,
+	 */
+	private function remove_file_with_all_sigs(&amp;$ar){
+		$rel_dir = ($ar['app_id'])? (Application_Controller::APP_DIR_PREF.$ar['app_id'].DIRECTORY_SEPARATOR.$ar['file_path']) : '';
+		$rel_file = ( (strlen($rel_dir))? ($rel_dir.DIRECTORY_SEPARATOR) : '') .$ar['file_id'];
+	
+		$this->remove_file_from_all_servers($ar['app_id'],$rel_file);
+		
+		if ($ar['file_signed']){
+			$this->remove_file_from_all_servers($ar['app_id'],$rel_file.'.sig');
+			//all temp sig.s(1)
+			$max_index = 0;
+			Application_Controller::getMaxIndexSigFile($rel_dir,$ar['file_id'],$max_index);
+			for($i=1;$i&lt;=$max_index; $i++){
+				$this->remove_file_from_all_servers($ar['app_id'],$rel_file.'.sig.s'.$i);
+			}
+		}	
+	}
+
+	/**
 	 * Called from DocFlowOut_Controller->delete,DocFlowInside_Controller->delete
 	 */
 	public function delete_attachments($pm,$type){
@@ -121,38 +141,14 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 						at.file_id,
 						at.file_signed,
 						at.file_path,
-						NULL AS to_application_id AS app_id
+						NULL AS app_id
 					FROM doc_flow_attachments AS at
 					WHERE doc_id=%d AND doc_type='doc_flow_in'::data_types",
 					$this->getExtDbVal($pm,'id')
 				));
 			}		
 			while($ar = $this->getDbLink()->fetch_array()){
-				$rel_dir = ($ar['app_id'])? (Application_Controller::APP_DIR_PREF.$ar['app_id'].DIRECTORY_SEPARATOR.$ar['file_path']) : '';
-				$rel_file = ( (strlen($rel_dir))? ($rel_dir.DIRECTORY_SEPARATOR) : '') .$ar['file_id'];
-				
-				$this->remove_file_from_all_servers($ar['app_id'],$rel_file);
-				if ($ar['file_signed']){
-					$this->remove_file_from_all_servers($ar['app_id'],$rel_file.'.sig');
-					//all temp sig.s(1)
-					$max_index = 0;
-					if ($ar['app_id']){						
-						Application_Controller::getMaxIndexSigFile($rel_dir,$ar['file_id'],$max_index);
-					}
-					else{
-						$max_index = Application_Controller::getMaxIndexInDir(DOC_FLOW_FILE_STORAGE_DIR,$ar['file_id']);
-						if (defined('DOC_FLOW_FILE_STORAGE_DIR_MAIN')){
-							$max_index2 = Application_Controller::getMaxIndexInDir(DOC_FLOW_FILE_STORAGE_DIR_MAIN,$ar['file_id']);
-							if ($max_index2 &gt; $max_index){
-								$max_index = $max_index2;
-							}
-						}
-					}
-					for($i=1;$i&lt;=$max_index; $i++){
-						$this->remove_file_from_all_servers($ar['app_id'],$rel_file.'.sig.s'.$i);
-					}
-				}
-				
+				$this->remove_file_with_all_sigs($ar);
 			}			
 
 			$this->getDbLinkMaster()->query(sprintf(
@@ -203,14 +199,12 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				CASE
 					WHEN att.doc_type='doc_flow_out' THEN out.to_application_id
 					WHEN att.doc_type='doc_flow_inside' THEN ct.application_id
-					WHEN att.doc_type='doc_flow_in' THEN doc_in.from_application_id
 					ELSE NULL
 				END AS app_id
 				
 			FROM doc_flow_attachments AS att
 			LEFT JOIN doc_flow_out AS out ON att.doc_type='doc_flow_out' AND att.doc_id=out.id
 			LEFT JOIN doc_flow_inside AS ins ON att.doc_type='doc_flow_inside' AND att.doc_id=ins.id
-			LEFT JOIN doc_flow_in AS doc_in ON att.doc_type='doc_flow_in' AND att.doc_id=doc_in.id
 			LEFT JOIN contracts AS ct ON ct.id=ins.contract_id
 			WHERE att.doc_id=%d AND att.file_id=%s AND att.doc_type='doc_flow_%s'",
 			$this->getExtDbVal($pm,'doc_id'),
@@ -260,7 +254,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				doc_files AS
 					(SELECT
 						json_array_elements(files) AS files
-					FROM doc_flow_inside_dialog
+					FROM doc_flow_%s_dialog
 					WHERE id=%d
 					),
 				file_sigs AS 
@@ -280,6 +274,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				FROM file_sigs
 				ORDER BY (file_sigs.signature->>'verif_date_time')::timestampTZ DESC
 				LIMIT 1",
+			$type,
 			$this->getExtDbVal($pm,'doc_id'),
 			$this->getExtDbVal($pm,'file_id')
 			));
@@ -304,20 +299,6 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			$this->getDbLinkMaster()->query("BEGIN");
 			
 			if ($ar['sig_cnt']==1){
-				$this->getDbLinkMaster()->query(sprintf(
-					"UPDATE doc_flow_attachments
-					SET file_signed=FALSE
-					WHERE file_id=%s
-					",
-					$this->getExtDbVal($pm,'file_id')
-				));
-				
-				$this->getDbLinkMaster()->query(sprintf(
-					"DELETE FROM file_verifications
-					WHERE file_id=%s",
-					$this->getExtDbVal($pm,'file_id')
-				));
-				
 				//current sig from all servers
 				$this->remove_file_from_all_servers($ar['app_id'],$sig_rel_file);
 				
@@ -326,22 +307,11 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			else{						
 				//find previous sig
 				$max_ind = NULL;
+				$prev_sig = Application_Controller::getMaxIndexSigFile($rel_dir,$ar['file_id'],$max_ind);
 				if (!$ar['app_id']){
-					$dir = DOC_FLOW_FILE_STORAGE_DIR;
-					$max_ind = Application_Controller::getMaxIndexInDir(DOC_FLOW_FILE_STORAGE_DIR,$ar['file_id']);
-					if (defined('DOC_FLOW_FILE_STORAGE_DIR_MAIN')){
-						$max_ind2 = Application_Controller::getMaxIndexInDir(DOC_FLOW_FILE_STORAGE_DIR_MAIN,$ar['file_id']);
-						if ($max_ind2>$max_ind){
-							$max_ind = $max_ind2;
-							$dir = DOC_FLOW_FILE_STORAGE_DIR_MAIN;
-						}
-					}
-					
-					$prev_sig = $dir.DIRECTORY_SEPARATOR.$sig_rel_file.'.s'.$max_ind;
 					$new_cur_sig = DOC_FLOW_FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$sig_rel_file;
 				}
 				else{
-					$prev_sig = Application_Controller::getMaxIndexSigFile($rel_dir,$ar['file_id'],$max_ind);				
 					$new_cur_sig = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$sig_rel_file;
 				}
 
@@ -351,17 +321,33 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				if ($max_ind &amp;&amp; file_exists($prev_sig)){
 					//found sig with index sig.s(1)
 					//sig.s(1) -> .sig
-					exec(sprintf('mv "%s" "%s"',$prev_sig,$new_cur_sig));
+					exec(sprintf('mv -f "%s" "%s"',$prev_sig,$new_cur_sig));
 					
 					$pki_man = new PKIManager(PKI_PATH,PKI_CRL_VALIDITY,PKI_MODE);
 					$db_link = $this->getDbLinkMaster();
 					pki_log_sig_check($new_cur_sig, $file_doc, $this->getExtDbVal($pm,'file_id'), $pki_man, $db_link);
 				}
 				else if (!$max_ind){
-					//no index file
-					$this->getDbLinkMaster()->query(sprintf("DELETE FROM file_verifications WHERE file_id=%s",$this->getExtDbVal($pm,'file_id')));
+					//no index file					
 					$all_sigs_deleted = TRUE;
-				}			
+				}
+				
+				if ($all_sigs_deleted){
+					$this->getDbLinkMaster()->query(sprintf(
+						"UPDATE doc_flow_attachments
+						SET
+							file_signed=FALSE
+						WHERE file_id=%s
+						",
+						$this->getExtDbVal($pm,'file_id')
+					));
+					
+					$this->getDbLinkMaster()->query(sprintf(
+						"DELETE FROM file_verifications
+						WHERE file_id=%s",
+					$this->getExtDbVal($pm,'file_id'))
+					);
+				}
 			}
 			
 			$this->getDbLinkMaster()->query("COMMIT");
@@ -385,84 +371,50 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		}
 	}
 	
-	
-	
+		
 	protected function remove_afile($pm,$type){
 		
-		$state = $this->get_state($id,$type);
+		$state = $this->get_state($this->getExtDbVal($pm,'doc_id'),$type);
 		if ($state=='registered' &amp;&amp; $_SESSION['role_id']!='admin'){
 			throw new Exception(self::ER_ALLOWED_TO_ADMIN);
 		}
 		
+		$ar = $this->getDbLink()->query_first(sprintf(
+			"SELECT
+				att.file_id,
+				att.file_name,
+				att.file_path,
+				att.file_signed,
+				CASE
+					WHEN att.doc_type='doc_flow_out' THEN out.to_application_id
+					WHEN att.doc_type='doc_flow_inside' THEN ct.application_id
+					ELSE NULL
+				END AS app_id				
+			FROM doc_flow_attachments AS att
+			LEFT JOIN doc_flow_out AS out ON att.doc_type='doc_flow_out' AND att.doc_id=out.id
+			LEFT JOIN doc_flow_inside AS ins ON att.doc_type='doc_flow_inside' AND att.doc_id=ins.id
+			LEFT JOIN contracts AS ct ON ct.id=ins.contract_id
+			WHERE att.file_id=%s AND att.doc_id=%d AND doc_type='doc_flow_%s'",
+			$this->getExtDbVal($pm,'file_id'),
+			$this->getExtDbVal($pm,'doc_id'),
+			$type
+		));
+		
+		if (!count($ar)){
+			throw new Exception(self::ER_STORAGE_FILE_NOT_FOUND);
+		}
+		
 		$this->getDbLinkMaster()->query('BEGIN');
-		try{
-			$ar = $this->getDbLinkMaster()->query_first(sprintf(
+		try{		
+			$this->getDbLinkMaster()->query(sprintf(
 				"DELETE FROM doc_flow_attachments
-				WHERE doc_id=%d AND file_id=%s AND doc_type='doc_flow_%s'
-				RETURNING file_id,file_signed,file_path,file_name",
+				WHERE doc_id=%d AND file_id=%s AND doc_type='doc_flow_%s'",
 				$this->getExtDbVal($pm,'doc_id'),
 				$this->getExtDbVal($pm,'file_id'),
 				$type
 			));
-			if (!count($ar)){
-				throw new Exception(self::ER_STORAGE_FILE_NOT_FOUND);
-			}
 			
-			/*
-			$fl = NULL;
-			if (
-			($type=='out' &amp;&amp; $ar['doc_type']=='doc_flow_out')
-			||($type=='inside' &amp;&amp; $ar['doc_type']=='doc_flow_inside')
-			){
-				$q = '';
-				if ($type=='out'){
-					$q = sprintf(
-						"SELECT to_application_id
-						FROM doc_flow_out
-						WHERE id=%d",
-						$this->getExtDbVal($pm,'doc_id')
-					);
-				}
-				else{
-					$q = sprintf(
-						"SELECT ct.application_id AS to_application_id
-						FROM doc_flow_inside AS ins
-						LEFT JOIN contracts AS ct ON ct.id=ins.contract_id
-						WHERE ins.id=%d",
-						$this->getExtDbVal($pm,'doc_id')
-					);
-				}
-				$app_ar = $this->getDbLink()->query_first($q);
-				if (count($app_ar) &amp;&amp; $app_ar['to_application_id']){
-					$fl = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
-						Application_Controller::APP_DIR_PREF.$app_ar['to_application_id'].DIRECTORY_SEPARATOR.
-						$ar['file_path'].DIRECTORY_SEPARATOR.$ar['file_id'];
-				}
-			}
-			
-			if (!$fl){
-				$fl = DOC_FLOW_FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$ar['file_id'];
-			}
-			*/
-			
-			$fl = NULL;
-			$app_id = NULL;
-			$rel_file = NULL;
-			if ($this->get_doc_file(
-				$this->getExtDbVal($pm,'doc_id'),
-				$type,
-				$ar['file_path'],
-				$ar['file_id'],
-				FALSE,
-				$fl,
-				$app_id,
-				$rel_file
-			)){
-				unlink($fl);
-			}
-			if ($ar['file_signed'] &amp;&amp; file_exists($fl.='.sig')){
-				unlink($fl);			
-			}
+			$this->remove_file_with_all_sigs($ar);
 			
 			$this->getDbLinkMaster()->query("COMMIT");
 			
@@ -534,7 +486,12 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			)
 			|| (
 				!$ar['to_application_id']
-				&amp;&amp; !file_exists($fl = DOC_FLOW_FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$this->getExtVal($pm,'file_id').$posf)
+				&amp;&amp; (!file_exists($fl = DOC_FLOW_FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$this->getExtVal($pm,'file_id').$posf)
+					&amp;&amp;(
+						defined('DOC_FLOW_FILE_STORAGE_DIR_MAIN') &amp;&amp;
+						!file_exists($fl = DOC_FLOW_FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$this->getExtVal($pm,'file_id').$posf)
+					)
+				)
 			)
 			){
 				$er_st = 404;

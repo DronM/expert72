@@ -106,7 +106,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 					SELECT
 						email,
 						name_full,
-						%s,
+						'%s',
 						'Ошибка загрузки оплат',
 						'new_remind'::email_types
 					FROM users

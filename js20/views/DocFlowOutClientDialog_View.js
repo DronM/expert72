@@ -215,6 +215,13 @@ function DocFlowOutClientDialog_View(id,options){
 			}
 		});
 		options.cmdSave = true;
+		options.controlSave = new ButtonSave(id+":cmdSave",
+			{"onClick":function(){
+				self.saveObject(function(){
+					self.close({"updated":true});
+				});
+			}
+		});
 		
 		options.controlCancel = new ButtonCancel(id+":cmdCancel",{
 			"onClick":function(){

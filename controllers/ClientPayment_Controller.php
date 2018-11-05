@@ -243,7 +243,7 @@ class ClientPayment_Controller extends ControllerSQL{
 					SELECT
 						email,
 						name_full,
-						%s,
+						'%s',
 						'Ошибка загрузки оплат',
 						'new_remind'::email_types
 					FROM users

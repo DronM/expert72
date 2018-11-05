@@ -24,14 +24,14 @@
 		<xsl:call-template name="initHead"/>
 		
 		<script>
-			function pageLoad(){				
+			<xsl:call-template name="modelFromTemplate"/>
+			function pageLoad(){							
 				<xsl:call-template name="initApp"/>
 				<xsl:call-template name="initReminder"/>
 				
 				<xsl:call-template name="checkForError"/>
-				
-				<xsl:call-template name="modelFromTemplate"/>
-				
+								
+				showView();
 			}
 		</script>
 	</head>
@@ -320,58 +320,59 @@
 </xsl:template>
 
 <xsl:template name="modelFromTemplate">
-	
-	<!-- All data models to object -->
-	var models;
-	var editViewOptions = window.getParam? (window.getParam("editViewOptions")||{}) : {};
-	if (window.getParam){
-		editViewOptions.cmd = window.getParam("cmd");
-	}
-	else{
-		var s_str = window.location.toString();
-		var par_start = s_str.indexOf("?");
-		if (par_start>=0){
-			var par_list = s_str.substr(par_start).split("&amp;");
-			for (var i=0;i&lt;par_list.length;i++){
-				var v_sep = par_list[i].indexOf("=");
-				if (v_sep>=0){
-					var n = par_list[i].substr(0,v_sep);
-					var v = par_list[i].substr(v_sep+1);
-					if (n=="mode"){
-						editViewOptions.cmd = v;
-						break;
+	function showView(){
+		<!-- All data models to object -->
+		var models;
+		var editViewOptions = window.getParam? (window.getParam("editViewOptions")||{}) : {};
+		if (window.getParam){
+			editViewOptions.cmd = window.getParam("cmd");
+		}
+		else{
+			var s_str = window.location.toString();
+			var par_start = s_str.indexOf("?");
+			if (par_start>=0){
+				var par_list = s_str.substr(par_start).split("&amp;");
+				for (var i=0;i&lt;par_list.length;i++){
+					var v_sep = par_list[i].indexOf("=");
+					if (v_sep>=0){
+						var n = par_list[i].substr(0,v_sep);
+						var v = par_list[i].substr(v_sep+1);
+						if (n=="mode"){
+							editViewOptions.cmd = v;
+							break;
+						}
 					}
 				}
 			}
 		}
-	}
-	editViewOptions.cmd = editViewOptions.cmd || "edit";
-	editViewOptions.models = editViewOptions.models || {};
-	<xsl:for-each select="model[not(@sysModel='1')]">
-	<xsl:variable name="m_id" select="@id"/>
-	editViewOptions.models.<xsl:value-of select="$m_id"/> = editViewOptions.models.<xsl:value-of select="$m_id"/>
-		|| new <xsl:value-of select="$m_id"/>({
-		"data":CommonHelper.longString(function () {/*
-			<xsl:copy-of select="/document/model[@id=$m_id]"/>
-		*/})
-	});
-	</xsl:for-each>
+		editViewOptions.cmd = editViewOptions.cmd || "edit";
+		editViewOptions.models = editViewOptions.models || {};
+		<xsl:for-each select="model[not(@sysModel='1')]">
+		<xsl:variable name="m_id" select="@id"/>
+		editViewOptions.models.<xsl:value-of select="$m_id"/> = editViewOptions.models.<xsl:value-of select="$m_id"/>
+			|| new <xsl:value-of select="$m_id"/>({
+			"data":CommonHelper.longString(function () {/*
+				<xsl:copy-of select="/document/model[@id=$m_id]"/>
+			*/})
+		});
+		</xsl:for-each>
 	
-	<xsl:for-each select="model[@templateId]">
-		var v_opts = CommonHelper.clone(editViewOptions);
-		v_opts.template = CommonHelper.longString(function () {/*
-		<xsl:copy-of select="./*"/>
-		*/});
-		v_opts.variantStorage = {
-			"name":"<xsl:value-of select="@templateId"/>"
-			<xsl:if test="/document/model[@id='VariantStorage_Model']">
-			,"model":editViewOptions.models.VariantStorage_Model
-			</xsl:if>			
-		};	
+		<xsl:for-each select="model[@templateId]">
+			var v_opts = CommonHelper.clone(editViewOptions);
+			v_opts.template = CommonHelper.longString(function () {/*
+			<xsl:copy-of select="./*"/>
+			*/});
+			v_opts.variantStorage = {
+				"name":"<xsl:value-of select="@templateId"/>"
+				<xsl:if test="/document/model[@id='VariantStorage_Model']">
+				,"model":editViewOptions.models.VariantStorage_Model
+				</xsl:if>			
+			};	
 				
-		var v_<xsl:value-of select="@templateId"/> = new <xsl:value-of select="@templateId"/>_View("<xsl:value-of select="@templateId"/>",v_opts);
-		v_<xsl:value-of select="@templateId"/>.toDOM(document.getElementById("windowData"));
-	</xsl:for-each>
+			var v_<xsl:value-of select="@templateId"/> = new <xsl:value-of select="@templateId"/>_View("<xsl:value-of select="@templateId"/>",v_opts);
+			v_<xsl:value-of select="@templateId"/>.toDOM(document.getElementById("windowData"));
+		</xsl:for-each>
+	}
 </xsl:template>
 
 

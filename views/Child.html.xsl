@@ -37,7 +37,9 @@
 				return;
 				
 			}
+			<xsl:call-template name="modelFromTemplate"/>
 			function pageLoad(){
+				
 				var application;
 				if (window.getApp){
 					application = window.getApp();
@@ -49,12 +51,14 @@
 				}
 				window.isChild = true;
 				<xsl:call-template name="checkForError"/>
-
-				<xsl:call-template name="modelFromTemplate"/>				
+				if (window.opener &amp;&amp; window.opener.initForm &amp;&amp; !window.opener.paramsInitialized){
+					window.opener.initForm();
+				}
+				showView();				
 			}
 		</script>
 	</head>
-	
+	<!-- onload="pageLoad();" -->
 	<body onload="pageLoad();" onbeforeunload="return beforeUnload();">
 	
 		<!-- Page container -->
@@ -102,6 +106,11 @@
 		<!-- /page container -->
 	    
 		<xsl:call-template name="initJS"/>
+		<!--
+		<script>
+			window.onload=pageLoad;
+		</script>
+		-->
 	</body>
 </html>		
 </xsl:template>

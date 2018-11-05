@@ -3408,22 +3408,42 @@ class Application_Controller extends ControllerSQL{
 		return $m_ind;	
 	}
 	
-	public static function getMaxIndexSigFile($relPath,$fileId,&$maxIndex){
+	/*
+	 * if relDir is empty - its common doc flow
+	 */
+	public static function getMaxIndexSigFile($relDir,$fileId,&$maxIndex){
+	
 		$maxIndex = 0;
 		
-		$ind_used = TRUE;
-		if (file_exists(FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$relPath)){
-			$maxIndex = self::getMaxIndexInDir(FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$relPath,$fileId);		
-		}
+		if ($relDir && strlen($relDir)){
+			if (file_exists(FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$relDir)){
+				$maxIndex = self::getMaxIndexInDir(FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$relDir,$fileId);		
+				$dir = FILE_STORAGE_DIR;
+			}
 		
-		if (defined('FILE_STORAGE_DIR_MAIN' && file_exists(FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$relPath))){
-			$ind2 = self::getMaxIndexInDir(FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$relPath,$fileId);
-			if($ind2>$maxIndex){
-				$maxIndex = $ind2;
-				$ind_used = FALSE;
+			if (defined('FILE_STORAGE_DIR_MAIN' && file_exists(FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$relDir))){
+				$ind2 = self::getMaxIndexInDir(FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$relDir,$fileId);
+				if($ind2>$maxIndex){
+					$maxIndex = $ind2;
+					$dir = FILE_STORAGE_DIR_MAIN;
+				}
 			}
 		}
-		return ($ind_used? FILE_STORAGE_DIR:FILE_STORAGE_DIR_MAIN) .DIRECTORY_SEPARATOR.$relPath.DIRECTORY_SEPARATOR.$fileId.'.sig.s'.$maxIndex;
+		else{
+			if (file_exists(DOC_FLOW_FILE_STORAGE_DIR.DIRECTORY_SEPARATOR)){
+				$maxIndex = Application_Controller::getMaxIndexInDir(DOC_FLOW_FILE_STORAGE_DIR,$fileId);
+				$dir = DOC_FLOW_FILE_STORAGE_DIR;
+			}
+			if (defined('DOC_FLOW_FILE_STORAGE_DIR_MAIN') && file_exists(DOC_FLOW_FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR)){
+				$ind2 = Application_Controller::getMaxIndexInDir(DOC_FLOW_FILE_STORAGE_DIR_MAIN,$fileId);
+				if ($ind2 > $maxIndex){
+					$maxIndex = $ind2;
+					$dir = DOC_FLOW_FILE_STORAGE_DIR_MAIN;
+				}
+			}
+		
+		}
+		return $dir.DIRECTORY_SEPARATOR.$relDir.DIRECTORY_SEPARATOR.$fileId.'.sig.s'.$maxIndex;
 	}
 	
 	public static function checkIULs(&$dbLink,$appId,$outClientId=NULL){

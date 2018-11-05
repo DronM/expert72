@@ -150,17 +150,14 @@ FileUploaderApplication_View.prototype.setEnabled = function(v){
 }
 
 FileUploaderApplication_View.prototype.setFileOptions = function(fileOpts,file){
-	//this.m_mainView.getModel().fieldExists("work_start_date")
-	/*
-	if (!this.m_work_start_date_set){
-		this.m_work_start_date_set = true;
-		this.m_work_start_date = this.m_mainView.getModel().fieldExists("work_start_date")? this.m_mainView.getModel().getFieldValue("work_start_date"):undefined;
-	}
-	if (this.m_work_start_date && this.m_work_start_date<upl_dt){
-	*/
 	if (file.doc_flow_out){
 		//id,date_time,reg_number
-		fileOpts.refTitle = "Загружен документом №"+file.doc_flow_out.reg_number+" от "+DateHelper.format(DateHelper.strtotime(file.doc_flow_out.date_time),"d/m/y");	
+		fileOpts.refTitle = 
+			(file.doc_flow_out.reg_number&&file.doc_flow_out.reg_number!="null")?
+				("Загружен документом №"+file.doc_flow_out.reg_number+" от "+DateHelper.format(DateHelper.strtotime(file.doc_flow_out.date_time),"d/m/y"))
+				: ("Загружен неотправленным документом от "+DateHelper.format(DateHelper.strtotime(file.doc_flow_out.date_time),"d/m/y"))
+				;	
+		
 		fileOpts.refClass = "uploadedAfterPost";	
 	}
 	else{

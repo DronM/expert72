@@ -172,8 +172,13 @@ FileSigContainer.prototype.sigsToDOM = function(){
 			);
 			var self = this;
 			
+			/* if there is no class fileSignNoSig
+			 * there will never be any possibility to apply signature (no key button) 
+			 */
 			this.m_addSignControl = new ControlContainer(this.getId()+":addSign","SPAN",{
-				"className":"btn btn-sm"+( (this.m_signatures.getCount()&&!this.m_multiSignature)? "":" fileSignNoSig"),
+				"className":"btn btn-sm"+(
+					((sig_cnt>=this.m_maxSignatureCount)||(this.m_signatures.getCount()&&!this.m_multiSignature))? "":" fileSignNoSig"
+					),
 				"title":this.ADD_SIG_TITLE,
 				"visible":vs,
 				"elements":[
@@ -217,6 +222,12 @@ FileSigContainer.prototype.setWait = function(v){
 		//this.m_addSignControl.getElement("pic").setClassName( (v? this.IMG_WAIT:this.IMG_KEY) );
 		this.m_addSignControl.getElement("pic").setAttr("class",(v? this.IMG_WAIT:this.IMG_KEY));
 		this.m_addSignControl.setAttr("title", (v? this.SIG_PROCESS_TITLE:this.ADD_SIG_TITLE) );
+	}	
+}
+
+FileSigContainer.prototype.setAddSigEnabled = function(v){
+	if (this.m_addSignControl){
+		this.m_addSignControl.setEnabled(v);
 	}	
 }
 
