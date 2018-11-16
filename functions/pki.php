@@ -1,6 +1,7 @@
 <?php
 	require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLString.php');
 	require_once(dirname(__FILE__).'/../Config.php');
+	require_once(ABSOLUTE_PATH.'controllers/Application_Controller.php');
 	
 	function pki_fatal_error(&$verifRes) {
 		return (
@@ -12,14 +13,16 @@
 	
 	function pki_log_sig_check($fileDocSig, $fileDoc,$dbFileId,&$pkiMan,&$dbLink,$passExpired=FALSE){
 		//$pkiMan->setLogLevel('error');
-		$verif_res = $pkiMan->verifySig($fileDocSig, $fileDoc,TRUE,TRUE,FALSE);
+		$verif_res = $pkiMan->verifySig($fileDocSig, $fileDoc,PKI_NO_CHAIN_VERIFICATION,TRUE,FALSE);
 		
 		$db_checkError = NULL;
 		FieldSQLString::formatForDb($dbLink,$verif_res->checkError,$db_checkError);
 		$db_checkPassed = $verif_res->checkPassed? 'TRUE':'FALSE';
 		
+		$tb_posf = Application_Controller::LKPostfix();
+		
 		$dbLink->query(sprintf(		
-		"INSERT INTO file_verifications
+		"INSERT INTO file_verifications%s
 		(file_id,date_time,check_time,check_result,error_str,user_id)
 		VALUES (%s,now(),%f,%s,%s,%d)
 		ON CONFLICT (file_id) DO UPDATE
@@ -29,6 +32,7 @@
 			check_result = %s,
 			error_str = %s,
 			user_id=%d",
+		$tb_posf,
 		$dbFileId,
 		$verif_res->checkTime,
 		$db_checkPassed,
@@ -40,7 +44,7 @@
 		$_SESSION['user_id']
 		));
 		
-		$dbLink->query(sprintf("DELETE FROM file_signatures WHERE file_id=%s",$dbFileId));
+		$dbLink->query(sprintf("DELETE FROM file_signatures%s WHERE file_id=%s",$tb_posf,$dbFileId));
 		
 		foreach($verif_res->signatures AS $cert_data){
 			$db_employee_id = NULL;		
@@ -106,7 +110,7 @@
 				FieldSQLString::formatForDb($dbLink,$cert_data->fingerprint,$db_fingerprint);	
 		
 				$user_cert_ar = $dbLink->query_first(sprintf(
-					"INSERT INTO user_certificates
+					"INSERT INTO user_certificates%s
 					(fingerprint,
 					  employee_id,
 					  date_time,
@@ -120,6 +124,7 @@
 							date_time=now(),
 							employee_id=%s
 					RETURNING id",
+					$tb_posf,
 					$db_fingerprint,
 					intval($db_employee_id)? $db_employee_id:'NULL',
 					$db_dateFrom,
@@ -130,9 +135,10 @@
 			}
 			
 			$dbLink->query(sprintf(
-				"INSERT INTO file_signatures
+				"INSERT INTO file_signatures%s
 				(file_id,sign_date_time,user_certificate_id,algorithm)
 				VALUES (%s,%s,%d,%s)",
+				$tb_posf,
 				$dbFileId,
 				$db_sign_date_time,
 				$user_cert_ar['id'],
@@ -170,9 +176,10 @@
 			}
 			else{
 				$dbLink->query(sprintf(
-					"INSERT INTO file_verifications
+					"INSERT INTO file_verifications%s
 					(file_id,date_time,hash_gost94)
 					VALUES(%s,now(),%s)",
+					$tb_posf,
 					$dbFileId,
 					$db_hash
 				));

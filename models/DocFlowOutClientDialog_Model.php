@@ -15,6 +15,9 @@ require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLBool.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLDateTimeTZ.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLJSON.php');
  
+
+require_once(ABSOLUTE_PATH.'controllers/Application_Controller.php');
+
 class DocFlowOutClientDialog_Model extends ModelSQL{
 	
 	public function __construct($dbLink){
@@ -150,6 +153,10 @@ class DocFlowOutClientDialog_Model extends ModelSQL{
 		$this->addField($f_attachment_files_only_sigs);
 		//********************
 	$this->setLimitConstant('doc_per_page_count');
+	}
+
+	public function setTableName($v){
+		parent::setTableName($v.Application_Controller::LKPostfix());
 	}
 
 }

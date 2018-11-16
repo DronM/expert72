@@ -39,10 +39,7 @@ BEGIN
 			WHERE app.id=NEW.application_id
 				--email_confirmed					
 			);				
-			
-		END IF;
-	
-		IF const_client_lk_val() OR const_debug_val() THEN
+
 			--client server, update application state
 			INSERT INTO public.application_processes(
 				    application_id, date_time, state, user_id, end_date_time, doc_flow_examination_id)
@@ -54,8 +51,9 @@ BEGIN
 			    NEW.end_date_time,
 			    NEW.doc_flow_examination_id
 			    );			
+			
 		END IF;
-				
+	
 		RETURN NEW;
 	END IF;
 END;

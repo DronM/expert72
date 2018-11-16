@@ -225,10 +225,10 @@ class DocFlowInClient_Controller extends ControllerSQL{
 	}
 
 	public function get_file($pm){
-		$this->get_file_on_type($pm,FALSE);
+		return $this->get_file_on_type($pm,FALSE);
 	}
 	public function get_file_sig($pm){
-		$this->get_file_on_type($pm,TRUE);
+		return $this->get_file_on_type($pm,TRUE);
 	}
 
 	public function set_viewed($pm){
@@ -257,7 +257,7 @@ class DocFlowInClient_Controller extends ControllerSQL{
 			
 		}
 		
-		$this->addModel(self::get_unviwed_count_model($this->getDbLink()));
+		$this->addModel(self::get_unviwed_count_model($this->getDbLinkMaster()));
 	}
 	public static function get_unviwed_count_model($dbLink){
 		$ar = $dbLink->query_first(sprintf(

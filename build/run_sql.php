@@ -25,7 +25,7 @@ file_put_contents(
 
 $cmd = sprintf('export PGPASSWORD=%s ; psql -h %s -d %s -U %s -f '.$sql_f,
 		DB_PASSWORD,
-		DB_SERVER_MASTER,
+		LK? DB_SERVER_LK:DB_SERVER_OFFICE,
 		DB_NAME,
 		DB_USER
 );

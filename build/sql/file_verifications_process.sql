@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION file_verifications_process()
 $BODY$
 BEGIN
 	IF (TG_WHEN='BEFORE' AND TG_OP='DELETE') THEN		
-		IF const_client_lk_val() OR const_debug_val() THEN			
+		IF NOT const_client_lk_val() OR const_debug_val() THEN			
 			DELETE FROM file_signatures WHERE file_id = OLD.file_id;
 		END IF;
 			

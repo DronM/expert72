@@ -1398,7 +1398,7 @@ FileUploader_View.prototype.signAllFilesContinueIteration = function(filesForSig
 			var del_btn = file_cont.getElement("file_"+filesForSigning[i].file_id+"_del");
 			if (del_btn)del_btn.setEnabled(true);
 		}
-		
+		window.showOk(this.NT_SIGN_DONE);
 	}
 	else{
 		if (ind==0){

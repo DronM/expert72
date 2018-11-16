@@ -18,6 +18,9 @@ require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLDateTimeTZ.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLJSON.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLJSONB.php');
  
+
+require_once(ABSOLUTE_PATH.'controllers/Application_Controller.php');
+
 class ApplicationDialog_Model extends ModelSQL{
 	
 	public function __construct($dbLink){
@@ -486,6 +489,10 @@ class ApplicationDialog_Model extends ModelSQL{
 		$this->addField($f_expertise_result_date);
 		//********************
 	$this->setLimitConstant('doc_per_page_count');
+	}
+
+	public function setTableName($v){
+		parent::setTableName($v.Application_Controller::LKPostfix());
 	}
 
 }

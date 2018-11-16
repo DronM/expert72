@@ -30950,3 +30950,10783 @@ $$
   LANGUAGE sql STABLE
   COST 100;
 ALTER FUNCTION doc_flow_out_client_files_for_signing(in_application_id int) OWNER TO expert72;
+
+-- ******************* update 12/11/2018 09:07:05 ******************
+-- Function: user_certificate_lk_process()
+
+-- DROP FUNCTION user_certificate_lk_process();
+
+CREATE OR REPLACE FUNCTION user_certificate_lk_process()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+	IF (TG_WHEN='AFTER' AND NOT const_client_lk_val()) THEN		
+		IF TG_OP='INSERT' THEN
+			INSERT INTO user_certificates(
+				    fingerprint, date_time, date_time_from, date_time_to, subject_cert, 
+				    issuer_cert)
+			    VALUES (NEW.fingerprint, NEW.date_time, NEW.date_time_from, NEW.date_time_to, NEW.subject_cert, 
+				    NEW.issuer_cert);
+				    
+			RETURN NEW;
+		ELSIF TG_OP='UPDATE' THEN
+			UPDATE user_certificates
+			SET
+				fingerprint = NEW.fingerprint,
+				date_time = NEW.date_time,
+				date_time_from = NEW.date_time_from,
+				date_time_to = NEW.date_time_to,
+				subject_cert = NEW.date_time_to, 
+				issuer_cert = NEW.issuer_cert
+			WHERE
+				fingerprint = NEW.fingerprint AND date_time_from=NEW.date_time_from;
+				    
+			RETURN NEW;
+		ELSIF TG_OP='DELETE' THEN
+			DELETE FROM user_certificates
+			WHERE
+				fingerprint = OLD.fingerprint AND date_time_from=OLD.date_time_from;
+				    
+			RETURN OLD;
+			
+		END IF;				
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION user_certificate_lk_process() OWNER TO expert72;
+
+
+-- ******************* update 12/11/2018 09:12:24 ******************
+-- Function: user_certificates_lk_process()
+
+ DROP FUNCTION user_certificate_lk_process();
+
+CREATE OR REPLACE FUNCTION user_certificates_lk_process()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+	IF (TG_WHEN='AFTER' AND NOT const_client_lk_val()) THEN		
+		IF TG_OP='INSERT' THEN
+			INSERT INTO user_certificates(
+				    fingerprint, date_time, date_time_from, date_time_to, subject_cert, 
+				    issuer_cert)
+			    VALUES (NEW.fingerprint, NEW.date_time, NEW.date_time_from, NEW.date_time_to, NEW.subject_cert, 
+				    NEW.issuer_cert);
+				    
+			RETURN NEW;
+		ELSIF TG_OP='UPDATE' THEN
+			UPDATE user_certificates
+			SET
+				fingerprint = NEW.fingerprint,
+				date_time = NEW.date_time,
+				date_time_from = NEW.date_time_from,
+				date_time_to = NEW.date_time_to,
+				subject_cert = NEW.date_time_to, 
+				issuer_cert = NEW.issuer_cert
+			WHERE
+				fingerprint = NEW.fingerprint AND date_time_from=NEW.date_time_from;
+				    
+			RETURN NEW;
+		ELSIF TG_OP='DELETE' THEN
+			DELETE FROM user_certificates
+			WHERE
+				fingerprint = OLD.fingerprint AND date_time_from=OLD.date_time_from;
+				    
+			RETURN OLD;
+			
+		END IF;				
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION user_certificates_lk_process() OWNER TO expert72;
+
+
+-- ******************* update 12/11/2018 09:12:49 ******************
+-- Trigger: user_certificates_lk_trigger on user_certificates_lk
+
+-- DROP TRIGGER user_certificates_lk_after_trigger ON user_certificates_lk;  
+ CREATE TRIGGER user_certificates_lk_after_trigger
+  AFTER INSERT OR UPDATE OR DELETE
+  ON user_certificates_lk
+  FOR EACH ROW
+  EXECUTE PROCEDURE user_certificates_lk_process();
+
+-- ******************* update 12/11/2018 09:28:13 ******************
+-- Function: file_signatures_lk_process()
+
+-- DROP FUNCTION file_signatures_lk_process();
+
+CREATE OR REPLACE FUNCTION file_signatures_lk_process()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+	IF (TG_WHEN='AFTER' AND NOT const_client_lk_val()) THEN		
+		IF TG_OP='INSERT' THEN
+			INSERT INTO file_signatures(
+				    file_id, user_certificate_id, sign_date_time, algorithm)
+			    VALUES (
+			    	NEW.file_id,
+			    	(SELECT ucert.id FROM user_certificates ucert
+			    	WHERE ucert.fingerprint=NEW.fingerprint AND ucert.date_time_from=NEW.date_time_from
+			    	),
+			    	NEW.sign_date_time,
+			    	NEW.algorithm
+			    );
+				    
+			RETURN NEW;
+		ELSIF TG_OP='UPDATE' THEN
+			UPDATE file_signatures
+			SET
+				file_id = NEW.file_id,
+				(SELECT ucert.id FROM user_certificates ucert
+			    	WHERE ucert.fingerprint=NEW.fingerprint AND ucert.date_time_from=NEW.date_time_from
+			    	),
+				sign_date_time = NEW.sign_date_time,
+				algorithm = NEW.algorithm
+			WHERE
+				fingerprint = NEW.fingerprint AND date_time_from=NEW.date_time_from;
+				    
+			RETURN NEW;
+		ELSIF TG_OP='DELETE' THEN
+			DELETE FROM file_signatures
+			WHERE
+				fingerprint = OLD.fingerprint AND date_time_from=OLD.date_time_from;
+				    
+			RETURN OLD;
+			
+		END IF;				
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION file_signatures_lk_process() OWNER TO expert72;
+
+
+-- ******************* update 12/11/2018 09:29:12 ******************
+-- Function: file_signatures_lk_process()
+
+-- DROP FUNCTION file_signatures_lk_process();
+
+CREATE OR REPLACE FUNCTION file_signatures_lk_process()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+	IF (TG_WHEN='AFTER' AND NOT const_client_lk_val()) THEN		
+		IF TG_OP='INSERT' THEN
+			INSERT INTO file_signatures(
+				    file_id, user_certificate_id, sign_date_time, algorithm)
+			    VALUES (
+			    	NEW.file_id,
+			    	(SELECT ucert.id FROM user_certificates ucert
+			    	WHERE ucert.fingerprint=NEW.fingerprint AND ucert.date_time_from=NEW.date_time_from
+			    	),
+			    	NEW.sign_date_time,
+			    	NEW.algorithm
+			    );
+				    
+			RETURN NEW;
+		ELSIF TG_OP='UPDATE' THEN
+			UPDATE file_signatures
+			SET
+				file_id = NEW.file_id,
+				user_certificate_id = (
+					SELECT ucert.id FROM user_certificates ucert
+				    	WHERE ucert.fingerprint=NEW.fingerprint AND ucert.date_time_from=NEW.date_time_from
+			    	),
+				sign_date_time = NEW.sign_date_time,
+				algorithm = NEW.algorithm
+			WHERE
+				fingerprint = NEW.fingerprint AND date_time_from=NEW.date_time_from;
+				    
+			RETURN NEW;
+		ELSIF TG_OP='DELETE' THEN
+			DELETE FROM file_signatures
+			WHERE
+				fingerprint = OLD.fingerprint AND date_time_from=OLD.date_time_from;
+				    
+			RETURN OLD;
+			
+		END IF;				
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION file_signatures_lk_process() OWNER TO expert72;
+
+
+-- ******************* update 12/11/2018 09:30:18 ******************
+-- Trigger: file_signatures_lk_trigger on file_signatures_lk
+
+-- DROP TRIGGER file_signatures_lk_after_trigger ON file_signatures_lk;  
+ CREATE TRIGGER file_signatures_lk_after_trigger
+  AFTER INSERT OR UPDATE OR DELETE
+  ON file_signatures_lk
+  FOR EACH ROW
+  EXECUTE PROCEDURE file_signatures_lk_process();
+
+-- ******************* update 12/11/2018 09:35:55 ******************
+-- Function: file_verifications_lk_process()
+
+-- DROP FUNCTION file_verifications_lk_process();
+
+CREATE OR REPLACE FUNCTION file_verifications_lk_process()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+	IF (TG_WHEN='AFTER' AND NOT const_client_lk_val()) THEN		
+		IF TG_OP='INSERT' THEN
+			INSERT INTO file_verifications(
+				    file_id, date_time, check_result, check_time, error_str, hash_gost94, 
+			            user_id)
+			    VALUES (NEW.file_id, NEW.date_time, NEW.check_result, NEW.check_time, NEW.error_str, NEW.hash_gost94, 
+			            NEW.user_id);
+				    
+			RETURN NEW;
+		ELSIF TG_OP='UPDATE' THEN
+			UPDATE file_verifications
+			SET
+				date_time = NEW.date_time,
+				check_result = NEW.check_result,
+				check_time = NEW.check_time,
+				error_str = NEW.error_str,
+				hash_gost94 = NEW.hash_gost94, 
+			        user_id = NEW.user_id
+			WHERE
+				file_id = NEW.file_id;
+				    
+			RETURN NEW;
+		ELSIF TG_OP='DELETE' THEN
+			DELETE FROM file_verifications
+			WHERE
+				file_id = OLD.file_id;
+				    
+			RETURN OLD;
+			
+		END IF;				
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION file_verifications_lk_process() OWNER TO expert72;
+
+
+-- ******************* update 12/11/2018 09:36:34 ******************
+-- Trigger: file_verifications_lk_trigger on file_verifications_lk
+
+-- DROP TRIGGER file_verifications_lk_after_trigger ON file_verifications_lk;  
+ CREATE TRIGGER file_verifications_lk_after_trigger
+  AFTER INSERT OR UPDATE OR DELETE
+  ON file_verifications_lk
+  FOR EACH ROW
+  EXECUTE PROCEDURE file_verifications_lk_process();
+
+-- ******************* update 12/11/2018 10:03:08 ******************
+-- Function: file_verifications_lk_process()
+
+-- DROP FUNCTION file_verifications_lk_process();
+
+CREATE OR REPLACE FUNCTION file_verifications_lk_process()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+	IF (TG_WHEN='AFTER' AND (NOT const_client_lk_val() OR const_debug_val())) THEN		
+		IF TG_OP='INSERT' THEN
+			INSERT INTO file_verifications(
+				    file_id, date_time, check_result, check_time, error_str, hash_gost94, 
+			            user_id)
+			    VALUES (NEW.file_id, NEW.date_time, NEW.check_result, NEW.check_time, NEW.error_str, NEW.hash_gost94, 
+			            NEW.user_id);
+				    
+			RETURN NEW;
+		ELSIF TG_OP='UPDATE' THEN
+			UPDATE file_verifications
+			SET
+				date_time = NEW.date_time,
+				check_result = NEW.check_result,
+				check_time = NEW.check_time,
+				error_str = NEW.error_str,
+				hash_gost94 = NEW.hash_gost94, 
+			        user_id = NEW.user_id
+			WHERE
+				file_id = NEW.file_id;
+				    
+			RETURN NEW;
+		ELSIF TG_OP='DELETE' THEN
+			DELETE FROM file_verifications
+			WHERE
+				file_id = OLD.file_id;
+				    
+			RETURN OLD;
+			
+		END IF;				
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION file_verifications_lk_process() OWNER TO expert72;
+
+
+-- ******************* update 12/11/2018 10:03:21 ******************
+-- Function: file_signatures_lk_process()
+
+-- DROP FUNCTION file_signatures_lk_process();
+
+CREATE OR REPLACE FUNCTION file_signatures_lk_process()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+	IF (TG_WHEN='AFTER' AND (NOT const_client_lk_val() OR const_debug_val())) THEN		
+		IF TG_OP='INSERT' THEN
+			INSERT INTO file_signatures(
+				    file_id, user_certificate_id, sign_date_time, algorithm)
+			    VALUES (
+			    	NEW.file_id,
+			    	(SELECT ucert.id FROM user_certificates ucert
+			    	WHERE ucert.fingerprint=NEW.fingerprint AND ucert.date_time_from=NEW.date_time_from
+			    	),
+			    	NEW.sign_date_time,
+			    	NEW.algorithm
+			    );
+				    
+			RETURN NEW;
+		ELSIF TG_OP='UPDATE' THEN
+			UPDATE file_signatures
+			SET
+				file_id = NEW.file_id,
+				user_certificate_id = (
+					SELECT ucert.id FROM user_certificates ucert
+				    	WHERE ucert.fingerprint=NEW.fingerprint AND ucert.date_time_from=NEW.date_time_from
+			    	),
+				sign_date_time = NEW.sign_date_time,
+				algorithm = NEW.algorithm
+			WHERE
+				fingerprint = NEW.fingerprint AND date_time_from=NEW.date_time_from;
+				    
+			RETURN NEW;
+		ELSIF TG_OP='DELETE' THEN
+			DELETE FROM file_signatures
+			WHERE
+				fingerprint = OLD.fingerprint AND date_time_from=OLD.date_time_from;
+				    
+			RETURN OLD;
+			
+		END IF;				
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION file_signatures_lk_process() OWNER TO expert72;
+
+
+-- ******************* update 12/11/2018 10:03:47 ******************
+-- Function: user_certificates_lk_process()
+
+-- DROP FUNCTION user_certificates_lk_process();
+
+CREATE OR REPLACE FUNCTION user_certificates_lk_process()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+	IF (TG_WHEN='AFTER' AND (NOT const_client_lk_val() OR const_debug_val())) THEN		
+		IF TG_OP='INSERT' THEN
+			INSERT INTO user_certificates(
+				    fingerprint, date_time, date_time_from, date_time_to, subject_cert, 
+				    issuer_cert)
+			    VALUES (NEW.fingerprint, NEW.date_time, NEW.date_time_from, NEW.date_time_to, NEW.subject_cert, 
+				    NEW.issuer_cert);
+				    
+			RETURN NEW;
+		ELSIF TG_OP='UPDATE' THEN
+			UPDATE user_certificates
+			SET
+				fingerprint = NEW.fingerprint,
+				date_time = NEW.date_time,
+				date_time_from = NEW.date_time_from,
+				date_time_to = NEW.date_time_to,
+				subject_cert = NEW.date_time_to, 
+				issuer_cert = NEW.issuer_cert
+			WHERE
+				fingerprint = NEW.fingerprint AND date_time_from=NEW.date_time_from;
+				    
+			RETURN NEW;
+		ELSIF TG_OP='DELETE' THEN
+			DELETE FROM user_certificates
+			WHERE
+				fingerprint = OLD.fingerprint AND date_time_from=OLD.date_time_from;
+				    
+			RETURN OLD;
+			
+		END IF;				
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION user_certificates_lk_process() OWNER TO expert72;
+
+
+-- ******************* update 12/11/2018 10:21:00 ******************
+-- VIEW: applications_dialog_lk
+
+--DROP VIEW contracts_dialog_lk;
+--DROP VIEW applications_dialog_lk;
+
+CREATE OR REPLACE VIEW applications_dialog_lk AS
+	SELECT
+		d.id,
+		d.create_dt,
+		d.user_id,
+		d.expertise_type,
+		
+		--Для контроллера
+		( (d.expertise_type IS NOT NULL OR NOT d.cost_eval_validity OR NOT d.modification OR NOT d.audit) AND d.construction_type_id IS NOT NULL) AS document_exists,
+		
+		coalesce(d.cost_eval_validity,FALSE) AS cost_eval_validity,
+		d.cost_eval_validity_simult,
+		fund_sources_ref(fund_sources) AS fund_sources_ref,
+		construction_types_ref(construction_types) AS construction_types_ref,
+		d.applicant,
+		d.customer,
+		d.contractors,
+		d.developer,
+		coalesce(contr.constr_name,d.constr_name) AS constr_name,
+		coalesce(contr.constr_address,d.constr_address) AS constr_address,
+		
+		coalesce(contr.constr_technical_features,d.constr_technical_features) As constr_technical_features,
+		coalesce(contr.constr_technical_features_in_compound_obj,d.constr_technical_features_in_compound_obj) AS constr_technical_features_in_compound_obj,
+		
+		d.total_cost_eval,
+		d.limit_cost_eval,
+		offices_ref(offices) AS offices_ref,
+		build_types_ref(build_types) AS build_types_ref,
+		coalesce(d.modification,FALSE) AS modification,
+		coalesce(d.audit,FALSE) AS audit,
+		
+		CASE WHEN d.primary_application_id IS NOT NULL AND d.primary_application_id<>d.id THEN applications_primary_chain(d.id)
+		WHEN d.primary_application_reg_number IS NOT NULL THEN json_build_object('primary_application_reg_number',d.primary_application_reg_number)
+		ELSE NULL
+		END AS primary_application,
+
+		CASE WHEN d.modif_primary_application_id IS NOT NULL AND d.modif_primary_application_id<>d.id THEN applications_modif_primary_chain(d.id)
+		WHEN d.modif_primary_application_reg_number IS NOT NULL THEN json_build_object('primary_application_reg_number',d.modif_primary_application_reg_number)
+		ELSE NULL
+		END AS modif_primary_application,
+		
+		st.state AS application_state,
+		st.date_time AS application_state_dt,
+		st.end_date_time AS application_state_end_date,
+		
+		array_to_json((
+			SELECT array_agg(l.documents) FROM document_templates_all_list_for_date(d.create_dt::date) l
+			WHERE
+				(d.construction_type_id IS NOT NULL)
+				AND
+				(l.construction_type_id=d.construction_type_id AND
+				l.document_type IN (
+					CASE WHEN d.expertise_type='pd' OR d.expertise_type='pd_eng_survey' THEN 'pd'::document_types ELSE NULL END,
+					CASE WHEN d.expertise_type='eng_survey' OR d.expertise_type='pd_eng_survey' THEN 'eng_survey'::document_types ELSE NULL END,
+					CASE WHEN d.cost_eval_validity THEN 'cost_eval_validity'::document_types ELSE NULL END,
+					CASE WHEN d.modification THEN 'modification'::document_types ELSE NULL END,
+					CASE WHEN d.audit THEN 'audit'::document_types ELSE NULL END			
+					)
+				)
+		)) AS documents,
+		
+		applications_ref(d)->>'descr' AS select_descr,
+		
+		d.app_print_expertise,
+		d.app_print_cost_eval,
+		d.app_print_modification,
+		d.app_print_audit,
+		
+		applications_ref(b_app) AS base_applications_ref,
+		applications_ref(d_app) AS derived_applications_ref,
+		
+		applications_ref(d) AS applications_ref,
+		d.primary_application_id,
+		d.primary_application_reg_number,
+		d.modif_primary_application_id,
+		d.modif_primary_application_reg_number,
+		
+		d.pd_usage_info,
+		
+		users_ref(users) AS users_ref,
+		
+		d.auth_letter,
+		d.auth_letter_file,
+		
+		folders.files AS doc_folders,
+		
+		contr.work_start_date,
+		contr.contract_number,
+		contr.contract_date,
+		contr.expertise_result_number,
+		contr.expertise_result_date,
+		
+		d.filled_percent
+		
+	FROM applications AS d
+	LEFT JOIN offices ON offices.id=d.office_id
+	LEFT JOIN users ON users.id=d.user_id
+	LEFT JOIN contracts AS contr ON contr.application_id=d.id
+	LEFT JOIN fund_sources ON fund_sources.id=d.fund_source_id
+	LEFT JOIN construction_types ON construction_types.id=d.construction_type_id
+	LEFT JOIN build_types ON build_types.id=d.build_type_id
+	LEFT JOIN applications AS b_app ON b_app.id=d.base_application_id
+	LEFT JOIN applications AS d_app ON d_app.id=d.derived_application_id
+	LEFT JOIN (
+		SELECT
+			t.application_id,
+			max(t.date_time) AS date_time
+		FROM application_processes t
+		GROUP BY t.application_id
+	) AS h_max ON h_max.application_id=d.id
+	LEFT JOIN application_processes st
+		ON st.application_id=h_max.application_id AND st.date_time = h_max.date_time
+	LEFT JOIN
+		(
+		SELECT
+			doc_att.application_id,
+			json_agg(
+				json_build_object(
+					'fields',json_build_object('id',doc_att.folder_id,'descr',doc_att.folder_descr),
+					'parent_id',NULL,
+					'files',doc_att.files
+				)
+			) AS files
+		FROM
+		
+		(SELECT
+			adf.application_id,
+			adf.file_path AS folder_descr,
+			app_fd.id AS folder_id,
+			json_agg(
+				json_build_object(
+					'file_id',adf.file_id,
+					'file_name',adf.file_name,
+					'file_size',adf.file_size,
+					'file_signed',adf.file_signed,
+					'file_uploaded','true',
+					'file_path',adf.file_path,
+					'date_time',adf.date_time,
+					'signatures',--sign.signatures
+					CASE
+						WHEN sign.signatures IS NULL AND f_ver.file_id IS NOT NULL THEN
+							jsonb_build_array(
+								jsonb_build_object(
+									'sign_date_time',f_ver.date_time,
+									'check_result',f_ver.check_result,
+									'error_str',f_ver.error_str
+								)
+							)
+						ELSE sign.signatures
+					END,
+					'file_signed_by_client',adf.file_signed_by_client,
+					'require_client_sig',app_fd.require_client_sig
+				)
+			) AS files
+		FROM application_document_files adf
+		LEFT JOIN application_doc_folders AS app_fd ON app_fd.name=adf.file_path
+		LEFT JOIN doc_flow_out AS adf_out ON adf_out.to_application_id=adf.application_id AND adf_out.doc_flow_type_id=(pdfn_doc_flow_types_app_resp()->'keys'->>'id')::int
+		--LEFT JOIN doc_flow_attachments AS adf_att ON adf_att.doc_type='doc_flow_out' AND adf_att.doc_id=adf_out.id AND adf_att.file_name=adf.file_name
+		LEFT JOIN file_verifications_lk AS f_ver ON f_ver.file_id=adf.file_id
+		LEFT JOIN (
+			SELECT
+				files_t.file_id,
+				jsonb_agg(files_t.signatures) AS signatures
+			FROM
+			(SELECT
+				f_sig.file_id,
+				jsonb_build_object(
+					'owner',u_certs.subject_cert,
+					'cert_from',u_certs.date_time_from,
+					'cert_to',u_certs.date_time_to,
+					'sign_date_time',f_sig.sign_date_time,
+					'check_result',ver.check_result,
+					'check_time',ver.check_time,
+					'error_str',ver.error_str
+				) AS signatures
+			FROM file_signatures_lk AS f_sig
+			LEFT JOIN file_verifications_lk AS ver ON ver.file_id=f_sig.file_id
+			LEFT JOIN user_certificates_lk AS u_certs ON u_certs.id=f_sig.user_certificate_id
+			ORDER BY f_sig.sign_date_time
+			) AS files_t
+			GROUP BY files_t.file_id
+		) AS sign ON sign.file_id=f_ver.file_id
+		WHERE adf.document_type='documents'
+		GROUP BY adf.application_id,adf.file_path,app_fd.id
+		ORDER BY app_fd.id)  AS doc_att	
+		
+		GROUP BY doc_att.application_id
+	) AS folders ON folders.application_id=d.id
+	;
+	
+ALTER VIEW applications_dialog_lk OWNER TO expert72;
+
+
+-- ******************* update 12/11/2018 10:23:34 ******************
+-- VIEW: doc_flow_out_client_dialog_lk
+
+--DROP VIEW doc_flow_out_client_dialog_lk;
+
+CREATE OR REPLACE VIEW doc_flow_out_client_dialog_lk AS
+	SELECT
+		t.id,
+		t.date_time,
+		t.reg_number,
+		t.subject,
+		t.user_id,
+		t.comment_text,
+		t.content,
+		applications_ref(applications) AS applications_ref,
+		t.sent,
+		cl_in_regs.reg_number AS reg_number_in,
+		t.doc_flow_out_client_type,
+		
+		CASE WHEN att.attachments IS NULL THEN NULL
+		ELSE
+			jsonb_build_array(
+				jsonb_build_object(
+					'files',att.attachments
+				)
+			)
+		END
+		AS attachment_files,
+		
+		CASE WHEN att_only_sigs.attachments IS NULL AND t.sent THEN NULL
+		ELSE
+			jsonb_build_array(
+				jsonb_build_object(
+					'files',
+						CASE
+							WHEN t.sent THEN '[]'::jsonb
+							WHEN (doc_flow_out_client_files_for_signing(t.application_id)->'files')::text='null' THEN '[]'::jsonb
+							ELSE doc_flow_out_client_files_for_signing(t.application_id)->'files'
+						END
+						||
+						CASE WHEN att_only_sigs.attachments IS NULL THEN '[]'::jsonb ELSE att_only_sigs.attachments
+						END
+				)
+			)
+		END
+		AS attachment_files_only_sigs
+		
+		
+	FROM doc_flow_out_client t
+	LEFT JOIN applications ON applications.id=t.application_id
+	LEFT JOIN doc_flow_out_client_reg_numbers AS cl_in_regs ON cl_in_regs.application_id=t.application_id AND cl_in_regs.doc_flow_out_client_id=t.id
+	--(SELECT pdfn_application_doc_folders_contract()->>'descr')
+	LEFT JOIN (
+		SELECT
+			files_t.doc_flow_out_client_id,
+			jsonb_agg(files_t.attachments) AS attachments
+		FROM
+		(SELECT
+			out_f.doc_flow_out_client_id,
+			jsonb_build_object(
+				'file_id',app_f.file_id,
+				'file_name',app_f.file_name,
+				'file_size',app_f.file_size,
+				'file_signed',app_f.file_signed,
+				'file_uploaded','true',
+				'file_path',app_f.file_path,
+				'signatures',sign.signatures,
+				'file_signed_by_client',app_f.file_signed_by_client
+			) AS attachments			
+		FROM doc_flow_out_client_document_files AS out_f
+		LEFT JOIN application_document_files AS app_f ON app_f.file_id=out_f.file_id
+		LEFT JOIN application_doc_folders AS folders ON folders.name=app_f.file_path
+		LEFT JOIN (
+			SELECT
+				sign_t.file_id,
+				json_agg(sign_t.signatures) AS signatures
+			FROM
+			(SELECT
+				f_sig.file_id,
+				json_build_object(
+					'owner',u_certs.subject_cert,
+					'cert_from',u_certs.date_time_from,
+					'cert_to',u_certs.date_time_to,
+					'sign_date_time',f_sig.sign_date_time,
+					'check_result',ver.check_result,
+					'check_time',ver.check_time,
+					'error_str',ver.error_str
+				) AS signatures
+			FROM file_signatures_lk AS f_sig
+			LEFT JOIN file_verifications_lk AS ver ON ver.file_id=f_sig.file_id
+			LEFT JOIN user_certificates_lk AS u_certs ON u_certs.id=f_sig.user_certificate_id
+			ORDER BY f_sig.sign_date_time
+			) AS sign_t
+			GROUP BY sign_t.file_id
+		) AS sign ON sign.file_id=app_f.file_id					
+		WHERE app_f.document_id=0 AND folders.require_client_sig
+		ORDER BY app_f.file_path,app_f.file_name
+		) AS files_t
+		GROUP BY files_t.doc_flow_out_client_id
+	) AS att_only_sigs ON att_only_sigs.doc_flow_out_client_id=t.id
+	LEFT JOIN (
+		SELECT
+			files_t.doc_flow_out_client_id,
+			jsonb_agg(files_t.attachments) AS attachments
+		FROM
+		(SELECT
+			out_f.doc_flow_out_client_id,
+			json_build_object(
+				'file_id',app_f.file_id,
+				'file_name',app_f.file_name,
+				'file_size',app_f.file_size,
+				'file_signed',app_f.file_signed,
+				'file_uploaded','true',
+				'file_path',app_f.file_path,
+				'signatures',sign.signatures,
+				'file_signed_by_client',app_f.file_signed_by_client
+			) AS attachments			
+		FROM doc_flow_out_client_document_files AS out_f
+		LEFT JOIN application_document_files AS app_f ON app_f.file_id=out_f.file_id
+		LEFT JOIN application_doc_folders AS folders ON folders.name=app_f.file_path
+		LEFT JOIN (
+			SELECT
+				sign_t.file_id,
+				json_agg(sign_t.signatures) AS signatures
+			FROM
+			(SELECT
+				f_sig.file_id,
+				json_build_object(
+					'owner',u_certs.subject_cert,
+					'cert_from',u_certs.date_time_from,
+					'cert_to',u_certs.date_time_to,
+					'sign_date_time',f_sig.sign_date_time,
+					'check_result',ver.check_result,
+					'check_time',ver.check_time,
+					'error_str',ver.error_str
+				) AS signatures
+			FROM file_signatures_lk AS f_sig
+			LEFT JOIN file_verifications_lk AS ver ON ver.file_id=f_sig.file_id
+			LEFT JOIN user_certificates_lk AS u_certs ON u_certs.id=f_sig.user_certificate_id
+			ORDER BY f_sig.sign_date_time
+			) AS sign_t
+			GROUP BY sign_t.file_id
+		) AS sign ON sign.file_id=app_f.file_id					
+		WHERE app_f.document_id=0 AND coalesce(folders.require_client_sig,FALSE)=FALSE
+		ORDER BY app_f.file_path,app_f.file_name
+		) AS files_t
+		GROUP BY files_t.doc_flow_out_client_id
+	) AS att ON att.doc_flow_out_client_id=t.id
+	
+	ORDER BY t.date_time DESC
+	;
+	
+ALTER VIEW doc_flow_out_client_dialog OWNER TO expert72;
+
+-- ******************* update 12/11/2018 12:14:57 ******************
+-- Function: file_verifications_lk_process()
+
+-- DROP FUNCTION file_verifications_lk_process();
+
+CREATE OR REPLACE FUNCTION file_verifications_lk_process()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+	IF (TG_WHEN='AFTER' AND (NOT const_client_lk_val() OR const_debug_val())) THEN		
+		IF TG_OP='INSERT' THEN
+			INSERT INTO file_verifications(
+				    file_id, date_time, check_result, check_time, error_str, hash_gost94, 
+			            user_id)
+			    VALUES (NEW.file_id, NEW.date_time, NEW.check_result, NEW.check_time, NEW.error_str, NEW.hash_gost94, 
+			            NEW.user_id);
+				    
+			RETURN NEW;
+		ELSIF TG_OP='UPDATE' THEN
+			UPDATE file_verifications
+			SET
+				date_time = NEW.date_time,
+				check_result = NEW.check_result,
+				check_time = NEW.check_time,
+				error_str = NEW.error_str,
+				hash_gost94 = NEW.hash_gost94, 
+			        user_id = NEW.user_id
+			WHERE
+				file_id = NEW.file_id;
+				    
+			RETURN NEW;
+		ELSIF TG_OP='DELETE' THEN
+			DELETE FROM file_verifications
+			WHERE
+				file_id = OLD.file_id;
+				    
+			RETURN OLD;
+			
+		END IF;				
+	ELSIF (TG_WHEN='BEFORE' AND TG_OP='DELETE') THEN		
+		IF const_client_lk_val() OR const_debug_val() THEN			
+			DELETE FROM file_signatures WHERE file_id = OLD.file_id;
+		END IF;
+			
+		RETURN OLD;
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION file_verifications_lk_process() OWNER TO expert72;
+
+
+-- ******************* update 12/11/2018 12:15:16 ******************
+-- Function: file_verifications_lk_process()
+
+-- DROP FUNCTION file_verifications_lk_process();
+
+CREATE OR REPLACE FUNCTION file_verifications_lk_process()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+	IF (TG_WHEN='AFTER' AND (NOT const_client_lk_val() OR const_debug_val())) THEN		
+		IF TG_OP='INSERT' THEN
+			INSERT INTO file_verifications(
+				    file_id, date_time, check_result, check_time, error_str, hash_gost94, 
+			            user_id)
+			    VALUES (NEW.file_id, NEW.date_time, NEW.check_result, NEW.check_time, NEW.error_str, NEW.hash_gost94, 
+			            NEW.user_id);
+				    
+			RETURN NEW;
+		ELSIF TG_OP='UPDATE' THEN
+			UPDATE file_verifications
+			SET
+				date_time = NEW.date_time,
+				check_result = NEW.check_result,
+				check_time = NEW.check_time,
+				error_str = NEW.error_str,
+				hash_gost94 = NEW.hash_gost94, 
+			        user_id = NEW.user_id
+			WHERE
+				file_id = NEW.file_id;
+				    
+			RETURN NEW;
+		ELSIF TG_OP='DELETE' THEN
+			DELETE FROM file_verifications
+			WHERE
+				file_id = OLD.file_id;
+				    
+			RETURN OLD;
+			
+		END IF;				
+	ELSIF (TG_WHEN='BEFORE' AND TG_OP='DELETE') THEN		
+		IF const_client_lk_val() OR const_debug_val() THEN			
+			DELETE FROM file_signatures_lk WHERE file_id = OLD.file_id;
+		END IF;
+			
+		RETURN OLD;
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION file_verifications_lk_process() OWNER TO expert72;
+
+
+-- ******************* update 12/11/2018 12:16:17 ******************
+-- Function: file_verifications_process()
+
+-- DROP FUNCTION file_verifications_process();
+
+CREATE OR REPLACE FUNCTION file_verifications_process()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+	IF (TG_WHEN='BEFORE' AND TG_OP='DELETE') THEN		
+		IF NOT const_client_lk_val() OR const_debug_val() THEN			
+			DELETE FROM file_signatures WHERE file_id = OLD.file_id;
+		END IF;
+			
+		RETURN OLD;
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION file_verifications_process() OWNER TO expert72;
+
+
+-- ******************* update 12/11/2018 12:19:04 ******************
+-- Function: user_certificates_lk_process()
+
+-- DROP FUNCTION user_certificates_lk_process();
+
+CREATE OR REPLACE FUNCTION user_certificates_lk_process()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+	IF (TG_WHEN='AFTER' AND (NOT const_client_lk_val() OR const_debug_val())) THEN		
+		IF TG_OP='INSERT' THEN
+			INSERT INTO user_certificates(
+				    fingerprint, date_time, date_time_from, date_time_to, subject_cert, 
+				    issuer_cert)
+			    VALUES (NEW.fingerprint, NEW.date_time, NEW.date_time_from, NEW.date_time_to, NEW.subject_cert, 
+				    NEW.issuer_cert);
+				    
+			RETURN NEW;
+		ELSIF TG_OP='UPDATE' THEN
+			UPDATE user_certificates
+			SET
+				fingerprint = NEW.fingerprint,
+				date_time = NEW.date_time,
+				date_time_from = NEW.date_time_from,
+				date_time_to = NEW.date_time_to,
+				subject_cert = NEW.subject_cert, 
+				issuer_cert = NEW.issuer_cert
+			WHERE
+				fingerprint = NEW.fingerprint AND date_time_from=NEW.date_time_from;
+				    
+			RETURN NEW;
+		ELSIF TG_OP='DELETE' THEN
+			DELETE FROM user_certificates
+			WHERE
+				fingerprint = OLD.fingerprint AND date_time_from=OLD.date_time_from;
+				    
+			RETURN OLD;
+			
+		END IF;				
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION user_certificates_lk_process() OWNER TO expert72;
+
+
+-- ******************* update 12/11/2018 12:24:59 ******************
+-- Function: file_signatures_lk_process()
+
+-- DROP FUNCTION file_signatures_lk_process();
+
+CREATE OR REPLACE FUNCTION file_signatures_lk_process()
+  RETURNS trigger AS
+$BODY$
+DECLARE
+	v_fingerprint varchar(40);
+	v_date_time_from timestamp with time zone;
+BEGIN
+	IF (TG_WHEN='AFTER' AND (NOT const_client_lk_val() OR const_debug_val())) THEN		
+		IF TG_OP='INSERT' THEN
+			SELECT
+				ucert.fingerprint,
+				ucert.date_time_from	
+			INTO v_fingerprint,v_date_time_from
+			FROM user_certificates AS ucert
+			WHERE ucert.id=NEW.user_certificate_id;
+			
+			INSERT INTO file_signatures(
+				    file_id, user_certificate_id, sign_date_time, algorithm)
+			    VALUES (
+			    	NEW.file_id,
+			    	(SELECT ucert.id FROM user_certificates ucert
+			    	WHERE ucert.fingerprint=v_fingerprint AND ucert.date_time_from=v_date_time_from
+			    	),
+			    	NEW.sign_date_time,
+			    	NEW.algorithm
+			    );
+				    
+			RETURN NEW;
+		ELSIF TG_OP='UPDATE' THEN
+			SELECT
+				ucert.fingerprint,
+				ucert.date_time_from	
+			INTO v_fingerprint,v_date_time_from
+			FROM user_certificates AS ucert
+			WHERE ucert.id=NEW.user_certificate_id;
+		
+			UPDATE file_signatures
+			SET
+				file_id = NEW.file_id,
+				user_certificate_id = (
+					SELECT ucert.id FROM user_certificates ucert
+				    	WHERE ucert.fingerprint=v_fingerprint AND ucert.date_time_from=v_date_time_from
+			    	),
+				sign_date_time = NEW.sign_date_time,
+				algorithm = NEW.algorithm
+			WHERE
+				file_id = NEW.file_id;
+				    
+			RETURN NEW;
+		ELSIF TG_OP='DELETE' THEN
+			DELETE FROM file_signatures
+			WHERE
+				file_id = OLD.file_id;
+				    
+			RETURN OLD;
+			
+		END IF;				
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION file_signatures_lk_process() OWNER TO expert72;
+
+
+-- ******************* update 12/11/2018 12:28:30 ******************
+-- Function: application_document_files_process()
+
+-- DROP FUNCTION application_document_files_process();
+
+CREATE OR REPLACE FUNCTION application_document_files_process()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+	IF (TG_WHEN='BEFORE' AND TG_OP='DELETE') THEN		
+		IF NOT const_client_lk_val() OR const_debug_val() THEN			
+			DELETE FROM file_verifications WHERE file_id = OLD.file_id;
+		END IF;
+		IF const_client_lk_val() OR const_debug_val() THEN			
+			DELETE FROM file_verifications_lk WHERE file_id = OLD.file_id;
+		END IF;
+			
+		RETURN OLD;
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION application_document_files_process() OWNER TO expert72;
+
+
+-- ******************* update 12/11/2018 12:31:05 ******************
+-- Function: application_document_files_process()
+
+-- DROP FUNCTION application_document_files_process();
+
+CREATE OR REPLACE FUNCTION application_document_files_process()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+	IF (TG_WHEN='BEFORE' AND TG_OP='DELETE') THEN		
+		IF NOT const_client_lk_val() OR const_debug_val() THEN			
+			DELETE FROM file_verifications WHERE file_id = OLD.file_id;
+		END IF;
+		IF const_client_lk_val() OR const_debug_val() THEN			
+			DELETE FROM file_verifications_lk WHERE file_id = OLD.file_id;
+		END IF;
+			
+		RETURN OLD;
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION application_document_files_process() OWNER TO expert72;
+
+
+-- ******************* update 12/11/2018 12:32:34 ******************
+-- Trigger: file_verifications_lk_trigger on file_verifications_lk
+
+-- DROP TRIGGER file_verifications_lk_after_trigger ON file_verifications_lk;  
+/*
+ CREATE TRIGGER file_verifications_lk_after_trigger
+  AFTER INSERT OR UPDATE OR DELETE
+  ON file_verifications_lk
+  FOR EACH ROW
+  EXECUTE PROCEDURE file_verifications_lk_process();
+  */
+  
+   CREATE TRIGGER file_verifications_lk_before_trigger
+  BEFORE DELETE
+  ON file_verifications_lk
+  FOR EACH ROW
+  EXECUTE PROCEDURE file_verifications_lk_process();
+
+-- ******************* update 12/11/2018 12:39:56 ******************
+-- Function: file_signatures_lk_process()
+
+-- DROP FUNCTION file_signatures_lk_process();
+
+CREATE OR REPLACE FUNCTION file_signatures_lk_process()
+  RETURNS trigger AS
+$BODY$
+DECLARE
+	v_fingerprint varchar(40);
+	v_date_time_from timestamp with time zone;
+BEGIN
+	IF (TG_WHEN='AFTER' AND (NOT const_client_lk_val() OR const_debug_val())) THEN		
+		IF TG_OP='INSERT' THEN
+			SELECT
+				ucert.fingerprint,
+				ucert.date_time_from	
+			INTO v_fingerprint,v_date_time_from
+			FROM user_certificates_lk AS ucert
+			WHERE ucert.id=NEW.user_certificate_id;
+			
+			INSERT INTO file_signatures(
+				    file_id, user_certificate_id, sign_date_time, algorithm)
+			    VALUES (
+			    	NEW.file_id,
+			    	(SELECT ucert.id FROM user_certificates ucert
+			    	WHERE ucert.fingerprint=v_fingerprint AND ucert.date_time_from=v_date_time_from
+			    	),
+			    	NEW.sign_date_time,
+			    	NEW.algorithm
+			    );
+				    
+			RETURN NEW;
+		ELSIF TG_OP='UPDATE' THEN
+			SELECT
+				ucert.fingerprint,
+				ucert.date_time_from	
+			INTO v_fingerprint,v_date_time_from
+			FROM user_certificates_lk AS ucert
+			WHERE ucert.id=NEW.user_certificate_id;
+		
+			UPDATE file_signatures
+			SET
+				file_id = NEW.file_id,
+				user_certificate_id = (
+					SELECT ucert.id FROM user_certificates ucert
+				    	WHERE ucert.fingerprint=v_fingerprint AND ucert.date_time_from=v_date_time_from
+			    	),
+				sign_date_time = NEW.sign_date_time,
+				algorithm = NEW.algorithm
+			WHERE
+				file_id = NEW.file_id;
+				    
+			RETURN NEW;
+		ELSIF TG_OP='DELETE' THEN
+			DELETE FROM file_signatures
+			WHERE
+				file_id = OLD.file_id;
+				    
+			RETURN OLD;
+			
+		END IF;				
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION file_signatures_lk_process() OWNER TO expert72;
+
+
+-- ******************* update 12/11/2018 16:22:43 ******************
+-- Function: file_verifications_lk_process()
+
+-- DROP FUNCTION file_verifications_lk_process();
+
+CREATE OR REPLACE FUNCTION file_verifications_lk_process()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+	IF (TG_WHEN='AFTER' AND (NOT const_client_lk_val() OR const_debug_val())) THEN		
+		IF TG_OP='INSERT' THEN
+			INSERT INTO file_verifications(
+				    file_id, date_time, check_result, check_time, error_str, hash_gost94, 
+			            user_id)
+			    VALUES (NEW.file_id, NEW.date_time, NEW.check_result, NEW.check_time, NEW.error_str, NEW.hash_gost94, 
+			            NEW.user_id);
+				    
+			RETURN NEW;
+		ELSIF TG_OP='UPDATE' THEN
+			UPDATE file_verifications
+			SET
+				date_time = NEW.date_time,
+				check_result = NEW.check_result,
+				check_time = NEW.check_time,
+				error_str = NEW.error_str,
+				hash_gost94 = NEW.hash_gost94, 
+			        user_id = NEW.user_id
+			WHERE
+				file_id = NEW.file_id;
+				    
+			RETURN NEW;
+		ELSIF TG_OP='DELETE' THEN
+			DELETE FROM file_verifications
+			WHERE
+				file_id = OLD.file_id;
+				    
+			RETURN OLD;
+			
+		END IF;				
+	ELSIF (TG_WHEN='AFTER' THEN
+		IF TG_OP='INSERT' OR TG_OP='UPDATE' THEN
+			RETURN NEW;
+		ELSE
+			RETURN OLD;
+		END IF;
+		
+	ELSIF (TG_WHEN='BEFORE' AND TG_OP='DELETE') THEN		
+		IF const_client_lk_val() OR const_debug_val() THEN			
+			DELETE FROM file_signatures_lk WHERE file_id = OLD.file_id;
+		END IF;
+			
+		RETURN OLD;
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION file_verifications_lk_process() OWNER TO expert72;
+
+
+-- ******************* update 12/11/2018 16:23:17 ******************
+-- Function: file_verifications_lk_process()
+
+-- DROP FUNCTION file_verifications_lk_process();
+
+CREATE OR REPLACE FUNCTION file_verifications_lk_process()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+	IF (TG_WHEN='AFTER' AND (NOT const_client_lk_val() OR const_debug_val())) THEN		
+		IF TG_OP='INSERT' THEN
+			INSERT INTO file_verifications(
+				    file_id, date_time, check_result, check_time, error_str, hash_gost94, 
+			            user_id)
+			    VALUES (NEW.file_id, NEW.date_time, NEW.check_result, NEW.check_time, NEW.error_str, NEW.hash_gost94, 
+			            NEW.user_id);
+				    
+			RETURN NEW;
+		ELSIF TG_OP='UPDATE' THEN
+			UPDATE file_verifications
+			SET
+				date_time = NEW.date_time,
+				check_result = NEW.check_result,
+				check_time = NEW.check_time,
+				error_str = NEW.error_str,
+				hash_gost94 = NEW.hash_gost94, 
+			        user_id = NEW.user_id
+			WHERE
+				file_id = NEW.file_id;
+				    
+			RETURN NEW;
+		ELSIF TG_OP='DELETE' THEN
+			DELETE FROM file_verifications
+			WHERE
+				file_id = OLD.file_id;
+				    
+			RETURN OLD;
+			
+		END IF;				
+	ELSIF TG_WHEN='AFTER' THEN
+		IF TG_OP='INSERT' OR TG_OP='UPDATE' THEN
+			RETURN NEW;
+		ELSE
+			RETURN OLD;
+		END IF;
+		
+	ELSIF (TG_WHEN='BEFORE' AND TG_OP='DELETE') THEN		
+		IF const_client_lk_val() OR const_debug_val() THEN			
+			DELETE FROM file_signatures_lk WHERE file_id = OLD.file_id;
+		END IF;
+			
+		RETURN OLD;
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION file_verifications_lk_process() OWNER TO expert72;
+
+
+-- ******************* update 12/11/2018 16:24:34 ******************
+-- Function: file_signatures_lk_process()
+
+-- DROP FUNCTION file_signatures_lk_process();
+
+CREATE OR REPLACE FUNCTION file_signatures_lk_process()
+  RETURNS trigger AS
+$BODY$
+DECLARE
+	v_fingerprint varchar(40);
+	v_date_time_from timestamp with time zone;
+BEGIN
+	IF (TG_WHEN='AFTER' AND (NOT const_client_lk_val() OR const_debug_val())) THEN		
+		IF TG_OP='INSERT' THEN
+			SELECT
+				ucert.fingerprint,
+				ucert.date_time_from	
+			INTO v_fingerprint,v_date_time_from
+			FROM user_certificates_lk AS ucert
+			WHERE ucert.id=NEW.user_certificate_id;
+			
+			INSERT INTO file_signatures(
+				    file_id, user_certificate_id, sign_date_time, algorithm)
+			    VALUES (
+			    	NEW.file_id,
+			    	(SELECT ucert.id FROM user_certificates ucert
+			    	WHERE ucert.fingerprint=v_fingerprint AND ucert.date_time_from=v_date_time_from
+			    	),
+			    	NEW.sign_date_time,
+			    	NEW.algorithm
+			    );
+				    
+			RETURN NEW;
+		ELSIF TG_OP='UPDATE' THEN
+			SELECT
+				ucert.fingerprint,
+				ucert.date_time_from	
+			INTO v_fingerprint,v_date_time_from
+			FROM user_certificates_lk AS ucert
+			WHERE ucert.id=NEW.user_certificate_id;
+		
+			UPDATE file_signatures
+			SET
+				file_id = NEW.file_id,
+				user_certificate_id = (
+					SELECT ucert.id FROM user_certificates ucert
+				    	WHERE ucert.fingerprint=v_fingerprint AND ucert.date_time_from=v_date_time_from
+			    	),
+				sign_date_time = NEW.sign_date_time,
+				algorithm = NEW.algorithm
+			WHERE
+				file_id = NEW.file_id;
+				    
+			RETURN NEW;
+		ELSIF TG_OP='DELETE' THEN
+			DELETE FROM file_signatures
+			WHERE
+				file_id = OLD.file_id;
+				    
+			RETURN OLD;
+			
+		END IF;				
+	ELSIF TG_WHEN='AFTER' THEN
+		IF TG_OP='INSERT' OR TG_OP='UPDATE' THEN
+			RETURN NEW;
+		ELSE
+			RETURN OLD;
+		END IF;		
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION file_signatures_lk_process() OWNER TO expert72;
+
+
+-- ******************* update 12/11/2018 16:26:13 ******************
+-- Function: user_certificates_lk_process()
+
+-- DROP FUNCTION user_certificates_lk_process();
+
+CREATE OR REPLACE FUNCTION user_certificates_lk_process()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+	IF (TG_WHEN='AFTER' AND (NOT const_client_lk_val() OR const_debug_val())) THEN		
+		IF TG_OP='INSERT' THEN
+			INSERT INTO user_certificates(
+				    fingerprint, date_time, date_time_from, date_time_to, subject_cert, 
+				    issuer_cert)
+			    VALUES (NEW.fingerprint, NEW.date_time, NEW.date_time_from, NEW.date_time_to, NEW.subject_cert, 
+				    NEW.issuer_cert);
+				    
+			RETURN NEW;
+		ELSIF TG_OP='UPDATE' THEN
+			UPDATE user_certificates
+			SET
+				fingerprint = NEW.fingerprint,
+				date_time = NEW.date_time,
+				date_time_from = NEW.date_time_from,
+				date_time_to = NEW.date_time_to,
+				subject_cert = NEW.subject_cert, 
+				issuer_cert = NEW.issuer_cert
+			WHERE
+				fingerprint = NEW.fingerprint AND date_time_from=NEW.date_time_from;
+				    
+			RETURN NEW;
+		ELSIF TG_OP='DELETE' THEN
+			DELETE FROM user_certificates
+			WHERE
+				fingerprint = OLD.fingerprint AND date_time_from=OLD.date_time_from;
+				    
+			RETURN OLD;
+			
+		END IF;				
+	ELSIF TG_WHEN='AFTER' AND const_client_lk_val() THEN
+		IF TG_OP='INSERT' OR TG_OP='UPDATE' THEN
+			RETURN NEW;
+		ELSE
+			RETURN OLD;
+		END IF;		
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION user_certificates_lk_process() OWNER TO expert72;
+
+
+-- ******************* update 12/11/2018 16:26:25 ******************
+-- Function: file_signatures_lk_process()
+
+-- DROP FUNCTION file_signatures_lk_process();
+
+CREATE OR REPLACE FUNCTION file_signatures_lk_process()
+  RETURNS trigger AS
+$BODY$
+DECLARE
+	v_fingerprint varchar(40);
+	v_date_time_from timestamp with time zone;
+BEGIN
+	IF (TG_WHEN='AFTER' AND (NOT const_client_lk_val() OR const_debug_val())) THEN		
+		IF TG_OP='INSERT' THEN
+			SELECT
+				ucert.fingerprint,
+				ucert.date_time_from	
+			INTO v_fingerprint,v_date_time_from
+			FROM user_certificates_lk AS ucert
+			WHERE ucert.id=NEW.user_certificate_id;
+			
+			INSERT INTO file_signatures(
+				    file_id, user_certificate_id, sign_date_time, algorithm)
+			    VALUES (
+			    	NEW.file_id,
+			    	(SELECT ucert.id FROM user_certificates ucert
+			    	WHERE ucert.fingerprint=v_fingerprint AND ucert.date_time_from=v_date_time_from
+			    	),
+			    	NEW.sign_date_time,
+			    	NEW.algorithm
+			    );
+				    
+			RETURN NEW;
+		ELSIF TG_OP='UPDATE' THEN
+			SELECT
+				ucert.fingerprint,
+				ucert.date_time_from	
+			INTO v_fingerprint,v_date_time_from
+			FROM user_certificates_lk AS ucert
+			WHERE ucert.id=NEW.user_certificate_id;
+		
+			UPDATE file_signatures
+			SET
+				file_id = NEW.file_id,
+				user_certificate_id = (
+					SELECT ucert.id FROM user_certificates ucert
+				    	WHERE ucert.fingerprint=v_fingerprint AND ucert.date_time_from=v_date_time_from
+			    	),
+				sign_date_time = NEW.sign_date_time,
+				algorithm = NEW.algorithm
+			WHERE
+				file_id = NEW.file_id;
+				    
+			RETURN NEW;
+		ELSIF TG_OP='DELETE' THEN
+			DELETE FROM file_signatures
+			WHERE
+				file_id = OLD.file_id;
+				    
+			RETURN OLD;
+			
+		END IF;				
+		
+	ELSIF TG_WHEN='AFTER' AND const_client_lk_val() THEN
+		IF TG_OP='INSERT' OR TG_OP='UPDATE' THEN
+			RETURN NEW;
+		ELSE
+			RETURN OLD;
+		END IF;		
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION file_signatures_lk_process() OWNER TO expert72;
+
+
+-- ******************* update 12/11/2018 16:26:45 ******************
+-- Function: file_verifications_lk_process()
+
+-- DROP FUNCTION file_verifications_lk_process();
+
+CREATE OR REPLACE FUNCTION file_verifications_lk_process()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+	IF (TG_WHEN='AFTER' AND (NOT const_client_lk_val() OR const_debug_val())) THEN		
+		IF TG_OP='INSERT' THEN
+			INSERT INTO file_verifications(
+				    file_id, date_time, check_result, check_time, error_str, hash_gost94, 
+			            user_id)
+			    VALUES (NEW.file_id, NEW.date_time, NEW.check_result, NEW.check_time, NEW.error_str, NEW.hash_gost94, 
+			            NEW.user_id);
+				    
+			RETURN NEW;
+		ELSIF TG_OP='UPDATE' THEN
+			UPDATE file_verifications
+			SET
+				date_time = NEW.date_time,
+				check_result = NEW.check_result,
+				check_time = NEW.check_time,
+				error_str = NEW.error_str,
+				hash_gost94 = NEW.hash_gost94, 
+			        user_id = NEW.user_id
+			WHERE
+				file_id = NEW.file_id;
+				    
+			RETURN NEW;
+		ELSIF TG_OP='DELETE' THEN
+			DELETE FROM file_verifications
+			WHERE
+				file_id = OLD.file_id;
+				    
+			RETURN OLD;
+			
+		END IF;	
+					
+	ELSIF TG_WHEN='AFTER' AND const_client_lk_val() THEN
+		IF TG_OP='INSERT' OR TG_OP='UPDATE' THEN
+			RETURN NEW;
+		ELSE
+			RETURN OLD;
+		END IF;
+		
+	ELSIF (TG_WHEN='BEFORE' AND TG_OP='DELETE') THEN		
+		IF const_client_lk_val() OR const_debug_val() THEN			
+			DELETE FROM file_signatures_lk WHERE file_id = OLD.file_id;
+		END IF;
+			
+		RETURN OLD;
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION file_verifications_lk_process() OWNER TO expert72;
+
+
+-- ******************* update 13/11/2018 12:44:05 ******************
+-- Function: applications_process()
+
+-- DROP FUNCTION applications_process();
+
+CREATE OR REPLACE FUNCTION applications_process()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+	IF (TG_WHEN='BEFORE' AND TG_OP='DELETE') THEN		
+		IF const_client_lk_val() OR const_debug_val() THEN			
+			DELETE FROM doc_flow_out_client WHERE application_id = OLD.id;
+			DELETE FROM application_document_files WHERE application_id = OLD.id;
+			
+			DELETE FROM application_processes WHERE application_id = OLD.id;
+		END IF;
+		IF NOT const_client_lk_val() OR const_debug_val() THEN
+			DELETE FROM doc_flow_in_client WHERE application_id = OLD.id;
+			DELETE FROM doc_flow_in WHERE from_application_id = OLD.id;
+			DELETE FROM doc_flow_out WHERE to_application_id = OLD.id;
+					
+			DELETE FROM contacts WHERE parent_type='application_applicants'::data_types and parent_id = OLD.id;
+			DELETE FROM contacts WHERE parent_type='application_customers'::data_types and parent_id = OLD.id;
+			DELETE FROM contacts WHERE parent_type='application_contractors'::data_types and parent_id = OLD.id;
+		END IF;
+			
+		RETURN OLD;
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION applications_process() OWNER TO expert72;
+
+
+-- ******************* update 13/11/2018 13:12:12 ******************
+-- Function: client_payments_process()
+
+-- DROP FUNCTION client_payments_process();
+
+CREATE OR REPLACE FUNCTION client_payments_process()
+  RETURNS trigger AS
+$BODY$
+DECLARE
+	v_pay_cnt int;
+	v_work_end_date timestampTZ;
+	v_expert_work_end_date timestampTZ;
+	v_application_id int;
+	v_user_id int;
+	v_simult_contr_id int;
+	v_simult_contr_work_end_date timestampTZ;
+	v_simult_app_id int;
+	v_cost_eval_simult bool;
+BEGIN
+
+	IF (TG_WHEN='AFTER' AND TG_OP='INSERT') THEN		
+		
+		--ПРИ ПЕРВОЙ ОПЛАТЕ УСТАНОВИМ ДАТУ ДАЧАЛА/ОКОНЧАНИЯ РАБОТ
+		SELECT count(*) INTO v_pay_cnt FROM client_payments WHERE contract_id=NEW.contract_id;
+
+		IF v_pay_cnt = 1 THEN
+			SELECT
+				t.application_id,
+				contracts_work_end_date(applications.office_id, t.date_type, NEW.pay_date::timestampTZ, t.expertise_day_count),
+				contracts_work_end_date(applications.office_id, t.date_type, NEW.pay_date::timestampTZ, t.expert_work_day_count),
+				simult_contr.id,
+				CASE WHEN simult_contr.id IS NOT NULL THEN
+					contracts_work_end_date(cost_eval_app.office_id, simult_contr.date_type, NEW.pay_date::timestampTZ, simult_contr.expertise_day_count)
+				ELSE NULL
+				END,
+				cost_eval_app.id,
+				(t.document_type='cost_eval_validity' AND applications.cost_eval_validity_simult)
+			INTO
+				v_application_id,
+				v_work_end_date,
+				v_expert_work_end_date,
+				v_simult_contr_id,
+				v_simult_contr_work_end_date,
+				v_simult_app_id,
+				v_cost_eval_simult
+			FROM contracts t
+			LEFT JOIN applications ON applications.id=t.application_id
+			LEFT JOIN applications AS cost_eval_app ON
+				cost_eval_app.id=applications.derived_application_id AND coalesce(cost_eval_app.cost_eval_validity_simult,FALSE)
+			LEFT JOIN contracts AS simult_contr ON simult_contr.application_id=cost_eval_app.id
+			WHERE t.id=NEW.contract_id;
+			
+			--ВСЕ кроме достоверености, которая вместе с ПД, там все через достоверность
+			IF coalesce(v_cost_eval_simult,FALSE)=FALSE THEN
+				IF NOT const_client_lk_val() OR const_debug_val() THEN
+					UPDATE contracts
+					SET
+						work_start_date = NEW.pay_date,
+						work_end_date = v_work_end_date,
+						expert_work_end_date = v_expert_work_end_date
+					WHERE id=NEW.contract_id;
+				END IF;
+							
+				IF NEW.employee_id IS NOT NULL THEN
+					SELECT user_id INTO v_user_id FROM employees WHERE id=NEW.employee_id;
+				END IF;
+			
+				IF v_user_id IS NULL THEN
+					SELECT id INTO v_user_id FROM users WHERE role_id='admin' LIMIT 1;
+				END IF;
+			
+				--Начало работ - статус
+				--Устанавливается автоматически из загрузки оплат
+				IF const_client_lk_val() OR const_debug_val() THEN
+					INSERT INTO application_processes
+					(application_id, date_time, state, user_id, end_date_time)
+					VALUES (v_application_id, (NEW.pay_date+'23:59:59'::interval)::timestampTZ, 'expertise'::application_states, v_user_id, v_work_end_date);
+				END IF;
+							
+				--А если это ПД и есть связная достоверность ОДНОВРЕМЕННО - сменить там тоже
+				IF v_simult_contr_id IS NOT NULL THEN
+					IF NOT const_client_lk_val() OR const_debug_val() THEN
+						UPDATE contracts
+						SET
+							work_start_date = NEW.pay_date,
+							work_end_date = v_simult_contr_work_end_date,
+							expert_work_end_date = v_expert_work_end_date
+						WHERE id=v_simult_contr_id;
+					END IF;
+									
+					IF const_client_lk_val() OR const_debug_val() THEN
+						INSERT INTO application_processes
+						(application_id, date_time, state, user_id, end_date_time)
+						VALUES (v_simult_app_id, NEW.pay_date::timestampTZ, 'expertise'::application_states, v_user_id, v_work_end_date);
+					END IF;
+				
+				END IF;
+				
+				--А если уже есть статусы после оплаты (вернулся контракт)
+				DELETE FROM application_processes
+				WHERE date_time>NEW.pay_date AND application_id=v_application_id AND state='waiting_for_pay';
+			END IF;	
+		END IF;
+				
+		RETURN NEW;
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION client_payments_process() OWNER TO expert72;
+
+
+-- ******************* update 13/11/2018 13:14:19 ******************
+-- Function: contacts_process()
+
+-- DROP FUNCTION contacts_process();
+
+CREATE OR REPLACE FUNCTION contacts_process()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+
+	IF (TG_WHEN='BEFORE' AND (TG_OP='INSERT' OR TG_OP='UPDATE') ) THEN
+		IF NOT const_client_lk_val() OR const_debug_val() THEN
+			NEW.contact =
+					CASE WHEN NEW.firm_name IS NULL THEN '' ELSE NEW.firm_name||' ' END||
+					CASE WHEN NEW.dep IS NULL THEN '' ELSE NEW.dep||' ' END||
+					CASE WHEN NEW.post IS NULL THEN '' ELSE NEW.post||' ' END||
+					CASE WHEN NEW.name IS NULL THEN '' ELSE NEW.name||' ' END||				
+					CASE WHEN NEW.tel IS NULL THEN '' ELSE format_cel_phone(NEW.tel)||' ' END||
+					CASE WHEN NEW.email IS NULL THEN '' ELSE '<'||NEW.email||'>' END				
+			;
+		END IF;
+		RETURN NEW;
+	END IF;
+
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION contacts_process() OWNER TO expert72;
+
+
+-- ******************* update 13/11/2018 13:17:35 ******************
+-- Function: contracts_process()
+
+-- DROP FUNCTION contracts_process();
+
+CREATE OR REPLACE FUNCTION contracts_process()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+	IF (TG_WHEN='BEFORE' AND (TG_OP='INSERT' OR TG_OP='UPDATE') ) THEN
+		IF
+		((TG_OP='INSERT')
+		OR (TG_OP='UPDATE' AND NEW.permissions<>OLD.permissions))
+		AND (NOT const_client_lk_val() OR const_debug_val())
+		THEN
+			SELECT
+				array_agg( ((sub.obj->'fields'->>'obj')::json->>'dataType')||((sub.obj->'fields'->>'obj')::json->'keys'->>'id') )
+			INTO NEW.permission_ar
+			FROM (
+				SELECT jsonb_array_elements(NEW.permissions->'rows') AS obj
+			) AS sub		
+			;
+		END IF;
+		/*
+		IF (TG_OP='UPDATE' AND NEW.experts_for_notification<>OLD.experts_for_notification) THEN
+			SELECT
+				array_agg( ((sub.obj->'fields'->>'expert')::json->'keys'->>'id')::int )
+			INTO NEW.experts_for_notification_ar
+			FROM (
+				SELECT jsonb_array_elements(NEW.experts_for_notification->'rows') AS obj
+			) AS sub		
+			;
+		END IF;
+		*/
+		/*
+		IF TG_OP='UPDATE' THEN
+			RAISE EXCEPTION 'Updating contracts linked_contracts=%',NEW.linked_contracts;
+		END IF;
+		*/
+		/*		
+		--ГЕНЕРАЦИЯ НОМЕРА ЭКСПЕРТНОГО ЗАКЛЮЧЕНИЯ
+		IF TG_OP='INSERT' AND (NOT const_client_lk_val() OR const_debug_val()) THEN
+			SELECT
+				coalesce(max(regexp_replace(ct.expertise_result_number,'\D+.*$','')::int),0)+1,
+				coalesce(max(regexp_replace(ct.contract_number,'\D+.*$','')::int),0)+1
+			INTO NEW.expertise_result_number,NEW.contract_number
+			FROM contracts AS ct
+			WHERE
+				ct.document_type=NEW.document_type
+				AND extract(year FROM NEW.date_time)=extract(year FROM now())
+			;
+			NEW.expertise_result_number = substr('0000',1,4-length(NEW.expertise_result_number)) || NEW.expertise_result_number
+				|| '/'||(extract(year FROM now())-2000)::text;
+			NEW.contract_number = 
+				CASE
+					WHEN NEW.document_type='pd' THEN NEW.contract_number
+					WHEN NEW.document_type='cost_eval_validity' THEN NEW.contract_number||'/'||'Д'
+					WHEN NEW.document_type='modification' THEN NEW.contract_number||'/'||'М'
+					WHEN NEW.document_type='audit' THEN NEW.contract_number||'/'||'А'
+					ELSE ''
+				END
+				;
+			NEW.contract_date = now()::date;
+		END IF;
+		*/
+		
+		RETURN NEW;
+		
+	ELSIF TG_WHEN='BEFORE' AND TG_OP='DELETE' THEN
+		IF (NOT const_client_lk_val() OR const_debug_val()) THEN
+			DELETE FROM client_payments WHERE contract_id = OLD.id;
+			DELETE FROM expert_works WHERE contract_id = OLD.id;
+			DELETE FROM doc_flow_out WHERE to_contract_id = OLD.id;
+			DELETE FROM doc_flow_inside WHERE contract_id = OLD.id;
+		END IF;		
+		RETURN OLD;
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION contracts_process() OWNER TO expert72;
+
+-- ******************* update 13/11/2018 13:19:40 ******************
+-- Function: public.doc_flow_approvement_templates_process()
+
+-- DROP FUNCTION public.doc_flow_approvement_templates_process();
+
+CREATE OR REPLACE FUNCTION public.doc_flow_approvement_templates_process()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+	IF (TG_WHEN='BEFORE' AND (TG_OP='INSERT' OR TG_OP='UPDATE') ) THEN
+		IF
+		((TG_OP='INSERT')
+		OR (TG_OP='UPDATE' AND NEW.permissions<>OLD.permissions))
+		AND (NOT const_client_lk_val() OR const_debug_val())
+		THEN
+			--permissions
+			SELECT
+				array_agg( ((sub.obj->'fields'->>'obj')::json->>'dataType')||((sub.obj->'fields'->>'obj')::json->'keys'->>'id') )
+			INTO NEW.permission_ar
+			FROM (
+				SELECT jsonb_array_elements(NEW.permissions->'rows') AS obj
+			) AS sub		
+			;
+			
+		END IF;
+		
+		RETURN NEW;
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION public.doc_flow_approvement_templates_process()
+  OWNER TO expert72;
+
+
+-- ******************* update 13/11/2018 13:22:47 ******************
+-- Function: doc_flow_approvements_process()
+
+-- DROP FUNCTION doc_flow_approvements_process();
+
+CREATE OR REPLACE FUNCTION doc_flow_approvements_process()
+  RETURNS trigger AS
+$BODY$
+DECLARE
+	v_doc_flow_type_id int;
+	v_id int;
+	v_reg_number text;
+BEGIN
+	IF (TG_WHEN='AFTER' AND TG_OP='INSERT') THEN
+		IF NOT const_client_lk_val() OR const_debug_val() THEN
+			--v_ref = doc_flow_approvements_ref((SELECT doc_flow_approvements FROM doc_flow_approvements WHERE id=NEW.id));
+			--статус
+		
+			IF NEW.subject_doc->>'dataType'='doc_flow_out' THEN
+				INSERT INTO doc_flow_out_processes (
+					doc_flow_out_id, date_time,
+					state,
+					register_doc,
+					doc_flow_importance_type_id,
+					description,
+					end_date_time
+				)
+				VALUES (
+					(NEW.subject_doc->'keys'->>'id')::int,NEW.date_time,
+					CASE WHEN NEW.closed THEN 'approved'::doc_flow_out_states ELSE 'approving'::doc_flow_out_states END,
+					doc_flow_approvements_ref(NEW),
+					NEW.doc_flow_importance_type_id,
+					NEW.subject,
+					NEW.end_date_time
+				);
+			ELSIF NEW.subject_doc->>'dataType'='doc_flow_inside' THEN
+				INSERT INTO doc_flow_inside_processes (
+					doc_flow_inside_id, date_time,
+					state,
+					register_doc,
+					doc_flow_importance_type_id,
+					description,
+					end_date_time
+				)
+				VALUES (
+					(NEW.subject_doc->'keys'->>'id')::int,NEW.date_time,
+					CASE WHEN NEW.closed THEN 'approved'::doc_flow_inside_states ELSE 'approving'::doc_flow_inside_states END,
+					doc_flow_approvements_ref(NEW),
+					NEW.doc_flow_importance_type_id,
+					NEW.subject,
+					NEW.end_date_time
+				);			
+			END IF;	
+			
+			PERFORM doc_flow_approvements_add_task_for_step(NEW,1);
+		END IF;
+				
+		RETURN NEW;
+		
+	ELSIF (TG_WHEN='AFTER' AND TG_OP='UPDATE' ) THEN
+		IF NOT const_client_lk_val() OR const_debug_val() THEN
+			--state
+			IF NEW.date_time<>OLD.date_time
+				OR NEW.end_date_time<>OLD.end_date_time
+				OR NEW.doc_flow_importance_type_id<>OLD.doc_flow_importance_type_id
+				OR NEW.subject_doc<>OLD.subject_doc
+				OR NEW.subject<>OLD.subject
+			THEN
+				IF NEW.subject_doc->>'dataType'='doc_flow_out' THEN
+					UPDATE doc_flow_out_processes
+					SET
+						date_time			= NEW.date_time,
+						doc_flow_importance_type_id	= NEW.doc_flow_importance_type_id,
+						doc_flow_out_id			= (NEW.subject_doc->'keys'->>'id')::int,
+						description			= NEW.subject,
+						end_date_time			= NEW.end_date_time
+					WHERE register_doc->>'dataType'='doc_flow_approvements' AND (register_doc->'keys'->>'id')::int=NEW.id;
+				ELSIF NEW.subject_doc->>'dataType'='doc_flow_inside' THEN
+					UPDATE doc_flow_inside_processes
+					SET
+						date_time			= NEW.date_time,
+						doc_flow_importance_type_id	= NEW.doc_flow_importance_type_id,
+						doc_flow_inside_id			= (NEW.subject_doc->'keys'->>'id')::int,
+						description			= NEW.subject,
+						end_date_time			= NEW.end_date_time
+					WHERE register_doc->>'dataType'='doc_flow_approvements' AND (register_doc->'keys'->>'id')::int=NEW.id;
+				
+				END IF;
+			END IF;
+
+			IF NEW.close_date_time IS NOT NULL AND OLD.close_date_time IS NULL THEN
+				--Все закрыли - задачу ответственному
+				INSERT INTO doc_flow_tasks (
+					register_doc,
+					date_time,end_date_time,
+					doc_flow_importance_type_id,
+					employee_id,
+					recipient,
+					description
+				)
+				VALUES (
+					doc_flow_approvements_ref(NEW),
+					now(),NEW.end_date_time,
+					NEW.doc_flow_importance_type_id,
+					NEW.employee_id,
+					employees_ref((SELECT e FROM employees e WHERE e.id=NEW.employee_id)),
+					'Ознакомиться с результатом согласования'
+				);
+			
+				--сменим статус при закрытии			
+				IF NEW.subject_doc->>'dataType'='doc_flow_out' THEN
+					INSERT INTO doc_flow_out_processes (
+						doc_flow_out_id,
+						date_time,
+						state,
+						register_doc,
+						doc_flow_importance_type_id,
+						end_date_time
+					)
+					VALUES (
+						(NEW.subject_doc->'keys'->>'id')::int,
+						now(),
+						((NEW.close_result)::text)::doc_flow_out_states,
+						doc_flow_approvements_ref(NEW),
+						NEW.doc_flow_importance_type_id,
+						NEW.end_date_time
+					);
+			
+					--Если это исх.письмо по контракту - сразу зарегистрируем
+					IF ((NEW.close_result)::text)::doc_flow_out_states='approved'::doc_flow_out_states
+					AND NEW.subject_doc->>'dataType'='doc_flow_out' THEN
+						SELECT
+							t.doc_flow_type_id,
+							t.reg_number,
+							t.id
+						INTO 
+							v_doc_flow_type_id,
+							v_reg_number,
+							v_id
+						FROM doc_flow_out t				
+						WHERE t.id = (NEW.subject_doc->'keys'->>'id')::int;
+				
+						IF (v_doc_flow_type_id=(pdfn_doc_flow_types_contr()->'keys'->>'id')::int) THEN
+							IF v_reg_number IS NULL THEN
+								UPDATE doc_flow_out
+								SET reg_number=doc_flow_out_next_num(v_doc_flow_type_id)
+								WHERE id=v_id;
+							END IF;
+					
+							INSERT INTO doc_flow_registrations
+							(date_time,subject_doc,employee_id,comment_text)
+							VALUES (
+							now()+'1 second'::interval,NEW.subject_doc,NEW.employee_id,'Создано автоматически'
+							);
+						END IF;
+					END IF;
+				
+				ELSIF NEW.subject_doc->>'dataType'='doc_flow_inside' THEN
+					INSERT INTO doc_flow_inside_processes (
+						doc_flow_inside_id,
+						date_time,
+						state,
+						register_doc,
+						doc_flow_importance_type_id,
+						end_date_time
+					)
+					VALUES (
+						(NEW.subject_doc->'keys'->>'id')::int,
+						now(),
+						((NEW.close_result)::text)::doc_flow_inside_states,
+						doc_flow_approvements_ref(NEW),
+						NEW.doc_flow_importance_type_id,
+						NEW.end_date_time
+					);
+				
+				END IF;
+			END IF;
+		END IF;
+									
+		RETURN NEW;
+
+	ELSIF (TG_WHEN='BEFORE' AND (TG_OP='INSERT' OR TG_OP='UPDATE') ) THEN
+		IF NOT const_client_lk_val() OR const_debug_val() THEN
+			--setting step count
+			SELECT max(steps.step)
+			INTO NEW.step_count
+			FROM (
+				SELECT (jsonb_array_elements(NEW.recipient_list->'rows')->'fields'->>'step')::int AS step
+			) steps;
+		
+			IF TG_OP='INSERT' AND NEW.step_count>0 THEN
+				NEW.current_step = 1;
+			END IF;
+		END IF;
+												
+		RETURN NEW;
+		
+	ELSIF (TG_WHEN='BEFORE' AND TG_OP='DELETE') THEN
+		IF NOT const_client_lk_val() OR const_debug_val() THEN
+			--статус
+			IF OLD.subject_doc->>'dataType'='doc_flow_out' THEN
+				DELETE FROM doc_flow_out_processes WHERE register_doc->>'dataType'='doc_flow_approvements' AND (register_doc->'keys'->>'id')::int=OLD.id;
+			ELSIF OLD.subject_doc->>'dataType'='doc_flow_inside' THEN
+				DELETE FROM doc_flow_inside_processes WHERE register_doc->>'dataType'='doc_flow_approvements' AND (register_doc->'keys'->>'id')::int=OLD.id;
+			END IF;
+		
+			--задачи
+			DELETE FROM doc_flow_tasks WHERE register_doc->>'dataType'='doc_flow_approvements' AND (register_doc->'keys'->>'id')::int=OLD.id;
+		END IF;
+													
+		RETURN OLD;
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION doc_flow_approvements_process() OWNER TO expert72;
+
+-- ******************* update 13/11/2018 13:25:10 ******************
+-- Function: doc_flow_attachments_process()
+
+-- DROP FUNCTION contracts_process();
+
+CREATE OR REPLACE FUNCTION doc_flow_attachments_process()
+  RETURNS trigger AS
+$BODY$
+DECLARE
+	FOLDER_OUT text;
+	FOLDER_DOCS text;
+	FOLDER_RES text;
+	v_application_id int;
+BEGIN
+	IF (TG_WHEN='AFTER' AND TG_OP='UPDATE' ) THEN
+		IF const_client_lk_val() OR const_debug_val() AND NEW.doc_type='doc_flow_out' THEN
+			FOLDER_OUT = 'Исходящие';
+			FOLDER_DOCS = 'Договорные документы';
+			FOLDER_RES = 'Заключение';
+		
+			SELECT t.to_application_id INTO v_application_id FROM doc_flow_out t WHERE t.id=NEW.doc_id;
+			
+			IF v_application_id IS NOT NULL THEN
+				IF (OLD.file_path=FOLDER_DOCS OR OLD.file_path=FOLDER_RES) AND NEW.file_path=FOLDER_OUT THEN
+					DELETE FROM application_document_files WHERE file_id=NEW.file_id;
+				
+				ELSIF (NEW.file_path=FOLDER_DOCS OR NEW.file_path=FOLDER_RES) AND OLD.file_path=FOLDER_OUT THEN
+					INSERT INTO application_document_files
+					(
+					file_id,
+					application_id,
+					document_id,
+					document_type,
+					date_time,
+					file_name,
+					file_path,
+					file_signed,
+					file_size
+					)
+					VALUES (
+					NEW.file_id,
+					v_application_id,
+					0,
+					'documents',
+					NEW.file_date,
+					NEW.file_name,
+					NEW.file_path,
+					NEW.file_signed,
+					NEW.file_size
+					);
+				ELSIF (OLD.file_path=FOLDER_DOCS OR OLD.file_path=FOLDER_RES) AND (NEW.file_path=FOLDER_DOCS OR NEW.file_path=FOLDER_RES) THEN
+					UPDATE application_document_files
+						SET file_path=NEW.file_path
+					WHERE file_id=NEW.file_id;
+					
+				END IF;
+			END IF;
+		END IF;
+		
+		RETURN NEW;
+		
+	ELSIF (TG_WHEN='BEFORE' AND TG_OP='DELETE') THEN		
+		IF const_client_lk_val() OR const_debug_val() THEN			
+			DELETE FROM file_verifications_lk WHERE file_id = OLD.file_id;
+		END IF;
+
+		IF NOT const_client_lk_val() OR const_debug_val() THEN			
+			DELETE FROM file_verifications WHERE file_id = OLD.file_id;
+		END IF;
+			
+		RETURN OLD;
+	END IF;
+		
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION doc_flow_attachments_process() OWNER TO expert72;
+
+-- ******************* update 13/11/2018 13:25:30 ******************
+-- Function: doc_flow_attachments_process()
+
+-- DROP FUNCTION contracts_process();
+
+CREATE OR REPLACE FUNCTION doc_flow_attachments_process()
+  RETURNS trigger AS
+$BODY$
+DECLARE
+	FOLDER_OUT text;
+	FOLDER_DOCS text;
+	FOLDER_RES text;
+	v_application_id int;
+BEGIN
+	IF (TG_WHEN='AFTER' AND TG_OP='UPDATE' ) THEN
+		IF const_client_lk_val() OR const_debug_val() AND NEW.doc_type='doc_flow_out' THEN
+			FOLDER_OUT = 'Исходящие';
+			FOLDER_DOCS = 'Договорные документы';
+			FOLDER_RES = 'Заключение';
+		
+			SELECT t.to_application_id INTO v_application_id FROM doc_flow_out t WHERE t.id=NEW.doc_id;
+			
+			IF v_application_id IS NOT NULL THEN
+				IF (OLD.file_path=FOLDER_DOCS OR OLD.file_path=FOLDER_RES) AND NEW.file_path=FOLDER_OUT THEN
+					DELETE FROM application_document_files WHERE file_id=NEW.file_id;
+				
+				ELSIF (NEW.file_path=FOLDER_DOCS OR NEW.file_path=FOLDER_RES) AND OLD.file_path=FOLDER_OUT THEN
+					INSERT INTO application_document_files
+					(
+					file_id,
+					application_id,
+					document_id,
+					document_type,
+					date_time,
+					file_name,
+					file_path,
+					file_signed,
+					file_size
+					)
+					VALUES (
+					NEW.file_id,
+					v_application_id,
+					0,
+					'documents',
+					NEW.file_date,
+					NEW.file_name,
+					NEW.file_path,
+					NEW.file_signed,
+					NEW.file_size
+					);
+				ELSIF (OLD.file_path=FOLDER_DOCS OR OLD.file_path=FOLDER_RES) AND (NEW.file_path=FOLDER_DOCS OR NEW.file_path=FOLDER_RES) THEN
+					UPDATE application_document_files
+						SET file_path=NEW.file_path
+					WHERE file_id=NEW.file_id;
+					
+				END IF;
+			END IF;
+		END IF;
+		
+		RETURN NEW;
+		
+	ELSIF (TG_WHEN='BEFORE' AND TG_OP='DELETE') THEN		
+		IF const_client_lk_val() OR const_debug_val() THEN			
+			DELETE FROM file_verifications_lk WHERE file_id = OLD.file_id;
+		END IF;
+
+		IF NOT const_client_lk_val() OR const_debug_val() THEN			
+			DELETE FROM file_verifications WHERE file_id = OLD.file_id;
+		END IF;
+			
+		RETURN OLD;
+	END IF;
+		
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION doc_flow_attachments_process() OWNER TO expert72;
+
+-- ******************* update 13/11/2018 13:28:21 ******************
+-- Function: doc_flow_examinations_process()
+
+-- DROP FUNCTION doc_flow_examinations_process();
+
+CREATE OR REPLACE FUNCTION doc_flow_examinations_process()
+  RETURNS trigger AS
+$BODY$
+DECLARE
+	v_ref JSONB;
+	v_application_id int;
+	v_app_expertise_type expertise_types;
+	v_app_cost_eval_validity bool;
+	v_app_modification bool;
+	v_app_audit bool;	
+	v_app_client_id int;
+	v_app_user_id int;
+	v_app_applicant JSONB;
+	v_primary_contracts_ref JSONB;
+	v_modif_primary_contracts_ref JSONB;	
+	v_linked_contracts_ref JSONB;
+	v_app_process_dt timestampTZ;
+	v_linked_app int;
+	v_cost_eval_validity_simult bool;
+	v_constr_name text;
+	v_constr_address jsonb;
+	v_constr_technical_features jsonb;
+	v_linked_contracts JSONB[];
+	v_linked_contracts_n int;
+	v_new_contract_number text;
+	v_document_type document_types;
+	v_expertise_result_number text;
+	v_date_type date_types;
+	v_work_day_count int;
+	v_expert_work_day_count int;
+	v_office_id int;
+	v_new_contract_id int;
+BEGIN
+	IF (TG_WHEN='AFTER' AND TG_OP='INSERT') THEN
+		IF NOT const_client_lk_val() OR const_debug_val() THEN
+			v_ref = doc_flow_examinations_ref((SELECT doc_flow_examinations FROM doc_flow_examinations WHERE id=NEW.id));
+			--статус
+			INSERT INTO doc_flow_in_processes (
+				doc_flow_in_id, date_time,
+				state,
+				register_doc,
+				doc_flow_importance_type_id,
+				description,
+				end_date_time
+			)
+			VALUES (
+				(NEW.subject_doc->'keys'->>'id')::int,NEW.date_time,
+				CASE WHEN NEW.closed THEN 'examined'::doc_flow_in_states ELSE 'examining'::doc_flow_in_states END,
+				v_ref,
+				NEW.doc_flow_importance_type_id,
+				NEW.subject,
+				NEW.end_date_time
+			);
+			
+			--если тип основания - письмо, чье основание - заявление - сменим его статус
+			IF NEW.subject_doc->>'dataType'='doc_flow_in' THEN
+				SELECT from_application_id INTO v_application_id FROM doc_flow_in WHERE id=(NEW.subject_doc->'keys'->>'id')::int;
+				IF (v_application_id IS NOT NULL) THEN
+					IF NEW.closed THEN
+						SELECT
+							greatest(NEW.date_time,date_time+'1 second'::interval)
+						INTO v_app_process_dt
+						FROM application_processes
+						WHERE application_id=v_application_id
+						ORDER BY date_time DESC
+						LIMIT 1;
+					ELSE
+						v_app_process_dt = NEW.date_time;
+					END IF;
+					--статус
+					INSERT INTO application_processes (
+						application_id,
+						date_time,
+						state,
+						user_id,
+						end_date_time
+					)
+					VALUES (
+						v_application_id,
+						v_app_process_dt,
+						CASE WHEN NEW.closed THEN NEW.application_resolution_state ELSE 'checking'::application_states END,
+						(SELECT user_id FROM employees WHERE id=NEW.employee_id),
+						NEW.end_date_time
+					);			
+				END IF;
+			END IF;
+			
+			--задачи
+			INSERT INTO doc_flow_tasks (
+				register_doc,
+				date_time,end_date_time,
+				doc_flow_importance_type_id,
+				employee_id,
+				recipient,
+				description,
+				closed,
+				close_doc,
+				close_date_time,
+				close_employee_id
+			)
+			VALUES (
+				v_ref,
+				NEW.date_time,NEW.end_date_time,
+				NEW.doc_flow_importance_type_id,
+				NEW.employee_id,
+				NEW.recipient,
+				NEW.subject,
+				NEW.closed,
+				CASE WHEN NEW.closed THEN v_ref ELSE NULL END,
+				CASE WHEN NEW.closed THEN now() ELSE NULL END,
+				CASE WHEN NEW.closed THEN NEW.close_employee_id ELSE NULL END
+			);
+		END IF;
+			
+		RETURN NEW;
+		
+	ELSIF (TG_WHEN='AFTER' AND TG_OP='UPDATE' ) THEN
+		IF NOT const_client_lk_val() OR const_debug_val() THEN
+			v_ref = doc_flow_examinations_ref((SELECT doc_flow_examinations FROM doc_flow_examinations WHERE id=NEW.id));
+		
+			--state
+			IF NEW.date_time<>OLD.date_time
+				OR NEW.end_date_time<>OLD.end_date_time
+				OR NEW.doc_flow_importance_type_id<>OLD.doc_flow_importance_type_id
+				OR NEW.subject_doc<>OLD.subject_doc
+				OR NEW.subject<>OLD.subject
+				OR NEW.date_time<>OLD.date_time
+				--OR (NEW.employee_id<>OLD.employee_id AND NEW.subject_doc->>'dataType'='doc_flow_in'
+			THEN
+				UPDATE doc_flow_in_processes
+				SET
+					date_time			= NEW.date_time,
+					doc_flow_importance_type_id	= NEW.doc_flow_importance_type_id,
+					doc_flow_in_id			= (NEW.subject_doc->'keys'->>'id')::int,
+					description			= NEW.subject,
+					end_date_time			= NEW.end_date_time
+				WHERE register_doc->>'dataType'='doc_flow_examinations' AND (register_doc->'keys'->>'id')::int=NEW.id;
+			END IF;
+	
+			--сменим статус при закрытии
+			IF NEW.closed<>OLD.closed THEN
+				INSERT INTO doc_flow_in_processes (
+					doc_flow_in_id,
+					date_time,
+					state,
+					register_doc,
+					doc_flow_importance_type_id,
+					end_date_time
+				)
+				VALUES (
+					(NEW.subject_doc->'keys'->>'id')::int,
+					CASE WHEN NEW.closed THEN NEW.close_date_time ELSE now() END,
+					CASE WHEN NEW.closed THEN 'examined'::doc_flow_in_states ELSE 'examining'::doc_flow_in_states END,
+					v_ref,
+					NEW.doc_flow_importance_type_id,
+					NEW.end_date_time
+				);		
+			END IF;
+	
+			--если тип основания - заявление - сменим его статус
+			IF NEW.subject_doc->>'dataType'='doc_flow_in' AND NEW.closed<>OLD.closed AND NEW.closed THEN
+				SELECT
+					from_application_id,
+					doc_flow_out.new_contract_number
+				INTO
+					v_application_id,
+					v_new_contract_number
+				FROM doc_flow_in
+				LEFT JOIN doc_flow_out ON doc_flow_out.doc_flow_in_id=doc_flow_in.id
+				WHERE doc_flow_in.id=(NEW.subject_doc->'keys'->>'id')::int;
+			
+				IF v_application_id IS NOT NULL THEN
+					IF NEW.closed THEN
+						SELECT
+							greatest(NEW.close_date_time,date_time+'1 second'::interval)
+						INTO v_app_process_dt
+						FROM application_processes
+						WHERE application_id=v_application_id
+						ORDER BY date_time DESC
+						LIMIT 1;
+					ELSE
+						v_app_process_dt = NEW.close_date_time;
+					END IF;
+			
+					--статус
+					INSERT INTO application_processes (
+						application_id,
+						date_time,
+						state,
+						user_id,
+						end_date_time
+					)
+					VALUES (
+						v_application_id,
+						v_app_process_dt,
+						CASE WHEN NEW.closed THEN NEW.application_resolution_state ELSE 'checking'::application_states END,
+						(SELECT user_id FROM employees WHERE id=NEW.employee_id),
+						CASE WHEN NEW.closed THEN NULL ELSE NEW.end_date_time END					
+					);			
+				END IF;
+			
+				--НОВЫЙ КОНТРАКТ
+				IF NEW.application_resolution_state='waiting_for_contract' THEN
+					SELECT
+						app.expertise_type,
+						app.cost_eval_validity,
+						app.modification,
+						app.audit,
+						app.user_id,
+						app.applicant,
+						(contracts_ref(p_contr))::jsonb,
+						(contracts_ref(mp_contr))::jsonb,
+						coalesce(app.base_application_id,app.derived_application_id),
+						app.cost_eval_validity_simult,
+						app.constr_name,
+						app.constr_address,
+						app.constr_technical_features,
+						CASE
+							WHEN app.expertise_type IS NOT NULL THEN 'pd'::document_types
+							WHEN app.cost_eval_validity THEN 'cost_eval_validity'::document_types
+							WHEN app.modification THEN 'modification'::document_types
+							WHEN app.audit THEN 'audit'::document_types						
+						END,
+						app.office_id
+					
+					INTO
+						v_app_expertise_type,
+						v_app_cost_eval_validity,
+						v_app_modification,
+						v_app_audit,
+						v_app_user_id,
+						v_app_applicant,
+						v_primary_contracts_ref,
+						v_modif_primary_contracts_ref,
+						v_linked_app,
+						v_cost_eval_validity_simult,
+						v_constr_name,
+						v_constr_address,
+						v_constr_technical_features,
+						v_document_type,
+						v_office_id
+					
+					FROM applications AS app
+					LEFT JOIN contracts AS p_contr ON p_contr.application_id=app.primary_application_id
+					LEFT JOIN contracts AS mp_contr ON mp_contr.application_id=app.modif_primary_application_id
+					WHERE app.id=v_application_id;
+				
+					--applicant -->> client
+					UPDATE clients
+					SET
+						name		= v_app_applicant->>'name',
+						name_full	= v_app_applicant->>'name_full',
+						ogrn		= v_app_applicant->>'ogrn',
+						inn		= v_app_applicant->>'inn',
+						kpp		= v_app_applicant->>'kpp',
+						okpo		= v_app_applicant->>'okpo',
+						okved		= v_app_applicant->>'okved',
+						post_address	= v_app_applicant->'post_address',
+						user_id		= v_app_user_id,
+						legal_address	= v_app_applicant->'legal_address',
+						bank_accounts	= v_app_applicant->'bank_accounts',
+						client_type	= 
+							CASE WHEN v_app_applicant->>'client_type' IS NULL OR v_app_applicant->>'client_type'='on' THEN 'enterprise'
+							ELSE (v_app_applicant->>'client_type')::client_types
+							END,
+						base_document_for_contract = v_app_applicant->>'base_document_for_contract',
+						person_id_paper	= v_app_applicant->'person_id_paper',
+						person_registr_paper = v_app_applicant->'person_registr_paper'
+					WHERE name = v_app_applicant->>'name' OR (inn=v_app_applicant->>'inn' AND kpp=v_app_applicant->>'kpp')
+					RETURNING id INTO v_app_client_id;
+				
+					IF NOT FOUND THEN
+						INSERT INTO clients
+						(
+							name,
+							name_full,
+							inn,
+							kpp,
+							ogrn,
+							okpo,
+							okved,
+							post_address,
+							user_id,
+							legal_address,
+							bank_accounts,
+							client_type,
+							base_document_for_contract,
+							person_id_paper,
+							person_registr_paper
+						)
+						VALUES(
+							CASE WHEN v_app_applicant->>'name' IS NULL THEN v_app_applicant->>'name_full'
+							ELSE v_app_applicant->>'name'
+							END,
+							v_app_applicant->>'name_full',
+							v_app_applicant->>'inn',
+							v_app_applicant->>'kpp',
+							v_app_applicant->>'ogrn',
+							v_app_applicant->>'okpo',
+							v_app_applicant->>'okved',
+							v_app_applicant->'post_address',
+							v_app_user_id,
+							v_app_applicant->'legal_address',
+							v_app_applicant->'bank_accounts',
+							CASE WHEN v_app_applicant->>'client_type' IS NULL OR v_app_applicant->>'client_type'='on' THEN 'enterprise'
+							ELSE (v_app_applicant->>'client_type')::client_types
+							END,
+							v_app_applicant->>'base_document_for_contract',
+							v_app_applicant->'person_id_paper',
+							v_app_applicant->'person_registr_paper'
+						)				
+						RETURNING id
+						INTO v_app_client_id
+						;
+					END IF;
+				
+					v_linked_contracts_n = 0;
+					IF (v_primary_contracts_ref->'keys'->>'id' IS NOT NULL) THEN
+						v_linked_contracts_n = v_linked_contracts_n + 1;
+						v_linked_contracts = v_linked_contracts || jsonb_build_object('fields',jsonb_build_object('id',v_linked_contracts_n,'contracts_ref',v_primary_contracts_ref));
+					END IF;
+					IF (v_modif_primary_contracts_ref->'keys'->>'id' IS NOT NULL) THEN
+						v_linked_contracts_n = v_linked_contracts_n + 1;
+						v_linked_contracts = v_linked_contracts || jsonb_build_object('fields',jsonb_build_object('id',v_linked_contracts_n,'contracts_ref',v_modif_primary_contracts_ref));
+					END IF;
+				
+					IF v_linked_app IS NOT NULL THEN
+						--Поиск связного контракта по заявлению
+						SELECT contracts_ref(contracts) INTO v_linked_contracts_ref FROM contracts WHERE application_id=v_linked_app;
+						IF v_linked_contracts_ref IS NOT NULL THEN
+							v_linked_contracts_n = v_linked_contracts_n + 1;
+							v_linked_contracts = v_linked_contracts || jsonb_build_object('fields',jsonb_build_object('id',v_linked_contracts_n,'contracts_ref',v_linked_contracts_ref));
+						END IF;
+					END IF;
+				
+					--Сначала из исх.письма, затем генерим новый
+					IF v_new_contract_number IS NULL THEN
+						v_new_contract_number = contracts_next_number(v_document_type,now()::date);
+					END IF;
+				
+					--Номер экспертного заключения
+					v_expertise_result_number = regexp_replace(v_new_contract_number,'\D+.*$','');
+					v_expertise_result_number = substr('0000',1,4-length(v_expertise_result_number))||
+								v_expertise_result_number||
+								'/'||(extract(year FROM now())-2000)::text;
+				
+					--Дни проверки
+					SELECT
+						services.date_type,
+						services.work_day_count,
+						services.expertise_day_count
+					INTO
+						v_date_type,
+						v_work_day_count,
+						v_expert_work_day_count
+					FROM services
+					WHERE services.id=
+					((
+						CASE
+							WHEN v_document_type='pd' THEN pdfn_services_expertise()
+							WHEN v_document_type='cost_eval_validity' THEN pdfn_services_cost_eval_validity()
+							WHEN v_document_type='modification' THEN pdfn_services_modification()
+							WHEN v_document_type='audit' THEN pdfn_services_audit()
+							ELSE NULL
+						END
+					)->'keys'->>'id')::int;
+								
+					--RAISE EXCEPTION 'v_linked_contracts=%',v_linked_contracts;
+					--Контракт
+					INSERT INTO contracts (
+						date_time,
+						application_id,
+						client_id,
+						employee_id,
+						document_type,
+						expertise_type,
+						cost_eval_validity_pd_order,
+						constr_name,
+						constr_address,
+						constr_technical_features,
+						contract_number,
+						expertise_result_number,
+						linked_contracts,
+						--contract_date,					
+						date_type,
+						expertise_day_count,
+						expert_work_day_count,
+						work_end_date,
+						expert_work_end_date,
+						permissions,
+						user_id)
+					VALUES (
+						now(),
+						v_application_id,
+						v_app_client_id,
+						NEW.close_employee_id,
+						v_document_type,
+						v_app_expertise_type,
+						CASE
+							WHEN v_app_cost_eval_validity THEN
+								CASE
+									WHEN v_cost_eval_validity_simult THEN 'simult_with_pd'::cost_eval_validity_pd_orders
+									WHEN v_linked_app IS NOT NULL THEN 'after_pd'::cost_eval_validity_pd_orders
+									ELSE 'no_pd'::cost_eval_validity_pd_orders
+								END
+							ELSE NULL
+						END,
+						v_constr_name,
+						v_constr_address,
+						v_constr_technical_features,
+					
+						v_new_contract_number,
+						v_expertise_result_number,
+					
+						--linked_contracts
+						CASE WHEN v_linked_contracts IS NOT NULL THEN
+							jsonb_build_object(
+								'id','LinkedContractList_Model',
+								'rows',v_linked_contracts
+							)
+						ELSE
+							'{"id":"LinkedContractList_Model","rows":[]}'::jsonb
+						END,
+					
+						--now()::date,--contract_date
+					
+						v_date_type,
+						v_work_day_count,
+						v_expert_work_day_count,
+					
+						--ПРИ ОПЛАТЕ client_payments_process()
+						--ставятся work_start_date&&work_end_date
+						--contracts_work_end_date(v_office_id, v_date_type, now(), v_work_day_count),
+						NULL,
+						NULL,					
+					
+						'{"id":"AccessPermission_Model","rows":[]}'::jsonb,
+					
+						v_app_user_id
+					)
+					RETURNING id INTO v_new_contract_id;
+				
+					--В связные контракты запишем данный по текущему новому
+					IF (v_linked_contracts_ref->'keys'->>'id' IS NOT NULL) THEN
+					--RAISE EXCEPTION 'Updating contracts, id=%',(v_linked_contracts_ref->'keys'->>'id')::int;
+						UPDATE contracts
+						SET
+							linked_contracts = jsonb_build_object(
+								'id','LinkedContractList_Model',
+								'rows',
+								linked_contracts->'rows'||
+									jsonb_build_object(
+									'fields',jsonb_build_object(
+										'id',
+										jsonb_array_length(linked_contracts->'rows')+1,
+										'contracts_ref',contracts_ref((SELECT contracts FROM contracts WHERE id=v_new_contract_id))
+										)
+									)							
+							)
+						WHERE id=(v_linked_contracts_ref->'keys'->>'id')::int;
+					END IF;
+					IF (v_primary_contracts_ref->'keys'->>'id' IS NOT NULL) THEN
+						UPDATE contracts
+						SET
+							linked_contracts = jsonb_build_object(
+								'id','LinkedContractList_Model',
+								'rows',
+								linked_contracts->'rows'||
+									jsonb_build_object(
+									'fields',jsonb_build_object(
+										'id',
+										jsonb_array_length(linked_contracts->'rows')+1,
+										'contracts_ref',contracts_ref((SELECT contracts FROM contracts WHERE id=v_new_contract_id))
+										)
+									)							
+							)
+						WHERE id=(v_primary_contracts_ref->'keys'->>'id')::int;
+					END IF;
+					IF (v_modif_primary_contracts_ref->'keys'->>'id' IS NOT NULL) THEN
+						UPDATE contracts
+						SET
+							linked_contracts = jsonb_build_object(
+								'id','LinkedContractList_Model',
+								'rows',
+								linked_contracts->'rows'||
+									jsonb_build_object(
+									'fields',jsonb_build_object(
+										'id',
+										jsonb_array_length(linked_contracts->'rows')+1,
+										'contracts_ref',contracts_ref((SELECT contracts FROM contracts WHERE id=v_new_contract_id))
+										)
+									)							
+							)
+						WHERE id=(v_modif_primary_contracts_ref->'keys'->>'id')::int;
+					END IF;
+				
+				END IF;
+			END IF;
+						
+			--задачи
+			UPDATE doc_flow_tasks
+			SET 
+				date_time			= NEW.date_time,
+				end_date_time			= NEW.end_date_time,
+				doc_flow_importance_type_id	= NEW.doc_flow_importance_type_id,
+				employee_id			= NEW.employee_id,
+				description			= NEW.subject,
+				closed				= NEW.closed,
+				close_doc			= CASE WHEN NEW.closed THEN v_ref ELSE NULL END,
+				close_date_time			= CASE WHEN NEW.closed THEN now() ELSE NULL END,
+				close_employee_id		= CASE WHEN NEW.closed THEN NEW.close_employee_id ELSE NULL END
+			WHERE register_doc->>'dataType'='doc_flow_examinations' AND (register_doc->'keys'->>'id')::int=NEW.id;
+		END IF;
+		
+		RETURN NEW;
+		
+	ELSIF (TG_WHEN='BEFORE' AND TG_OP='UPDATE') THEN
+		--статус
+		--DELETE FROM doc_flow_in_processes WHERE (register_doc->>'dataType')::data_types='doc_flow_examinations'::data_types AND (register_doc->'keys'->>'id')::int=NEW.id;
+		--задачи
+		--DELETE FROM doc_flow_tasks WHERE (register_doc->>'dataType')::data_types='doc_flow_examinations'::data_types AND (register_doc->'keys'->>'id')::int=NEW.id;
+	
+		RETURN NEW;
+		
+	ELSIF (TG_WHEN='BEFORE' AND TG_OP='DELETE') THEN
+		IF NOT const_client_lk_val() OR const_debug_val() THEN
+			--статус
+			DELETE FROM doc_flow_in_processes WHERE register_doc->>'dataType'='doc_flow_examinations' AND (register_doc->'keys'->>'id')::int=OLD.id;
+			--задачи
+			DELETE FROM doc_flow_tasks WHERE register_doc->>'dataType'='doc_flow_examinations' AND (register_doc->'keys'->>'id')::int=OLD.id;
+			IF (OLD.subject_doc->>'dataType')::data_types='doc_flow_in'::data_types THEN
+				SELECT from_application_id INTO v_application_id FROM doc_flow_in WHERE id=(OLD.subject_doc->'keys'->>'id')::int;
+				IF v_application_id IS NOT NULL THEN
+					DELETE FROM application_processes WHERE doc_flow_examination_id=OLD.id;
+				END IF;
+			END IF;
+		END IF;
+													
+		RETURN OLD;
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION doc_flow_examinations_process() OWNER TO expert72;
+
+-- ******************* update 13/11/2018 13:30:11 ******************
+-- Function: doc_flow_in_process()
+
+-- DROP FUNCTION doc_flow_in_process();
+
+CREATE OR REPLACE FUNCTION doc_flow_in_process()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+	IF (TG_WHEN='BEFORE' AND TG_OP='INSERT') THEN
+		IF
+			(NOT const_client_lk_val() OR const_debug_val())
+			AND NEW.reg_number IS NULL
+			AND (
+				--ЛЮБОЕ ОТ КЛИЕНТА
+				--doc_flow_type_id=1 OR NEW.doc_flow_type_id=3
+				NEW.from_application_id IS NOT NULL
+			)
+		THEN
+			--назначим номер
+			NEW.reg_number = doc_flow_in_next_num(NEW.doc_flow_type_id);
+		END IF;
+		
+		RETURN NEW;
+
+	ELSIF TG_WHEN='BEFORE' AND TG_OP='DELETE' THEN
+		IF (NOT const_client_lk_val() OR const_debug_val()) THEN
+			DELETE FROM doc_flow_in_processes WHERE doc_flow_in_id = OLD.id;
+			DELETE FROM doc_flow_out WHERE doc_flow_in_id = OLD.id;
+			DELETE FROM doc_flow_attachments WHERE doc_type='doc_flow_in' AND doc_id = OLD.id;
+		END IF;
+		
+		RETURN OLD;
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION doc_flow_in_process() OWNER TO expert72;
+
+
+-- ******************* update 13/11/2018 13:31:41 ******************
+-- Function: doc_flow_in_client_process()
+
+-- DROP FUNCTION doc_flow_in_client_process();
+
+CREATE OR REPLACE FUNCTION doc_flow_in_client_process()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+	IF (TG_WHEN='BEFORE' AND TG_OP='INSERT') THEN		
+		IF const_client_lk_val() OR const_debug_val() THEN
+			--Если это достоверность одновременно с ПД - сделать не одновременно
+			--это при возврате заявления без рассмотрения
+			UPDATE applications AS app
+			SET cost_eval_validity_simult = FALSE
+			FROM (
+				SELECT t.id
+				FROM applications t
+				WHERE t.id=NEW.application_id
+				AND coalesce(t.cost_eval_validity,FALSE) AND coalesce(t.cost_eval_validity_simult,FALSE)
+				AND NEW.doc_flow_type_id=(pdfn_doc_flow_types_app_resp_return()->'keys'->>'id')::int
+			) AS base
+			WHERE app.id=base.id;
+		END IF;
+		
+		RETURN NEW;		
+		
+	ELSIF (TG_WHEN='BEFORE' AND TG_OP='DELETE') THEN		
+		IF const_client_lk_val() OR const_debug_val() THEN
+			DELETE FROM doc_flow_in_client_reg_numbers WHERE doc_flow_in_client_id=OLD.id;
+		END IF;
+		RETURN OLD;
+		
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION doc_flow_in_client_process() OWNER TO expert72;
+
+
+-- ******************* update 13/11/2018 13:43:57 ******************
+-- Function: users_process()
+
+-- DROP FUNCTION users_process();
+
+CREATE OR REPLACE FUNCTION users_process()
+  RETURNS trigger AS
+$BODY$
+DECLARE
+	i json;
+	ind int;
+	v_applicant json;
+	v_customer json;
+	v_contractors json;
+BEGIN
+	IF (TG_WHEN='AFTER' AND TG_OP='INSERT') THEN		
+		IF NOT const_client_lk_val() OR const_debug_val() THEN
+			PERFORM contacts_insert(NEW.id, 'users'::data_types,1,
+				json_build_object(
+					'name',NEW.name_full,
+					'email',NEW.email,
+					'tel',NEW.phone_cel
+				),
+				NULL
+			);
+		END IF;
+						
+		RETURN NEW;
+		
+	ELSIF (TG_WHEN='AFTER' AND TG_OP='UPDATE') THEN		
+		IF
+		(NOT const_client_lk_val() OR const_debug_val())
+		AND
+		(OLD.name_full<>NEW.name_full) OR (OLD.email<>NEW.email) OR (OLD.phone_cel<>NEW.phone_cel)
+		THEN
+			DELETE FROM contacts WHERE parent_id=OLD.id AND parent_type='users'::data_types;
+			PERFORM contacts_insert(NEW.id, 'users'::data_types, 1,
+				json_build_object(
+					'name',NEW.name_full,
+					'email',NEW.email,
+					'tel',NEW.phone_cel
+				),
+				NULL
+			);
+		END IF;				
+		RETURN NEW;
+		
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION users_process() OWNER TO expert72;
+
+
+-- ******************* update 14/11/2018 07:25:29 ******************
+-- Function: user_certificates_lk_process()
+
+-- DROP FUNCTION user_certificates_lk_process();
+
+CREATE OR REPLACE FUNCTION user_certificates_lk_process()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+	IF (TG_WHEN='AFTER' AND (NOT const_client_lk_val() OR const_debug_val())) THEN		
+		IF TG_OP='INSERT' THEN
+			INSERT INTO user_certificates(
+				    fingerprint, date_time, date_time_from, date_time_to, subject_cert, 
+				    issuer_cert)
+			    VALUES (NEW.fingerprint, NEW.date_time, NEW.date_time_from, NEW.date_time_to, NEW.subject_cert, 
+				    NEW.issuer_cert)
+			ON CONFLICT DO NOTHING;
+				    
+			RETURN NEW;
+		ELSIF TG_OP='UPDATE' THEN
+			UPDATE user_certificates
+			SET
+				fingerprint = NEW.fingerprint,
+				date_time = NEW.date_time,
+				date_time_from = NEW.date_time_from,
+				date_time_to = NEW.date_time_to,
+				subject_cert = NEW.subject_cert, 
+				issuer_cert = NEW.issuer_cert
+			WHERE
+				fingerprint = NEW.fingerprint AND date_time_from=NEW.date_time_from;
+				    
+			RETURN NEW;
+		ELSIF TG_OP='DELETE' THEN
+			DELETE FROM user_certificates
+			WHERE
+				fingerprint = OLD.fingerprint AND date_time_from=OLD.date_time_from;
+				    
+			RETURN OLD;
+			
+		END IF;				
+	ELSIF TG_WHEN='AFTER' AND const_client_lk_val() THEN
+		IF TG_OP='INSERT' OR TG_OP='UPDATE' THEN
+			RETURN NEW;
+		ELSE
+			RETURN OLD;
+		END IF;		
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION user_certificates_lk_process() OWNER TO expert72;
+
+
+-- ******************* update 14/11/2018 09:06:55 ******************
+-- Function: doc_flow_in_client_process()
+
+-- DROP FUNCTION doc_flow_in_client_process();
+
+CREATE OR REPLACE FUNCTION doc_flow_in_client_process()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+	IF (TG_WHEN='BEFORE' AND TG_OP='INSERT') THEN		
+		IF const_client_lk_val() OR const_debug_val() THEN
+			--Если это достоверность одновременно с ПД - сделать не одновременно
+			--это при возврате заявления без рассмотрения
+			UPDATE applications AS app
+			SET cost_eval_validity_simult = FALSE
+			FROM (
+				SELECT t.id
+				FROM applications t
+				WHERE t.id=NEW.application_id
+				AND coalesce(t.cost_eval_validity,FALSE) AND coalesce(t.cost_eval_validity_simult,FALSE)
+				AND NEW.doc_flow_type_id=(pdfn_doc_flow_types_app_resp_return()->'keys'->>'id')::int
+			) AS base
+			WHERE app.id=base.id;
+		END IF;
+		
+		RETURN NEW;
+				
+	ELSIF (TG_WHEN='AFTER' AND TG_OP='INSERT') THEN		
+		IF NOT const_client_lk_val() OR const_debug_val() THEN
+			--письмо клиенту со ссылкой на вход.документ
+			INSERT INTO mail_for_sending
+			(to_addr,to_name,body,subject,email_type)
+			(WITH 
+				templ AS (
+					SELECT
+						t.template AS v,
+						t.mes_subject AS s
+					FROM email_templates t
+					WHERE t.email_type= 'out_mail_to_app'::email_types
+				)
+			SELECT
+				users.email,
+				coalesce(users.name_full,users.name),
+				sms_templates_text(
+					ARRAY[
+						ROW('subject', NEW.subject)::template_value,
+						ROW('id',NEW.id)::template_value
+					],
+					(SELECT v FROM templ)
+				) AS mes_body,		
+				(SELECT s FROM templ),
+				'out_mail_to_app'::email_types
+			FROM users
+			WHERE
+				users.id=NEW.user_id
+				AND users.email IS NOT NULL
+				AND users.reminders_to_email
+				--AND users.email_confirmed					
+			);
+		END IF;
+		
+		RETURN NEW;
+		
+	ELSIF (TG_WHEN='BEFORE' AND TG_OP='DELETE') THEN		
+		IF const_client_lk_val() OR const_debug_val() THEN
+			DELETE FROM doc_flow_in_client_reg_numbers WHERE doc_flow_in_client_id=OLD.id;
+		END IF;
+		RETURN OLD;
+		
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION doc_flow_in_client_process() OWNER TO expert72;
+
+
+-- ******************* update 14/11/2018 09:13:57 ******************
+-- Function: doc_flow_registrations_process()
+
+-- DROP FUNCTION doc_flow_registrations_process();
+
+CREATE OR REPLACE FUNCTION doc_flow_registrations_process()
+  RETURNS trigger AS
+$BODY$
+DECLARE
+	v_doc_flow_out_id int;
+	v_to_application_id int;
+	v_doc_flow_type_id int;
+	v_date_time timestampTZ;
+BEGIN
+	IF (TG_WHEN='AFTER' AND TG_OP='INSERT') THEN
+	
+		v_doc_flow_out_id = (NEW.subject_doc->'keys'->>'id')::int;
+		
+		IF NOT const_client_lk_val() OR const_debug_val() THEN			
+			--статус
+			INSERT INTO doc_flow_out_processes (
+				doc_flow_out_id, date_time,
+				state,
+				register_doc,
+				doc_flow_importance_type_id,
+				description,
+				end_date_time
+			)
+			VALUES (
+				v_doc_flow_out_id,NEW.date_time,
+				'registered'::doc_flow_out_states,
+				doc_flow_registrations_ref(NEW),
+				NULL,
+				'Зарегистрирован исходящий документ',
+				NULL
+			);	
+		
+			IF NEW.subject_doc->>'dataType'='doc_flow_out' THEN
+				--Установка подписанта исходящего документа
+				UPDATE
+					doc_flow_out
+				SET
+					signed_by_employee_id = NEW.employee_id
+				WHERE id=v_doc_flow_out_id
+				RETURNING doc_flow_type_id,to_application_id
+				INTO v_doc_flow_type_id,v_to_application_id;
+			
+				--При заключении по контракту - закрыть дату в контракте
+				--Вид заключения и вид отрицательного выставляется из формы исх.письма
+				IF v_doc_flow_type_id = (pdfn_doc_flow_types_contr_close()->'keys'->>'id')::int THEN
+					UPDATE contracts
+					SET expertise_result_date = NEW.date_time::date				
+					WHERE application_id=v_to_application_id;
+				END IF;
+			END IF;		
+		END IF;
+		
+		IF const_client_lk_val() OR const_debug_val() THEN
+			--если основание - заявление/контракт = ответное письмо клиенту
+			INSERT INTO doc_flow_in_client (
+				date_time,
+				reg_number,
+				application_id,
+				user_id,
+				subject,
+				content,
+				doc_flow_type_id,
+				doc_flow_out_id
+			)		
+			SELECT
+				NEW.date_time,
+				t.reg_number,
+				t.to_application_id,
+				ap.user_id,
+				--t.to_contract_id
+				t.subject,
+				t.content,
+				t.doc_flow_type_id,
+				v_doc_flow_out_id
+			
+			FROM doc_flow_out t
+			LEFT JOIN applications ap ON ap.id=t.to_application_id			
+			WHERE t.id=v_doc_flow_out_id AND t.to_application_id IS NOT NULL
+			;
+			
+			IF NEW.subject_doc->>'dataType'='doc_flow_out' THEN
+				--Если есть вложения с папками "в дело" - копируем в application_document_files
+				INSERT INTO application_document_files
+				(file_id,application_id,document_id,document_type,date_time,file_name,
+				file_path,file_signed,file_size)
+				SELECT
+					at.file_id,
+					out.to_application_id,0,'documents',at.file_date,at.file_name,
+					at.file_path,at.file_signed,at.file_size
+				
+				FROM doc_flow_attachments AS at
+				LEFT JOIN doc_flow_out out ON out.id=(NEW.subject_doc->'keys'->>'id')::int
+				WHERE
+					at.doc_type='doc_flow_out'
+					AND at.doc_id=(NEW.subject_doc->'keys'->>'id')::int
+					AND at.file_path!='Исходящие'
+				--Все кроме исходящих
+				;
+			END IF;
+			
+		END IF;
+									
+		RETURN NEW;
+		
+	ELSIF (TG_WHEN='AFTER' AND TG_OP='UPDATE' ) THEN
+		RETURN NEW;
+		
+	ELSIF (TG_WHEN='BEFORE' AND TG_OP='DELETE') THEN
+		IF NOT const_client_lk_val() OR const_debug_val() THEN
+			SELECT
+				doc_flow_out_id,date_time
+			FROM doc_flow_out_processes
+			INTO v_doc_flow_out_id,v_date_time
+			WHERE register_doc->>'dataType'='doc_flow_registrations'
+				AND (register_doc->'keys'->>'id')::int=OLD.id;
+	
+			--статус
+			DELETE FROM doc_flow_out_processes
+			WHERE register_doc->>'dataType'='doc_flow_registrations'
+				AND (register_doc->'keys'->>'id')::int=OLD.id;
+							
+			DELETE FROM doc_flow_in_client WHERE doc_flow_out_id=v_doc_flow_out_id;
+		END IF;
+								
+		RETURN OLD;
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION doc_flow_registrations_process() OWNER TO expert72;
+
+-- ******************* update 14/11/2018 09:14:32 ******************
+-- Function: doc_flow_in_client_process()
+
+-- DROP FUNCTION doc_flow_in_client_process();
+
+CREATE OR REPLACE FUNCTION doc_flow_in_client_process()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+	IF (TG_WHEN='BEFORE' AND TG_OP='INSERT') THEN		
+		IF const_client_lk_val() OR const_debug_val() THEN
+			--Если это достоверность одновременно с ПД - сделать не одновременно
+			--это при возврате заявления без рассмотрения
+			UPDATE applications AS app
+			SET cost_eval_validity_simult = FALSE
+			FROM (
+				SELECT t.id
+				FROM applications t
+				WHERE t.id=NEW.application_id
+				AND coalesce(t.cost_eval_validity,FALSE) AND coalesce(t.cost_eval_validity_simult,FALSE)
+				AND NEW.doc_flow_type_id=(pdfn_doc_flow_types_app_resp_return()->'keys'->>'id')::int
+			) AS base
+			WHERE app.id=base.id;
+		END IF;
+		
+		RETURN NEW;
+				
+	ELSIF (TG_WHEN='AFTER' AND TG_OP='INSERT') THEN		
+		IF NOT const_client_lk_val() OR const_debug_val() THEN
+			--письмо клиенту со ссылкой на вход.документ
+			INSERT INTO mail_for_sending
+			(to_addr,to_name,body,subject,email_type)
+			(WITH 
+				templ AS (
+					SELECT
+						t.template AS v,
+						t.mes_subject AS s
+					FROM email_templates t
+					WHERE t.email_type= 'out_mail_to_app'::email_types
+				)
+			SELECT
+				users.email,
+				coalesce(users.name_full,users.name),
+				sms_templates_text(
+					ARRAY[
+						ROW('subject', NEW.subject)::template_value,
+						ROW('id',NEW.id)::template_value
+					],
+					(SELECT v FROM templ)
+				) AS mes_body,		
+				(SELECT s FROM templ),
+				'out_mail_to_app'::email_types
+			FROM users
+			WHERE
+				users.id=NEW.user_id
+				AND users.email IS NOT NULL
+				AND users.reminders_to_email
+				--AND users.email_confirmed					
+			);
+		END IF;
+		
+		RETURN NEW;
+		
+	ELSIF (TG_WHEN='BEFORE' AND TG_OP='DELETE') THEN		
+		IF const_client_lk_val() OR const_debug_val() THEN
+			DELETE FROM doc_flow_in_client_reg_numbers WHERE doc_flow_in_client_id=OLD.id;
+		END IF;
+		RETURN OLD;
+		
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION doc_flow_in_client_process() OWNER TO expert72;
+
+
+-- ******************* update 14/11/2018 09:21:53 ******************
+-- DROP TRIGGER doc_flow_in_client_before_trigger ON doc_flow_in_client;
+/*
+ CREATE TRIGGER doc_flow_in_client_before_trigger
+  BEFORE INSERT OR DELETE
+  ON doc_flow_in_client
+  FOR EACH ROW
+  EXECUTE PROCEDURE doc_flow_in_client_process();
+*/  
+ CREATE TRIGGER doc_flow_in_client_after_trigger
+  AFTER INSERT
+  ON doc_flow_in_client
+  FOR EACH ROW
+  EXECUTE PROCEDURE doc_flow_in_client_process();
+    
+
+-- ******************* update 14/11/2018 10:05:53 ******************
+-- Function: doc_flow_out_process()
+
+-- DROP FUNCTION doc_flow_out_process();
+
+CREATE OR REPLACE FUNCTION doc_flow_out_process()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+	IF (TG_WHEN='BEFORE' AND (TG_OP='INSERT' OR TG_OP='UPDATE') ) THEN		
+	
+		IF NOT const_client_lk_val() OR const_debug_val() THEN
+			IF NEW.to_contract_id IS NOT NULL AND NEW.to_application_id IS NULL THEN
+				SELECT application_id INTO NEW.to_application_id FROM contracts WHERE id=NEW.to_contract_id;
+			END IF;	
+
+			IF NEW.doc_flow_in_id IS NULL AND NEW.doc_flow_type_id=(pdfn_doc_flow_types_app_resp()->'keys'->>'id')::int
+			AND NEW.to_application_id IS NOT NULL THEN
+				SELECT id
+				INTO NEW.doc_flow_in_id
+				FROM doc_flow_in
+				WHERE from_application_id=NEW.to_application_id
+				ORDER BY date_time DESC LIMIT 1;
+			END IF;	
+		END IF;		
+		
+		RETURN NEW;
+		
+	ELSIF TG_WHEN='BEFORE' AND TG_OP='DELETE' THEN
+		IF NOT const_client_lk_val() OR const_debug_val() THEN
+			DELETE FROM doc_flow_out_processes WHERE doc_flow_out_id = OLD.id;
+			DELETE FROM doc_flow_attachments WHERE doc_type='doc_flow_out' AND doc_id = OLD.id;
+		END IF;	
+		
+		RETURN OLD;		
+		
+	ELSIF TG_WHEN='AFTER' AND TG_OP='DELETE' THEN
+		IF const_client_lk_val() OR const_debug_val() THEN
+			DELETE FROM doc_flow_in_client WHERE doc_flow_out_id = OLD.id;
+		END IF;	
+		
+		RETURN OLD;		
+	
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION doc_flow_out_process() OWNER TO expert72;
+
+
+-- ******************* update 14/11/2018 10:34:10 ******************
+-- Function: doc_flow_examinations_process()
+
+-- DROP FUNCTION doc_flow_examinations_process();
+
+CREATE OR REPLACE FUNCTION doc_flow_examinations_process()
+  RETURNS trigger AS
+$BODY$
+DECLARE
+	v_ref JSONB;
+	v_application_id int;
+	v_app_expertise_type expertise_types;
+	v_app_cost_eval_validity bool;
+	v_app_modification bool;
+	v_app_audit bool;	
+	v_app_client_id int;
+	v_app_user_id int;
+	v_app_applicant JSONB;
+	v_primary_contracts_ref JSONB;
+	v_modif_primary_contracts_ref JSONB;	
+	v_linked_contracts_ref JSONB;
+	v_app_process_dt timestampTZ;
+	v_linked_app int;
+	v_cost_eval_validity_simult bool;
+	v_constr_name text;
+	v_constr_address jsonb;
+	v_constr_technical_features jsonb;
+	v_linked_contracts JSONB[];
+	v_linked_contracts_n int;
+	v_new_contract_number text;
+	v_document_type document_types;
+	v_expertise_result_number text;
+	v_date_type date_types;
+	v_work_day_count int;
+	v_expert_work_day_count int;
+	v_office_id int;
+	v_new_contract_id int;
+BEGIN
+	IF (TG_WHEN='AFTER' AND TG_OP='INSERT') THEN
+		IF NOT const_client_lk_val() OR const_debug_val() THEN
+			v_ref = doc_flow_examinations_ref((SELECT doc_flow_examinations FROM doc_flow_examinations WHERE id=NEW.id));
+			--статус
+			INSERT INTO doc_flow_in_processes (
+				doc_flow_in_id, date_time,
+				state,
+				register_doc,
+				doc_flow_importance_type_id,
+				description,
+				end_date_time
+			)
+			VALUES (
+				(NEW.subject_doc->'keys'->>'id')::int,NEW.date_time,
+				CASE WHEN NEW.closed THEN 'examined'::doc_flow_in_states ELSE 'examining'::doc_flow_in_states END,
+				v_ref,
+				NEW.doc_flow_importance_type_id,
+				NEW.subject,
+				NEW.end_date_time
+			);
+			
+			--задачи
+			INSERT INTO doc_flow_tasks (
+				register_doc,
+				date_time,end_date_time,
+				doc_flow_importance_type_id,
+				employee_id,
+				recipient,
+				description,
+				closed,
+				close_doc,
+				close_date_time,
+				close_employee_id
+			)
+			VALUES (
+				v_ref,
+				NEW.date_time,NEW.end_date_time,
+				NEW.doc_flow_importance_type_id,
+				NEW.employee_id,
+				NEW.recipient,
+				NEW.subject,
+				NEW.closed,
+				CASE WHEN NEW.closed THEN v_ref ELSE NULL END,
+				CASE WHEN NEW.closed THEN now() ELSE NULL END,
+				CASE WHEN NEW.closed THEN NEW.close_employee_id ELSE NULL END
+			);
+		END IF;
+		
+		IF const_client_lk_val() OR const_debug_val() THEN
+			--если тип основания - письмо, чье основание - заявление - сменим его статус
+			IF NEW.subject_doc->>'dataType'='doc_flow_in' THEN
+				SELECT from_application_id INTO v_application_id FROM doc_flow_in WHERE id=(NEW.subject_doc->'keys'->>'id')::int;
+				IF (v_application_id IS NOT NULL) THEN
+					IF NEW.closed THEN
+						SELECT
+							greatest(NEW.date_time,date_time+'1 second'::interval)
+						INTO v_app_process_dt
+						FROM application_processes
+						WHERE application_id=v_application_id
+						ORDER BY date_time DESC
+						LIMIT 1;
+					ELSE
+						v_app_process_dt = NEW.date_time;
+					END IF;
+					--статус
+					INSERT INTO application_processes (
+						application_id,
+						date_time,
+						state,
+						user_id,
+						end_date_time
+					)
+					VALUES (
+						v_application_id,
+						v_app_process_dt,
+						CASE WHEN NEW.closed THEN NEW.application_resolution_state ELSE 'checking'::application_states END,
+						(SELECT user_id FROM employees WHERE id=NEW.employee_id),
+						NEW.end_date_time
+					);			
+				END IF;
+			END IF;		
+		END IF;
+		
+			
+		RETURN NEW;
+		
+	ELSIF (TG_WHEN='AFTER' AND TG_OP='UPDATE' ) THEN
+		IF NOT const_client_lk_val() OR const_debug_val() THEN
+			v_ref = doc_flow_examinations_ref((SELECT doc_flow_examinations FROM doc_flow_examinations WHERE id=NEW.id));
+		
+			--state
+			IF NEW.date_time<>OLD.date_time
+				OR NEW.end_date_time<>OLD.end_date_time
+				OR NEW.doc_flow_importance_type_id<>OLD.doc_flow_importance_type_id
+				OR NEW.subject_doc<>OLD.subject_doc
+				OR NEW.subject<>OLD.subject
+				OR NEW.date_time<>OLD.date_time
+				--OR (NEW.employee_id<>OLD.employee_id AND NEW.subject_doc->>'dataType'='doc_flow_in'
+			THEN
+				UPDATE doc_flow_in_processes
+				SET
+					date_time			= NEW.date_time,
+					doc_flow_importance_type_id	= NEW.doc_flow_importance_type_id,
+					doc_flow_in_id			= (NEW.subject_doc->'keys'->>'id')::int,
+					description			= NEW.subject,
+					end_date_time			= NEW.end_date_time
+				WHERE register_doc->>'dataType'='doc_flow_examinations' AND (register_doc->'keys'->>'id')::int=NEW.id;
+			END IF;
+	
+			--сменим статус при закрытии
+			IF NEW.closed<>OLD.closed THEN
+				INSERT INTO doc_flow_in_processes (
+					doc_flow_in_id,
+					date_time,
+					state,
+					register_doc,
+					doc_flow_importance_type_id,
+					end_date_time
+				)
+				VALUES (
+					(NEW.subject_doc->'keys'->>'id')::int,
+					CASE WHEN NEW.closed THEN NEW.close_date_time ELSE now() END,
+					CASE WHEN NEW.closed THEN 'examined'::doc_flow_in_states ELSE 'examining'::doc_flow_in_states END,
+					v_ref,
+					NEW.doc_flow_importance_type_id,
+					NEW.end_date_time
+				);		
+			END IF;
+	
+			--если тип основания - заявление - сменим его статус
+			IF NEW.subject_doc->>'dataType'='doc_flow_in' AND NEW.closed<>OLD.closed AND NEW.closed THEN
+				SELECT
+					from_application_id,
+					doc_flow_out.new_contract_number
+				INTO
+					v_application_id,
+					v_new_contract_number
+				FROM doc_flow_in
+				LEFT JOIN doc_flow_out ON doc_flow_out.doc_flow_in_id=doc_flow_in.id
+				WHERE doc_flow_in.id=(NEW.subject_doc->'keys'->>'id')::int;
+			
+				IF v_application_id IS NOT NULL THEN
+					IF NEW.closed THEN
+						SELECT
+							greatest(NEW.close_date_time,date_time+'1 second'::interval)
+						INTO v_app_process_dt
+						FROM application_processes
+						WHERE application_id=v_application_id
+						ORDER BY date_time DESC
+						LIMIT 1;
+					ELSE
+						v_app_process_dt = NEW.close_date_time;
+					END IF;
+			
+					--статус
+					INSERT INTO application_processes (
+						application_id,
+						date_time,
+						state,
+						user_id,
+						end_date_time
+					)
+					VALUES (
+						v_application_id,
+						v_app_process_dt,
+						CASE WHEN NEW.closed THEN NEW.application_resolution_state ELSE 'checking'::application_states END,
+						(SELECT user_id FROM employees WHERE id=NEW.employee_id),
+						CASE WHEN NEW.closed THEN NULL ELSE NEW.end_date_time END					
+					);			
+				END IF;
+			
+				--НОВЫЙ КОНТРАКТ
+				IF NEW.application_resolution_state='waiting_for_contract' THEN
+					SELECT
+						app.expertise_type,
+						app.cost_eval_validity,
+						app.modification,
+						app.audit,
+						app.user_id,
+						app.applicant,
+						(contracts_ref(p_contr))::jsonb,
+						(contracts_ref(mp_contr))::jsonb,
+						coalesce(app.base_application_id,app.derived_application_id),
+						app.cost_eval_validity_simult,
+						app.constr_name,
+						app.constr_address,
+						app.constr_technical_features,
+						CASE
+							WHEN app.expertise_type IS NOT NULL THEN 'pd'::document_types
+							WHEN app.cost_eval_validity THEN 'cost_eval_validity'::document_types
+							WHEN app.modification THEN 'modification'::document_types
+							WHEN app.audit THEN 'audit'::document_types						
+						END,
+						app.office_id
+					
+					INTO
+						v_app_expertise_type,
+						v_app_cost_eval_validity,
+						v_app_modification,
+						v_app_audit,
+						v_app_user_id,
+						v_app_applicant,
+						v_primary_contracts_ref,
+						v_modif_primary_contracts_ref,
+						v_linked_app,
+						v_cost_eval_validity_simult,
+						v_constr_name,
+						v_constr_address,
+						v_constr_technical_features,
+						v_document_type,
+						v_office_id
+					
+					FROM applications AS app
+					LEFT JOIN contracts AS p_contr ON p_contr.application_id=app.primary_application_id
+					LEFT JOIN contracts AS mp_contr ON mp_contr.application_id=app.modif_primary_application_id
+					WHERE app.id=v_application_id;
+				
+					--applicant -->> client
+					UPDATE clients
+					SET
+						name		= v_app_applicant->>'name',
+						name_full	= v_app_applicant->>'name_full',
+						ogrn		= v_app_applicant->>'ogrn',
+						inn		= v_app_applicant->>'inn',
+						kpp		= v_app_applicant->>'kpp',
+						okpo		= v_app_applicant->>'okpo',
+						okved		= v_app_applicant->>'okved',
+						post_address	= v_app_applicant->'post_address',
+						user_id		= v_app_user_id,
+						legal_address	= v_app_applicant->'legal_address',
+						bank_accounts	= v_app_applicant->'bank_accounts',
+						client_type	= 
+							CASE WHEN v_app_applicant->>'client_type' IS NULL OR v_app_applicant->>'client_type'='on' THEN 'enterprise'
+							ELSE (v_app_applicant->>'client_type')::client_types
+							END,
+						base_document_for_contract = v_app_applicant->>'base_document_for_contract',
+						person_id_paper	= v_app_applicant->'person_id_paper',
+						person_registr_paper = v_app_applicant->'person_registr_paper'
+					WHERE name = v_app_applicant->>'name' OR (inn=v_app_applicant->>'inn' AND kpp=v_app_applicant->>'kpp')
+					RETURNING id INTO v_app_client_id;
+				
+					IF NOT FOUND THEN
+						INSERT INTO clients
+						(
+							name,
+							name_full,
+							inn,
+							kpp,
+							ogrn,
+							okpo,
+							okved,
+							post_address,
+							user_id,
+							legal_address,
+							bank_accounts,
+							client_type,
+							base_document_for_contract,
+							person_id_paper,
+							person_registr_paper
+						)
+						VALUES(
+							CASE WHEN v_app_applicant->>'name' IS NULL THEN v_app_applicant->>'name_full'
+							ELSE v_app_applicant->>'name'
+							END,
+							v_app_applicant->>'name_full',
+							v_app_applicant->>'inn',
+							v_app_applicant->>'kpp',
+							v_app_applicant->>'ogrn',
+							v_app_applicant->>'okpo',
+							v_app_applicant->>'okved',
+							v_app_applicant->'post_address',
+							v_app_user_id,
+							v_app_applicant->'legal_address',
+							v_app_applicant->'bank_accounts',
+							CASE WHEN v_app_applicant->>'client_type' IS NULL OR v_app_applicant->>'client_type'='on' THEN 'enterprise'
+							ELSE (v_app_applicant->>'client_type')::client_types
+							END,
+							v_app_applicant->>'base_document_for_contract',
+							v_app_applicant->'person_id_paper',
+							v_app_applicant->'person_registr_paper'
+						)				
+						RETURNING id
+						INTO v_app_client_id
+						;
+					END IF;
+				
+					v_linked_contracts_n = 0;
+					IF (v_primary_contracts_ref->'keys'->>'id' IS NOT NULL) THEN
+						v_linked_contracts_n = v_linked_contracts_n + 1;
+						v_linked_contracts = v_linked_contracts || jsonb_build_object('fields',jsonb_build_object('id',v_linked_contracts_n,'contracts_ref',v_primary_contracts_ref));
+					END IF;
+					IF (v_modif_primary_contracts_ref->'keys'->>'id' IS NOT NULL) THEN
+						v_linked_contracts_n = v_linked_contracts_n + 1;
+						v_linked_contracts = v_linked_contracts || jsonb_build_object('fields',jsonb_build_object('id',v_linked_contracts_n,'contracts_ref',v_modif_primary_contracts_ref));
+					END IF;
+				
+					IF v_linked_app IS NOT NULL THEN
+						--Поиск связного контракта по заявлению
+						SELECT contracts_ref(contracts) INTO v_linked_contracts_ref FROM contracts WHERE application_id=v_linked_app;
+						IF v_linked_contracts_ref IS NOT NULL THEN
+							v_linked_contracts_n = v_linked_contracts_n + 1;
+							v_linked_contracts = v_linked_contracts || jsonb_build_object('fields',jsonb_build_object('id',v_linked_contracts_n,'contracts_ref',v_linked_contracts_ref));
+						END IF;
+					END IF;
+				
+					--Сначала из исх.письма, затем генерим новый
+					IF v_new_contract_number IS NULL THEN
+						v_new_contract_number = contracts_next_number(v_document_type,now()::date);
+					END IF;
+				
+					--Номер экспертного заключения
+					v_expertise_result_number = regexp_replace(v_new_contract_number,'\D+.*$','');
+					v_expertise_result_number = substr('0000',1,4-length(v_expertise_result_number))||
+								v_expertise_result_number||
+								'/'||(extract(year FROM now())-2000)::text;
+				
+					--Дни проверки
+					SELECT
+						services.date_type,
+						services.work_day_count,
+						services.expertise_day_count
+					INTO
+						v_date_type,
+						v_work_day_count,
+						v_expert_work_day_count
+					FROM services
+					WHERE services.id=
+					((
+						CASE
+							WHEN v_document_type='pd' THEN pdfn_services_expertise()
+							WHEN v_document_type='cost_eval_validity' THEN pdfn_services_cost_eval_validity()
+							WHEN v_document_type='modification' THEN pdfn_services_modification()
+							WHEN v_document_type='audit' THEN pdfn_services_audit()
+							ELSE NULL
+						END
+					)->'keys'->>'id')::int;
+								
+					--RAISE EXCEPTION 'v_linked_contracts=%',v_linked_contracts;
+					--Контракт
+					INSERT INTO contracts (
+						date_time,
+						application_id,
+						client_id,
+						employee_id,
+						document_type,
+						expertise_type,
+						cost_eval_validity_pd_order,
+						constr_name,
+						constr_address,
+						constr_technical_features,
+						contract_number,
+						expertise_result_number,
+						linked_contracts,
+						--contract_date,					
+						date_type,
+						expertise_day_count,
+						expert_work_day_count,
+						work_end_date,
+						expert_work_end_date,
+						permissions,
+						user_id)
+					VALUES (
+						now(),
+						v_application_id,
+						v_app_client_id,
+						NEW.close_employee_id,
+						v_document_type,
+						v_app_expertise_type,
+						CASE
+							WHEN v_app_cost_eval_validity THEN
+								CASE
+									WHEN v_cost_eval_validity_simult THEN 'simult_with_pd'::cost_eval_validity_pd_orders
+									WHEN v_linked_app IS NOT NULL THEN 'after_pd'::cost_eval_validity_pd_orders
+									ELSE 'no_pd'::cost_eval_validity_pd_orders
+								END
+							ELSE NULL
+						END,
+						v_constr_name,
+						v_constr_address,
+						v_constr_technical_features,
+					
+						v_new_contract_number,
+						v_expertise_result_number,
+					
+						--linked_contracts
+						CASE WHEN v_linked_contracts IS NOT NULL THEN
+							jsonb_build_object(
+								'id','LinkedContractList_Model',
+								'rows',v_linked_contracts
+							)
+						ELSE
+							'{"id":"LinkedContractList_Model","rows":[]}'::jsonb
+						END,
+					
+						--now()::date,--contract_date
+					
+						v_date_type,
+						v_work_day_count,
+						v_expert_work_day_count,
+					
+						--ПРИ ОПЛАТЕ client_payments_process()
+						--ставятся work_start_date&&work_end_date
+						--contracts_work_end_date(v_office_id, v_date_type, now(), v_work_day_count),
+						NULL,
+						NULL,					
+					
+						'{"id":"AccessPermission_Model","rows":[]}'::jsonb,
+					
+						v_app_user_id
+					)
+					RETURNING id INTO v_new_contract_id;
+				
+					--В связные контракты запишем данный по текущему новому
+					IF (v_linked_contracts_ref->'keys'->>'id' IS NOT NULL) THEN
+					--RAISE EXCEPTION 'Updating contracts, id=%',(v_linked_contracts_ref->'keys'->>'id')::int;
+						UPDATE contracts
+						SET
+							linked_contracts = jsonb_build_object(
+								'id','LinkedContractList_Model',
+								'rows',
+								linked_contracts->'rows'||
+									jsonb_build_object(
+									'fields',jsonb_build_object(
+										'id',
+										jsonb_array_length(linked_contracts->'rows')+1,
+										'contracts_ref',contracts_ref((SELECT contracts FROM contracts WHERE id=v_new_contract_id))
+										)
+									)							
+							)
+						WHERE id=(v_linked_contracts_ref->'keys'->>'id')::int;
+					END IF;
+					IF (v_primary_contracts_ref->'keys'->>'id' IS NOT NULL) THEN
+						UPDATE contracts
+						SET
+							linked_contracts = jsonb_build_object(
+								'id','LinkedContractList_Model',
+								'rows',
+								linked_contracts->'rows'||
+									jsonb_build_object(
+									'fields',jsonb_build_object(
+										'id',
+										jsonb_array_length(linked_contracts->'rows')+1,
+										'contracts_ref',contracts_ref((SELECT contracts FROM contracts WHERE id=v_new_contract_id))
+										)
+									)							
+							)
+						WHERE id=(v_primary_contracts_ref->'keys'->>'id')::int;
+					END IF;
+					IF (v_modif_primary_contracts_ref->'keys'->>'id' IS NOT NULL) THEN
+						UPDATE contracts
+						SET
+							linked_contracts = jsonb_build_object(
+								'id','LinkedContractList_Model',
+								'rows',
+								linked_contracts->'rows'||
+									jsonb_build_object(
+									'fields',jsonb_build_object(
+										'id',
+										jsonb_array_length(linked_contracts->'rows')+1,
+										'contracts_ref',contracts_ref((SELECT contracts FROM contracts WHERE id=v_new_contract_id))
+										)
+									)							
+							)
+						WHERE id=(v_modif_primary_contracts_ref->'keys'->>'id')::int;
+					END IF;
+				
+				END IF;
+			END IF;
+						
+			--задачи
+			UPDATE doc_flow_tasks
+			SET 
+				date_time			= NEW.date_time,
+				end_date_time			= NEW.end_date_time,
+				doc_flow_importance_type_id	= NEW.doc_flow_importance_type_id,
+				employee_id			= NEW.employee_id,
+				description			= NEW.subject,
+				closed				= NEW.closed,
+				close_doc			= CASE WHEN NEW.closed THEN v_ref ELSE NULL END,
+				close_date_time			= CASE WHEN NEW.closed THEN now() ELSE NULL END,
+				close_employee_id		= CASE WHEN NEW.closed THEN NEW.close_employee_id ELSE NULL END
+			WHERE register_doc->>'dataType'='doc_flow_examinations' AND (register_doc->'keys'->>'id')::int=NEW.id;
+		END IF;
+		
+		RETURN NEW;
+		
+	ELSIF (TG_WHEN='BEFORE' AND TG_OP='UPDATE') THEN
+		--статус
+		--DELETE FROM doc_flow_in_processes WHERE (register_doc->>'dataType')::data_types='doc_flow_examinations'::data_types AND (register_doc->'keys'->>'id')::int=NEW.id;
+		--задачи
+		--DELETE FROM doc_flow_tasks WHERE (register_doc->>'dataType')::data_types='doc_flow_examinations'::data_types AND (register_doc->'keys'->>'id')::int=NEW.id;
+	
+		RETURN NEW;
+		
+	ELSIF (TG_WHEN='BEFORE' AND TG_OP='DELETE') THEN
+		IF NOT const_client_lk_val() OR const_debug_val() THEN
+			--статус
+			DELETE FROM doc_flow_in_processes WHERE register_doc->>'dataType'='doc_flow_examinations' AND (register_doc->'keys'->>'id')::int=OLD.id;
+			--задачи
+			DELETE FROM doc_flow_tasks WHERE register_doc->>'dataType'='doc_flow_examinations' AND (register_doc->'keys'->>'id')::int=OLD.id;
+			IF (OLD.subject_doc->>'dataType')::data_types='doc_flow_in'::data_types THEN
+				SELECT from_application_id INTO v_application_id FROM doc_flow_in WHERE id=(OLD.subject_doc->'keys'->>'id')::int;
+				IF v_application_id IS NOT NULL THEN
+					DELETE FROM application_processes WHERE doc_flow_examination_id=OLD.id;
+				END IF;
+			END IF;
+		END IF;
+													
+		RETURN OLD;
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION doc_flow_examinations_process() OWNER TO expert72;
+
+-- ******************* update 14/11/2018 11:37:00 ******************
+-- Function: doc_flow_examinations_process()
+
+-- DROP FUNCTION doc_flow_examinations_process();
+
+CREATE OR REPLACE FUNCTION doc_flow_examinations_process()
+  RETURNS trigger AS
+$BODY$
+DECLARE
+	v_ref JSONB;
+	v_application_id int;
+	v_app_expertise_type expertise_types;
+	v_app_cost_eval_validity bool;
+	v_app_modification bool;
+	v_app_audit bool;	
+	v_app_client_id int;
+	v_app_user_id int;
+	v_app_applicant JSONB;
+	v_primary_contracts_ref JSONB;
+	v_modif_primary_contracts_ref JSONB;	
+	v_linked_contracts_ref JSONB;
+	v_app_process_dt timestampTZ;
+	v_linked_app int;
+	v_cost_eval_validity_simult bool;
+	v_constr_name text;
+	v_constr_address jsonb;
+	v_constr_technical_features jsonb;
+	v_linked_contracts JSONB[];
+	v_linked_contracts_n int;
+	v_new_contract_number text;
+	v_document_type document_types;
+	v_expertise_result_number text;
+	v_date_type date_types;
+	v_work_day_count int;
+	v_expert_work_day_count int;
+	v_office_id int;
+	v_new_contract_id int;
+BEGIN
+	IF (TG_WHEN='AFTER' AND TG_OP='INSERT') THEN
+		IF NOT const_client_lk_val() OR const_debug_val() THEN
+			v_ref = doc_flow_examinations_ref((SELECT doc_flow_examinations FROM doc_flow_examinations WHERE id=NEW.id));
+			--статус
+			INSERT INTO doc_flow_in_processes (
+				doc_flow_in_id, date_time,
+				state,
+				register_doc,
+				doc_flow_importance_type_id,
+				description,
+				end_date_time
+			)
+			VALUES (
+				(NEW.subject_doc->'keys'->>'id')::int,NEW.date_time,
+				CASE WHEN NEW.closed THEN 'examined'::doc_flow_in_states ELSE 'examining'::doc_flow_in_states END,
+				v_ref,
+				NEW.doc_flow_importance_type_id,
+				NEW.subject,
+				NEW.end_date_time
+			);
+			
+			--задачи
+			INSERT INTO doc_flow_tasks (
+				register_doc,
+				date_time,end_date_time,
+				doc_flow_importance_type_id,
+				employee_id,
+				recipient,
+				description,
+				closed,
+				close_doc,
+				close_date_time,
+				close_employee_id
+			)
+			VALUES (
+				v_ref,
+				NEW.date_time,NEW.end_date_time,
+				NEW.doc_flow_importance_type_id,
+				NEW.employee_id,
+				NEW.recipient,
+				NEW.subject,
+				NEW.closed,
+				CASE WHEN NEW.closed THEN v_ref ELSE NULL END,
+				CASE WHEN NEW.closed THEN now() ELSE NULL END,
+				CASE WHEN NEW.closed THEN NEW.close_employee_id ELSE NULL END
+			);
+		END IF;
+		
+		IF NOT const_client_lk_val() OR const_debug_val() THEN
+			--если тип основания - письмо, чье основание - заявление - сменим его статус
+			IF NEW.subject_doc->>'dataType'='doc_flow_in' THEN
+				SELECT from_application_id INTO v_application_id FROM doc_flow_in WHERE id=(NEW.subject_doc->'keys'->>'id')::int;
+				IF (v_application_id IS NOT NULL) THEN
+					IF NEW.closed THEN
+						SELECT
+							greatest(NEW.date_time,date_time+'1 second'::interval)
+						INTO v_app_process_dt
+						FROM application_processes
+						WHERE application_id=v_application_id
+						ORDER BY date_time DESC
+						LIMIT 1;
+					ELSE
+						v_app_process_dt = NEW.date_time;
+					END IF;
+					--статус
+					INSERT INTO application_processes (
+						application_id,
+						date_time,
+						state,
+						user_id,
+						end_date_time
+					)
+					VALUES (
+						v_application_id,
+						v_app_process_dt,
+						CASE WHEN NEW.closed THEN NEW.application_resolution_state ELSE 'checking'::application_states END,
+						(SELECT user_id FROM employees WHERE id=NEW.employee_id),
+						NEW.end_date_time
+					);			
+				END IF;
+			END IF;		
+		END IF;
+		
+			
+		RETURN NEW;
+		
+	ELSIF (TG_WHEN='AFTER' AND TG_OP='UPDATE' ) THEN
+		IF NOT const_client_lk_val() OR const_debug_val() THEN
+			v_ref = doc_flow_examinations_ref((SELECT doc_flow_examinations FROM doc_flow_examinations WHERE id=NEW.id));
+		
+			--state
+			IF NEW.date_time<>OLD.date_time
+				OR NEW.end_date_time<>OLD.end_date_time
+				OR NEW.doc_flow_importance_type_id<>OLD.doc_flow_importance_type_id
+				OR NEW.subject_doc<>OLD.subject_doc
+				OR NEW.subject<>OLD.subject
+				OR NEW.date_time<>OLD.date_time
+				--OR (NEW.employee_id<>OLD.employee_id AND NEW.subject_doc->>'dataType'='doc_flow_in'
+			THEN
+				UPDATE doc_flow_in_processes
+				SET
+					date_time			= NEW.date_time,
+					doc_flow_importance_type_id	= NEW.doc_flow_importance_type_id,
+					doc_flow_in_id			= (NEW.subject_doc->'keys'->>'id')::int,
+					description			= NEW.subject,
+					end_date_time			= NEW.end_date_time
+				WHERE register_doc->>'dataType'='doc_flow_examinations' AND (register_doc->'keys'->>'id')::int=NEW.id;
+			END IF;
+	
+			--сменим статус при закрытии
+			IF NEW.closed<>OLD.closed THEN
+				INSERT INTO doc_flow_in_processes (
+					doc_flow_in_id,
+					date_time,
+					state,
+					register_doc,
+					doc_flow_importance_type_id,
+					end_date_time
+				)
+				VALUES (
+					(NEW.subject_doc->'keys'->>'id')::int,
+					CASE WHEN NEW.closed THEN NEW.close_date_time ELSE now() END,
+					CASE WHEN NEW.closed THEN 'examined'::doc_flow_in_states ELSE 'examining'::doc_flow_in_states END,
+					v_ref,
+					NEW.doc_flow_importance_type_id,
+					NEW.end_date_time
+				);		
+			END IF;
+	
+			--если тип основания - заявление - сменим его статус
+			IF NEW.subject_doc->>'dataType'='doc_flow_in' AND NEW.closed<>OLD.closed AND NEW.closed THEN
+				SELECT
+					from_application_id,
+					doc_flow_out.new_contract_number
+				INTO
+					v_application_id,
+					v_new_contract_number
+				FROM doc_flow_in
+				LEFT JOIN doc_flow_out ON doc_flow_out.doc_flow_in_id=doc_flow_in.id
+				WHERE doc_flow_in.id=(NEW.subject_doc->'keys'->>'id')::int;
+			
+				IF v_application_id IS NOT NULL THEN
+					IF NEW.closed THEN
+						SELECT
+							greatest(NEW.close_date_time,date_time+'1 second'::interval)
+						INTO v_app_process_dt
+						FROM application_processes
+						WHERE application_id=v_application_id
+						ORDER BY date_time DESC
+						LIMIT 1;
+					ELSE
+						v_app_process_dt = NEW.close_date_time;
+					END IF;
+			
+					--статус
+					INSERT INTO application_processes (
+						application_id,
+						date_time,
+						state,
+						user_id,
+						end_date_time
+					)
+					VALUES (
+						v_application_id,
+						v_app_process_dt,
+						CASE WHEN NEW.closed THEN NEW.application_resolution_state ELSE 'checking'::application_states END,
+						(SELECT user_id FROM employees WHERE id=NEW.employee_id),
+						CASE WHEN NEW.closed THEN NULL ELSE NEW.end_date_time END					
+					);			
+				END IF;
+			
+				--НОВЫЙ КОНТРАКТ
+				IF NEW.application_resolution_state='waiting_for_contract' THEN
+					SELECT
+						app.expertise_type,
+						app.cost_eval_validity,
+						app.modification,
+						app.audit,
+						app.user_id,
+						app.applicant,
+						(contracts_ref(p_contr))::jsonb,
+						(contracts_ref(mp_contr))::jsonb,
+						coalesce(app.base_application_id,app.derived_application_id),
+						app.cost_eval_validity_simult,
+						app.constr_name,
+						app.constr_address,
+						app.constr_technical_features,
+						CASE
+							WHEN app.expertise_type IS NOT NULL THEN 'pd'::document_types
+							WHEN app.cost_eval_validity THEN 'cost_eval_validity'::document_types
+							WHEN app.modification THEN 'modification'::document_types
+							WHEN app.audit THEN 'audit'::document_types						
+						END,
+						app.office_id
+					
+					INTO
+						v_app_expertise_type,
+						v_app_cost_eval_validity,
+						v_app_modification,
+						v_app_audit,
+						v_app_user_id,
+						v_app_applicant,
+						v_primary_contracts_ref,
+						v_modif_primary_contracts_ref,
+						v_linked_app,
+						v_cost_eval_validity_simult,
+						v_constr_name,
+						v_constr_address,
+						v_constr_technical_features,
+						v_document_type,
+						v_office_id
+					
+					FROM applications AS app
+					LEFT JOIN contracts AS p_contr ON p_contr.application_id=app.primary_application_id
+					LEFT JOIN contracts AS mp_contr ON mp_contr.application_id=app.modif_primary_application_id
+					WHERE app.id=v_application_id;
+				
+					--applicant -->> client
+					UPDATE clients
+					SET
+						name		= v_app_applicant->>'name',
+						name_full	= v_app_applicant->>'name_full',
+						ogrn		= v_app_applicant->>'ogrn',
+						inn		= v_app_applicant->>'inn',
+						kpp		= v_app_applicant->>'kpp',
+						okpo		= v_app_applicant->>'okpo',
+						okved		= v_app_applicant->>'okved',
+						post_address	= v_app_applicant->'post_address',
+						user_id		= v_app_user_id,
+						legal_address	= v_app_applicant->'legal_address',
+						bank_accounts	= v_app_applicant->'bank_accounts',
+						client_type	= 
+							CASE WHEN v_app_applicant->>'client_type' IS NULL OR v_app_applicant->>'client_type'='on' THEN 'enterprise'
+							ELSE (v_app_applicant->>'client_type')::client_types
+							END,
+						base_document_for_contract = v_app_applicant->>'base_document_for_contract',
+						person_id_paper	= v_app_applicant->'person_id_paper',
+						person_registr_paper = v_app_applicant->'person_registr_paper'
+					WHERE name = v_app_applicant->>'name' OR (inn=v_app_applicant->>'inn' AND kpp=v_app_applicant->>'kpp')
+					RETURNING id INTO v_app_client_id;
+				
+					IF NOT FOUND THEN
+						INSERT INTO clients
+						(
+							name,
+							name_full,
+							inn,
+							kpp,
+							ogrn,
+							okpo,
+							okved,
+							post_address,
+							user_id,
+							legal_address,
+							bank_accounts,
+							client_type,
+							base_document_for_contract,
+							person_id_paper,
+							person_registr_paper
+						)
+						VALUES(
+							CASE WHEN v_app_applicant->>'name' IS NULL THEN v_app_applicant->>'name_full'
+							ELSE v_app_applicant->>'name'
+							END,
+							v_app_applicant->>'name_full',
+							v_app_applicant->>'inn',
+							v_app_applicant->>'kpp',
+							v_app_applicant->>'ogrn',
+							v_app_applicant->>'okpo',
+							v_app_applicant->>'okved',
+							v_app_applicant->'post_address',
+							v_app_user_id,
+							v_app_applicant->'legal_address',
+							v_app_applicant->'bank_accounts',
+							CASE WHEN v_app_applicant->>'client_type' IS NULL OR v_app_applicant->>'client_type'='on' THEN 'enterprise'
+							ELSE (v_app_applicant->>'client_type')::client_types
+							END,
+							v_app_applicant->>'base_document_for_contract',
+							v_app_applicant->'person_id_paper',
+							v_app_applicant->'person_registr_paper'
+						)				
+						RETURNING id
+						INTO v_app_client_id
+						;
+					END IF;
+				
+					v_linked_contracts_n = 0;
+					IF (v_primary_contracts_ref->'keys'->>'id' IS NOT NULL) THEN
+						v_linked_contracts_n = v_linked_contracts_n + 1;
+						v_linked_contracts = v_linked_contracts || jsonb_build_object('fields',jsonb_build_object('id',v_linked_contracts_n,'contracts_ref',v_primary_contracts_ref));
+					END IF;
+					IF (v_modif_primary_contracts_ref->'keys'->>'id' IS NOT NULL) THEN
+						v_linked_contracts_n = v_linked_contracts_n + 1;
+						v_linked_contracts = v_linked_contracts || jsonb_build_object('fields',jsonb_build_object('id',v_linked_contracts_n,'contracts_ref',v_modif_primary_contracts_ref));
+					END IF;
+				
+					IF v_linked_app IS NOT NULL THEN
+						--Поиск связного контракта по заявлению
+						SELECT contracts_ref(contracts) INTO v_linked_contracts_ref FROM contracts WHERE application_id=v_linked_app;
+						IF v_linked_contracts_ref IS NOT NULL THEN
+							v_linked_contracts_n = v_linked_contracts_n + 1;
+							v_linked_contracts = v_linked_contracts || jsonb_build_object('fields',jsonb_build_object('id',v_linked_contracts_n,'contracts_ref',v_linked_contracts_ref));
+						END IF;
+					END IF;
+				
+					--Сначала из исх.письма, затем генерим новый
+					IF v_new_contract_number IS NULL THEN
+						v_new_contract_number = contracts_next_number(v_document_type,now()::date);
+					END IF;
+				
+					--Номер экспертного заключения
+					v_expertise_result_number = regexp_replace(v_new_contract_number,'\D+.*$','');
+					v_expertise_result_number = substr('0000',1,4-length(v_expertise_result_number))||
+								v_expertise_result_number||
+								'/'||(extract(year FROM now())-2000)::text;
+				
+					--Дни проверки
+					SELECT
+						services.date_type,
+						services.work_day_count,
+						services.expertise_day_count
+					INTO
+						v_date_type,
+						v_work_day_count,
+						v_expert_work_day_count
+					FROM services
+					WHERE services.id=
+					((
+						CASE
+							WHEN v_document_type='pd' THEN pdfn_services_expertise()
+							WHEN v_document_type='cost_eval_validity' THEN pdfn_services_cost_eval_validity()
+							WHEN v_document_type='modification' THEN pdfn_services_modification()
+							WHEN v_document_type='audit' THEN pdfn_services_audit()
+							ELSE NULL
+						END
+					)->'keys'->>'id')::int;
+								
+					--RAISE EXCEPTION 'v_linked_contracts=%',v_linked_contracts;
+					--Контракт
+					INSERT INTO contracts (
+						date_time,
+						application_id,
+						client_id,
+						employee_id,
+						document_type,
+						expertise_type,
+						cost_eval_validity_pd_order,
+						constr_name,
+						constr_address,
+						constr_technical_features,
+						contract_number,
+						expertise_result_number,
+						linked_contracts,
+						--contract_date,					
+						date_type,
+						expertise_day_count,
+						expert_work_day_count,
+						work_end_date,
+						expert_work_end_date,
+						permissions,
+						user_id)
+					VALUES (
+						now(),
+						v_application_id,
+						v_app_client_id,
+						NEW.close_employee_id,
+						v_document_type,
+						v_app_expertise_type,
+						CASE
+							WHEN v_app_cost_eval_validity THEN
+								CASE
+									WHEN v_cost_eval_validity_simult THEN 'simult_with_pd'::cost_eval_validity_pd_orders
+									WHEN v_linked_app IS NOT NULL THEN 'after_pd'::cost_eval_validity_pd_orders
+									ELSE 'no_pd'::cost_eval_validity_pd_orders
+								END
+							ELSE NULL
+						END,
+						v_constr_name,
+						v_constr_address,
+						v_constr_technical_features,
+					
+						v_new_contract_number,
+						v_expertise_result_number,
+					
+						--linked_contracts
+						CASE WHEN v_linked_contracts IS NOT NULL THEN
+							jsonb_build_object(
+								'id','LinkedContractList_Model',
+								'rows',v_linked_contracts
+							)
+						ELSE
+							'{"id":"LinkedContractList_Model","rows":[]}'::jsonb
+						END,
+					
+						--now()::date,--contract_date
+					
+						v_date_type,
+						v_work_day_count,
+						v_expert_work_day_count,
+					
+						--ПРИ ОПЛАТЕ client_payments_process()
+						--ставятся work_start_date&&work_end_date
+						--contracts_work_end_date(v_office_id, v_date_type, now(), v_work_day_count),
+						NULL,
+						NULL,					
+					
+						'{"id":"AccessPermission_Model","rows":[]}'::jsonb,
+					
+						v_app_user_id
+					)
+					RETURNING id INTO v_new_contract_id;
+				
+					--В связные контракты запишем данный по текущему новому
+					IF (v_linked_contracts_ref->'keys'->>'id' IS NOT NULL) THEN
+					--RAISE EXCEPTION 'Updating contracts, id=%',(v_linked_contracts_ref->'keys'->>'id')::int;
+						UPDATE contracts
+						SET
+							linked_contracts = jsonb_build_object(
+								'id','LinkedContractList_Model',
+								'rows',
+								linked_contracts->'rows'||
+									jsonb_build_object(
+									'fields',jsonb_build_object(
+										'id',
+										jsonb_array_length(linked_contracts->'rows')+1,
+										'contracts_ref',contracts_ref((SELECT contracts FROM contracts WHERE id=v_new_contract_id))
+										)
+									)							
+							)
+						WHERE id=(v_linked_contracts_ref->'keys'->>'id')::int;
+					END IF;
+					IF (v_primary_contracts_ref->'keys'->>'id' IS NOT NULL) THEN
+						UPDATE contracts
+						SET
+							linked_contracts = jsonb_build_object(
+								'id','LinkedContractList_Model',
+								'rows',
+								linked_contracts->'rows'||
+									jsonb_build_object(
+									'fields',jsonb_build_object(
+										'id',
+										jsonb_array_length(linked_contracts->'rows')+1,
+										'contracts_ref',contracts_ref((SELECT contracts FROM contracts WHERE id=v_new_contract_id))
+										)
+									)							
+							)
+						WHERE id=(v_primary_contracts_ref->'keys'->>'id')::int;
+					END IF;
+					IF (v_modif_primary_contracts_ref->'keys'->>'id' IS NOT NULL) THEN
+						UPDATE contracts
+						SET
+							linked_contracts = jsonb_build_object(
+								'id','LinkedContractList_Model',
+								'rows',
+								linked_contracts->'rows'||
+									jsonb_build_object(
+									'fields',jsonb_build_object(
+										'id',
+										jsonb_array_length(linked_contracts->'rows')+1,
+										'contracts_ref',contracts_ref((SELECT contracts FROM contracts WHERE id=v_new_contract_id))
+										)
+									)							
+							)
+						WHERE id=(v_modif_primary_contracts_ref->'keys'->>'id')::int;
+					END IF;
+				
+				END IF;
+			END IF;
+						
+			--задачи
+			UPDATE doc_flow_tasks
+			SET 
+				date_time			= NEW.date_time,
+				end_date_time			= NEW.end_date_time,
+				doc_flow_importance_type_id	= NEW.doc_flow_importance_type_id,
+				employee_id			= NEW.employee_id,
+				description			= NEW.subject,
+				closed				= NEW.closed,
+				close_doc			= CASE WHEN NEW.closed THEN v_ref ELSE NULL END,
+				close_date_time			= CASE WHEN NEW.closed THEN now() ELSE NULL END,
+				close_employee_id		= CASE WHEN NEW.closed THEN NEW.close_employee_id ELSE NULL END
+			WHERE register_doc->>'dataType'='doc_flow_examinations' AND (register_doc->'keys'->>'id')::int=NEW.id;
+		END IF;
+		
+		RETURN NEW;
+		
+	ELSIF (TG_WHEN='BEFORE' AND TG_OP='UPDATE') THEN
+		--статус
+		--DELETE FROM doc_flow_in_processes WHERE (register_doc->>'dataType')::data_types='doc_flow_examinations'::data_types AND (register_doc->'keys'->>'id')::int=NEW.id;
+		--задачи
+		--DELETE FROM doc_flow_tasks WHERE (register_doc->>'dataType')::data_types='doc_flow_examinations'::data_types AND (register_doc->'keys'->>'id')::int=NEW.id;
+	
+		RETURN NEW;
+		
+	ELSIF (TG_WHEN='BEFORE' AND TG_OP='DELETE') THEN
+		IF NOT const_client_lk_val() OR const_debug_val() THEN
+			--статус
+			DELETE FROM doc_flow_in_processes WHERE register_doc->>'dataType'='doc_flow_examinations' AND (register_doc->'keys'->>'id')::int=OLD.id;
+			--задачи
+			DELETE FROM doc_flow_tasks WHERE register_doc->>'dataType'='doc_flow_examinations' AND (register_doc->'keys'->>'id')::int=OLD.id;
+			IF (OLD.subject_doc->>'dataType')::data_types='doc_flow_in'::data_types THEN
+				SELECT from_application_id INTO v_application_id FROM doc_flow_in WHERE id=(OLD.subject_doc->'keys'->>'id')::int;
+				IF v_application_id IS NOT NULL THEN
+					DELETE FROM application_processes WHERE doc_flow_examination_id=OLD.id;
+				END IF;
+			END IF;
+		END IF;
+													
+		RETURN OLD;
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION doc_flow_examinations_process() OWNER TO expert72_office;
+
+-- ******************* update 14/11/2018 11:38:40 ******************
+-- Function: doc_flow_examinations_process()
+
+-- DROP FUNCTION doc_flow_examinations_process();
+
+CREATE OR REPLACE FUNCTION doc_flow_examinations_process()
+  RETURNS trigger AS
+$BODY$
+DECLARE
+	v_ref JSONB;
+	v_application_id int;
+	v_app_expertise_type expertise_types;
+	v_app_cost_eval_validity bool;
+	v_app_modification bool;
+	v_app_audit bool;	
+	v_app_client_id int;
+	v_app_user_id int;
+	v_app_applicant JSONB;
+	v_primary_contracts_ref JSONB;
+	v_modif_primary_contracts_ref JSONB;	
+	v_linked_contracts_ref JSONB;
+	v_app_process_dt timestampTZ;
+	v_linked_app int;
+	v_cost_eval_validity_simult bool;
+	v_constr_name text;
+	v_constr_address jsonb;
+	v_constr_technical_features jsonb;
+	v_linked_contracts JSONB[];
+	v_linked_contracts_n int;
+	v_new_contract_number text;
+	v_document_type document_types;
+	v_expertise_result_number text;
+	v_date_type date_types;
+	v_work_day_count int;
+	v_expert_work_day_count int;
+	v_office_id int;
+	v_new_contract_id int;
+BEGIN
+	IF (TG_WHEN='AFTER' AND TG_OP='INSERT') THEN
+		IF NOT const_client_lk_val() OR const_debug_val() THEN
+			v_ref = doc_flow_examinations_ref((SELECT doc_flow_examinations FROM doc_flow_examinations WHERE id=NEW.id));
+			--статус
+			INSERT INTO doc_flow_in_processes (
+				doc_flow_in_id, date_time,
+				state,
+				register_doc,
+				doc_flow_importance_type_id,
+				description,
+				end_date_time
+			)
+			VALUES (
+				(NEW.subject_doc->'keys'->>'id')::int,NEW.date_time,
+				CASE WHEN NEW.closed THEN 'examined'::doc_flow_in_states ELSE 'examining'::doc_flow_in_states END,
+				v_ref,
+				NEW.doc_flow_importance_type_id,
+				NEW.subject,
+				NEW.end_date_time
+			);
+			
+			--задачи
+			INSERT INTO doc_flow_tasks (
+				register_doc,
+				date_time,end_date_time,
+				doc_flow_importance_type_id,
+				employee_id,
+				recipient,
+				description,
+				closed,
+				close_doc,
+				close_date_time,
+				close_employee_id
+			)
+			VALUES (
+				v_ref,
+				NEW.date_time,NEW.end_date_time,
+				NEW.doc_flow_importance_type_id,
+				NEW.employee_id,
+				NEW.recipient,
+				NEW.subject,
+				NEW.closed,
+				CASE WHEN NEW.closed THEN v_ref ELSE NULL END,
+				CASE WHEN NEW.closed THEN now() ELSE NULL END,
+				CASE WHEN NEW.closed THEN NEW.close_employee_id ELSE NULL END
+			);
+		END IF;
+		
+		IF NOT const_client_lk_val() OR const_debug_val() THEN
+			--если тип основания - письмо, чье основание - заявление - сменим его статус
+			IF NEW.subject_doc->>'dataType'='doc_flow_in' THEN
+				SELECT from_application_id INTO v_application_id FROM doc_flow_in WHERE id=(NEW.subject_doc->'keys'->>'id')::int;
+				IF (v_application_id IS NOT NULL) THEN
+					IF NEW.closed THEN
+						SELECT
+							greatest(NEW.date_time,date_time+'1 second'::interval)
+						INTO v_app_process_dt
+						FROM application_processes
+						WHERE application_id=v_application_id
+						ORDER BY date_time DESC
+						LIMIT 1;
+					ELSE
+						v_app_process_dt = NEW.date_time;
+					END IF;
+					--статус
+					INSERT INTO application_processes (
+						application_id,
+						date_time,
+						state,
+						user_id,
+						end_date_time
+					)
+					VALUES (
+						v_application_id,
+						v_app_process_dt,
+						CASE WHEN NEW.closed THEN NEW.application_resolution_state ELSE 'checking'::application_states END,
+						(SELECT user_id FROM employees WHERE id=NEW.employee_id),
+						NEW.end_date_time
+					);			
+				END IF;
+			END IF;		
+		END IF;
+		
+			
+		RETURN NEW;
+		
+	ELSIF (TG_WHEN='AFTER' AND TG_OP='UPDATE' ) THEN
+		IF NOT const_client_lk_val() OR const_debug_val() THEN
+			v_ref = doc_flow_examinations_ref((SELECT doc_flow_examinations FROM doc_flow_examinations WHERE id=NEW.id));
+		
+			--state
+			IF NEW.date_time<>OLD.date_time
+				OR NEW.end_date_time<>OLD.end_date_time
+				OR NEW.doc_flow_importance_type_id<>OLD.doc_flow_importance_type_id
+				OR NEW.subject_doc<>OLD.subject_doc
+				OR NEW.subject<>OLD.subject
+				OR NEW.date_time<>OLD.date_time
+				--OR (NEW.employee_id<>OLD.employee_id AND NEW.subject_doc->>'dataType'='doc_flow_in'
+			THEN
+				UPDATE doc_flow_in_processes
+				SET
+					date_time			= NEW.date_time,
+					doc_flow_importance_type_id	= NEW.doc_flow_importance_type_id,
+					doc_flow_in_id			= (NEW.subject_doc->'keys'->>'id')::int,
+					description			= NEW.subject,
+					end_date_time			= NEW.end_date_time
+				WHERE register_doc->>'dataType'='doc_flow_examinations' AND (register_doc->'keys'->>'id')::int=NEW.id;
+			END IF;
+	
+			--сменим статус при закрытии
+			IF NEW.closed<>OLD.closed THEN
+				INSERT INTO doc_flow_in_processes (
+					doc_flow_in_id,
+					date_time,
+					state,
+					register_doc,
+					doc_flow_importance_type_id,
+					end_date_time
+				)
+				VALUES (
+					(NEW.subject_doc->'keys'->>'id')::int,
+					CASE WHEN NEW.closed THEN NEW.close_date_time ELSE now() END,
+					CASE WHEN NEW.closed THEN 'examined'::doc_flow_in_states ELSE 'examining'::doc_flow_in_states END,
+					v_ref,
+					NEW.doc_flow_importance_type_id,
+					NEW.end_date_time
+				);		
+			END IF;
+	
+			--если тип основания - заявление - сменим его статус
+			IF NEW.subject_doc->>'dataType'='doc_flow_in' AND NEW.closed<>OLD.closed AND NEW.closed THEN
+				SELECT
+					from_application_id,
+					doc_flow_out.new_contract_number
+				INTO
+					v_application_id,
+					v_new_contract_number
+				FROM doc_flow_in
+				LEFT JOIN doc_flow_out ON doc_flow_out.doc_flow_in_id=doc_flow_in.id
+				WHERE doc_flow_in.id=(NEW.subject_doc->'keys'->>'id')::int;
+			
+				IF v_application_id IS NOT NULL THEN
+					IF NEW.closed THEN
+						SELECT
+							greatest(NEW.close_date_time,date_time+'1 second'::interval)
+						INTO v_app_process_dt
+						FROM application_processes
+						WHERE application_id=v_application_id
+						ORDER BY date_time DESC
+						LIMIT 1;
+					ELSE
+						v_app_process_dt = NEW.close_date_time;
+					END IF;
+			
+					--статус
+					INSERT INTO application_processes (
+						application_id,
+						date_time,
+						state,
+						user_id,
+						end_date_time
+					)
+					VALUES (
+						v_application_id,
+						v_app_process_dt,
+						CASE WHEN NEW.closed THEN NEW.application_resolution_state ELSE 'checking'::application_states END,
+						(SELECT user_id FROM employees WHERE id=NEW.employee_id),
+						CASE WHEN NEW.closed THEN NULL ELSE NEW.end_date_time END					
+					);			
+				END IF;
+			
+				--НОВЫЙ КОНТРАКТ
+				IF NEW.application_resolution_state='waiting_for_contract' THEN
+					SELECT
+						app.expertise_type,
+						app.cost_eval_validity,
+						app.modification,
+						app.audit,
+						app.user_id,
+						app.applicant,
+						(contracts_ref(p_contr))::jsonb,
+						(contracts_ref(mp_contr))::jsonb,
+						coalesce(app.base_application_id,app.derived_application_id),
+						app.cost_eval_validity_simult,
+						app.constr_name,
+						app.constr_address,
+						app.constr_technical_features,
+						CASE
+							WHEN app.expertise_type IS NOT NULL THEN 'pd'::document_types
+							WHEN app.cost_eval_validity THEN 'cost_eval_validity'::document_types
+							WHEN app.modification THEN 'modification'::document_types
+							WHEN app.audit THEN 'audit'::document_types						
+						END,
+						app.office_id
+					
+					INTO
+						v_app_expertise_type,
+						v_app_cost_eval_validity,
+						v_app_modification,
+						v_app_audit,
+						v_app_user_id,
+						v_app_applicant,
+						v_primary_contracts_ref,
+						v_modif_primary_contracts_ref,
+						v_linked_app,
+						v_cost_eval_validity_simult,
+						v_constr_name,
+						v_constr_address,
+						v_constr_technical_features,
+						v_document_type,
+						v_office_id
+					
+					FROM applications AS app
+					LEFT JOIN contracts AS p_contr ON p_contr.application_id=app.primary_application_id
+					LEFT JOIN contracts AS mp_contr ON mp_contr.application_id=app.modif_primary_application_id
+					WHERE app.id=v_application_id;
+				
+					--applicant -->> client
+					UPDATE clients
+					SET
+						name		= v_app_applicant->>'name',
+						name_full	= v_app_applicant->>'name_full',
+						ogrn		= v_app_applicant->>'ogrn',
+						inn		= v_app_applicant->>'inn',
+						kpp		= v_app_applicant->>'kpp',
+						okpo		= v_app_applicant->>'okpo',
+						okved		= v_app_applicant->>'okved',
+						post_address	= v_app_applicant->'post_address',
+						user_id		= v_app_user_id,
+						legal_address	= v_app_applicant->'legal_address',
+						bank_accounts	= v_app_applicant->'bank_accounts',
+						client_type	= 
+							CASE WHEN v_app_applicant->>'client_type' IS NULL OR v_app_applicant->>'client_type'='on' THEN 'enterprise'
+							ELSE (v_app_applicant->>'client_type')::client_types
+							END,
+						base_document_for_contract = v_app_applicant->>'base_document_for_contract',
+						person_id_paper	= v_app_applicant->'person_id_paper',
+						person_registr_paper = v_app_applicant->'person_registr_paper'
+					WHERE name = v_app_applicant->>'name' OR (inn=v_app_applicant->>'inn' AND kpp=v_app_applicant->>'kpp')
+					RETURNING id INTO v_app_client_id;
+				
+					IF NOT FOUND THEN
+						INSERT INTO clients
+						(
+							name,
+							name_full,
+							inn,
+							kpp,
+							ogrn,
+							okpo,
+							okved,
+							post_address,
+							user_id,
+							legal_address,
+							bank_accounts,
+							client_type,
+							base_document_for_contract,
+							person_id_paper,
+							person_registr_paper
+						)
+						VALUES(
+							CASE WHEN v_app_applicant->>'name' IS NULL THEN v_app_applicant->>'name_full'
+							ELSE v_app_applicant->>'name'
+							END,
+							v_app_applicant->>'name_full',
+							v_app_applicant->>'inn',
+							v_app_applicant->>'kpp',
+							v_app_applicant->>'ogrn',
+							v_app_applicant->>'okpo',
+							v_app_applicant->>'okved',
+							v_app_applicant->'post_address',
+							v_app_user_id,
+							v_app_applicant->'legal_address',
+							v_app_applicant->'bank_accounts',
+							CASE WHEN v_app_applicant->>'client_type' IS NULL OR v_app_applicant->>'client_type'='on' THEN 'enterprise'
+							ELSE (v_app_applicant->>'client_type')::client_types
+							END,
+							v_app_applicant->>'base_document_for_contract',
+							v_app_applicant->'person_id_paper',
+							v_app_applicant->'person_registr_paper'
+						)				
+						RETURNING id
+						INTO v_app_client_id
+						;
+					END IF;
+				
+					v_linked_contracts_n = 0;
+					IF (v_primary_contracts_ref->'keys'->>'id' IS NOT NULL) THEN
+						v_linked_contracts_n = v_linked_contracts_n + 1;
+						v_linked_contracts = v_linked_contracts || jsonb_build_object('fields',jsonb_build_object('id',v_linked_contracts_n,'contracts_ref',v_primary_contracts_ref));
+					END IF;
+					IF (v_modif_primary_contracts_ref->'keys'->>'id' IS NOT NULL) THEN
+						v_linked_contracts_n = v_linked_contracts_n + 1;
+						v_linked_contracts = v_linked_contracts || jsonb_build_object('fields',jsonb_build_object('id',v_linked_contracts_n,'contracts_ref',v_modif_primary_contracts_ref));
+					END IF;
+				
+					IF v_linked_app IS NOT NULL THEN
+						--Поиск связного контракта по заявлению
+						SELECT contracts_ref(contracts) INTO v_linked_contracts_ref FROM contracts WHERE application_id=v_linked_app;
+						IF v_linked_contracts_ref IS NOT NULL THEN
+							v_linked_contracts_n = v_linked_contracts_n + 1;
+							v_linked_contracts = v_linked_contracts || jsonb_build_object('fields',jsonb_build_object('id',v_linked_contracts_n,'contracts_ref',v_linked_contracts_ref));
+						END IF;
+					END IF;
+				
+					--Сначала из исх.письма, затем генерим новый
+					IF v_new_contract_number IS NULL THEN
+						v_new_contract_number = contracts_next_number(v_document_type,now()::date);
+					END IF;
+				
+					--Номер экспертного заключения
+					v_expertise_result_number = regexp_replace(v_new_contract_number,'\D+.*$','');
+					v_expertise_result_number = substr('0000',1,4-length(v_expertise_result_number))||
+								v_expertise_result_number||
+								'/'||(extract(year FROM now())-2000)::text;
+				
+					--Дни проверки
+					SELECT
+						services.date_type,
+						services.work_day_count,
+						services.expertise_day_count
+					INTO
+						v_date_type,
+						v_work_day_count,
+						v_expert_work_day_count
+					FROM services
+					WHERE services.id=
+					((
+						CASE
+							WHEN v_document_type='pd' THEN pdfn_services_expertise()
+							WHEN v_document_type='cost_eval_validity' THEN pdfn_services_cost_eval_validity()
+							WHEN v_document_type='modification' THEN pdfn_services_modification()
+							WHEN v_document_type='audit' THEN pdfn_services_audit()
+							ELSE NULL
+						END
+					)->'keys'->>'id')::int;
+								
+					--RAISE EXCEPTION 'v_linked_contracts=%',v_linked_contracts;
+					--Контракт
+					INSERT INTO contracts (
+						date_time,
+						application_id,
+						client_id,
+						employee_id,
+						document_type,
+						expertise_type,
+						cost_eval_validity_pd_order,
+						constr_name,
+						constr_address,
+						constr_technical_features,
+						contract_number,
+						expertise_result_number,
+						linked_contracts,
+						--contract_date,					
+						date_type,
+						expertise_day_count,
+						expert_work_day_count,
+						work_end_date,
+						expert_work_end_date,
+						permissions,
+						user_id)
+					VALUES (
+						now(),
+						v_application_id,
+						v_app_client_id,
+						NEW.close_employee_id,
+						v_document_type,
+						v_app_expertise_type,
+						CASE
+							WHEN v_app_cost_eval_validity THEN
+								CASE
+									WHEN v_cost_eval_validity_simult THEN 'simult_with_pd'::cost_eval_validity_pd_orders
+									WHEN v_linked_app IS NOT NULL THEN 'after_pd'::cost_eval_validity_pd_orders
+									ELSE 'no_pd'::cost_eval_validity_pd_orders
+								END
+							ELSE NULL
+						END,
+						v_constr_name,
+						v_constr_address,
+						v_constr_technical_features,
+					
+						v_new_contract_number,
+						v_expertise_result_number,
+					
+						--linked_contracts
+						CASE WHEN v_linked_contracts IS NOT NULL THEN
+							jsonb_build_object(
+								'id','LinkedContractList_Model',
+								'rows',v_linked_contracts
+							)
+						ELSE
+							'{"id":"LinkedContractList_Model","rows":[]}'::jsonb
+						END,
+					
+						--now()::date,--contract_date
+					
+						v_date_type,
+						v_work_day_count,
+						v_expert_work_day_count,
+					
+						--ПРИ ОПЛАТЕ client_payments_process()
+						--ставятся work_start_date&&work_end_date
+						--contracts_work_end_date(v_office_id, v_date_type, now(), v_work_day_count),
+						NULL,
+						NULL,					
+					
+						'{"id":"AccessPermission_Model","rows":[]}'::jsonb,
+					
+						v_app_user_id
+					)
+					RETURNING id INTO v_new_contract_id;
+				
+					--В связные контракты запишем данный по текущему новому
+					IF (v_linked_contracts_ref->'keys'->>'id' IS NOT NULL) THEN
+					--RAISE EXCEPTION 'Updating contracts, id=%',(v_linked_contracts_ref->'keys'->>'id')::int;
+						UPDATE contracts
+						SET
+							linked_contracts = jsonb_build_object(
+								'id','LinkedContractList_Model',
+								'rows',
+								linked_contracts->'rows'||
+									jsonb_build_object(
+									'fields',jsonb_build_object(
+										'id',
+										jsonb_array_length(linked_contracts->'rows')+1,
+										'contracts_ref',contracts_ref((SELECT contracts FROM contracts WHERE id=v_new_contract_id))
+										)
+									)							
+							)
+						WHERE id=(v_linked_contracts_ref->'keys'->>'id')::int;
+					END IF;
+					IF (v_primary_contracts_ref->'keys'->>'id' IS NOT NULL) THEN
+						UPDATE contracts
+						SET
+							linked_contracts = jsonb_build_object(
+								'id','LinkedContractList_Model',
+								'rows',
+								linked_contracts->'rows'||
+									jsonb_build_object(
+									'fields',jsonb_build_object(
+										'id',
+										jsonb_array_length(linked_contracts->'rows')+1,
+										'contracts_ref',contracts_ref((SELECT contracts FROM contracts WHERE id=v_new_contract_id))
+										)
+									)							
+							)
+						WHERE id=(v_primary_contracts_ref->'keys'->>'id')::int;
+					END IF;
+					IF (v_modif_primary_contracts_ref->'keys'->>'id' IS NOT NULL) THEN
+						UPDATE contracts
+						SET
+							linked_contracts = jsonb_build_object(
+								'id','LinkedContractList_Model',
+								'rows',
+								linked_contracts->'rows'||
+									jsonb_build_object(
+									'fields',jsonb_build_object(
+										'id',
+										jsonb_array_length(linked_contracts->'rows')+1,
+										'contracts_ref',contracts_ref((SELECT contracts FROM contracts WHERE id=v_new_contract_id))
+										)
+									)							
+							)
+						WHERE id=(v_modif_primary_contracts_ref->'keys'->>'id')::int;
+					END IF;
+				
+				END IF;
+			END IF;
+						
+			--задачи
+			UPDATE doc_flow_tasks
+			SET 
+				date_time			= NEW.date_time,
+				end_date_time			= NEW.end_date_time,
+				doc_flow_importance_type_id	= NEW.doc_flow_importance_type_id,
+				employee_id			= NEW.employee_id,
+				description			= NEW.subject,
+				closed				= NEW.closed,
+				close_doc			= CASE WHEN NEW.closed THEN v_ref ELSE NULL END,
+				close_date_time			= CASE WHEN NEW.closed THEN now() ELSE NULL END,
+				close_employee_id		= CASE WHEN NEW.closed THEN NEW.close_employee_id ELSE NULL END
+			WHERE register_doc->>'dataType'='doc_flow_examinations' AND (register_doc->'keys'->>'id')::int=NEW.id;
+		END IF;
+		
+		RETURN NEW;
+		
+	ELSIF (TG_WHEN='BEFORE' AND TG_OP='UPDATE') THEN
+		--статус
+		--DELETE FROM doc_flow_in_processes WHERE (register_doc->>'dataType')::data_types='doc_flow_examinations'::data_types AND (register_doc->'keys'->>'id')::int=NEW.id;
+		--задачи
+		--DELETE FROM doc_flow_tasks WHERE (register_doc->>'dataType')::data_types='doc_flow_examinations'::data_types AND (register_doc->'keys'->>'id')::int=NEW.id;
+	
+		RETURN NEW;
+		
+	ELSIF (TG_WHEN='BEFORE' AND TG_OP='DELETE') THEN
+		IF NOT const_client_lk_val() OR const_debug_val() THEN
+			--статус
+			DELETE FROM doc_flow_in_processes WHERE register_doc->>'dataType'='doc_flow_examinations' AND (register_doc->'keys'->>'id')::int=OLD.id;
+			--задачи
+			DELETE FROM doc_flow_tasks WHERE register_doc->>'dataType'='doc_flow_examinations' AND (register_doc->'keys'->>'id')::int=OLD.id;
+			IF (OLD.subject_doc->>'dataType')::data_types='doc_flow_in'::data_types THEN
+				SELECT from_application_id INTO v_application_id FROM doc_flow_in WHERE id=(OLD.subject_doc->'keys'->>'id')::int;
+				IF v_application_id IS NOT NULL THEN
+					DELETE FROM application_processes WHERE doc_flow_examination_id=OLD.id;
+				END IF;
+			END IF;
+		END IF;
+													
+		RETURN OLD;
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION doc_flow_examinations_process() OWNER TO expert72_office;
+
+-- ******************* update 14/11/2018 11:41:43 ******************
+-- Function: doc_flow_examinations_process()
+
+-- DROP FUNCTION doc_flow_examinations_process();
+
+CREATE OR REPLACE FUNCTION doc_flow_examinations_process()
+  RETURNS trigger AS
+$BODY$
+DECLARE
+	v_ref JSONB;
+	v_application_id int;
+	v_app_expertise_type expertise_types;
+	v_app_cost_eval_validity bool;
+	v_app_modification bool;
+	v_app_audit bool;	
+	v_app_client_id int;
+	v_app_user_id int;
+	v_app_applicant JSONB;
+	v_primary_contracts_ref JSONB;
+	v_modif_primary_contracts_ref JSONB;	
+	v_linked_contracts_ref JSONB;
+	v_app_process_dt timestampTZ;
+	v_linked_app int;
+	v_cost_eval_validity_simult bool;
+	v_constr_name text;
+	v_constr_address jsonb;
+	v_constr_technical_features jsonb;
+	v_linked_contracts JSONB[];
+	v_linked_contracts_n int;
+	v_new_contract_number text;
+	v_document_type document_types;
+	v_expertise_result_number text;
+	v_date_type date_types;
+	v_work_day_count int;
+	v_expert_work_day_count int;
+	v_office_id int;
+	v_new_contract_id int;
+BEGIN
+	IF (TG_WHEN='AFTER' AND TG_OP='INSERT') THEN
+		IF NOT const_client_lk_val() OR const_debug_val() THEN
+			v_ref = doc_flow_examinations_ref((SELECT doc_flow_examinations FROM doc_flow_examinations WHERE id=NEW.id));
+			--статус
+			INSERT INTO doc_flow_in_processes (
+				doc_flow_in_id, date_time,
+				state,
+				register_doc,
+				doc_flow_importance_type_id,
+				description,
+				end_date_time
+			)
+			VALUES (
+				(NEW.subject_doc->'keys'->>'id')::int,NEW.date_time,
+				CASE WHEN NEW.closed THEN 'examined'::doc_flow_in_states ELSE 'examining'::doc_flow_in_states END,
+				v_ref,
+				NEW.doc_flow_importance_type_id,
+				NEW.subject,
+				NEW.end_date_time
+			);
+			
+			--задачи
+			INSERT INTO doc_flow_tasks (
+				register_doc,
+				date_time,end_date_time,
+				doc_flow_importance_type_id,
+				employee_id,
+				recipient,
+				description,
+				closed,
+				close_doc,
+				close_date_time,
+				close_employee_id
+			)
+			VALUES (
+				v_ref,
+				NEW.date_time,NEW.end_date_time,
+				NEW.doc_flow_importance_type_id,
+				NEW.employee_id,
+				NEW.recipient,
+				NEW.subject,
+				NEW.closed,
+				CASE WHEN NEW.closed THEN v_ref ELSE NULL END,
+				CASE WHEN NEW.closed THEN now() ELSE NULL END,
+				CASE WHEN NEW.closed THEN NEW.close_employee_id ELSE NULL END
+			);
+		END IF;
+		
+		IF NOT const_client_lk_val() OR const_debug_val() THEN
+			--если тип основания - письмо, чье основание - заявление - сменим его статус
+			IF NEW.subject_doc->>'dataType'='doc_flow_in' THEN
+				SELECT from_application_id INTO v_application_id FROM doc_flow_in WHERE id=(NEW.subject_doc->'keys'->>'id')::int;
+				IF (v_application_id IS NOT NULL) THEN
+					IF NEW.closed THEN
+						SELECT
+							greatest(NEW.date_time,date_time+'1 second'::interval)
+						INTO v_app_process_dt
+						FROM application_processes
+						WHERE application_id=v_application_id
+						ORDER BY date_time DESC
+						LIMIT 1;
+					ELSE
+						v_app_process_dt = NEW.date_time;
+					END IF;
+					--статус
+					INSERT INTO application_processes (
+						application_id,
+						date_time,
+						state,
+						user_id,
+						end_date_time
+					)
+					VALUES (
+						v_application_id,
+						v_app_process_dt,
+						CASE WHEN NEW.closed THEN NEW.application_resolution_state ELSE 'checking'::application_states END,
+						(SELECT user_id FROM employees WHERE id=NEW.employee_id),
+						NEW.end_date_time
+					);			
+				END IF;
+			END IF;		
+		END IF;
+		
+			
+		RETURN NEW;
+		
+	ELSIF (TG_WHEN='AFTER' AND TG_OP='UPDATE' ) THEN
+		IF NOT const_client_lk_val() OR const_debug_val() THEN
+			v_ref = doc_flow_examinations_ref((SELECT doc_flow_examinations FROM doc_flow_examinations WHERE id=NEW.id));
+		
+			--state
+			IF NEW.date_time<>OLD.date_time
+				OR NEW.end_date_time<>OLD.end_date_time
+				OR NEW.doc_flow_importance_type_id<>OLD.doc_flow_importance_type_id
+				OR NEW.subject_doc<>OLD.subject_doc
+				OR NEW.subject<>OLD.subject
+				OR NEW.date_time<>OLD.date_time
+				--OR (NEW.employee_id<>OLD.employee_id AND NEW.subject_doc->>'dataType'='doc_flow_in'
+			THEN
+				UPDATE doc_flow_in_processes
+				SET
+					date_time			= NEW.date_time,
+					doc_flow_importance_type_id	= NEW.doc_flow_importance_type_id,
+					doc_flow_in_id			= (NEW.subject_doc->'keys'->>'id')::int,
+					description			= NEW.subject,
+					end_date_time			= NEW.end_date_time
+				WHERE register_doc->>'dataType'='doc_flow_examinations' AND (register_doc->'keys'->>'id')::int=NEW.id;
+			END IF;
+	
+			--сменим статус при закрытии
+			IF NEW.closed<>OLD.closed THEN
+				INSERT INTO doc_flow_in_processes (
+					doc_flow_in_id,
+					date_time,
+					state,
+					register_doc,
+					doc_flow_importance_type_id,
+					end_date_time
+				)
+				VALUES (
+					(NEW.subject_doc->'keys'->>'id')::int,
+					CASE WHEN NEW.closed THEN NEW.close_date_time ELSE now() END,
+					CASE WHEN NEW.closed THEN 'examined'::doc_flow_in_states ELSE 'examining'::doc_flow_in_states END,
+					v_ref,
+					NEW.doc_flow_importance_type_id,
+					NEW.end_date_time
+				);		
+			END IF;
+	
+			--если тип основания - заявление - сменим его статус
+			IF NEW.subject_doc->>'dataType'='doc_flow_in' AND NEW.closed<>OLD.closed AND NEW.closed THEN
+				SELECT
+					from_application_id,
+					doc_flow_out.new_contract_number
+				INTO
+					v_application_id,
+					v_new_contract_number
+				FROM doc_flow_in
+				LEFT JOIN doc_flow_out ON doc_flow_out.doc_flow_in_id=doc_flow_in.id
+				WHERE doc_flow_in.id=(NEW.subject_doc->'keys'->>'id')::int;
+			
+				IF v_application_id IS NOT NULL THEN
+					IF NEW.closed THEN
+						SELECT
+							greatest(NEW.close_date_time,date_time+'1 second'::interval)
+						INTO v_app_process_dt
+						FROM application_processes
+						WHERE application_id=v_application_id
+						ORDER BY date_time DESC
+						LIMIT 1;
+					ELSE
+						v_app_process_dt = NEW.close_date_time;
+					END IF;
+			
+					--статус
+					INSERT INTO application_processes (
+						application_id,
+						date_time,
+						state,
+						user_id,
+						end_date_time
+					)
+					VALUES (
+						v_application_id,
+						v_app_process_dt,
+						CASE WHEN NEW.closed THEN NEW.application_resolution_state ELSE 'checking'::application_states END,
+						(SELECT user_id FROM employees WHERE id=NEW.employee_id),
+						CASE WHEN NEW.closed THEN NULL ELSE NEW.end_date_time END					
+					);			
+				END IF;
+			
+				--НОВЫЙ КОНТРАКТ
+				IF NEW.application_resolution_state='waiting_for_contract' THEN
+					SELECT
+						app.expertise_type,
+						app.cost_eval_validity,
+						app.modification,
+						app.audit,
+						app.user_id,
+						app.applicant,
+						(contracts_ref(p_contr))::jsonb,
+						(contracts_ref(mp_contr))::jsonb,
+						coalesce(app.base_application_id,app.derived_application_id),
+						app.cost_eval_validity_simult,
+						app.constr_name,
+						app.constr_address,
+						app.constr_technical_features,
+						CASE
+							WHEN app.expertise_type IS NOT NULL THEN 'pd'::document_types
+							WHEN app.cost_eval_validity THEN 'cost_eval_validity'::document_types
+							WHEN app.modification THEN 'modification'::document_types
+							WHEN app.audit THEN 'audit'::document_types						
+						END,
+						app.office_id
+					
+					INTO
+						v_app_expertise_type,
+						v_app_cost_eval_validity,
+						v_app_modification,
+						v_app_audit,
+						v_app_user_id,
+						v_app_applicant,
+						v_primary_contracts_ref,
+						v_modif_primary_contracts_ref,
+						v_linked_app,
+						v_cost_eval_validity_simult,
+						v_constr_name,
+						v_constr_address,
+						v_constr_technical_features,
+						v_document_type,
+						v_office_id
+					
+					FROM applications AS app
+					LEFT JOIN contracts AS p_contr ON p_contr.application_id=app.primary_application_id
+					LEFT JOIN contracts AS mp_contr ON mp_contr.application_id=app.modif_primary_application_id
+					WHERE app.id=v_application_id;
+				
+					--applicant -->> client
+					UPDATE clients
+					SET
+						name		= v_app_applicant->>'name',
+						name_full	= v_app_applicant->>'name_full',
+						ogrn		= v_app_applicant->>'ogrn',
+						inn		= v_app_applicant->>'inn',
+						kpp		= v_app_applicant->>'kpp',
+						okpo		= v_app_applicant->>'okpo',
+						okved		= v_app_applicant->>'okved',
+						post_address	= v_app_applicant->'post_address',
+						user_id		= v_app_user_id,
+						legal_address	= v_app_applicant->'legal_address',
+						bank_accounts	= v_app_applicant->'bank_accounts',
+						client_type	= 
+							CASE WHEN v_app_applicant->>'client_type' IS NULL OR v_app_applicant->>'client_type'='on' THEN 'enterprise'
+							ELSE (v_app_applicant->>'client_type')::client_types
+							END,
+						base_document_for_contract = v_app_applicant->>'base_document_for_contract',
+						person_id_paper	= v_app_applicant->'person_id_paper',
+						person_registr_paper = v_app_applicant->'person_registr_paper'
+					WHERE name = v_app_applicant->>'name' OR (inn=v_app_applicant->>'inn' AND kpp=v_app_applicant->>'kpp')
+					RETURNING id INTO v_app_client_id;
+				
+					IF NOT FOUND THEN
+						INSERT INTO clients
+						(
+							name,
+							name_full,
+							inn,
+							kpp,
+							ogrn,
+							okpo,
+							okved,
+							post_address,
+							user_id,
+							legal_address,
+							bank_accounts,
+							client_type,
+							base_document_for_contract,
+							person_id_paper,
+							person_registr_paper
+						)
+						VALUES(
+							CASE WHEN v_app_applicant->>'name' IS NULL THEN v_app_applicant->>'name_full'
+							ELSE v_app_applicant->>'name'
+							END,
+							v_app_applicant->>'name_full',
+							v_app_applicant->>'inn',
+							v_app_applicant->>'kpp',
+							v_app_applicant->>'ogrn',
+							v_app_applicant->>'okpo',
+							v_app_applicant->>'okved',
+							v_app_applicant->'post_address',
+							v_app_user_id,
+							v_app_applicant->'legal_address',
+							v_app_applicant->'bank_accounts',
+							CASE WHEN v_app_applicant->>'client_type' IS NULL OR v_app_applicant->>'client_type'='on' THEN 'enterprise'
+							ELSE (v_app_applicant->>'client_type')::client_types
+							END,
+							v_app_applicant->>'base_document_for_contract',
+							v_app_applicant->'person_id_paper',
+							v_app_applicant->'person_registr_paper'
+						)				
+						RETURNING id
+						INTO v_app_client_id
+						;
+					END IF;
+				
+					v_linked_contracts_n = 0;
+					IF (v_primary_contracts_ref->'keys'->>'id' IS NOT NULL) THEN
+						v_linked_contracts_n = v_linked_contracts_n + 1;
+						v_linked_contracts = v_linked_contracts || jsonb_build_object('fields',jsonb_build_object('id',v_linked_contracts_n,'contracts_ref',v_primary_contracts_ref));
+					END IF;
+					IF (v_modif_primary_contracts_ref->'keys'->>'id' IS NOT NULL) THEN
+						v_linked_contracts_n = v_linked_contracts_n + 1;
+						v_linked_contracts = v_linked_contracts || jsonb_build_object('fields',jsonb_build_object('id',v_linked_contracts_n,'contracts_ref',v_modif_primary_contracts_ref));
+					END IF;
+				
+					IF v_linked_app IS NOT NULL THEN
+						--Поиск связного контракта по заявлению
+						SELECT contracts_ref(contracts) INTO v_linked_contracts_ref FROM contracts WHERE application_id=v_linked_app;
+						IF v_linked_contracts_ref IS NOT NULL THEN
+							v_linked_contracts_n = v_linked_contracts_n + 1;
+							v_linked_contracts = v_linked_contracts || jsonb_build_object('fields',jsonb_build_object('id',v_linked_contracts_n,'contracts_ref',v_linked_contracts_ref));
+						END IF;
+					END IF;
+				
+					--Сначала из исх.письма, затем генерим новый
+					IF v_new_contract_number IS NULL THEN
+						v_new_contract_number = contracts_next_number(v_document_type,now()::date);
+					END IF;
+				
+					--Номер экспертного заключения
+					v_expertise_result_number = regexp_replace(v_new_contract_number,'\D+.*$','');
+					v_expertise_result_number = substr('0000',1,4-length(v_expertise_result_number))||
+								v_expertise_result_number||
+								'/'||(extract(year FROM now())-2000)::text;
+				
+					--Дни проверки
+					SELECT
+						services.date_type,
+						services.work_day_count,
+						services.expertise_day_count
+					INTO
+						v_date_type,
+						v_work_day_count,
+						v_expert_work_day_count
+					FROM services
+					WHERE services.id=
+					((
+						CASE
+							WHEN v_document_type='pd' THEN pdfn_services_expertise()
+							WHEN v_document_type='cost_eval_validity' THEN pdfn_services_cost_eval_validity()
+							WHEN v_document_type='modification' THEN pdfn_services_modification()
+							WHEN v_document_type='audit' THEN pdfn_services_audit()
+							ELSE NULL
+						END
+					)->'keys'->>'id')::int;
+								
+					--RAISE EXCEPTION 'v_linked_contracts=%',v_linked_contracts;
+					--Контракт
+					INSERT INTO contracts (
+						date_time,
+						application_id,
+						client_id,
+						employee_id,
+						document_type,
+						expertise_type,
+						cost_eval_validity_pd_order,
+						constr_name,
+						constr_address,
+						constr_technical_features,
+						contract_number,
+						expertise_result_number,
+						linked_contracts,
+						--contract_date,					
+						date_type,
+						expertise_day_count,
+						expert_work_day_count,
+						work_end_date,
+						expert_work_end_date,
+						permissions,
+						user_id)
+					VALUES (
+						now(),
+						v_application_id,
+						v_app_client_id,
+						NEW.close_employee_id,
+						v_document_type,
+						v_app_expertise_type,
+						CASE
+							WHEN v_app_cost_eval_validity THEN
+								CASE
+									WHEN v_cost_eval_validity_simult THEN 'simult_with_pd'::cost_eval_validity_pd_orders
+									WHEN v_linked_app IS NOT NULL THEN 'after_pd'::cost_eval_validity_pd_orders
+									ELSE 'no_pd'::cost_eval_validity_pd_orders
+								END
+							ELSE NULL
+						END,
+						v_constr_name,
+						v_constr_address,
+						v_constr_technical_features,
+					
+						v_new_contract_number,
+						v_expertise_result_number,
+					
+						--linked_contracts
+						CASE WHEN v_linked_contracts IS NOT NULL THEN
+							jsonb_build_object(
+								'id','LinkedContractList_Model',
+								'rows',v_linked_contracts
+							)
+						ELSE
+							'{"id":"LinkedContractList_Model","rows":[]}'::jsonb
+						END,
+					
+						--now()::date,--contract_date
+					
+						v_date_type,
+						v_work_day_count,
+						v_expert_work_day_count,
+					
+						--ПРИ ОПЛАТЕ client_payments_process()
+						--ставятся work_start_date&&work_end_date
+						--contracts_work_end_date(v_office_id, v_date_type, now(), v_work_day_count),
+						NULL,
+						NULL,					
+					
+						'{"id":"AccessPermission_Model","rows":[]}'::jsonb,
+					
+						v_app_user_id
+					)
+					RETURNING id INTO v_new_contract_id;
+				
+					--В связные контракты запишем данный по текущему новому
+					IF (v_linked_contracts_ref->'keys'->>'id' IS NOT NULL) THEN
+					--RAISE EXCEPTION 'Updating contracts, id=%',(v_linked_contracts_ref->'keys'->>'id')::int;
+						UPDATE contracts
+						SET
+							linked_contracts = jsonb_build_object(
+								'id','LinkedContractList_Model',
+								'rows',
+								linked_contracts->'rows'||
+									jsonb_build_object(
+									'fields',jsonb_build_object(
+										'id',
+										jsonb_array_length(linked_contracts->'rows')+1,
+										'contracts_ref',contracts_ref((SELECT contracts FROM contracts WHERE id=v_new_contract_id))
+										)
+									)							
+							)
+						WHERE id=(v_linked_contracts_ref->'keys'->>'id')::int;
+					END IF;
+					IF (v_primary_contracts_ref->'keys'->>'id' IS NOT NULL) THEN
+						UPDATE contracts
+						SET
+							linked_contracts = jsonb_build_object(
+								'id','LinkedContractList_Model',
+								'rows',
+								linked_contracts->'rows'||
+									jsonb_build_object(
+									'fields',jsonb_build_object(
+										'id',
+										jsonb_array_length(linked_contracts->'rows')+1,
+										'contracts_ref',contracts_ref((SELECT contracts FROM contracts WHERE id=v_new_contract_id))
+										)
+									)							
+							)
+						WHERE id=(v_primary_contracts_ref->'keys'->>'id')::int;
+					END IF;
+					IF (v_modif_primary_contracts_ref->'keys'->>'id' IS NOT NULL) THEN
+						UPDATE contracts
+						SET
+							linked_contracts = jsonb_build_object(
+								'id','LinkedContractList_Model',
+								'rows',
+								linked_contracts->'rows'||
+									jsonb_build_object(
+									'fields',jsonb_build_object(
+										'id',
+										jsonb_array_length(linked_contracts->'rows')+1,
+										'contracts_ref',contracts_ref((SELECT contracts FROM contracts WHERE id=v_new_contract_id))
+										)
+									)							
+							)
+						WHERE id=(v_modif_primary_contracts_ref->'keys'->>'id')::int;
+					END IF;
+				
+				END IF;
+			END IF;
+						
+			--задачи
+			UPDATE doc_flow_tasks
+			SET 
+				date_time			= NEW.date_time,
+				end_date_time			= NEW.end_date_time,
+				doc_flow_importance_type_id	= NEW.doc_flow_importance_type_id,
+				employee_id			= NEW.employee_id,
+				description			= NEW.subject,
+				closed				= NEW.closed,
+				close_doc			= CASE WHEN NEW.closed THEN v_ref ELSE NULL END,
+				close_date_time			= CASE WHEN NEW.closed THEN now() ELSE NULL END,
+				close_employee_id		= CASE WHEN NEW.closed THEN NEW.close_employee_id ELSE NULL END
+			WHERE register_doc->>'dataType'='doc_flow_examinations' AND (register_doc->'keys'->>'id')::int=NEW.id;
+		END IF;
+		
+		RETURN NEW;
+		
+	ELSIF (TG_WHEN='BEFORE' AND TG_OP='UPDATE') THEN
+		--статус
+		--DELETE FROM doc_flow_in_processes WHERE (register_doc->>'dataType')::data_types='doc_flow_examinations'::data_types AND (register_doc->'keys'->>'id')::int=NEW.id;
+		--задачи
+		--DELETE FROM doc_flow_tasks WHERE (register_doc->>'dataType')::data_types='doc_flow_examinations'::data_types AND (register_doc->'keys'->>'id')::int=NEW.id;
+	
+		RETURN NEW;
+		
+	ELSIF (TG_WHEN='BEFORE' AND TG_OP='DELETE') THEN
+		IF NOT const_client_lk_val() OR const_debug_val() THEN
+			--статус
+			DELETE FROM doc_flow_in_processes WHERE register_doc->>'dataType'='doc_flow_examinations' AND (register_doc->'keys'->>'id')::int=OLD.id;
+			--задачи
+			DELETE FROM doc_flow_tasks WHERE register_doc->>'dataType'='doc_flow_examinations' AND (register_doc->'keys'->>'id')::int=OLD.id;
+			IF (OLD.subject_doc->>'dataType')::data_types='doc_flow_in'::data_types THEN
+				SELECT from_application_id INTO v_application_id FROM doc_flow_in WHERE id=(OLD.subject_doc->'keys'->>'id')::int;
+				IF v_application_id IS NOT NULL THEN
+					DELETE FROM application_processes WHERE doc_flow_examination_id=OLD.id;
+				END IF;
+			END IF;
+		END IF;
+													
+		RETURN OLD;
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION doc_flow_examinations_process() OWNER TO expert72;
+
+-- ******************* update 14/11/2018 11:49:06 ******************
+-- Function: doc_flow_examinations_process()
+
+-- DROP FUNCTION doc_flow_examinations_process();
+
+CREATE OR REPLACE FUNCTION doc_flow_examinations_process()
+  RETURNS trigger AS
+$BODY$
+DECLARE
+	v_ref JSONB;
+	v_application_id int;
+	v_app_expertise_type expertise_types;
+	v_app_cost_eval_validity bool;
+	v_app_modification bool;
+	v_app_audit bool;	
+	v_app_client_id int;
+	v_app_user_id int;
+	v_app_applicant JSONB;
+	v_primary_contracts_ref JSONB;
+	v_modif_primary_contracts_ref JSONB;	
+	v_linked_contracts_ref JSONB;
+	v_app_process_dt timestampTZ;
+	v_linked_app int;
+	v_cost_eval_validity_simult bool;
+	v_constr_name text;
+	v_constr_address jsonb;
+	v_constr_technical_features jsonb;
+	v_linked_contracts JSONB[];
+	v_linked_contracts_n int;
+	v_new_contract_number text;
+	v_document_type document_types;
+	v_expertise_result_number text;
+	v_date_type date_types;
+	v_work_day_count int;
+	v_expert_work_day_count int;
+	v_office_id int;
+	v_new_contract_id int;
+BEGIN
+	IF (TG_WHEN='AFTER' AND TG_OP='INSERT') THEN
+		IF NOT const_client_lk_val() OR const_debug_val() THEN
+			v_ref = doc_flow_examinations_ref((SELECT doc_flow_examinations FROM doc_flow_examinations WHERE id=NEW.id));
+			--статус
+			INSERT INTO doc_flow_in_processes (
+				doc_flow_in_id, date_time,
+				state,
+				register_doc,
+				doc_flow_importance_type_id,
+				description,
+				end_date_time
+			)
+			VALUES (
+				(NEW.subject_doc->'keys'->>'id')::int,NEW.date_time,
+				CASE WHEN NEW.closed THEN 'examined'::doc_flow_in_states ELSE 'examining'::doc_flow_in_states END,
+				v_ref,
+				NEW.doc_flow_importance_type_id,
+				NEW.subject,
+				NEW.end_date_time
+			);
+			
+			--задачи
+			INSERT INTO doc_flow_tasks (
+				register_doc,
+				date_time,end_date_time,
+				doc_flow_importance_type_id,
+				employee_id,
+				recipient,
+				description,
+				closed,
+				close_doc,
+				close_date_time,
+				close_employee_id
+			)
+			VALUES (
+				v_ref,
+				NEW.date_time,NEW.end_date_time,
+				NEW.doc_flow_importance_type_id,
+				NEW.employee_id,
+				NEW.recipient,
+				NEW.subject,
+				NEW.closed,
+				CASE WHEN NEW.closed THEN v_ref ELSE NULL END,
+				CASE WHEN NEW.closed THEN now() ELSE NULL END,
+				CASE WHEN NEW.closed THEN NEW.close_employee_id ELSE NULL END
+			);
+		END IF;
+		
+		IF const_client_lk_val() OR const_debug_val() THEN
+			--если тип основания - письмо, чье основание - заявление - сменим его статус
+			IF NEW.subject_doc->>'dataType'='doc_flow_in' THEN
+				SELECT from_application_id INTO v_application_id FROM doc_flow_in WHERE id=(NEW.subject_doc->'keys'->>'id')::int;
+				IF (v_application_id IS NOT NULL) THEN
+					IF NEW.closed THEN
+						SELECT
+							greatest(NEW.date_time,date_time+'1 second'::interval)
+						INTO v_app_process_dt
+						FROM application_processes
+						WHERE application_id=v_application_id
+						ORDER BY date_time DESC
+						LIMIT 1;
+					ELSE
+						v_app_process_dt = NEW.date_time;
+					END IF;
+					--статус
+					INSERT INTO application_processes (
+						application_id,
+						date_time,
+						state,
+						user_id,
+						end_date_time
+					)
+					VALUES (
+						v_application_id,
+						v_app_process_dt,
+						CASE WHEN NEW.closed THEN NEW.application_resolution_state ELSE 'checking'::application_states END,
+						(SELECT user_id FROM employees WHERE id=NEW.employee_id),
+						NEW.end_date_time
+					);			
+				END IF;
+			END IF;		
+		END IF;
+		
+			
+		RETURN NEW;
+		
+	ELSIF (TG_WHEN='AFTER' AND TG_OP='UPDATE' ) THEN
+		IF NOT const_client_lk_val() OR const_debug_val() THEN
+			v_ref = doc_flow_examinations_ref((SELECT doc_flow_examinations FROM doc_flow_examinations WHERE id=NEW.id));
+		
+			--state
+			IF NEW.date_time<>OLD.date_time
+				OR NEW.end_date_time<>OLD.end_date_time
+				OR NEW.doc_flow_importance_type_id<>OLD.doc_flow_importance_type_id
+				OR NEW.subject_doc<>OLD.subject_doc
+				OR NEW.subject<>OLD.subject
+				OR NEW.date_time<>OLD.date_time
+				--OR (NEW.employee_id<>OLD.employee_id AND NEW.subject_doc->>'dataType'='doc_flow_in'
+			THEN
+				UPDATE doc_flow_in_processes
+				SET
+					date_time			= NEW.date_time,
+					doc_flow_importance_type_id	= NEW.doc_flow_importance_type_id,
+					doc_flow_in_id			= (NEW.subject_doc->'keys'->>'id')::int,
+					description			= NEW.subject,
+					end_date_time			= NEW.end_date_time
+				WHERE register_doc->>'dataType'='doc_flow_examinations' AND (register_doc->'keys'->>'id')::int=NEW.id;
+			END IF;
+	
+			--сменим статус при закрытии
+			IF NEW.closed<>OLD.closed THEN
+				INSERT INTO doc_flow_in_processes (
+					doc_flow_in_id,
+					date_time,
+					state,
+					register_doc,
+					doc_flow_importance_type_id,
+					end_date_time
+				)
+				VALUES (
+					(NEW.subject_doc->'keys'->>'id')::int,
+					CASE WHEN NEW.closed THEN NEW.close_date_time ELSE now() END,
+					CASE WHEN NEW.closed THEN 'examined'::doc_flow_in_states ELSE 'examining'::doc_flow_in_states END,
+					v_ref,
+					NEW.doc_flow_importance_type_id,
+					NEW.end_date_time
+				);		
+			END IF;
+	
+			--если тип основания - заявление - сменим его статус
+			IF NEW.subject_doc->>'dataType'='doc_flow_in' AND NEW.closed<>OLD.closed AND NEW.closed THEN
+				SELECT
+					from_application_id,
+					doc_flow_out.new_contract_number
+				INTO
+					v_application_id,
+					v_new_contract_number
+				FROM doc_flow_in
+				LEFT JOIN doc_flow_out ON doc_flow_out.doc_flow_in_id=doc_flow_in.id
+				WHERE doc_flow_in.id=(NEW.subject_doc->'keys'->>'id')::int;
+			
+				--НОВЫЙ КОНТРАКТ
+				IF NEW.application_resolution_state='waiting_for_contract' THEN
+					SELECT
+						app.expertise_type,
+						app.cost_eval_validity,
+						app.modification,
+						app.audit,
+						app.user_id,
+						app.applicant,
+						(contracts_ref(p_contr))::jsonb,
+						(contracts_ref(mp_contr))::jsonb,
+						coalesce(app.base_application_id,app.derived_application_id),
+						app.cost_eval_validity_simult,
+						app.constr_name,
+						app.constr_address,
+						app.constr_technical_features,
+						CASE
+							WHEN app.expertise_type IS NOT NULL THEN 'pd'::document_types
+							WHEN app.cost_eval_validity THEN 'cost_eval_validity'::document_types
+							WHEN app.modification THEN 'modification'::document_types
+							WHEN app.audit THEN 'audit'::document_types						
+						END,
+						app.office_id
+					
+					INTO
+						v_app_expertise_type,
+						v_app_cost_eval_validity,
+						v_app_modification,
+						v_app_audit,
+						v_app_user_id,
+						v_app_applicant,
+						v_primary_contracts_ref,
+						v_modif_primary_contracts_ref,
+						v_linked_app,
+						v_cost_eval_validity_simult,
+						v_constr_name,
+						v_constr_address,
+						v_constr_technical_features,
+						v_document_type,
+						v_office_id
+					
+					FROM applications AS app
+					LEFT JOIN contracts AS p_contr ON p_contr.application_id=app.primary_application_id
+					LEFT JOIN contracts AS mp_contr ON mp_contr.application_id=app.modif_primary_application_id
+					WHERE app.id=v_application_id;
+				
+					--applicant -->> client
+					UPDATE clients
+					SET
+						name		= v_app_applicant->>'name',
+						name_full	= v_app_applicant->>'name_full',
+						ogrn		= v_app_applicant->>'ogrn',
+						inn		= v_app_applicant->>'inn',
+						kpp		= v_app_applicant->>'kpp',
+						okpo		= v_app_applicant->>'okpo',
+						okved		= v_app_applicant->>'okved',
+						post_address	= v_app_applicant->'post_address',
+						user_id		= v_app_user_id,
+						legal_address	= v_app_applicant->'legal_address',
+						bank_accounts	= v_app_applicant->'bank_accounts',
+						client_type	= 
+							CASE WHEN v_app_applicant->>'client_type' IS NULL OR v_app_applicant->>'client_type'='on' THEN 'enterprise'
+							ELSE (v_app_applicant->>'client_type')::client_types
+							END,
+						base_document_for_contract = v_app_applicant->>'base_document_for_contract',
+						person_id_paper	= v_app_applicant->'person_id_paper',
+						person_registr_paper = v_app_applicant->'person_registr_paper'
+					WHERE name = v_app_applicant->>'name' OR (inn=v_app_applicant->>'inn' AND kpp=v_app_applicant->>'kpp')
+					RETURNING id INTO v_app_client_id;
+				
+					IF NOT FOUND THEN
+						INSERT INTO clients
+						(
+							name,
+							name_full,
+							inn,
+							kpp,
+							ogrn,
+							okpo,
+							okved,
+							post_address,
+							user_id,
+							legal_address,
+							bank_accounts,
+							client_type,
+							base_document_for_contract,
+							person_id_paper,
+							person_registr_paper
+						)
+						VALUES(
+							CASE WHEN v_app_applicant->>'name' IS NULL THEN v_app_applicant->>'name_full'
+							ELSE v_app_applicant->>'name'
+							END,
+							v_app_applicant->>'name_full',
+							v_app_applicant->>'inn',
+							v_app_applicant->>'kpp',
+							v_app_applicant->>'ogrn',
+							v_app_applicant->>'okpo',
+							v_app_applicant->>'okved',
+							v_app_applicant->'post_address',
+							v_app_user_id,
+							v_app_applicant->'legal_address',
+							v_app_applicant->'bank_accounts',
+							CASE WHEN v_app_applicant->>'client_type' IS NULL OR v_app_applicant->>'client_type'='on' THEN 'enterprise'
+							ELSE (v_app_applicant->>'client_type')::client_types
+							END,
+							v_app_applicant->>'base_document_for_contract',
+							v_app_applicant->'person_id_paper',
+							v_app_applicant->'person_registr_paper'
+						)				
+						RETURNING id
+						INTO v_app_client_id
+						;
+					END IF;
+				
+					v_linked_contracts_n = 0;
+					IF (v_primary_contracts_ref->'keys'->>'id' IS NOT NULL) THEN
+						v_linked_contracts_n = v_linked_contracts_n + 1;
+						v_linked_contracts = v_linked_contracts || jsonb_build_object('fields',jsonb_build_object('id',v_linked_contracts_n,'contracts_ref',v_primary_contracts_ref));
+					END IF;
+					IF (v_modif_primary_contracts_ref->'keys'->>'id' IS NOT NULL) THEN
+						v_linked_contracts_n = v_linked_contracts_n + 1;
+						v_linked_contracts = v_linked_contracts || jsonb_build_object('fields',jsonb_build_object('id',v_linked_contracts_n,'contracts_ref',v_modif_primary_contracts_ref));
+					END IF;
+				
+					IF v_linked_app IS NOT NULL THEN
+						--Поиск связного контракта по заявлению
+						SELECT contracts_ref(contracts) INTO v_linked_contracts_ref FROM contracts WHERE application_id=v_linked_app;
+						IF v_linked_contracts_ref IS NOT NULL THEN
+							v_linked_contracts_n = v_linked_contracts_n + 1;
+							v_linked_contracts = v_linked_contracts || jsonb_build_object('fields',jsonb_build_object('id',v_linked_contracts_n,'contracts_ref',v_linked_contracts_ref));
+						END IF;
+					END IF;
+				
+					--Сначала из исх.письма, затем генерим новый
+					IF v_new_contract_number IS NULL THEN
+						v_new_contract_number = contracts_next_number(v_document_type,now()::date);
+					END IF;
+				
+					--Номер экспертного заключения
+					v_expertise_result_number = regexp_replace(v_new_contract_number,'\D+.*$','');
+					v_expertise_result_number = substr('0000',1,4-length(v_expertise_result_number))||
+								v_expertise_result_number||
+								'/'||(extract(year FROM now())-2000)::text;
+				
+					--Дни проверки
+					SELECT
+						services.date_type,
+						services.work_day_count,
+						services.expertise_day_count
+					INTO
+						v_date_type,
+						v_work_day_count,
+						v_expert_work_day_count
+					FROM services
+					WHERE services.id=
+					((
+						CASE
+							WHEN v_document_type='pd' THEN pdfn_services_expertise()
+							WHEN v_document_type='cost_eval_validity' THEN pdfn_services_cost_eval_validity()
+							WHEN v_document_type='modification' THEN pdfn_services_modification()
+							WHEN v_document_type='audit' THEN pdfn_services_audit()
+							ELSE NULL
+						END
+					)->'keys'->>'id')::int;
+								
+					--RAISE EXCEPTION 'v_linked_contracts=%',v_linked_contracts;
+					--Контракт
+					INSERT INTO contracts (
+						date_time,
+						application_id,
+						client_id,
+						employee_id,
+						document_type,
+						expertise_type,
+						cost_eval_validity_pd_order,
+						constr_name,
+						constr_address,
+						constr_technical_features,
+						contract_number,
+						expertise_result_number,
+						linked_contracts,
+						--contract_date,					
+						date_type,
+						expertise_day_count,
+						expert_work_day_count,
+						work_end_date,
+						expert_work_end_date,
+						permissions,
+						user_id)
+					VALUES (
+						now(),
+						v_application_id,
+						v_app_client_id,
+						NEW.close_employee_id,
+						v_document_type,
+						v_app_expertise_type,
+						CASE
+							WHEN v_app_cost_eval_validity THEN
+								CASE
+									WHEN v_cost_eval_validity_simult THEN 'simult_with_pd'::cost_eval_validity_pd_orders
+									WHEN v_linked_app IS NOT NULL THEN 'after_pd'::cost_eval_validity_pd_orders
+									ELSE 'no_pd'::cost_eval_validity_pd_orders
+								END
+							ELSE NULL
+						END,
+						v_constr_name,
+						v_constr_address,
+						v_constr_technical_features,
+					
+						v_new_contract_number,
+						v_expertise_result_number,
+					
+						--linked_contracts
+						CASE WHEN v_linked_contracts IS NOT NULL THEN
+							jsonb_build_object(
+								'id','LinkedContractList_Model',
+								'rows',v_linked_contracts
+							)
+						ELSE
+							'{"id":"LinkedContractList_Model","rows":[]}'::jsonb
+						END,
+					
+						--now()::date,--contract_date
+					
+						v_date_type,
+						v_work_day_count,
+						v_expert_work_day_count,
+					
+						--ПРИ ОПЛАТЕ client_payments_process()
+						--ставятся work_start_date&&work_end_date
+						--contracts_work_end_date(v_office_id, v_date_type, now(), v_work_day_count),
+						NULL,
+						NULL,					
+					
+						'{"id":"AccessPermission_Model","rows":[]}'::jsonb,
+					
+						v_app_user_id
+					)
+					RETURNING id INTO v_new_contract_id;
+				
+					--В связные контракты запишем данный по текущему новому
+					IF (v_linked_contracts_ref->'keys'->>'id' IS NOT NULL) THEN
+					--RAISE EXCEPTION 'Updating contracts, id=%',(v_linked_contracts_ref->'keys'->>'id')::int;
+						UPDATE contracts
+						SET
+							linked_contracts = jsonb_build_object(
+								'id','LinkedContractList_Model',
+								'rows',
+								linked_contracts->'rows'||
+									jsonb_build_object(
+									'fields',jsonb_build_object(
+										'id',
+										jsonb_array_length(linked_contracts->'rows')+1,
+										'contracts_ref',contracts_ref((SELECT contracts FROM contracts WHERE id=v_new_contract_id))
+										)
+									)							
+							)
+						WHERE id=(v_linked_contracts_ref->'keys'->>'id')::int;
+					END IF;
+					IF (v_primary_contracts_ref->'keys'->>'id' IS NOT NULL) THEN
+						UPDATE contracts
+						SET
+							linked_contracts = jsonb_build_object(
+								'id','LinkedContractList_Model',
+								'rows',
+								linked_contracts->'rows'||
+									jsonb_build_object(
+									'fields',jsonb_build_object(
+										'id',
+										jsonb_array_length(linked_contracts->'rows')+1,
+										'contracts_ref',contracts_ref((SELECT contracts FROM contracts WHERE id=v_new_contract_id))
+										)
+									)							
+							)
+						WHERE id=(v_primary_contracts_ref->'keys'->>'id')::int;
+					END IF;
+					IF (v_modif_primary_contracts_ref->'keys'->>'id' IS NOT NULL) THEN
+						UPDATE contracts
+						SET
+							linked_contracts = jsonb_build_object(
+								'id','LinkedContractList_Model',
+								'rows',
+								linked_contracts->'rows'||
+									jsonb_build_object(
+									'fields',jsonb_build_object(
+										'id',
+										jsonb_array_length(linked_contracts->'rows')+1,
+										'contracts_ref',contracts_ref((SELECT contracts FROM contracts WHERE id=v_new_contract_id))
+										)
+									)							
+							)
+						WHERE id=(v_modif_primary_contracts_ref->'keys'->>'id')::int;
+					END IF;
+				
+				END IF;
+			END IF;
+						
+			--задачи
+			UPDATE doc_flow_tasks
+			SET 
+				date_time			= NEW.date_time,
+				end_date_time			= NEW.end_date_time,
+				doc_flow_importance_type_id	= NEW.doc_flow_importance_type_id,
+				employee_id			= NEW.employee_id,
+				description			= NEW.subject,
+				closed				= NEW.closed,
+				close_doc			= CASE WHEN NEW.closed THEN v_ref ELSE NULL END,
+				close_date_time			= CASE WHEN NEW.closed THEN now() ELSE NULL END,
+				close_employee_id		= CASE WHEN NEW.closed THEN NEW.close_employee_id ELSE NULL END
+			WHERE register_doc->>'dataType'='doc_flow_examinations' AND (register_doc->'keys'->>'id')::int=NEW.id;
+		END IF;
+		
+		IF const_client_lk_val() OR const_debug_val() THEN
+			--если тип основания - заявление - сменим его статус
+			IF NEW.subject_doc->>'dataType'='doc_flow_in' AND NEW.closed<>OLD.closed AND NEW.closed THEN
+				SELECT
+					from_application_id,
+					doc_flow_out.new_contract_number
+				INTO
+					v_application_id,
+					v_new_contract_number
+				FROM doc_flow_in
+				LEFT JOIN doc_flow_out ON doc_flow_out.doc_flow_in_id=doc_flow_in.id
+				WHERE doc_flow_in.id=(NEW.subject_doc->'keys'->>'id')::int;
+			
+				IF v_application_id IS NOT NULL THEN
+					IF NEW.closed THEN
+						SELECT
+							greatest(NEW.close_date_time,date_time+'1 second'::interval)
+						INTO v_app_process_dt
+						FROM application_processes
+						WHERE application_id=v_application_id
+						ORDER BY date_time DESC
+						LIMIT 1;
+					ELSE
+						v_app_process_dt = NEW.close_date_time;
+					END IF;
+			
+					--статус
+					INSERT INTO application_processes (
+						application_id,
+						date_time,
+						state,
+						user_id,
+						end_date_time
+					)
+					VALUES (
+						v_application_id,
+						v_app_process_dt,
+						CASE WHEN NEW.closed THEN NEW.application_resolution_state ELSE 'checking'::application_states END,
+						(SELECT user_id FROM employees WHERE id=NEW.employee_id),
+						CASE WHEN NEW.closed THEN NULL ELSE NEW.end_date_time END					
+					);			
+				END IF;
+			END IF;					
+		END IF;
+		
+		RETURN NEW;
+		
+	ELSIF (TG_WHEN='BEFORE' AND TG_OP='UPDATE') THEN
+		--статус
+		--DELETE FROM doc_flow_in_processes WHERE (register_doc->>'dataType')::data_types='doc_flow_examinations'::data_types AND (register_doc->'keys'->>'id')::int=NEW.id;
+		--задачи
+		--DELETE FROM doc_flow_tasks WHERE (register_doc->>'dataType')::data_types='doc_flow_examinations'::data_types AND (register_doc->'keys'->>'id')::int=NEW.id;
+	
+		RETURN NEW;
+		
+	ELSIF (TG_WHEN='BEFORE' AND TG_OP='DELETE') THEN
+		IF NOT const_client_lk_val() OR const_debug_val() THEN
+			--статус
+			DELETE FROM doc_flow_in_processes WHERE register_doc->>'dataType'='doc_flow_examinations' AND (register_doc->'keys'->>'id')::int=OLD.id;
+			--задачи
+			DELETE FROM doc_flow_tasks WHERE register_doc->>'dataType'='doc_flow_examinations' AND (register_doc->'keys'->>'id')::int=OLD.id;
+			IF (OLD.subject_doc->>'dataType')::data_types='doc_flow_in'::data_types THEN
+				SELECT from_application_id INTO v_application_id FROM doc_flow_in WHERE id=(OLD.subject_doc->'keys'->>'id')::int;
+				IF v_application_id IS NOT NULL THEN
+					DELETE FROM application_processes WHERE doc_flow_examination_id=OLD.id;
+				END IF;
+			END IF;
+		END IF;
+													
+		RETURN OLD;
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION doc_flow_examinations_process() OWNER TO expert72;
+
+-- ******************* update 14/11/2018 11:54:01 ******************
+-- Function: doc_flow_registrations_process()
+
+-- DROP FUNCTION doc_flow_registrations_process();
+
+CREATE OR REPLACE FUNCTION doc_flow_registrations_process()
+  RETURNS trigger AS
+$BODY$
+DECLARE
+	v_doc_flow_out_id int;
+	v_to_application_id int;
+	v_doc_flow_type_id int;
+	v_date_time timestampTZ;
+BEGIN
+	IF (TG_WHEN='AFTER' AND TG_OP='INSERT') THEN
+	
+		v_doc_flow_out_id = (NEW.subject_doc->'keys'->>'id')::int;
+		
+		IF NOT const_client_lk_val() OR const_debug_val() THEN			
+			--статус
+			INSERT INTO doc_flow_out_processes (
+				doc_flow_out_id, date_time,
+				state,
+				register_doc,
+				doc_flow_importance_type_id,
+				description,
+				end_date_time
+			)
+			VALUES (
+				v_doc_flow_out_id,NEW.date_time,
+				'registered'::doc_flow_out_states,
+				doc_flow_registrations_ref(NEW),
+				NULL,
+				'Зарегистрирован исходящий документ',
+				NULL
+			);	
+		
+			IF NEW.subject_doc->>'dataType'='doc_flow_out' THEN
+				--Установка подписанта исходящего документа
+				UPDATE
+					doc_flow_out
+				SET
+					signed_by_employee_id = NEW.employee_id
+				WHERE id=v_doc_flow_out_id
+				RETURNING doc_flow_type_id,to_application_id
+				INTO v_doc_flow_type_id,v_to_application_id;
+			
+				--При заключении по контракту - закрыть дату в контракте
+				--Вид заключения и вид отрицательного выставляется из формы исх.письма
+				IF v_doc_flow_type_id = (pdfn_doc_flow_types_contr_close()->'keys'->>'id')::int THEN
+					UPDATE contracts
+					SET expertise_result_date = NEW.date_time::date				
+					WHERE application_id=v_to_application_id;
+				END IF;
+			END IF;		
+		END IF;
+		
+		IF const_client_lk_val() OR const_debug_val() THEN
+			--если основание - заявление/контракт = ответное письмо клиенту
+			INSERT INTO doc_flow_in_client (
+				date_time,
+				reg_number,
+				application_id,
+				user_id,
+				subject,
+				content,
+				doc_flow_type_id,
+				doc_flow_out_id
+			)		
+			SELECT
+				NEW.date_time,
+				t.reg_number,
+				t.to_application_id,
+				ap.user_id,
+				--t.to_contract_id
+				t.subject,
+				t.content,
+				t.doc_flow_type_id,
+				v_doc_flow_out_id
+			
+			FROM doc_flow_out t
+			LEFT JOIN applications ap ON ap.id=t.to_application_id			
+			WHERE t.id=v_doc_flow_out_id AND t.to_application_id IS NOT NULL
+			;
+			
+			IF NEW.subject_doc->>'dataType'='doc_flow_out' THEN
+				--Если есть вложения с папками "в дело" - копируем в application_document_files
+				INSERT INTO application_document_files
+				(file_id,application_id,document_id,document_type,date_time,file_name,
+				file_path,file_signed,file_size)
+				SELECT
+					at.file_id,
+					out.to_application_id,0,'documents',at.file_date,at.file_name,
+					at.file_path,at.file_signed,at.file_size
+				
+				FROM doc_flow_attachments AS at
+				LEFT JOIN doc_flow_out out ON out.id=(NEW.subject_doc->'keys'->>'id')::int
+				WHERE
+					at.doc_type='doc_flow_out'
+					AND at.doc_id=(NEW.subject_doc->'keys'->>'id')::int
+					AND at.file_path!='Исходящие'
+				--Все кроме исходящих
+				;
+			END IF;
+			
+		END IF;
+									
+		RETURN NEW;
+		
+	ELSIF (TG_WHEN='AFTER' AND TG_OP='UPDATE' ) THEN
+		RETURN NEW;
+		
+	ELSIF (TG_WHEN='BEFORE' AND TG_OP='DELETE') THEN
+		IF NOT const_client_lk_val() OR const_debug_val() THEN
+			SELECT
+				doc_flow_out_id,date_time
+			FROM doc_flow_out_processes
+			INTO v_doc_flow_out_id,v_date_time
+			WHERE register_doc->>'dataType'='doc_flow_registrations'
+				AND (register_doc->'keys'->>'id')::int=OLD.id;
+	
+			--статус
+			DELETE FROM doc_flow_out_processes
+			WHERE register_doc->>'dataType'='doc_flow_registrations'
+				AND (register_doc->'keys'->>'id')::int=OLD.id;
+							
+			DELETE FROM doc_flow_in_client WHERE doc_flow_out_id=v_doc_flow_out_id;
+		END IF;
+								
+		RETURN OLD;
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION doc_flow_registrations_process() OWNER TO expert72;
+
+-- ******************* update 14/11/2018 12:53:27 ******************
+-- Function: doc_flow_out_process()
+
+-- DROP FUNCTION doc_flow_out_process();
+
+CREATE OR REPLACE FUNCTION doc_flow_out_process()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+	IF (TG_WHEN='BEFORE' AND (TG_OP='INSERT' OR TG_OP='UPDATE') ) THEN		
+	
+		IF NOT const_client_lk_val() OR const_debug_val() THEN
+			IF NEW.to_contract_id IS NOT NULL AND NEW.to_application_id IS NULL THEN
+				SELECT application_id INTO NEW.to_application_id FROM contracts WHERE id=NEW.to_contract_id;
+			END IF;	
+
+			IF NEW.doc_flow_in_id IS NULL AND NEW.doc_flow_type_id=(pdfn_doc_flow_types_app_resp()->'keys'->>'id')::int
+			AND NEW.to_application_id IS NOT NULL THEN
+				SELECT id
+				INTO NEW.doc_flow_in_id
+				FROM doc_flow_in
+				WHERE from_application_id=NEW.to_application_id
+				ORDER BY date_time DESC LIMIT 1;
+			END IF;	
+		END IF;		
+		
+		RETURN NEW;
+		
+	ELSIF TG_WHEN='BEFORE' AND TG_OP='DELETE' THEN
+		IF NOT const_client_lk_val() OR const_debug_val() THEN
+			DELETE FROM doc_flow_out_processes WHERE doc_flow_out_id = OLD.id;
+			DELETE FROM doc_flow_attachments WHERE doc_type='doc_flow_out' AND doc_id = OLD.id;
+		END IF;	
+		
+		RETURN OLD;		
+		
+	ELSIF TG_WHEN='AFTER' AND TG_OP='DELETE' THEN
+		IF const_client_lk_val() OR const_debug_val() THEN
+			DELETE FROM doc_flow_in_client WHERE doc_flow_out_id = OLD.id;
+		END IF;	
+		
+		RETURN OLD;		
+	
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION doc_flow_out_process() OWNER TO expert72;
+
+
+-- ******************* update 14/11/2018 13:16:34 ******************
+-- Function: file_verifications_lk_process()
+
+-- DROP FUNCTION file_verifications_lk_process();
+
+CREATE OR REPLACE FUNCTION file_verifications_lk_process()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+	IF (TG_WHEN='AFTER' AND (NOT const_client_lk_val() OR const_debug_val())) THEN		
+		IF TG_OP='INSERT' THEN
+			INSERT INTO file_verifications(
+				    file_id, date_time, check_result, check_time, error_str, hash_gost94, 
+			            user_id)
+			    VALUES (NEW.file_id, NEW.date_time, NEW.check_result, NEW.check_time, NEW.error_str, NEW.hash_gost94, 
+			            NEW.user_id)
+			ON CONFLICT DO NOTHING;
+				    
+			RETURN NEW;
+		ELSIF TG_OP='UPDATE' THEN
+			UPDATE file_verifications
+			SET
+				date_time = NEW.date_time,
+				check_result = NEW.check_result,
+				check_time = NEW.check_time,
+				error_str = NEW.error_str,
+				hash_gost94 = NEW.hash_gost94, 
+			        user_id = NEW.user_id
+			WHERE
+				file_id = NEW.file_id;
+				    
+			RETURN NEW;
+		ELSIF TG_OP='DELETE' THEN
+			DELETE FROM file_verifications
+			WHERE
+				file_id = OLD.file_id;
+				    
+			RETURN OLD;
+			
+		END IF;	
+					
+	ELSIF TG_WHEN='AFTER' AND const_client_lk_val() THEN
+		IF TG_OP='INSERT' OR TG_OP='UPDATE' THEN
+			RETURN NEW;
+		ELSE
+			RETURN OLD;
+		END IF;
+		
+	ELSIF (TG_WHEN='BEFORE' AND TG_OP='DELETE') THEN		
+		IF const_client_lk_val() OR const_debug_val() THEN			
+			DELETE FROM file_signatures_lk WHERE file_id = OLD.file_id;
+		END IF;
+			
+		RETURN OLD;
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION file_verifications_lk_process() OWNER TO expert72;
+
+
+-- ******************* update 14/11/2018 13:22:48 ******************
+-- Function: client_payments_process()
+
+-- DROP FUNCTION client_payments_process();
+
+CREATE OR REPLACE FUNCTION client_payments_process()
+  RETURNS trigger AS
+$BODY$
+DECLARE
+	v_pay_cnt int;
+	v_work_end_date timestampTZ;
+	v_expert_work_end_date timestampTZ;
+	v_application_id int;
+	v_user_id int;
+	v_simult_contr_id int;
+	v_simult_contr_work_end_date timestampTZ;
+	v_simult_app_id int;
+	v_cost_eval_simult bool;
+BEGIN
+
+	IF (TG_WHEN='AFTER' AND TG_OP='INSERT') THEN		
+		
+		--ПРИ ПЕРВОЙ ОПЛАТЕ УСТАНОВИМ ДАТУ ДАЧАЛА/ОКОНЧАНИЯ РАБОТ
+		SELECT count(*) INTO v_pay_cnt FROM client_payments WHERE contract_id=NEW.contract_id;
+
+		IF v_pay_cnt = 1 THEN
+			SELECT
+				t.application_id,
+				contracts_work_end_date(applications.office_id, t.date_type, NEW.pay_date::timestampTZ, t.expertise_day_count),
+				contracts_work_end_date(applications.office_id, t.date_type, NEW.pay_date::timestampTZ, t.expert_work_day_count),
+				simult_contr.id,
+				CASE WHEN simult_contr.id IS NOT NULL THEN
+					contracts_work_end_date(cost_eval_app.office_id, simult_contr.date_type, NEW.pay_date::timestampTZ, simult_contr.expertise_day_count)
+				ELSE NULL
+				END,
+				cost_eval_app.id,
+				(t.document_type='cost_eval_validity' AND applications.cost_eval_validity_simult)
+			INTO
+				v_application_id,
+				v_work_end_date,
+				v_expert_work_end_date,
+				v_simult_contr_id,
+				v_simult_contr_work_end_date,
+				v_simult_app_id,
+				v_cost_eval_simult
+			FROM contracts t
+			LEFT JOIN applications ON applications.id=t.application_id
+			LEFT JOIN applications AS cost_eval_app ON
+				cost_eval_app.id=applications.derived_application_id AND coalesce(cost_eval_app.cost_eval_validity_simult,FALSE)
+			LEFT JOIN contracts AS simult_contr ON simult_contr.application_id=cost_eval_app.id
+			WHERE t.id=NEW.contract_id;
+			
+			--ВСЕ кроме достоверености, которая вместе с ПД, там все через достоверность
+			IF coalesce(v_cost_eval_simult,FALSE)=FALSE THEN
+				IF NOT const_client_lk_val() OR const_debug_val() THEN
+					UPDATE contracts
+					SET
+						work_start_date = NEW.pay_date,
+						work_end_date = v_work_end_date,
+						expert_work_end_date = v_expert_work_end_date
+					WHERE id=NEW.contract_id;
+				END IF;
+							
+				IF NEW.employee_id IS NOT NULL THEN
+					SELECT user_id INTO v_user_id FROM employees WHERE id=NEW.employee_id;
+				END IF;
+			
+				IF v_user_id IS NULL THEN
+					SELECT id INTO v_user_id FROM users WHERE role_id='admin' LIMIT 1;
+				END IF;
+			
+				--Начало работ - статус
+				--Устанавливается автоматически из загрузки оплат
+				IF const_client_lk_val() OR const_debug_val() THEN
+					INSERT INTO application_processes
+					(application_id, date_time, state, user_id, end_date_time)
+					VALUES (v_application_id, (NEW.pay_date+'23:59:59'::interval)::timestampTZ, 'expertise'::application_states, v_user_id, v_work_end_date);
+				END IF;
+							
+				--А если это ПД и есть связная достоверность ОДНОВРЕМЕННО - сменить там тоже
+				IF v_simult_contr_id IS NOT NULL THEN
+					IF NOT const_client_lk_val() OR const_debug_val() THEN
+						UPDATE contracts
+						SET
+							work_start_date = NEW.pay_date,
+							work_end_date = v_simult_contr_work_end_date,
+							expert_work_end_date = v_expert_work_end_date
+						WHERE id=v_simult_contr_id;
+					END IF;
+									
+					IF const_client_lk_val() OR const_debug_val() THEN
+						INSERT INTO application_processes
+						(application_id, date_time, state, user_id, end_date_time)
+						VALUES (v_simult_app_id, NEW.pay_date::timestampTZ, 'expertise'::application_states, v_user_id, v_work_end_date);
+					END IF;
+				
+				END IF;
+				
+				--А если уже есть статусы после оплаты (вернулся контракт)
+				DELETE FROM application_processes
+				WHERE date_time>NEW.pay_date AND application_id=v_application_id AND state='waiting_for_pay';
+			END IF;	
+		END IF;
+				
+		RETURN NEW;
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION client_payments_process() OWNER TO expert72;
+
+
+-- ******************* update 14/11/2018 13:23:14 ******************
+-- Function: client_payments_process()
+
+-- DROP FUNCTION client_payments_process();
+
+CREATE OR REPLACE FUNCTION client_payments_process()
+  RETURNS trigger AS
+$BODY$
+DECLARE
+	v_pay_cnt int;
+	v_work_end_date timestampTZ;
+	v_expert_work_end_date timestampTZ;
+	v_application_id int;
+	v_user_id int;
+	v_simult_contr_id int;
+	v_simult_contr_work_end_date timestampTZ;
+	v_simult_app_id int;
+	v_cost_eval_simult bool;
+BEGIN
+
+	IF (TG_WHEN='AFTER' AND TG_OP='INSERT') THEN		
+		
+		--ПРИ ПЕРВОЙ ОПЛАТЕ УСТАНОВИМ ДАТУ ДАЧАЛА/ОКОНЧАНИЯ РАБОТ
+		SELECT count(*) INTO v_pay_cnt FROM client_payments WHERE contract_id=NEW.contract_id;
+
+		IF v_pay_cnt = 1 THEN
+			SELECT
+				t.application_id,
+				contracts_work_end_date(applications.office_id, t.date_type, NEW.pay_date::timestampTZ, t.expertise_day_count),
+				contracts_work_end_date(applications.office_id, t.date_type, NEW.pay_date::timestampTZ, t.expert_work_day_count),
+				simult_contr.id,
+				CASE WHEN simult_contr.id IS NOT NULL THEN
+					contracts_work_end_date(cost_eval_app.office_id, simult_contr.date_type, NEW.pay_date::timestampTZ, simult_contr.expertise_day_count)
+				ELSE NULL
+				END,
+				cost_eval_app.id,
+				(t.document_type='cost_eval_validity' AND applications.cost_eval_validity_simult)
+			INTO
+				v_application_id,
+				v_work_end_date,
+				v_expert_work_end_date,
+				v_simult_contr_id,
+				v_simult_contr_work_end_date,
+				v_simult_app_id,
+				v_cost_eval_simult
+			FROM contracts t
+			LEFT JOIN applications ON applications.id=t.application_id
+			LEFT JOIN applications AS cost_eval_app ON
+				cost_eval_app.id=applications.derived_application_id AND coalesce(cost_eval_app.cost_eval_validity_simult,FALSE)
+			LEFT JOIN contracts AS simult_contr ON simult_contr.application_id=cost_eval_app.id
+			WHERE t.id=NEW.contract_id;
+			
+			--ВСЕ кроме достоверености, которая вместе с ПД, там все через достоверность
+			IF coalesce(v_cost_eval_simult,FALSE)=FALSE THEN
+				IF NOT const_client_lk_val() OR const_debug_val() THEN
+					UPDATE contracts
+					SET
+						work_start_date = NEW.pay_date,
+						work_end_date = v_work_end_date,
+						expert_work_end_date = v_expert_work_end_date
+					WHERE id=NEW.contract_id;
+				END IF;
+							
+				IF NEW.employee_id IS NOT NULL THEN
+					SELECT user_id INTO v_user_id FROM employees WHERE id=NEW.employee_id;
+				END IF;
+			
+				IF v_user_id IS NULL THEN
+					SELECT id INTO v_user_id FROM users WHERE role_id='admin' LIMIT 1;
+				END IF;
+			
+				--Начало работ - статус
+				--Устанавливается автоматически из загрузки оплат
+				IF const_client_lk_val() OR const_debug_val() THEN
+					INSERT INTO application_processes
+					(application_id, date_time, state, user_id, end_date_time)
+					VALUES (v_application_id, (NEW.pay_date+'23:59:59'::interval)::timestampTZ, 'expertise'::application_states, v_user_id, v_work_end_date);
+				END IF;
+							
+				--А если это ПД и есть связная достоверность ОДНОВРЕМЕННО - сменить там тоже
+				IF v_simult_contr_id IS NOT NULL THEN
+					IF NOT const_client_lk_val() OR const_debug_val() THEN
+						UPDATE contracts
+						SET
+							work_start_date = NEW.pay_date,
+							work_end_date = v_simult_contr_work_end_date,
+							expert_work_end_date = v_expert_work_end_date
+						WHERE id=v_simult_contr_id;
+					END IF;
+									
+					IF const_client_lk_val() OR const_debug_val() THEN
+						INSERT INTO application_processes
+						(application_id, date_time, state, user_id, end_date_time)
+						VALUES (v_simult_app_id, NEW.pay_date::timestampTZ, 'expertise'::application_states, v_user_id, v_work_end_date);
+					END IF;
+				
+				END IF;
+				
+				--А если уже есть статусы после оплаты (вернулся контракт)
+				DELETE FROM application_processes
+				WHERE date_time>NEW.pay_date AND application_id=v_application_id AND state='waiting_for_pay';
+			END IF;	
+		END IF;
+				
+		RETURN NEW;
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION client_payments_process() OWNER TO expert72;
+
+
+-- ******************* update 14/11/2018 13:25:05 ******************
+-- Function: client_payments_process()
+
+-- DROP FUNCTION client_payments_process();
+
+CREATE OR REPLACE FUNCTION client_payments_process()
+  RETURNS trigger AS
+$BODY$
+DECLARE
+	v_pay_cnt int;
+	v_work_end_date timestampTZ;
+	v_expert_work_end_date timestampTZ;
+	v_application_id int;
+	v_user_id int;
+	v_simult_contr_id int;
+	v_simult_contr_work_end_date timestampTZ;
+	v_simult_app_id int;
+	v_cost_eval_simult bool;
+BEGIN
+
+	IF (TG_WHEN='AFTER' AND TG_OP='INSERT') THEN		
+		
+		--ПРИ ПЕРВОЙ ОПЛАТЕ УСТАНОВИМ ДАТУ ДАЧАЛА/ОКОНЧАНИЯ РАБОТ
+		SELECT count(*) INTO v_pay_cnt FROM client_payments WHERE contract_id=NEW.contract_id;
+
+		IF v_pay_cnt = 1 THEN
+			SELECT
+				t.application_id,
+				contracts_work_end_date(applications.office_id, t.date_type, NEW.pay_date::timestampTZ, t.expertise_day_count),
+				contracts_work_end_date(applications.office_id, t.date_type, NEW.pay_date::timestampTZ, t.expert_work_day_count),
+				simult_contr.id,
+				CASE WHEN simult_contr.id IS NOT NULL THEN
+					contracts_work_end_date(cost_eval_app.office_id, simult_contr.date_type, NEW.pay_date::timestampTZ, simult_contr.expertise_day_count)
+				ELSE NULL
+				END,
+				cost_eval_app.id,
+				(t.document_type='cost_eval_validity' AND applications.cost_eval_validity_simult)
+			INTO
+				v_application_id,
+				v_work_end_date,
+				v_expert_work_end_date,
+				v_simult_contr_id,
+				v_simult_contr_work_end_date,
+				v_simult_app_id,
+				v_cost_eval_simult
+			FROM contracts t
+			LEFT JOIN applications ON applications.id=t.application_id
+			LEFT JOIN applications AS cost_eval_app ON
+				cost_eval_app.id=applications.derived_application_id AND coalesce(cost_eval_app.cost_eval_validity_simult,FALSE)
+			LEFT JOIN contracts AS simult_contr ON simult_contr.application_id=cost_eval_app.id
+			WHERE t.id=NEW.contract_id;
+			
+			--ВСЕ кроме достоверености, которая вместе с ПД, там все через достоверность
+			IF coalesce(v_cost_eval_simult,FALSE)=FALSE THEN
+				IF NOT const_client_lk_val() OR const_debug_val() THEN
+					UPDATE contracts
+					SET
+						work_start_date = NEW.pay_date,
+						work_end_date = v_work_end_date,
+						expert_work_end_date = v_expert_work_end_date
+					WHERE id=NEW.contract_id;
+				END IF;
+							
+				IF NEW.employee_id IS NOT NULL THEN
+					SELECT user_id INTO v_user_id FROM employees WHERE id=NEW.employee_id;
+				END IF;
+			
+				IF v_user_id IS NULL THEN
+					SELECT id INTO v_user_id FROM users WHERE role_id='admin' LIMIT 1;
+				END IF;
+			
+				--Начало работ - статус
+				--Устанавливается автоматически из загрузки оплат
+				IF const_client_lk_val() OR const_debug_val() THEN
+					INSERT INTO application_processes
+					(application_id, date_time, state, user_id, end_date_time)
+					VALUES (v_application_id, (NEW.pay_date+'23:59:59'::interval)::timestampTZ, 'expertise'::application_states, v_user_id, v_work_end_date);
+				END IF;
+							
+				--А если это ПД и есть связная достоверность ОДНОВРЕМЕННО - сменить там тоже
+				IF v_simult_contr_id IS NOT NULL THEN
+					IF NOT const_client_lk_val() OR const_debug_val() THEN
+						UPDATE contracts
+						SET
+							work_start_date = NEW.pay_date,
+							work_end_date = v_simult_contr_work_end_date,
+							expert_work_end_date = v_expert_work_end_date
+						WHERE id=v_simult_contr_id;
+					END IF;
+									
+					IF const_client_lk_val() OR const_debug_val() THEN
+						INSERT INTO application_processes
+						(application_id, date_time, state, user_id, end_date_time)
+						VALUES (v_simult_app_id, NEW.pay_date::timestampTZ, 'expertise'::application_states, v_user_id, v_work_end_date);
+					END IF;
+				
+				END IF;
+				
+				IF const_client_lk_val() OR const_debug_val() THEN
+					--А если уже есть статусы после оплаты (вернулся контракт)
+					DELETE FROM application_processes
+					WHERE date_time>NEW.pay_date AND application_id=v_application_id AND state='waiting_for_pay';
+				END IF;
+			END IF;	
+		END IF;
+				
+		RETURN NEW;
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION client_payments_process() OWNER TO expert72;
+
+
+-- ******************* update 14/11/2018 14:25:16 ******************
+-- Function: application_processes_lk_process()
+
+-- DROP FUNCTION application_processes_lk_process();
+
+CREATE OR REPLACE FUNCTION application_processes_lk_process()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+	IF (TG_WHEN='AFTER' AND (NOT const_client_lk_val() OR const_debug_val())) THEN		
+		IF TG_OP='INSERT' THEN
+			INSERT INTO application_processes(
+				    application_id, date_time, state, user_id, end_date_time, doc_flow_examination_id)
+			    VALUES (NEW.application_id, NEW.date_time, NEW.state, NEW.user_id, NEW.end_date_time, NEW.doc_flow_examination_id)
+			ON CONFLICT DO NOTHING;
+				    
+			RETURN NEW;
+		ELSIF TG_OP='UPDATE' THEN
+			UPDATE application_processes
+			SET
+				state = NEW.state,
+				user_id = NEW.user_id,
+				end_date_time = NEW.end_date_time,
+				doc_flow_examination_id = NEW.doc_flow_examination_id
+			WHERE
+				application_id = NEW.application_id AND date_time=NEW.date_time;
+				    
+			RETURN NEW;
+		ELSIF TG_OP='DELETE' THEN
+			DELETE FROM application_processes
+			WHERE
+				application_id = NEW.application_id AND date_time=NEW.date_time;
+				    
+			RETURN OLD;
+			
+		END IF;				
+	ELSIF TG_WHEN='AFTER' AND const_client_lk_val() THEN
+		IF TG_OP='INSERT' OR TG_OP='UPDATE' THEN
+			RETURN NEW;
+		ELSE
+			RETURN OLD;
+		END IF;		
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION application_processes_lk_process() OWNER TO expert72;
+
+
+-- ******************* update 14/11/2018 14:27:21 ******************
+-- Trigger: application_processes_lk_trigger on application_processes_lk
+
+-- DROP TRIGGER application_processes_lk_after_trigger ON application_processes_lk;  
+ CREATE TRIGGER application_processes_lk_after_trigger
+  AFTER INSERT OR UPDATE OR DELETE
+  ON application_processes_lk
+  FOR EACH ROW
+  EXECUTE PROCEDURE application_processes_lk_process();
+
+-- ******************* update 14/11/2018 14:28:47 ******************
+-- Trigger: application_processes_lk_trigger on application_processes_lk
+
+-- DROP TRIGGER application_processes_lk_after_trigger ON application_processes_lk;  
+ CREATE TRIGGER application_processes_lk_after_trigger
+  AFTER INSERT OR UPDATE OR DELETE
+  ON application_processes_lk
+  FOR EACH ROW
+  EXECUTE PROCEDURE application_processes_lk_process();
+
+-- ******************* update 14/11/2018 14:33:32 ******************
+-- VIEW: applications_dialog_lk
+
+--DROP VIEW contracts_dialog_lk;
+--DROP VIEW applications_dialog_lk;
+
+CREATE OR REPLACE VIEW applications_dialog_lk AS
+	SELECT
+		d.id,
+		d.create_dt,
+		d.user_id,
+		d.expertise_type,
+		
+		--Для контроллера
+		( (d.expertise_type IS NOT NULL OR NOT d.cost_eval_validity OR NOT d.modification OR NOT d.audit) AND d.construction_type_id IS NOT NULL) AS document_exists,
+		
+		coalesce(d.cost_eval_validity,FALSE) AS cost_eval_validity,
+		d.cost_eval_validity_simult,
+		fund_sources_ref(fund_sources) AS fund_sources_ref,
+		construction_types_ref(construction_types) AS construction_types_ref,
+		d.applicant,
+		d.customer,
+		d.contractors,
+		d.developer,
+		coalesce(contr.constr_name,d.constr_name) AS constr_name,
+		coalesce(contr.constr_address,d.constr_address) AS constr_address,
+		
+		coalesce(contr.constr_technical_features,d.constr_technical_features) As constr_technical_features,
+		coalesce(contr.constr_technical_features_in_compound_obj,d.constr_technical_features_in_compound_obj) AS constr_technical_features_in_compound_obj,
+		
+		d.total_cost_eval,
+		d.limit_cost_eval,
+		offices_ref(offices) AS offices_ref,
+		build_types_ref(build_types) AS build_types_ref,
+		coalesce(d.modification,FALSE) AS modification,
+		coalesce(d.audit,FALSE) AS audit,
+		
+		CASE WHEN d.primary_application_id IS NOT NULL AND d.primary_application_id<>d.id THEN applications_primary_chain(d.id)
+		WHEN d.primary_application_reg_number IS NOT NULL THEN json_build_object('primary_application_reg_number',d.primary_application_reg_number)
+		ELSE NULL
+		END AS primary_application,
+
+		CASE WHEN d.modif_primary_application_id IS NOT NULL AND d.modif_primary_application_id<>d.id THEN applications_modif_primary_chain(d.id)
+		WHEN d.modif_primary_application_reg_number IS NOT NULL THEN json_build_object('primary_application_reg_number',d.modif_primary_application_reg_number)
+		ELSE NULL
+		END AS modif_primary_application,
+		
+		st.state AS application_state,
+		st.date_time AS application_state_dt,
+		st.end_date_time AS application_state_end_date,
+		
+		array_to_json((
+			SELECT array_agg(l.documents) FROM document_templates_all_list_for_date(d.create_dt::date) l
+			WHERE
+				(d.construction_type_id IS NOT NULL)
+				AND
+				(l.construction_type_id=d.construction_type_id AND
+				l.document_type IN (
+					CASE WHEN d.expertise_type='pd' OR d.expertise_type='pd_eng_survey' THEN 'pd'::document_types ELSE NULL END,
+					CASE WHEN d.expertise_type='eng_survey' OR d.expertise_type='pd_eng_survey' THEN 'eng_survey'::document_types ELSE NULL END,
+					CASE WHEN d.cost_eval_validity THEN 'cost_eval_validity'::document_types ELSE NULL END,
+					CASE WHEN d.modification THEN 'modification'::document_types ELSE NULL END,
+					CASE WHEN d.audit THEN 'audit'::document_types ELSE NULL END			
+					)
+				)
+		)) AS documents,
+		
+		applications_ref(d)->>'descr' AS select_descr,
+		
+		d.app_print_expertise,
+		d.app_print_cost_eval,
+		d.app_print_modification,
+		d.app_print_audit,
+		
+		applications_ref(b_app) AS base_applications_ref,
+		applications_ref(d_app) AS derived_applications_ref,
+		
+		applications_ref(d) AS applications_ref,
+		d.primary_application_id,
+		d.primary_application_reg_number,
+		d.modif_primary_application_id,
+		d.modif_primary_application_reg_number,
+		
+		d.pd_usage_info,
+		
+		users_ref(users) AS users_ref,
+		
+		d.auth_letter,
+		d.auth_letter_file,
+		
+		folders.files AS doc_folders,
+		
+		contr.work_start_date,
+		contr.contract_number,
+		contr.contract_date,
+		contr.expertise_result_number,
+		contr.expertise_result_date,
+		
+		d.filled_percent
+		
+	FROM applications AS d
+	LEFT JOIN offices ON offices.id=d.office_id
+	LEFT JOIN users ON users.id=d.user_id
+	LEFT JOIN contracts AS contr ON contr.application_id=d.id
+	LEFT JOIN fund_sources ON fund_sources.id=d.fund_source_id
+	LEFT JOIN construction_types ON construction_types.id=d.construction_type_id
+	LEFT JOIN build_types ON build_types.id=d.build_type_id
+	LEFT JOIN applications AS b_app ON b_app.id=d.base_application_id
+	LEFT JOIN applications AS d_app ON d_app.id=d.derived_application_id
+	LEFT JOIN (
+		SELECT
+			t.application_id,
+			max(t.date_time) AS date_time
+		FROM application_processes_lk t
+		GROUP BY t.application_id
+	) AS h_max ON h_max.application_id=d.id
+	LEFT JOIN application_processes_lk st
+		ON st.application_id=h_max.application_id AND st.date_time = h_max.date_time
+	LEFT JOIN
+		(
+		SELECT
+			doc_att.application_id,
+			json_agg(
+				json_build_object(
+					'fields',json_build_object('id',doc_att.folder_id,'descr',doc_att.folder_descr),
+					'parent_id',NULL,
+					'files',doc_att.files
+				)
+			) AS files
+		FROM
+		
+		(SELECT
+			adf.application_id,
+			adf.file_path AS folder_descr,
+			app_fd.id AS folder_id,
+			json_agg(
+				json_build_object(
+					'file_id',adf.file_id,
+					'file_name',adf.file_name,
+					'file_size',adf.file_size,
+					'file_signed',adf.file_signed,
+					'file_uploaded','true',
+					'file_path',adf.file_path,
+					'date_time',adf.date_time,
+					'signatures',--sign.signatures
+					CASE
+						WHEN sign.signatures IS NULL AND f_ver.file_id IS NOT NULL THEN
+							jsonb_build_array(
+								jsonb_build_object(
+									'sign_date_time',f_ver.date_time,
+									'check_result',f_ver.check_result,
+									'error_str',f_ver.error_str
+								)
+							)
+						ELSE sign.signatures
+					END,
+					'file_signed_by_client',adf.file_signed_by_client,
+					'require_client_sig',app_fd.require_client_sig
+				)
+			) AS files
+		FROM application_document_files adf
+		LEFT JOIN application_doc_folders AS app_fd ON app_fd.name=adf.file_path
+		LEFT JOIN doc_flow_out AS adf_out ON adf_out.to_application_id=adf.application_id AND adf_out.doc_flow_type_id=(pdfn_doc_flow_types_app_resp()->'keys'->>'id')::int
+		--LEFT JOIN doc_flow_attachments AS adf_att ON adf_att.doc_type='doc_flow_out' AND adf_att.doc_id=adf_out.id AND adf_att.file_name=adf.file_name
+		LEFT JOIN file_verifications_lk AS f_ver ON f_ver.file_id=adf.file_id
+		LEFT JOIN (
+			SELECT
+				files_t.file_id,
+				jsonb_agg(files_t.signatures) AS signatures
+			FROM
+			(SELECT
+				f_sig.file_id,
+				jsonb_build_object(
+					'owner',u_certs.subject_cert,
+					'cert_from',u_certs.date_time_from,
+					'cert_to',u_certs.date_time_to,
+					'sign_date_time',f_sig.sign_date_time,
+					'check_result',ver.check_result,
+					'check_time',ver.check_time,
+					'error_str',ver.error_str
+				) AS signatures
+			FROM file_signatures_lk AS f_sig
+			LEFT JOIN file_verifications_lk AS ver ON ver.file_id=f_sig.file_id
+			LEFT JOIN user_certificates_lk AS u_certs ON u_certs.id=f_sig.user_certificate_id
+			ORDER BY f_sig.sign_date_time
+			) AS files_t
+			GROUP BY files_t.file_id
+		) AS sign ON sign.file_id=f_ver.file_id
+		WHERE adf.document_type='documents'
+		GROUP BY adf.application_id,adf.file_path,app_fd.id
+		ORDER BY app_fd.id)  AS doc_att	
+		
+		GROUP BY doc_att.application_id
+	) AS folders ON folders.application_id=d.id
+	;
+	
+ALTER VIEW applications_dialog_lk OWNER TO expert72;
+
+
+-- ******************* update 14/11/2018 14:37:57 ******************
+﻿-- Function: application_processes_last_lk(in_application_id int)
+
+-- DROP FUNCTION application_processes_last_lk(in_application_id int);
+
+CREATE OR REPLACE FUNCTION application_processes_last_lk(in_application_id int)
+  RETURNS application_states AS
+$$
+	SELECT
+		state
+	FROM application_processes_lk
+	WHERE application_id=in_application_id
+	ORDER BY date_time DESC
+	LIMIT 1;
+$$
+  LANGUAGE sql VOLATILE
+  COST 100;
+ALTER FUNCTION application_processes_last_lk(in_application_id int) OWNER TO expert72;
+
+-- ******************* update 14/11/2018 14:45:56 ******************
+-- Function: client_payments_process()
+
+-- DROP FUNCTION client_payments_process();
+
+CREATE OR REPLACE FUNCTION client_payments_process()
+  RETURNS trigger AS
+$BODY$
+DECLARE
+	v_pay_cnt int;
+	v_work_end_date timestampTZ;
+	v_expert_work_end_date timestampTZ;
+	v_application_id int;
+	v_user_id int;
+	v_simult_contr_id int;
+	v_simult_contr_work_end_date timestampTZ;
+	v_simult_app_id int;
+	v_cost_eval_simult bool;
+BEGIN
+
+	IF (TG_WHEN='AFTER' AND TG_OP='INSERT') THEN		
+		IF NOT const_client_lk_val() OR const_debug_val() THEN
+			--ПРИ ПЕРВОЙ ОПЛАТЕ УСТАНОВИМ ДАТУ ДАЧАЛА/ОКОНЧАНИЯ РАБОТ
+			SELECT count(*) INTO v_pay_cnt FROM client_payments WHERE contract_id=NEW.contract_id;
+
+			IF v_pay_cnt = 1 THEN
+				SELECT
+					t.application_id,
+					contracts_work_end_date(applications.office_id, t.date_type, NEW.pay_date::timestampTZ, t.expertise_day_count),
+					contracts_work_end_date(applications.office_id, t.date_type, NEW.pay_date::timestampTZ, t.expert_work_day_count),
+					simult_contr.id,
+					CASE WHEN simult_contr.id IS NOT NULL THEN
+						contracts_work_end_date(cost_eval_app.office_id, simult_contr.date_type, NEW.pay_date::timestampTZ, simult_contr.expertise_day_count)
+					ELSE NULL
+					END,
+					cost_eval_app.id,
+					(t.document_type='cost_eval_validity' AND applications.cost_eval_validity_simult)
+				INTO
+					v_application_id,
+					v_work_end_date,
+					v_expert_work_end_date,
+					v_simult_contr_id,
+					v_simult_contr_work_end_date,
+					v_simult_app_id,
+					v_cost_eval_simult
+				FROM contracts t
+				LEFT JOIN applications ON applications.id=t.application_id
+				LEFT JOIN applications AS cost_eval_app ON
+					cost_eval_app.id=applications.derived_application_id AND coalesce(cost_eval_app.cost_eval_validity_simult,FALSE)
+				LEFT JOIN contracts AS simult_contr ON simult_contr.application_id=cost_eval_app.id
+				WHERE t.id=NEW.contract_id;
+			
+				--ВСЕ кроме достоверености, которая вместе с ПД, там все через достоверность
+				IF coalesce(v_cost_eval_simult,FALSE)=FALSE THEN
+					UPDATE contracts
+					SET
+						work_start_date = NEW.pay_date,
+						work_end_date = v_work_end_date,
+						expert_work_end_date = v_expert_work_end_date
+					WHERE id=NEW.contract_id;
+							
+					IF NEW.employee_id IS NOT NULL THEN
+						SELECT user_id INTO v_user_id FROM employees WHERE id=NEW.employee_id;
+					END IF;
+			
+					IF v_user_id IS NULL THEN
+						SELECT id INTO v_user_id FROM users WHERE role_id='admin' LIMIT 1;
+					END IF;
+			
+					--Начало работ - статус
+					--Устанавливается автоматически из загрузки оплат
+					INSERT INTO application_processes
+					(application_id, date_time, state, user_id, end_date_time)
+					VALUES (v_application_id, (NEW.pay_date+'23:59:59'::interval)::timestampTZ, 'expertise'::application_states, v_user_id, v_work_end_date);
+							
+					--А если это ПД и есть связная достоверность ОДНОВРЕМЕННО - сменить там тоже
+					IF v_simult_contr_id IS NOT NULL THEN
+						UPDATE contracts
+						SET
+							work_start_date = NEW.pay_date,
+							work_end_date = v_simult_contr_work_end_date,
+							expert_work_end_date = v_expert_work_end_date
+						WHERE id=v_simult_contr_id;
+									
+						INSERT INTO application_processes
+						(application_id, date_time, state, user_id, end_date_time)
+						VALUES (v_simult_app_id, NEW.pay_date::timestampTZ, 'expertise'::application_states, v_user_id, v_work_end_date);
+				
+					END IF;
+				
+					--А если уже есть статусы после оплаты (вернулся контракт)
+					DELETE FROM application_processes
+					WHERE date_time>NEW.pay_date AND application_id=v_application_id AND state='waiting_for_pay';
+				END IF;	
+			END IF;
+		END IF;
+		RETURN NEW;
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION client_payments_process() OWNER TO expert72;
+
+
+-- ******************* update 14/11/2018 14:49:32 ******************
+-- Function: doc_flow_out_client_process()
+
+-- DROP FUNCTION doc_flow_out_client_process();
+
+CREATE OR REPLACE FUNCTION doc_flow_out_client_process()
+  RETURNS trigger AS
+$BODY$
+DECLARE
+	v_email_type email_types;
+	v_doc_flow_in_id int;
+	v_applicant json;
+	v_constr_name text;
+	v_office_id int;
+	v_from_date_time timestampTZ;
+	v_end_date_time timestampTZ;
+	v_recipient jsonb;
+	v_contract_id int;
+	v_main_department_id int;
+	v_main_expert_id int;
+	v_reg_number text;
+	v_dep_email text;
+	v_recip_department_id int;
+	v_application_state application_states;
+	v_application_state_dt timestampTZ;
+	v_contract_number text;
+	v_doc_flow_subject text;
+	v_contract_employee_id int;
+	v_contract_return_date timestampTZ;
+	v_corrected_sections_t text;
+	v_corrected_sections_o jsonb;
+BEGIN
+	IF TG_WHEN='BEFORE' AND ( TG_OP='INSERT' OR TG_OP='UPDATE') THEN		
+		IF (const_client_lk_val() OR const_debug_val())
+		AND (NEW.sent AND (TG_OP='INSERT' OR coalesce(OLD.sent,FALSE)=FALSE ))
+		THEN
+			NEW.date_time = now();			
+		END IF;
+		
+		RETURN NEW;
+		
+	ELSIF (TG_WHEN='BEFORE' AND TG_OP='DELETE') THEN	
+		IF (const_client_lk_val() OR const_debug_val())	THEN
+			DELETE FROM doc_flow_out_client_document_files WHERE doc_flow_out_client_id=OLD.id;
+		END IF;
+		
+		RETURN OLD;
+		
+	ELSIF (TG_WHEN='AFTER' AND (TG_OP='INSERT' OR TG_OP='UPDATE')) THEN			
+		IF
+		( (TG_OP='INSERT' AND NEW.sent) OR (TG_OP='UPDATE' AND NEW.sent AND NOT coalesce(OLD.sent,FALSE)) )
+		AND (NOT const_client_lk_val() OR const_debug_val()) THEN
+			--main programm
+			--*********** Исходные данные *************************
+			SELECT
+				app.applicant,
+				app.constr_name::text,
+				app.office_id,
+				contracts.id,
+				contracts.main_department_id,
+				contracts.main_expert_id,
+				dep.email,
+				st.state,
+				st.date_time,
+				contracts.contract_number,
+				contracts.employee_id
+			INTO
+				v_applicant,
+				v_constr_name,
+				v_office_id,
+				v_contract_id,
+				v_main_department_id,
+				v_main_expert_id,
+				v_dep_email,
+				v_application_state,
+				v_application_state_dt,
+				v_contract_number,
+				v_contract_employee_id
+			FROM applications AS app
+			LEFT JOIN contracts ON contracts.application_id=app.id
+				AND (
+					(contracts.expertise_type IS NOT NULL AND contracts.expertise_type = app.expertise_type)
+					OR (contracts.document_type='cost_eval_validity'::document_types AND app.cost_eval_validity)
+					OR (contracts.document_type='modification'::document_types AND app.modification)
+					OR (contracts.document_type='audit'::document_types AND app.audit)
+				)
+			LEFT JOIN departments As dep ON dep.id=contracts.main_department_id
+			--тек.статус
+			LEFT JOIN (
+				SELECT
+					t.application_id,
+					max(t.date_time) AS date_time
+				FROM application_processes t
+				GROUP BY t.application_id
+			) AS h_max ON h_max.application_id=app.id
+			LEFT JOIN application_processes st
+				ON st.application_id=h_max.application_id AND st.date_time = h_max.date_time
+			
+			WHERE app.id = NEW.application_id;
+			
+			SELECT
+				d_from,d_to
+			INTO v_from_date_time,v_end_date_time
+			FROM applications_check_period(v_office_id,now(),const_application_check_days_val()) AS (d_from timestampTZ,d_to timestampTZ);
+			--*******************************************************************
+			
+			
+			--Исходящее письмо клиента может быть:
+			--	1) По новому заявлению, контракта нет
+			--		Действия:
+			--			Создать входящее письмо на отдел приема
+			--			Создать рассмотрение на отдел приема
+			--			Напоминание&&email боссу
+			--			Напоминание&&email admin
+			
+			--	2) По замечаниям, когда уже есть контракт
+			--		Действия:
+			--			Создать входящее письмо на главный отдел контракта			
+			--			Напоминание&&email главному эксперту
+			--			email на главный отдел
+			--			Напоминание&&email admin
+			
+			--	3) Возврат контракта
+			--		Действия:
+			--			Создать входящее письмо на отдел приема
+			--			email на отдел приема
+			--			Напоминание&&email admin
+			--			Отметить возврат контракта в контракте
+			--			Перевести статус контракта в ожидание оплаты, только тек.статус=ожидание контракта
+			
+			--************* Входящее письмо НАШЕ ***********************************
+			--Либо отделу приема
+			--Либо главному отделу контракта
+			IF (v_main_department_id IS NULL)
+			OR (NEW.doc_flow_out_client_type='contr_return'::doc_flow_out_client_types) THEN
+				v_recip_department_id = (SELECT const_app_recipient_department_val()->'keys'->>'id')::int;				
+			ELSE
+				v_recip_department_id = v_main_department_id;
+			END IF;
+			
+			--Расширенная тема с доп.атрибутами
+			IF NEW.doc_flow_out_client_type='contr_return' THEN
+				v_doc_flow_subject = NEW.subject||' №'||v_contract_number||', '||(v_applicant->>'name')::text;
+			ELSIF NEW.doc_flow_out_client_type='contr_resp' THEN
+				--Разделы с изменениями для ответов на замечания
+				SELECT
+					string_agg(paths.file_path,','),
+					jsonb_agg(paths.section_o)
+				INTO v_corrected_sections_t,v_corrected_sections_o
+				FROM
+				(
+					SELECT 
+					app_f.file_path,
+					jsonb_build_object(
+						'name',app_f.file_path,
+						'deleted',sum(CASE WHEN doc_f.is_new THEN 0 ELSE 1 END),
+						'added',sum(CASE WHEN doc_f.is_new THEN 1 ELSE 0 END)
+					) AS section_o
+					FROM doc_flow_out_client_document_files AS doc_f
+					LEFT JOIN application_document_files AS app_f ON app_f.file_id=doc_f.file_id
+					WHERE doc_f.doc_flow_out_client_id=NEW.id AND app_f.document_id<>0
+					GROUP BY app_f.file_path
+					ORDER BY app_f.file_path
+				) AS paths;
+				
+				v_doc_flow_subject = NEW.subject||', контракт №'||v_contract_number||', '||(v_applicant->>'name')::text;
+			ELSE
+				v_doc_flow_subject = NEW.subject;
+				IF v_contract_number IS NOT NULL THEN
+					v_doc_flow_subject = v_doc_flow_subject ||', контракт №'||v_contract_number;
+				END IF;
+				v_doc_flow_subject = v_doc_flow_subject ||', '||(v_applicant->>'name')::text;
+			END IF;
+			
+			--Новое входяее письмо всегда						
+			INSERT INTO doc_flow_in (
+				date_time,
+				from_user_id,
+				from_addr_name,from_client_signed_by,from_client_date,
+				from_application_id,
+				doc_flow_type_id,
+				end_date_time,
+				subject,content,
+				recipient,
+				from_doc_flow_out_client_id,
+				from_client_app,
+				corrected_sections
+			)
+			VALUES (
+				v_from_date_time,
+				NEW.user_id,
+				v_applicant->>'name', (v_applicant->>'responsable_person_head')::json->>'name',now()::date,
+				NEW.application_id,
+				
+				CASE
+					WHEN NEW.doc_flow_out_client_type='contr_return'::doc_flow_out_client_types THEN
+						(pdfn_doc_flow_types_contr_paper_return()->'keys'->>'id')::int
+					WHEN NEW.doc_flow_out_client_type='contr_resp'::doc_flow_out_client_types THEN
+						(pdfn_doc_flow_types_contr_resp()->'keys'->>'id')::int
+					ELSE (pdfn_doc_flow_types_app()->'keys'->>'id')::int
+				END,
+				
+				v_end_date_time,
+				v_doc_flow_subject,
+				NEW.content,
+				(SELECT departments_ref(departments) FROM departments WHERE id=v_recip_department_id),
+				NEW.id,
+				TRUE,
+				v_corrected_sections_o
+			)
+			RETURNING id,recipient,reg_number
+			INTO v_doc_flow_in_id,v_recipient,v_reg_number;
+			--**********************************************************
+			
+			--************** Рег номер наш - клиенту ******************************
+			INSERT INTO doc_flow_out_client_reg_numbers
+			(doc_flow_out_client_id,application_id,reg_number)
+			VALUES (NEW.id,NEW.application_id,v_reg_number);
+			--*********************************************************************
+			
+			
+			IF v_contract_id IS NULL THEN
+				--НЕТ контракта - Передача на рассмотрение в отдел приема
+				INSERT INTO doc_flow_examinations (
+					date_time,
+					subject,
+					description,
+					doc_flow_importance_type_id,
+					end_date_time,
+					employee_id,
+					subject_doc,
+					recipient
+				)
+				VALUES (
+					v_from_date_time+'1 second'::interval,
+					NEW.subject,
+					NEW.content,
+					(pdfn_doc_flow_importance_types_common()->'keys'->>'id')::int,
+					v_end_date_time,
+					(SELECT boss_employee_id
+					FROM departments
+					WHERE id=(const_app_recipient_department_val()->'keys'->>'id')::int
+					),
+					doc_flow_in_ref( (SELECT doc_flow_in FROM doc_flow_in WHERE id=v_doc_flow_in_id) ),
+					v_recipient				
+				);
+						
+				--reminder&&email boss о новых заявлениях
+				INSERT INTO reminders
+				(register_docs_ref,recipient_employee_id,content,docs_ref)
+				(SELECT
+					applications_ref((SELECT applications
+								FROM applications
+								WHERE id = NEW.application_id
+					)),
+					employees.id,
+					NEW.subject,
+					doc_flow_in_ref((SELECT doc_flow_in
+								FROM doc_flow_in
+								WHERE id = v_doc_flow_in_id
+					))
+				FROM employees
+				WHERE
+					employees.user_id IN (SELECT id FROM users WHERE role_id='boss')
+				);
+				
+			ELSIF NEW.doc_flow_out_client_type='contr_resp' THEN
+				--ответы на замечания
+				IF v_main_expert_id IS NOT NULL THEN			
+					--напоминание&&email Гл.эксперту 
+					INSERT INTO reminders (register_docs_ref,recipient_employee_id,content,docs_ref)
+					VALUES(
+						applications_ref((SELECT applications
+									FROM applications
+									WHERE id = NEW.application_id
+						)),
+						v_main_expert_id,
+						v_doc_flow_subject||' Разделы:'||v_corrected_sections_t,
+						doc_flow_in_ref((SELECT doc_flow_in
+									FROM doc_flow_in
+									WHERE id = v_doc_flow_in_id
+						))					
+					);
+				END IF;
+				
+				--Напоминание всем экспертам из списка
+				INSERT INTO reminders (register_docs_ref,recipient_employee_id,content,docs_ref)
+				(SELECT
+					applications_ref((SELECT applications
+								FROM applications
+								WHERE id = NEW.application_id
+					)),
+					(sub.expert_fields->'fields'->'expert'->'keys'->>'id')::int AS expert_id,
+					v_doc_flow_subject||' Разделы:'||v_corrected_sections_t,
+					doc_flow_in_ref((SELECT doc_flow_in
+								FROM doc_flow_in
+								WHERE id = v_doc_flow_in_id
+					))					
+					
+				FROM (
+					SELECT jsonb_array_elements(experts_for_notification->'rows') AS expert_fields
+					FROM contracts
+					WHERE contracts.id=v_contract_id
+				) AS sub
+				WHERE (v_main_expert_id IS NULL) OR ((sub.expert_fields->'fields'->'expert'->'keys'->>'id')::int<>v_main_expert_id)
+				);
+				
+			ELSIF NEW.doc_flow_out_client_type='contr_return' THEN	
+				--Возврат подписанных документов
+				--Мыло отделу приема
+				INSERT INTO mail_for_sending
+				(to_addr,to_name,body,subject,email_type)
+				(WITH 
+					templ AS (
+					SELECT t.template AS v,t.mes_subject AS s
+					FROM email_templates t
+					WHERE t.email_type='contr_return'
+					)
+				SELECT
+				departments.email,
+				departments.name,
+				sms_templates_text(
+					ARRAY[
+						ROW('number', v_contract_number)::template_value,
+						ROW('doc_in_id',v_doc_flow_in_id)::template_value
+					],
+					(SELECT v FROM templ)
+				) AS mes_body,		
+				v_doc_flow_subject,
+				'contr_return'
+				FROM departments
+				WHERE
+					departments.id = v_recip_department_id
+					AND departments.email IS NOT NULL
+				);								
+				
+				--напоминание автору контракта из отдела приема
+				IF v_contract_employee_id IS NOT NULL THEN
+					INSERT INTO reminders
+					(register_docs_ref,recipient_employee_id,content,docs_ref)
+					(SELECT
+						applications_ref((SELECT applications
+									FROM applications
+									WHERE id = NEW.application_id
+						)),
+						employees.id,
+						v_doc_flow_subject,
+						doc_flow_in_ref((SELECT doc_flow_in
+									FROM doc_flow_in
+									WHERE id = v_doc_flow_in_id
+						))
+					FROM employees
+					LEFT JOIN users ON users.id=employees.user_id
+					WHERE employees.id=v_contract_employee_id AND users.email IS NOT NULL
+					);				
+				END IF;
+				
+				--Отметка даты возврата контракта && смена статуса
+				SELECT doc_flow_contract_ret_date(NEW.id) INTO v_contract_return_date;
+				
+				UPDATE contracts
+				SET
+					contract_return_date = coalesce(v_contract_return_date,NEW.date_time::date),
+					contract_date = coalesce(v_contract_return_date,NEW.date_time),
+					contract_return_date_on_sig = (v_contract_return_date IS NOT NULL)
+				WHERE id=v_contract_id AND contract_return_date IS NULL;
+				--coalesce(contract_return_date_on_sig,FALSE)=FALSE;
+				--RAISE EXCEPTION 'v_application_state=%',v_application_state;
+				
+				IF v_application_state='waiting_for_contract'
+				OR v_application_state='closed' THEN
+					INSERT INTO application_processes (
+						application_id,
+						date_time,
+						state,
+						user_id,
+						end_date_time
+					)
+					VALUES (
+						NEW.application_id,
+						greatest(NEW.date_time,v_application_state_dt+'1 second'::interval),
+						CASE
+							WHEN v_application_state='waiting_for_contract' THEN 'waiting_for_pay'::application_states
+							ELSE 'archive'::application_states
+						END,
+						NEW.user_id,
+						NULL
+					);			
+				END IF;
+				
+			END IF;
+			
+			
+			--Email главному отделу
+			IF v_main_department_id IS NOT NULL AND NEW.doc_flow_out_client_type='contr_resp' THEN
+				INSERT INTO mail_for_sending
+				(to_addr,to_name,body,subject,email_type)
+				(WITH 
+					templ AS (
+					SELECT t.template AS v,t.mes_subject AS s
+					FROM email_templates t
+					WHERE t.email_type='app_change'
+					)
+				SELECT
+				departments.email,
+				departments.name,
+				sms_templates_text(
+					ARRAY[
+						ROW('applicant', (v_applicant->>'name')::text)::template_value,
+						ROW('constr_name',v_constr_name)::template_value,
+						ROW('application_id',NEW.application_id)::template_value,
+						ROW('contract_id',v_contract_id)::template_value,						
+						ROW('sections',v_corrected_sections_t)::template_value
+					],
+					(SELECT v FROM templ)
+				) AS mes_body,		
+				v_doc_flow_subject,
+				'app_change'
+				FROM departments
+				WHERE
+					departments.id = v_main_department_id
+					AND departments.email IS NOT NULL
+				);								
+			END IF;
+						
+			--Напоминание&&email админу - всегда
+			-- ну и всему списку сотрудников, указанных в доступности (permissions)
+			INSERT INTO reminders
+			(register_docs_ref,recipient_employee_id,content,docs_ref)
+			(SELECT
+				applications_ref((SELECT applications
+							FROM applications
+							WHERE id = NEW.application_id
+				)),
+				employees.id,
+				v_doc_flow_subject,
+				doc_flow_in_ref((SELECT doc_flow_in
+							FROM doc_flow_in
+							WHERE id = v_doc_flow_in_id
+				))
+			FROM employees
+			WHERE
+				employees.user_id IN (SELECT id FROM users WHERE role_id='admin')
+				OR
+				(NEW.doc_flow_out_client_type='contr_resp'
+				AND
+				employees.id IN (
+					SELECT (fld.obj->'keys'->>'id')::int
+					FROM (
+						SELECT jsonb_array_elements(contracts.permissions->'rows')->'fields'->'obj' AS obj
+						FROM contracts
+						WHERE contracts.id=v_contract_id
+					) AS fld
+					WHERE fld.obj->>'dataType'='employees'
+					)
+				)
+			);
+		
+		END IF;
+	
+		RETURN NEW;
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION doc_flow_out_client_process() OWNER TO expert72;
+
+
+-- ******************* update 14/11/2018 14:52:46 ******************
+-- Function: doc_flow_examinations_process()
+
+-- DROP FUNCTION doc_flow_examinations_process();
+
+CREATE OR REPLACE FUNCTION doc_flow_examinations_process()
+  RETURNS trigger AS
+$BODY$
+DECLARE
+	v_ref JSONB;
+	v_application_id int;
+	v_app_expertise_type expertise_types;
+	v_app_cost_eval_validity bool;
+	v_app_modification bool;
+	v_app_audit bool;	
+	v_app_client_id int;
+	v_app_user_id int;
+	v_app_applicant JSONB;
+	v_primary_contracts_ref JSONB;
+	v_modif_primary_contracts_ref JSONB;	
+	v_linked_contracts_ref JSONB;
+	v_app_process_dt timestampTZ;
+	v_linked_app int;
+	v_cost_eval_validity_simult bool;
+	v_constr_name text;
+	v_constr_address jsonb;
+	v_constr_technical_features jsonb;
+	v_linked_contracts JSONB[];
+	v_linked_contracts_n int;
+	v_new_contract_number text;
+	v_document_type document_types;
+	v_expertise_result_number text;
+	v_date_type date_types;
+	v_work_day_count int;
+	v_expert_work_day_count int;
+	v_office_id int;
+	v_new_contract_id int;
+BEGIN
+	IF (TG_WHEN='AFTER' AND TG_OP='INSERT') THEN
+		IF NOT const_client_lk_val() OR const_debug_val() THEN
+			v_ref = doc_flow_examinations_ref((SELECT doc_flow_examinations FROM doc_flow_examinations WHERE id=NEW.id));
+			--статус
+			INSERT INTO doc_flow_in_processes (
+				doc_flow_in_id, date_time,
+				state,
+				register_doc,
+				doc_flow_importance_type_id,
+				description,
+				end_date_time
+			)
+			VALUES (
+				(NEW.subject_doc->'keys'->>'id')::int,NEW.date_time,
+				CASE WHEN NEW.closed THEN 'examined'::doc_flow_in_states ELSE 'examining'::doc_flow_in_states END,
+				v_ref,
+				NEW.doc_flow_importance_type_id,
+				NEW.subject,
+				NEW.end_date_time
+			);
+			
+			--задачи
+			INSERT INTO doc_flow_tasks (
+				register_doc,
+				date_time,end_date_time,
+				doc_flow_importance_type_id,
+				employee_id,
+				recipient,
+				description,
+				closed,
+				close_doc,
+				close_date_time,
+				close_employee_id
+			)
+			VALUES (
+				v_ref,
+				NEW.date_time,NEW.end_date_time,
+				NEW.doc_flow_importance_type_id,
+				NEW.employee_id,
+				NEW.recipient,
+				NEW.subject,
+				NEW.closed,
+				CASE WHEN NEW.closed THEN v_ref ELSE NULL END,
+				CASE WHEN NEW.closed THEN now() ELSE NULL END,
+				CASE WHEN NEW.closed THEN NEW.close_employee_id ELSE NULL END
+			);
+			
+			--если тип основания - письмо, чье основание - заявление - сменим его статус
+			IF NEW.subject_doc->>'dataType'='doc_flow_in' THEN
+				SELECT from_application_id INTO v_application_id FROM doc_flow_in WHERE id=(NEW.subject_doc->'keys'->>'id')::int;
+				IF (v_application_id IS NOT NULL) THEN
+					IF NEW.closed THEN
+						SELECT
+							greatest(NEW.date_time,date_time+'1 second'::interval)
+						INTO v_app_process_dt
+						FROM application_processes
+						WHERE application_id=v_application_id
+						ORDER BY date_time DESC
+						LIMIT 1;
+					ELSE
+						v_app_process_dt = NEW.date_time;
+					END IF;
+					--статус
+					INSERT INTO application_processes (
+						application_id,
+						date_time,
+						state,
+						user_id,
+						end_date_time
+					)
+					VALUES (
+						v_application_id,
+						v_app_process_dt,
+						CASE WHEN NEW.closed THEN NEW.application_resolution_state ELSE 'checking'::application_states END,
+						(SELECT user_id FROM employees WHERE id=NEW.employee_id),
+						NEW.end_date_time
+					);			
+				END IF;
+			END IF;		
+			
+		END IF;
+					
+		RETURN NEW;
+		
+	ELSIF (TG_WHEN='AFTER' AND TG_OP='UPDATE' ) THEN
+		IF NOT const_client_lk_val() OR const_debug_val() THEN
+			v_ref = doc_flow_examinations_ref((SELECT doc_flow_examinations FROM doc_flow_examinations WHERE id=NEW.id));
+		
+			--state
+			IF NEW.date_time<>OLD.date_time
+				OR NEW.end_date_time<>OLD.end_date_time
+				OR NEW.doc_flow_importance_type_id<>OLD.doc_flow_importance_type_id
+				OR NEW.subject_doc<>OLD.subject_doc
+				OR NEW.subject<>OLD.subject
+				OR NEW.date_time<>OLD.date_time
+				--OR (NEW.employee_id<>OLD.employee_id AND NEW.subject_doc->>'dataType'='doc_flow_in'
+			THEN
+				UPDATE doc_flow_in_processes
+				SET
+					date_time			= NEW.date_time,
+					doc_flow_importance_type_id	= NEW.doc_flow_importance_type_id,
+					doc_flow_in_id			= (NEW.subject_doc->'keys'->>'id')::int,
+					description			= NEW.subject,
+					end_date_time			= NEW.end_date_time
+				WHERE register_doc->>'dataType'='doc_flow_examinations' AND (register_doc->'keys'->>'id')::int=NEW.id;
+			END IF;
+	
+			--сменим статус при закрытии
+			IF NEW.closed<>OLD.closed THEN
+				INSERT INTO doc_flow_in_processes (
+					doc_flow_in_id,
+					date_time,
+					state,
+					register_doc,
+					doc_flow_importance_type_id,
+					end_date_time
+				)
+				VALUES (
+					(NEW.subject_doc->'keys'->>'id')::int,
+					CASE WHEN NEW.closed THEN NEW.close_date_time ELSE now() END,
+					CASE WHEN NEW.closed THEN 'examined'::doc_flow_in_states ELSE 'examining'::doc_flow_in_states END,
+					v_ref,
+					NEW.doc_flow_importance_type_id,
+					NEW.end_date_time
+				);		
+			END IF;
+	
+			--если тип основания - заявление - сменим его статус
+			IF NEW.subject_doc->>'dataType'='doc_flow_in' AND NEW.closed<>OLD.closed AND NEW.closed THEN
+				SELECT
+					from_application_id,
+					doc_flow_out.new_contract_number
+				INTO
+					v_application_id,
+					v_new_contract_number
+				FROM doc_flow_in
+				LEFT JOIN doc_flow_out ON doc_flow_out.doc_flow_in_id=doc_flow_in.id
+				WHERE doc_flow_in.id=(NEW.subject_doc->'keys'->>'id')::int;
+			
+				--НОВЫЙ КОНТРАКТ
+				IF NEW.application_resolution_state='waiting_for_contract' THEN
+					SELECT
+						app.expertise_type,
+						app.cost_eval_validity,
+						app.modification,
+						app.audit,
+						app.user_id,
+						app.applicant,
+						(contracts_ref(p_contr))::jsonb,
+						(contracts_ref(mp_contr))::jsonb,
+						coalesce(app.base_application_id,app.derived_application_id),
+						app.cost_eval_validity_simult,
+						app.constr_name,
+						app.constr_address,
+						app.constr_technical_features,
+						CASE
+							WHEN app.expertise_type IS NOT NULL THEN 'pd'::document_types
+							WHEN app.cost_eval_validity THEN 'cost_eval_validity'::document_types
+							WHEN app.modification THEN 'modification'::document_types
+							WHEN app.audit THEN 'audit'::document_types						
+						END,
+						app.office_id
+					
+					INTO
+						v_app_expertise_type,
+						v_app_cost_eval_validity,
+						v_app_modification,
+						v_app_audit,
+						v_app_user_id,
+						v_app_applicant,
+						v_primary_contracts_ref,
+						v_modif_primary_contracts_ref,
+						v_linked_app,
+						v_cost_eval_validity_simult,
+						v_constr_name,
+						v_constr_address,
+						v_constr_technical_features,
+						v_document_type,
+						v_office_id
+					
+					FROM applications AS app
+					LEFT JOIN contracts AS p_contr ON p_contr.application_id=app.primary_application_id
+					LEFT JOIN contracts AS mp_contr ON mp_contr.application_id=app.modif_primary_application_id
+					WHERE app.id=v_application_id;
+				
+					--applicant -->> client
+					UPDATE clients
+					SET
+						name		= v_app_applicant->>'name',
+						name_full	= v_app_applicant->>'name_full',
+						ogrn		= v_app_applicant->>'ogrn',
+						inn		= v_app_applicant->>'inn',
+						kpp		= v_app_applicant->>'kpp',
+						okpo		= v_app_applicant->>'okpo',
+						okved		= v_app_applicant->>'okved',
+						post_address	= v_app_applicant->'post_address',
+						user_id		= v_app_user_id,
+						legal_address	= v_app_applicant->'legal_address',
+						bank_accounts	= v_app_applicant->'bank_accounts',
+						client_type	= 
+							CASE WHEN v_app_applicant->>'client_type' IS NULL OR v_app_applicant->>'client_type'='on' THEN 'enterprise'
+							ELSE (v_app_applicant->>'client_type')::client_types
+							END,
+						base_document_for_contract = v_app_applicant->>'base_document_for_contract',
+						person_id_paper	= v_app_applicant->'person_id_paper',
+						person_registr_paper = v_app_applicant->'person_registr_paper'
+					WHERE name = v_app_applicant->>'name' OR (inn=v_app_applicant->>'inn' AND kpp=v_app_applicant->>'kpp')
+					RETURNING id INTO v_app_client_id;
+				
+					IF NOT FOUND THEN
+						INSERT INTO clients
+						(
+							name,
+							name_full,
+							inn,
+							kpp,
+							ogrn,
+							okpo,
+							okved,
+							post_address,
+							user_id,
+							legal_address,
+							bank_accounts,
+							client_type,
+							base_document_for_contract,
+							person_id_paper,
+							person_registr_paper
+						)
+						VALUES(
+							CASE WHEN v_app_applicant->>'name' IS NULL THEN v_app_applicant->>'name_full'
+							ELSE v_app_applicant->>'name'
+							END,
+							v_app_applicant->>'name_full',
+							v_app_applicant->>'inn',
+							v_app_applicant->>'kpp',
+							v_app_applicant->>'ogrn',
+							v_app_applicant->>'okpo',
+							v_app_applicant->>'okved',
+							v_app_applicant->'post_address',
+							v_app_user_id,
+							v_app_applicant->'legal_address',
+							v_app_applicant->'bank_accounts',
+							CASE WHEN v_app_applicant->>'client_type' IS NULL OR v_app_applicant->>'client_type'='on' THEN 'enterprise'
+							ELSE (v_app_applicant->>'client_type')::client_types
+							END,
+							v_app_applicant->>'base_document_for_contract',
+							v_app_applicant->'person_id_paper',
+							v_app_applicant->'person_registr_paper'
+						)				
+						RETURNING id
+						INTO v_app_client_id
+						;
+					END IF;
+				
+					v_linked_contracts_n = 0;
+					IF (v_primary_contracts_ref->'keys'->>'id' IS NOT NULL) THEN
+						v_linked_contracts_n = v_linked_contracts_n + 1;
+						v_linked_contracts = v_linked_contracts || jsonb_build_object('fields',jsonb_build_object('id',v_linked_contracts_n,'contracts_ref',v_primary_contracts_ref));
+					END IF;
+					IF (v_modif_primary_contracts_ref->'keys'->>'id' IS NOT NULL) THEN
+						v_linked_contracts_n = v_linked_contracts_n + 1;
+						v_linked_contracts = v_linked_contracts || jsonb_build_object('fields',jsonb_build_object('id',v_linked_contracts_n,'contracts_ref',v_modif_primary_contracts_ref));
+					END IF;
+				
+					IF v_linked_app IS NOT NULL THEN
+						--Поиск связного контракта по заявлению
+						SELECT contracts_ref(contracts) INTO v_linked_contracts_ref FROM contracts WHERE application_id=v_linked_app;
+						IF v_linked_contracts_ref IS NOT NULL THEN
+							v_linked_contracts_n = v_linked_contracts_n + 1;
+							v_linked_contracts = v_linked_contracts || jsonb_build_object('fields',jsonb_build_object('id',v_linked_contracts_n,'contracts_ref',v_linked_contracts_ref));
+						END IF;
+					END IF;
+				
+					--Сначала из исх.письма, затем генерим новый
+					IF v_new_contract_number IS NULL THEN
+						v_new_contract_number = contracts_next_number(v_document_type,now()::date);
+					END IF;
+				
+					--Номер экспертного заключения
+					v_expertise_result_number = regexp_replace(v_new_contract_number,'\D+.*$','');
+					v_expertise_result_number = substr('0000',1,4-length(v_expertise_result_number))||
+								v_expertise_result_number||
+								'/'||(extract(year FROM now())-2000)::text;
+				
+					--Дни проверки
+					SELECT
+						services.date_type,
+						services.work_day_count,
+						services.expertise_day_count
+					INTO
+						v_date_type,
+						v_work_day_count,
+						v_expert_work_day_count
+					FROM services
+					WHERE services.id=
+					((
+						CASE
+							WHEN v_document_type='pd' THEN pdfn_services_expertise()
+							WHEN v_document_type='cost_eval_validity' THEN pdfn_services_cost_eval_validity()
+							WHEN v_document_type='modification' THEN pdfn_services_modification()
+							WHEN v_document_type='audit' THEN pdfn_services_audit()
+							ELSE NULL
+						END
+					)->'keys'->>'id')::int;
+								
+					--RAISE EXCEPTION 'v_linked_contracts=%',v_linked_contracts;
+					--Контракт
+					INSERT INTO contracts (
+						date_time,
+						application_id,
+						client_id,
+						employee_id,
+						document_type,
+						expertise_type,
+						cost_eval_validity_pd_order,
+						constr_name,
+						constr_address,
+						constr_technical_features,
+						contract_number,
+						expertise_result_number,
+						linked_contracts,
+						--contract_date,					
+						date_type,
+						expertise_day_count,
+						expert_work_day_count,
+						work_end_date,
+						expert_work_end_date,
+						permissions,
+						user_id)
+					VALUES (
+						now(),
+						v_application_id,
+						v_app_client_id,
+						NEW.close_employee_id,
+						v_document_type,
+						v_app_expertise_type,
+						CASE
+							WHEN v_app_cost_eval_validity THEN
+								CASE
+									WHEN v_cost_eval_validity_simult THEN 'simult_with_pd'::cost_eval_validity_pd_orders
+									WHEN v_linked_app IS NOT NULL THEN 'after_pd'::cost_eval_validity_pd_orders
+									ELSE 'no_pd'::cost_eval_validity_pd_orders
+								END
+							ELSE NULL
+						END,
+						v_constr_name,
+						v_constr_address,
+						v_constr_technical_features,
+					
+						v_new_contract_number,
+						v_expertise_result_number,
+					
+						--linked_contracts
+						CASE WHEN v_linked_contracts IS NOT NULL THEN
+							jsonb_build_object(
+								'id','LinkedContractList_Model',
+								'rows',v_linked_contracts
+							)
+						ELSE
+							'{"id":"LinkedContractList_Model","rows":[]}'::jsonb
+						END,
+					
+						--now()::date,--contract_date
+					
+						v_date_type,
+						v_work_day_count,
+						v_expert_work_day_count,
+					
+						--ПРИ ОПЛАТЕ client_payments_process()
+						--ставятся work_start_date&&work_end_date
+						--contracts_work_end_date(v_office_id, v_date_type, now(), v_work_day_count),
+						NULL,
+						NULL,					
+					
+						'{"id":"AccessPermission_Model","rows":[]}'::jsonb,
+					
+						v_app_user_id
+					)
+					RETURNING id INTO v_new_contract_id;
+				
+					--В связные контракты запишем данный по текущему новому
+					IF (v_linked_contracts_ref->'keys'->>'id' IS NOT NULL) THEN
+					--RAISE EXCEPTION 'Updating contracts, id=%',(v_linked_contracts_ref->'keys'->>'id')::int;
+						UPDATE contracts
+						SET
+							linked_contracts = jsonb_build_object(
+								'id','LinkedContractList_Model',
+								'rows',
+								linked_contracts->'rows'||
+									jsonb_build_object(
+									'fields',jsonb_build_object(
+										'id',
+										jsonb_array_length(linked_contracts->'rows')+1,
+										'contracts_ref',contracts_ref((SELECT contracts FROM contracts WHERE id=v_new_contract_id))
+										)
+									)							
+							)
+						WHERE id=(v_linked_contracts_ref->'keys'->>'id')::int;
+					END IF;
+					IF (v_primary_contracts_ref->'keys'->>'id' IS NOT NULL) THEN
+						UPDATE contracts
+						SET
+							linked_contracts = jsonb_build_object(
+								'id','LinkedContractList_Model',
+								'rows',
+								linked_contracts->'rows'||
+									jsonb_build_object(
+									'fields',jsonb_build_object(
+										'id',
+										jsonb_array_length(linked_contracts->'rows')+1,
+										'contracts_ref',contracts_ref((SELECT contracts FROM contracts WHERE id=v_new_contract_id))
+										)
+									)							
+							)
+						WHERE id=(v_primary_contracts_ref->'keys'->>'id')::int;
+					END IF;
+					IF (v_modif_primary_contracts_ref->'keys'->>'id' IS NOT NULL) THEN
+						UPDATE contracts
+						SET
+							linked_contracts = jsonb_build_object(
+								'id','LinkedContractList_Model',
+								'rows',
+								linked_contracts->'rows'||
+									jsonb_build_object(
+									'fields',jsonb_build_object(
+										'id',
+										jsonb_array_length(linked_contracts->'rows')+1,
+										'contracts_ref',contracts_ref((SELECT contracts FROM contracts WHERE id=v_new_contract_id))
+										)
+									)							
+							)
+						WHERE id=(v_modif_primary_contracts_ref->'keys'->>'id')::int;
+					END IF;
+				
+				END IF;
+			END IF;
+						
+			--задачи
+			UPDATE doc_flow_tasks
+			SET 
+				date_time			= NEW.date_time,
+				end_date_time			= NEW.end_date_time,
+				doc_flow_importance_type_id	= NEW.doc_flow_importance_type_id,
+				employee_id			= NEW.employee_id,
+				description			= NEW.subject,
+				closed				= NEW.closed,
+				close_doc			= CASE WHEN NEW.closed THEN v_ref ELSE NULL END,
+				close_date_time			= CASE WHEN NEW.closed THEN now() ELSE NULL END,
+				close_employee_id		= CASE WHEN NEW.closed THEN NEW.close_employee_id ELSE NULL END
+			WHERE register_doc->>'dataType'='doc_flow_examinations' AND (register_doc->'keys'->>'id')::int=NEW.id;
+			
+			--если тип основания - заявление - сменим его статус
+			IF NEW.subject_doc->>'dataType'='doc_flow_in' AND NEW.closed<>OLD.closed AND NEW.closed THEN
+				SELECT
+					from_application_id,
+					doc_flow_out.new_contract_number
+				INTO
+					v_application_id,
+					v_new_contract_number
+				FROM doc_flow_in
+				LEFT JOIN doc_flow_out ON doc_flow_out.doc_flow_in_id=doc_flow_in.id
+				WHERE doc_flow_in.id=(NEW.subject_doc->'keys'->>'id')::int;
+			
+				IF v_application_id IS NOT NULL THEN
+					IF NEW.closed THEN
+						SELECT
+							greatest(NEW.close_date_time,date_time+'1 second'::interval)
+						INTO v_app_process_dt
+						FROM application_processes
+						WHERE application_id=v_application_id
+						ORDER BY date_time DESC
+						LIMIT 1;
+					ELSE
+						v_app_process_dt = NEW.close_date_time;
+					END IF;
+			
+					--статус
+					INSERT INTO application_processes (
+						application_id,
+						date_time,
+						state,
+						user_id,
+						end_date_time
+					)
+					VALUES (
+						v_application_id,
+						v_app_process_dt,
+						CASE WHEN NEW.closed THEN NEW.application_resolution_state ELSE 'checking'::application_states END,
+						(SELECT user_id FROM employees WHERE id=NEW.employee_id),
+						CASE WHEN NEW.closed THEN NULL ELSE NEW.end_date_time END					
+					);			
+				END IF;
+			END IF;					
+			
+		END IF;
+		
+		RETURN NEW;
+		
+	ELSIF (TG_WHEN='BEFORE' AND TG_OP='UPDATE') THEN
+		--статус
+		--DELETE FROM doc_flow_in_processes WHERE (register_doc->>'dataType')::data_types='doc_flow_examinations'::data_types AND (register_doc->'keys'->>'id')::int=NEW.id;
+		--задачи
+		--DELETE FROM doc_flow_tasks WHERE (register_doc->>'dataType')::data_types='doc_flow_examinations'::data_types AND (register_doc->'keys'->>'id')::int=NEW.id;
+	
+		RETURN NEW;
+		
+	ELSIF (TG_WHEN='BEFORE' AND TG_OP='DELETE') THEN
+		IF NOT const_client_lk_val() OR const_debug_val() THEN
+			--статус
+			DELETE FROM doc_flow_in_processes WHERE register_doc->>'dataType'='doc_flow_examinations' AND (register_doc->'keys'->>'id')::int=OLD.id;
+			--задачи
+			DELETE FROM doc_flow_tasks WHERE register_doc->>'dataType'='doc_flow_examinations' AND (register_doc->'keys'->>'id')::int=OLD.id;
+			IF (OLD.subject_doc->>'dataType')::data_types='doc_flow_in'::data_types THEN
+				SELECT from_application_id INTO v_application_id FROM doc_flow_in WHERE id=(OLD.subject_doc->'keys'->>'id')::int;
+				IF v_application_id IS NOT NULL THEN
+					DELETE FROM application_processes WHERE doc_flow_examination_id=OLD.id;
+				END IF;
+			END IF;
+		END IF;
+													
+		RETURN OLD;
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION doc_flow_examinations_process() OWNER TO expert72;
+
+-- ******************* update 14/11/2018 14:54:49 ******************
+-- Function: doc_flow_out_client_process()
+
+-- DROP FUNCTION doc_flow_out_client_process();
+
+CREATE OR REPLACE FUNCTION doc_flow_out_client_process()
+  RETURNS trigger AS
+$BODY$
+DECLARE
+	v_email_type email_types;
+	v_doc_flow_in_id int;
+	v_applicant json;
+	v_constr_name text;
+	v_office_id int;
+	v_from_date_time timestampTZ;
+	v_end_date_time timestampTZ;
+	v_recipient jsonb;
+	v_contract_id int;
+	v_main_department_id int;
+	v_main_expert_id int;
+	v_reg_number text;
+	v_dep_email text;
+	v_recip_department_id int;
+	v_application_state application_states;
+	v_application_state_dt timestampTZ;
+	v_contract_number text;
+	v_doc_flow_subject text;
+	v_contract_employee_id int;
+	v_contract_return_date timestampTZ;
+	v_corrected_sections_t text;
+	v_corrected_sections_o jsonb;
+BEGIN
+	IF TG_WHEN='BEFORE' AND ( TG_OP='INSERT' OR TG_OP='UPDATE') THEN		
+		IF (const_client_lk_val() OR const_debug_val())
+		AND (NEW.sent AND (TG_OP='INSERT' OR coalesce(OLD.sent,FALSE)=FALSE ))
+		THEN
+			NEW.date_time = now();			
+		END IF;
+		
+		RETURN NEW;
+		
+	ELSIF (TG_WHEN='BEFORE' AND TG_OP='DELETE') THEN	
+		IF (const_client_lk_val() OR const_debug_val())	THEN
+			DELETE FROM doc_flow_out_client_document_files WHERE doc_flow_out_client_id=OLD.id;
+		END IF;
+		
+		RETURN OLD;
+		
+	ELSIF (TG_WHEN='AFTER' AND (TG_OP='INSERT' OR TG_OP='UPDATE')) THEN			
+		IF
+		( (TG_OP='INSERT' AND NEW.sent) OR (TG_OP='UPDATE' AND NEW.sent AND NOT coalesce(OLD.sent,FALSE)) )
+		AND (NOT const_client_lk_val() OR const_debug_val()) THEN
+			--main programm
+			--*********** Исходные данные *************************
+			SELECT
+				app.applicant,
+				app.constr_name::text,
+				app.office_id,
+				contracts.id,
+				contracts.main_department_id,
+				contracts.main_expert_id,
+				dep.email,
+				st.state,
+				st.date_time,
+				contracts.contract_number,
+				contracts.employee_id
+			INTO
+				v_applicant,
+				v_constr_name,
+				v_office_id,
+				v_contract_id,
+				v_main_department_id,
+				v_main_expert_id,
+				v_dep_email,
+				v_application_state,
+				v_application_state_dt,
+				v_contract_number,
+				v_contract_employee_id
+			FROM applications AS app
+			LEFT JOIN contracts ON contracts.application_id=app.id
+				AND (
+					(contracts.expertise_type IS NOT NULL AND contracts.expertise_type = app.expertise_type)
+					OR (contracts.document_type='cost_eval_validity'::document_types AND app.cost_eval_validity)
+					OR (contracts.document_type='modification'::document_types AND app.modification)
+					OR (contracts.document_type='audit'::document_types AND app.audit)
+				)
+			LEFT JOIN departments As dep ON dep.id=contracts.main_department_id
+			--тек.статус
+			LEFT JOIN (
+				SELECT
+					t.application_id,
+					max(t.date_time) AS date_time
+				FROM application_processes t
+				GROUP BY t.application_id
+			) AS h_max ON h_max.application_id=app.id
+			LEFT JOIN application_processes st
+				ON st.application_id=h_max.application_id AND st.date_time = h_max.date_time
+			
+			WHERE app.id = NEW.application_id;
+			
+			SELECT
+				d_from,d_to
+			INTO v_from_date_time,v_end_date_time
+			FROM applications_check_period(v_office_id,now(),const_application_check_days_val()) AS (d_from timestampTZ,d_to timestampTZ);
+			--*******************************************************************
+			
+			
+			--Исходящее письмо клиента может быть:
+			--	1) По новому заявлению, контракта нет
+			--		Действия:
+			--			Создать входящее письмо на отдел приема
+			--			Создать рассмотрение на отдел приема
+			--			Напоминание&&email боссу
+			--			Напоминание&&email admin
+			
+			--	2) По замечаниям, когда уже есть контракт
+			--		Действия:
+			--			Создать входящее письмо на главный отдел контракта			
+			--			Напоминание&&email главному эксперту
+			--			email на главный отдел
+			--			Напоминание&&email admin
+			
+			--	3) Возврат контракта
+			--		Действия:
+			--			Создать входящее письмо на отдел приема
+			--			email на отдел приема
+			--			Напоминание&&email admin
+			--			Отметить возврат контракта в контракте
+			--			Перевести статус контракта в ожидание оплаты, только тек.статус=ожидание контракта
+			
+			--************* Входящее письмо НАШЕ ***********************************
+			--Либо отделу приема
+			--Либо главному отделу контракта
+			IF (v_main_department_id IS NULL)
+			OR (NEW.doc_flow_out_client_type='contr_return'::doc_flow_out_client_types) THEN
+				v_recip_department_id = (SELECT const_app_recipient_department_val()->'keys'->>'id')::int;				
+			ELSE
+				v_recip_department_id = v_main_department_id;
+			END IF;
+			
+			--Расширенная тема с доп.атрибутами
+			IF NEW.doc_flow_out_client_type='contr_return' THEN
+				v_doc_flow_subject = NEW.subject||' №'||v_contract_number||', '||(v_applicant->>'name')::text;
+			ELSIF NEW.doc_flow_out_client_type='contr_resp' THEN
+				--Разделы с изменениями для ответов на замечания
+				SELECT
+					string_agg(paths.file_path,','),
+					jsonb_agg(paths.section_o)
+				INTO v_corrected_sections_t,v_corrected_sections_o
+				FROM
+				(
+					SELECT 
+					app_f.file_path,
+					jsonb_build_object(
+						'name',app_f.file_path,
+						'deleted',sum(CASE WHEN doc_f.is_new THEN 0 ELSE 1 END),
+						'added',sum(CASE WHEN doc_f.is_new THEN 1 ELSE 0 END)
+					) AS section_o
+					FROM doc_flow_out_client_document_files AS doc_f
+					LEFT JOIN application_document_files AS app_f ON app_f.file_id=doc_f.file_id
+					WHERE doc_f.doc_flow_out_client_id=NEW.id AND app_f.document_id<>0
+					GROUP BY app_f.file_path
+					ORDER BY app_f.file_path
+				) AS paths;
+				
+				v_doc_flow_subject = NEW.subject||', контракт №'||v_contract_number||', '||(v_applicant->>'name')::text;
+			ELSE
+				v_doc_flow_subject = NEW.subject;
+				IF v_contract_number IS NOT NULL THEN
+					v_doc_flow_subject = v_doc_flow_subject ||', контракт №'||v_contract_number;
+				END IF;
+				v_doc_flow_subject = v_doc_flow_subject ||', '||(v_applicant->>'name')::text;
+			END IF;
+			
+			--Новое входяее письмо всегда						
+			INSERT INTO doc_flow_in (
+				date_time,
+				from_user_id,
+				from_addr_name,from_client_signed_by,from_client_date,
+				from_application_id,
+				doc_flow_type_id,
+				end_date_time,
+				subject,content,
+				recipient,
+				from_doc_flow_out_client_id,
+				from_client_app,
+				corrected_sections
+			)
+			VALUES (
+				v_from_date_time,
+				NEW.user_id,
+				v_applicant->>'name', (v_applicant->>'responsable_person_head')::json->>'name',now()::date,
+				NEW.application_id,
+				
+				CASE
+					WHEN NEW.doc_flow_out_client_type='contr_return'::doc_flow_out_client_types THEN
+						(pdfn_doc_flow_types_contr_paper_return()->'keys'->>'id')::int
+					WHEN NEW.doc_flow_out_client_type='contr_resp'::doc_flow_out_client_types THEN
+						(pdfn_doc_flow_types_contr_resp()->'keys'->>'id')::int
+					ELSE (pdfn_doc_flow_types_app()->'keys'->>'id')::int
+				END,
+				
+				v_end_date_time,
+				v_doc_flow_subject,
+				NEW.content,
+				(SELECT departments_ref(departments) FROM departments WHERE id=v_recip_department_id),
+				NEW.id,
+				TRUE,
+				v_corrected_sections_o
+			)
+			RETURNING id,recipient,reg_number
+			INTO v_doc_flow_in_id,v_recipient,v_reg_number;
+			--**********************************************************
+			
+			--************** Рег номер наш - клиенту ******************************
+			INSERT INTO doc_flow_out_client_reg_numbers
+			(doc_flow_out_client_id,application_id,reg_number)
+			VALUES (NEW.id,NEW.application_id,v_reg_number);
+			--*********************************************************************
+			
+			
+			IF v_contract_id IS NULL THEN
+				--НЕТ контракта - Передача на рассмотрение в отдел приема
+				INSERT INTO doc_flow_examinations (
+					date_time,
+					subject,
+					description,
+					doc_flow_importance_type_id,
+					end_date_time,
+					employee_id,
+					subject_doc,
+					recipient
+				)
+				VALUES (
+					v_from_date_time+'1 second'::interval,
+					NEW.subject,
+					NEW.content,
+					(pdfn_doc_flow_importance_types_common()->'keys'->>'id')::int,
+					v_end_date_time,
+					(SELECT boss_employee_id
+					FROM departments
+					WHERE id=(const_app_recipient_department_val()->'keys'->>'id')::int
+					),
+					doc_flow_in_ref( (SELECT doc_flow_in FROM doc_flow_in WHERE id=v_doc_flow_in_id) ),
+					v_recipient				
+				);
+						
+				--reminder&&email boss о новых заявлениях
+				INSERT INTO reminders
+				(register_docs_ref,recipient_employee_id,content,docs_ref)
+				(SELECT
+					applications_ref((SELECT applications
+								FROM applications
+								WHERE id = NEW.application_id
+					)),
+					employees.id,
+					NEW.subject,
+					doc_flow_in_ref((SELECT doc_flow_in
+								FROM doc_flow_in
+								WHERE id = v_doc_flow_in_id
+					))
+				FROM employees
+				WHERE
+					employees.user_id IN (SELECT id FROM users WHERE role_id='boss')
+				);
+				
+			ELSIF NEW.doc_flow_out_client_type='contr_resp' THEN
+				--ответы на замечания
+				IF v_main_expert_id IS NOT NULL THEN			
+					--напоминание&&email Гл.эксперту 
+					INSERT INTO reminders (register_docs_ref,recipient_employee_id,content,docs_ref)
+					VALUES(
+						applications_ref((SELECT applications
+									FROM applications
+									WHERE id = NEW.application_id
+						)),
+						v_main_expert_id,
+						v_doc_flow_subject||' Разделы:'||v_corrected_sections_t,
+						doc_flow_in_ref((SELECT doc_flow_in
+									FROM doc_flow_in
+									WHERE id = v_doc_flow_in_id
+						))					
+					);
+				END IF;
+				
+				--Напоминание всем экспертам из списка
+				INSERT INTO reminders (register_docs_ref,recipient_employee_id,content,docs_ref)
+				(SELECT
+					applications_ref((SELECT applications
+								FROM applications
+								WHERE id = NEW.application_id
+					)),
+					(sub.expert_fields->'fields'->'expert'->'keys'->>'id')::int AS expert_id,
+					v_doc_flow_subject||' Разделы:'||v_corrected_sections_t,
+					doc_flow_in_ref((SELECT doc_flow_in
+								FROM doc_flow_in
+								WHERE id = v_doc_flow_in_id
+					))					
+					
+				FROM (
+					SELECT jsonb_array_elements(experts_for_notification->'rows') AS expert_fields
+					FROM contracts
+					WHERE contracts.id=v_contract_id
+				) AS sub
+				WHERE (v_main_expert_id IS NULL) OR ((sub.expert_fields->'fields'->'expert'->'keys'->>'id')::int<>v_main_expert_id)
+				);
+				
+			ELSIF NEW.doc_flow_out_client_type='contr_return' THEN	
+				--Возврат подписанных документов
+				--Мыло отделу приема
+				INSERT INTO mail_for_sending
+				(to_addr,to_name,body,subject,email_type)
+				(WITH 
+					templ AS (
+					SELECT t.template AS v,t.mes_subject AS s
+					FROM email_templates t
+					WHERE t.email_type='contr_return'
+					)
+				SELECT
+				departments.email,
+				departments.name,
+				sms_templates_text(
+					ARRAY[
+						ROW('number', v_contract_number)::template_value,
+						ROW('doc_in_id',v_doc_flow_in_id)::template_value
+					],
+					(SELECT v FROM templ)
+				) AS mes_body,		
+				v_doc_flow_subject,
+				'contr_return'
+				FROM departments
+				WHERE
+					departments.id = v_recip_department_id
+					AND departments.email IS NOT NULL
+				);								
+				
+				--напоминание автору контракта из отдела приема
+				IF v_contract_employee_id IS NOT NULL THEN
+					INSERT INTO reminders
+					(register_docs_ref,recipient_employee_id,content,docs_ref)
+					(SELECT
+						applications_ref((SELECT applications
+									FROM applications
+									WHERE id = NEW.application_id
+						)),
+						employees.id,
+						v_doc_flow_subject,
+						doc_flow_in_ref((SELECT doc_flow_in
+									FROM doc_flow_in
+									WHERE id = v_doc_flow_in_id
+						))
+					FROM employees
+					LEFT JOIN users ON users.id=employees.user_id
+					WHERE employees.id=v_contract_employee_id AND users.email IS NOT NULL
+					);				
+				END IF;
+				
+				--Отметка даты возврата контракта && смена статуса
+				SELECT doc_flow_contract_ret_date(NEW.id) INTO v_contract_return_date;
+				
+				UPDATE contracts
+				SET
+					contract_return_date = coalesce(v_contract_return_date,NEW.date_time::date),
+					contract_date = coalesce(v_contract_return_date,NEW.date_time),
+					contract_return_date_on_sig = (v_contract_return_date IS NOT NULL)
+				WHERE id=v_contract_id AND contract_return_date IS NULL;
+				--coalesce(contract_return_date_on_sig,FALSE)=FALSE;
+				--RAISE EXCEPTION 'v_application_state=%',v_application_state;
+				
+				IF v_application_state='waiting_for_contract'
+				OR v_application_state='closed' THEN
+					INSERT INTO application_processes (
+						application_id,
+						date_time,
+						state,
+						user_id,
+						end_date_time
+					)
+					VALUES (
+						NEW.application_id,
+						greatest(NEW.date_time,v_application_state_dt+'1 second'::interval),
+						CASE
+							WHEN v_application_state='waiting_for_contract' THEN 'waiting_for_pay'::application_states
+							ELSE 'archive'::application_states
+						END,
+						NEW.user_id,
+						NULL
+					);			
+				END IF;
+				
+			END IF;
+			
+			
+			--Email главному отделу
+			IF v_main_department_id IS NOT NULL AND NEW.doc_flow_out_client_type='contr_resp' THEN
+				INSERT INTO mail_for_sending
+				(to_addr,to_name,body,subject,email_type)
+				(WITH 
+					templ AS (
+					SELECT t.template AS v,t.mes_subject AS s
+					FROM email_templates t
+					WHERE t.email_type='app_change'
+					)
+				SELECT
+				departments.email,
+				departments.name,
+				sms_templates_text(
+					ARRAY[
+						ROW('applicant', (v_applicant->>'name')::text)::template_value,
+						ROW('constr_name',v_constr_name)::template_value,
+						ROW('application_id',NEW.application_id)::template_value,
+						ROW('contract_id',v_contract_id)::template_value,						
+						ROW('sections',v_corrected_sections_t)::template_value
+					],
+					(SELECT v FROM templ)
+				) AS mes_body,		
+				v_doc_flow_subject,
+				'app_change'
+				FROM departments
+				WHERE
+					departments.id = v_main_department_id
+					AND departments.email IS NOT NULL
+				);								
+			END IF;
+						
+			--Напоминание&&email админу - всегда
+			-- ну и всему списку сотрудников, указанных в доступности (permissions)
+			INSERT INTO reminders
+			(register_docs_ref,recipient_employee_id,content,docs_ref)
+			(SELECT
+				applications_ref((SELECT applications
+							FROM applications
+							WHERE id = NEW.application_id
+				)),
+				employees.id,
+				v_doc_flow_subject,
+				doc_flow_in_ref((SELECT doc_flow_in
+							FROM doc_flow_in
+							WHERE id = v_doc_flow_in_id
+				))
+			FROM employees
+			WHERE
+				employees.user_id IN (SELECT id FROM users WHERE role_id='admin')
+				OR
+				(NEW.doc_flow_out_client_type='contr_resp'
+				AND
+				employees.id IN (
+					SELECT (fld.obj->'keys'->>'id')::int
+					FROM (
+						SELECT jsonb_array_elements(contracts.permissions->'rows')->'fields'->'obj' AS obj
+						FROM contracts
+						WHERE contracts.id=v_contract_id
+					) AS fld
+					WHERE fld.obj->>'dataType'='employees'
+					)
+				)
+			);
+		
+		END IF;
+	
+		RETURN NEW;
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION doc_flow_out_client_process() OWNER TO expert72;
+
+
+-- ******************* update 14/11/2018 15:04:42 ******************
+﻿-- Function: application_processes_last_lk(in_application_id int)
+
+-- DROP FUNCTION application_processes_last_lk(in_application_id int);
+
+CREATE OR REPLACE FUNCTION application_processes_last_lk(in_application_id int)
+  RETURNS application_states AS
+$$
+	SELECT
+		sub.state
+	FROM (
+	
+		(SELECT
+			date_time,state
+		FROM application_processes
+		WHERE application_id=in_application_id
+		ORDER BY date_time DESC
+		LIMIT 1)
+
+		UNION ALL
+	
+		(SELECT
+			date_time,state
+		FROM application_processes_lk
+		WHERE application_id=in_application_id
+		ORDER BY date_time DESC
+		LIMIT 1)
+		
+	) AS sub
+	ORDER BY sub.date_time DESC
+	LIMIT 1
+	;
+$$
+  LANGUAGE sql VOLATILE
+  COST 100;
+ALTER FUNCTION application_processes_last_lk(in_application_id int) OWNER TO expert72;
+
+-- ******************* update 14/11/2018 15:12:39 ******************
+-- VIEW: applications_dialog_lk
+
+--DROP VIEW contracts_dialog_lk;
+--DROP VIEW applications_dialog_lk;
+
+CREATE OR REPLACE VIEW applications_dialog_lk AS
+	SELECT
+		d.id,
+		d.create_dt,
+		d.user_id,
+		d.expertise_type,
+		
+		--Для контроллера
+		( (d.expertise_type IS NOT NULL OR NOT d.cost_eval_validity OR NOT d.modification OR NOT d.audit) AND d.construction_type_id IS NOT NULL) AS document_exists,
+		
+		coalesce(d.cost_eval_validity,FALSE) AS cost_eval_validity,
+		d.cost_eval_validity_simult,
+		fund_sources_ref(fund_sources) AS fund_sources_ref,
+		construction_types_ref(construction_types) AS construction_types_ref,
+		d.applicant,
+		d.customer,
+		d.contractors,
+		d.developer,
+		coalesce(contr.constr_name,d.constr_name) AS constr_name,
+		coalesce(contr.constr_address,d.constr_address) AS constr_address,
+		
+		coalesce(contr.constr_technical_features,d.constr_technical_features) As constr_technical_features,
+		coalesce(contr.constr_technical_features_in_compound_obj,d.constr_technical_features_in_compound_obj) AS constr_technical_features_in_compound_obj,
+		
+		d.total_cost_eval,
+		d.limit_cost_eval,
+		offices_ref(offices) AS offices_ref,
+		build_types_ref(build_types) AS build_types_ref,
+		coalesce(d.modification,FALSE) AS modification,
+		coalesce(d.audit,FALSE) AS audit,
+		
+		CASE WHEN d.primary_application_id IS NOT NULL AND d.primary_application_id<>d.id THEN applications_primary_chain(d.id)
+		WHEN d.primary_application_reg_number IS NOT NULL THEN json_build_object('primary_application_reg_number',d.primary_application_reg_number)
+		ELSE NULL
+		END AS primary_application,
+
+		CASE WHEN d.modif_primary_application_id IS NOT NULL AND d.modif_primary_application_id<>d.id THEN applications_modif_primary_chain(d.id)
+		WHEN d.modif_primary_application_reg_number IS NOT NULL THEN json_build_object('primary_application_reg_number',d.modif_primary_application_reg_number)
+		ELSE NULL
+		END AS modif_primary_application,
+		
+		greatest(st.state,st_lk.state) AS application_state,
+		greatest(st.date_time,st_lk.date_time) AS application_state_dt,
+		greatest(st.end_date_time,st_lk.end_date_time) AS application_state_end_date,
+		
+		array_to_json((
+			SELECT array_agg(l.documents) FROM document_templates_all_list_for_date(d.create_dt::date) l
+			WHERE
+				(d.construction_type_id IS NOT NULL)
+				AND
+				(l.construction_type_id=d.construction_type_id AND
+				l.document_type IN (
+					CASE WHEN d.expertise_type='pd' OR d.expertise_type='pd_eng_survey' THEN 'pd'::document_types ELSE NULL END,
+					CASE WHEN d.expertise_type='eng_survey' OR d.expertise_type='pd_eng_survey' THEN 'eng_survey'::document_types ELSE NULL END,
+					CASE WHEN d.cost_eval_validity THEN 'cost_eval_validity'::document_types ELSE NULL END,
+					CASE WHEN d.modification THEN 'modification'::document_types ELSE NULL END,
+					CASE WHEN d.audit THEN 'audit'::document_types ELSE NULL END			
+					)
+				)
+		)) AS documents,
+		
+		applications_ref(d)->>'descr' AS select_descr,
+		
+		d.app_print_expertise,
+		d.app_print_cost_eval,
+		d.app_print_modification,
+		d.app_print_audit,
+		
+		applications_ref(b_app) AS base_applications_ref,
+		applications_ref(d_app) AS derived_applications_ref,
+		
+		applications_ref(d) AS applications_ref,
+		d.primary_application_id,
+		d.primary_application_reg_number,
+		d.modif_primary_application_id,
+		d.modif_primary_application_reg_number,
+		
+		d.pd_usage_info,
+		
+		users_ref(users) AS users_ref,
+		
+		d.auth_letter,
+		d.auth_letter_file,
+		
+		folders.files AS doc_folders,
+		
+		contr.work_start_date,
+		contr.contract_number,
+		contr.contract_date,
+		contr.expertise_result_number,
+		contr.expertise_result_date,
+		
+		d.filled_percent
+		
+	FROM applications AS d
+	LEFT JOIN offices ON offices.id=d.office_id
+	LEFT JOIN users ON users.id=d.user_id
+	LEFT JOIN contracts AS contr ON contr.application_id=d.id
+	LEFT JOIN fund_sources ON fund_sources.id=d.fund_source_id
+	LEFT JOIN construction_types ON construction_types.id=d.construction_type_id
+	LEFT JOIN build_types ON build_types.id=d.build_type_id
+	LEFT JOIN applications AS b_app ON b_app.id=d.base_application_id
+	LEFT JOIN applications AS d_app ON d_app.id=d.derived_application_id
+	LEFT JOIN (
+		SELECT
+			t.application_id,
+			max(t.date_time) AS date_time
+		FROM application_processes t
+		GROUP BY t.application_id
+	) AS h_max ON h_max.application_id=d.id
+	LEFT JOIN application_processes st
+		ON st.application_id=h_max.application_id AND st.date_time = h_max.date_time
+		
+	--*****
+	LEFT JOIN (
+		SELECT
+			t.application_id,
+			max(t.date_time) AS date_time
+		FROM application_processes_lk t
+		GROUP BY t.application_id
+	) AS h_max_lk ON h_max_lk.application_id=d.id
+	LEFT JOIN application_processes_lk st_lk
+		ON st_lk.application_id=h_max_lk.application_id AND st_lk.date_time = h_lk_max.date_time	
+	--*****
+		
+	LEFT JOIN
+		(
+		SELECT
+			doc_att.application_id,
+			json_agg(
+				json_build_object(
+					'fields',json_build_object('id',doc_att.folder_id,'descr',doc_att.folder_descr),
+					'parent_id',NULL,
+					'files',doc_att.files
+				)
+			) AS files
+		FROM
+		
+		(SELECT
+			adf.application_id,
+			adf.file_path AS folder_descr,
+			app_fd.id AS folder_id,
+			json_agg(
+				json_build_object(
+					'file_id',adf.file_id,
+					'file_name',adf.file_name,
+					'file_size',adf.file_size,
+					'file_signed',adf.file_signed,
+					'file_uploaded','true',
+					'file_path',adf.file_path,
+					'date_time',adf.date_time,
+					'signatures',--sign.signatures
+					CASE
+						WHEN sign.signatures IS NULL AND f_ver.file_id IS NOT NULL THEN
+							jsonb_build_array(
+								jsonb_build_object(
+									'sign_date_time',f_ver.date_time,
+									'check_result',f_ver.check_result,
+									'error_str',f_ver.error_str
+								)
+							)
+						ELSE sign.signatures
+					END,
+					'file_signed_by_client',adf.file_signed_by_client,
+					'require_client_sig',app_fd.require_client_sig
+				)
+			) AS files
+		FROM application_document_files adf
+		LEFT JOIN application_doc_folders AS app_fd ON app_fd.name=adf.file_path
+		LEFT JOIN doc_flow_out AS adf_out ON adf_out.to_application_id=adf.application_id AND adf_out.doc_flow_type_id=(pdfn_doc_flow_types_app_resp()->'keys'->>'id')::int
+		--LEFT JOIN doc_flow_attachments AS adf_att ON adf_att.doc_type='doc_flow_out' AND adf_att.doc_id=adf_out.id AND adf_att.file_name=adf.file_name
+		LEFT JOIN file_verifications_lk AS f_ver ON f_ver.file_id=adf.file_id
+		LEFT JOIN (
+			SELECT
+				files_t.file_id,
+				jsonb_agg(files_t.signatures) AS signatures
+			FROM
+			(SELECT
+				f_sig.file_id,
+				jsonb_build_object(
+					'owner',u_certs.subject_cert,
+					'cert_from',u_certs.date_time_from,
+					'cert_to',u_certs.date_time_to,
+					'sign_date_time',f_sig.sign_date_time,
+					'check_result',ver.check_result,
+					'check_time',ver.check_time,
+					'error_str',ver.error_str
+				) AS signatures
+			FROM file_signatures_lk AS f_sig
+			LEFT JOIN file_verifications_lk AS ver ON ver.file_id=f_sig.file_id
+			LEFT JOIN user_certificates_lk AS u_certs ON u_certs.id=f_sig.user_certificate_id
+			ORDER BY f_sig.sign_date_time
+			) AS files_t
+			GROUP BY files_t.file_id
+		) AS sign ON sign.file_id=f_ver.file_id
+		WHERE adf.document_type='documents'
+		GROUP BY adf.application_id,adf.file_path,app_fd.id
+		ORDER BY app_fd.id)  AS doc_att	
+		
+		GROUP BY doc_att.application_id
+	) AS folders ON folders.application_id=d.id
+	;
+	
+ALTER VIEW applications_dialog_lk OWNER TO expert72;
+
+
+-- ******************* update 14/11/2018 15:13:20 ******************
+-- VIEW: applications_dialog_lk
+
+--DROP VIEW contracts_dialog_lk;
+--DROP VIEW applications_dialog_lk;
+
+CREATE OR REPLACE VIEW applications_dialog_lk AS
+	SELECT
+		d.id,
+		d.create_dt,
+		d.user_id,
+		d.expertise_type,
+		
+		--Для контроллера
+		( (d.expertise_type IS NOT NULL OR NOT d.cost_eval_validity OR NOT d.modification OR NOT d.audit) AND d.construction_type_id IS NOT NULL) AS document_exists,
+		
+		coalesce(d.cost_eval_validity,FALSE) AS cost_eval_validity,
+		d.cost_eval_validity_simult,
+		fund_sources_ref(fund_sources) AS fund_sources_ref,
+		construction_types_ref(construction_types) AS construction_types_ref,
+		d.applicant,
+		d.customer,
+		d.contractors,
+		d.developer,
+		coalesce(contr.constr_name,d.constr_name) AS constr_name,
+		coalesce(contr.constr_address,d.constr_address) AS constr_address,
+		
+		coalesce(contr.constr_technical_features,d.constr_technical_features) As constr_technical_features,
+		coalesce(contr.constr_technical_features_in_compound_obj,d.constr_technical_features_in_compound_obj) AS constr_technical_features_in_compound_obj,
+		
+		d.total_cost_eval,
+		d.limit_cost_eval,
+		offices_ref(offices) AS offices_ref,
+		build_types_ref(build_types) AS build_types_ref,
+		coalesce(d.modification,FALSE) AS modification,
+		coalesce(d.audit,FALSE) AS audit,
+		
+		CASE WHEN d.primary_application_id IS NOT NULL AND d.primary_application_id<>d.id THEN applications_primary_chain(d.id)
+		WHEN d.primary_application_reg_number IS NOT NULL THEN json_build_object('primary_application_reg_number',d.primary_application_reg_number)
+		ELSE NULL
+		END AS primary_application,
+
+		CASE WHEN d.modif_primary_application_id IS NOT NULL AND d.modif_primary_application_id<>d.id THEN applications_modif_primary_chain(d.id)
+		WHEN d.modif_primary_application_reg_number IS NOT NULL THEN json_build_object('primary_application_reg_number',d.modif_primary_application_reg_number)
+		ELSE NULL
+		END AS modif_primary_application,
+		
+		greatest(st.state,st_lk.state) AS application_state,
+		greatest(st.date_time,st_lk.date_time) AS application_state_dt,
+		greatest(st.end_date_time,st_lk.end_date_time) AS application_state_end_date,
+		
+		array_to_json((
+			SELECT array_agg(l.documents) FROM document_templates_all_list_for_date(d.create_dt::date) l
+			WHERE
+				(d.construction_type_id IS NOT NULL)
+				AND
+				(l.construction_type_id=d.construction_type_id AND
+				l.document_type IN (
+					CASE WHEN d.expertise_type='pd' OR d.expertise_type='pd_eng_survey' THEN 'pd'::document_types ELSE NULL END,
+					CASE WHEN d.expertise_type='eng_survey' OR d.expertise_type='pd_eng_survey' THEN 'eng_survey'::document_types ELSE NULL END,
+					CASE WHEN d.cost_eval_validity THEN 'cost_eval_validity'::document_types ELSE NULL END,
+					CASE WHEN d.modification THEN 'modification'::document_types ELSE NULL END,
+					CASE WHEN d.audit THEN 'audit'::document_types ELSE NULL END			
+					)
+				)
+		)) AS documents,
+		
+		applications_ref(d)->>'descr' AS select_descr,
+		
+		d.app_print_expertise,
+		d.app_print_cost_eval,
+		d.app_print_modification,
+		d.app_print_audit,
+		
+		applications_ref(b_app) AS base_applications_ref,
+		applications_ref(d_app) AS derived_applications_ref,
+		
+		applications_ref(d) AS applications_ref,
+		d.primary_application_id,
+		d.primary_application_reg_number,
+		d.modif_primary_application_id,
+		d.modif_primary_application_reg_number,
+		
+		d.pd_usage_info,
+		
+		users_ref(users) AS users_ref,
+		
+		d.auth_letter,
+		d.auth_letter_file,
+		
+		folders.files AS doc_folders,
+		
+		contr.work_start_date,
+		contr.contract_number,
+		contr.contract_date,
+		contr.expertise_result_number,
+		contr.expertise_result_date,
+		
+		d.filled_percent
+		
+	FROM applications AS d
+	LEFT JOIN offices ON offices.id=d.office_id
+	LEFT JOIN users ON users.id=d.user_id
+	LEFT JOIN contracts AS contr ON contr.application_id=d.id
+	LEFT JOIN fund_sources ON fund_sources.id=d.fund_source_id
+	LEFT JOIN construction_types ON construction_types.id=d.construction_type_id
+	LEFT JOIN build_types ON build_types.id=d.build_type_id
+	LEFT JOIN applications AS b_app ON b_app.id=d.base_application_id
+	LEFT JOIN applications AS d_app ON d_app.id=d.derived_application_id
+	LEFT JOIN (
+		SELECT
+			t.application_id,
+			max(t.date_time) AS date_time
+		FROM application_processes t
+		GROUP BY t.application_id
+	) AS h_max ON h_max.application_id=d.id
+	LEFT JOIN application_processes st
+		ON st.application_id=h_max.application_id AND st.date_time = h_max.date_time
+		
+	--*****
+	LEFT JOIN (
+		SELECT
+			t.application_id,
+			max(t.date_time) AS date_time
+		FROM application_processes_lk t
+		GROUP BY t.application_id
+	) AS h_max_lk ON h_max_lk.application_id=d.id
+	LEFT JOIN application_processes_lk st_lk
+		ON st_lk.application_id=h_max_lk.application_id AND st_lk.date_time = h_lk_max.date_time	
+	--*****
+		
+	LEFT JOIN
+		(
+		SELECT
+			doc_att.application_id,
+			json_agg(
+				json_build_object(
+					'fields',json_build_object('id',doc_att.folder_id,'descr',doc_att.folder_descr),
+					'parent_id',NULL,
+					'files',doc_att.files
+				)
+			) AS files
+		FROM
+		
+		(SELECT
+			adf.application_id,
+			adf.file_path AS folder_descr,
+			app_fd.id AS folder_id,
+			json_agg(
+				json_build_object(
+					'file_id',adf.file_id,
+					'file_name',adf.file_name,
+					'file_size',adf.file_size,
+					'file_signed',adf.file_signed,
+					'file_uploaded','true',
+					'file_path',adf.file_path,
+					'date_time',adf.date_time,
+					'signatures',--sign.signatures
+					CASE
+						WHEN sign.signatures IS NULL AND f_ver.file_id IS NOT NULL THEN
+							jsonb_build_array(
+								jsonb_build_object(
+									'sign_date_time',f_ver.date_time,
+									'check_result',f_ver.check_result,
+									'error_str',f_ver.error_str
+								)
+							)
+						ELSE sign.signatures
+					END,
+					'file_signed_by_client',adf.file_signed_by_client,
+					'require_client_sig',app_fd.require_client_sig
+				)
+			) AS files
+		FROM application_document_files adf
+		LEFT JOIN application_doc_folders AS app_fd ON app_fd.name=adf.file_path
+		LEFT JOIN doc_flow_out AS adf_out ON adf_out.to_application_id=adf.application_id AND adf_out.doc_flow_type_id=(pdfn_doc_flow_types_app_resp()->'keys'->>'id')::int
+		--LEFT JOIN doc_flow_attachments AS adf_att ON adf_att.doc_type='doc_flow_out' AND adf_att.doc_id=adf_out.id AND adf_att.file_name=adf.file_name
+		LEFT JOIN file_verifications_lk AS f_ver ON f_ver.file_id=adf.file_id
+		LEFT JOIN (
+			SELECT
+				files_t.file_id,
+				jsonb_agg(files_t.signatures) AS signatures
+			FROM
+			(SELECT
+				f_sig.file_id,
+				jsonb_build_object(
+					'owner',u_certs.subject_cert,
+					'cert_from',u_certs.date_time_from,
+					'cert_to',u_certs.date_time_to,
+					'sign_date_time',f_sig.sign_date_time,
+					'check_result',ver.check_result,
+					'check_time',ver.check_time,
+					'error_str',ver.error_str
+				) AS signatures
+			FROM file_signatures_lk AS f_sig
+			LEFT JOIN file_verifications_lk AS ver ON ver.file_id=f_sig.file_id
+			LEFT JOIN user_certificates_lk AS u_certs ON u_certs.id=f_sig.user_certificate_id
+			ORDER BY f_sig.sign_date_time
+			) AS files_t
+			GROUP BY files_t.file_id
+		) AS sign ON sign.file_id=f_ver.file_id
+		WHERE adf.document_type='documents'
+		GROUP BY adf.application_id,adf.file_path,app_fd.id
+		ORDER BY app_fd.id)  AS doc_att	
+		
+		GROUP BY doc_att.application_id
+	) AS folders ON folders.application_id=d.id
+	;
+	
+ALTER VIEW applications_dialog_lk OWNER TO expert72;
+
+
+-- ******************* update 14/11/2018 15:14:09 ******************
+-- VIEW: applications_dialog_lk
+
+--DROP VIEW contracts_dialog_lk;
+--DROP VIEW applications_dialog_lk;
+
+CREATE OR REPLACE VIEW applications_dialog_lk AS
+	SELECT
+		d.id,
+		d.create_dt,
+		d.user_id,
+		d.expertise_type,
+		
+		--Для контроллера
+		( (d.expertise_type IS NOT NULL OR NOT d.cost_eval_validity OR NOT d.modification OR NOT d.audit) AND d.construction_type_id IS NOT NULL) AS document_exists,
+		
+		coalesce(d.cost_eval_validity,FALSE) AS cost_eval_validity,
+		d.cost_eval_validity_simult,
+		fund_sources_ref(fund_sources) AS fund_sources_ref,
+		construction_types_ref(construction_types) AS construction_types_ref,
+		d.applicant,
+		d.customer,
+		d.contractors,
+		d.developer,
+		coalesce(contr.constr_name,d.constr_name) AS constr_name,
+		coalesce(contr.constr_address,d.constr_address) AS constr_address,
+		
+		coalesce(contr.constr_technical_features,d.constr_technical_features) As constr_technical_features,
+		coalesce(contr.constr_technical_features_in_compound_obj,d.constr_technical_features_in_compound_obj) AS constr_technical_features_in_compound_obj,
+		
+		d.total_cost_eval,
+		d.limit_cost_eval,
+		offices_ref(offices) AS offices_ref,
+		build_types_ref(build_types) AS build_types_ref,
+		coalesce(d.modification,FALSE) AS modification,
+		coalesce(d.audit,FALSE) AS audit,
+		
+		CASE WHEN d.primary_application_id IS NOT NULL AND d.primary_application_id<>d.id THEN applications_primary_chain(d.id)
+		WHEN d.primary_application_reg_number IS NOT NULL THEN json_build_object('primary_application_reg_number',d.primary_application_reg_number)
+		ELSE NULL
+		END AS primary_application,
+
+		CASE WHEN d.modif_primary_application_id IS NOT NULL AND d.modif_primary_application_id<>d.id THEN applications_modif_primary_chain(d.id)
+		WHEN d.modif_primary_application_reg_number IS NOT NULL THEN json_build_object('primary_application_reg_number',d.modif_primary_application_reg_number)
+		ELSE NULL
+		END AS modif_primary_application,
+		
+		greatest(st.state,st_lk.state) AS application_state,
+		greatest(st.date_time,st_lk.date_time) AS application_state_dt,
+		greatest(st.end_date_time,st_lk.end_date_time) AS application_state_end_date,
+		
+		array_to_json((
+			SELECT array_agg(l.documents) FROM document_templates_all_list_for_date(d.create_dt::date) l
+			WHERE
+				(d.construction_type_id IS NOT NULL)
+				AND
+				(l.construction_type_id=d.construction_type_id AND
+				l.document_type IN (
+					CASE WHEN d.expertise_type='pd' OR d.expertise_type='pd_eng_survey' THEN 'pd'::document_types ELSE NULL END,
+					CASE WHEN d.expertise_type='eng_survey' OR d.expertise_type='pd_eng_survey' THEN 'eng_survey'::document_types ELSE NULL END,
+					CASE WHEN d.cost_eval_validity THEN 'cost_eval_validity'::document_types ELSE NULL END,
+					CASE WHEN d.modification THEN 'modification'::document_types ELSE NULL END,
+					CASE WHEN d.audit THEN 'audit'::document_types ELSE NULL END			
+					)
+				)
+		)) AS documents,
+		
+		applications_ref(d)->>'descr' AS select_descr,
+		
+		d.app_print_expertise,
+		d.app_print_cost_eval,
+		d.app_print_modification,
+		d.app_print_audit,
+		
+		applications_ref(b_app) AS base_applications_ref,
+		applications_ref(d_app) AS derived_applications_ref,
+		
+		applications_ref(d) AS applications_ref,
+		d.primary_application_id,
+		d.primary_application_reg_number,
+		d.modif_primary_application_id,
+		d.modif_primary_application_reg_number,
+		
+		d.pd_usage_info,
+		
+		users_ref(users) AS users_ref,
+		
+		d.auth_letter,
+		d.auth_letter_file,
+		
+		folders.files AS doc_folders,
+		
+		contr.work_start_date,
+		contr.contract_number,
+		contr.contract_date,
+		contr.expertise_result_number,
+		contr.expertise_result_date,
+		
+		d.filled_percent
+		
+	FROM applications AS d
+	LEFT JOIN offices ON offices.id=d.office_id
+	LEFT JOIN users ON users.id=d.user_id
+	LEFT JOIN contracts AS contr ON contr.application_id=d.id
+	LEFT JOIN fund_sources ON fund_sources.id=d.fund_source_id
+	LEFT JOIN construction_types ON construction_types.id=d.construction_type_id
+	LEFT JOIN build_types ON build_types.id=d.build_type_id
+	LEFT JOIN applications AS b_app ON b_app.id=d.base_application_id
+	LEFT JOIN applications AS d_app ON d_app.id=d.derived_application_id
+	LEFT JOIN (
+		SELECT
+			t.application_id,
+			max(t.date_time) AS date_time
+		FROM application_processes t
+		GROUP BY t.application_id
+	) AS h_max ON h_max.application_id=d.id
+	LEFT JOIN application_processes st
+		ON st.application_id=h_max.application_id AND st.date_time = h_max.date_time
+		
+	--*****
+	LEFT JOIN (
+		SELECT
+			t.application_id,
+			max(t.date_time) AS date_time
+		FROM application_processes_lk t
+		GROUP BY t.application_id
+	) AS h_max_lk ON h_max_lk.application_id=d.id
+	LEFT JOIN application_processes_lk st_lk
+		ON st_lk.application_id=h_max_lk.application_id AND st_lk.date_time = h_max_lk.date_time	
+	--*****
+		
+	LEFT JOIN
+		(
+		SELECT
+			doc_att.application_id,
+			json_agg(
+				json_build_object(
+					'fields',json_build_object('id',doc_att.folder_id,'descr',doc_att.folder_descr),
+					'parent_id',NULL,
+					'files',doc_att.files
+				)
+			) AS files
+		FROM
+		
+		(SELECT
+			adf.application_id,
+			adf.file_path AS folder_descr,
+			app_fd.id AS folder_id,
+			json_agg(
+				json_build_object(
+					'file_id',adf.file_id,
+					'file_name',adf.file_name,
+					'file_size',adf.file_size,
+					'file_signed',adf.file_signed,
+					'file_uploaded','true',
+					'file_path',adf.file_path,
+					'date_time',adf.date_time,
+					'signatures',--sign.signatures
+					CASE
+						WHEN sign.signatures IS NULL AND f_ver.file_id IS NOT NULL THEN
+							jsonb_build_array(
+								jsonb_build_object(
+									'sign_date_time',f_ver.date_time,
+									'check_result',f_ver.check_result,
+									'error_str',f_ver.error_str
+								)
+							)
+						ELSE sign.signatures
+					END,
+					'file_signed_by_client',adf.file_signed_by_client,
+					'require_client_sig',app_fd.require_client_sig
+				)
+			) AS files
+		FROM application_document_files adf
+		LEFT JOIN application_doc_folders AS app_fd ON app_fd.name=adf.file_path
+		LEFT JOIN doc_flow_out AS adf_out ON adf_out.to_application_id=adf.application_id AND adf_out.doc_flow_type_id=(pdfn_doc_flow_types_app_resp()->'keys'->>'id')::int
+		--LEFT JOIN doc_flow_attachments AS adf_att ON adf_att.doc_type='doc_flow_out' AND adf_att.doc_id=adf_out.id AND adf_att.file_name=adf.file_name
+		LEFT JOIN file_verifications_lk AS f_ver ON f_ver.file_id=adf.file_id
+		LEFT JOIN (
+			SELECT
+				files_t.file_id,
+				jsonb_agg(files_t.signatures) AS signatures
+			FROM
+			(SELECT
+				f_sig.file_id,
+				jsonb_build_object(
+					'owner',u_certs.subject_cert,
+					'cert_from',u_certs.date_time_from,
+					'cert_to',u_certs.date_time_to,
+					'sign_date_time',f_sig.sign_date_time,
+					'check_result',ver.check_result,
+					'check_time',ver.check_time,
+					'error_str',ver.error_str
+				) AS signatures
+			FROM file_signatures_lk AS f_sig
+			LEFT JOIN file_verifications_lk AS ver ON ver.file_id=f_sig.file_id
+			LEFT JOIN user_certificates_lk AS u_certs ON u_certs.id=f_sig.user_certificate_id
+			ORDER BY f_sig.sign_date_time
+			) AS files_t
+			GROUP BY files_t.file_id
+		) AS sign ON sign.file_id=f_ver.file_id
+		WHERE adf.document_type='documents'
+		GROUP BY adf.application_id,adf.file_path,app_fd.id
+		ORDER BY app_fd.id)  AS doc_att	
+		
+		GROUP BY doc_att.application_id
+	) AS folders ON folders.application_id=d.id
+	;
+	
+ALTER VIEW applications_dialog_lk OWNER TO expert72;
+
+
+-- ******************* update 14/11/2018 15:36:54 ******************
+-- VIEW: applications_list
+
+DROP VIEW applications_list;
+
+CREATE OR REPLACE VIEW applications_list AS
+	SELECT
+		l.id,
+		l.user_id,
+		l.create_dt,
+		l.constr_name,
+		
+		greatest(st.state,st_lk.state) AS application_state,
+		greatest(st.date_time,st_lk.date_time) AS application_state_dt,
+		greatest(st.end_date_time,st_lk.end_date_time) AS application_state_end_date,
+		/*
+		CASE
+			WHEN st.state='sent' THEN
+				bank_day_next(st.date_time::date,(SELECT const_application_check_days_val()))
+			ELSE NULL
+		END AS application_state_end_date,
+		*/
+		
+		l.filled_percent,
+		off.address AS office_descr,
+		l.office_id,
+		
+		--'Заявление №'||l.id||' от '||to_char(l.create_dt,'DD/MM/YY') AS select_descr,
+		applications_ref(l)->>'descr' AS select_descr,
+		
+		applicant->>'name' AS applicant_name,
+		customer->>'name' AS customer_name,
+		
+		(
+			CASE WHEN l.expertise_type IS NOT NULL THEN
+				CASE WHEN l.expertise_type='pd' THEN 'ПД'
+				WHEN l.expertise_type='eng_survey' THEN 'РИИ'
+				ELSE 'ПД и РИИ'
+				END
+			ELSE ''
+			END||
+			CASE WHEN l.cost_eval_validity THEN
+				CASE WHEN l.expertise_type IS NOT NULL THEN ',' ELSE '' END || 'Достоверность'
+			ELSE ''
+			END||
+			CASE WHEN l.modification THEN
+				CASE WHEN l.expertise_type IS NOT NULL OR l.cost_eval_validity THEN ',' ELSE '' END|| 'Модификация'
+			ELSE ''
+			END||
+			CASE WHEN l.audit THEN
+				CASE WHEN l.expertise_type IS NOT NULL OR l.cost_eval_validity OR l.modification THEN ',' ELSE '' END|| 'Аудит'
+			ELSE ''
+			END
+		) AS service_list,
+		
+		(
+		SELECT json_agg(doc_flow_in_client_ref(in_docs))
+		FROM doc_flow_in_client AS in_docs
+		WHERE in_docs.application_id=l.id AND NOT coalesce(in_docs.viewed,FALSE)
+		) AS unviewed_in_docs,
+		
+		contr.contract_number,
+		contr.contract_date,
+		contr.expertise_result_number,
+		contr.expertise_result_date
+				
+	FROM applications AS l
+	LEFT JOIN offices_list AS off ON off.id=l.office_id
+	LEFT JOIN contracts AS contr ON contr.application_id=l.id
+	LEFT JOIN (
+		SELECT
+			t.application_id,
+			max(t.date_time) AS date_time
+		FROM application_processes t
+		GROUP BY t.application_id
+	) AS h_max ON h_max.application_id=l.id
+	LEFT JOIN application_processes st
+		ON st.application_id=h_max.application_id AND st.date_time = h_max.date_time
+	
+	--*****
+	LEFT JOIN (
+		SELECT
+			t.application_id,
+			max(t.date_time) AS date_time
+		FROM application_processes_lk t
+		GROUP BY t.application_id
+	) AS h_max_lk ON h_max_lk.application_id=d.id
+	LEFT JOIN application_processes_lk st_lk
+		ON st_lk.application_id=h_max_lk.application_id AND st_lk.date_time = h_max_lk.date_time	
+	--*****
+		
+	ORDER BY l.user_id,l.create_dt DESC
+	;
+	
+ALTER VIEW applications_list OWNER TO expert72;
+
+
+-- ******************* update 14/11/2018 15:37:09 ******************
+-- VIEW: applications_list
+
+DROP VIEW applications_list;
+
+CREATE OR REPLACE VIEW applications_list AS
+	SELECT
+		l.id,
+		l.user_id,
+		l.create_dt,
+		l.constr_name,
+		
+		greatest(st.state,st_lk.state) AS application_state,
+		greatest(st.date_time,st_lk.date_time) AS application_state_dt,
+		greatest(st.end_date_time,st_lk.end_date_time) AS application_state_end_date,
+		/*
+		CASE
+			WHEN st.state='sent' THEN
+				bank_day_next(st.date_time::date,(SELECT const_application_check_days_val()))
+			ELSE NULL
+		END AS application_state_end_date,
+		*/
+		
+		l.filled_percent,
+		off.address AS office_descr,
+		l.office_id,
+		
+		--'Заявление №'||l.id||' от '||to_char(l.create_dt,'DD/MM/YY') AS select_descr,
+		applications_ref(l)->>'descr' AS select_descr,
+		
+		applicant->>'name' AS applicant_name,
+		customer->>'name' AS customer_name,
+		
+		(
+			CASE WHEN l.expertise_type IS NOT NULL THEN
+				CASE WHEN l.expertise_type='pd' THEN 'ПД'
+				WHEN l.expertise_type='eng_survey' THEN 'РИИ'
+				ELSE 'ПД и РИИ'
+				END
+			ELSE ''
+			END||
+			CASE WHEN l.cost_eval_validity THEN
+				CASE WHEN l.expertise_type IS NOT NULL THEN ',' ELSE '' END || 'Достоверность'
+			ELSE ''
+			END||
+			CASE WHEN l.modification THEN
+				CASE WHEN l.expertise_type IS NOT NULL OR l.cost_eval_validity THEN ',' ELSE '' END|| 'Модификация'
+			ELSE ''
+			END||
+			CASE WHEN l.audit THEN
+				CASE WHEN l.expertise_type IS NOT NULL OR l.cost_eval_validity OR l.modification THEN ',' ELSE '' END|| 'Аудит'
+			ELSE ''
+			END
+		) AS service_list,
+		
+		(
+		SELECT json_agg(doc_flow_in_client_ref(in_docs))
+		FROM doc_flow_in_client AS in_docs
+		WHERE in_docs.application_id=l.id AND NOT coalesce(in_docs.viewed,FALSE)
+		) AS unviewed_in_docs,
+		
+		contr.contract_number,
+		contr.contract_date,
+		contr.expertise_result_number,
+		contr.expertise_result_date
+				
+	FROM applications AS l
+	LEFT JOIN offices_list AS off ON off.id=l.office_id
+	LEFT JOIN contracts AS contr ON contr.application_id=l.id
+	LEFT JOIN (
+		SELECT
+			t.application_id,
+			max(t.date_time) AS date_time
+		FROM application_processes t
+		GROUP BY t.application_id
+	) AS h_max ON h_max.application_id=l.id
+	LEFT JOIN application_processes st
+		ON st.application_id=h_max.application_id AND st.date_time = h_max.date_time
+	
+	--*****
+	LEFT JOIN (
+		SELECT
+			t.application_id,
+			max(t.date_time) AS date_time
+		FROM application_processes_lk t
+		GROUP BY t.application_id
+	) AS h_max_lk ON h_max_lk.application_id=l.id
+	LEFT JOIN application_processes_lk st_lk
+		ON st_lk.application_id=h_max_lk.application_id AND st_lk.date_time = h_max_lk.date_time	
+	--*****
+		
+	ORDER BY l.user_id,l.create_dt DESC
+	;
+	
+ALTER VIEW applications_list OWNER TO expert72;
+
+
+-- ******************* update 14/11/2018 15:37:15 ******************
+-- VIEW: applications_list
+
+DROP VIEW applications_list;
+
+CREATE OR REPLACE VIEW applications_list AS
+	SELECT
+		l.id,
+		l.user_id,
+		l.create_dt,
+		l.constr_name,
+		
+		st.state AS application_state,
+		st.date_time AS application_state_dt,
+		st.end_date_time AS application_state_end_date,
+		/*
+		CASE
+			WHEN st.state='sent' THEN
+				bank_day_next(st.date_time::date,(SELECT const_application_check_days_val()))
+			ELSE NULL
+		END AS application_state_end_date,
+		*/
+		
+		l.filled_percent,
+		off.address AS office_descr,
+		l.office_id,
+		
+		--'Заявление №'||l.id||' от '||to_char(l.create_dt,'DD/MM/YY') AS select_descr,
+		applications_ref(l)->>'descr' AS select_descr,
+		
+		applicant->>'name' AS applicant_name,
+		customer->>'name' AS customer_name,
+		
+		(
+			CASE WHEN l.expertise_type IS NOT NULL THEN
+				CASE WHEN l.expertise_type='pd' THEN 'ПД'
+				WHEN l.expertise_type='eng_survey' THEN 'РИИ'
+				ELSE 'ПД и РИИ'
+				END
+			ELSE ''
+			END||
+			CASE WHEN l.cost_eval_validity THEN
+				CASE WHEN l.expertise_type IS NOT NULL THEN ',' ELSE '' END || 'Достоверность'
+			ELSE ''
+			END||
+			CASE WHEN l.modification THEN
+				CASE WHEN l.expertise_type IS NOT NULL OR l.cost_eval_validity THEN ',' ELSE '' END|| 'Модификация'
+			ELSE ''
+			END||
+			CASE WHEN l.audit THEN
+				CASE WHEN l.expertise_type IS NOT NULL OR l.cost_eval_validity OR l.modification THEN ',' ELSE '' END|| 'Аудит'
+			ELSE ''
+			END
+		) AS service_list,
+		
+		(
+		SELECT json_agg(doc_flow_in_client_ref(in_docs))
+		FROM doc_flow_in_client AS in_docs
+		WHERE in_docs.application_id=l.id AND NOT coalesce(in_docs.viewed,FALSE)
+		) AS unviewed_in_docs,
+		
+		contr.contract_number,
+		contr.contract_date,
+		contr.expertise_result_number,
+		contr.expertise_result_date
+				
+	FROM applications AS l
+	LEFT JOIN offices_list AS off ON off.id=l.office_id
+	LEFT JOIN contracts AS contr ON contr.application_id=l.id
+	LEFT JOIN (
+		SELECT
+			t.application_id,
+			max(t.date_time) AS date_time
+		FROM application_processes t
+		GROUP BY t.application_id
+	) AS h_max ON h_max.application_id=l.id
+	LEFT JOIN application_processes st
+		ON st.application_id=h_max.application_id AND st.date_time = h_max.date_time
+		
+	ORDER BY l.user_id,l.create_dt DESC
+	;
+	
+ALTER VIEW applications_list OWNER TO expert72;
+
+
+-- ******************* update 14/11/2018 15:37:30 ******************
+-- VIEW: applications_list_lk
+
+--DROP VIEW applications_list_lk;
+
+CREATE OR REPLACE VIEW applications_list_lk AS
+	SELECT
+		l.id,
+		l.user_id,
+		l.create_dt,
+		l.constr_name,
+		
+		greatest(st.state,st_lk.state) AS application_state,
+		greatest(st.date_time,st_lk.date_time) AS application_state_dt,
+		greatest(st.end_date_time,st_lk.end_date_time) AS application_state_end_date,
+		/*
+		CASE
+			WHEN st.state='sent' THEN
+				bank_day_next(st.date_time::date,(SELECT const_application_check_days_val()))
+			ELSE NULL
+		END AS application_state_end_date,
+		*/
+		
+		l.filled_percent,
+		off.address AS office_descr,
+		l.office_id,
+		
+		--'Заявление №'||l.id||' от '||to_char(l.create_dt,'DD/MM/YY') AS select_descr,
+		applications_ref(l)->>'descr' AS select_descr,
+		
+		applicant->>'name' AS applicant_name,
+		customer->>'name' AS customer_name,
+		
+		(
+			CASE WHEN l.expertise_type IS NOT NULL THEN
+				CASE WHEN l.expertise_type='pd' THEN 'ПД'
+				WHEN l.expertise_type='eng_survey' THEN 'РИИ'
+				ELSE 'ПД и РИИ'
+				END
+			ELSE ''
+			END||
+			CASE WHEN l.cost_eval_validity THEN
+				CASE WHEN l.expertise_type IS NOT NULL THEN ',' ELSE '' END || 'Достоверность'
+			ELSE ''
+			END||
+			CASE WHEN l.modification THEN
+				CASE WHEN l.expertise_type IS NOT NULL OR l.cost_eval_validity THEN ',' ELSE '' END|| 'Модификация'
+			ELSE ''
+			END||
+			CASE WHEN l.audit THEN
+				CASE WHEN l.expertise_type IS NOT NULL OR l.cost_eval_validity OR l.modification THEN ',' ELSE '' END|| 'Аудит'
+			ELSE ''
+			END
+		) AS service_list,
+		
+		(
+		SELECT json_agg(doc_flow_in_client_ref(in_docs))
+		FROM doc_flow_in_client AS in_docs
+		WHERE in_docs.application_id=l.id AND NOT coalesce(in_docs.viewed,FALSE)
+		) AS unviewed_in_docs,
+		
+		contr.contract_number,
+		contr.contract_date,
+		contr.expertise_result_number,
+		contr.expertise_result_date
+				
+	FROM applications AS l
+	LEFT JOIN offices_list AS off ON off.id=l.office_id
+	LEFT JOIN contracts AS contr ON contr.application_id=l.id
+	LEFT JOIN (
+		SELECT
+			t.application_id,
+			max(t.date_time) AS date_time
+		FROM application_processes t
+		GROUP BY t.application_id
+	) AS h_max ON h_max.application_id=l.id
+	LEFT JOIN application_processes st
+		ON st.application_id=h_max.application_id AND st.date_time = h_max.date_time
+	
+	--*****
+	LEFT JOIN (
+		SELECT
+			t.application_id,
+			max(t.date_time) AS date_time
+		FROM application_processes_lk t
+		GROUP BY t.application_id
+	) AS h_max_lk ON h_max_lk.application_id=l.id
+	LEFT JOIN application_processes_lk st_lk
+		ON st_lk.application_id=h_max_lk.application_id AND st_lk.date_time = h_max_lk.date_time	
+	--*****
+		
+	ORDER BY l.user_id,l.create_dt DESC
+	;
+	
+ALTER VIEW applications_list_lk OWNER TO expert72;
+
+
+-- ******************* update 14/11/2018 15:48:58 ******************
+-- Function: applications_process()
+
+-- DROP FUNCTION applications_process();
+
+CREATE OR REPLACE FUNCTION applications_process()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+	IF (TG_WHEN='BEFORE' AND TG_OP='DELETE') THEN		
+		IF const_client_lk_val() OR const_debug_val() THEN			
+			DELETE FROM doc_flow_out_client WHERE application_id = OLD.id;
+			DELETE FROM application_document_files WHERE application_id = OLD.id;
+			
+			DELETE FROM application_processes_lk WHERE application_id = OLD.id;			
+		END IF;
+		IF NOT const_client_lk_val() OR const_debug_val() THEN
+			DELETE FROM application_processes WHERE application_id = OLD.id;
+			
+			DELETE FROM doc_flow_in_client WHERE application_id = OLD.id;
+			DELETE FROM doc_flow_in WHERE from_application_id = OLD.id;
+			DELETE FROM doc_flow_out WHERE to_application_id = OLD.id;
+					
+			DELETE FROM contacts WHERE parent_type='application_applicants'::data_types and parent_id = OLD.id;
+			DELETE FROM contacts WHERE parent_type='application_customers'::data_types and parent_id = OLD.id;
+			DELETE FROM contacts WHERE parent_type='application_contractors'::data_types and parent_id = OLD.id;
+		END IF;
+			
+		RETURN OLD;
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION applications_process() OWNER TO expert72;
+
+
+-- ******************* update 14/11/2018 15:49:46 ******************
+-- Function: applications_process()
+
+-- DROP FUNCTION applications_process();
+
+CREATE OR REPLACE FUNCTION applications_process()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+	IF (TG_WHEN='BEFORE' AND TG_OP='DELETE') THEN		
+		IF const_client_lk_val() OR const_debug_val() THEN			
+			DELETE FROM doc_flow_out_client WHERE application_id = OLD.id;
+			DELETE FROM application_document_files WHERE application_id = OLD.id;
+			
+			DELETE FROM application_processes_lk WHERE application_id = OLD.id;			
+		END IF;
+		IF NOT const_client_lk_val() OR const_debug_val() THEN
+			DELETE FROM application_processes WHERE application_id = OLD.id;
+			
+			DELETE FROM doc_flow_in_client WHERE application_id = OLD.id;
+			DELETE FROM doc_flow_in WHERE from_application_id = OLD.id;
+			DELETE FROM doc_flow_out WHERE to_application_id = OLD.id;
+					
+			DELETE FROM contacts WHERE parent_type='application_applicants'::data_types and parent_id = OLD.id;
+			DELETE FROM contacts WHERE parent_type='application_customers'::data_types and parent_id = OLD.id;
+			DELETE FROM contacts WHERE parent_type='application_contractors'::data_types and parent_id = OLD.id;
+		END IF;
+			
+		RETURN OLD;
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION applications_process() OWNER TO expert72;
+
+
+-- ******************* update 14/11/2018 16:03:19 ******************
+-- Function: application_corrections_process()
+
+-- DROP FUNCTION application_corrections_process();
+
+CREATE OR REPLACE FUNCTION application_corrections_process()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+
+	IF (TG_WHEN='AFTER' AND TG_OP='INSERT') THEN		
+	
+		IF NOT const_client_lk_val() OR const_debug_val() THEN
+			--письмо заявителю
+			INSERT INTO mail_for_sending
+			(to_addr,to_name,body,subject,email_type)
+			(WITH 
+				templ AS (
+					SELECT
+						t.template AS v,
+						t.mes_subject AS s
+					FROM email_templates t
+					WHERE t.email_type= 'app_to_correction'::email_types
+				)
+			SELECT
+				users.email,
+				users.name_full,
+				sms_templates_text(
+					ARRAY[
+						ROW('app_number', app.id)::template_value,
+						ROW('app_date',to_char(app.create_dt,'DD/MM/YY'))::template_value,
+						ROW('end_date',to_char(NEW.end_date_time,'DD/MM/YY'))::template_value
+					],
+					(SELECT v FROM templ)
+				) AS mes_body,		
+				(SELECT s FROM templ),
+				'app_to_correction'::email_types
+			FROM applications AS app
+			LEFT JOIN users ON users.id=app.user_id
+			WHERE app.id=NEW.application_id
+				--email_confirmed					
+			);				
+
+			--client server, update application state
+			INSERT INTO public.application_processes(
+				    application_id, date_time, state, user_id, end_date_time, doc_flow_examination_id)
+			    VALUES (
+			    NEW.application_id,
+			    NEW.date_time,
+			    'correcting'::application_states,
+			    NEW.user_id,
+			    NEW.end_date_time,
+			    NEW.doc_flow_examination_id
+			    );			
+			
+		END IF;
+	
+		RETURN NEW;
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION application_corrections_process() OWNER TO expert72;
+
+
+-- ******************* update 15/11/2018 11:55:42 ******************
+-- Function: users_lk_process()
+
+-- DROP FUNCTION users_lk_process();
+
+CREATE OR REPLACE FUNCTION users_lk_process()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+	IF (TG_WHEN='AFTER' AND (NOT const_client_lk_val() OR const_debug_val())) THEN		
+		IF TG_OP='INSERT' THEN
+			INSERT INTO users(
+				    id, name, role_id, pwd, phone_cel, time_zone_locale_id, email, 
+				    locale_id, pers_data_proc_agreement, create_dt, email_confirmed, 
+				    comment_text, banned, name_full, color_palette, reminders_to_email, 
+				    cades_load_timeout, cades_chunk_size)
+			    VALUES (NEW.id, NEW.name, NEW.role_id, NEW.pwd, NEW.phone_cel, NEW.time_zone_locale_id, NEW.email, 
+				    NEW.locale_id, NEW.pers_data_proc_agreement, NEW.create_dt, NEW.email_confirmed, 
+				    NEW.comment_text, NEW.banned, NEW.name_full, NEW.lor_palette, NEW.reminders_to_email, 
+				    NEW.cades_load_timeout, NEW.cades_chunk_size)
+			ON CONFLICT DO NOTHING;
+				    
+			RETURN NEW;
+		ELSIF TG_OP='UPDATE' THEN
+			UPDATE users
+			SET
+				name = NEW.name,
+				role_id = NEW.role_id,
+				pwd = NEW.pwd,
+				phone_cel = NEW.phone_cel,
+				time_zone_locale_id = NEW.time_zone_locale_id,
+				email = NEW.email, 
+				locale_id = NEW.locale_id,
+				pers_data_proc_agreement = NEW.pers_data_proc_agreement,
+				create_dt = NEW.create_dt,
+				email_confirmed = NEW.email_confirmed, 
+				comment_text = NEW.comment_text,
+				banned = NEW.banned,
+				name_full = NEW.name_full,
+				color_palette = NEW.color_palette,
+				reminders_to_email = NEW.reminders_to_email, 
+				cades_load_timeout = NEW.cades_load_timeout,
+				cades_chunk_size = NEW.cades_chunk_size
+			WHERE
+				id = OLD.id;
+				    
+			RETURN NEW;
+		ELSIF TG_OP='DELETE' THEN
+			DELETE FROM users
+			WHERE
+				id = OLD.id;
+				    
+			RETURN OLD;
+			
+		END IF;				
+	ELSIF TG_WHEN='AFTER' AND const_client_lk_val() THEN
+		IF TG_OP='INSERT' OR TG_OP='UPDATE' THEN
+			RETURN NEW;
+		ELSE
+			RETURN OLD;
+		END IF;		
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION users_lk_process() OWNER TO expert72;
+
+
+-- ******************* update 15/11/2018 12:25:54 ******************
+-- Function: user_certificates_lk_process()
+
+-- DROP FUNCTION user_certificates_lk_process();
+
+CREATE OR REPLACE FUNCTION user_certificates_lk_process()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+	IF (TG_WHEN='AFTER' AND (NOT const_client_lk_val() OR const_debug_val())) THEN		
+		IF TG_OP='INSERT' THEN
+			INSERT INTO user_certificates(
+				    fingerprint, date_time, date_time_from, date_time_to, subject_cert, 
+				    issuer_cert)
+			    VALUES (NEW.fingerprint, NEW.date_time, NEW.date_time_from, NEW.date_time_to, NEW.subject_cert, 
+				    NEW.issuer_cert)
+			ON CONFLICT DO NOTHING;
+				    
+			RETURN NEW;
+		ELSIF TG_OP='UPDATE' THEN
+			UPDATE user_certificates
+			SET
+				fingerprint = NEW.fingerprint,
+				date_time = NEW.date_time,
+				date_time_from = NEW.date_time_from,
+				date_time_to = NEW.date_time_to,
+				subject_cert = NEW.subject_cert, 
+				issuer_cert = NEW.issuer_cert
+			WHERE
+				fingerprint = NEW.fingerprint AND date_time_from=NEW.date_time_from;
+				    
+			RETURN NEW;
+		ELSIF TG_OP='DELETE' THEN
+			DELETE FROM user_certificates
+			WHERE
+				fingerprint = OLD.fingerprint AND date_time_from=OLD.date_time_from;
+				    
+			RETURN OLD;
+			
+		END IF;				
+	ELSIF TG_WHEN='AFTER' AND const_client_lk_val() THEN
+		IF TG_OP='INSERT' OR TG_OP='UPDATE' THEN
+			RETURN NEW;
+		ELSE
+			RETURN OLD;
+		END IF;		
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION user_certificates_lk_process() OWNER TO expert72;
+
+
+-- ******************* update 15/11/2018 12:26:04 ******************
+-- Function: users_lk_process()
+
+-- DROP FUNCTION users_lk_process();
+
+CREATE OR REPLACE FUNCTION users_lk_process()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+	IF (TG_WHEN='AFTER' AND (NOT const_client_lk_val() OR const_debug_val())) THEN		
+		IF TG_OP='INSERT' THEN
+			INSERT INTO users(
+				    id, name, role_id, pwd, phone_cel, time_zone_locale_id, email, 
+				    locale_id, pers_data_proc_agreement, create_dt, email_confirmed, 
+				    comment_text, banned, name_full, color_palette, reminders_to_email, 
+				    cades_load_timeout, cades_chunk_size)
+			    VALUES (NEW.id, NEW.name, NEW.role_id, NEW.pwd, NEW.phone_cel, NEW.time_zone_locale_id, NEW.email, 
+				    NEW.locale_id, NEW.pers_data_proc_agreement, NEW.create_dt, NEW.email_confirmed, 
+				    NEW.comment_text, NEW.banned, NEW.name_full, NEW.lor_palette, NEW.reminders_to_email, 
+				    NEW.cades_load_timeout, NEW.cades_chunk_size)
+			ON CONFLICT DO NOTHING;
+				    
+			RETURN NEW;
+		ELSIF TG_OP='UPDATE' THEN
+			UPDATE users
+			SET
+				name = NEW.name,
+				role_id = NEW.role_id,
+				pwd = NEW.pwd,
+				phone_cel = NEW.phone_cel,
+				time_zone_locale_id = NEW.time_zone_locale_id,
+				email = NEW.email, 
+				locale_id = NEW.locale_id,
+				pers_data_proc_agreement = NEW.pers_data_proc_agreement,
+				create_dt = NEW.create_dt,
+				email_confirmed = NEW.email_confirmed, 
+				comment_text = NEW.comment_text,
+				banned = NEW.banned,
+				name_full = NEW.name_full,
+				color_palette = NEW.color_palette,
+				reminders_to_email = NEW.reminders_to_email, 
+				cades_load_timeout = NEW.cades_load_timeout,
+				cades_chunk_size = NEW.cades_chunk_size
+			WHERE
+				id = OLD.id;
+				    
+			RETURN NEW;
+		ELSIF TG_OP='DELETE' THEN
+			DELETE FROM users
+			WHERE
+				id = OLD.id;
+				    
+			RETURN OLD;
+			
+		END IF;				
+	ELSIF TG_WHEN='AFTER' AND const_client_lk_val() THEN
+		IF TG_OP='INSERT' OR TG_OP='UPDATE' THEN
+			RETURN NEW;
+		ELSE
+			RETURN OLD;
+		END IF;		
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION users_lk_process() OWNER TO expert72;
+
+
+-- ******************* update 15/11/2018 12:27:19 ******************
+-- Trigger: users_lk_trigger on users_lk
+
+-- DROP TRIGGER users_lk_after_trigger ON users_lk;  
+ CREATE TRIGGER users_lk_after_trigger
+  AFTER INSERT OR UPDATE OR DELETE
+  ON users_lk
+  FOR EACH ROW
+  EXECUTE PROCEDURE users_lk_process();
+
+-- ******************* update 15/11/2018 12:51:00 ******************
+-- Function: mail_for_sending_lk_process()
+
+-- DROP FUNCTION users_lk_process();
+
+CREATE OR REPLACE FUNCTION mail_for_sending_lk_process()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+	IF (TG_WHEN='AFTER' AND (NOT const_client_lk_val() OR const_debug_val())) THEN		
+		IF TG_OP='INSERT' THEN
+			INSERT INTO mail_for_sending(
+				    id, date_time, from_addr, from_name, to_addr, to_name, reply_addr, 
+			            reply_name, body, sender_addr, subject, sent, sent_date_time, 
+			            email_type)
+			    VALUES (NEW.id, NEW.date_time, NEW.from_addr, NEW.from_name, NEW.to_addr, NEW.to_name, NEW.reply_addr, 
+			            NEW.reply_name, NEW.body, NEW.sender_addr, NEW.subject, NEW.sent, NEW.sent_date_time, 
+			            NEW.email_type)
+			ON CONFLICT DO NOTHING;
+				    
+			RETURN NEW;
+		ELSIF TG_OP='UPDATE' THEN
+			UPDATE mail_for_sending
+			SET
+				date_time = NEW.date_time,
+				from_addr = NEW.from_addr,
+				from_name = NEW.from_name,
+				to_addr = NEW.to_addr,
+				to_name = NEW.to_name,
+				reply_addr = NEW.reply_addr, 
+			        reply_name = NEW.reply_name,
+			        body = NEW.body,
+			        sender_addr = NEW.sender_addr,
+			        subject = NEW.subject,
+			        sent = NEW.sent,
+			        sent_date_time = NEW.sent_date_time, 
+			        email_type = NEW.email_type
+			WHERE
+				id = OLD.id;
+				    
+			RETURN NEW;
+		ELSIF TG_OP='DELETE' THEN
+			DELETE FROM mail_for_sending
+			WHERE
+				id = OLD.id;
+				    
+			RETURN OLD;
+			
+		END IF;				
+	ELSIF TG_WHEN='AFTER' AND const_client_lk_val() THEN
+		IF TG_OP='INSERT' OR TG_OP='UPDATE' THEN
+			RETURN NEW;
+		ELSE
+			RETURN OLD;
+		END IF;		
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION mail_for_sending_lk_process() OWNER TO expert72;
+
+
+-- ******************* update 15/11/2018 12:51:17 ******************
+-- Function: mail_for_sending_lk_process()
+
+-- DROP FUNCTION mail_for_sending_lk_process();
+
+CREATE OR REPLACE FUNCTION mail_for_sending_lk_process()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+	IF (TG_WHEN='AFTER' AND (NOT const_client_lk_val() OR const_debug_val())) THEN		
+		IF TG_OP='INSERT' THEN
+			INSERT INTO mail_for_sending(
+				    id, date_time, from_addr, from_name, to_addr, to_name, reply_addr, 
+			            reply_name, body, sender_addr, subject, sent, sent_date_time, 
+			            email_type)
+			    VALUES (NEW.id, NEW.date_time, NEW.from_addr, NEW.from_name, NEW.to_addr, NEW.to_name, NEW.reply_addr, 
+			            NEW.reply_name, NEW.body, NEW.sender_addr, NEW.subject, NEW.sent, NEW.sent_date_time, 
+			            NEW.email_type)
+			ON CONFLICT DO NOTHING;
+				    
+			RETURN NEW;
+		ELSIF TG_OP='UPDATE' THEN
+			UPDATE mail_for_sending
+			SET
+				date_time = NEW.date_time,
+				from_addr = NEW.from_addr,
+				from_name = NEW.from_name,
+				to_addr = NEW.to_addr,
+				to_name = NEW.to_name,
+				reply_addr = NEW.reply_addr, 
+			        reply_name = NEW.reply_name,
+			        body = NEW.body,
+			        sender_addr = NEW.sender_addr,
+			        subject = NEW.subject,
+			        sent = NEW.sent,
+			        sent_date_time = NEW.sent_date_time, 
+			        email_type = NEW.email_type
+			WHERE
+				id = OLD.id;
+				    
+			RETURN NEW;
+		ELSIF TG_OP='DELETE' THEN
+			DELETE FROM mail_for_sending
+			WHERE
+				id = OLD.id;
+				    
+			RETURN OLD;
+			
+		END IF;				
+	ELSIF TG_WHEN='AFTER' AND const_client_lk_val() THEN
+		IF TG_OP='INSERT' OR TG_OP='UPDATE' THEN
+			RETURN NEW;
+		ELSE
+			RETURN OLD;
+		END IF;		
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION mail_for_sending_lk_process() OWNER TO expert72;
+
+
+-- ******************* update 15/11/2018 12:53:21 ******************
+-- Trigger: mail_for_sending_lk_trigger on mail_for_sending_lk
+
+-- DROP TRIGGER mail_for_sending_lk_after_trigger ON mail_for_sending_lk;  
+ CREATE TRIGGER mail_for_sending_lk_after_trigger
+  AFTER INSERT OR UPDATE OR DELETE
+  ON mail_for_sending_lk
+  FOR EACH ROW
+  EXECUTE PROCEDURE mail_for_sending_lk_process();
+
+-- ******************* update 15/11/2018 13:35:08 ******************
+-- Function: mail_for_sending_lk_process()
+
+-- DROP FUNCTION mail_for_sending_lk_process();
+
+CREATE OR REPLACE FUNCTION mail_for_sending_lk_process()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+	IF (TG_WHEN='AFTER' AND (NOT const_client_lk_val() OR const_debug_val())) THEN		
+		IF TG_OP='INSERT' THEN
+			INSERT INTO mail_for_sending(
+				    id, date_time, from_addr, from_name, to_addr, to_name, reply_addr, 
+			            reply_name, body, sender_addr, subject, sent, sent_date_time, 
+			            email_type)
+			    VALUES (NEW.id, NEW.date_time, NEW.from_addr, NEW.from_name, NEW.to_addr, NEW.to_name, NEW.reply_addr, 
+			            NEW.reply_name, NEW.body, NEW.sender_addr, NEW.subject, NEW.sent, NEW.sent_date_time, 
+			            NEW.email_type)
+			ON CONFLICT DO NOTHING;
+				    
+			RETURN NEW;
+		ELSIF TG_OP='UPDATE' THEN
+			UPDATE mail_for_sending
+			SET
+				date_time = NEW.date_time,
+				from_addr = NEW.from_addr,
+				from_name = NEW.from_name,
+				to_addr = NEW.to_addr,
+				to_name = NEW.to_name,
+				reply_addr = NEW.reply_addr, 
+			        reply_name = NEW.reply_name,
+			        body = NEW.body,
+			        sender_addr = NEW.sender_addr,
+			        subject = NEW.subject,
+			        sent = NEW.sent,
+			        sent_date_time = NEW.sent_date_time, 
+			        email_type = NEW.email_type
+			WHERE
+				id = OLD.id;
+				    
+			RETURN NEW;
+		ELSIF TG_OP='DELETE' THEN
+			DELETE FROM mail_for_sending
+			WHERE
+				id = OLD.id;
+				    
+			RETURN OLD;
+			
+		END IF;				
+	ELSIF TG_WHEN='AFTER' AND const_client_lk_val() THEN
+		IF TG_OP='INSERT' OR TG_OP='UPDATE' THEN
+			RETURN NEW;
+		ELSE
+			RETURN OLD;
+		END IF;		
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION mail_for_sending_lk_process() OWNER TO expert72;
+
+
+-- ******************* update 15/11/2018 13:35:15 ******************
+-- Trigger: mail_for_sending_lk_trigger on mail_for_sending_lk
+
+-- DROP TRIGGER mail_for_sending_lk_after_trigger ON mail_for_sending_lk;  
+ CREATE TRIGGER mail_for_sending_lk_after_trigger
+  AFTER INSERT OR UPDATE OR DELETE
+  ON mail_for_sending_lk
+  FOR EACH ROW
+  EXECUTE PROCEDURE mail_for_sending_lk_process();
+
+-- ******************* update 15/11/2018 13:35:37 ******************
+-- Trigger: mail_for_sending_lk_trigger on mail_for_sending_lk
+
+-- DROP TRIGGER mail_for_sending_lk_after_trigger ON mail_for_sending_lk;  
+ CREATE TRIGGER mail_for_sending_lk_after_trigger
+  AFTER INSERT OR UPDATE OR DELETE
+  ON mail_for_sending_lk
+  FOR EACH ROW
+  EXECUTE PROCEDURE mail_for_sending_lk_process();
+
+-- ******************* update 15/11/2018 13:41:24 ******************
+-- Function: mail_for_sending_attachments_lk_process()
+
+-- DROP FUNCTION mail_for_sending_attachments_lk_process();
+
+CREATE OR REPLACE FUNCTION mail_for_sending_attachments_lk_process()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+	IF (TG_WHEN='AFTER' AND (NOT const_client_lk_val() OR const_debug_val())) THEN		
+		IF TG_OP='INSERT' THEN
+			INSERT INTO mail_for_sending_attachments(
+				    id, mail_for_sending_id, file_name)
+			    VALUES (NEW.id, NEW.mail_for_sending_id, NEW.file_name)
+			ON CONFLICT DO NOTHING;
+				    
+			RETURN NEW;
+		ELSIF TG_OP='UPDATE' THEN
+			UPDATE mail_for_sending_attachments
+			SET
+				mail_for_sending_id = NEW.mail_for_sending_id,
+				file_name = NEW.file_name
+			WHERE
+				id = OLD.id;
+				    
+			RETURN NEW;
+		ELSIF TG_OP='DELETE' THEN
+			DELETE FROM mail_for_sending_attachments
+			WHERE
+				id = OLD.id;
+				    
+			RETURN OLD;
+			
+		END IF;				
+	ELSIF TG_WHEN='AFTER' AND const_client_lk_val() THEN
+		IF TG_OP='INSERT' OR TG_OP='UPDATE' THEN
+			RETURN NEW;
+		ELSE
+			RETURN OLD;
+		END IF;		
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION mail_for_sending_attachments_lk_process() OWNER TO expert72;
+
+
+-- ******************* update 15/11/2018 13:46:05 ******************
+-- Trigger: mail_for_sending_attachments_lk_trigger on mail_for_sending_attachments_lk
+
+-- DROP TRIGGER mail_for_sending_attachments_lk_after_trigger ON mail_for_sending_lk;  
+ CREATE TRIGGER mail_for_sending_attachments_lk_after_trigger
+  AFTER INSERT OR UPDATE OR DELETE
+  ON mail_for_sending_attachments_lk
+  FOR EACH ROW
+  EXECUTE PROCEDURE mail_for_sending_attachments_lk_process();
+
+-- ******************* update 15/11/2018 13:46:42 ******************
+-- Trigger: mail_for_sending_attachments_lk_trigger on mail_for_sending_attachments_lk
+
+-- DROP TRIGGER mail_for_sending_attachments_lk_after_trigger ON mail_for_sending_lk;  
+ CREATE TRIGGER mail_for_sending_attachments_lk_after_trigger
+  AFTER INSERT OR UPDATE OR DELETE
+  ON mail_for_sending_attachments_lk
+  FOR EACH ROW
+  EXECUTE PROCEDURE mail_for_sending_attachments_lk_process();
+
+-- ******************* update 15/11/2018 13:56:26 ******************
+-- Function: user_email_confirmations_lk_process()
+
+-- DROP FUNCTION user_email_confirmations_lk_process();
+
+CREATE OR REPLACE FUNCTION user_email_confirmations_lk_process()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+	IF (TG_WHEN='AFTER' AND (NOT const_client_lk_val() OR const_debug_val())) THEN		
+		IF TG_OP='INSERT' THEN
+			INSERT INTO user_email_confirmations(
+				    key, user_id, dt, confirmed)
+			    VALUES (NEW.key, NEW.user_id, NEW.dt, NEW.confirmed)
+			ON CONFLICT DO NOTHING;
+				    
+			RETURN NEW;
+		ELSIF TG_OP='UPDATE' THEN
+			UPDATE user_email_confirmations
+			SET
+				user_id = NEW.user_id
+				dt = NEW.dt,
+				confirmed = NEW.confirmed
+			WHERE
+				key = OLD.key;
+				    
+			RETURN NEW;
+		ELSIF TG_OP='DELETE' THEN
+			DELETE FROM user_email_confirmations
+			WHERE
+				key = OLD.key;
+				    
+			RETURN OLD;
+			
+		END IF;				
+	ELSIF TG_WHEN='AFTER' AND const_client_lk_val() THEN
+		IF TG_OP='INSERT' OR TG_OP='UPDATE' THEN
+			RETURN NEW;
+		ELSE
+			RETURN OLD;
+		END IF;		
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION user_email_confirmations_lk_process() OWNER TO expert72;
+
+
+-- ******************* update 15/11/2018 13:56:34 ******************
+-- Function: user_email_confirmations_lk_process()
+
+-- DROP FUNCTION user_email_confirmations_lk_process();
+
+CREATE OR REPLACE FUNCTION user_email_confirmations_lk_process()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+	IF (TG_WHEN='AFTER' AND (NOT const_client_lk_val() OR const_debug_val())) THEN		
+		IF TG_OP='INSERT' THEN
+			INSERT INTO user_email_confirmations(
+				    key, user_id, dt, confirmed)
+			    VALUES (NEW.key, NEW.user_id, NEW.dt, NEW.confirmed)
+			ON CONFLICT DO NOTHING;
+				    
+			RETURN NEW;
+		ELSIF TG_OP='UPDATE' THEN
+			UPDATE user_email_confirmations
+			SET
+				user_id = NEW.user_id,
+				dt = NEW.dt,
+				confirmed = NEW.confirmed
+			WHERE
+				key = OLD.key;
+				    
+			RETURN NEW;
+		ELSIF TG_OP='DELETE' THEN
+			DELETE FROM user_email_confirmations
+			WHERE
+				key = OLD.key;
+				    
+			RETURN OLD;
+			
+		END IF;				
+	ELSIF TG_WHEN='AFTER' AND const_client_lk_val() THEN
+		IF TG_OP='INSERT' OR TG_OP='UPDATE' THEN
+			RETURN NEW;
+		ELSE
+			RETURN OLD;
+		END IF;		
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION user_email_confirmations_lk_process() OWNER TO expert72;
+
+
+-- ******************* update 15/11/2018 13:57:27 ******************
+-- Trigger: user_email_confirmations_lk_trigger on user_email_confirmations_lk
+
+-- DROP TRIGGER user_email_confirmations_lk_after_trigger ON user_email_confirmations_lk;  
+ CREATE TRIGGER user_email_confirmations_lk_after_trigger
+  AFTER INSERT OR UPDATE OR DELETE
+  ON user_email_confirmations_lk
+  FOR EACH ROW
+  EXECUTE PROCEDURE user_email_confirmations_lk_process();
+
+-- ******************* update 16/11/2018 06:01:05 ******************
+-- VIEW: user_view_lk
+
+--DROP VIEW user_view_lk;
+
+CREATE OR REPLACE VIEW user_view_lk AS
+	SELECT
+		u.*,
+		tzl.name AS user_time_locale,
+		employees_ref(emp) AS employees_ref,
+		departments_ref(dep) AS departments_ref,
+		(emp.id=dep.boss_employee_id) department_boss,
+		
+		CASE WHEN st.id IS NULL THEN pdfn_short_message_recipient_states_free()
+		ELSE short_message_recipient_states_ref(st)
+		END AS recipient_states_ref
+	FROM users_lk u
+	LEFT JOIN time_zone_locales tzl ON tzl.id=u.time_zone_locale_id
+	LEFT JOIN employees emp ON emp.user_id=u.id
+	LEFT JOIN departments dep ON dep.id=emp.department_id
+	LEFT JOIN short_message_recipient_current_states cur_st ON cur_st.recipient_id=emp.id
+	LEFT JOIN short_message_recipient_states st ON st.id=cur_st.recipient_state_id
+	;
+	
+ALTER VIEW user_view_lk OWNER TO expert72;
+
+-- ******************* update 16/11/2018 06:26:45 ******************
+-- Function: users_lk_process()
+
+-- DROP FUNCTION users_lk_process();
+
+CREATE OR REPLACE FUNCTION users_lk_process()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+	IF (TG_WHEN='AFTER' AND (NOT const_client_lk_val() OR const_debug_val())) THEN		
+		IF TG_OP='INSERT' THEN
+			INSERT INTO users(
+				    id, name, role_id, pwd, phone_cel, time_zone_locale_id, email, 
+				    locale_id, pers_data_proc_agreement, create_dt, email_confirmed, 
+				    comment_text, banned, name_full, color_palette, reminders_to_email, 
+				    cades_load_timeout, cades_chunk_size)
+			    VALUES (NEW.id, NEW.name, NEW.role_id, NEW.pwd, NEW.phone_cel, NEW.time_zone_locale_id, NEW.email, 
+				    NEW.locale_id, NEW.pers_data_proc_agreement, NEW.create_dt, NEW.email_confirmed, 
+				    NEW.comment_text, NEW.banned, NEW.name_full, NEW.color_palette, NEW.reminders_to_email, 
+				    NEW.cades_load_timeout, NEW.cades_chunk_size)
+			ON CONFLICT DO NOTHING;
+				    
+			RETURN NEW;
+		ELSIF TG_OP='UPDATE' THEN
+			UPDATE users
+			SET
+				name = NEW.name,
+				role_id = NEW.role_id,
+				pwd = NEW.pwd,
+				phone_cel = NEW.phone_cel,
+				time_zone_locale_id = NEW.time_zone_locale_id,
+				email = NEW.email, 
+				locale_id = NEW.locale_id,
+				pers_data_proc_agreement = NEW.pers_data_proc_agreement,
+				create_dt = NEW.create_dt,
+				email_confirmed = NEW.email_confirmed, 
+				comment_text = NEW.comment_text,
+				banned = NEW.banned,
+				name_full = NEW.name_full,
+				color_palette = NEW.color_palette,
+				reminders_to_email = NEW.reminders_to_email, 
+				cades_load_timeout = NEW.cades_load_timeout,
+				cades_chunk_size = NEW.cades_chunk_size
+			WHERE
+				id = OLD.id;
+				    
+			RETURN NEW;
+		ELSIF TG_OP='DELETE' THEN
+			DELETE FROM users
+			WHERE
+				id = OLD.id;
+				    
+			RETURN OLD;
+			
+		END IF;				
+	ELSIF TG_WHEN='AFTER' AND const_client_lk_val() THEN
+		IF TG_OP='INSERT' OR TG_OP='UPDATE' THEN
+			RETURN NEW;
+		ELSE
+			RETURN OLD;
+		END IF;		
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION users_lk_process() OWNER TO expert72;
+
+
+-- ******************* update 16/11/2018 08:39:16 ******************
+-- Trigger: user_email_confirmations_lk_trigger on user_email_confirmations_lk
+
+-- DROP TRIGGER user_email_confirmations_lk_after_trigger ON user_email_confirmations_lk;  
+ CREATE TRIGGER user_email_confirmations_lk_after_trigger
+  AFTER INSERT OR UPDATE OR DELETE
+  ON user_email_confirmations_lk
+  FOR EACH ROW
+  EXECUTE PROCEDURE user_email_confirmations_lk_process();
+
+-- ******************* update 16/11/2018 11:24:15 ******************
+-- Function: doc_flow_attachments_process()
+
+-- DROP FUNCTION contracts_process();
+
+CREATE OR REPLACE FUNCTION doc_flow_attachments_process()
+  RETURNS trigger AS
+$BODY$
+DECLARE
+	FOLDER_OUT text;
+	FOLDER_DOCS text;
+	FOLDER_RES text;
+	v_application_id int;
+BEGIN
+	IF (TG_WHEN='AFTER' AND TG_OP='UPDATE' ) THEN
+		IF const_client_lk_val() OR const_debug_val() AND NEW.doc_type='doc_flow_out' THEN
+			FOLDER_OUT = 'Исходящие';
+			FOLDER_DOCS = 'Договорные документы';
+			FOLDER_RES = 'Заключение';
+		
+			SELECT t.to_application_id INTO v_application_id FROM doc_flow_out t WHERE t.id=NEW.doc_id;
+			
+			IF v_application_id IS NOT NULL THEN
+				IF (OLD.file_path=FOLDER_DOCS OR OLD.file_path=FOLDER_RES) AND NEW.file_path=FOLDER_OUT THEN
+					DELETE FROM application_document_files WHERE file_id=NEW.file_id;
+				
+				ELSIF (NEW.file_path=FOLDER_DOCS OR NEW.file_path=FOLDER_RES) AND OLD.file_path=FOLDER_OUT THEN
+					INSERT INTO application_document_files
+					(
+					file_id,
+					application_id,
+					document_id,
+					document_type,
+					date_time,
+					file_name,
+					file_path,
+					file_signed,
+					file_size
+					)
+					VALUES (
+					NEW.file_id,
+					v_application_id,
+					0,
+					'documents',
+					NEW.file_date,
+					NEW.file_name,
+					NEW.file_path,
+					NEW.file_signed,
+					NEW.file_size
+					);
+				ELSIF (OLD.file_path=FOLDER_DOCS OR OLD.file_path=FOLDER_RES) AND (NEW.file_path=FOLDER_DOCS OR NEW.file_path=FOLDER_RES) THEN
+					UPDATE application_document_files
+						SET file_path=NEW.file_path
+					WHERE file_id=NEW.file_id;
+					
+				END IF;
+			END IF;
+		END IF;
+		
+		RETURN NEW;
+		
+	ELSIF (TG_WHEN='BEFORE' AND TG_OP='DELETE') THEN		
+		IF const_client_lk_val() OR const_debug_val() THEN			
+			DELETE FROM file_verifications_lk WHERE file_id = OLD.file_id;
+		END IF;
+
+		IF NOT const_client_lk_val() OR const_debug_val() THEN			
+			DELETE FROM file_verifications WHERE file_id = OLD.file_id;
+		END IF;
+			
+		RETURN OLD;
+	ELSIF (TG_WHEN='BEFORE' AND TG_OP='UPDATE') THEN		
+		RETURN NEW;
+	END IF;
+		
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION doc_flow_attachments_process() OWNER TO expert72;
+
+-- ******************* update 16/11/2018 13:03:01 ******************
+-- VIEW: applications_dialog_lk
+
+--DROP VIEW contracts_dialog_lk;
+--DROP VIEW applications_dialog_lk;
+
+CREATE OR REPLACE VIEW applications_dialog_lk AS
+	SELECT
+		d.id,
+		d.create_dt,
+		d.user_id,
+		d.expertise_type,
+		
+		--Для контроллера
+		( (d.expertise_type IS NOT NULL OR NOT d.cost_eval_validity OR NOT d.modification OR NOT d.audit) AND d.construction_type_id IS NOT NULL) AS document_exists,
+		
+		coalesce(d.cost_eval_validity,FALSE) AS cost_eval_validity,
+		d.cost_eval_validity_simult,
+		fund_sources_ref(fund_sources) AS fund_sources_ref,
+		construction_types_ref(construction_types) AS construction_types_ref,
+		d.applicant,
+		d.customer,
+		d.contractors,
+		d.developer,
+		coalesce(contr.constr_name,d.constr_name) AS constr_name,
+		coalesce(contr.constr_address,d.constr_address) AS constr_address,
+		
+		coalesce(contr.constr_technical_features,d.constr_technical_features) As constr_technical_features,
+		coalesce(contr.constr_technical_features_in_compound_obj,d.constr_technical_features_in_compound_obj) AS constr_technical_features_in_compound_obj,
+		
+		d.total_cost_eval,
+		d.limit_cost_eval,
+		offices_ref(offices) AS offices_ref,
+		build_types_ref(build_types) AS build_types_ref,
+		coalesce(d.modification,FALSE) AS modification,
+		coalesce(d.audit,FALSE) AS audit,
+		
+		CASE WHEN d.primary_application_id IS NOT NULL AND d.primary_application_id<>d.id THEN applications_primary_chain(d.id)
+		WHEN d.primary_application_reg_number IS NOT NULL THEN json_build_object('primary_application_reg_number',d.primary_application_reg_number)
+		ELSE NULL
+		END AS primary_application,
+
+		CASE WHEN d.modif_primary_application_id IS NOT NULL AND d.modif_primary_application_id<>d.id THEN applications_modif_primary_chain(d.id)
+		WHEN d.modif_primary_application_reg_number IS NOT NULL THEN json_build_object('primary_application_reg_number',d.modif_primary_application_reg_number)
+		ELSE NULL
+		END AS modif_primary_application,
+		
+		greatest(st.state,st_lk.state) AS application_state,
+		greatest(st.date_time,st_lk.date_time) AS application_state_dt,
+		greatest(st.end_date_time,st_lk.end_date_time) AS application_state_end_date,
+		
+		array_to_json((
+			SELECT array_agg(l.documents) FROM document_templates_all_list_for_date(d.create_dt::date) l
+			WHERE
+				(d.construction_type_id IS NOT NULL)
+				AND
+				(l.construction_type_id=d.construction_type_id AND
+				l.document_type IN (
+					CASE WHEN d.expertise_type='pd' OR d.expertise_type='pd_eng_survey' THEN 'pd'::document_types ELSE NULL END,
+					CASE WHEN d.expertise_type='eng_survey' OR d.expertise_type='pd_eng_survey' THEN 'eng_survey'::document_types ELSE NULL END,
+					CASE WHEN d.cost_eval_validity THEN 'cost_eval_validity'::document_types ELSE NULL END,
+					CASE WHEN d.modification THEN 'modification'::document_types ELSE NULL END,
+					CASE WHEN d.audit THEN 'audit'::document_types ELSE NULL END			
+					)
+				)
+		)) AS documents,
+		
+		applications_ref(d)->>'descr' AS select_descr,
+		
+		d.app_print_expertise,
+		d.app_print_cost_eval,
+		d.app_print_modification,
+		d.app_print_audit,
+		
+		applications_ref(b_app) AS base_applications_ref,
+		applications_ref(d_app) AS derived_applications_ref,
+		
+		applications_ref(d) AS applications_ref,
+		d.primary_application_id,
+		d.primary_application_reg_number,
+		d.modif_primary_application_id,
+		d.modif_primary_application_reg_number,
+		
+		d.pd_usage_info,
+		
+		users_ref(users) AS users_ref,
+		
+		d.auth_letter,
+		d.auth_letter_file,
+		
+		folders.files AS doc_folders,
+		
+		contr.work_start_date,
+		contr.contract_number,
+		contr.contract_date,
+		contr.expertise_result_number,
+		contr.expertise_result_date,
+		
+		d.filled_percent
+		
+	FROM applications AS d
+	LEFT JOIN offices ON offices.id=d.office_id
+	LEFT JOIN users ON users.id=d.user_id
+	LEFT JOIN contracts AS contr ON contr.application_id=d.id
+	LEFT JOIN fund_sources ON fund_sources.id=d.fund_source_id
+	LEFT JOIN construction_types ON construction_types.id=d.construction_type_id
+	LEFT JOIN build_types ON build_types.id=d.build_type_id
+	LEFT JOIN applications AS b_app ON b_app.id=d.base_application_id
+	LEFT JOIN applications AS d_app ON d_app.id=d.derived_application_id
+	LEFT JOIN (
+		SELECT
+			t.application_id,
+			max(t.date_time) AS date_time
+		FROM application_processes t
+		GROUP BY t.application_id
+	) AS h_max ON h_max.application_id=d.id
+	LEFT JOIN application_processes st
+		ON st.application_id=h_max.application_id AND st.date_time = h_max.date_time
+		
+	--*****
+	LEFT JOIN (
+		SELECT
+			t.application_id,
+			max(t.date_time) AS date_time
+		FROM application_processes_lk t
+		GROUP BY t.application_id
+	) AS h_max_lk ON h_max_lk.application_id=d.id
+	LEFT JOIN application_processes_lk st_lk
+		ON st_lk.application_id=h_max_lk.application_id AND st_lk.date_time = h_max_lk.date_time	
+	--*****
+		
+	LEFT JOIN
+		(
+		SELECT
+			doc_att.application_id,
+			json_agg(
+				json_build_object(
+					'fields',json_build_object('id',doc_att.folder_id,'descr',doc_att.folder_descr),
+					'parent_id',NULL,
+					'files',doc_att.files
+				)
+			) AS files
+		FROM
+		
+		(SELECT
+			adf.application_id,
+			adf.file_path AS folder_descr,
+			app_fd.id AS folder_id,
+			json_agg(
+				json_build_object(
+					'file_id',adf.file_id,
+					'file_name',adf.file_name,
+					'file_size',adf.file_size,
+					'file_signed',adf.file_signed,
+					'file_uploaded','true',
+					'file_path',adf.file_path,
+					'date_time',adf.date_time,
+					'signatures',--sign.signatures
+					CASE
+						WHEN sign.signatures IS NULL AND f_ver.file_id IS NOT NULL THEN
+							jsonb_build_array(
+								jsonb_build_object(
+									'sign_date_time',f_ver.date_time,
+									'check_result',f_ver.check_result,
+									'error_str',f_ver.error_str
+								)
+							)
+						ELSE sign.signatures
+					END,
+					'file_signed_by_client',adf.file_signed_by_client,
+					'require_client_sig',app_fd.require_client_sig
+				)
+			) AS files
+		FROM application_document_files adf
+		LEFT JOIN application_doc_folders AS app_fd ON app_fd.name=adf.file_path
+		LEFT JOIN doc_flow_out AS adf_out ON adf_out.to_application_id=adf.application_id AND adf_out.doc_flow_type_id=(pdfn_doc_flow_types_app_resp()->'keys'->>'id')::int
+		--LEFT JOIN doc_flow_attachments AS adf_att ON adf_att.doc_type='doc_flow_out' AND adf_att.doc_id=adf_out.id AND adf_att.file_name=adf.file_name
+		LEFT JOIN file_verifications_lk AS f_ver ON f_ver.file_id=adf.file_id
+		LEFT JOIN (
+			SELECT
+				files_t.file_id,
+				jsonb_agg(files_t.signatures) AS signatures
+			FROM
+			(SELECT
+				f_sig.file_id,
+				jsonb_build_object(
+					'owner',u_certs.subject_cert,
+					'cert_from',u_certs.date_time_from,
+					'cert_to',u_certs.date_time_to,
+					'sign_date_time',f_sig.sign_date_time,
+					'check_result',ver.check_result,
+					'check_time',ver.check_time,
+					'error_str',ver.error_str
+				) AS signatures
+			FROM file_signatures_lk AS f_sig
+			LEFT JOIN file_verifications_lk AS ver ON ver.file_id=f_sig.file_id
+			LEFT JOIN user_certificates_lk AS u_certs ON u_certs.id=f_sig.user_certificate_id
+			ORDER BY f_sig.sign_date_time
+			) AS files_t
+			GROUP BY files_t.file_id
+		) AS sign ON sign.file_id=f_ver.file_id
+		WHERE adf.document_type='documents'
+		GROUP BY adf.application_id,adf.file_path,app_fd.id
+		ORDER BY app_fd.id)  AS doc_att	
+		
+		GROUP BY doc_att.application_id
+	) AS folders ON folders.application_id=d.id
+	;
+	
+ALTER VIEW applications_dialog_lk OWNER TO expert72_office;
+

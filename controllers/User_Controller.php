@@ -35,6 +35,8 @@ require_once('common/PwdGen.php');
 require_once('functions/ExpertEmailSender.php');
 require_once('controllers/Captcha_Controller.php');
 
+require_once(ABSOLUTE_PATH.'controllers/Application_Controller.php');
+
 class User_Controller extends ControllerSQL{
 
 	const PWD_LEN = 6;
@@ -979,13 +981,12 @@ class User_Controller extends ControllerSQL{
 
 	private function field_check($pm,$field1,$field2=NULL){
 		$cond = sprintf('"%s"=%s',$field1,$this->getExtDbVal($pm,$field1));
-		/*
-		if (!is_null($field2)){
-			$cond.= sprintf(' AND %s=%s',$field2,$this->getExtDbVal($pm,$field2));
-		}
-		throw new Exception("SELECT TRUE AS ex FROM users WHERE ".$cond);
-		*/
-		return $this->getDbLink()->query_first("SELECT TRUE AS ex FROM users WHERE ".$cond);
+		
+		return $this->getDbLink()->query_first(sprintf(
+			"SELECT
+				(SELECT TRUE FROM users WHERE %s) AS ex",
+			$cond
+		));
 	}
 	
 	public function name_check($pm){

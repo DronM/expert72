@@ -60,10 +60,16 @@ BEGIN
 		
 	ELSIF (TG_WHEN='BEFORE' AND TG_OP='DELETE') THEN		
 		IF const_client_lk_val() OR const_debug_val() THEN			
+			DELETE FROM file_verifications_lk WHERE file_id = OLD.file_id;
+		END IF;
+
+		IF NOT const_client_lk_val() OR const_debug_val() THEN			
 			DELETE FROM file_verifications WHERE file_id = OLD.file_id;
 		END IF;
 			
 		RETURN OLD;
+	ELSIF (TG_WHEN='BEFORE' AND TG_OP='UPDATE') THEN		
+		RETURN NEW;
 	END IF;
 		
 END;

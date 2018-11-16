@@ -368,18 +368,39 @@ wget -O crypto_plugin.txt https://www.cryptopro.ru/sites/default/files/products/
 11) Порядок следования подписей в исх.письме клиента doc_flow_out_client_files_for_signing
 
 
+1.0.91
+1) Подписание ответов в IE
+2) IE10 hierarchyRequestError
+3) Вроде нет проблем в IE10 с открытием окон, с заполнением параметров
+4) Профиль изменение "Дублировать напоминания на электронную почту" не открывало кнопку "сохранить", тоже и настройки плагина
+5) дополнительные таблицы для подписей для возможности работы с двух мастеров
 
+file_verifications_lk_process()
+file_signatures_lk_process()
+user_certificates_lk_process()
+applications_process()
+client_payments_process()
+contacts_process()
+contracts_process()
+doc_flow_approvement_templates_process()
+doc_flow_approvements_process()
+doc_flow_attachments_process()
+doc_flow_examinations_process()
+doc_flow_in_process()
+doc_flow_in_client_process()
+users_process()
+doc_flow_registrations_process()
+doc_flow_in_client_after_trigger
+doc_flow_out_process()
+application_processes_lk_process()
+applications_list_lk
+application_corrections_process()
+users_lk_process()
+mail_for_sending_lk_process()
+mail_for_sending_attachments_lk_process()
+user_view_lk()
 
--) Инициализация дочерних окон IE
--) Подписание ответов в IE
-
-Добить удаление подписей
 - Авторизация ЕСИА
-
--IE10 все равно беда с открытием окон, с заполнением параметров
--IE10 hierarchyRequestError
-
-- Все на https
 
 - Слобовидящие  ААА цветовая Схема Бел|Черн|Голубой|Лиловый|Зеленый|
 
@@ -393,15 +414,16 @@ wget -O crypto_plugin.txt https://www.cryptopro.ru/sites/default/files/products/
 
 //**********************************************************
 МИНИМАЛЬНО ПОДДЕРЖИВАКМЫЙ IE - 10!!!
-IE9 работает но верстка кривая
+IE9 работает но верстка кривая, Пустые дочерние окна!!!
 IE8 - закрыт доступ
 ToDo
 
 - Пришли подписанные документы: 2 сообщения. Эксперты жалуются, что получают по несколько сообщений. Проверить ссылку в рабочей программе.
-- IE10 не работает кнопка Все фнкции и Фильтр в таблицах
 - IE10 ошибки FatalException
 
-
++ Postgres replication SSL
++ Все на https
++ IE10 не работает кнопка Все фнкции и Фильтр в таблицах
 + Номер счета банка в заявлении ___ убрать!!!
 + Согласования добавить фильтр по статусу контракта
 + Спец символы в JSON полях

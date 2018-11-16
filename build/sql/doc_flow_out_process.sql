@@ -32,6 +32,14 @@ BEGIN
 		END IF;	
 		
 		RETURN OLD;		
+		
+	ELSIF TG_WHEN='AFTER' AND TG_OP='DELETE' THEN
+		IF const_client_lk_val() OR const_debug_val() THEN
+			DELETE FROM doc_flow_in_client WHERE doc_flow_out_id = OLD.id;
+		END IF;	
+		
+		RETURN OLD;		
+	
 	END IF;
 END;
 $BODY$

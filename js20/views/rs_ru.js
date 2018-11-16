@@ -7,7 +7,8 @@ PasswordRecovery_View.prototype.SUBMITED = "Новый пароль направ
 UserList_View.prototype.HEAD_TITLE = "Пользолватели";
 UserProfile_View.prototype.HEAD_TITLE = "Профиль пользователя";
 
-TimeZoneLocale_View.prototype.HEAD_TITLE = "Профиль пользователя";
+TimeZoneLocale_View.prototype.HEAD_TITLE = "Временные зоны";
+PostList_View.prototype.HEAD_TITLE = "Должности";
 
 Client_View.prototype.HEAD_TITLE = "Данные контрагента";
 ClientList_View.prototype.HEAD_TITLE = "Контрагенты";

@@ -1,0 +1,8 @@
+#!/bin/sh
+
+rsync -az --remove-source-files /media/rstorage/* /media/storage
+sudo chown -R www-data:www-data /media/storage
+sudo find /media/storage -type d -exec chmod 775 {} ";"
+sudo find /media/storage -type f -exec chmod 664 {} ";"
+find /media/rstorage/Documents/ -type d -empty -delete
+

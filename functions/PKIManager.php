@@ -145,8 +145,25 @@ class PKIManager {
 		}
 	}
 	
-	public function __construct($pkiPath,$crlValidity=NULL,$logLevel=NULL){
+	public function __construct($pkiPath,$crlValidity=NULL,$logLevel=NULL,$tmpPath=NULL){				
 		$this->pkiPath = $pkiPath;
+		if (is_null($this->pkiPath) || !strlen($this->pkiPath)){
+			throw new Exception('pkiPath is not defined!');
+		}
+		if ($this->pkiPath[strlen($this->pkiPath)-1]!=DIRECTORY_SEPARATOR){
+			$this->pkiPath.=DIRECTORY_SEPARATOR;
+		}
+		if (is_null($tmpPath) || !strlen($tmpPath)){
+			$tmpPath = $this->pkiPath.'tmp'.DIRECTORY_SEPARATOR;
+			if (!file_exists($tmpPath)){
+				mkdir($tmpPath,0775,TRUE);
+			}
+		}
+		$this->tmpPath = $tmpPath;
+		if ($this->tmpPath[strlen($this->tmpPath)-1]!=DIRECTORY_SEPARATOR){
+			$this->tmpPath.=DIRECTORY_SEPARATOR;
+		}
+		
 		$this->crlValidity = isset($crlValidity)? $crlValidity : self::DEF_CRL_VALIDITY;
 		$this->logger = new Logger($this->pkiPath.self::LOG_FILE_NAME,array('logLevel'=>is_null($logLevel)? self::DEF_LOG_LEVEL:$logLevel));
 		
@@ -194,7 +211,7 @@ class PKIManager {
 		} else {
 			$env = array_merge($_ENV, $envopts);
 		}
-		$resource = proc_open($command, $descriptorspec, $pipes, OUTPUT_PATH, $env);
+		$resource = proc_open($command, $descriptorspec, $pipes, $this->tmpPath, $env);
 		
 		$stdout = stream_get_contents($pipes[1]);
 		$stderr = stream_get_contents($pipes[2]);
@@ -293,23 +310,23 @@ class PKIManager {
 	public function parseSigFile($sigFile,&$derFile,&$signerPemFiles){
 		$this->logger->add('parseSigFile','note');
 		
-		$derFile = $this->replace_extension($sigFile,'der');				
-		if (!file_exists($derFile)){
-			//проверяем файл
-			$need_decode = $this->isBase64Encoded($sigFile);
-			// декодируем подпись из base64 - получаем подпись в бинарном формате
-			if ($need_decode){
-				$this->decodeSigFromBase64($sigFile,$derFile);
-			}
-			else{
-				//der = sig
-				symlink($sigFile,$derFile);
-			}
-		}		
+		//$derFile = $this->replace_extension($sigFile,'der');				
+		$derFile = $this->tmpPath.uniqid().'.der';
+		//проверяем файл
+		$need_decode = $this->isBase64Encoded($sigFile);
+		// декодируем подпись из base64 - получаем подпись в бинарном формате
+		if ($need_decode){
+			$this->decodeSigFromBase64($sigFile,$derFile);
+		}
+		else{
+			//der = sig
+			symlink($sigFile,$derFile);
+		}
 		// извлекаем сертификаты из подписи
 		//Получаем несколько файлов, в каждом 1 сертификат
 		$id = uniqid();		
-		$pat = dirname($sigFile).DIRECTORY_SEPARATOR.$id;
+		//$pat = dirname($sigFile).DIRECTORY_SEPARATOR.$id;
+		$pat = $this->tmpPath.$id;
 		$this->run_shell_cmd2(sprintf('openssl pkcs7 -in "%s" -print_certs -inform DER -outform pem | awk \'/BEGIN/ { i++; } /BEGIN/, /END CERT/ { print > "%s."i }\'',$derFile,$pat));
 		$pem_list = glob($pat.".*");
 		if (!count($pem_list)){
@@ -513,34 +530,45 @@ class PKIManager {
 				throw new Exception(sprintf(self::ER_UNABLE_LOAD_CA_CERT,$certData->issuer['Наименование']));
 			}										
 		}
+		else if (!file_exists($issuer_pem)){
+			$this->logger->add('Unable to get issuer certificate - no URI','error');
+			throw new Exception(self::ER_UNABLE_LOAD_CA_CERT);
+		}
 		
 		//CRLs
 		$crl_passed = FALSE;
+		$revoked = FALSE;
 		if ($onlineRevocCheck && $certData->OCSP){
 			$this->logger->add('OCSP checking '.$certData->OCSP,'debug');
-			$crl_res = '';
-			try{
-				$crl_res = $this->run_shell_cmd(sprintf('openssl ocsp -issuer "%s" -cert "%s" -url %s',
-					$issuer_pem,
-					$certFile,
-					$certData->OCSP
-				));
-			}
-			catch(Exception $e){			
-			}
+			$issuer_index = 0;
+			while(!$crl_passed && file_exists($ocsp_issuer_pem = $this->pkiPath.$certData->issuerHash.'.'.$issuer_index)){
+				$crl_res = '';
+				try{
+					$crl_res = $this->run_shell_cmd(sprintf('openssl ocsp -issuer "%s" -CApath "%s" -cert "%s" -url %s',
+						$ocsp_issuer_pem,
+						$this->pkiPath,
+						$certFile,
+						$certData->OCSP
+					));
+				}
+				catch(Exception $e){			
+				}
 			
-			if (strlen($crl_res)){
-				$crl_res_ar = explode(PHP_EOL,trim($crl_res));				
-				foreach($crl_res_ar as $crl_str){
-					if (strpos($crl_str,': good')!==FALSE){
-						$crl_passed = TRUE;
-						break;
+				if (strlen($crl_res)){
+					$crl_res_ar = explode(PHP_EOL,trim($crl_res));				
+					foreach($crl_res_ar as $crl_str){
+						if (strpos($crl_str,': good')!==FALSE){
+							$crl_passed = TRUE;
+							break;
+						}
+						else if (strpos($crl_str,': revoked')!==FALSE){
+							$this->logger->add('OCSP not passed: владелец:'.$certData->subject['Наименование'].' issuer:'.$certData->issuer['Наименование'],'debug');
+							throw new Exception(sprintf(self::ER_REVOKED,$certData->subject['Наименование'],$certData->issuer['Наименование']));						
+						}
+						
 					}
 				}
-				if (!$crl_passed){
-					$this->logger->add('OCSP not passed: владелец:'.$certData->subject['Наименование'].' issuer:'.$certData->issuer['Наименование'],'debug');
-					throw new Exception(sprintf(self::ER_REVOKED,$certData->subject['Наименование'],$certData->issuer['Наименование']));
-				}
+				$issuer_index++;
 			}
 		}
 		
@@ -561,7 +589,7 @@ class PKIManager {
 					
 								if (file_exists($crl_der)){
 									$this->run_shell_cmd2(sprintf('openssl crl -in "%s" -inform DER -out "%s"',$crl_der,$crl_pem));
-					
+									$crl_passed = TRUE;
 									break;
 								}
 							}
@@ -673,7 +701,7 @@ class PKIManager {
 				}
 				catch(Exception $e){
 					$user_m = str_replace(PHP_EOL,' ',$e->getMessage());
-					$this->logger->add('Verification error:'.$user_m,'error');
+					$this->logger->add('Verification error:'.$user_m.PHP_EOL.'CMD='.$verif_cmd,'error');
 					
 					if (strpos($user_m,'CRL has expired')!==FALSE && $crl_expir_tries){
 						$crl_expir_tries--;
@@ -760,7 +788,7 @@ class PKIManager {
 			else if ($serial_found && strpos($line,'serialNumber:')!==FALSE){
 				$p=strpos($line,':')+1;
 				$cur_serial = dec2hex(trim(substr($line,$p)));
-				if (strlen($cur_serial)==31)$cur_serial='0'.$cur_serial;
+				if (strlen($cur_serial)%2==1)$cur_serial='0'.$cur_serial;
 				$res[$cur_serial] = new stdClass();
 				$res[$cur_serial]->signedDate = NULL;
 				$res[$cur_serial]->algorithm = NULL;				

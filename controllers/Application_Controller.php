@@ -66,6 +66,8 @@ class Application_Controller extends ControllerSQL{
 	const ER_NO_ATT = 'Нет ни одного вложенного файла с документацией!';
 
 	const ER_PRINT_FILE_CNT = 'Нет файла ЭЦП с заявлением по ';
+	
+	const ER_PRIM_APP = 'В качестве перевичной документации указано это заявление!';
 
 	public function __construct($dbLinkMaster=NULL,$dbLink=NULL){
 		parent::__construct($dbLinkMaster,$dbLink);
@@ -1029,6 +1031,7 @@ class Application_Controller extends ControllerSQL{
 			throw new Exception('Ошибка проверки подписи заявления по '.$ER_PRINT_FILE_CNT_END[$id].': '.$verif_res->checkError);
 		}
 		
+		$tb_postf = self::LKPostfix();
 		$sig_ar = $this->getDbLinkMaster()->query_first(sprintf(
 		"SELECT
 			f_sig.file_id,
@@ -1043,11 +1046,12 @@ class Application_Controller extends ControllerSQL{
 					'error_str',ver.error_str
 				)
 			) AS signatures
-		FROM file_signatures AS f_sig
-		LEFT JOIN file_verifications AS ver ON ver.file_id=f_sig.file_id
-		LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id			
+		FROM file_signatures%s AS f_sig
+		LEFT JOIN file_verifications%s AS ver ON ver.file_id=f_sig.file_id
+		LEFT JOIN user_certificates%s AS u_certs ON u_certs.id=f_sig.user_certificate_id			
 		WHERE ver.file_id=%s
 		GROUP BY f_sig.file_id",
+		$tb_postf,$tb_postf,$tb_postf,
 		$db_file_id
 		));
 		/*
@@ -1250,7 +1254,7 @@ class Application_Controller extends ControllerSQL{
 		$fullPath = '';
 		$fileName = '';
 		if ($this->get_print_file($appId,$docType,$isSig,$fullPath,$fileName)){
-			$mime = getMimeTypeOnExt($fl);
+			$mime = getMimeTypeOnExt($fileName);
 			ob_clean();
 			downloadFile($fullPath, $mime,'attachment;',$fileName);
 			return TRUE;
@@ -1307,6 +1311,7 @@ class Application_Controller extends ControllerSQL{
 	}
 
 	public static function attachmentsQuery($dbLink,$appId,$deletedCond){
+		$tb_postf = self::LKPostfix();
 		return $dbLink->query(sprintf(
 			"SELECT
 				adf.*,
@@ -1347,14 +1352,15 @@ class Application_Controller extends ControllerSQL{
 							'error_str',ver.error_str
 						)
 					) As signatures
-				FROM file_signatures AS f_sig
-				LEFT JOIN file_verifications AS ver ON ver.file_id=f_sig.file_id
-				LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id
+				FROM file_signatures%s AS f_sig
+				LEFT JOIN file_verifications%s AS ver ON ver.file_id=f_sig.file_id
+				LEFT JOIN user_certificates%s AS u_certs ON u_certs.id=f_sig.user_certificate_id
 				GROUP BY f_sig.file_id
 				-- Здесь Всегда одна подпись, можно без сортировки!!!
 			) AS sign ON sign.file_id=adf.file_id			
 			WHERE adf.application_id=%d %s
 			ORDER BY adf.document_type,adf.document_id,adf.file_name,adf.deleted_dt ASC NULLS LAST",
+		$tb_postf,$tb_postf,$tb_postf,
 		$appId,
 		$deletedCond
 		));				
@@ -1370,7 +1376,8 @@ class Application_Controller extends ControllerSQL{
 			}
 			
 			$ar_obj = $this->getDbLink()->query_first(sprintf(
-			"SELECT * FROM applications_dialog WHERE id=%d".$client_q_t,
+			"SELECT * FROM applications_dialog%s WHERE id=%d".$client_q_t,
+			self::LKPostfix(),
 			$this->getExtDbVal($pm,'id')
 			));
 		
@@ -1665,16 +1672,24 @@ class Application_Controller extends ControllerSQL{
 		
 		return $inserted_id_ar;
 	}
-	
-	public static function checkSentState($dbLink,$appId,$checkUser){
-		$q = sprintf("SELECT application_processes_last(%d) AS state",$appId);
+
+	public static function checkSentState($dbLink,$appId,$checkUser,$checkPrimApp=FALSE){
+		$q = sprintf("SELECT application_processes_last%s(%d) AS state",self::LKPostfix(),$appId);
 		$do_check = ($_SESSION['role_id']=='client' && $checkUser);
 		if ($do_check){
 			$q.=sprintf(",(SELECT ap.user_id=%d FROM applications AS ap WHERE ap.id=%d) AS user_check_passed",
 				$_SESSION['user_id'],$appId
 			);
 		}
-//throw new Exception($q);
+		if ($checkPrimApp){
+			$q.=sprintf(",(SELECT
+					(ap.primary_application_id IS NULL OR ap.primary_application_id <> ap.id)
+					FROM applications AS ap
+					WHERE ap.id=%d) AS primary_check_passed",
+				$appId
+			);
+		}
+		
 		$ar = $dbLink->query_first($q);
 		self::checkApp($ar);
 		
@@ -1685,6 +1700,10 @@ class Application_Controller extends ControllerSQL{
 		if ($ar['state']=='sent' || $ar['state']=='checking'){
 			throw new Exception(self::ER_DOC_SENT);
 		}
+		if ($checkPrimApp && $ar['primary_check_passed']!='t'){
+			throw new Exception(self::ER_PRIM_APP);
+		}
+		
 		return $ar['state'];
 	}
 	
@@ -1700,7 +1719,7 @@ class Application_Controller extends ControllerSQL{
 	}
 	
 	public function update($pm){
-		$old_state = self::checkSentState($this->getDbLink(),$this->getExtDbVal($pm,'old_id'),TRUE);
+		$old_state = self::checkSentState($this->getDbLink(),$this->getExtDbVal($pm,'old_id'),TRUE,TRUE);
 
 		if ($pm->getParamValue('user_id') && $_SESSION['role_id']!='admin'){
 			$pm->setParamValue('user_id', $_SESSION['user_id']);
@@ -1776,7 +1795,8 @@ class Application_Controller extends ControllerSQL{
 					throw new Exception(self::ER_NO_ATT);
 				}				
 				
-				self::checkIULs($this->getDbLinkMaster(),$this->getExtDbVal($pm,'old_id'));
+				$l = $this->getDbLinkMaster();
+				self::checkIULs($l,$this->getExtDbVal($pm,'old_id'));
 				
 				$resAr = [];
 				$this->set_state(
@@ -1852,17 +1872,12 @@ class Application_Controller extends ControllerSQL{
 				f.application_id,
 				app.user_id,
 				f.document_id,
-				(SELECT
-					st.state
-				FROM application_processes AS st
-				WHERE st.application_id=f.application_id
-				ORDER BY st.date_time DESC
-				LIMIT 1
-				) AS state
+				application_processes_last%s(f.application_id) AS state
 			FROM application_document_files AS f
 			LEFT JOIN applications AS app ON app.id=f.application_id
-			WHERE f.file_id=%s",
-		$fileIdForDb
+			WHERE f.file_id=%s",		
+		self::LKPostfix(),
+		$fileIdForDb		
 		));
 		if (!count($ar) || !$ar['application_id']){
 			throw new Exception(self::ER_STORAGE_FILE_NOT_FOUND);
@@ -2067,10 +2082,10 @@ class Application_Controller extends ControllerSQL{
 	}
 	
 	public function get_file($pm){
-		$this->download_file($pm,FALSE);
+		return $this->download_file($pm,FALSE);
 	}
 	public function get_file_sig($pm){
-		$this->download_file($pm,TRUE);
+		return $this->download_file($pm,TRUE);
 	}
 
 	public function get_file_out_sig($pm){
@@ -2327,15 +2342,16 @@ class Application_Controller extends ControllerSQL{
 		$q = '';
 		if ($state=='sent'||$state=='filling'){
 			$q = sprintf(
-				"INSERT INTO application_processes
+				"INSERT INTO application_processes%s
 				(application_id,state,user_id)
 				VALUES (%d,'%s',%d)",
+				self::LKPostfix(),
 				$id,$state,$_SESSION['user_id']
 			);
 		}
 		else if ($state=='checking'){
 			$q = sprintf(
-				"INSERT INTO application_processes
+				"INSERT INTO application_processes%s
 				(application_id,date_time,state,user_id,end_date_time,doc_flow_examination_id)
 				(SELECT
 					doc_flow_in.from_application_id,
@@ -2350,6 +2366,7 @@ class Application_Controller extends ControllerSQL{
 				WHERE doc_flow_in.from_application_id=%d
 				LIMIT 1
 				)",
+				self::LKPostfix(),
 				$id
 			);
 		}
@@ -3133,7 +3150,7 @@ class Application_Controller extends ControllerSQL{
 				pki_log_sig_check($file_doc_sig, $file_doc, "'".$file['file_id']."'", $pki_man,$db_link);
 			}
 		}		
-	
+		$tb_postf = self::LKPostfix();
 		$m = new ModelSQL($this->getDbLinkMaster(),array('id'=>'SigCheck_Model'));
 		$m->query(sprintf(
 			"(SELECT 
@@ -3163,9 +3180,9 @@ class Application_Controller extends ControllerSQL{
 				AS file_name
 		
 			FROM application_document_files AS app_f
-			LEFT JOIN file_verifications AS v ON app_f.file_id=v.file_id
-			LEFT JOIN file_signatures AS f_sig ON f_sig.file_id=v.file_id
-			LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id
+			LEFT JOIN file_verifications".$tb_postf." AS v ON app_f.file_id=v.file_id
+			LEFT JOIN file_signatures".$tb_postf." AS f_sig ON f_sig.file_id=v.file_id
+			LEFT JOIN user_certificates".$tb_postf." AS u_certs ON u_certs.id=f_sig.user_certificate_id
 			WHERE app_f.application_id=%d AND app_f.deleted=FALSE AND v.date_time IS NOT NULL
 			ORDER BY v.date_time)
 
@@ -3192,9 +3209,9 @@ class Application_Controller extends ControllerSQL{
 			FROM (
 			SELECT jsonb_array_elements(app_print_expertise) AS fl FROM applications WHERE id=%d AND app_print_expertise IS NOT NULL
 			) AS app_f
-			LEFT JOIN file_verifications AS v ON app_f.fl->>'id'=v.file_id
-			LEFT JOIN file_signatures AS f_sig ON f_sig.file_id=v.file_id
-			LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id)			
+			LEFT JOIN file_verifications".$tb_postf." AS v ON app_f.fl->>'id'=v.file_id
+			LEFT JOIN file_signatures".$tb_postf." AS f_sig ON f_sig.file_id=v.file_id
+			LEFT JOIN user_certificates".$tb_postf." AS u_certs ON u_certs.id=f_sig.user_certificate_id)			
 
 			UNION ALL
 
@@ -3219,9 +3236,9 @@ class Application_Controller extends ControllerSQL{
 			FROM (
 			SELECT jsonb_array_elements(app_print_cost_eval) AS fl FROM applications WHERE id=%d AND app_print_cost_eval IS NOT NULL
 			) AS app_f
-			LEFT JOIN file_verifications AS v ON app_f.fl->>'id'=v.file_id
-			LEFT JOIN file_signatures AS f_sig ON f_sig.file_id=v.file_id
-			LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id)			
+			LEFT JOIN file_verifications".$tb_postf." AS v ON app_f.fl->>'id'=v.file_id
+			LEFT JOIN file_signatures".$tb_postf." AS f_sig ON f_sig.file_id=v.file_id
+			LEFT JOIN user_certificates".$tb_postf." AS u_certs ON u_certs.id=f_sig.user_certificate_id)			
 
 			UNION ALL
 
@@ -3246,9 +3263,9 @@ class Application_Controller extends ControllerSQL{
 			FROM (
 			SELECT jsonb_array_elements(app_print_modification) AS fl FROM applications WHERE id=%d AND app_print_modification IS NOT NULL
 			) AS app_f
-			LEFT JOIN file_verifications AS v ON app_f.fl->>'id'=v.file_id
-			LEFT JOIN file_signatures AS f_sig ON f_sig.file_id=v.file_id
-			LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id)			
+			LEFT JOIN file_verifications".$tb_postf." AS v ON app_f.fl->>'id'=v.file_id
+			LEFT JOIN file_signatures".$tb_postf." AS f_sig ON f_sig.file_id=v.file_id
+			LEFT JOIN user_certificates".$tb_postf." AS u_certs ON u_certs.id=f_sig.user_certificate_id)			
 
 			UNION ALL
 
@@ -3273,9 +3290,9 @@ class Application_Controller extends ControllerSQL{
 			FROM (
 			SELECT jsonb_array_elements(app_print_audit) AS fl FROM applications WHERE id=%d AND app_print_audit IS NOT NULL
 			) AS app_f
-			LEFT JOIN file_verifications AS v ON app_f.fl->>'id'=v.file_id
-			LEFT JOIN file_signatures AS f_sig ON f_sig.file_id=v.file_id
-			LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id)			
+			LEFT JOIN file_verifications".$tb_postf." AS v ON app_f.fl->>'id'=v.file_id
+			LEFT JOIN file_signatures".$tb_postf." AS f_sig ON f_sig.file_id=v.file_id
+			LEFT JOIN user_certificates".$tb_postf." AS u_certs ON u_certs.id=f_sig.user_certificate_id)			
 
 			UNION ALL
 
@@ -3300,9 +3317,9 @@ class Application_Controller extends ControllerSQL{
 			FROM (
 			SELECT jsonb_array_elements(auth_letter_file) AS fl FROM applications WHERE id=%d AND auth_letter_file IS NOT NULL
 			) AS app_f
-			LEFT JOIN file_verifications AS v ON app_f.fl->>'id'=v.file_id
-			LEFT JOIN file_signatures AS f_sig ON f_sig.file_id=v.file_id
-			LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id)			
+			LEFT JOIN file_verifications".$tb_postf." AS v ON app_f.fl->>'id'=v.file_id
+			LEFT JOIN file_signatures".$tb_postf." AS f_sig ON f_sig.file_id=v.file_id
+			LEFT JOIN user_certificates".$tb_postf." AS u_certs ON u_certs.id=f_sig.user_certificate_id)			
 			",
 			$db_app_id,
 			$db_app_id,
@@ -3350,6 +3367,7 @@ class Application_Controller extends ControllerSQL{
 	}
 	
 	public static function getSigDetailsQuery($fileIdDb){
+		$tb_postf = self::LKPostfix();
 		return sprintf(
 		"SELECT
 			f_sig.file_id,
@@ -3364,11 +3382,12 @@ class Application_Controller extends ControllerSQL{
 					'error_str',ver.error_str
 				)
 			) AS signatures
-		FROM file_signatures AS f_sig
-		LEFT JOIN file_verifications AS ver ON ver.file_id=f_sig.file_id
-		LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id			
+		FROM file_signatures%s AS f_sig
+		LEFT JOIN file_verifications%s AS ver ON ver.file_id=f_sig.file_id
+		LEFT JOIN user_certificates%s AS u_certs ON u_certs.id=f_sig.user_certificate_id			
 		WHERE ver.file_id=%s
 		GROUP BY f_sig.file_id",
+		$tb_postf,$tb_postf,$tb_postf,
 		$fileIdDb
 		);
 	}
@@ -3530,6 +3549,13 @@ class Application_Controller extends ControllerSQL{
 			if($data_file_exists)unlink($data_file);
 			if($sig_file_exists)unlink($sig_file);
 		}
+	}
+	
+	public static function LKPostfix(){
+		return (
+			(isset($_SESSION['role_id']) && ($_SESSION['role_id']=='client' || $_SESSION['user_name']=='adminlk'))
+			|| LK
+		)? '_lk':'';
 	}
 	
 

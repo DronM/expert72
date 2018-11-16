@@ -7,8 +7,11 @@ CREATE OR REPLACE FUNCTION contracts_process()
 $BODY$
 BEGIN
 	IF (TG_WHEN='BEFORE' AND (TG_OP='INSERT' OR TG_OP='UPDATE') ) THEN
-		IF (TG_OP='INSERT')
-		OR (TG_OP='UPDATE' AND NEW.permissions<>OLD.permissions) THEN
+		IF
+		((TG_OP='INSERT')
+		OR (TG_OP='UPDATE' AND NEW.permissions<>OLD.permissions))
+		AND (NOT const_client_lk_val() OR const_debug_val())
+		THEN
 			SELECT
 				array_agg( ((sub.obj->'fields'->>'obj')::json->>'dataType')||((sub.obj->'fields'->>'obj')::json->'keys'->>'id') )
 			INTO NEW.permission_ar
@@ -35,7 +38,7 @@ BEGIN
 		*/
 		/*		
 		--ГЕНЕРАЦИЯ НОМЕРА ЭКСПЕРТНОГО ЗАКЛЮЧЕНИЯ
-		IF TG_OP='INSERT' THEN
+		IF TG_OP='INSERT' AND (NOT const_client_lk_val() OR const_debug_val()) THEN
 			SELECT
 				coalesce(max(regexp_replace(ct.expertise_result_number,'\D+.*$','')::int),0)+1,
 				coalesce(max(regexp_replace(ct.contract_number,'\D+.*$','')::int),0)+1
@@ -63,11 +66,12 @@ BEGIN
 		RETURN NEW;
 		
 	ELSIF TG_WHEN='BEFORE' AND TG_OP='DELETE' THEN
-		DELETE FROM client_payments WHERE contract_id = OLD.id;
-		DELETE FROM expert_works WHERE contract_id = OLD.id;
-		DELETE FROM doc_flow_out WHERE to_contract_id = OLD.id;
-		DELETE FROM doc_flow_inside WHERE contract_id = OLD.id;
-		
+		IF (NOT const_client_lk_val() OR const_debug_val()) THEN
+			DELETE FROM client_payments WHERE contract_id = OLD.id;
+			DELETE FROM expert_works WHERE contract_id = OLD.id;
+			DELETE FROM doc_flow_out WHERE to_contract_id = OLD.id;
+			DELETE FROM doc_flow_inside WHERE contract_id = OLD.id;
+		END IF;		
 		RETURN OLD;
 	END IF;
 END;

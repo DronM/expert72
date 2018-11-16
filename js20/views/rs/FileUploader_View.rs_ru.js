@@ -25,3 +25,4 @@ FileUploader_View.prototype.SIG_TITLE = "Приложен файл ЭЦП";
 
 FileUploader_View.prototype.NT_DOWNLOAD_DONE = "Загрузка успешно завершена!";
 FileUploader_View.prototype.WN_DOWNLOAD_DONE = "Загрузка завершена с ошибками!";
+FileUploader_View.prototype.NT_SIGN_DONE = "Подписание успешно завершено!";

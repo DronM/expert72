@@ -272,7 +272,7 @@ class Resumable
     {
         $tmpChunkDir = $this->tempFolder . DIRECTORY_SEPARATOR . $identifier;
         if (!file_exists($tmpChunkDir)) {
-            mkdir($tmpChunkDir);
+            @mkdir($tmpChunkDir);//supress warnings if created in other process
         }
         return $tmpChunkDir;
     }

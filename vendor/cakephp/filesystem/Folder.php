@@ -136,7 +136,7 @@ class Folder
     public function __construct($path = null, $create = false, $mode = false)
     {
         if (empty($path)) {
-            $path = TMP;
+            $path = '/tmp';
         }
         if ($mode) {
             $this->mode = $mode;

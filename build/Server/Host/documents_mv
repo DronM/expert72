@@ -1,0 +1,6 @@
+#!/bin/sh
+
+#rsync -az -e ssh /usr/share/client_files/* andrey@92.255.164.139:/media/storage
+rsync -az --remove-source-files /usr/share/client_files/* /mnt/rstorage
+#mv -f /usr/share/client_files/Documents/* /mnt/rstorage/Documents
+

@@ -22,10 +22,48 @@ BEGIN
 			WHERE app.id=base.id;
 		END IF;
 		
-		RETURN NEW;		
+		RETURN NEW;
+				
+	ELSIF (TG_WHEN='AFTER' AND TG_OP='INSERT') THEN		
+		IF NOT const_client_lk_val() OR const_debug_val() THEN
+			--письмо клиенту со ссылкой на вход.документ
+			INSERT INTO mail_for_sending
+			(to_addr,to_name,body,subject,email_type)
+			(WITH 
+				templ AS (
+					SELECT
+						t.template AS v,
+						t.mes_subject AS s
+					FROM email_templates t
+					WHERE t.email_type= 'out_mail_to_app'::email_types
+				)
+			SELECT
+				users.email,
+				coalesce(users.name_full,users.name),
+				sms_templates_text(
+					ARRAY[
+						ROW('subject', NEW.subject)::template_value,
+						ROW('id',NEW.id)::template_value
+					],
+					(SELECT v FROM templ)
+				) AS mes_body,		
+				(SELECT s FROM templ),
+				'out_mail_to_app'::email_types
+			FROM users
+			WHERE
+				users.id=NEW.user_id
+				AND users.email IS NOT NULL
+				AND users.reminders_to_email
+				--AND users.email_confirmed					
+			);
+		END IF;
+		
+		RETURN NEW;
 		
 	ELSIF (TG_WHEN='BEFORE' AND TG_OP='DELETE') THEN		
-		DELETE FROM doc_flow_in_client_reg_numbers WHERE doc_flow_in_client_id=OLD.id;
+		IF const_client_lk_val() OR const_debug_val() THEN
+			DELETE FROM doc_flow_in_client_reg_numbers WHERE doc_flow_in_client_id=OLD.id;
+		END IF;
 		RETURN OLD;
 		
 	END IF;

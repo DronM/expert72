@@ -51,10 +51,22 @@
 				}
 				window.isChild = true;
 				<xsl:call-template name="checkForError"/>
-				/*if (window.opener &amp;&amp; window.opener.initForm &amp;&amp; !window.paramsInitialized){
-					window.opener.initForm();
-				}*/
-				showView();				
+				if (window.opener &amp;&amp; !window["getParam"] &amp;&amp; !window.opener["paramsSet"]){
+					//ie hack wait for params to appear
+					var param_check = setInterval(function(){
+						if (window["getParam"] || window.opener["paramsSet"]){
+							clearInterval(param_check);
+							showView();
+						}
+					},500);
+				}
+				else{
+					//ie hack
+					if (window.opener &amp;&amp; !window["getParam"] &amp;&amp; window.opener["getChildParam"]){
+						window["getParam"] = window.opener["getChildParam"];
+					}
+					showView();
+				}
 			}
 		</script>
 	</head>

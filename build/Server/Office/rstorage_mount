@@ -1,0 +1,16 @@
+#!/bin/sh
+
+case "$1" in
+        start)
+                sudo -u admin sshfs -o allow_other,reconnect,ServerAliveInterval=15,Server$
+                ;;
+        stop)
+                sudo umount /media/rstorage
+                ;;
+        *)
+                echo "usage: start|stop"
+                exit 1
+                ;;
+esac
+exit 0
+

@@ -1,0 +1,5 @@
+0 5 * * 1 wget -O /var/www/html/lk/crypto_plugin.txt https://www.cryptopro.ru/sites/default/files/products/cades/latest_2_0.txt
+
+#SSL certificate
+30 4 * * * certbot renew
+

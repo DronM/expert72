@@ -1,0 +1,8 @@
+#!/bin/sh
+
+#document files  backup
+rsync -a -e ssh /media/storage/* admin@192.168.1.101:/data/backup
+
+#database backup
+pg_dumpall -U postgres --clean | gzip -fq9 > pg_bases.gz
+rsync -a -e ssh pg_bases.gz admin@192.168.1.101:/data/backup

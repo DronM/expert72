@@ -1,4 +1,6 @@
 <?php
+//	echo 11%2;
+//	exit;
 /*
 function dec2hex($number){
     $hexvalues = array('0','1','2','3','4','5','6','7',
@@ -15,15 +17,8 @@ return;
 */
 	require_once('functions/PKIManager.php');
 	$pki_man = new PKIManager(PKI_PATH,PKI_CRL_VALIDITY,'debug');
-	//$certData = new stdClass();
-	//$pki_man->getCertInf('/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/5bcbfc353d0b3.1',$certData);
-	//var_dump($certData);
-	//exit;
-	//$verif_res = $pki_man->verifySig('/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/744000cf-3b5f-42eb-8dfa-1fda59b88871.sig','/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/744000cf-3b5f-42eb-8dfa-1fda59b88871',TRUE,FALSE,FALSE);
-	//$verif_res = $pki_man->verifySig('/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/260-Д Договор Тюменгипроводхоз одновременно.pdf.sig','/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/260-Д Договор Тюменгипроводхоз одновременно.pdf');
-	$verif_res = $pki_man->verifySig('/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/ЗаявлениеДостоверность.pdf.sig','/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/ЗаявлениеДостоверность.pdf',FALSE,TRUE,FALSE);
-	//$pki_man->makeCACertificates();
-	//exit;
+	$verif_res = $pki_man->verifySig('/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/333/3 Самоомывающееся рыбозащитное устройство РОП-175.pdf.sig','/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/333/3 Самоомывающееся рыбозащитное устройство РОП-175.pdf',FALSE,TRUE,FALSE);
+	//$verif_res = $pki_man->verifySig('/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/!!!/ЛС (9 смет).xlsx.sig','/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/!!!/ЛС (9 смет).xlsx',FALSE,TRUE,TRUE);
 	
 	/*
 	$verif_res = pki_log_sig_check(

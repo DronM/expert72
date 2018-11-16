@@ -74,14 +74,29 @@ function UserProfile_View(id,options){
 	}));	
 
 	this.addElement(new EditInt(id+":cades_load_timeout",{
-		"labelCaption":"Время загрузки плагина, (мс.)"
+		"labelCaption":"Время загрузки плагина, (мс.)",
+		"events":{
+			"keyup":function(){
+				self.getControlSave().setEnabled(true);
+			}
+		}						
 	}));								
 	this.addElement(new EditInt(id+":cades_chunk_size",{
-		"labelCaption":"Размер части файла при подписании, байт"
+		"labelCaption":"Размер части файла при подписании, байт",
+		"events":{
+			"keyup":function(){
+				self.getControlSave().setEnabled(true);
+			}
+		}								
 	}));								
 
 	this.addElement(new EditCheckBox(id+":reminders_to_email",{
-		"labelCaption":"Дублировать напоминания на электронную почту"
+		"labelCaption":"Дублировать напоминания на электронную почту",
+		"events":{
+			"change":function(){
+				self.getControlSave().setEnabled(true);
+			}
+		}						
 	}));								
 
 	//****************************************************

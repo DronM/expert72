@@ -1,0 +1,25 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          rstorage_mount
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start daemon at boot time
+# Description:       Enable service provided by daemon.
+### END INIT INFO
+
+case "$1" in
+        start)
+                sudo -u admin sshfs -o allow_other,reconnect,ServerAliveInterval=15,Server$
+                ;;
+        stop)
+                sudo umount /mnt/rstorage
+                ;;
+        *)
+                echo "usage: start|stop"
+                exit 1
+                ;;
+esac
+exit 0
+

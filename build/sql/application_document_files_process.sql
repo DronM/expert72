@@ -7,8 +7,11 @@ CREATE OR REPLACE FUNCTION application_document_files_process()
 $BODY$
 BEGIN
 	IF (TG_WHEN='BEFORE' AND TG_OP='DELETE') THEN		
-		IF const_client_lk_val() OR const_debug_val() THEN			
+		IF NOT const_client_lk_val() OR const_debug_val() THEN			
 			DELETE FROM file_verifications WHERE file_id = OLD.file_id;
+		END IF;
+		IF const_client_lk_val() OR const_debug_val() THEN			
+			DELETE FROM file_verifications_lk WHERE file_id = OLD.file_id;
 		END IF;
 			
 		RETURN OLD;

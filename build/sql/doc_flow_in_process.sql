@@ -23,10 +23,12 @@ BEGIN
 		RETURN NEW;
 
 	ELSIF TG_WHEN='BEFORE' AND TG_OP='DELETE' THEN
-		DELETE FROM doc_flow_in_processes WHERE doc_flow_in_id = OLD.id;
-		DELETE FROM doc_flow_out WHERE doc_flow_in_id = OLD.id;
-		DELETE FROM doc_flow_attachments WHERE doc_type='doc_flow_in' AND doc_id = OLD.id;
-				
+		IF (NOT const_client_lk_val() OR const_debug_val()) THEN
+			DELETE FROM doc_flow_in_processes WHERE doc_flow_in_id = OLD.id;
+			DELETE FROM doc_flow_out WHERE doc_flow_in_id = OLD.id;
+			DELETE FROM doc_flow_attachments WHERE doc_type='doc_flow_in' AND doc_id = OLD.id;
+		END IF;
+		
 		RETURN OLD;
 	END IF;
 END;

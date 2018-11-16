@@ -10,13 +10,16 @@ BEGIN
 		IF const_client_lk_val() OR const_debug_val() THEN			
 			DELETE FROM doc_flow_out_client WHERE application_id = OLD.id;
 			DELETE FROM application_document_files WHERE application_id = OLD.id;
+			
+			DELETE FROM application_processes_lk WHERE application_id = OLD.id;			
 		END IF;
 		IF NOT const_client_lk_val() OR const_debug_val() THEN
+			DELETE FROM application_processes WHERE application_id = OLD.id;
+			
 			DELETE FROM doc_flow_in_client WHERE application_id = OLD.id;
 			DELETE FROM doc_flow_in WHERE from_application_id = OLD.id;
 			DELETE FROM doc_flow_out WHERE to_application_id = OLD.id;
-		
-			DELETE FROM application_processes WHERE application_id = OLD.id;
+					
 			DELETE FROM contacts WHERE parent_type='application_applicants'::data_types and parent_id = OLD.id;
 			DELETE FROM contacts WHERE parent_type='application_customers'::data_types and parent_id = OLD.id;
 			DELETE FROM contacts WHERE parent_type='application_contractors'::data_types and parent_id = OLD.id;

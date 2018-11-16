@@ -8,3 +8,9 @@
   FOR EACH ROW
   EXECUTE PROCEDURE doc_flow_attachments_process();
   
+   CREATE TRIGGER doc_flow_attachments_before_trigger
+  BEFORE UPDATE
+  ON doc_flow_attachments
+  FOR EACH ROW
+  EXECUTE PROCEDURE doc_flow_attachments_process();
+  

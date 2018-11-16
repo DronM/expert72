@@ -42,10 +42,16 @@ class ExpertEmailSender extends EmailSender{
 		}
 		return $mail_id;
 	}
-	public static function sendAllMail($delFiles=TRUE,$db){
-	
+	public static function sendAllMail($delFiles=TRUE,&$db,
+			$smtpHost=NULL,$smtpPort=NULL,$smtpUser=NULL,$smtpPwd=NULL){
+		
+		$smtpHost = is_null($smtpHost)? SMTP_HOST:$smtpHost;
+		$smtpPort = is_null($smtpPort)? SMTP_PORT:$smtpPort;
+		$smtpUser = is_null($smtpUser)? SMTP_USER:$smtpUser;
+		$smtpPwd = is_null($smtpPwd)? SMTP_PWD:$smtpPwd;
+		
 		parent::sendAllMail($delFiles,$db,
-				SMTP_HOST,SMTP_PORT,SMTP_USER,SMTP_PWD
+				$smtpHost,$smtpPort,$smtpUser,$smtpPwd
 		);
 	}
 	

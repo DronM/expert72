@@ -13,18 +13,25 @@ DECLARE
 	v_contractors json;
 BEGIN
 	IF (TG_WHEN='AFTER' AND TG_OP='INSERT') THEN		
-		PERFORM contacts_insert(NEW.id, 'users'::data_types,1,
-			json_build_object(
-				'name',NEW.name_full,
-				'email',NEW.email,
-				'tel',NEW.phone_cel
-			),
-			NULL
-		);
-				
+		IF NOT const_client_lk_val() OR const_debug_val() THEN
+			PERFORM contacts_insert(NEW.id, 'users'::data_types,1,
+				json_build_object(
+					'name',NEW.name_full,
+					'email',NEW.email,
+					'tel',NEW.phone_cel
+				),
+				NULL
+			);
+		END IF;
+						
 		RETURN NEW;
+		
 	ELSIF (TG_WHEN='AFTER' AND TG_OP='UPDATE') THEN		
-		IF (OLD.name_full<>NEW.name_full) OR (OLD.email<>NEW.email) OR (OLD.phone_cel<>NEW.phone_cel) THEN
+		IF
+		(NOT const_client_lk_val() OR const_debug_val())
+		AND
+		(OLD.name_full<>NEW.name_full) OR (OLD.email<>NEW.email) OR (OLD.phone_cel<>NEW.phone_cel)
+		THEN
 			DELETE FROM contacts WHERE parent_id=OLD.id AND parent_type='users'::data_types;
 			PERFORM contacts_insert(NEW.id, 'users'::data_types, 1,
 				json_build_object(

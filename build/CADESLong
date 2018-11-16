@@ -1,0 +1,47 @@
+https://cpdn.cryptopro.ru/content/cades/requirements.html
+
+function MakeCadesEnhanced_NPAPI(dataToSign, tspService, certObject, sign_type) {
+    var errormes = "";
+
+    try {
+        var oSigner = cadesplugin.CreateObject("CAdESCOM.CPSigner");
+    } catch (err) {
+        errormes = "Failed to create CAdESCOM.CPSigner: " + err.number;
+        alert(errormes);
+        throw errormes;
+    }
+
+    if (oSigner) {
+        oSigner.Certificate = certObject;
+    }
+    else {
+        errormes = "Failed to create CAdESCOM.CPSigner";
+        alert(errormes);
+        throw errormes;
+    }
+
+    try {
+        var oSignedData = cadesplugin.CreateObject("CAdESCOM.CadesSignedData");
+    } catch (err) {
+        alert('Failed to create CAdESCOM.CadesSignedData: ' + cadesplugin.getLastError(err));
+        return;
+    }
+
+    var Signature;
+
+    if (dataToSign) {
+        // Ð”Ð°Ð½Ð½Ñ‹Ðµ Ð½Ð° Ð¿Ð¾Ð´Ð¿Ð¸ÑÑŒ Ð²Ð²ÐµÐ»Ð¸
+        oSignedData.Content = dataToSign;
+        oSigner.Options = 1; //CAPICOM_CERTIFICATE_INCLUDE_WHOLE_CHAIN
+        oSigner.TSAAddress = tspService;
+        try {
+            Signature = oSignedData.SignCades(oSigner, sign_type);
+        }
+        catch (err) {
+            errormes = "ÐÐµ ÑƒÐ´Ð°Ð»Ð¾ÑÑŒ ÑÐ¾Ð·Ð´Ð°Ñ‚ÑŒ Ð¿Ð¾Ð´Ð¿Ð¸ÑÑŒ Ð¸Ð·-Ð·Ð° Ð¾ÑˆÐ¸Ð±ÐºÐ¸: " + cadesplugin.getLastError(err);
+            alert(errormes);
+            throw errormes;
+        }
+    }
+    return Signature;
+}

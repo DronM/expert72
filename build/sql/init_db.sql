@@ -3,10 +3,52 @@ CREATE DATABASE expert72;
 GRANT ALL PRIVILEGES ON DATABASE expert72 TO expert72;
 GRANT SELECT ON ALL TABLES IN SCHEMA public TO expert72;
 
+CREATE USER expert72_lk WITH PASSWORD '159753';
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO expert72_lk;
+GRANT ALL ON application_document_files TO expert72_lk;
+GRANT ALL ON applications TO expert72_lk;
+GRANT USAGE, SELECT ON SEQUENCE applications_id_seq TO expert72_lk;
+
+GRANT ALL ON doc_flow_in_client_reg_numbers TO expert72_lk;
+GRANT ALL ON doc_flow_out_client TO expert72_lk;
+GRANT USAGE, SELECT ON SEQUENCE doc_flow_out_client_id_seq TO expert72_lk;
+
+GRANT ALL ON doc_flow_out_client_document_files TO expert72_lk;
+
+GRANT ALL ON doc_flow_out_client_reg_numbers TO expert72_lk;
+GRANT ALL ON file_signatures_lk TO expert72_lk;
+GRANT USAGE, SELECT ON SEQUENCE file_signatures_lk_id_seq TO expert72_lk;
+
+GRANT ALL ON file_verifications_lk TO expert72_lk;
+GRANT ALL ON user_certificates_lk TO expert72_lk;
+GRANT USAGE, SELECT ON SEQUENCE user_certificates_lk_id_seq TO expert72_lk;
+
+GRANT ALL ON logins TO expert72_lk;
+GRANT ALL ON users TO expert72_lk;
+GRANT USAGE, SELECT ON SEQUENCE users_id_seq TO expert72_lk;
+
+GRANT USAGE, SELECT ON SEQUENCE logins_id_seq TO expert72_lk;
+
+GRANT ALL ON sessions TO expert72_lk;
+GRANT ALL ON morpher TO expert72_lk;
+GRANT ALL ON application_processes TO expert72_lk;
+SELECT grant_all_views('public', 'expert72_lk')
+
+GRANT ALL ON TABLE public.application_processes_lk TO expert72_lk;
+
+GRANT USAGE, SELECT ON SEQUENCE mail_for_sending_lk_id_seq TO expert72_lk;
+
+ALTER SEQUENCE logins_id_seq RESTART WITH 1000000000;
+ALTER SEQUENCE users_id_seq RESTART WITH 1000000000;
+ALTER SEQUENCE file_signatures_lk_id_seq RESTART WITH 1000000000;
+ALTER SEQUENCE mail_for_sending_lk_id_seq RESTART WITH 1000000000;
+
+
+
 -Восстанавливает в другую базу
-pg_dump -U expert72 -Fc -v expert72 > expert72.dump
-drop database expert72_test;
-pg_restore -U expert72 -v -e -d expert72_test -n public expert72.dump
+-s no data
+pg_dump -U expert72 -vs expert72 > expert72.dump
+psql -U expert72 -d expert72 -f expert72.dump
 
 ПРОСТОЙ DUMP!!!
 sudo service postgresql stop
@@ -21,276 +63,121 @@ GRANT USAGE ON ALL SEQUENCES IN SCHEMA public TO expert72;
 ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL PRIVILEGES ON TABLES TO expert72;
 ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT USAGE ON SEQUENCES TO expert72;
 
-psql -U expert72 -d expert72 -f expert.dmp
-159753
+--=================================================================================
+--Перенос с главного сервере на ЛК
+CREATE PUBLICATION sync_office_to_lk FOR TABLE
+	application_corrections,
+	application_doc_folders,
+	--application_processes,
+	banks,
+	build_types,
+	client_payments,
+	clients,
+	const_app_recipient_department,
+	const_application_check_days,
+	const_cades_hash_algorithm,
+	const_cades_include_certificate,
+	const_cades_signature_type,
+	const_cades_verify_after_signing,
+	const_client_download_file_max_size,
+	const_client_download_file_types,
+	const_client_download_max_file_size,
+	const_client_lk,
+	const_debug,
+	const_doc_per_page_count,
+	const_employee_download_file_max_size,
+	const_employee_download_file_types,
+	const_grid_refresh_interval,
+	const_outmail_data,
+	const_reminder_refresh_interval,
+	const_reminder_show_days,
+	const_session_live_time,
+	construction_types,
+	contacts,
+	departments,
+	doc_flow_approvement_templates,
+	doc_flow_approvements,
+	doc_flow_attachments,
+	doc_flow_examinations,
+	doc_flow_importance_types,
+	doc_flow_in,
+	doc_flow_in_client,
+	doc_flow_in_processes,
+	doc_flow_inside,
+	doc_flow_inside_processes,
+	doc_flow_out,
+	doc_flow_out_corrections,
+	doc_flow_out_processes,
+	doc_flow_registrations,
+	doc_flow_tasks,
+	doc_flow_types,
+	document_templates,
+	email_templates,
+	employees,
+	expert_sections,
+	expert_works,
+	expertise_reject_types,
+	file_signatures,
+	file_verifications,
+	fund_sources,
+	holidays,
+	logins,--************* Нужна установка sequence на ЛК
+	mail_for_sending,
+	mail_for_sending_attachments,
+	mail_types,
+	main_menus,
+	morpher,--************** Полномтью с главного копировать, ключ src
+	office_day_schedules,
+	offices,
+	person_id_papers,
+	posts,
+	reminders,
+	report_template_files,
+	report_templates,
+	services,
+	--sessions, **************** Вообще никуда не копируем, на каждолм сервере свой
+	short_message_recipient_current_states,
+	short_message_recipient_states,
+	short_messages,
+	time_zone_locales,
+	user_certificates,
+	user_email_confirmations,--**************** Полномтью копируется с главного, ключ key уникален
+	users,--*************** Нужна установка sequence на ЛК
+	variant_storages,--************** Полномтью копируется с главного, ключ юзер+название варианта
+	views
+	;
 
+--Перенос с ЛК на Главный
+CREATE PUBLICATION sync_lk_to_office FOR TABLE
+	application_processes_lk,
+	application_document_files,	
+	applications,
+	doc_flow_in_client_reg_numbers,
+	doc_flow_out_client,
+	doc_flow_out_client_document_files,
+	doc_flow_out_client_reg_numbers,
+	file_signatures_lk,
+	file_verifications_lk,
+	user_certificates_lk,
+	logins,--************* Нужна установка sequence на ЛК
+	users_lk,
+	mail_for_sending_lk,
+	mail_for_sending_attachments_lk,
+	user_email_confirmations_lk
+	--sessions **************** Вообще никуда не копируем, на каждолм сервере свой
+	;	
 
+CREATE SUBSCRIPTION sync_office_from_lk
+         CONNECTION 'host=expertiza72.ru port=5432 user=expert72 dbname=expert72_lk'
+        PUBLICATION sync_lk_to_office
+        WITH (enabled = false);
 
-ИСПРАВИТЬ КПП "7203321348 КПП 7"
-psql -d expert72 -U expert72 -f /home/andrey/\!Экспертиза/ЛК/cl.sql
+CREATE SUBSCRIPTION sync_office_from_lk
+CONNECTION 'host=localhost port=5432 password=159753 user=repl dbname=expert72'
+PUBLICATION sync_office_to_lk;
 
-DELETE from doc_flow_inside_processes;
-DELETE FROM contacts;
-delete from contracts;
-delete from applications;
-delete from clients where id<>4;
-
-DELETE FROM doc_flow_approvements;
-DELETE FROM doc_flow_examinations;
-DELETE FROM doc_flow_in;
-DELETE FROM doc_flow_out;
-DELETE FROM doc_flow_in_client;
-DELETE FROM doc_flow_out_client;
-DELETE from doc_flow_inside;
-
-DELETE FROM doc_flow_registrations;
-DELETE FROM doc_flow_tasks;
-DELETE FROM mail_for_sending;
-DELETE FROM morpher;
-DELETE FROM reminders;
---DELETE FROM report_template_files;
---DELETE FROM report_templates;
-DELETE FROM sessions;
-DELETE FROM user_email_confirmations;
-
---ЗАМЕНА
-'{\'id\':\'LinkedContractList_Model\',\'rows\':[]}'
-'{"id":"LinkedContractList_Model","rows":[]}'
-
---ПЕРЕЗАПУСТИТЬ ПЕРЕЗ ЗАГРУЗКОЙ
-SELECT setval('contracts_id_seq', 1);
-SELECT setval('applications_id_seq', 1);
-SELECT setval('client_payments_id_seq', 1);
-SELECT setval('reminders_id_seq', 1);
-SELECT setval('applications_id_seq', 1);
-SELECT setval('doc_flow_approvements_id_seq', 1);
-SELECT setval('doc_flow_examinations_id_seq', 1);
-SELECT setval('doc_flow_in_id_seq', 1);
-SELECT setval('doc_flow_out_id_seq', 1);
-SELECT setval('doc_flow_in_client_id_seq', 1);
-SELECT setval('doc_flow_out_client_id_seq', 1);
-SELECT setval('doc_flow_inside_id_seq', 1);
-SELECT setval('doc_flow_registrations_id_seq', 1);
-SELECT setval('doc_flow_tasks_id_seq', 1);
-SELECT setval('mail_for_sending_id_seq', 1);
-SELECT setval('mail_for_sending_id_seq', 1);
-
--- Trigger: contacts_before_trigger on public.contacts
-
---*** УБРАТЬ ТРИГГЕР ПЕРЕД ЗАПУСКОМ ЗАГРУЗКИ *****
-DROP TRIGGER contacts_before_trigger ON public.contacts;
-CREATE TRIGGER contacts_before_trigger
-  BEFORE INSERT OR UPDATE
-  ON public.contacts
-  FOR EACH ROW
-  EXECUTE PROCEDURE public.contacts_process();
-
-DROP TRIGGER client_payments_after_trigger ON public.client_payments;
-CREATE TRIGGER client_payments_after_trigger
-  AFTER INSERT
-  ON public.client_payments
-  FOR EACH ROW
-  EXECUTE PROCEDURE public.client_payments_process();
-
-
-
-
-
-
-INSERT INTO client_payments
-(contract_id,pay_date,total)
-(select id,work_start_date,payment2 from contracts where payment2>0)
-INSERT INTO client_payments
-(contract_id,pay_date,total)
-(select id,work_start_date+'1 day',payment from contracts where payment>0)
-
-
-COPY tmp_logins FROM '/home/andrey/logins.csv' (FORMAT csv, DELIMITER '@')
-
-
-
-INSERT INTO public.users(
-            name,
-            role_id,
-            tmp_pwd,
-            pwd,
-            time_zone_locale_id,
-            email, 
-            locale_id,
-            pers_data_proc_agreement,
-            create_dt,
-            email_confirmed, 
-            comment_text,
-            banned,
-            name_full, reminders_to_email,
-            tmp_inn)
-(
-SELECT DISTINCT ON (t.login,t.email)
-t.login AS name,
-'client' AS role_id,
-random_string(6) AS tmp_pwd,
-'111' AS pwd,
-1 AS time_zone_locale_id,
-t.email AS email,
-'ru' AS locale_id,
-TRUE AS pers_data_proc_agreement,
-now()::date AS create_dt,
-TRUE AS email_confirmed,
-'Перенесено из старого ЛК' AS comment_text,
-FALSE AS banned,
-t.ruk_fio AS name_full,
-TRUE AS reminders_to_email,
-t.inn AS tmp_inn
-FROM tmp_logins AS t
-
-    )
-
-
-
-
-
-update contracts
-set user_id=sub.user_id
-FROM (
-select contracts.id AS contract_id,contracts.application_id,users.id AS user_id
-from contracts
-left join clients ON clients.id=contracts.client_id
-left join users ON users.tmp_inn=clients.inn
-where users.tmp_inn IS NOT NULL AND users.id IN (
-	SELECT u1.id
-	FROM users AS u1
-	LEFT JOIN users AS u2 ON u1.tmp_inn=u2.tmp_inn AND u1.id<>u2.id
-	WHERE u2.name IS NULL
-)
-) AS sub
-WHERE id=sub.contract_id
-
-
-update applications
-set user_id=sub.user_id
-FROM (
-select contracts.id AS contract_id,contracts.application_id,users.id AS user_id
-from contracts
-left join clients ON clients.id=contracts.client_id
-left join users ON users.tmp_inn=clients.inn
-where users.tmp_inn IS NOT NULL AND users.id IN (
-	SELECT u1.id
-	FROM users AS u1
-	LEFT JOIN users AS u2 ON u1.tmp_inn=u2.tmp_inn AND u1.id<>u2.id
-	WHERE u2.name IS NULL
-)
-) AS sub
-WHERE id=sub.application_id
-
-
---*** ДЛЯ ВСЕХ ЗАПОЛНИТЬ  linked_contracts *****
---"{"id":"LinkedContractList_Model","rows":[{"fields":{"id":1,"contracts_ref":{"keys":{"id":2},"descr":"Контракт №0001/15 от 12/01/15"}}}]}"
-UPDATE contracts
-SET linked_contracts=sel.linked_contracts
-FROM
-(SELECT
-	contr1.id,
-	json_build_object(
-	'id',
-	'LinkedContractList_Model',
-	'rows',
-	array_agg(
-		json_build_object(
-			'fields',
-			json_build_object(
-				'id',
-				contr1.rank,
-				'contracts_ref',
-				contracts_ref(contr2)
-			)
-		)
-	)
-	) AS linked_contracts
-	/*,
-	contr1.expertise_result_number,
-	contr1.document_type
-	*/
-FROM (
-	SELECT
-		*,
-		rank() over (PARTITION BY id ORDER BY expertise_result_number) AS rank
-	FROM (
-	select
-		id,	
-		jsonb_array_elements(linked_contracts2)->>'number' AS expertise_result_number,
-		(jsonb_array_elements(linked_contracts2)->>'document_type')::document_types AS document_type
-	from contracts
-	where linked_contracts2 is not null-- limit 10
-	) AS sub
-
-) AS contr1
-LEFT JOIN contracts AS contr2 ON contr2.expertise_result_number=contr1.expertise_result_number AND contr2.document_type=contr1.document_type
-GROUP BY contr1.id
-) AS sel
-WHERE sel.id=contracts.id 
-
-
---*** ТОЧНО НЕ НАДО *****
-/*
-update contracts
-set linked_contracts='{"id":"LinkedContractList_Model","rows":[]}'
-where linked_contracts is null
-*/
-
-
---*** ДЛЯ ВСЕХ Добавить слэш!!! *****
-update contracts
-set contract_number=cor.corrected_contract_number
-FROM(
-select contract_number AS old_number,
-regexp_replace(contract_number,'\D+.*$','')||'/Д' AS corrected_contract_number
-FROM contracts
-where document_type='cost_eval_validity' AND substring(contract_number from length(contract_number)-1 FOR length(contract_number))<>'/Д'
-AND length(contract_number)<5
-ORDER BY date_time desc
-) AS cor
-WHERE cor.old_number=contract_number;
-
-
---***************************************************
-update contracts
-set
-	constr_name=app.constr_name,
-	constr_address=app.constr_address,
-	constr_technical_features=app.constr_technical_features
-
-FROM (
-SELECT
-	applications.id,
-	applications.constr_name,
-	applications.constr_address,
-	applications.constr_technical_features					
+CREATE SUBSCRIPTION sync_lk_from_office
+         CONNECTION 'host=92.255.164.139 port=5432 user=expert72 dbname=expert72'
+        PUBLICATION sync_office_to_lk
+        WITH (enabled = false);
 	
-FROM applications
-) As app
-WHERE app.id=contracts.application_id
-
-
-
-
-//*************************************
-DELETE from client_payments where contract_id in (select id from contracts where payment2>0 OR payment>0) LIMIT 10
-
-DROP TRIGGER client_payments_after_trigger ON public.client_payments;
-
-INSERT INTO client_payments
-(contract_id,pay_date,total)
-(select id,work_start_date,payment2 from contracts where payment2>0)
-INSERT INTO client_payments
-(contract_id,pay_date,total)
-(select id,work_start_date+'1 day',payment from contracts where payment>0)
-
-CREATE TRIGGER client_payments_after_trigger
-  AFTER INSERT
-  ON public.client_payments
-  FOR EACH ROW
-  EXECUTE PROCEDURE public.client_payments_process();
-
-
-select  id,create_dt,user_id from applications where NOT id IN (SELECT application_id FROM contracts)
-AND (applicant->>'client_type'='on' OR customer->>'client_type'='on' OR developer->>'client_type'='on')

@@ -1,0 +1,22 @@
+#Обновление времени
+5 4 * * * ntpdate time.nist.gov
+
+#Файловый архив
+0 3 * * * /usr/share/documents_mv
+0 4 * * * sudo -u admin /usr/share/documents_backup
+
+#Обновление классификатора банков
+0 6 * * * php /var/www/expert72/functions/bank_refresh.php
+
+#Удаление устаревших файлов
+0 6 * * * php /var/www/expert72/functions/regl_docum_deletion.php
+
+#Отправка почты
+*/3 * * * * php /var/www/expert72/functions/regl_send_mail.php
+
+#Загрузка оплат из 1с
+30 13 * * * php /var/www/expert72/functions/regl_get_payments.php
+
+
+0 5 * * 1 wget -O /var/www/expert72/crypto_plugin.txt https://www.cryptopro.ru/sites/default/files/products/cades/latest_2_0.txt
+

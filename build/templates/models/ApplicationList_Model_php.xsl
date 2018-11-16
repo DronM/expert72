@@ -13,5 +13,29 @@
 <xsl:template match="/">
 	<xsl:apply-templates select="metadata/models/model[@id=$MODEL_ID]"/>
 </xsl:template>
+		
+<xsl:template match="model"><![CDATA[<?php]]>
+/**
+ *
+ * THIS FILE IS GENERATED FROM TEMPLATE build/templates/models/Model_php.xsl
+ * ALL DIRECT MODIFICATIONS WILL BE LOST WITH THE NEXT BUILD PROCESS!!!
+ *
+ */
+<xsl:call-template name="add_requirements"/> 
+
+require_once(ABSOLUTE_PATH.'controllers/Application_Controller.php');
+
+class <xsl:value-of select="@id"/>_Model extends <xsl:value-of select="@parent"/>{
+	<xsl:call-template name="add_constructor"/>
+	<xsl:call-template name="user_functions"/>
+}
+<![CDATA[?>]]>
+</xsl:template>
+		
+<xsl:template name="user_functions">
+	public function setTableName($v){
+		parent::setTableName($v.Application_Controller::LKPostfix());
+	}
+</xsl:template>
 			
 </xsl:stylesheet>

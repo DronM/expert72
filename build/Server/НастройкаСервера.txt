@@ -1,4 +1,4 @@
-#New user
+#=============================== New user ==================================================
 sudo adduser --home /home/andrey andrey
 
 #Add to sudoers list
@@ -11,8 +11,11 @@ sudo adduser --home /home/admin admin
 
 #Mignight commander
 sudo apt-get install mc
+#===========================================================================================
 
-#********* Nginx installation ***********************
+
+
+#=========================== Nginx installation =============================================
 Создаем файл в /etc/apt/sources.list.d/nginx.list
 eb http://nginx.org/packages/ubuntu/ <codename> nginx
 deb-src http://nginx.org/packages/ubuntu/ <codename> nginx
@@ -53,11 +56,12 @@ sudo service apache2 restart
 #Включить себя в группу www-data
 sudo usermod -a -G www-data andrey
 sudo usermod -a -G www-data admin
+sudo usermod -a -G admin www-data
+#==========================================================================
 
-#********* Nginx installation ***********************
 
 
-#********** PHP 7 ********************
+#==================== PHP 7 =========================================================================================
 sudo apt-get install php7.0 php7.0-fpm php7.0-pgsql php7.0-gd php7.0-xsl php7.0-mcrypt php7.0-cli php7.0-imap php7.0-zip
 
 /etc/php7/fpm/php.ini
@@ -71,10 +75,12 @@ listen=/tmp/php5-fpm.sock
 listen.mode=0777
 
 sudo service php7.0-fpm restart
-#********** PHP 7 ********************
+#=======================================================================================================================
 
 
-#********** POSTGRESQL ***************************
+
+
+#========================================= POSTGRESQL =================================================================
 Gvr72sS
 Create the file /etc/apt/sources.list.d/postgres.list
 deb http://apt.postgresql.org/pub/repos/apt/ YOUR_UBUNTU_VERSION_HERE-pgdg main
@@ -91,10 +97,16 @@ sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys ВСТАВИТЬ_�
 РЕПЛИКАЦИЯ
 psql -c "CREATE USER rep REPLICATION LOGIN CONNECTION LIMIT 1 ENCRYPTED PASSWORD '159753';"
 
-#*************************************************
+wal_level = hot_standby
+max_wal_senders = 1
+wal_keep_segments = 8 
+max_wal_size
+#=====================================================================================================================
 
 
-#******************* Удаленная файловая система *****************************
+
+
+#==================================== Удаленная файловая система =====================================================
 # Перенос данных на второй сервер
 sudo chmod 777 $(find /media/storage/Documents -type d)
 rsync -az -e ssh /usr/share/client_files/Documents/ andrey@92.255.164.139:/media/storage/Documents
@@ -106,6 +118,7 @@ sudo mkdir /media/rstorage
 sudo sshfs -o allow_other,reconnect,ServerAliveInterval=15,ServerAliveCountMax=17280 andrey@expertiza72.ru:/usr/share/client_files /media/rstorage
 Настроить скрипт!!!
 
+Не работает такое!!!
 /etc/fstab
 sshfs#andrey@46.173.214.98/usr/share/client_files /media/rstorage
 
@@ -117,6 +130,7 @@ sudo apt-get install sshfs
 sudo mkdir /mnt/rstorage
 sudo sshfs -o allow_other,reconnect,ServerAliveInterval=15,ServerAliveCountMax=17280 andrey@92.255.164.139:/media/storage /mnt/rstorage
 
+Не работает такое!!!
 /etc/fstab
 sshfs#andrey@92.255.164.139/media/storage /mnt/rstorage
 
@@ -124,13 +138,57 @@ sshfs#andrey@92.255.164.139/media/storage /mnt/rstorage
 rsync -az -e ssh /usr/share/client_files/* andrey@92.255.164.139:/media/storage
 
 sudo -u admin sshfs -o allow_other,reconnect,ServerAliveInterval=15,ServerAliveCountMax=17280 admin@192.168.1.101:/data/backup /mnt/backup
+#=================================================================================================================================
 
 
-#Удаление правила из файервола по второму серверу, как то заблочил
+
+
+#======================== Удаление правила из файервола по второму серверу, как то заблочил ========================
 sudo iptables -D f2b-sshd -s 92.255.164.139/32 -j REJECT --reject-with icmp-port-unreachable
+#===================================================================================================================
 
 
-#Обновление версии плагина раз в неделю
+
+
+#============================== Обновление версии плагина раз в неделю =============================================
 sudo crontab -e
 wget -O /var/www/html/lk/crypto_plugin.txt https://www.cryptopro.ru/sites/default/files/products/cades/latest_2_0.txt
 wget -O /var/www/html/lk/crypto_plugin.txt https://www.cryptopro.ru/sites/default/files/products/cades/latest_2_0.txt
+#===================================================================================================================
+
+
+#====================== letsencrypt ==========================================================================
+https://www.digitalocean.com/community/tutorials/how-to-secure-apache-with-let-s-encrypt-on-ubuntu-16-04
+sudo add-apt-repository ppa:certbot/certbot
+sudo apt-get update
+#apache
+sudo apt-get install python-certbot-apache
+#nginx 
+sudo apt-get install python-certbot-nginx
+
+#Generate certificate
+sudo certbot --apache -d example.com -d www.example.com
+
+To test the renewal process, you can do a dry run with certbot:
+sudo certbot renew --dry-run
+#Add to cron
+sudo certbot renew
+#apache http->>https redirect
+sites-enabled/*.conf
+Redirect / https://www.example.com/
+#============================================================================================================
+
+
+
+№========================== Скрипты на сервере офиса ===============================================
+documents_mv
+documents_backup
+rsync_mount
+Со всех симлинки в usr/share/
+№=================================================================================================
+
+
+
+#====================== Обновление времени ==========================================================================
+sudo apt-get install ntpdate
+#===================================================================================================================

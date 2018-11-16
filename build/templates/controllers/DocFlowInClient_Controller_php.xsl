@@ -75,10 +75,10 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 	}
 
 	public function get_file($pm){
-		$this->get_file_on_type($pm,FALSE);
+		return $this->get_file_on_type($pm,FALSE);
 	}
 	public function get_file_sig($pm){
-		$this->get_file_on_type($pm,TRUE);
+		return $this->get_file_on_type($pm,TRUE);
 	}
 
 	public function set_viewed($pm){
@@ -107,7 +107,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			
 		}
 		
-		$this->addModel(self::get_unviwed_count_model($this->getDbLink()));
+		$this->addModel(self::get_unviwed_count_model($this->getDbLinkMaster()));
 	}
 	public static function get_unviwed_count_model($dbLink){
 		$ar = $dbLink->query_first(sprintf(

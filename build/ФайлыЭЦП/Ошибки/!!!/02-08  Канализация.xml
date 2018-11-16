@@ -1,0 +1,848 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<Document ProgramVersion="7.0.4.12954" Generator="GrandSmeta" DocumentType="{2B0470FD-477C-4359-9F34-EEBE36B7D340}">
+  <Properties LocNum="02-08-2018" Constr="&quot;Капитальный ремонт МБОУ средняя общеобразовательная школа №29 г.Ишима&quot;"/>
+  <RegionInfo RegionName="ГЭСН-2017, ФЕР-2017 (с Изм. 1)" RegionID="7001" Zone84ID="1" Zone01Name="Базовый федеральный район" Zone01ID="1"/>
+  <Parameters Options="RoundPos AddZatr SeparateFot TempRound" BasePrices="2001" BaseCalcVrs="Vr2001" BlockRoundMode="Smart" TempZone="1" MatRoundMode="SignDigitsPreserveInt" MatDigits="4" ItogOptions="SeparateChapters SeparateVrs" FirstItogItem="K" ItogExpandTo="Default" TzDigits="2" PosKDigits="2" MultKPosCalcMode="UseTotalMult" PropsConfigNameModified="Yes">
+    <Numbering Mode="Sequential" Options="Auto"/>
+    <CommonNK ActiveItems="Vk Ck Mk"/>
+    <CommonPK ActiveItems="Vk Ck Mk"/>
+  </Parameters>
+  <Indexes IndexesMode="None" IndexesLinkMode="Chapters">
+    <IndexesPos>
+      <Index Caption="таб.4, прил. 2, п.3.3.1." Code="1" SMR="8,51"/>
+    </IndexesPos>
+    <OsIndexes/>
+  </Indexes>
+  <RegionalK Options="Percent Base"/>
+  <TerZoneK Caption="Территориальная поправка к базе 2001г" Options="Base PzAll EmAll"/>
+  <VidRab_Catalog Caption="Ремонт жил Основной с обоснованием">
+    <Vids_Rab Type="Виды работ 2001г">
+      <VidRab_Group Caption="Сантехнические работы" ID="4">
+        <Vid_Rab Caption="Сантехнические работы - внутренние (трубопроводы, водопровод, канализация, отопление, газоснабжение, вентиляция и кондиционирование воздуха) (МДС81-33.2004 Прил.4 п.16, Прим.п.1; Письмо №АП-5536/06 Прил.1 п.16, Прим.п.1)" ID="10026" Nacl="128" NaclMask="ФОТ" Plan="83" PlanMask="ФОТ" NaclCurr="128" PlanCurr="83" NKB="0.9" PNB="0.85" NKI="0.9" PKI="0.85" NKR="0.9" PKR="0.85"/>
+      </VidRab_Group>
+      <VidRab_Group Caption="Общестроительные работы" ID="0">
+        <Vid_Rab Caption="Теплоизоляционные работы (МДС81-33.2004 Прил.4 п.20, Прим.п.1; Письмо №АП-5536/06 Прил.1 п.20, Прим.п.1)" ID="10030" Nacl="100" NaclMask="ФОТ" Plan="70" PlanMask="ФОТ" NaclCurr="100" PlanCurr="70" NKB="0.9" PNB="0.85" NKI="0.9" PKI="0.85" NKR="0.9" PKR="0.85"/>
+        <Vid_Rab Caption="Материалы для строительных работ" ID="10091" NaclMask="ФОТ" PlanMask="ФОТ"/>
+        <Vid_Rab Caption="Материалы" ID="2945" NaclMask="ФОТ" PlanMask="ФОТ"/>
+      </VidRab_Group>
+      <VidRab_Group Caption="Ремонтно-строительные работы" ID="5">
+        <Vid_Rab Caption="Наружные инженерные сети: разборка, очистка (ремонтно-строительные) (МДС81-33.2004 Прил.5 п.16.1 и Письмо №ВБ-338/02 от 08.02.08; Письмо №АП-5536/06 Прил.2 п.16.1)" ID="10082" Nacl="74" NaclMask="ФОТ" Plan="50" PlanMask="ФОТ" NaclCurr="74" PlanCurr="50"/>
+        <Vid_Rab Caption="Внутренние санитарно-технические работы: демонтаж и разборка (ремонтно-строительные) (МДС81-33.2004 Прил.5 п.15.1 и Письмо №ВБ-338/02 от 08.02.08; Письмо №АП-5536/06 Прил.2 п.15.1)" ID="10080" Nacl="74" NaclMask="ФОТ" Plan="50" PlanMask="ФОТ" NaclCurr="74" PlanCurr="50"/>
+      </VidRab_Group>
+    </Vids_Rab>
+    <Vids_Rab Type="Виды работ 1984г"/>
+  </VidRab_Catalog>
+  <Koefficients>
+    <K Caption="При ремонте и реконструкции зданий и сооружений работы, аналогичные технологическим процессам в новом строительстве" Code="МДС35-IV п.4.7." Options="InPos Base Curr EmAll EmQty OzpTz ZpmTz" Value_OZ="1,15" Value_EM="1,25" Level="10" AllVidRabs="No" AllChapters="No" ChaptersLinks="(3, 4)" VrsLinks="(10030)" VrGroupsLinks="(0, 4)"/>
+  </Koefficients>
+  <WinterCatalog WinterMode="None" WinterLinkMode="Table">
+    <CommonWinterK/>
+  </WinterCatalog>
+  <Chapters>
+    <Chapter Caption="Демонтажные работы" SysID="2" IndexCode="1">
+      <Position Caption="Прокладка внутренних трубопроводов канализации из полипропиленовых труб диаметром: 50 мм" Number="1" Code="ФЕР16-04-004-01" SysID="92" Units="100 м" Quantity="320 / 100" PriceLevel="2001" IndexCode="1" DBComment="Приказ Минстроя России от 30.12.2016 №1039/пр" DBFlags="Comment" PzSync="Yes" Vr2001="10026" Bookmark="255">
+        <Quantity Fx="=320" KUnit="100" Result="3,2"/>
+        <PriceBase PZ="589,41" OZ="563,25" EM="7,88" ZM="1,19" MT="18,28"/>
+        <Resources>
+          <Tzr Caption="Затраты труда рабочих" Code="1-3-8" Units="чел.час" Quantity="59,92" WorkClass="3,8">
+            <PriceBase Value="9,4"/>
+          </Tzr>
+          <Tzm Caption="Затраты труда машинистов" Code="2" Units="чел.час" Quantity="0,1"/>
+          <Mch Caption="Краны башенные, грузоподъемность 8 т" Code="91.05.01-017" Units="маш.час" Quantity="0,02">
+            <PriceBase Value="86,4" ZM="13,5"/>
+          </Mch>
+          <Mch Caption="Краны на автомобильном ходу, грузоподъемность 6,3 т" Code="91.05.05-013" Units="маш.час" Quantity="0,04">
+            <PriceBase Value="88,01" ZM="11,6"/>
+          </Mch>
+          <Mch Caption="Автомобили бортовые, грузоподъемность: до 5 т" Code="91.14.02-001" Units="маш.час" Quantity="0,04">
+            <PriceBase Value="65,71" ZM="11,6"/>
+          </Mch>
+          <Mat Caption="Вода" Code="01.7.03.01-0001" Units="м3" Quantity="0,197" Cargo="1" Mass="1000">
+            <PriceBase Value="2,44"/>
+          </Mat>
+          <Mat Caption="Болты с гайками и шайбами для санитарно-технических работ диаметром: 16 мм" Code="01.7.15.03-0014" Units="т" Quantity="0,0012" Cargo="1" Mass="1120">
+            <PriceBase Value="14830"/>
+          </Mat>
+          <Mat Caption="Кольца резиновые уплотнительные для полипропиленовых труб" Code="01.7.19.02" Units="шт" Quantity="12" Options="NotCount"/>
+          <Mat Caption="Задвижки" Code="18.1.02.03" Units="шт" Options="Project NotCount"/>
+          <Mat Caption="Крепления" Code="19.1.01.11" Units="кг" Options="Project NotCount"/>
+          <Mat Caption="Трубы безнапорные канализационные из полипропилена" Code="24.3.02.02" Units="м" Quantity="99,8" Options="NotCount"/>
+          <Mat Caption="Фасонные и соединительные части к полипропиленовым трубам" Code="24.3.05.19" Units="шт" Options="Project NotCount"/>
+        </Resources>
+        <Koefficients>
+          <K Caption="Демонтаж (разборка) внутренних санитарно-технических устройств (водопровода, газопровода, канализации, водостоков, отопления, вентиляции)" Code="МДС36 п.3.3.1." Options="Base Curr EmAll MatQty EmQty OzpTz ZpmTz" Value_OZ="0,4" Value_EM="0,4" Value_MT="0" Level="1"/>
+        </Koefficients>
+        <WorksList>
+          <Work Caption="Прокладка трубопровода из труб и фасонных частей с заделкой раструбов уплотнительными кольцами."/>
+          <Work Caption="Установка и заделка креплений."/>
+          <Work Caption="Установка задвижек."/>
+          <Work Caption="Испытание трубопровода."/>
+        </WorksList>
+      </Position>
+      <Position Caption="Прокладка внутренних трубопроводов канализации из полипропиленовых труб диаметром: 110 мм" Number="2" Code="ФЕР16-04-004-02" SysID="93" Units="100 м" Quantity="192 / 100" PriceLevel="2001" IndexCode="1" DBComment="Приказ Минстроя России от 30.12.2016 №1039/пр" DBFlags="Comment" PzSync="Yes" Vr2001="10026" Bookmark="255">
+        <Quantity Fx="=192" KUnit="100" Result="1,92"/>
+        <PriceBase PZ="602,48" OZ="524,8" EM="36,31" ZM="5,53" MT="41,37"/>
+        <Resources>
+          <Tzr Caption="Затраты труда рабочих" Code="1-3-8" Units="чел.час" Quantity="55,83" WorkClass="3,8">
+            <PriceBase Value="9,4"/>
+          </Tzr>
+          <Tzm Caption="Затраты труда машинистов" Code="2" Units="чел.час" Quantity="0,46"/>
+          <Mch Caption="Краны башенные, грузоподъемность 8 т" Code="91.05.01-017" Units="маш.час" Quantity="0,1">
+            <PriceBase Value="86,4" ZM="13,5"/>
+          </Mch>
+          <Mch Caption="Краны на автомобильном ходу, грузоподъемность 6,3 т" Code="91.05.05-013" Units="маш.час" Quantity="0,18">
+            <PriceBase Value="88,01" ZM="11,6"/>
+          </Mch>
+          <Mch Caption="Автомобили бортовые, грузоподъемность: до 5 т" Code="91.14.02-001" Units="маш.час" Quantity="0,18">
+            <PriceBase Value="65,71" ZM="11,6"/>
+          </Mch>
+          <Mat Caption="Вода" Code="01.7.03.01-0001" Units="м3" Quantity="0,786" Cargo="1" Mass="1000">
+            <PriceBase Value="2,44"/>
+          </Mat>
+          <Mat Caption="Болты с гайками и шайбами для санитарно-технических работ диаметром: 16 мм" Code="01.7.15.03-0014" Units="т" Quantity="0,00266" Cargo="1" Mass="1120">
+            <PriceBase Value="14830"/>
+          </Mat>
+          <Mat Caption="Кольца резиновые уплотнительные для полипропиленовых труб" Code="01.7.19.02" Units="шт" Quantity="12" Options="NotCount"/>
+          <Mat Caption="Задвижки" Code="18.1.02.03" Units="шт" Options="Project NotCount"/>
+          <Mat Caption="Крепления" Code="19.1.01.11" Units="кг" Options="Project NotCount"/>
+          <Mat Caption="Трубы безнапорные канализационные из полипропилена" Code="24.3.02.02" Units="м" Quantity="99,8" Options="NotCount"/>
+          <Mat Caption="Фасонные и соединительные части к полипропиленовым трубам" Code="24.3.05.19" Units="шт" Options="Project NotCount"/>
+        </Resources>
+        <Koefficients>
+          <K Caption="Демонтаж (разборка) внутренних санитарно-технических устройств (водопровода, газопровода, канализации, водостоков, отопления, вентиляции)" Code="МДС36 п.3.3.1." Options="Base Curr EmAll MatQty EmQty OzpTz ZpmTz" Value_OZ="0,4" Value_EM="0,4" Value_MT="0" Level="1"/>
+        </Koefficients>
+        <WorksList>
+          <Work Caption="Прокладка трубопровода из труб и фасонных частей с заделкой раструбов уплотнительными кольцами."/>
+          <Work Caption="Установка и заделка креплений."/>
+          <Work Caption="Установка задвижек."/>
+          <Work Caption="Испытание трубопровода."/>
+        </WorksList>
+      </Position>
+      <Position Caption="Демонтаж: унитазов и писсуаров" Number="3" Code="ФЕРр65-4-2" SysID="38" Units="100 шт" Quantity="(33+4) / 100" PriceLevel="2001" IndexCode="1" DBComment="Приказ Минстроя России от 30.12.2016 №1039/пр" DBFlags="Comment TechK" PzSync="Yes" Vr2001="10080" Bookmark="255">
+        <Quantity Fx="=33+4" KUnit="100" Result="0,37"/>
+        <PriceBase PZ="553,63" OZ="544,56" EM="9,07" ZM="3,92"/>
+        <Resources>
+          <Tzr Caption="Затраты труда рабочих" Code="1-3-0" Units="чел.час" Quantity="63,84" WorkClass="3">
+            <PriceBase Value="8,53"/>
+          </Tzr>
+          <Tzm Caption="Затраты труда машинистов" Code="2" Units="чел.час" Quantity="0,29"/>
+          <Mch Caption="Подъемники одномачтовые, грузоподъемность до 500 кг, высота подъема 45 м" Code="91.06.06-048" Units="маш.час" Quantity="0,29">
+            <PriceBase Value="31,26" ZM="13,5"/>
+          </Mch>
+          <Mat Caption="Строительный мусор и масса возвратных материалов" Code="01.7.07.07" Units="т" Quantity="2,65" Options="NotCount"/>
+        </Resources>
+        <WorksList>
+          <Work Caption="Снятие прибора с отсоединением от креплений и трубопроводов."/>
+          <Work Caption="Снятие кронштейнов."/>
+        </WorksList>
+      </Position>
+      <Position Caption="Демонтаж: умывальников и раковин" Number="4" Code="ФЕРр65-4-1" SysID="39" Units="100 шт" Quantity="74 / 100" PriceLevel="2001" IndexCode="1" DBComment="Приказ Минстроя России от 30.12.2016 №1039/пр" DBFlags="Comment TechK" PzSync="Yes" Vr2001="10080" Bookmark="255">
+        <Quantity Fx="=74" KUnit="100" Result="0,74"/>
+        <PriceBase PZ="445,72" OZ="437,59" EM="8,13" ZM="3,51"/>
+        <Resources>
+          <Tzr Caption="Затраты труда рабочих" Code="1-3-0" Units="чел.час" Quantity="51,3" WorkClass="3">
+            <PriceBase Value="8,53"/>
+          </Tzr>
+          <Tzm Caption="Затраты труда машинистов" Code="2" Units="чел.час" Quantity="0,26"/>
+          <Mch Caption="Подъемники одномачтовые, грузоподъемность до 500 кг, высота подъема 45 м" Code="91.06.06-048" Units="маш.час" Quantity="0,26">
+            <PriceBase Value="31,26" ZM="13,5"/>
+          </Mch>
+          <Mat Caption="Строительный мусор и масса возвратных материалов" Code="01.7.07.07" Units="т" Quantity="1,82" Options="NotCount"/>
+        </Resources>
+        <WorksList>
+          <Work Caption="Снятие прибора с отсоединением от креплений и трубопроводов."/>
+          <Work Caption="Снятие кронштейнов."/>
+        </WorksList>
+      </Position>
+      <Position Caption="Установка трапов диаметром: 100 мм" Number="5" Code="ФЕР17-01-001-23" SysID="60" Units="10 компл." Quantity="6 / 10" PriceLevel="2001" IndexCode="1" DBComment="Приказ Минстроя России от 30.12.2016 №1039/пр" DBFlags="Comment" PzSync="Yes" Vr2001="10026" Bookmark="255">
+        <Quantity Fx="=6" KUnit="10" Result="0,6"/>
+        <PriceBase PZ="141,9" OZ="84,37" EM="15,61" ZM="3,55" MT="41,92"/>
+        <Resources>
+          <Tzr Caption="Затраты труда рабочих" Code="1-4-0" Units="чел.час" Quantity="8,77" WorkClass="4">
+            <PriceBase Value="9,62"/>
+          </Tzr>
+          <Tzm Caption="Затраты труда машинистов" Code="2" Units="чел.час" Quantity="0,29"/>
+          <Mch Caption="Подъемники одномачтовые, грузоподъемность до 500 кг, высота подъема 45 м" Code="91.06.06-048" Units="маш.час" Quantity="0,1">
+            <PriceBase Value="31,26" ZM="13,5"/>
+          </Mch>
+          <Mch Caption="Автомобили бортовые, грузоподъемность: до 5 т" Code="91.14.02-001" Units="маш.час" Quantity="0,19">
+            <PriceBase Value="65,71" ZM="11,6"/>
+          </Mch>
+          <Mat Caption="Каболка" Code="01.7.07.29-0031" Units="т" Quantity="0,0012" Cargo="2" Mass="1000">
+            <PriceBase Value="30030"/>
+          </Mat>
+          <Mat Caption="Цемент гипсоглиноземистый расширяющийся" Code="03.2.02.08-0001" Units="т" Quantity="0,0032" Cargo="1" Mass="1010">
+            <PriceBase Value="1836"/>
+          </Mat>
+          <Mat Caption="Приборы санитарно-технические" Code="18.2.06.12" Units="компл." Quantity="10" Options="NotCount"/>
+        </Resources>
+        <Koefficients>
+          <K Caption="Демонтаж (разборка) внутренних санитарно-технических устройств (водопровода, газопровода, канализации, водостоков, отопления, вентиляции)" Code="МДС36 п.3.3.1." Options="Base Curr EmAll MatQty EmQty OzpTz ZpmTz" Value_OZ="0,4" Value_EM="0,4" Value_MT="0" Level="2"/>
+        </Koefficients>
+        <WorksList>
+          <Work Caption="Установка санитарных приборов со сверлением отверстий."/>
+          <Work Caption="Установка и заделка кронштейнов."/>
+          <Work Caption="Присоединение приборов к трубопроводам."/>
+        </WorksList>
+      </Position>
+      <Position Caption="Демонтаж: моек" Number="6" Code="ФЕРр65-4-3" SysID="94" Units="100 шт" Quantity="(3+2) / 100" PriceLevel="2001" IndexCode="1" DBComment="Приказ Минстроя России от 30.12.2016 №1039/пр" DBFlags="Comment TechK" PzSync="Yes" Vr2001="10080" Bookmark="255">
+        <Quantity Fx="=3+2" KUnit="100" Result="0,05"/>
+        <PriceBase PZ="899,88" OZ="875,18" EM="24,7" ZM="10,67"/>
+        <Resources>
+          <Tzr Caption="Затраты труда рабочих" Code="1-3-0" Units="чел.час" Quantity="102,6" WorkClass="3">
+            <PriceBase Value="8,53"/>
+          </Tzr>
+          <Tzm Caption="Затраты труда машинистов" Code="2" Units="чел.час" Quantity="0,79"/>
+          <Mch Caption="Подъемники одномачтовые, грузоподъемность до 500 кг, высота подъема 45 м" Code="91.06.06-048" Units="маш.час" Quantity="0,79">
+            <PriceBase Value="31,26" ZM="13,5"/>
+          </Mch>
+          <Mat Caption="Строительный мусор и масса возвратных материалов" Code="01.7.07.07" Units="т" Quantity="1,18" Options="NotCount"/>
+        </Resources>
+        <WorksList>
+          <Work Caption="Снятие прибора с отсоединением от креплений и трубопроводов."/>
+          <Work Caption="Снятие кронштейнов."/>
+        </WorksList>
+      </Position>
+      <Position Caption="Установка поддонов душевых: чугунных и стальных мелких" Number="7" Code="ФЕР17-01-001-18" SysID="95" Units="10 компл." Quantity="1 / 10" PriceLevel="2001" IndexCode="1" DBComment="Приказ Минстроя России от 30.12.2016 №1039/пр" DBFlags="Comment" PzSync="Yes" Vr2001="10026" Bookmark="255">
+        <Quantity Fx="=1" KUnit="10" Result="0,1"/>
+        <PriceBase PZ="234,61" OZ="104,76" EM="47,93" ZM="10,3" MT="81,92"/>
+        <Resources>
+          <Tzr Caption="Затраты труда рабочих" Code="1-4-0" Units="чел.час" Quantity="10,89" WorkClass="4">
+            <PriceBase Value="9,62"/>
+          </Tzr>
+          <Tzm Caption="Затраты труда машинистов" Code="2" Units="чел.час" Quantity="0,85"/>
+          <Mch Caption="Подъемники одномачтовые, грузоподъемность до 500 кг, высота подъема 45 м" Code="91.06.06-048" Units="маш.час" Quantity="0,23">
+            <PriceBase Value="31,26" ZM="13,5"/>
+          </Mch>
+          <Mch Caption="Автомобили бортовые, грузоподъемность: до 5 т" Code="91.14.02-001" Units="маш.час" Quantity="0,62">
+            <PriceBase Value="65,71" ZM="11,6"/>
+          </Mch>
+          <Mat Caption="Каболка" Code="01.7.07.29-0031" Units="т" Quantity="0,0007" Cargo="2" Mass="1000">
+            <PriceBase Value="30030"/>
+          </Mat>
+          <Mat Caption="Очес льняной" Code="01.7.07.29-0101" Units="кг" Quantity="0,6" Cargo="2" Mass="0,7">
+            <PriceBase Value="37,29"/>
+          </Mat>
+          <Mat Caption="Электроды диаметром: 5 мм Э42А" Code="01.7.11.07-0045" Units="т" Quantity="3E-5" Cargo="2" Mass="1140">
+            <PriceBase Value="10362"/>
+          </Mat>
+          <Mat Caption="Болты с гайками и шайбами для санитарно-технических работ диаметром: 10 мм" Code="01.7.15.03-0012" Units="т" Quantity="0,0001" Cargo="1" Mass="1120">
+            <PriceBase Value="15130"/>
+          </Mat>
+          <Mat Caption="Цемент гипсоглиноземистый расширяющийся" Code="03.2.02.08-0001" Units="т" Quantity="0,002" Cargo="1" Mass="1010">
+            <PriceBase Value="1836"/>
+          </Mat>
+          <Mat Caption="Краски масляные земляные марки: МА-0115 мумия, сурик железный" Code="14.4.02.04-0141" Units="т" Quantity="0,0014" Cargo="3" Mass="1100">
+            <PriceBase Value="15119"/>
+          </Mat>
+          <Mat Caption="Олифа комбинированная, марки: К-3" Code="14.5.05.01-0012" Units="т" Quantity="0,0007" Cargo="3" Mass="1150">
+            <PriceBase Value="16950"/>
+          </Mat>
+          <Mat Caption="Приборы санитарно-технические" Code="18.2.06.12" Units="компл." Quantity="10" Options="NotCount"/>
+        </Resources>
+        <Koefficients>
+          <K Caption="Демонтаж (разборка) внутренних санитарно-технических устройств (водопровода, газопровода, канализации, водостоков, отопления, вентиляции)" Code="МДС36 п.3.3.1." Options="Base Curr EmAll MatQty EmQty OzpTz ZpmTz" Value_OZ="0,4" Value_EM="0,4" Value_MT="0" Level="1"/>
+        </Koefficients>
+        <WorksList>
+          <Work Caption="Установка санитарных приборов со сверлением отверстий."/>
+          <Work Caption="Установка и заделка кронштейнов."/>
+          <Work Caption="Присоединение приборов к трубопроводам."/>
+        </WorksList>
+      </Position>
+      <Position Caption="Демонтаж: ванн" Number="8" Code="ФЕРр65-4-4" SysID="61" Units="100 шт" Quantity="2 / 100" PriceLevel="2001" IndexCode="1" DBComment="Приказ Минстроя России от 30.12.2016 №1039/пр" DBFlags="Comment TechK" PzSync="Yes" Vr2001="10080" Bookmark="255">
+        <Quantity Fx="=2" KUnit="100" Result="0,02"/>
+        <PriceBase PZ="2581,5" OZ="2499,29" EM="82,21" ZM="35,51"/>
+        <Resources>
+          <Tzr Caption="Затраты труда рабочих" Code="1-3-0" Units="чел.час" Quantity="293" WorkClass="3">
+            <PriceBase Value="8,53"/>
+          </Tzr>
+          <Tzm Caption="Затраты труда машинистов" Code="2" Units="чел.час" Quantity="2,63"/>
+          <Mch Caption="Подъемники одномачтовые, грузоподъемность до 500 кг, высота подъема 45 м" Code="91.06.06-048" Units="маш.час" Quantity="2,63">
+            <PriceBase Value="31,26" ZM="13,5"/>
+          </Mch>
+          <Mat Caption="Строительный мусор и масса возвратных материалов" Code="01.7.07.07" Units="т" Quantity="11,4" Options="NotCount"/>
+        </Resources>
+        <WorksList>
+          <Work Caption="Снятие прибора с отсоединением от креплений и трубопроводов."/>
+          <Work Caption="Снятие кронштейнов."/>
+        </WorksList>
+      </Position>
+    </Chapter>
+    <Chapter Caption="Сентехнические работы" SysID="4" IndexCode="1">
+      <Header Caption="Канализация К1, К3."/>
+      <Position Caption="Прокладка трубопроводов канализации из полиэтиленовых труб высокой плотности диаметром: 50 мм" Number="9" Code="ФЕР16-04-001-01" SysID="96" Units="100 м" Quantity="320 / 100" PriceLevel="2001" IndexCode="1" DBComment="Приказ Минстроя России от 30.12.2016 №1039/пр" DBFlags="Comment TechK" PzSync="Yes" Vr2001="10026" Bookmark="255">
+        <Quantity Fx="=320" KUnit="100" Result="3,2"/>
+        <PriceBase PZ="695,27" OZ="637,26" EM="2,64" ZM="0,4" MT="55,37"/>
+        <Resources>
+          <Tzr Caption="Затраты труда рабочих" Code="1-4-2" Units="чел.час" Quantity="64,24" WorkClass="4,2">
+            <PriceBase Value="9,92"/>
+          </Tzr>
+          <Tzm Caption="Затраты труда машинистов" Code="2" Units="чел.час" Quantity="0,03"/>
+          <Mch Caption="Краны башенные, грузоподъемность 8 т" Code="91.05.01-017" Units="маш.час" Quantity="0,01">
+            <PriceBase Value="86,4" ZM="13,5"/>
+          </Mch>
+          <Mch Caption="Краны на автомобильном ходу, грузоподъемность 10 т" Code="91.05.05-014" Units="маш.час" Quantity="0,01">
+            <PriceBase Value="111,99" ZM="13,5"/>
+          </Mch>
+          <Mch Caption="Автомобили бортовые, грузоподъемность: до 5 т" Code="91.14.02-001" Units="маш.час" Quantity="0,01">
+            <PriceBase Value="65,71" ZM="11,6"/>
+          </Mch>
+          <Mat Caption="Вода" Code="01.7.03.01-0001" Units="м3" Quantity="0,39" Cargo="1" Mass="1000">
+            <PriceBase Value="2,44"/>
+          </Mat>
+          <Mat Caption="Болты с гайками и шайбами для санитарно-технических работ диаметром: 16 мм" Code="01.7.15.03-0014" Units="т" Quantity="0,0012" Cargo="1" Mass="1120">
+            <PriceBase Value="14830"/>
+          </Mat>
+          <Mat Caption="Кольца резиновые для: чугунных напорных труб диаметром 50-300 мм" Code="01.7.19.02-0041" Units="кг" Quantity="1,5" Cargo="3" Mass="1,26">
+            <PriceBase Value="24,41"/>
+          </Mat>
+          <Mat Caption="Задвижки" Code="18.1.02.03" Units="шт" Options="Project NotCount"/>
+          <Mat Caption="Крепления" Code="19.1.01.11" Units="кг" Options="Project NotCount"/>
+          <Mat Caption="Трубопроводы канализации из полиэтиленовых труб высокой плотности с гильзами, диаметром 50 мм" Code="24.3.03.02" Units="м" Quantity="99,8" Options="NotCount"/>
+        </Resources>
+        <WorksList>
+          <Work Caption="Прокладка трубопровода из готовых узлов с заделкой раструбов уплотнительными кольцами."/>
+          <Work Caption="Установка и заделка креплений."/>
+          <Work Caption="Установка задвижек."/>
+          <Work Caption="Испытание трубопровода."/>
+        </WorksList>
+      </Position>
+      <Position Caption="Трубопроводы канализации из полиэтиленовых труб высокой плотности с гильзами, диаметром: 50 мм" Number="10" Code="ФССЦ-24.3.03.02-0001" SysID="42" Units="м" Quantity="319,4" PriceLevel="2001" IndexCode="1" DBComment="Приказ Минстроя России от 30.12.2016 №1039/пр" PzSync="Yes" Vr2001="10091" Bookmark="255" Cargo="2" Mass="0,4">
+        <Quantity Fx="319,4" Result="319,4"/>
+        <PriceBase PZ="39,36" MT="39,36"/>
+      </Position>
+      <Position Caption="Хомуты для крепления: канализационных и водосточных пластмассовых трубопроводов, диаметром 50 мм" Number="11" Code="ФССЦ-24.1.02.01-0111" SysID="44" Units="т" Quantity="0,034" PriceLevel="2001" IndexCode="1" DBComment="Приказ Минстроя России от 30.12.2016 №1039/пр" PzSync="Yes" Vr2001="10091" Bookmark="255" Cargo="1" Mass="1120">
+        <Quantity Fx="=0,034" Result="0,034"/>
+        <PriceBase PZ="26729,37" MT="26729,37"/>
+      </Position>
+      <Position Caption="Прокладка трубопроводов канализации из полиэтиленовых труб высокой плотности диаметром: 110 мм" Number="12" Code="ФЕР16-04-001-02" SysID="97" Units="100 м" Quantity="192 / 100" PriceLevel="2001" IndexCode="1" DBComment="Приказ Минстроя России от 30.12.2016 №1039/пр" DBFlags="Comment TechK" PzSync="Yes" Vr2001="10026">
+        <Quantity Fx="=192" KUnit="100" Result="1,92"/>
+        <PriceBase PZ="758,13" OZ="611,07" EM="6,14" ZM="0,91" MT="140,92"/>
+        <Resources>
+          <Tzr Caption="Затраты труда рабочих" Code="1-4-2" Units="чел.час" Quantity="61,6" WorkClass="4,2">
+            <PriceBase Value="9,92"/>
+          </Tzr>
+          <Tzm Caption="Затраты труда машинистов" Code="2" Units="чел.час" Quantity="0,07"/>
+          <Mch Caption="Краны башенные, грузоподъемность 8 т" Code="91.05.01-017" Units="маш.час" Quantity="0,03">
+            <PriceBase Value="86,4" ZM="13,5"/>
+          </Mch>
+          <Mch Caption="Краны на автомобильном ходу, грузоподъемность 10 т" Code="91.05.05-014" Units="маш.час" Quantity="0,02">
+            <PriceBase Value="111,99" ZM="13,5"/>
+          </Mch>
+          <Mch Caption="Автомобили бортовые, грузоподъемность: до 5 т" Code="91.14.02-001" Units="маш.час" Quantity="0,02">
+            <PriceBase Value="65,71" ZM="11,6"/>
+          </Mch>
+          <Mat Caption="Вода" Code="01.7.03.01-0001" Units="м3" Quantity="1,57" Cargo="1" Mass="1000">
+            <PriceBase Value="2,44"/>
+          </Mat>
+          <Mat Caption="Болты с гайками и шайбами для санитарно-технических работ диаметром: 16 мм" Code="01.7.15.03-0014" Units="т" Quantity="0,00266" Cargo="1" Mass="1120">
+            <PriceBase Value="14830"/>
+          </Mat>
+          <Mat Caption="Кольца резиновые для: чугунных напорных труб диаметром 50-300 мм" Code="01.7.19.02-0041" Units="кг" Quantity="4" Cargo="3" Mass="1,26">
+            <PriceBase Value="24,41"/>
+          </Mat>
+          <Mat Caption="Задвижки" Code="18.1.02.03" Units="шт" Options="Project NotCount"/>
+          <Mat Caption="Крепления" Code="19.1.01.11" Units="кг" Options="Project NotCount"/>
+          <Mat Caption="Трубопроводы канализации из полиэтиленовых труб высокой плотности с гильзами, диаметром 110 мм" Code="24.3.03.02" Units="м" Quantity="99,8" Options="NotCount"/>
+        </Resources>
+        <WorksList>
+          <Work Caption="Прокладка трубопровода из готовых узлов с заделкой раструбов уплотнительными кольцами."/>
+          <Work Caption="Установка и заделка креплений."/>
+          <Work Caption="Установка задвижек."/>
+          <Work Caption="Испытание трубопровода."/>
+        </WorksList>
+      </Position>
+      <Position Caption="Трубопроводы канализации из полиэтиленовых труб высокой плотности с гильзами, диаметром: 110 мм" Number="13" Code="ФССЦ-24.3.03.02-0002" SysID="43" Units="м" Quantity="191,6" PriceLevel="2001" IndexCode="1" DBComment="Приказ Минстроя России от 30.12.2016 №1039/пр" PzSync="Yes" Vr2001="10091" Bookmark="255" Cargo="2" Mass="1,1">
+        <Quantity Fx="191,6" Result="191,6"/>
+        <PriceBase PZ="70,4" MT="70,4"/>
+      </Position>
+      <Position Caption="Хомуты для крепления: канализационных и водосточных пластмассовых трубопроводов, диаметром 100 мм" Number="14" Code="ФССЦ-24.1.02.01-0112" SysID="45" Units="т" Quantity="0,046" PriceLevel="2001" IndexCode="1" DBComment="Приказ Минстроя России от 30.12.2016 №1039/пр" PzSync="Yes" Vr2001="10091" Bookmark="255" Cargo="1" Mass="1120">
+        <Quantity Fx="=0,046" Result="0,046"/>
+        <PriceBase PZ="37529,15" MT="37529,15"/>
+      </Position>
+      <Position Caption="Муфты противопожарные для пластиковых труб Огракс ПМ-50/40" Number="15" Code="ФССЦ-24.3.05.07-0524" SysID="46" Units="шт" Quantity="30" PriceLevel="2001" IndexCode="1" DBComment="Приказ Минстроя России от 15.06.2017 №886/пр" PzSync="Yes" Vr2001="10091" Bookmark="255" Cargo="2" Mass="0,1">
+        <Quantity Fx="=30" Result="30"/>
+        <PriceBase PZ="51,1" MT="51,1"/>
+      </Position>
+      <Position Caption="Муфты противопожарные для пластиковых труб Огракс ПМ-110/60" Number="16" Code="ФССЦ-24.3.05.07-0525" SysID="47" Units="шт" Quantity="12" PriceLevel="2001" IndexCode="1" DBComment="Приказ Минстроя России от 15.06.2017 №886/пр" PzSync="Yes" Vr2001="10091" Bookmark="255" Cargo="2" Mass="0,16">
+        <Quantity Fx="12" Result="12"/>
+        <PriceBase PZ="60,85" MT="60,85"/>
+      </Position>
+      <Position Caption="Установка умывальников одиночных: с подводкой холодной и горячей воды" Number="17" Code="ФЕР17-01-001-14" SysID="98" Units="10 компл." Quantity="74 / 10" PriceLevel="2001" IndexCode="1" DBComment="Приказ Минстроя России от 30.12.2016 №1039/пр" DBFlags="Comment" PzSync="Yes" Vr2001="10026">
+        <Quantity Fx="=74" KUnit="10" Result="7,4"/>
+        <PriceBase PZ="268,98" OZ="208,27" EM="18,52" ZM="4,31" MT="42,19"/>
+        <Resources>
+          <Tzr Caption="Затраты труда рабочих" Code="1-4-0" Units="чел.час" Quantity="21,65" WorkClass="4">
+            <PriceBase Value="9,62"/>
+          </Tzr>
+          <Tzm Caption="Затраты труда машинистов" Code="2" Units="чел.час" Quantity="0,35"/>
+          <Mch Caption="Подъемники одномачтовые, грузоподъемность до 500 кг, высота подъема 45 м" Code="91.06.06-048" Units="маш.час" Quantity="0,13">
+            <PriceBase Value="31,26" ZM="13,5"/>
+          </Mch>
+          <Mch Caption="Автомобили бортовые, грузоподъемность: до 5 т" Code="91.14.02-001" Units="маш.час" Quantity="0,22">
+            <PriceBase Value="65,71" ZM="11,6"/>
+          </Mch>
+          <Mat Caption="Очес льняной" Code="01.7.07.29-0101" Units="кг" Quantity="0,3" Cargo="2" Mass="0,7">
+            <PriceBase Value="37,29"/>
+          </Mat>
+          <Mat Caption="Дюбели распорные полиэтиленовые" Code="01.7.15.07" Units="10 шт" Quantity="4" Options="NotCount"/>
+          <Mat Caption="Шурупы строительные" Code="01.7.15.14" Units="т" Quantity="0,0007" Options="NotCount"/>
+          <Mat Caption="Поковки из квадратных заготовок, масса: 1,8 кг" Code="08.1.02.11-0001" Units="т" Quantity="0,0036" Cargo="1" Mass="1120">
+            <PriceBase Value="5989"/>
+          </Mat>
+          <Mat Caption="Краски масляные земляные марки: МА-0115 мумия, сурик железный" Code="14.4.02.04-0141" Units="т" Quantity="0,0004" Cargo="3" Mass="1100">
+            <PriceBase Value="15119"/>
+          </Mat>
+          <Mat Caption="Замазка суриковая" Code="14.5.02.02" Units="кг" Quantity="2" Options="NotCount"/>
+          <Mat Caption="Олифа комбинированная, марки: К-3" Code="14.5.05.01-0012" Units="т" Quantity="0,0002" Cargo="3" Mass="1150">
+            <PriceBase Value="16950"/>
+          </Mat>
+          <Mat Caption="Приборы санитарно-технические" Code="18.2.06.12" Units="компл." Quantity="10" Options="NotCount"/>
+        </Resources>
+        <WorksList>
+          <Work Caption="Установка санитарных приборов со сверлением отверстий."/>
+          <Work Caption="Установка и заделка кронштейнов."/>
+          <Work Caption="Присоединение приборов к трубопроводам."/>
+        </WorksList>
+      </Position>
+      <Position Caption="Дюбели распорные полиэтиленовые: 8х40 мм" Number="18" Code="ФССЦ-01.7.15.07-0024" SysID="77" Units="1000 шт" Quantity="296 / 1000" PriceLevel="2001" IndexCode="1" DBComment="Приказ Минстроя России от 30.12.2016 №1039/пр" PzSync="Yes" Vr2001="10026" Bookmark="255" Cargo="1" Mass="10">
+        <Quantity Fx="=296" KUnit="1000" Result="0,296"/>
+        <PriceBase PZ="200" MT="200"/>
+      </Position>
+      <Position Caption="Шурупы с полукруглой головкой: 6х90 мм" Number="19" Code="ФССЦ-01.7.15.14-0173" SysID="78" Units="т" Quantity="0,0052" PriceLevel="2001" IndexCode="1" DBComment="Приказ Минстроя России от 30.12.2016 №1039/пр" PzSync="Yes" Vr2001="10026" Bookmark="255" Cargo="1" Mass="1120">
+        <Quantity Fx="0,0052" Result="0,0052"/>
+        <PriceBase PZ="11350" MT="11350"/>
+      </Position>
+      <Position Caption="Замазка суриковая" Number="20" Code="ФССЦ-14.5.02.02-0105" SysID="79" Units="кг" Quantity="14,8" PriceLevel="2001" IndexCode="1" DBComment="Приказ Минстроя России от 30.12.2016 №1039/пр" PzSync="Yes" Vr2001="2945" Bookmark="255" Cargo="1" Mass="1,06">
+        <Quantity Fx="14,8" Result="14,8"/>
+        <PriceBase PZ="19,61" MT="19,61"/>
+      </Position>
+      <Position Caption="Умывальники полуфарфоровые и фарфоровые с кронштейнами, сифоном бутылочным латунным и выпуском,: овальные с выступающими установочными поверхностями без спинки размером 550х420х150 мм" Number="21" Code="ФССЦ-18.2.01.05-0052" SysID="49" Units="компл." Quantity="74" PriceLevel="2001" IndexCode="1" DBComment="Приказ Минстроя России от 30.12.2016 №1039/пр" PzSync="Yes" Vr2001="10091" Bookmark="255" Cargo="2" Mass="21,3">
+        <Quantity Fx="74" Result="74"/>
+        <PriceBase PZ="202,29" MT="202,29"/>
+      </Position>
+      <Position Caption="Установка унитазов: с бачком непосредственно присоединенным" Number="22" Code="ФЕР17-01-003-01" SysID="50" Units="10 компл." Quantity="33 / 10" PriceLevel="2001" IndexCode="1" DBComment="Приказ Минстроя России от 30.12.2016 №1039/пр" DBFlags="Comment" PzSync="Yes" Vr2001="10026" Bookmark="255">
+        <Quantity Fx="=33" KUnit="10" Result="3,3"/>
+        <PriceBase PZ="461,63" OZ="234,33" EM="35,63" ZM="8,84" MT="191,67"/>
+        <Resources>
+          <Tzr Caption="Затраты труда рабочих" Code="1-3-9" Units="чел.час" Quantity="24,64" WorkClass="3,9">
+            <PriceBase Value="9,51"/>
+          </Tzr>
+          <Tzm Caption="Затраты труда машинистов" Code="2" Units="чел.час" Quantity="0,71"/>
+          <Mch Caption="Подъемники одномачтовые, грузоподъемность до 500 кг, высота подъема 45 м" Code="91.06.06-048" Units="маш.час" Quantity="0,32">
+            <PriceBase Value="31,26" ZM="13,5"/>
+          </Mch>
+          <Mch Caption="Автомобили бортовые, грузоподъемность: до 5 т" Code="91.14.02-001" Units="маш.час" Quantity="0,39">
+            <PriceBase Value="65,71" ZM="11,6"/>
+          </Mch>
+          <Mat Caption="Каболка" Code="01.7.07.29-0031" Units="т" Quantity="0,001" Cargo="2" Mass="1000">
+            <PriceBase Value="30030"/>
+          </Mat>
+          <Mat Caption="Очес льняной" Code="01.7.07.29-0101" Units="кг" Quantity="0,04" Cargo="2" Mass="0,7">
+            <PriceBase Value="37,29"/>
+          </Mat>
+          <Mat Caption="Дюбели распорные полиэтиленовые" Code="01.7.15.07" Units="10 шт" Quantity="4" Options="NotCount"/>
+          <Mat Caption="Скобы: скрепляющие и для подвеса" Code="01.7.15.10-0057" Units="кг" Quantity="20" Cargo="3" Mass="1">
+            <PriceBase Value="6,5"/>
+          </Mat>
+          <Mat Caption="Шурупы строительные" Code="01.7.15.14" Units="т" Quantity="0,0005" Options="NotCount"/>
+          <Mat Caption="Пластина резиновая рулонная вулканизированная" Code="01.7.19.04-0002" Units="кг" Quantity="0,8" Cargo="1" Mass="1,3">
+            <PriceBase Value="13,56"/>
+          </Mat>
+          <Mat Caption="Клей фенолполивинилацетатный марки: БФ-2, сорт I" Code="14.1.05.03-0012" Units="т" Quantity="0,0008" Cargo="1" Mass="1160">
+            <PriceBase Value="12330"/>
+          </Mat>
+          <Mat Caption="Краски масляные земляные марки: МА-0115 мумия, сурик железный" Code="14.4.02.04-0141" Units="т" Quantity="0,0004" Cargo="3" Mass="1100">
+            <PriceBase Value="15119"/>
+          </Mat>
+          <Mat Caption="Замазка суриковая" Code="14.5.02.02" Units="кг" Quantity="4" Options="NotCount"/>
+          <Mat Caption="Олифа комбинированная, марки: К-3" Code="14.5.05.01-0012" Units="т" Quantity="0,0002" Cargo="3" Mass="1150">
+            <PriceBase Value="16950"/>
+          </Mat>
+          <Mat Caption="Приборы санитарно-технические" Code="18.2.06.12" Units="компл." Quantity="10" Options="NotCount"/>
+        </Resources>
+        <WorksList>
+          <Work Caption="Установка приборов со сверлением отверстий."/>
+          <Work Caption="Регулировка смывной арматуры."/>
+          <Work Caption="Присоединение приборов к трубопроводам."/>
+        </WorksList>
+      </Position>
+      <Position Caption="Дюбели распорные полиэтиленовые: 8х40 мм" Number="23" Code="ФССЦ-01.7.15.07-0024" SysID="83" Units="1000 шт" Quantity="132 / 1000" PriceLevel="2001" IndexCode="1" DBComment="Приказ Минстроя России от 30.12.2016 №1039/пр" PzSync="Yes" Vr2001="10026" Bookmark="255" Cargo="1" Mass="10">
+        <Quantity Fx="=132" KUnit="1000" Result="0,132"/>
+        <PriceBase PZ="200" MT="200"/>
+      </Position>
+      <Position Caption="Шурупы с полукруглой головкой: 6х90 мм" Number="24" Code="ФССЦ-01.7.15.14-0173" SysID="84" Units="т" Quantity="0,0017" PriceLevel="2001" IndexCode="1" DBComment="Приказ Минстроя России от 30.12.2016 №1039/пр" PzSync="Yes" Vr2001="10026" Bookmark="255" Cargo="1" Mass="1120">
+        <Quantity Fx="0,0017" Result="0,0017"/>
+        <PriceBase PZ="11350" MT="11350"/>
+      </Position>
+      <Position Caption="Замазка суриковая" Number="25" Code="ФССЦ-14.5.02.02-0105" SysID="85" Units="кг" Quantity="13,2" PriceLevel="2001" IndexCode="1" DBComment="Приказ Минстроя России от 30.12.2016 №1039/пр" PzSync="Yes" Vr2001="2945" Bookmark="255" Cargo="1" Mass="1,06">
+        <Quantity Fx="13,2" Result="13,2"/>
+        <PriceBase PZ="19,61" MT="19,61"/>
+      </Position>
+      <Position Caption="Унитаз-компакт «Комфорт»" Number="26" Code="ФССЦ-18.2.01.06-0001" SysID="51" Units="компл." Quantity="33" PriceLevel="2001" IndexCode="1" DBComment="Приказ Минстроя России от 30.12.2016 №1039/пр" PzSync="Yes" Vr2001="10091" Bookmark="255" Cargo="3" Mass="45">
+        <Quantity Fx="33" Result="33"/>
+        <PriceBase PZ="318" MT="318"/>
+      </Position>
+      <Position Caption="Установка писсуаров: настенных" Number="27" Code="ФЕР17-01-004-01" SysID="52" Units="10 компл." Quantity="4 / 10" PriceLevel="2001" IndexCode="1" DBComment="Приказ Минстроя России от 30.12.2016 №1039/пр" DBFlags="Comment" PzSync="Yes" Vr2001="10026" Bookmark="255">
+        <Quantity Fx="=4" KUnit="10" Result="0,4"/>
+        <PriceBase PZ="150,1" OZ="97,01" EM="12,99" ZM="3,09" MT="40,1"/>
+        <Resources>
+          <Tzr Caption="Затраты труда рабочих" Code="1-3-8" Units="чел.час" Quantity="10,32" WorkClass="3,8">
+            <PriceBase Value="9,4"/>
+          </Tzr>
+          <Tzm Caption="Затраты труда машинистов" Code="2" Units="чел.час" Quantity="0,25"/>
+          <Mch Caption="Подъемники одномачтовые, грузоподъемность до 500 кг, высота подъема 45 м" Code="91.06.06-048" Units="маш.час" Quantity="0,1">
+            <PriceBase Value="31,26" ZM="13,5"/>
+          </Mch>
+          <Mch Caption="Автомобили бортовые, грузоподъемность: до 5 т" Code="91.14.02-001" Units="маш.час" Quantity="0,15">
+            <PriceBase Value="65,71" ZM="11,6"/>
+          </Mch>
+          <Mat Caption="Каболка" Code="01.7.07.29-0031" Units="т" Quantity="0,0009" Cargo="2" Mass="1000">
+            <PriceBase Value="30030"/>
+          </Mat>
+          <Mat Caption="Очес льняной" Code="01.7.07.29-0101" Units="кг" Quantity="0,12" Cargo="2" Mass="0,7">
+            <PriceBase Value="37,29"/>
+          </Mat>
+          <Mat Caption="Дюбели распорные полиэтиленовые" Code="01.7.15.07" Units="10 шт" Quantity="4" Options="NotCount"/>
+          <Mat Caption="Шурупы строительные" Code="01.7.15.14" Units="т" Quantity="0,0007" Options="NotCount"/>
+          <Mat Caption="Цемент гипсоглиноземистый расширяющийся" Code="03.2.02.08-0001" Units="т" Quantity="0,0016" Cargo="1" Mass="1010">
+            <PriceBase Value="1836"/>
+          </Mat>
+          <Mat Caption="Краски масляные земляные марки: МА-0115 мумия, сурик железный" Code="14.4.02.04-0141" Units="т" Quantity="0,00024" Cargo="3" Mass="1100">
+            <PriceBase Value="15119"/>
+          </Mat>
+          <Mat Caption="Замазка суриковая" Code="14.5.02.02" Units="кг" Quantity="0,8" Options="NotCount"/>
+          <Mat Caption="Олифа комбинированная, марки: К-3" Code="14.5.05.01-0012" Units="т" Quantity="0,00012" Cargo="3" Mass="1150">
+            <PriceBase Value="16950"/>
+          </Mat>
+          <Mat Caption="Приборы санитарно-технические" Code="18.2.06.12" Units="компл." Quantity="10" Options="NotCount"/>
+        </Resources>
+        <WorksList>
+          <Work Caption="Установка приборов со сверлением отверстий."/>
+          <Work Caption="Присоединение приборов к трубопроводам."/>
+        </WorksList>
+      </Position>
+      <Position Caption="Дюбели распорные полиэтиленовые: 8х40 мм" Number="28" Code="ФССЦ-01.7.15.07-0024" SysID="80" Units="1000 шт" Quantity="16/1000" PriceLevel="2001" IndexCode="1" DBComment="Приказ Минстроя России от 30.12.2016 №1039/пр" PzSync="Yes" Vr2001="10026" Bookmark="255" Cargo="1" Mass="10">
+        <Quantity Fx="16/1000" KUnit="1000" Result="0,016"/>
+        <PriceBase PZ="200" MT="200"/>
+      </Position>
+      <Position Caption="Шурупы с полукруглой головкой: 6х90 мм" Number="29" Code="ФССЦ-01.7.15.14-0173" SysID="81" Units="т" Quantity="0,0003" PriceLevel="2001" IndexCode="1" DBComment="Приказ Минстроя России от 30.12.2016 №1039/пр" PzSync="Yes" Vr2001="10026" Bookmark="255" Cargo="1" Mass="1120">
+        <Quantity Fx="0,0003" Result="0,0003"/>
+        <PriceBase PZ="11350" MT="11350"/>
+      </Position>
+      <Position Caption="Замазка суриковая" Number="30" Code="ФССЦ-14.5.02.02-0105" SysID="82" Units="кг" Quantity="0,32" PriceLevel="2001" IndexCode="1" DBComment="Приказ Минстроя России от 30.12.2016 №1039/пр" PzSync="Yes" Vr2001="2945" Bookmark="255" Cargo="1" Mass="1,06">
+        <Quantity Fx="0,32" Result="0,32"/>
+        <PriceBase PZ="19,61" MT="19,61"/>
+      </Position>
+      <Position Caption="Писсуары полуфарфоровые и фарфоровые настенные с писсуарным краном: с цельноотлитым сифоном размером 435х360х290 мм" Number="31" Code="ФССЦ-18.2.01.03-0012" SysID="53" Units="шт" Quantity="4" PriceLevel="2001" IndexCode="1" DBComment="Приказ Минстроя России от 30.12.2016 №1039/пр" PzSync="Yes" Vr2001="10091" Bookmark="255" Cargo="3" Mass="11,5">
+        <Quantity Fx="=4" Result="4"/>
+        <PriceBase PZ="217,12" MT="217,12"/>
+      </Position>
+      <Position Caption="Установка трапов диаметром: 50 мм" Number="32" Code="ФЕР17-01-001-22" SysID="55" Units="10 компл." Quantity="6 / 10" PriceLevel="2001" IndexCode="1" DBComment="Приказ Минстроя России от 30.12.2016 №1039/пр" DBFlags="Comment" PzSync="Yes" Vr2001="10026" Bookmark="255">
+        <Quantity Fx="=6" KUnit="10" Result="0,6"/>
+        <PriceBase PZ="80,88" OZ="48,68" EM="7,51" ZM="1,57" MT="24,69"/>
+        <Resources>
+          <Tzr Caption="Затраты труда рабочих" Code="1-4-0" Units="чел.час" Quantity="5,06" WorkClass="4">
+            <PriceBase Value="9,62"/>
+          </Tzr>
+          <Tzm Caption="Затраты труда машинистов" Code="2" Units="чел.час" Quantity="0,13"/>
+          <Mch Caption="Подъемники одномачтовые, грузоподъемность до 500 кг, высота подъема 45 м" Code="91.06.06-048" Units="маш.час" Quantity="0,03">
+            <PriceBase Value="31,26" ZM="13,5"/>
+          </Mch>
+          <Mch Caption="Автомобили бортовые, грузоподъемность: до 5 т" Code="91.14.02-001" Units="маш.час" Quantity="0,1">
+            <PriceBase Value="65,71" ZM="11,6"/>
+          </Mch>
+          <Mat Caption="Каболка" Code="01.7.07.29-0031" Units="т" Quantity="0,0007" Cargo="2" Mass="1000">
+            <PriceBase Value="30030"/>
+          </Mat>
+          <Mat Caption="Цемент гипсоглиноземистый расширяющийся" Code="03.2.02.08-0001" Units="т" Quantity="0,002" Cargo="1" Mass="1010">
+            <PriceBase Value="1836"/>
+          </Mat>
+          <Mat Caption="Приборы санитарно-технические" Code="18.2.06.12" Units="компл." Quantity="10" Options="NotCount"/>
+        </Resources>
+        <WorksList>
+          <Work Caption="Установка санитарных приборов со сверлением отверстий."/>
+          <Work Caption="Установка и заделка кронштейнов."/>
+          <Work Caption="Присоединение приборов к трубопроводам."/>
+        </WorksList>
+      </Position>
+      <Position Caption="Трапы чугунные эмалированные с горизонтальным выпуском диаметром 50 мм" Number="33" Code="ФССЦ-18.2.06.10-0013" SysID="54" Units="шт" Quantity="6" PriceLevel="2001" IndexCode="1" DBComment="Приказ Минстроя России от 30.12.2016 №1039/пр" PzSync="Yes" Vr2001="10091" Bookmark="255" Cargo="1" Mass="8,6">
+        <Quantity Fx="=6" Result="6"/>
+        <PriceBase PZ="121,11" MT="121,11"/>
+      </Position>
+      <Position Caption="Установка моек: на два  отделения" Number="34" Code="ФЕР17-01-005-02" SysID="99" Units="10 компл." Quantity="3 / 10" PriceLevel="2001" IndexCode="1" DBComment="Приказ Минстроя России от 30.12.2016 №1039/пр" DBFlags="Comment" PzSync="Yes" Vr2001="10026">
+        <Quantity Fx="=3" KUnit="10" Result="0,3"/>
+        <PriceBase PZ="366,7" OZ="243,48" EM="45,64" ZM="13,16" MT="77,58"/>
+        <Resources>
+          <Tzr Caption="Затраты труда рабочих" Code="1-4-0" Units="чел.час" Quantity="25,31" WorkClass="4">
+            <PriceBase Value="9,62"/>
+          </Tzr>
+          <Tzm Caption="Затраты труда машинистов" Code="2" Units="чел.час" Quantity="1,03"/>
+          <Mch Caption="Подъемники одномачтовые, грузоподъемность до 500 кг, высота подъема 45 м" Code="91.06.06-048" Units="маш.час" Quantity="0,64">
+            <PriceBase Value="31,26" ZM="13,5"/>
+          </Mch>
+          <Mch Caption="Автомобили бортовые, грузоподъемность: до 5 т" Code="91.14.02-001" Units="маш.час" Quantity="0,39">
+            <PriceBase Value="65,71" ZM="11,6"/>
+          </Mch>
+          <Mat Caption="Каболка" Code="01.7.07.29-0031" Units="т" Quantity="0,0014" Cargo="2" Mass="1000">
+            <PriceBase Value="30030"/>
+          </Mat>
+          <Mat Caption="Очес льняной" Code="01.7.07.29-0101" Units="кг" Quantity="0,7" Cargo="2" Mass="0,7">
+            <PriceBase Value="37,29"/>
+          </Mat>
+          <Mat Caption="Дюбели распорные полиэтиленовые" Code="01.7.15.07" Units="10 шт" Quantity="4" Options="NotCount"/>
+          <Mat Caption="Шурупы строительные" Code="01.7.15.14" Units="т" Quantity="0,0005" Options="NotCount"/>
+          <Mat Caption="Раствор цементный" Code="04.3.01.09" Units="м3" Quantity="0,01" Options="NotCount"/>
+          <Mat Caption="Краски масляные земляные марки: МА-0115 мумия, сурик железный" Code="14.4.02.04-0141" Units="т" Quantity="0,0004" Cargo="3" Mass="1100">
+            <PriceBase Value="15119"/>
+          </Mat>
+          <Mat Caption="Замазка суриковая" Code="14.5.02.02" Units="кг" Quantity="2" Options="NotCount"/>
+          <Mat Caption="Олифа комбинированная, марки: К-3" Code="14.5.05.01-0012" Units="т" Quantity="0,0002" Cargo="3" Mass="1150">
+            <PriceBase Value="16950"/>
+          </Mat>
+          <Mat Caption="Приборы санитарно-технические" Code="18.2.06.12" Units="компл." Quantity="10" Options="NotCount"/>
+        </Resources>
+        <WorksList>
+          <Work Caption="Установка приборов со сверлением отверстий."/>
+          <Work Caption="Установка кронштейнов или шкафов под мойки."/>
+          <Work Caption="Присоединение приборов к трубопроводам."/>
+        </WorksList>
+      </Position>
+      <Position Caption="Дюбели распорные полиэтиленовые: 8х40 мм" Number="35" Code="ФССЦ-01.7.15.07-0024" SysID="100" Units="1000 шт" Quantity="12/1000" PriceLevel="2001" IndexCode="1" DBComment="Приказ Минстроя России от 30.12.2016 №1039/пр" PzSync="Yes" Vr2001="10026" Cargo="1" Mass="10">
+        <Quantity Fx="12/1000" KUnit="1000" Result="0,012"/>
+        <PriceBase PZ="200" MT="200"/>
+      </Position>
+      <Position Caption="Шурупы с полукруглой головкой: 6х90 мм" Number="36" Code="ФССЦ-01.7.15.14-0173" SysID="101" Units="т" Quantity="0,0002" PriceLevel="2001" IndexCode="1" DBComment="Приказ Минстроя России от 30.12.2016 №1039/пр" PzSync="Yes" Vr2001="10026" Cargo="1" Mass="1120">
+        <Quantity Fx="0,0002" Result="0,0002"/>
+        <PriceBase PZ="11350" MT="11350"/>
+      </Position>
+      <Position Caption="Раствор готовый кладочный цементный марки: 50" Number="37" Code="ФССЦ-04.3.01.09-0012" SysID="103" Units="м3" Quantity="0,003" PriceLevel="2001" IndexCode="1" DBComment="Приказ Минстроя России от 30.12.2016 №1039/пр" PzSync="Yes" Vr2001="10026" Cargo="1" Mass="2420">
+        <Quantity Fx="0,003" Result="0,003"/>
+        <PriceBase PZ="485,9" MT="485,9"/>
+      </Position>
+      <Position Caption="Замазка суриковая" Number="38" Code="ФССЦ-14.5.02.02-0105" SysID="102" Units="кг" Quantity="0,6" PriceLevel="2001" IndexCode="1" DBComment="Приказ Минстроя России от 30.12.2016 №1039/пр" PzSync="Yes" Vr2001="2945" Cargo="1" Mass="1,06">
+        <Quantity Fx="0,6" Result="0,6"/>
+        <PriceBase PZ="19,61" MT="19,61"/>
+      </Position>
+      <Position Caption="Ванна моечная двухсекционная, размером 1000х500х860 мм" Number="39" Code="ФССЦ-18.2.02.01-0011" SysID="57" Units="шт" Quantity="3" PriceLevel="2001" IndexCode="1" DBComment="Приказ Минстроя России от 30.12.2016 №1039/пр" PzSync="Yes" Vr2001="10091" Bookmark="255" Cargo="2" Mass="16">
+        <Quantity Fx="=3" Result="3"/>
+        <PriceBase PZ="1964,06" MT="1964,06"/>
+      </Position>
+      <Position Caption="Установка моек: на три отделения" Number="40" Code="ФЕР17-01-005-02" SysID="104" Units="10 компл." Quantity="2 / 10" Comment="прим" PriceLevel="2001" IndexCode="1" DBComment="Приказ Минстроя России от 30.12.2016 №1039/пр" DBFlags="Comment" PzSync="Yes" Vr2001="10026">
+        <Quantity Fx="=2" KUnit="10" Result="0,2"/>
+        <PriceBase PZ="366,7" OZ="243,48" EM="45,64" ZM="13,16" MT="77,58"/>
+        <Resources>
+          <Tzr Caption="Затраты труда рабочих" Code="1-4-0" Units="чел.час" Quantity="25,31" WorkClass="4">
+            <PriceBase Value="9,62"/>
+          </Tzr>
+          <Tzm Caption="Затраты труда машинистов" Code="2" Units="чел.час" Quantity="1,03"/>
+          <Mch Caption="Подъемники одномачтовые, грузоподъемность до 500 кг, высота подъема 45 м" Code="91.06.06-048" Units="маш.час" Quantity="0,64">
+            <PriceBase Value="31,26" ZM="13,5"/>
+          </Mch>
+          <Mch Caption="Автомобили бортовые, грузоподъемность: до 5 т" Code="91.14.02-001" Units="маш.час" Quantity="0,39">
+            <PriceBase Value="65,71" ZM="11,6"/>
+          </Mch>
+          <Mat Caption="Каболка" Code="01.7.07.29-0031" Units="т" Quantity="0,0014" Cargo="2" Mass="1000">
+            <PriceBase Value="30030"/>
+          </Mat>
+          <Mat Caption="Очес льняной" Code="01.7.07.29-0101" Units="кг" Quantity="0,7" Cargo="2" Mass="0,7">
+            <PriceBase Value="37,29"/>
+          </Mat>
+          <Mat Caption="Дюбели распорные полиэтиленовые" Code="01.7.15.07" Units="10 шт" Quantity="4" Options="NotCount"/>
+          <Mat Caption="Шурупы строительные" Code="01.7.15.14" Units="т" Quantity="0,0005" Options="NotCount"/>
+          <Mat Caption="Раствор цементный" Code="04.3.01.09" Units="м3" Quantity="0,01" Options="NotCount"/>
+          <Mat Caption="Краски масляные земляные марки: МА-0115 мумия, сурик железный" Code="14.4.02.04-0141" Units="т" Quantity="0,0004" Cargo="3" Mass="1100">
+            <PriceBase Value="15119"/>
+          </Mat>
+          <Mat Caption="Замазка суриковая" Code="14.5.02.02" Units="кг" Quantity="2" Options="NotCount"/>
+          <Mat Caption="Олифа комбинированная, марки: К-3" Code="14.5.05.01-0012" Units="т" Quantity="0,0002" Cargo="3" Mass="1150">
+            <PriceBase Value="16950"/>
+          </Mat>
+          <Mat Caption="Приборы санитарно-технические" Code="18.2.06.12" Units="компл." Quantity="10" Options="NotCount"/>
+        </Resources>
+        <WorksList>
+          <Work Caption="Установка приборов со сверлением отверстий."/>
+          <Work Caption="Установка кронштейнов или шкафов под мойки."/>
+          <Work Caption="Присоединение приборов к трубопроводам."/>
+        </WorksList>
+      </Position>
+      <Position Caption="Дюбели распорные полиэтиленовые: 8х40 мм" Number="41" Code="ФССЦ-01.7.15.07-0024" SysID="105" Units="1000 шт" Quantity="8/1000" PriceLevel="2001" IndexCode="1" DBComment="Приказ Минстроя России от 30.12.2016 №1039/пр" PzSync="Yes" Vr2001="10026" Cargo="1" Mass="10">
+        <Quantity Fx="8/1000" KUnit="1000" Result="0,008"/>
+        <PriceBase PZ="200" MT="200"/>
+      </Position>
+      <Position Caption="Шурупы с полукруглой головкой: 6х90 мм" Number="42" Code="ФССЦ-01.7.15.14-0173" SysID="106" Units="т" Quantity="0,0001" PriceLevel="2001" IndexCode="1" DBComment="Приказ Минстроя России от 30.12.2016 №1039/пр" PzSync="Yes" Vr2001="10026" Cargo="1" Mass="1120">
+        <Quantity Fx="0,0001" Result="0,0001"/>
+        <PriceBase PZ="11350" MT="11350"/>
+      </Position>
+      <Position Caption="Раствор готовый кладочный цементный марки: 50" Number="43" Code="ФССЦ-04.3.01.09-0012" SysID="107" Units="м3" Quantity="0,002" PriceLevel="2001" IndexCode="1" DBComment="Приказ Минстроя России от 30.12.2016 №1039/пр" PzSync="Yes" Vr2001="10026" Cargo="1" Mass="2420">
+        <Quantity Fx="0,002" Result="0,002"/>
+        <PriceBase PZ="485,9" MT="485,9"/>
+      </Position>
+      <Position Caption="Замазка суриковая" Number="44" Code="ФССЦ-14.5.02.02-0105" SysID="108" Units="кг" Quantity="0,4" PriceLevel="2001" IndexCode="1" DBComment="Приказ Минстроя России от 30.12.2016 №1039/пр" PzSync="Yes" Vr2001="2945" Cargo="1" Mass="1,06">
+        <Quantity Fx="0,4" Result="0,4"/>
+        <PriceBase PZ="19,61" MT="19,61"/>
+      </Position>
+      <Position Caption="Ванна моечная трехсекционная, размером 1500х500х860 мм" Number="45" Code="ФССЦ-18.2.02.01-0014" SysID="86" Units="шт" Quantity="2" PriceLevel="2001" IndexCode="1" DBComment="Приказ Минстроя России от 30.12.2016 №1039/пр" PzSync="Yes" Vr2001="10091" Bookmark="255" Cargo="2" Mass="25">
+        <Quantity Fx="2" Result="2"/>
+        <PriceBase PZ="2949,8" MT="2949,8"/>
+      </Position>
+      <Position Caption="Установка поддонов душевых: чугунных и стальных мелких" Number="46" Code="ФЕР17-01-001-18" SysID="87" Units="10 компл." Quantity="1 / 10" PriceLevel="2001" IndexCode="1" DBComment="Приказ Минстроя России от 30.12.2016 №1039/пр" DBFlags="Comment" PzSync="Yes" Vr2001="10026" Bookmark="255">
+        <Quantity Fx="=1" KUnit="10" Result="0,1"/>
+        <PriceBase PZ="234,61" OZ="104,76" EM="47,93" ZM="10,3" MT="81,92"/>
+        <Resources>
+          <Tzr Caption="Затраты труда рабочих" Code="1-4-0" Units="чел.час" Quantity="10,89" WorkClass="4">
+            <PriceBase Value="9,62"/>
+          </Tzr>
+          <Tzm Caption="Затраты труда машинистов" Code="2" Units="чел.час" Quantity="0,85"/>
+          <Mch Caption="Подъемники одномачтовые, грузоподъемность до 500 кг, высота подъема 45 м" Code="91.06.06-048" Units="маш.час" Quantity="0,23">
+            <PriceBase Value="31,26" ZM="13,5"/>
+          </Mch>
+          <Mch Caption="Автомобили бортовые, грузоподъемность: до 5 т" Code="91.14.02-001" Units="маш.час" Quantity="0,62">
+            <PriceBase Value="65,71" ZM="11,6"/>
+          </Mch>
+          <Mat Caption="Каболка" Code="01.7.07.29-0031" Units="т" Quantity="0,0007" Cargo="2" Mass="1000">
+            <PriceBase Value="30030"/>
+          </Mat>
+          <Mat Caption="Очес льняной" Code="01.7.07.29-0101" Units="кг" Quantity="0,6" Cargo="2" Mass="0,7">
+            <PriceBase Value="37,29"/>
+          </Mat>
+          <Mat Caption="Электроды диаметром: 5 мм Э42А" Code="01.7.11.07-0045" Units="т" Quantity="3E-5" Cargo="2" Mass="1140">
+            <PriceBase Value="10362"/>
+          </Mat>
+          <Mat Caption="Болты с гайками и шайбами для санитарно-технических работ диаметром: 10 мм" Code="01.7.15.03-0012" Units="т" Quantity="0,0001" Cargo="1" Mass="1120">
+            <PriceBase Value="15130"/>
+          </Mat>
+          <Mat Caption="Цемент гипсоглиноземистый расширяющийся" Code="03.2.02.08-0001" Units="т" Quantity="0,002" Cargo="1" Mass="1010">
+            <PriceBase Value="1836"/>
+          </Mat>
+          <Mat Caption="Краски масляные земляные марки: МА-0115 мумия, сурик железный" Code="14.4.02.04-0141" Units="т" Quantity="0,0014" Cargo="3" Mass="1100">
+            <PriceBase Value="15119"/>
+          </Mat>
+          <Mat Caption="Олифа комбинированная, марки: К-3" Code="14.5.05.01-0012" Units="т" Quantity="0,0007" Cargo="3" Mass="1150">
+            <PriceBase Value="16950"/>
+          </Mat>
+          <Mat Caption="Приборы санитарно-технические" Code="18.2.06.12" Units="компл." Quantity="10" Options="NotCount"/>
+        </Resources>
+        <WorksList>
+          <Work Caption="Установка санитарных приборов со сверлением отверстий."/>
+          <Work Caption="Установка и заделка кронштейнов."/>
+          <Work Caption="Присоединение приборов к трубопроводам."/>
+        </WorksList>
+      </Position>
+      <Position Caption="Поддоны душевые" Number="47" Code="ФССЦ-18.2.02.07-0001" SysID="89" Units="компл." Quantity="1" PriceLevel="2001" IndexCode="1" DBComment="Приказ Минстроя России от 30.12.2016 №1039/пр" PzSync="Yes" Vr2001="10026" Bookmark="255" Cargo="2" Mass="23,4">
+        <Quantity Fx="1" Result="1"/>
+        <PriceBase PZ="341,5" MT="341,5"/>
+      </Position>
+      <Position Caption="Установка ванн купальных: прямых стальных" Number="48" Code="ФЕР17-01-001-02" SysID="90" Units="10 компл." Quantity="2 / 10" PriceLevel="2001" IndexCode="1" DBComment="Приказ Минстроя России от 30.12.2016 №1039/пр" DBFlags="Comment" PzSync="Yes" Vr2001="10026" Bookmark="255">
+        <Quantity Fx="=2" KUnit="10" Result="0,2"/>
+        <PriceBase PZ="359,91" OZ="208,27" EM="74,76" ZM="15,71" MT="76,88"/>
+        <Resources>
+          <Tzr Caption="Затраты труда рабочих" Code="1-4-0" Units="чел.час" Quantity="21,65" WorkClass="4">
+            <PriceBase Value="9,62"/>
+          </Tzr>
+          <Tzm Caption="Затраты труда машинистов" Code="2" Units="чел.час" Quantity="1,27"/>
+          <Mch Caption="Краны на автомобильном ходу, грузоподъемность 10 т" Code="91.05.05-014" Units="маш.час" Quantity="0,11">
+            <PriceBase Value="111,99" ZM="13,5"/>
+          </Mch>
+          <Mch Caption="Подъемники одномачтовые, грузоподъемность до 500 кг, высота подъема 45 м" Code="91.06.06-048" Units="маш.час" Quantity="0,4">
+            <PriceBase Value="31,26" ZM="13,5"/>
+          </Mch>
+          <Mch Caption="Автомобили бортовые, грузоподъемность: до 5 т" Code="91.14.02-001" Units="маш.час" Quantity="0,76">
+            <PriceBase Value="65,71" ZM="11,6"/>
+          </Mch>
+          <Mat Caption="Каболка" Code="01.7.07.29-0031" Units="т" Quantity="0,0007" Cargo="2" Mass="1000">
+            <PriceBase Value="30030"/>
+          </Mat>
+          <Mat Caption="Очес льняной" Code="01.7.07.29-0101" Units="кг" Quantity="0,6" Cargo="2" Mass="0,7">
+            <PriceBase Value="37,29"/>
+          </Mat>
+          <Mat Caption="Цемент гипсоглиноземистый расширяющийся" Code="03.2.02.08-0001" Units="т" Quantity="0,002" Cargo="1" Mass="1010">
+            <PriceBase Value="1836"/>
+          </Mat>
+          <Mat Caption="Краски масляные земляные марки: МА-0115 мумия, сурик железный" Code="14.4.02.04-0141" Units="т" Quantity="0,0013" Cargo="3" Mass="1100">
+            <PriceBase Value="15119"/>
+          </Mat>
+          <Mat Caption="Олифа комбинированная, марки: К-3" Code="14.5.05.01-0012" Units="т" Quantity="0,0006" Cargo="3" Mass="1150">
+            <PriceBase Value="16950"/>
+          </Mat>
+          <Mat Caption="Приборы санитарно-технические" Code="18.2.06.12" Units="компл." Quantity="10" Options="NotCount"/>
+        </Resources>
+        <WorksList>
+          <Work Caption="Установка санитарных приборов со сверлением отверстий."/>
+          <Work Caption="Установка и заделка кронштейнов."/>
+          <Work Caption="Присоединение приборов к трубопроводам."/>
+        </WorksList>
+      </Position>
+      <Position Caption="Ванны купальные прямобортные стальные эмалированные с 2-мя стальными подставками, с прокладками, уравнителем электрических потенциалов, с пластмассовыми выпуском, сифоном, переливной трубой и переливом: ВСТУ-1500, размером 1500х700х535 мм" Number="49" Code="ФССЦ-18.2.02.01-0022" SysID="91" Units="компл." Quantity="2" PriceLevel="2001" IndexCode="1" DBComment="Приказ Минстроя России от 30.12.2016 №1039/пр" PzSync="Yes" Vr2001="10080" Bookmark="255" Cargo="2" Mass="49,3">
+        <Quantity Fx="2" Result="2"/>
+        <PriceBase PZ="1210,24" MT="1210,24"/>
+      </Position>
+    </Chapter>
+    <Chapter Caption="Строительные работы" SysID="3" IndexCode="1">
+      <Header Caption="Канализация К1"/>
+      <Position Caption="Изоляция трубопроводов цилиндрами и полуцилиндрами из минеральной ваты на синтетическом связующем" Number="50" Code="ФЕР26-01-003-01" SysID="58" Units="м3" Quantity="3,8" PriceLevel="2001" IndexCode="1" DBComment="Приказ Минстроя России от 30.12.2016 №1039/пр" DBFlags="Comment TechK" PzSync="Yes" Vr2001="10030" Bookmark="255">
+        <Quantity Fx="=3,8" Result="3,8"/>
+        <PriceBase PZ="788,06" OZ="172,58" EM="28,83" ZM="4,64" MT="586,65"/>
+        <Resources>
+          <Tzr Caption="Затраты труда рабочих" Code="1-3-6" Units="чел.час" Quantity="18,8" WorkClass="3,6">
+            <PriceBase Value="9,18"/>
+          </Tzr>
+          <Tzm Caption="Затраты труда машинистов" Code="2" Units="чел.час" Quantity="0,4"/>
+          <Mch Caption="Автомобили бортовые, грузоподъемность: до 5 т" Code="91.14.02-001" Units="маш.час" Quantity="0,4">
+            <PriceBase Value="65,71" ZM="11,6"/>
+          </Mch>
+          <Mch Caption="Установки: для изготовления бандажей, диафрагм, пряжек" Code="91.21.22-443" Units="маш.час" Quantity="1,18">
+            <PriceBase Value="2,16"/>
+          </Mch>
+          <Mat Caption="Винты самонарезающие оцинкованные" Code="01.7.15.04" Units="т" Quantity="4E-5" Options="NotCount"/>
+          <Mat Caption="Лента стальная упаковочная, мягкая, нормальной точности 0,7х20-50 мм" Code="08.3.02.01-0041" Units="т" Quantity="0,0109" Cargo="1" Mass="1000">
+            <PriceBase Value="7590"/>
+          </Mat>
+          <Mat Caption="Проволока стальная низкоуглеродистая разного назначения оцинкованная диаметром: 1,1 мм" Code="08.3.03.05-0011" Units="т" Quantity="0,0011" Cargo="1" Mass="1000">
+            <PriceBase Value="14690"/>
+          </Mat>
+          <Mat Caption="Проволока стальная низкоуглеродистая разного назначения оцинкованная диаметром: 1,6 мм" Code="08.3.03.05-0013" Units="т" Quantity="0,004" Cargo="1" Mass="1000">
+            <PriceBase Value="14690"/>
+          </Mat>
+          <Mat Caption="Сталь листовая оцинкованная толщиной листа: 0,8 мм" Code="08.3.05.05-0054" Units="т" Quantity="0,039" Cargo="1" Mass="1000">
+            <PriceBase Value="11000"/>
+          </Mat>
+          <Mat Caption="Цилиндры и полуцилиндры теплоизоляционные из минваты на синтетическом связующем" Code="12.2.08.03" Units="м3" Quantity="1,032" Options="NotCount"/>
+        </Resources>
+        <WorksList>
+          <Work Caption="Укладка цилиндров и полуцилиндров с подгонкой их по месту."/>
+          <Work Caption="Заполнение швов отходами изделий."/>
+          <Work Caption="Закрепление изделий бандажами."/>
+          <Work Caption="Изготовление и установка диафрагм."/>
+          <Work Caption="Изготовление бандажей."/>
+          <Work Caption="Изготовление и закрепление пряжек"/>
+        </WorksList>
+      </Position>
+      <Position Caption="Цилиндры и полуцилиндры теплоизоляционные из минваты на синтетическом связующем: М-200, внутренний диаметр 76-108 мм" Number="51" Code="ФССЦ-12.2.08.03-0021" SysID="59" Units="м3" Quantity="3,922" PriceLevel="2001" IndexCode="1" DBComment="Приказ Минстроя России от 30.12.2016 №1039/пр" PzSync="Yes" Vr2001="10091" Bookmark="255" Cargo="4" Mass="244">
+        <Quantity Fx="3,922" Result="3,922"/>
+        <PriceBase PZ="1275,2" MT="1275,2"/>
+      </Position>
+    </Chapter>
+  </Chapters>
+  <AddZatrats>
+    <AddZatrGlava Glava="8"/>
+    <AddZatrGlava Glava="9"/>
+    <AddZatrGlava Glava="10"/>
+    <AddZatrGlava Glava="11"/>
+    <AddZatrGlava Glava="12"/>
+    <AddZatrGlava Glava="13"/>
+    <AddZatrGlava Glava="14"/>
+    <AddZatrGlava Glava="15"/>
+  </AddZatrats>
+  <OsInfo OSChapter="1" LinkType="LB">
+    <CCChapter Cons="2" Rec="2" Road="2"/>
+  </OsInfo>
+  <GsDocSignatures>
+    <Item Caption="Основание" ID="100"/>
+    <Item Caption="Дата составления сметы" ID="102" Value="1.01.2000г.с переводом в текущие цены на 1 квартал 2018 года"/>
+    <Item Caption="Составил" ID="300"/>
+  </GsDocSignatures>
+  <ReportOptions Options="Grouping SeparateZakPodr" Kk="1" RangingGroups="Mch Mat">
+    <RangingRates Mch="20" Mat="20"/>
+  </ReportOptions>
+</Document>

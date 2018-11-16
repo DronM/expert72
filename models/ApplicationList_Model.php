@@ -19,6 +19,9 @@ require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLDateTimeTZ.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLJSON.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLJSONB.php');
  
+
+require_once(ABSOLUTE_PATH.'controllers/Application_Controller.php');
+
 class ApplicationList_Model extends ModelSQL{
 	
 	public function __construct($dbLink){
@@ -444,6 +447,10 @@ class ApplicationList_Model extends ModelSQL{
 		$direct = 'DESC';
 		$order->addField($f_create_dt,$direct);
 $this->setLimitConstant('doc_per_page_count');
+	}
+
+	public function setTableName($v){
+		parent::setTableName($v.Application_Controller::LKPostfix());
 	}
 
 }

@@ -13,7 +13,7 @@ class EmailSender {
 				$smsType=NULL){
 		if (strlen($to)){
 			$ar = $dbLink->query_first(sprintf(
-			"INSERT INTO mail_for_sending 
+			"INSERT INTO mail_for_sending
 					(from_addr,from_name,
 					to_addr,to_name,
 					reply_addr,reply_name,
@@ -53,7 +53,7 @@ class EmailSender {
 			);	
 		}
 	}
-	public static function sendAllMail($delFiles,$dbLink,
+	public static function sendAllMail($delFiles,&$dbLink,
 				$smtpHost,$smtpPort,$smtpUser,$smtpPwd){
 		// Perform Query
 		$result = $dbLink->query(

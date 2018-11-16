@@ -250,7 +250,7 @@ function ApplicationList_View(id,options){
 			{"countPerPage":constants.doc_per_page_count.getValue()}),		
 		
 		"autoRefresh":false,
-		"refreshInterval":(role_id=="admin")? constants.grid_refresh_interval.getValue()*1000:0,
+		"refreshInterval":(role_id=="admin")? (constants.grid_refresh_interval.getValue()*1000) : (constants.grid_refresh_interval.getValue()*1000*5),
 		"rowSelect":false,
 		"focus":true
 	}));		

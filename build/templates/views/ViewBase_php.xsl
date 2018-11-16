@@ -61,13 +61,32 @@ class ViewBase extends ViewHTMLXSLT {
 	protected function initDbLink(){
 		if (!$this->dbLink){
 			$this->dbLink = new DB_Sql();
+			if (
+			$_SESSION['role_id']=='client'
+			||($_SESSION['role_id']=='admin' &amp;&amp; $_SESSION['user_name']=='adminlk')
+			){
+				//Клиент - всегда доступ ТОЛЬКО клиентский с любого сервера
+				$db_server = DB_SERVER_LK;
+				$db_user = DB_USER_LK;
+				$db_password = DB_PASSWORD_LK;
+				$port = DB_PORT_LK;
+				$this->dbLink->database	= DB_NAME_LK;
+			}
+			else{
+				//не клиент, здесь доступ из офиса
+				$db_server = DB_SERVER_OFFICE;
+				$db_user = DB_USER_OFFICE;
+				$db_password = DB_PASSWORD_OFFICE;						
+				$port = DB_PORT_OFFICE;
+				$this->dbLink->database	= DB_NAME;
+			}
+					
 			$this->dbLink->persistent=true;
 			$this->dbLink->appname = APP_NAME;
 			$this->dbLink->technicalemail = TECH_EMAIL;
 			$this->dbLink->reporterror = DEBUG;
-			$this->dbLink->database= DB_NAME;
 			try{			
-				$this->dbLink->connect(DB_SERVER,DB_USER,DB_PASSWORD,(defined('DB_PORT'))? DB_PORT:NULL);
+				$this->dbLink->connect($db_server,$db_user,$db_password,$port);
 			}
 			catch (Exception $e){
 				//do nothing
