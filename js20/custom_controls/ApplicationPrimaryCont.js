@@ -139,12 +139,12 @@ ApplicationPrimaryCont.prototype.setInitValue = function(v){
 	if (v && typeof v =="object"){
 		if (v[this.m_primaryFieldId]){
 			//number
-			this.getElement("primary_reg_number").setValue(v[this.m_primaryFieldId]);
+			this.getElement("primary_reg_number").setInitValue(v[this.m_primaryFieldId]);
 			tp = "not_primary";			
 		}
-		else if (v.backward_ord && v.backward_ord.length){
+		if (v.backward_ord && v.backward_ord.length){
 			//ref						
-			this.getElement("primary_ref").setValue(v.backward_ord[0]);
+			this.getElement("primary_ref").setInitValue(v.backward_ord[0]);
 			tp = "not_primary";
 		}
 	}
@@ -171,7 +171,9 @@ ApplicationPrimaryCont.prototype.getModified = function(){
 		return this.getElement("grp").getModified();
 	}
 	else{
-		return (this.getElement("primary_ref").getModified()||this.getElement("primary_reg_number").getModified());
+		var m1 = this.getElement("primary_ref").getModified();
+		var m2 = this.getElement("primary_reg_number").getModified();
+		return (m1||m2);
 	}
 }
 ApplicationPrimaryCont.prototype.fillOnPrimary = function(){

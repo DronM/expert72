@@ -29,6 +29,11 @@ function ApplicationClientContainer(id,options){
 				new_elem.toDOM(self.m_container.getNode());
 				self.addPanelEvents();
 				self.m_mainView.calcFillPercent();
+				new_elem.getElement("name").focus();
+				$([document.documentElement, document.body]).animate({
+					scrollTop: $(new_elem.getNode()).offset().top
+				}, 600);
+				
 			}
 		}));	
 	}

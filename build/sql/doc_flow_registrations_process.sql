@@ -46,11 +46,13 @@ BEGIN
 			
 				--При заключении по контракту - закрыть дату в контракте
 				--Вид заключения и вид отрицательного выставляется из формы исх.письма
+				/*
 				IF v_doc_flow_type_id = (pdfn_doc_flow_types_contr_close()->'keys'->>'id')::int THEN
 					UPDATE contracts
 					SET expertise_result_date = NEW.date_time::date				
 					WHERE application_id=v_to_application_id;
 				END IF;
+				*/
 			END IF;		
 		END IF;
 		

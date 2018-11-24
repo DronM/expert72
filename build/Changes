@@ -368,12 +368,20 @@ wget -O crypto_plugin.txt https://www.cryptopro.ru/sites/default/files/products/
 11) Порядок следования подписей в исх.письме клиента doc_flow_out_client_files_for_signing
 
 
-1.0.91
+1.0.91 16/10
+Тестирование мультимастеров
+
+1.0.92
 1) Подписание ответов в IE
 2) IE10 hierarchyRequestError
 3) Вроде нет проблем в IE10 с открытием окон, с заполнением параметров
 4) Профиль изменение "Дублировать напоминания на электронную почту" не открывало кнопку "сохранить", тоже и настройки плагина
 5) дополнительные таблицы для подписей для возможности работы с двух мастеров
+6) Добавление исполнителя, позийионирование (скролл), фокус на наименование
+7) Заполнение клиентов, теперь окно не скачет вверх
+8) Неквалифицированные сертификаты
+9) Невозможно отозвать отправленное заявление, ошибка - заявление отправлено на проверку!
+
 
 file_verifications_lk_process()
 file_signatures_lk_process()
@@ -395,10 +403,6 @@ doc_flow_out_process()
 application_processes_lk_process()
 applications_list_lk
 application_corrections_process()
-users_lk_process()
-mail_for_sending_lk_process()
-mail_for_sending_attachments_lk_process()
-user_view_lk()
 
 - Авторизация ЕСИА
 

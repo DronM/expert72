@@ -1,7 +1,6 @@
 <?php
 require_once('db_con.php');
-require_once(FRAME_WORK_PATH.'Constants.php');
-require_once(FRAME_WORK_PATH.'db/SessManager.php');
+
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLString.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLInt.php');
 
@@ -20,15 +19,6 @@ use Dilab\Resumable;
 use Monolog\Logger;
 use Monolog\Handler\PHPConsoleHandler;
 
-$session = new SessManager();
-$session->start_session('_s', $dbLink,$dbLink);
-//setting locale
-if (isset($_SESSION['user_time_locale'])){
-	$dbLink->query(sprintf("SET TIME ZONE '%s'",$_SESSION['user_time_locale']));
-	//php locale		
-	date_default_timezone_set($_SESSION['user_time_locale']);
-}
- 
 $request = new SimpleRequest();
 $response = new SimpleResponse();
 
@@ -49,6 +39,11 @@ define('PKI_MODE','error');
 define('DIR_MAX_LENGTH',500);
 define('CLIENT_OUT_FOLDER','Исходящие заявителя');
 
+function throw_common_error($erStr){
+	error_log($erStr);
+	throw new Exception(ER_COMMON.(DEBUG? ' '.$erStr:''));
+}
+
 function mkdir_or_error($dir){
 	if (!file_exists($dir)){
 		if (strlen($dir)>DIR_MAX_LENGTH){
@@ -56,8 +51,7 @@ function mkdir_or_error($dir){
 		}
 		@mkdir($dir,0775,TRUE);
 		if (!file_exists($dir)){
-			error_log('file_uploader mkdir_or_error '.$dir);
-			throw new Exception(ER_COMMON);
+			throw_common_error('file_uploader mkdir_or_error '.$dir);
 		}
 	}
 }
@@ -81,18 +75,17 @@ function prolongate_session() {
 	}
 }
 
-function pki_throw_error(&$verifRres) {
+function pki_throw_error(&$verifRres,$dbFileId,&$dbLink) {
 	//throw new Exception(sprintf(ER_VERIF_SIG,"Какая-то ошибка проверки подписи"));
-	if (pki_fatal_error($verifRres)){
+	if (pki_fatal_error($verifRres,$dbFileId,$dbLink)){
 		throw new Exception(sprintf(ER_VERIF_SIG,$verifRres->checkError));
 	}		
-
 }
- 
+
 function check_signature($dbLink,$fileDoc,$fileDocSig,$dbFileId) {
 	$pki_man = new PKIManager(PKI_PATH,PKI_CRL_VALIDITY,PKI_MODE);
 	$verif_res = pki_log_sig_check($fileDocSig, $fileDoc, $dbFileId, $pki_man, $dbLink);
-	pki_throw_error($verif_res);
+	pki_throw_error($verif_res,$dbFileId,$dbLink);
 }
  
 /**
@@ -124,7 +117,16 @@ function merge_sig($relDir,$contentFile,$origFile,$newName,$fileId,$dbFileId,&$d
 	$pki_man = new PKIManager(PKI_PATH,PKI_CRL_VALIDITY,PKI_MODE);
 	
 	//1) verify new signature, throw error
-	$verif_res = $pki_man->verifySig($origFile,$contentFile,PKI_NO_CHAIN_VERIFICATION,TRUE,FALSE);
+	$verif_res = $pki_man->verifySig(
+		$origFile,
+		$contentFile,
+		array(
+			'noChainVerification' => PKI_NO_CHAIN_VERIFICATION,
+			'onlineRevocCheck' => TRUE,
+			'notRemoveTempFiles' => FALSE,
+			'unqualifiedCertTreatAsError' => TRUE
+		)			
+	);
 	if (!$verif_res->checkPassed){
 		throw new Exception(sprintf(ER_VERIF_SIG,$verif_res->checkError));
 	}
@@ -221,7 +223,7 @@ function merge_sig($relDir,$contentFile,$origFile,$newName,$fileId,$dbFileId,&$d
  
 /** validation
  */ 
-function get_doc_flow_out_client_id_for_db($dbLink,$appIdForDb,$docFlowOutClientIdPar){
+function get_doc_flow_out_client_id_for_db($dbLink,$appIdForDb,$docFlowOutClientIdPar,&$docFlowFields){
 	$db_doc_flow_out_client_id = NULL;
 	FieldSQLInt::formatForDb($docFlowOutClientIdPar,$db_doc_flow_out_client_id);
 	if ($db_doc_flow_out_client_id=='null'){
@@ -229,8 +231,15 @@ function get_doc_flow_out_client_id_for_db($dbLink,$appIdForDb,$docFlowOutClient
 		throw new Exception(ER_NO_DOC);
 	}
 	
-	$ar = $dbLink->query_first(sprintf("SELECT (application_id=%d) AS app_checked FROM doc_flow_out_client WHERE id=%d",$appIdForDb,$db_doc_flow_out_client_id));
-	if (!count($ar) || $ar['app_checked']!='t'){
+	$docFlowFields = $dbLink->query_first(sprintf(
+		"SELECT
+			(application_id=%d) AS app_checked,
+			doc_flow_out_client_type,
+			user_id
+		FROM doc_flow_out_client
+		WHERE id=%d",$appIdForDb,$db_doc_flow_out_client_id
+	));
+	if (!count($docFlowFields) || $docFlowFields['app_checked']!='t'){
 		error_log('file_uploader, function get_doc_flow_out_client_id_for_db, checking not passed, application='.$appIdForDb);
 		throw new Exception(ER_NO_DOC);
 	}
@@ -319,8 +328,7 @@ try{
 		
 			$orig_file = $resumable->uploadFolder.DIRECTORY_SEPARATOR.$_REQUEST['resumableFilename'];
 			if (!file_exists($orig_file)){
-				error_log("file_uploader, isUploadComplete BUT no file=".$orig_file);
-				throw new Exception(ER_COMMON);
+				throw_common_error("file_uploader, isUploadComplete BUT no file=".$orig_file);
 			}
 			
 			$upload_folder_main = NULL;
@@ -335,12 +343,35 @@ try{
 			try{
 				$orig_file_size = @filesize($orig_file);
 				if (!$orig_file_size){
-					error_log("file_uploader, file length is 0, AppId=".$db_app_id);
-					throw new Exception(ER_COMMON);
+					throw_common_error("file_uploader, file length is 0, AppId=".$db_app_id);
 				}
 			
-				//application state and owner
-				Application_Controller::checkSentState($dbLink,$db_app_id,TRUE);
+				//application state and owner				
+				if (isset($_REQUEST['doc_flow_out_client_id'])){
+					//Кроме письма клиента с отзывом - это всегда можно отправлять!					
+					$doc_flow_iut_client_fields = [];
+					$db_doc_flow_out_client_id = get_doc_flow_out_client_id_for_db(
+							$dbLink,
+							$db_app_id,
+							$_REQUEST['doc_flow_out_client_id'],
+							$doc_flow_iut_client_fields
+					);
+					if (
+					($doc_flow_iut_client_fields['doc_flow_out_client_type']!='app_contr_revoke')
+					&& ($doc_flow_iut_client_fields['doc_flow_out_client_type']!='date_prolongate')
+					){
+						//обычная проверка на статус
+						Application_Controller::checkSentState($dbLink,$db_app_id,TRUE);
+					}
+					else if ($_SESSION['role_id']!='admin' && $doc_flow_iut_client_fields['user_id']!=$_SESSION['user_id']){
+						//Проверка только на пользователя
+						throw new Exception(Application_Controller::ER_OTHER_USER_APP);
+					}
+				}
+				else{
+					//статус и пользователь
+					Application_Controller::checkSentState($dbLink,$db_app_id,TRUE);
+				}				
 
 				if ($_SESSION['client_download_file_max_size']<$orig_file_size){
 					error_log('file_uploader, appId='.$db_app_id.' ER_MAX_SIZE_EXCEEDED size='.$orig_file_size);
@@ -392,8 +423,7 @@ try{
 				){
 					FieldSQLString::formatForDb($dbLink,$par_file_id,$db_file_id);
 					if ($db_file_id=='null'){
-						error_log('file_uploader, error uploading file, parameter db_file_id=null, appId= '.$db_app_id);
-						throw new Exception(ER_COMMON);
+						throw_common_error('file_uploader, error uploading file, parameter db_file_id=null, appId= '.$db_app_id);
 					}
 					
 					if ($sig_add){
@@ -404,11 +434,6 @@ try{
 					
 						check_signature($dbLink,$file_doc,$file_doc_sig,$db_file_id);
 						
-						$db_doc_flow_out_client_id = get_doc_flow_out_client_id_for_db(
-								$dbLink,
-								$db_app_id,
-								$_REQUEST['doc_flow_out_client_id']
-						);
 						$ar = $dbLink->query_first(sprintf(		
 						"SELECT TRUE AS signed FROM doc_flow_out_client_document_files WHERE file_id=%s",
 						$db_file_id
@@ -508,12 +533,6 @@ try{
 							 * - ставим отметку!!!
 							 */
 							if (isset($_REQUEST['doc_flow_out_client_id'])){
-								$db_doc_flow_out_client_id = get_doc_flow_out_client_id_for_db(
-										$dbLink,
-										$db_app_id,
-										$_REQUEST['doc_flow_out_client_id']
-								);
-					
 								$dbLink->query(sprintf(		
 								"INSERT INTO doc_flow_out_client_document_files
 								(file_id,doc_flow_out_client_id,is_new)
@@ -710,8 +729,7 @@ try{
 				$db_file_id = NULL;
 				FieldSQLString::formatForDb($dbLink,$par_file_id,$db_file_id);
 				if ($db_file_id=='null'){
-					error_log('file_uploader, doc_flow_out: parameter db_file_id=null, doc_id= '.$db_id);
-					throw new Exception(ER_COMMON);
+					throw_common_error('file_uploader, doc_flow_out: parameter db_file_id=null, doc_id= '.$db_id);
 				}
 				
 				

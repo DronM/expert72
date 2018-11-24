@@ -3,17 +3,86 @@
 	require_once(dirname(__FILE__).'/../Config.php');
 	require_once(ABSOLUTE_PATH.'controllers/Application_Controller.php');
 	
-	function pki_fatal_error(&$verifRes) {
-		return (
+	function pki_fatal_error(&$verifRes,$dbFileId=NULL,&$dbLink=NULL) {
+	
+		$fatal_res = (
 			!$verifRes->checkPassed
 			&&
-			( PKI_SIG_ERROR=='ALL' || (PKI_SIG_ERROR=='NO_CERT' && !count($verifRes->signatures) ) )
+			( PKI_SIG_ERROR=='ALL'
+			|| (strpos(PKI_SIG_ERROR,'ER_NO_CERT_FOUND')!==FALSE && !count($verifRes->signatures) )
+			|| (strpos(PKI_SIG_ERROR,'ER_UNQUALIFIED_CERT')!==FALSE &&  $verifRes->checkError==PKIManager::ER_UNQUALIFIED_CERT)
+			|| (strpos(PKI_SIG_ERROR,'ER_REVOKED')!==FALSE &&  $verifRes->checkError==PKIManager::ER_REVOKED)
+			|| (strpos(PKI_SIG_ERROR,'ER_BROKEN_CHAIN')!==FALSE &&  $verifRes->checkError==PKIManager::ER_BROKEN_CHAIN)
+			)
 		);
+		
+		if($fatal_res && !is_null($dbFileId) && !is_null($dbLink) && PKI_ERROR_TO_ADMIN){
+			try{
+				$dbLink->query(sprintf(
+				"INSERT INTO reminders
+				(recipient_employee_id,content)
+				WITH
+				file_id AS (SELECT %s AS val),
+				doc_data AS (
+					SELECT
+						CASE WHEN length((SELECT file_id.val FROM file_id))=32 THEN
+							(SELECT
+								CASE WHEN app.app_print_cost_eval @> ('[{\"id\":\"'||(SELECT file_id.val FROM file_id)||'\"}]')::jsonb THEN
+									'заявление №'||app.id||', заявление по достоверности'
+								WHEN app.app_print_expertise @> ('[{\"id\":\"'||(SELECT file_id.val FROM file_id)||'\"}]')::jsonb THEN
+									'заявление №'||app.id||', заявление по экспертизе'
+								WHEN app.app_print_audit @> ('[{\"id\":\"'||(SELECT file_id.val FROM file_id)||'\"}]')::jsonb THEN
+									'заявление №'||app.id||', заявление по аудиту'
+								WHEN app.app_print_audit @> ('[{\"id\":\"'||(SELECT file_id.val FROM file_id)||'\"}]')::jsonb THEN
+									'заявление №'||app.id||', файл доверенности'
+								
+								ELSE ''
+								END
+							FROM   applications AS app
+							WHERE 
+								app.app_print_cost_eval @> ('[{\"id\":\"'||(SELECT file_id.val FROM file_id)||'\"}]')::jsonb
+								OR app.app_print_expertise @> ('[{\"id\":\"'||(SELECT file_id.val FROM file_id)||'\"}]')::jsonb
+								OR app.app_print_audit @> ('[{\"id\":\"'||(SELECT file_id.val FROM file_id)||'\"}]')::jsonb
+								OR app.auth_letter_file @> ('[{\"id\":\"'||(SELECT file_id.val FROM file_id)||'\"}]')::jsonb
+							)
+						
+						ELSE
+							(SELECT
+								'заявление №'||app_f.application_id||', файл документации: '||app_f.file_path||'/'||app_f.file_name
+							FROM application_document_files AS app_f
+							WHERE app_f.file_id=(SELECT file_id.val FROM file_id)
+							)
+						END AS val
+				)
+				SELECT
+					employees.id,
+					'Ошибка проверки ЭЦП:  '||(SELECT doc_data.val FROM doc_data)||', '||'%s'
+				FROM employees
+				LEFT JOIN users ON users.id=employees.user_id
+				WHERE users.role_id='admin'",
+				$dbFileId,$verifRes->checkError
+				));
+			}
+			catch(Exception $e){
+			
+			}
+		}
+		
+		return $fatal_res;
 	}
 	
 	function pki_log_sig_check($fileDocSig, $fileDoc,$dbFileId,&$pkiMan,&$dbLink,$passExpired=FALSE){
 		//$pkiMan->setLogLevel('error');
-		$verif_res = $pkiMan->verifySig($fileDocSig, $fileDoc,PKI_NO_CHAIN_VERIFICATION,TRUE,FALSE);
+		$verif_res = $pkiMan->verifySig(
+			$fileDocSig,
+			$fileDoc,
+			array(
+				'noChainVerification' => PKI_NO_CHAIN_VERIFICATION,
+				'onlineRevocCheck' => TRUE,
+				'notRemoveTempFiles' => FALSE,
+				'unqualifiedCertTreatAsError' => TRUE
+			)			
+		);
 		
 		$db_checkError = NULL;
 		FieldSQLString::formatForDb($dbLink,$verif_res->checkError,$db_checkError);

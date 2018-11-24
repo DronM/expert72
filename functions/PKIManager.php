@@ -79,10 +79,10 @@ class PKIManager {
 	const ER_CERT_EXPIRED = 'Сертификат просрочен!';
 	const ER_BAD_CERT = 'Неверная структура сертификата!';
 	const ER_UNABLE_LOAD_CA_CERT = 'Невозможно установить сертификат удостоверяющего центра %s';
-	const ER_CERT_REVOC = 'Сертификат, выданный %s отозван';
 	const ER_NO_CRL = 'Невозможно получить список отозванных сертификатов!';
 	const ER_REVOKED = 'Сертификат владелец:%s, издатель:%s отозван!';
 	const ER_INNER = 'Внутренняя ошибка!';
+	const ER_UNQUALIFIED_CERT = 'Сертификат неквалифицированный';
 
 	const CA_LIST_URL = 'https://e-trust.gosuslugi.ru/CA/DownloadTSL?schemaVersion=0';		
 	const DEF_CRL_VALIDITY = 86400;//24*60*60
@@ -627,11 +627,25 @@ class PKIManager {
 	 *			subject,issuer,dateFrom,dateTo
 	 * @param{string} sigFile Full path to signature file
 	 * @param{string} contentFile Full path to data file
+	 * Options
 	 * @param{bool} [noChainVerification=FALSE]
 	 * @param{bool} [onlineRevocCheck=FALSE]
 	 * @param{bool} [notRemoveTempFiles=FALSE] Leave temporary pem,der files for debugging purposes
 	 */	
-	public function verifySig($sigFile,$contentFile,$noChainVerification=FALSE,$onlineRevocCheck=FALSE,$notRemoveTempFiles=FALSE){
+	public function verifySig($sigFile,$contentFile,$options=NULL){
+		$option_values = array(
+			'noChainVerification' => FALSE,
+			'onlineRevocCheck' => FALSE,
+			'notRemoveTempFiles' => FALSE,
+			'unqualifiedCertTreatAsError' => TRUE
+		);
+		if (!is_null($options)&&is_array($options)){
+			foreach($options as $opt=>$val){
+				if(array_key_exists($opt,$option_values)){
+					$option_values[$opt] = $val;
+				}
+			}
+		}
 		$verifResult = new stdClass();
 		$verifResult->checkPassed = TRUE;
 		$verifResult->checkTime = microtime(TRUE);
@@ -665,16 +679,22 @@ class PKIManager {
 					$cert_data->signedDate = NULL;
 					$cert_data->algorithm = NULL;
 					$this->getCertInf($pem_file,$cert_data);						
-					array_push($verifResult->signatures,$cert_data);						
+					array_push($verifResult->signatures,$cert_data);
+					
+					if ($option_values['unqualifiedCertTreatAsError'] && !array_key_exists('СНИЛС',$cert_data->subject)){
+						$verifResult->checkError = self::ER_UNQUALIFIED_CERT;
+						$verifResult->checkPassed = FALSE;
+					}
+					
 					//setting sign date
 					if (isset($sig_attrs[$cert_data->serialHex])){
 						$cert_data->signedDate = $sig_attrs[$cert_data->serialHex]->signedDate;
 						$cert_data->algorithm = $sig_attrs[$cert_data->serialHex]->algorithm;
 					}
 					
-					if (!$noChainVerification){
+					if (!$option_values['noChainVerification']){
 						$included_hases = [];
-						$this->build_chain($pem_file,$onlineRevocCheck,$cert_data,$included_hases);						
+						$this->build_chain($pem_file,$option_values['onlineRevocCheck'],$cert_data,$included_hases);						
 					}
 						
 				}
@@ -688,10 +708,10 @@ class PKIManager {
 						$der_file
 						
 					);
-					if (!$onlineRevocCheck){
+					if (!$option_values['onlineRevocCheck']){
 						$verif_cmd.= ' -crl_check_all';
 					}
-					if (!$noChainVerification){
+					if (!$option_values['noChainVerification']){
 						$verif_cmd.=sprintf(' -CApath "%s"',$this->pkiPath);
 					}
 					else{
@@ -730,10 +750,9 @@ class PKIManager {
 					$verifResult->checkPassed = FALSE;
 				}
 				
-				
 			}
 			finally{
-				if (!$notRemoveTempFiles){
+				if (!$option_values['notRemoveTempFiles']){
 					foreach($signer_pem_files as $pem_file){
 						if (file_exists($pem_file))unlink($pem_file);
 					}

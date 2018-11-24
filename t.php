@@ -17,8 +17,28 @@ return;
 */
 	require_once('functions/PKIManager.php');
 	$pki_man = new PKIManager(PKI_PATH,PKI_CRL_VALIDITY,'debug');
-	$verif_res = $pki_man->verifySig('/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/333/3 Самоомывающееся рыбозащитное устройство РОП-175.pdf.sig','/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/333/3 Самоомывающееся рыбозащитное устройство РОП-175.pdf',FALSE,TRUE,FALSE);
-	//$verif_res = $pki_man->verifySig('/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/!!!/ЛС (9 смет).xlsx.sig','/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/!!!/ЛС (9 смет).xlsx',FALSE,TRUE,TRUE);
+	/*
+	$verif_res = $pki_man->verifySig(
+		'/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/НеКвалифицированная/Доверенность № 82, Надеина А.М.pdf.sig',
+		'/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/НеКвалифицированная/Доверенность № 82, Надеина А.М.pdf',
+		array(
+			'noChainVerification' => FALSE,
+			'onlineRevocCheck' => TRUE,
+			'notRemoveTempFiles' => FALSE,
+			'unqualifiedCertTreatAsError' => TRUE
+		)
+	);
+	*/
+	$verif_res = $pki_man->verifySig(
+		'/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/111/Информационно-удостоверяющий лист ИОС1.pdf.sig',
+		'/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/111/Информационно-удостоверяющий лист ИОС1.pdf',
+		array(
+			'noChainVerification' => FALSE,
+			'onlineRevocCheck' => TRUE,
+			'notRemoveTempFiles' => FALSE,
+			'unqualifiedCertTreatAsError' => TRUE
+		)
+	);
 	
 	/*
 	$verif_res = pki_log_sig_check(

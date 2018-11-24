@@ -152,6 +152,15 @@ GRANT USAGE, SELECT ON SEQUENCE logins_id_seq TO expert72_lk;
 GRANT ALL ON sessions TO expert72_lk;
 GRANT ALL ON morpher TO expert72_lk;
 GRANT ALL ON application_processes_lk TO expert72_lk;
+GRANT ALL ON users TO expert72_lk;
+
+GRANT ALL ON mail_for_sending TO expert72_lk;
+GRANT ALL ON mail_for_sending_attachments TO expert72_lk;
+GRANT USAGE, SELECT ON SEQUENCE mail_for_sending_id_seq TO expert72_lk;
+GRANT USAGE, SELECT ON SEQUENCE mail_for_sending_attachments_id_seq TO expert72_lk;
+
+GRANT ALL ON user_email_confirmations TO expert72_lk;
+
 SELECT grant_all_views('public', 'expert72_lk')
 
 
@@ -182,6 +191,8 @@ psql -U expert72 -p 5435 -d expert72_lk
 ALTER SEQUENCE logins_id_seq RESTART WITH 1000000000;
 ALTER SEQUENCE users_id_seq RESTART WITH 1000000000;
 ALTER SEQUENCE file_signatures_lk_id_seq RESTART WITH 1000000000;
+ALTER SEQUENCE mail_for_sending_id_seq RESTART WITH 1000000000;
+ALTER SEQUENCE mail_for_sending_attachments_id_seq RESTART WITH 1000000000;
 
 Скопировать таблицы
 COPY user_certificates TO '/tmp/user_certificates_copy.txt';
@@ -208,6 +219,11 @@ CREATE PUBLICATION sync_lk_to_office FOR TABLE
 	user_certificates_lk,
 	logins,--************* Нужна установка sequence на ЛК	
 	--sessions **************** Вообще никуда не копируем, на каждом сервере свой
+	mail_for_sending,
+	mail_for_sending_attachments,
+	users,
+	user_email_confirmations
+	--morpher Does not work this way!
 	;	
 
 
@@ -217,12 +233,12 @@ psql -U postgres -p 5435 -d expert72_lk
 CREATE SUBSCRIPTION sync_lk_from_office
          CONNECTION 'host=localhost port=5432 password=159753 user=repl dbname=expert72'
         PUBLICATION sync_office_to_lk
-        WITH (copy_data=FALSE);
+        WITH (copy_data=FALSE,enabled=FALSE);
 
 CREATE SUBSCRIPTION sync_lk_from_office
-         CONNECTION 'host=46.173.214.98 port=5432 password=Gvr72sS@expert72_office user=expert72_office dbname=expert72_test'
+         CONNECTION 'host=46.173.214.98 port=5432 password=Gvr72sS@expert72_office user=expert72_office dbname=expert72_test sslmode=disable'
         PUBLICATION sync_office_to_lk
-        WITH (copy_data=FALSE);
+        WITH (copy_data=FALSE,enabled=FALSE);
 
 
 На основном сервере под postgres
@@ -230,13 +246,16 @@ psql -U postgres -p 5432 -d expert72
 CREATE SUBSCRIPTION sync_office_from_lk
          CONNECTION 'host=localhost port=5435 password=159753 user=repl dbname=expert72_lk'
         PUBLICATION sync_lk_to_office
-        WITH (copy_data=FALSE);
+        WITH (copy_data=FALSE,enabled=FALSE);
 
 CREATE SUBSCRIPTION sync_office_from_lk
          CONNECTION 'host=178.46.157.185 port=5435 password=159753 user=rep dbname=expert72_office'
         PUBLICATION sync_lk_to_office
         WITH (copy_data=FALSE);
 
+
+ALTER SUBSCRIPTION name ENABLE
+ALTER SUBSCRIPTION name DISABLE
 
 8) Создать пользователя для работы из офиса
 CREATE ROLE expert72_office WITH REPLICATION LOGIN PASSWORD '159753';
@@ -254,8 +273,5 @@ REVOKE INSERT,UPDATE,DELETE ON doc_flow_out_client_reg_numbers FROM expert72_off
 REVOKE INSERT,UPDATE,DELETE ON file_signatures_lk FROM expert72_office;
 REVOKE INSERT,UPDATE,DELETE ON file_verifications_lk FROM expert72_office;
 REVOKE INSERT,UPDATE,DELETE ON user_certificates_lk FROM expert72_office;
-REVOKE INSERT,UPDATE,DELETE ON user_lk FROM expert72_office;
-REVOKE INSERT,UPDATE,DELETE ON mail_for_sending_attachments_lk FROM expert72_office;
-REVOKE INSERT,UPDATE,DELETE ON user_email_confirmations_lk FROM expert72_office;
 GRANT SELECT,USAGE ON ALL SEQUENCES IN SCHEMA public TO expert72_office;
 

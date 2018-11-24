@@ -38,7 +38,8 @@ function ApplicationClientEdit(id,options){
 		//var id = this.getId();
 		this.addElement(new Control(id+":fillOnApplicant","A",{
 			"events":{
-				"click":function(){
+				"click":function(e){
+					e.preventDefault();
 					self.fillOnApplicant();
 				}
 			}
@@ -47,7 +48,8 @@ function ApplicationClientEdit(id,options){
 		if (!options.cmdClose){	
 			this.addElement(new Control(id+":fillOnContractor","A",{
 				"events":{
-					"click":function(){
+					"click":function(e){
+						e.preventDefault();
 						self.fillOnContractor();
 					}
 				}
@@ -56,14 +58,16 @@ function ApplicationClientEdit(id,options){
 		
 		this.addElement(new Control(id+":fillOnCustomer","A",{
 			"events":{
-				"click":function(){
+				"click":function(e){
+					e.preventDefault();
 					self.fillOnCustomer();
 				}
 			}
 		}));	
 		this.addElement(new Control(id+":fillOnDeveloper","A",{
 			"events":{
-				"click":function(){
+				"click":function(e){
+					e.preventDefault();
 					self.fillOnDeveloper();
 				}
 			}
@@ -71,7 +75,8 @@ function ApplicationClientEdit(id,options){
 		
 		this.addElement(new Control(id+":fillOnClientList","A",{
 			"events":{
-				"click":function(){
+				"click":function(e){
+					e.preventDefault();
 					self.fillOnClientList();
 				}
 			}

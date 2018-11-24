@@ -808,6 +808,23 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		
 		return $ar['state'];
 	}
+
+	public static function checkAppUser($dbLink,$appId){
+		$q.=sprintf(
+			"SELECT ap.user_id=%d AS user_check_passed
+			FROM applications AS ap
+			WHERE ap.id=%d",
+			$_SESSION['user_id'],$appId
+		);
+		
+		$ar = $dbLink->query_first($q);
+		self::checkApp($ar);
+		
+		if ($ar['user_check_passed']!='t'){
+			throw new Exception(self::ER_OTHER_USER_APP);
+		}
+		
+	}
 	
 	public function set_user($pm){
 		if ($_SESSION['role_id']!='admin' || !defined('TEMP_DOC_STORAGE') || !TEMP_DOC_STORAGE){
@@ -2542,7 +2559,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				$dir = FILE_STORAGE_DIR;
 			}
 		
-			if (defined('FILE_STORAGE_DIR_MAIN' &amp;&amp; file_exists(FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$relDir))){
+			if (defined('FILE_STORAGE_DIR_MAIN') &amp;&amp; file_exists(FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$relDir)){
 				$ind2 = self::getMaxIndexInDir(FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$relDir,$fileId);
 				if($ind2>$maxIndex){
 					$maxIndex = $ind2;

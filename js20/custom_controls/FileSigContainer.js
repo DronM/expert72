@@ -278,7 +278,7 @@ FileSigContainer.prototype.showSignatureDetails = function(toolTip,e){
 		if (signature.cert_from && signature.cert_to){
 			var expir = "";
 			if (signature.cert_to&&DateHelper.strtotime(signature.cert_to)<DateHelper.time()){
-				expir = '<div class="badge badge-danger">Просрочена</div>';
+				expir = '<div class="badge badge-danger">Сертификат не действителен.</div>';
 			}
 			cert = "<div>Сертификат с "+DateHelper.format(DateHelper.strtotime(signature.cert_from),"d/m/Y")+" до "+DateHelper.format(DateHelper.strtotime(signature.cert_to),"d/m/Y")+
 					expir+
@@ -298,7 +298,7 @@ FileSigContainer.prototype.showSignatureDetails = function(toolTip,e){
 			'<div>'+
 				'<i class="glyphicon glyphicon-remove"></i>'+
 				' <strong>Ошибка проверки подписи</strong>'+
-				(signature.error_str? "<div>"+signature.error_str+"</div>" : "")+
+				(signature.error_str? '<div class="badge badge-danger">'+signature.error_str+"</div>" : "")+
 			'</div>';					
 		}
 		
@@ -345,7 +345,7 @@ FileSigContainer.prototype.showSignatureDetails = function(toolTip,e){
 		cont ='<div>' +
 			'<i class="glyphicon glyphicon-remove"></i>'+
 			' <strong>Ошибка проверки подписи</strong>'+
-			(signature.error_str? "<div>"+signature.error_str+"</div>" : "")+
+			(signature.error_str? '<div class="badge badge-danger">'+signature.error_str+"</div>" : "")+
 		"</div>";
 
 	}					
