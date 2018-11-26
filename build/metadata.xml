@@ -2,7 +2,7 @@
 <metadata owner="expert72">
 	<versions>
 		<version dateOpen="2017-09-27 12:09:48" dateClose="2017-12-08 10:12:08">1.001 
-		<lastBuild>2018-11-24 06:17:01</lastBuild></version>
+		<lastBuild>2018-11-26 05:52:53</lastBuild></version>
 		<version dateOpen="2017-12-08 11:12:01" dateClose="2017-12-08 11:12:04">1.002</version>
 		<version dateOpen="2017-12-08 11:12:20" dateClose="2017-12-08 11:12:20">1.0.3</version>
 		<version dateOpen="2017-12-12 11:12:07" dateClose="2017-12-12 11:12:07">1.0.4</version>
@@ -93,6 +93,7 @@
 		<version dateOpen="2018-11-05 10:11:12" dateClose="2018-11-05 11:11:07">1.0.90</version>
 		<version dateOpen="2018-11-05 11:11:10" dateClose="2018-11-16 14:11:35">1.0.91</version>
 		<version dateOpen="2018-11-16 14:11:35" dateClose="2018-11-24 06:11:17">1.0.92</version>
+		<version dateOpen="2018-11-24 06:11:17" dateClose="2018-11-26 05:11:53">1.0.93</version>
 	</versions>
 	<globalFilters>
 		<field id="user_id"/>
@@ -3227,6 +3228,7 @@
 			</publicMethod>
 			<publicMethod id="delete_auth_letter_file">
 				<field id="id" dataType="Int" required="TRUE"/>
+				<field id="fill_percent" dataType="Int" required="TRUE"/>
 			</publicMethod>
 			<publicMethod id="all_sig_report">
 				<field id="id" dataType="Int" required="TRUE"/>

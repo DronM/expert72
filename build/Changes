@@ -371,7 +371,7 @@ wget -O crypto_plugin.txt https://www.cryptopro.ru/sites/default/files/products/
 1.0.91 16/10
 Тестирование мультимастеров
 
-1.0.92
+1.0.92 24/10
 1) Подписание ответов в IE
 2) IE10 hierarchyRequestError
 3) Вроде нет проблем в IE10 с открытием окон, с заполнением параметров
@@ -382,6 +382,8 @@ wget -O crypto_plugin.txt https://www.cryptopro.ru/sites/default/files/products/
 8) Неквалифицированные сертификаты
 9) Невозможно отозвать отправленное заявление, ошибка - заявление отправлено на проверку!
 
+1.0.93 26/10
+1) Удаление файла доверенности
 
 file_verifications_lk_process()
 file_signatures_lk_process()

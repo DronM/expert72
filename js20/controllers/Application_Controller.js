@@ -1187,6 +1187,14 @@ extend(Application_Controller,ControllerObjServer);
 	
 		pm.addField(new FieldInt("id",options));
 	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("fill_percent",options));
+	
 			
 	this.addPublicMethod(pm);
 }

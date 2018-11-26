@@ -798,6 +798,12 @@ class Application_Controller extends ControllerSQL{
 		$opts['required']=TRUE;				
 		$pm->addParam(new FieldExtInt('id',$opts));
 	
+				
+	$opts=array();
+	
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtInt('fill_percent',$opts));
+	
 			
 		$this->addPublicMethod($pm);
 
@@ -1029,8 +1035,11 @@ class Application_Controller extends ControllerSQL{
 		);
 		if (pki_fatal_error($verif_res)){
 			throw new Exception('Ошибка проверки подписи заявления по '.$ER_PRINT_FILE_CNT_END[$id].': '.$verif_res->checkError);
+		}		
+		else if (!count($verif_res->signatures)){
+			//Такие в любом случае не берем!
+			throw new Exception('Ошибка проверки подписи заявления по '.$ER_PRINT_FILE_CNT_END[$id].': '.$pki_man::ER_NO_CERT_FOUND);
 		}
-		
 		$tb_postf = self::LKPostfix();
 		$sig_ar = $this->getDbLinkMaster()->query_first(sprintf(
 		"SELECT
@@ -3569,10 +3578,11 @@ class Application_Controller extends ControllerSQL{
 	}
 	
 	public static function LKPostfix(){
-		return (
-			(isset($_SESSION['role_id']) && ($_SESSION['role_id']=='client' || $_SESSION['user_name']=='adminlk'))
-			|| LK
-		)? '_lk':'';
+		return LK_TEST? '' :
+			(
+				(isset($_SESSION['role_id']) && ($_SESSION['role_id']=='client' || $_SESSION['user_name']=='adminlk'))
+				|| LK
+			)? '_lk':'';
 	}
 	
 

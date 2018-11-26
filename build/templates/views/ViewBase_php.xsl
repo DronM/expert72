@@ -61,7 +61,15 @@ class ViewBase extends ViewHTMLXSLT {
 	protected function initDbLink(){
 		if (!$this->dbLink){
 			$this->dbLink = new DB_Sql();
-			if (
+			
+			if (LK_TEST){
+				$db_server = DB_SERVER;
+				$db_user = DB_USER;
+				$db_password = DB_PASSWORD;
+				$port = DB_PORT;
+				$this->dbLink->database	= DB_NAME;
+			}
+			else if (
 			$_SESSION['role_id']=='client'
 			||($_SESSION['role_id']=='admin' &amp;&amp; $_SESSION['user_name']=='adminlk')
 			){
