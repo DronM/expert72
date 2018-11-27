@@ -323,7 +323,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 					//sig.s(1) -> .sig
 					exec(sprintf('mv -f "%s" "%s"',$prev_sig,$new_cur_sig));
 					
-					$pki_man = new PKIManager(PKI_PATH,PKI_CRL_VALIDITY,PKI_MODE);
+					$pki_man = pki_create_manager();
 					$db_link = $this->getDbLinkMaster();
 					pki_log_sig_check($new_cur_sig, $file_doc, $this->getExtDbVal($pm,'file_id'), $pki_man, $db_link);
 				}

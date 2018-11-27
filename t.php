@@ -16,7 +16,13 @@ echo dec2hex('2429033231916172176376404571619655682');
 return;
 */
 	require_once('functions/PKIManager.php');
-	$pki_man = new PKIManager(PKI_PATH,PKI_CRL_VALIDITY,'debug');
+	$pki_man = new PKIManager(array(
+			'pkiPath' => PKI_PATH,
+			'crlValidity' => PKI_CRL_VALIDITY,
+			'logLevel' => 'debug',
+			'tmpPath' => PKI_PATH.'tmp/',
+			'opensslPath' => PKI_OPENSSL_PATH
+	));	
 	/*
 	$verif_res = $pki_man->verifySig(
 		'/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/НеКвалифицированная/Доверенность № 82, Надеина А.М.pdf.sig',
@@ -35,7 +41,7 @@ return;
 		array(
 			'noChainVerification' => FALSE,
 			'onlineRevocCheck' => TRUE,
-			'notRemoveTempFiles' => FALSE,
+			'notRemoveTempFiles' => TRUE,
 			'unqualifiedCertTreatAsError' => TRUE
 		)
 	);

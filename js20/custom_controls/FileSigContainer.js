@@ -262,7 +262,9 @@ FileSigContainer.prototype.showSignatureDetails = function(toolTip,e){
 		var pers="";
 		if (signature.owner){
 			org=add_field(signature.owner["ИНН"],org);
+			org=add_field(signature.owner["INN"],org);
 			org=add_field(signature.owner["ОГРН"],org);
+			org=add_field(signature.owner["OGRN"],org);
 			org=add_field(signature.owner["Организация"],org);				
 			org+= org.length? "</div>":"";
 		
@@ -270,6 +272,7 @@ FileSigContainer.prototype.showSignatureDetails = function(toolTip,e){
 			pers=add_field(signature.owner["Имя"],pers," ",true);
 			pers=add_field(signature.owner["Должность"],pers);
 			pers=add_field(signature.owner["СНИЛС"],pers);
+			pers=add_field(signature.owner["SNILS"],pers);
 			pers=add_field(signature.owner["Адрес"],pers);				
 			pers=add_field(signature.owner["Эл.почта"],pers);
 			pers+= pers.length? "</div>":"";
@@ -318,7 +321,9 @@ FileSigContainer.prototype.showSignatureDetails = function(toolTip,e){
 		var pers="";
 		if (signature.owner){
 			org=add_field(signature.owner["ИНН"],org);
+			org=add_field(signature.owner["INN"],org);
 			org=add_field(signature.owner["ОГРН"],org);
+			org=add_field(signature.owner["OGRN"],org);
 			org=add_field(signature.owner["Организация"],org);				
 			org+= org.length? "</div>":"";
 			
@@ -326,6 +331,7 @@ FileSigContainer.prototype.showSignatureDetails = function(toolTip,e){
 			pers=add_field(signature.owner["Имя"],pers," ");
 			pers=add_field(signature.owner["Должность"],pers);
 			pers=add_field(signature.owner["СНИЛС"],pers);
+			pers=add_field(signature.owner["SNILS"],pers);
 			pers=add_field(signature.owner["Адрес"],pers);				
 			pers=add_field(signature.owner["Эл.почта"],pers);
 			pers+= pers.length? "</div>":"";
@@ -364,7 +370,11 @@ FileSigContainer.prototype.findSignatureBySNILS = function(SNILS){
 	var res = false;
 	var elem = this.m_signatures.getElements();
 	for(var sig_id in elem){
-		if (elem[sig_id] && elem[sig_id].certInf.signature&&elem[sig_id].certInf.signature.owner&&elem[sig_id].certInf.signature.owner["СНИЛС"]==SNILS){
+		if (elem[sig_id]
+			&& elem[sig_id].certInf.signature
+			&& elem[sig_id].certInf.signature.owner
+			&& (elem[sig_id].certInf.signature.owner["СНИЛС"]==SNILS || elem[sig_id].certInf.signature.owner["SNILS"]==SNILS)
+		){
 			res = true;
 			break;
 		}

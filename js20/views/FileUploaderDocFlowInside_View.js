@@ -151,3 +151,10 @@ FileUploaderDocFlowInside_View.prototype.deleteSigFromServer = function(fileId,i
 	FileUploaderDocFlowInside_View.superclass.deleteSigFromServer.call(this,fileId,itemId,new DocFlowInside_Controller());
 }
 
+FileUploaderDocFlowInside_View.prototype.getPublicMethodForFileDownload = function(fileId){
+	var pm = (new DocFlowInside_Controller()).getPublicMethod("get_file");
+	pm.setFieldValue("file_id",fileId);
+	pm.setFieldValue("doc_id",this.m_mainView.getElement("id").getValue());
+	return pm;
+}
+

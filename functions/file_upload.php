@@ -35,7 +35,6 @@ define('ER_FILE_EXISTS_IN_FOLDER', 'Файл с таким именем уже �
 define('ER_SIGNED','Документ уже подписан!');
 define('ER_SNILS_EXISTS','Документ уже подписан физическим лицом %s');
 
-define('PKI_MODE','error');
 define('DIR_MAX_LENGTH',500);
 define('CLIENT_OUT_FOLDER','Исходящие заявителя');
 
@@ -83,7 +82,7 @@ function pki_throw_error(&$verifRres,$dbFileId,&$dbLink) {
 }
 
 function check_signature($dbLink,$fileDoc,$fileDocSig,$dbFileId) {
-	$pki_man = new PKIManager(PKI_PATH,PKI_CRL_VALIDITY,PKI_MODE);
+	$pki_man = pki_create_manager();
 	$verif_res = pki_log_sig_check($fileDocSig, $fileDoc, $dbFileId, $pki_man, $dbLink);
 	pki_throw_error($verif_res,$dbFileId,$dbLink);
 }
@@ -114,7 +113,7 @@ function check_app_folder($dbLink){
  * @param {object} dbLink
  */ 
 function merge_sig($relDir,$contentFile,$origFile,$newName,$fileId,$dbFileId,&$dbLink){
-	$pki_man = new PKIManager(PKI_PATH,PKI_CRL_VALIDITY,PKI_MODE);
+	$pki_man = pki_create_manager();
 	
 	//1) verify new signature, throw error
 	$verif_res = $pki_man->verifySig(
@@ -152,7 +151,14 @@ function merge_sig($relDir,$contentFile,$origFile,$newName,$fileId,$dbFileId,&$d
 	}
 	if ($cnt){
 		foreach($verif_res->signatures as $sig){
-			if (isset($sig->subject)&&is_array($sig->subject)&&array_key_exists('СНИЛС',$sig->subject)&&array_key_exists($sig->subject['СНИЛС'],$used_snils)){
+			if (isset($sig->subject)
+				&& is_array($sig->subject)
+				&& (
+					array_key_exists(($snils_id='СНИЛС'),$sig->subject)
+					||array_key_exists(($snils_id='SNILS'),$sig->subject)
+				)
+				&& array_key_exists($sig->subject[$snils_id],$used_snils)
+			){
 				$arg = '';
 				if (array_key_exists('Фамилия',$sig->subject)){
 					$arg = $sig->subject['Фамилия'];
@@ -161,7 +167,7 @@ function merge_sig($relDir,$contentFile,$origFile,$newName,$fileId,$dbFileId,&$d
 					}
 				}
 				$arg.= ($arg=='')? '':', ';
-				$arg.= 'СНИЛС:'.$sig->subject['СНИЛС'];
+				$arg.= 'СНИЛС:'.$sig->subject[$snils_id];
 				throw new Exception(sprintf(ER_SNILS_EXISTS,$arg));
 			}
 		}
@@ -829,7 +835,7 @@ try{
 					}
 					else{					
 						//first signature
-						$pki_man = new PKIManager(PKI_PATH,PKI_CRL_VALIDITY,PKI_MODE);
+						$pki_man = pki_create_manager();
 						$need_decode = $pki_man->isBase64Encoded($orig_file);
 						if ($need_decode){							
 							$pki_man->decodeSigFromBase64($orig_file,$new_name);

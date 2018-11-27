@@ -3,6 +3,17 @@
 	require_once(dirname(__FILE__).'/../Config.php');
 	require_once(ABSOLUTE_PATH.'controllers/Application_Controller.php');
 	
+	function pki_create_manager(){
+		return (new PKIManager(array(
+				'pkiPath' => PKI_PATH,
+				'crlValidity' => PKI_CRL_VALIDITY,
+				'logLevel' => PKI_MODE,
+				'tmpPath' => PKI_PATH.'tmp/',
+				'opensslPath' => PKI_OPENSSL_PATH
+		)));	
+	}
+	
+	
 	function pki_fatal_error(&$verifRes,$dbFileId=NULL,&$dbLink=NULL) {
 	
 		$fatal_res = (

@@ -994,7 +994,10 @@ class Application_Controller extends ControllerSQL{
 		$dir = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
 			self::APP_DIR_PREF.$appId.DIRECTORY_SEPARATOR.
 			self::dirNameOnDocType($id);
-		mkdir($dir,0777,TRUE);
+		@mkdir($dir,0777,TRUE);
+		if (!file_exists($dir)){
+			throw new Exception('Ошибка при создании каталога файлов!');
+		}
 		
 		$file_id = md5(uniqid());
 		
@@ -1023,7 +1026,7 @@ class Application_Controller extends ControllerSQL{
 	
 		//проверка ЭЦП
 		$sig_ar = NULL;
-		$pki_man = new PKIManager(PKI_PATH,PKI_CRL_VALIDITY,'error');		
+		$pki_man = pki_create_manager();
 		$db_file_id = "'".$file_id."'";
 		$db_link = $this->getDbLinkMaster();
 		$verif_res = pki_log_sig_check(
@@ -1108,7 +1111,7 @@ class Application_Controller extends ControllerSQL{
 			$files['name'][$data_ind],
 			$file_id,
 			$files['size'][$data_ind],
-			$sig_ar['signatures']
+			$sig_ar['signatures']			
 		);
 		
 	}
@@ -1316,7 +1319,7 @@ class Application_Controller extends ControllerSQL{
 		return $this->download_print($this->getExtDbVal($pm,'id'),'auth_letter_file',TRUE);
 	}
 	public function delete_auth_letter_file($pm){
-		return $this->delete_print($this->getExtDbVal($pm,'id'),'auth_letter_file');
+		return $this->delete_print($this->getExtDbVal($pm,'id'),'auth_letter_file',$this->getExtDbVal($pm,'fill_percent'));
 	}
 
 	public static function attachmentsQuery($dbLink,$appId,$deletedCond){
@@ -1643,8 +1646,8 @@ class Application_Controller extends ControllerSQL{
 				//need updating
 				$cols = '';
 				foreach($file_params as $k=>$v){
-					$cols.= ($cols=='')? '':', ';
-					$cols.= $k.'='."'".$v."'";
+					$cols.= ($cols=='')? '':', ';					
+					$cols.= $k.'='."'".str_replace("'","''",$v)."'";
 				}			
 				
 				$this->getDbLinkMaster()->query(sprintf(
@@ -3159,7 +3162,7 @@ class Application_Controller extends ControllerSQL{
 			$db_app_id
 		));
 		
-		$pki_man = new PKIManager(PKI_PATH,PKI_CRL_VALIDITY,'error');		
+		$pki_man = pki_create_manager();
 		$rel_dir = self::APP_DIR_PREF.$this->getExtVal($pm,'id');
 		
 		while($file = $this->getDbLink()->fetch_array($qid)){

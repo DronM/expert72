@@ -70,7 +70,9 @@ function DocFlowOutClientList_View(id,options){
 	else{
 		filters.application = {
 			"binding":new CommandBinding({
-				"control":new ApplicationEditRef(id+":flt-application"),
+				"control":new ApplicationEditRef(id+":flt-application",{
+					"contClassName":"form-group-filter"
+				}),
 				"field":new FieldInt("application_id")
 			}),
 			"sign":"e"

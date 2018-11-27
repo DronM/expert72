@@ -192,3 +192,69 @@ rsync_mount
 #====================== Обновление времени ==========================================================================
 sudo apt-get install ntpdate
 #===================================================================================================================
+
+
+#===================== OpenSSL ====================================================================================
+https://kirill-zak.ru/2015/08/13/298
+Старый ГОСТ
+Находим файл
+sudo find / -name "libgost.so"
+
+sudo mkdir -p /usr/lib/ssl/engines
+sudo ln -s /usr/lib/x86_64-linux-gnu/openssl-1.0.0/engines/libgost.so /usr/lib/ssl/engines/libgost.so
+
+Добавляем в /etc/ssl/openssl/openssl.cnf
+[gost_section]
+engine_id = gost
+dynamic_path = /usr/lib/ssl/engines/libgost.so
+default_algorithms = ALL
+CRYPT_PARAMS = id-Gost28147-89-CryptoPro-A-ParamSet
+
+#*****************
+wget https://www.openssl.org/source/openssl-1.1.1a.tar.gz
+tar xzvf openssl-1.1.1a.tar.gz
+cd openssl-1.1.1a
+sudo ./config -Wl,--enable-new-dtags,-rpath,'$(LIBRPATH)'
+sudo make
+sudo make install
+Исп.файл /usr/local/bin/openssl
+Настройки /usr/local/ssl
+
+НОВЫЙ ГОСТ
+https://github.com/gost-engine/engine
+https://github.com/gost-engine/engine/wiki/Building
+git clone https://github.com/gost-engine/engine.git
+Инструкция по установке в директории
+
+#***CMAKE 3.13.0
+СОБРАТЬ ИЗ ИСХОДНИКОВ
+wget https://cmake.org/files/v3.13/cmake-3.13.0.tar.gz
+tar -xzf cmake-3.13.0.tar.gz
+cd cmake-3.13.0
+./configure
+make
+sudo install
+
+cmake -DCMAKE_BUILD_TYPE=Release -DOPENSSL_ROOT_DIR=/usr/local/bin/
+
+Настройка
+Вставить в самое начало!!! ДО СЕКЦИЙ!!!
+openssl_conf = openssl_def
+Затем 
+[openssl_def]
+engines = engine_section
+
+[engine_section]
+gost = gost_section
+
+[gost_section]
+engine_id = gost
+dynamic_path = ./bin/gost.so
+default_algorithms = ALL
+CRYPT_PARAMS = id-Gost28147-89-CryptoPro-A-ParamSet
+
+
+Проверка
+openssl ciphers|tr ':' '\n'|grep GOST
+
+

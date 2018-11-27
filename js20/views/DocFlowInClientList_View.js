@@ -24,27 +24,11 @@ function DocFlowInClientList_View(id,options){
 		model = new DocFlowInClientList_Model();
 	}
 	var contr = new DocFlowInClient_Controller();
-	var grid_filters = [];
-	if (options.application){
-		//вызов из заявления - всегда фильтр
-		grid_filters.push({
-			"field":"application_id",
-			"sign":"e",
-			"val":options.application.getKey()
-		});
-	}
-	
-	var constants = {"doc_per_page_count":null};
-	window.getApp().getConstantManager().get(constants);
-	
-	var pagClass = window.getApp().getPaginationClass();
-	
-	var popup_menu = new PopUpMenu();
 	
 	var period_ctrl = new EditPeriodDate(id+":filter-ctrl-period",{
 		"field":new FieldDateTime("date_time")
 	});
-	
+			
 	var filters = {
 		"period":{
 			"binding":new CommandBinding({
@@ -67,6 +51,34 @@ function DocFlowInClientList_View(id,options){
 			]
 		}
 	};
+	
+	var grid_filters = [];
+	if (options.application){
+		//вызов из заявления - всегда фильтр
+		grid_filters.push({
+			"field":"application_id",
+			"sign":"e",
+			"val":options.application.getKey()
+		});
+	}
+	else{
+		filters.application = {
+			"binding":new CommandBinding({
+				"control":new ApplicationEditRef(id+":flt-application",{
+					"contClassName":"form-group-filter"
+				}),
+				"field":new FieldInt("application_id")
+			}),
+			"sign":"e"
+		};
+	}
+	
+	var constants = {"doc_per_page_count":null};
+	window.getApp().getConstantManager().get(constants);
+	
+	var pagClass = window.getApp().getPaginationClass();
+	
+	var popup_menu = new PopUpMenu();
 	
 	var columns = [
 		new GridCellHead(id+":grid:head:date_time",{
@@ -124,6 +136,23 @@ function DocFlowInClientList_View(id,options){
 			]
 		})		
 	];
+	
+	if (!options.application){
+		//общая форма списка
+		columns.push(
+			new GridCellHead(id+":grid:head:applications_ref",{
+				"value":"Заявление",
+				"columns":[
+					new GridColumnRef({
+						"field":model.getField("applications_ref"),
+						"form":ApplicationDialog_Form
+					})
+				],
+				"sortable":true
+			})
+		);
+	}
+
 	
 	this.addElement(new GridAjx(id+":grid",{
 		"model":model,

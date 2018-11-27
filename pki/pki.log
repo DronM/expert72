@@ -1,206 +1,116 @@
-20/11/2018 12:09 Called verifySig
-20/11/2018 12:09 parseSigFile
-20/11/2018 12:09 Called run_shell_cmd2 openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf3b33b60283.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END CERT/ { print > "/home/andrey/www/htdocs/expert72/pki/tmp/5bf3b33b61104."i }'
-20/11/2018 12:09 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf3b33b61104.1" -noout
-20/11/2018 12:09 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf3b33b61104.2" -noout
-20/11/2018 12:09 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf3b33b61104.3" -noout
-20/11/2018 12:09 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf3b33b61104.4" -noout
-20/11/2018 12:09 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf3b33b61104.5" -noout
-20/11/2018 12:09 Found signer certificates:2
-20/11/2018 12:09 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf3b33b60283.der" -noout -cmsout -print
-20/11/2018 12:09 Parsing certificate file /home/andrey/www/htdocs/expert72/pki/tmp/5bf3b33b61104.1
-20/11/2018 12:09 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf3b33b61104.1" -noout
-20/11/2018 12:09 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf3b33b61104.1" -noout -nameopt multiline
-20/11/2018 12:09 Need certificate for hash:1fbee991
-20/11/2018 12:09 Looking for CRL file /home/andrey/www/htdocs/expert72/pki/1fbee991.r0
-20/11/2018 12:09 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/1fbee991.0" -noout
-20/11/2018 12:09 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/1fbee991.0" -noout -nameopt multiline
-20/11/2018 12:09 Need certificate for hash:34fa2b3d
-20/11/2018 12:09 Looking for CRL file /home/andrey/www/htdocs/expert72/pki/34fa2b3d.r0
-20/11/2018 12:09 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/34fa2b3d.0" -noout
-20/11/2018 12:09 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/34fa2b3d.0" -noout -nameopt multiline
-20/11/2018 12:09 Parsing certificate file /home/andrey/www/htdocs/expert72/pki/tmp/5bf3b33b61104.5
-20/11/2018 12:09 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf3b33b61104.5" -noout
-20/11/2018 12:09 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf3b33b61104.5" -noout -nameopt multiline
-20/11/2018 12:09 Need certificate for hash:9e757460
-20/11/2018 12:09 OCSP checking http://ocsp.72to.ru/ocsp/ocsp.srf
-20/11/2018 12:09 Called run_shell_cmd openssl ocsp -issuer "/home/andrey/www/htdocs/expert72/pki/9e757460.0" -CApath "/home/andrey/www/htdocs/expert72/pki/" -cert "/home/andrey/www/htdocs/expert72/pki/tmp/5bf3b33b61104.5" -url http://ocsp.72to.ru/ocsp/ocsp.srf
-20/11/2018 12:09 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/9e757460.0" -noout
-20/11/2018 12:09 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/9e757460.0" -noout -nameopt multiline
-20/11/2018 12:09 Need certificate for hash:4db0c08c
-20/11/2018 12:09 Looking for CRL file /home/andrey/www/htdocs/expert72/pki/4db0c08c.r0
-20/11/2018 12:09 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/4db0c08c.0" -noout
-20/11/2018 12:09 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/4db0c08c.0" -noout -nameopt multiline
-20/11/2018 12:09 Need certificate for hash:34fa2b3d
-20/11/2018 12:09 Looking for CRL file /home/andrey/www/htdocs/expert72/pki/34fa2b3d.r0
-20/11/2018 12:09 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/34fa2b3d.0" -noout
-20/11/2018 12:09 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/34fa2b3d.0" -noout -nameopt multiline
-20/11/2018 12:09 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/!!!/291-Д Договор МАУ АГ, повтор.pdf" -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf3b33b60283.der" -CApath "/home/andrey/www/htdocs/expert72/pki/"
-20/11/2018 13:48 Called verifySig
-20/11/2018 13:48 parseSigFile
-20/11/2018 13:48 Called run_shell_cmd2 openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf3ca746ceca.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END CERT/ { print > "/home/andrey/www/htdocs/expert72/pki/tmp/5bf3ca746d169."i }'
-20/11/2018 13:48 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf3ca746d169.1" -noout
-20/11/2018 13:48 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf3ca746d169.2" -noout
-20/11/2018 13:48 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf3ca746d169.3" -noout
-20/11/2018 13:48 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf3ca746d169.4" -noout
-20/11/2018 13:48 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf3ca746d169.5" -noout
-20/11/2018 13:48 Found signer certificates:2
-20/11/2018 13:48 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf3ca746ceca.der" -noout -cmsout -print
-20/11/2018 13:48 Parsing certificate file /home/andrey/www/htdocs/expert72/pki/tmp/5bf3ca746d169.1
-20/11/2018 13:48 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf3ca746d169.1" -noout
-20/11/2018 13:48 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf3ca746d169.1" -noout -nameopt multiline
-20/11/2018 13:48 Need certificate for hash:1fbee991
-20/11/2018 13:48 Looking for CRL file /home/andrey/www/htdocs/expert72/pki/1fbee991.r0
-20/11/2018 13:48 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/1fbee991.0" -noout
-20/11/2018 13:48 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/1fbee991.0" -noout -nameopt multiline
-20/11/2018 13:48 Need certificate for hash:34fa2b3d
-20/11/2018 13:48 Looking for CRL file /home/andrey/www/htdocs/expert72/pki/34fa2b3d.r0
-20/11/2018 13:48 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/34fa2b3d.0" -noout
-20/11/2018 13:48 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/34fa2b3d.0" -noout -nameopt multiline
-20/11/2018 13:48 Parsing certificate file /home/andrey/www/htdocs/expert72/pki/tmp/5bf3ca746d169.5
-20/11/2018 13:48 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf3ca746d169.5" -noout
-20/11/2018 13:48 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf3ca746d169.5" -noout -nameopt multiline
-20/11/2018 13:48 Need certificate for hash:9e757460
-20/11/2018 13:48 OCSP checking http://ocsp.72to.ru/ocsp/ocsp.srf
-20/11/2018 13:48 Called run_shell_cmd openssl ocsp -issuer "/home/andrey/www/htdocs/expert72/pki/9e757460.0" -CApath "/home/andrey/www/htdocs/expert72/pki/" -cert "/home/andrey/www/htdocs/expert72/pki/tmp/5bf3ca746d169.5" -url http://ocsp.72to.ru/ocsp/ocsp.srf
-20/11/2018 13:48 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/9e757460.0" -noout
-20/11/2018 13:48 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/9e757460.0" -noout -nameopt multiline
-20/11/2018 13:48 Need certificate for hash:4db0c08c
-20/11/2018 13:48 Looking for CRL file /home/andrey/www/htdocs/expert72/pki/4db0c08c.r0
-20/11/2018 13:48 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/4db0c08c.0" -noout
-20/11/2018 13:48 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/4db0c08c.0" -noout -nameopt multiline
-20/11/2018 13:48 Need certificate for hash:34fa2b3d
-20/11/2018 13:48 Looking for CRL file /home/andrey/www/htdocs/expert72/pki/34fa2b3d.r0
-20/11/2018 13:48 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/34fa2b3d.0" -noout
-20/11/2018 13:48 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/34fa2b3d.0" -noout -nameopt multiline
-20/11/2018 13:48 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/!!!/291-Д Договор МАУ АГ, повтор.pdf" -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf3ca746ceca.der" -CApath "/home/andrey/www/htdocs/expert72/pki/"
-22/11/2018 09:35 Called verifySig
-22/11/2018 09:35 parseSigFile
-22/11/2018 09:35 Called run_shell_cmd2 openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/НеКвалифицированная/Доверенность № 82, Надеина А.М.pdf.sig" -out "/home/andrey/www/htdocs/expert72/pki/tmp/5bf6320a6450a.der"
-22/11/2018 09:35 Called run_shell_cmd2 openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf6320a6450a.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END CERT/ { print > "/home/andrey/www/htdocs/expert72/pki/tmp/5bf6320a67cb1."i }'
-22/11/2018 09:35 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf6320a67cb1.1" -noout
-22/11/2018 09:35 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf6320a67cb1.2" -noout
-22/11/2018 09:35 Found signer certificates:1
-22/11/2018 09:35 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf6320a6450a.der" -noout -cmsout -print
-22/11/2018 09:35 Parsing certificate file /home/andrey/www/htdocs/expert72/pki/tmp/5bf6320a67cb1.2
-22/11/2018 09:35 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf6320a67cb1.2" -noout
-22/11/2018 09:35 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf6320a67cb1.2" -noout -nameopt multiline
-22/11/2018 09:35 Need certificate for hash:47ee410f
-22/11/2018 09:35 OCSP checking http://pki.skbkontur.ru/ocspn2/ocsp.srf
-22/11/2018 09:35 Called run_shell_cmd openssl ocsp -issuer "/home/andrey/www/htdocs/expert72/pki/47ee410f.0" -CApath "/home/andrey/www/htdocs/expert72/pki/" -cert "/home/andrey/www/htdocs/expert72/pki/tmp/5bf6320a67cb1.2" -url http://pki.skbkontur.ru/ocspn2/ocsp.srf
-22/11/2018 09:35 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/47ee410f.0" -noout
-22/11/2018 09:35 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/47ee410f.0" -noout -nameopt multiline
-22/11/2018 09:35 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/НеКвалифицированная/Доверенность № 82, Надеина А.М.pdf.sig" -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf6320a6450a.der" -CApath "/home/andrey/www/htdocs/expert72/pki/"
-22/11/2018 09:35 Verification failure
-3074369212:error:21071065:PKCS7 routines:PKCS7_signatureVerify:digest failure:pk7_doit.c:1170:
-3074369212:error:21075069:PKCS7 routines:PKCS7_verify:signature failure:pk7_smime.c:410:
+26/11/2018 14:32 Called verifySig
+26/11/2018 14:32 parseSigFile
+26/11/2018 14:32 Called run_shell_cmd2 openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bfbbda6b6e97.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END CERT/ { print > "/home/andrey/www/htdocs/expert72/pki/tmp/5bfbbda6b8953."i }'
+26/11/2018 14:32 Found signer certificates:1
+26/11/2018 14:32 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bfbbda6b6e97.der" -noout -cmsout -print
+26/11/2018 14:32 Parsing certificate file /home/andrey/www/htdocs/expert72/pki/tmp/5bfbbda6b8953.1
+26/11/2018 14:32 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bfbbda6b8953.1" -noout
+26/11/2018 14:32 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bfbbda6b8953.1" -noout -nameopt multiline
+26/11/2018 14:32 Need certificate for hash:1fbee991
+26/11/2018 14:32 Looking for CRL file /home/andrey/www/htdocs/expert72/pki/1fbee991.r0
+26/11/2018 14:32 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/1fbee991.0" -noout
+26/11/2018 14:32 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/1fbee991.0" -noout -nameopt multiline
+26/11/2018 14:32 Need certificate for hash:34fa2b3d
+26/11/2018 14:32 Looking for CRL file /home/andrey/www/htdocs/expert72/pki/34fa2b3d.r0
+26/11/2018 14:32 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/34fa2b3d.0" -noout
+26/11/2018 14:32 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/34fa2b3d.0" -noout -nameopt multiline
+26/11/2018 14:32 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/111/Информационно-удостоверяющий лист ИОС1.pdf" -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bfbbda6b6e97.der" -CApath "/home/andrey/www/htdocs/expert72/pki/"
+26/11/2018 14:32 Verification failure
+3072734976:error:0609E09C:digital envelope routines:pkey_set_type:unsupported algorithm:crypto/evp/p_lib.c:210:
+3072734976:error:0B09406F:x509 certificate routines:x509_pubkey_decode:unsupported algorithm:crypto/x509/x_pubkey.c:113:
+3072734976:error:21075075:PKCS7 routines:PKCS7_verify:certificate verify error:crypto/pkcs7/pk7_smime.c:285:Verify error:EE certificate key too weak
 
-22/11/2018 09:35 Verification error:Verification failure 3074369212:error:21071065:PKCS7 routines:PKCS7_signatureVerify:digest failure:pk7_doit.c:1170: 3074369212:error:21075069:PKCS7 routines:PKCS7_verify:signature failure:pk7_smime.c:410: 
-CMD=openssl smime -verify -content "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/НеКвалифицированная/Доверенность № 82, Надеина А.М.pdf.sig" -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf6320a6450a.der" -CApath "/home/andrey/www/htdocs/expert72/pki/"
-22/11/2018 09:35 Deleting der file /home/andrey/www/htdocs/expert72/pki/tmp/5bf6320a6450a.der
-22/11/2018 09:36 Called verifySig
-22/11/2018 09:36 parseSigFile
-22/11/2018 09:36 Called run_shell_cmd2 openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/НеКвалифицированная/Доверенность № 82, Надеина А.М.pdf.sig" -out "/home/andrey/www/htdocs/expert72/pki/tmp/5bf6323b4a372.der"
-22/11/2018 09:36 Called run_shell_cmd2 openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf6323b4a372.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END CERT/ { print > "/home/andrey/www/htdocs/expert72/pki/tmp/5bf6323b4d77e."i }'
-22/11/2018 09:36 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf6323b4d77e.1" -noout
-22/11/2018 09:36 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf6323b4d77e.2" -noout
-22/11/2018 09:36 Found signer certificates:1
-22/11/2018 09:36 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf6323b4a372.der" -noout -cmsout -print
-22/11/2018 09:36 Parsing certificate file /home/andrey/www/htdocs/expert72/pki/tmp/5bf6323b4d77e.2
-22/11/2018 09:36 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf6323b4d77e.2" -noout
-22/11/2018 09:36 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf6323b4d77e.2" -noout -nameopt multiline
-22/11/2018 09:36 Need certificate for hash:47ee410f
-22/11/2018 09:36 OCSP checking http://pki.skbkontur.ru/ocspn2/ocsp.srf
-22/11/2018 09:36 Called run_shell_cmd openssl ocsp -issuer "/home/andrey/www/htdocs/expert72/pki/47ee410f.0" -CApath "/home/andrey/www/htdocs/expert72/pki/" -cert "/home/andrey/www/htdocs/expert72/pki/tmp/5bf6323b4d77e.2" -url http://pki.skbkontur.ru/ocspn2/ocsp.srf
-22/11/2018 09:36 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/47ee410f.0" -noout
-22/11/2018 09:36 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/47ee410f.0" -noout -nameopt multiline
-22/11/2018 09:36 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/НеКвалифицированная/Доверенность № 82, Надеина А.М.pdf" -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf6323b4a372.der" -CApath "/home/andrey/www/htdocs/expert72/pki/"
-22/11/2018 10:03 Called verifySig
-22/11/2018 10:03 parseSigFile
-22/11/2018 10:03 Called run_shell_cmd2 openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/НеКвалифицированная/Доверенность № 82, Надеина А.М.pdf.sig" -out "/home/andrey/www/htdocs/expert72/pki/tmp/5bf638ba84c5c.der"
-22/11/2018 10:03 Called run_shell_cmd2 openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf638ba84c5c.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END CERT/ { print > "/home/andrey/www/htdocs/expert72/pki/tmp/5bf638ba86a4e."i }'
-22/11/2018 10:03 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf638ba86a4e.1" -noout
-22/11/2018 10:03 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf638ba86a4e.2" -noout
-22/11/2018 10:03 Found signer certificates:1
-22/11/2018 10:03 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf638ba84c5c.der" -noout -cmsout -print
-22/11/2018 10:03 Parsing certificate file /home/andrey/www/htdocs/expert72/pki/tmp/5bf638ba86a4e.2
-22/11/2018 10:03 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf638ba86a4e.2" -noout
-22/11/2018 10:03 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf638ba86a4e.2" -noout -nameopt multiline
-22/11/2018 10:03 Need certificate for hash:47ee410f
-22/11/2018 10:03 OCSP checking http://pki.skbkontur.ru/ocspn2/ocsp.srf
-22/11/2018 10:03 Called run_shell_cmd openssl ocsp -issuer "/home/andrey/www/htdocs/expert72/pki/47ee410f.0" -CApath "/home/andrey/www/htdocs/expert72/pki/" -cert "/home/andrey/www/htdocs/expert72/pki/tmp/5bf638ba86a4e.2" -url http://pki.skbkontur.ru/ocspn2/ocsp.srf
-22/11/2018 10:03 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/47ee410f.0" -noout
-22/11/2018 10:03 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/47ee410f.0" -noout -nameopt multiline
-22/11/2018 10:03 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/НеКвалифицированная/Доверенность № 82, Надеина А.М.pdf" -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf638ba84c5c.der" -CApath "/home/andrey/www/htdocs/expert72/pki/"
-22/11/2018 10:03 Deleting der file /home/andrey/www/htdocs/expert72/pki/tmp/5bf638ba84c5c.der
-22/11/2018 10:04 Called verifySig
-22/11/2018 10:04 parseSigFile
-22/11/2018 10:04 Called run_shell_cmd2 openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/!!!/ЛС (9 смет).xlsx.sig" -out "/home/andrey/www/htdocs/expert72/pki/tmp/5bf638e3b771d.der"
-22/11/2018 10:04 Called run_shell_cmd2 openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf638e3b771d.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END CERT/ { print > "/home/andrey/www/htdocs/expert72/pki/tmp/5bf638e3b970b."i }'
-22/11/2018 10:04 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf638e3b970b.1" -noout
-22/11/2018 10:04 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf638e3b970b.2" -noout
-22/11/2018 10:04 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf638e3b970b.3" -noout
-22/11/2018 10:04 Found signer certificates:1
-22/11/2018 10:04 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf638e3b771d.der" -noout -cmsout -print
-22/11/2018 10:04 Parsing certificate file /home/andrey/www/htdocs/expert72/pki/tmp/5bf638e3b970b.3
-22/11/2018 10:04 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf638e3b970b.3" -noout
-22/11/2018 10:04 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf638e3b970b.3" -noout -nameopt multiline
-22/11/2018 10:04 Need certificate for hash:7d96a6c1
-22/11/2018 10:04 OCSP checking http://ocsp-tsp.garant.ru/ocsp3/ocsp.srf
-22/11/2018 10:04 Called run_shell_cmd openssl ocsp -issuer "/home/andrey/www/htdocs/expert72/pki/7d96a6c1.0" -CApath "/home/andrey/www/htdocs/expert72/pki/" -cert "/home/andrey/www/htdocs/expert72/pki/tmp/5bf638e3b970b.3" -url http://ocsp-tsp.garant.ru/ocsp3/ocsp.srf
-22/11/2018 10:04 Called run_shell_cmd openssl ocsp -issuer "/home/andrey/www/htdocs/expert72/pki/7d96a6c1.1" -CApath "/home/andrey/www/htdocs/expert72/pki/" -cert "/home/andrey/www/htdocs/expert72/pki/tmp/5bf638e3b970b.3" -url http://ocsp-tsp.garant.ru/ocsp3/ocsp.srf
-22/11/2018 10:04 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/7d96a6c1.0" -noout
-22/11/2018 10:04 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/7d96a6c1.0" -noout -nameopt multiline
-22/11/2018 10:04 Need certificate for hash:4db0c08c
-22/11/2018 10:04 Looking for CRL file /home/andrey/www/htdocs/expert72/pki/4db0c08c.r0
-22/11/2018 10:04 Trying to download new CRL file
-22/11/2018 10:04 Called run_shell_cmd2 wget -O "/home/andrey/www/htdocs/expert72/pki/4db0c08c.r0.der" http://rostelecom.ru/cdp/vguc1_5.crl
-22/11/2018 10:04 Called run_shell_cmd2 openssl crl -in "/home/andrey/www/htdocs/expert72/pki/4db0c08c.r0.der" -inform DER -out "/home/andrey/www/htdocs/expert72/pki/4db0c08c.r0"
-22/11/2018 10:04 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/4db0c08c.0" -noout
-22/11/2018 10:04 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/4db0c08c.0" -noout -nameopt multiline
-22/11/2018 10:04 Need certificate for hash:34fa2b3d
-22/11/2018 10:04 Looking for CRL file /home/andrey/www/htdocs/expert72/pki/34fa2b3d.r0
-22/11/2018 10:04 Trying to download new CRL file
-22/11/2018 10:04 Called run_shell_cmd2 wget -O "/home/andrey/www/htdocs/expert72/pki/34fa2b3d.r0.der" http://rostelecom.ru/cdp/guc.crl
-22/11/2018 10:04 Called run_shell_cmd2 openssl crl -in "/home/andrey/www/htdocs/expert72/pki/34fa2b3d.r0.der" -inform DER -out "/home/andrey/www/htdocs/expert72/pki/34fa2b3d.r0"
-22/11/2018 10:04 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/34fa2b3d.0" -noout
-22/11/2018 10:04 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/34fa2b3d.0" -noout -nameopt multiline
-22/11/2018 10:04 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/!!!/ЛС (9 смет).xlsx" -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf638e3b771d.der" -CApath "/home/andrey/www/htdocs/expert72/pki/"
-22/11/2018 10:04 Deleting der file /home/andrey/www/htdocs/expert72/pki/tmp/5bf638e3b771d.der
-22/11/2018 11:12 Unable to get certificates from bundle /home/andrey/www/htdocs/expert72/client_files/Заявление№1588/Исходящие заявителя/06390bd1-7492-4a61-acc7-acc82e12883a.sig
-22/11/2018 11:12 Verification failure
-3074270908:error:21071065:PKCS7 routines:PKCS7_signatureVerify:digest failure:pk7_doit.c:1170:
-3074270908:error:21075069:PKCS7 routines:PKCS7_verify:signature failure:pk7_smime.c:410:
+26/11/2018 14:32 Verification error:Verification failure 3072734976:error:0609E09C:digital envelope routines:pkey_set_type:unsupported algorithm:crypto/evp/p_lib.c:210: 3072734976:error:0B09406F:x509 certificate routines:x509_pubkey_decode:unsupported algorithm:crypto/x509/x_pubkey.c:113: 3072734976:error:21075075:PKCS7 routines:PKCS7_verify:certificate verify error:crypto/pkcs7/pk7_smime.c:285:Verify error:EE certificate key too weak 
+CMD=openssl smime -verify -content "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/111/Информационно-удостоверяющий лист ИОС1.pdf" -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bfbbda6b6e97.der" -CApath "/home/andrey/www/htdocs/expert72/pki/"
+26/11/2018 14:37 Error querying OCSP responsder
 
-22/11/2018 11:12 Verification error:Verification failure 3074270908:error:21071065:PKCS7 routines:PKCS7_signatureVerify:digest failure:pk7_doit.c:1170: 3074270908:error:21075069:PKCS7 routines:PKCS7_verify:signature failure:pk7_smime.c:410: 
-CMD=openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1588/Исходящие заявителя/885fb047-f15f-4432-bb75-2724186ab340" -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf648d734d3e.der" -CApath "/home/andrey/www/htdocs/expert72/pki/"
-22/11/2018 12:10 Called verifySig
-22/11/2018 12:10 parseSigFile
-22/11/2018 12:10 Called run_shell_cmd2 openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf6565755472.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END CERT/ { print > "/home/andrey/www/htdocs/expert72/pki/tmp/5bf6565759999."i }'
-22/11/2018 12:10 Found signer certificates:1
-22/11/2018 12:10 Called run_shell_cmd openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf6565755472.der" -noout -cmsout -print
-22/11/2018 12:10 Parsing certificate file /home/andrey/www/htdocs/expert72/pki/tmp/5bf6565759999.1
-22/11/2018 12:10 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf6565759999.1" -noout
-22/11/2018 12:10 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf6565759999.1" -noout -nameopt multiline
-22/11/2018 12:10 Need certificate for hash:1fbee991
-22/11/2018 12:10 Looking for CRL file /home/andrey/www/htdocs/expert72/pki/1fbee991.r0
-22/11/2018 12:10 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/1fbee991.0" -noout
-22/11/2018 12:10 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/1fbee991.0" -noout -nameopt multiline
-22/11/2018 12:10 Need certificate for hash:34fa2b3d
-22/11/2018 12:10 Looking for CRL file /home/andrey/www/htdocs/expert72/pki/34fa2b3d.r0
-22/11/2018 12:10 Called run_shell_cmd openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/34fa2b3d.0" -noout
-22/11/2018 12:10 Called run_shell_cmd openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/34fa2b3d.0" -noout -nameopt multiline
-22/11/2018 12:10 Called run_shell_cmd openssl smime -verify -content "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/111/Информационно-удостоверяющий лист ИОС1.pdf" -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf6565755472.der" -CApath "/home/andrey/www/htdocs/expert72/pki/"
-22/11/2018 12:10 Deleting der file /home/andrey/www/htdocs/expert72/pki/tmp/5bf6565755472.der
-22/11/2018 14:50 Verification failure
-3073947324:error:21071065:PKCS7 routines:PKCS7_signatureVerify:digest failure:pk7_doit.c:1170:
-3073947324:error:21075069:PKCS7 routines:PKCS7_verify:signature failure:pk7_smime.c:410:
+26/11/2018 14:37 Error querying OCSP responsder
 
-22/11/2018 14:50 Verification error:Verification failure 3073947324:error:21071065:PKCS7 routines:PKCS7_signatureVerify:digest failure:pk7_doit.c:1170: 3073947324:error:21075069:PKCS7 routines:PKCS7_verify:signature failure:pk7_smime.c:410: 
-CMD=openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1578/ПД/1/1210cc40-b604-4655-b60f-3edb5a9f8e07" -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf67bf17dd57.der" -CApath "/home/andrey/www/htdocs/expert72/pki/"
-22/11/2018 15:06 Verification failure
-3074229948:error:21071065:PKCS7 routines:PKCS7_signatureVerify:digest failure:pk7_doit.c:1170:
-3074229948:error:21075069:PKCS7 routines:PKCS7_verify:signature failure:pk7_smime.c:410:
+26/11/2018 14:37 Error querying OCSP responsder
 
-22/11/2018 15:06 Verification error:Verification failure 3074229948:error:21071065:PKCS7 routines:PKCS7_signatureVerify:digest failure:pk7_doit.c:1170: 3074229948:error:21075069:PKCS7 routines:PKCS7_verify:signature failure:pk7_smime.c:410: 
-CMD=openssl smime -verify -content "/home/andrey/www/htdocs/expert72/client_files/Заявление№1578/ПД/1/0117a1e5-0d52-41c4-a761-271533cc3b71" -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bf67fb1306b1.der" -CApath "/home/andrey/www/htdocs/expert72/pki/"
+26/11/2018 14:37 Error querying OCSP responsder
+
+26/11/2018 14:37 Error querying OCSP responsder
+
+26/11/2018 14:37 Error querying OCSP responsder
+
+26/11/2018 14:37 Error querying OCSP responsder
+
+26/11/2018 14:37 Error querying OCSP responsder
+
+26/11/2018 14:37 Error querying OCSP responsder
+
+26/11/2018 14:37 Error querying OCSP responsder
+
+26/11/2018 14:37 Error querying OCSP responsder
+
+26/11/2018 14:37 Error querying OCSP responsder
+
+26/11/2018 14:54 Called verifySig
+26/11/2018 14:54 parseSigFile
+26/11/2018 14:54 Called run_shell_cmd2 /usr/local/bin/openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bfbc2c9c9f1b.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END CERT/ { print > "/home/andrey/www/htdocs/expert72/pki/tmp/5bfbc2c9ca056."i }'
+26/11/2018 14:54 Found signer certificates:1
+26/11/2018 14:54 Called run_shell_cmd /usr/local/bin/openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bfbc2c9c9f1b.der" -noout -cmsout -print
+26/11/2018 14:54 Parsing certificate file /home/andrey/www/htdocs/expert72/pki/tmp/5bfbc2c9ca056.1
+26/11/2018 14:54 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bfbc2c9ca056.1" -noout
+26/11/2018 14:54 Called run_shell_cmd /usr/local/bin/openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bfbc2c9ca056.1" -noout -nameopt multiline
+26/11/2018 14:54 Need certificate for hash:1fbee991
+26/11/2018 14:54 Looking for CRL file /home/andrey/www/htdocs/expert72/pki/1fbee991.r0
+26/11/2018 14:54 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/1fbee991.0" -noout
+26/11/2018 14:54 Called run_shell_cmd /usr/local/bin/openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/1fbee991.0" -noout -nameopt multiline
+26/11/2018 14:54 Need certificate for hash:34fa2b3d
+26/11/2018 14:54 Looking for CRL file /home/andrey/www/htdocs/expert72/pki/34fa2b3d.r0
+26/11/2018 14:54 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/34fa2b3d.0" -noout
+26/11/2018 14:54 Called run_shell_cmd /usr/local/bin/openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/34fa2b3d.0" -noout -nameopt multiline
+26/11/2018 14:54 Called run_shell_cmd /usr/local/bin/openssl smime -verify -content "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/111/Информационно-удостоверяющий лист ИОС1.pdf" -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bfbc2c9c9f1b.der" -CApath "/home/andrey/www/htdocs/expert72/pki/"
+26/11/2018 14:56 Called verifySig
+26/11/2018 14:56 parseSigFile
+26/11/2018 14:56 Called run_shell_cmd2 /usr/local/bin/openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bfbc3339c1ce.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END CERT/ { print > "/home/andrey/www/htdocs/expert72/pki/tmp/5bfbc3339c2de."i }'
+26/11/2018 14:56 Found signer certificates:1
+26/11/2018 14:56 Called run_shell_cmd /usr/local/bin/openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bfbc3339c1ce.der" -noout -cmsout -print
+26/11/2018 14:56 Parsing certificate file /home/andrey/www/htdocs/expert72/pki/tmp/5bfbc3339c2de.1
+26/11/2018 14:56 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bfbc3339c2de.1" -noout
+26/11/2018 14:56 Called run_shell_cmd /usr/local/bin/openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bfbc3339c2de.1" -noout -nameopt multiline
+26/11/2018 14:56 Need certificate for hash:1fbee991
+26/11/2018 14:56 Looking for CRL file /home/andrey/www/htdocs/expert72/pki/1fbee991.r0
+26/11/2018 14:56 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/1fbee991.0" -noout
+26/11/2018 14:56 Called run_shell_cmd /usr/local/bin/openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/1fbee991.0" -noout -nameopt multiline
+26/11/2018 14:56 Need certificate for hash:34fa2b3d
+26/11/2018 14:56 Looking for CRL file /home/andrey/www/htdocs/expert72/pki/34fa2b3d.r0
+26/11/2018 14:56 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/34fa2b3d.0" -noout
+26/11/2018 14:56 Called run_shell_cmd /usr/local/bin/openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/34fa2b3d.0" -noout -nameopt multiline
+26/11/2018 14:56 Called run_shell_cmd /usr/local/bin/openssl smime -verify -content "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/111/Информационно-удостоверяющий лист ИОС1.pdf" -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bfbc3339c1ce.der" -CApath "/home/andrey/www/htdocs/expert72/pki/"
+26/11/2018 15:02 Called verifySig
+26/11/2018 15:02 parseSigFile
+26/11/2018 15:02 Called run_shell_cmd2 /usr/bin/openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bfbc4c38aa25.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END CERT/ { print > "/home/andrey/www/htdocs/expert72/pki/tmp/5bfbc4c38ab31."i }'
+26/11/2018 15:02 Found signer certificates:1
+26/11/2018 15:02 Called run_shell_cmd /usr/bin/openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bfbc4c38aa25.der" -noout -cmsout -print
+26/11/2018 15:02 Parsing certificate file /home/andrey/www/htdocs/expert72/pki/tmp/5bfbc4c38ab31.1
+26/11/2018 15:02 Called run_shell_cmd /usr/bin/openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bfbc4c38ab31.1" -noout
+26/11/2018 15:02 Called run_shell_cmd /usr/bin/openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bfbc4c38ab31.1" -noout -nameopt multiline
+26/11/2018 15:02 Need certificate for hash:1fbee991
+26/11/2018 15:02 Looking for CRL file /home/andrey/www/htdocs/expert72/pki/1fbee991.r0
+26/11/2018 15:02 Called run_shell_cmd /usr/bin/openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/1fbee991.0" -noout
+26/11/2018 15:02 Called run_shell_cmd /usr/bin/openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/1fbee991.0" -noout -nameopt multiline
+26/11/2018 15:02 Need certificate for hash:34fa2b3d
+26/11/2018 15:02 Looking for CRL file /home/andrey/www/htdocs/expert72/pki/34fa2b3d.r0
+26/11/2018 15:02 Called run_shell_cmd /usr/bin/openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/34fa2b3d.0" -noout
+26/11/2018 15:02 Called run_shell_cmd /usr/bin/openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/34fa2b3d.0" -noout -nameopt multiline
+26/11/2018 15:02 Called run_shell_cmd /usr/bin/openssl smime -verify -content "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/111/Информационно-удостоверяющий лист ИОС1.pdf" -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bfbc4c38aa25.der" -CApath "/home/andrey/www/htdocs/expert72/pki/"
+26/11/2018 15:03 Called verifySig
+26/11/2018 15:03 parseSigFile
+26/11/2018 15:03 Called run_shell_cmd2 /usr/local/bin/openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bfbc4ef07769.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END CERT/ { print > "/home/andrey/www/htdocs/expert72/pki/tmp/5bfbc4ef078bc."i }'
+26/11/2018 15:03 Found signer certificates:1
+26/11/2018 15:03 Called run_shell_cmd /usr/local/bin/openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bfbc4ef07769.der" -noout -cmsout -print
+26/11/2018 15:03 Parsing certificate file /home/andrey/www/htdocs/expert72/pki/tmp/5bfbc4ef078bc.1
+26/11/2018 15:03 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bfbc4ef078bc.1" -noout
+26/11/2018 15:03 Called run_shell_cmd /usr/local/bin/openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bfbc4ef078bc.1" -noout -nameopt multiline
+26/11/2018 15:03 Need certificate for hash:1fbee991
+26/11/2018 15:03 Looking for CRL file /home/andrey/www/htdocs/expert72/pki/1fbee991.r0
+26/11/2018 15:03 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/1fbee991.0" -noout
+26/11/2018 15:03 Called run_shell_cmd /usr/local/bin/openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/1fbee991.0" -noout -nameopt multiline
+26/11/2018 15:03 Need certificate for hash:34fa2b3d
+26/11/2018 15:03 Looking for CRL file /home/andrey/www/htdocs/expert72/pki/34fa2b3d.r0
+26/11/2018 15:03 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/34fa2b3d.0" -noout
+26/11/2018 15:03 Called run_shell_cmd /usr/local/bin/openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/34fa2b3d.0" -noout -nameopt multiline
+26/11/2018 15:03 Called run_shell_cmd /usr/local/bin/openssl smime -verify -content "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/111/Информационно-удостоверяющий лист ИОС1.pdf" -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/pki/tmp/5bfbc4ef07769.der" -CApath "/home/andrey/www/htdocs/expert72/pki/"

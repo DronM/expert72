@@ -385,6 +385,19 @@ wget -O crypto_plugin.txt https://www.cryptopro.ru/sites/default/files/products/
 1.0.93 26/10
 1) Удаление файла доверенности
 
+1.0.94 
+1) PKI_OPENSSL_PATH OpenSSL library directory для поддержки нескольких библиотек, для ГОСт2012
+2) Подписание внутреннего документа в браузере не работало
+3) Константа PKI_MODE из файла file_upload в Config.php
+4) Ошибка при добавлении доверенности в заявление при insert (не update!) - двойная кавычка в подписанте не проходит!
+5) openssl 1.1.1 для работы с GOST2012
+7) Входящие клиента, показано заявление в таблице
+8) Входящие клиента, отбор не нажимаются кнопки
+
+1.0.95
+1) 
+
+
 file_verifications_lk_process()
 file_signatures_lk_process()
 user_certificates_lk_process()

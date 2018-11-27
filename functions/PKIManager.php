@@ -88,6 +88,8 @@ class PKIManager {
 	const DEF_CRL_VALIDITY = 86400;//24*60*60
 	const DEF_LOG_LEVEL = 'error';
 	const LOG_FILE_NAME = 'pki.log';
+	const DEF_PKI_PATH = 'pki/';
+	const DEF_TMP_PATH = '/tmp/';
 
 	const SUBJ_FLD_OGRN = '1.2.643.100.1';
 	const SUBJ_FLD_SNILS = '1.2.643.100.3';
@@ -99,6 +101,8 @@ class PKIManager {
 	
 	//directory for storing cach files: certificates,crls
 	private $pkiPath;
+	
+	private $opensslPath;
 	
 	private $logger;
 	
@@ -145,27 +149,41 @@ class PKIManager {
 		}
 	}
 	
-	public function __construct($pkiPath,$crlValidity=NULL,$logLevel=NULL,$tmpPath=NULL){				
-		$this->pkiPath = $pkiPath;
+	/**
+	 * old style $pkiPath,$crlValidity=NULL,$logLevel=NULL,$tmpPath=NULL
+	 */
+	public function __construct($options=NULL){
+		$option_values = array(
+			'pkiPath' => self::DEF_PKI_PATH,
+			'crlValidity' => self::DEF_CRL_VALIDITY,
+			'logLevel' => self::DEF_LOG_LEVEL,
+			'tmpPath' => self::DEF_TMP_PATH,
+			'opensslPath' => ''
+		);
+		if (!is_null($options)&&is_array($options)){
+			foreach($options as $opt=>$val){
+				if(array_key_exists($opt,$option_values)){
+					$option_values[$opt] = $val;
+				}
+			}
+		}
+		
+		$this->opensslPath = $option_values['opensslPath'];
+		
+		$this->pkiPath = $option_values['pkiPath'];
 		if (is_null($this->pkiPath) || !strlen($this->pkiPath)){
 			throw new Exception('pkiPath is not defined!');
 		}
 		if ($this->pkiPath[strlen($this->pkiPath)-1]!=DIRECTORY_SEPARATOR){
 			$this->pkiPath.=DIRECTORY_SEPARATOR;
 		}
-		if (is_null($tmpPath) || !strlen($tmpPath)){
-			$tmpPath = $this->pkiPath.'tmp'.DIRECTORY_SEPARATOR;
-			if (!file_exists($tmpPath)){
-				mkdir($tmpPath,0775,TRUE);
-			}
-		}
-		$this->tmpPath = $tmpPath;
+		$this->tmpPath = $option_values['tmpPath'];
 		if ($this->tmpPath[strlen($this->tmpPath)-1]!=DIRECTORY_SEPARATOR){
 			$this->tmpPath.=DIRECTORY_SEPARATOR;
 		}
 		
-		$this->crlValidity = isset($crlValidity)? $crlValidity : self::DEF_CRL_VALIDITY;
-		$this->logger = new Logger($this->pkiPath.self::LOG_FILE_NAME,array('logLevel'=>is_null($logLevel)? self::DEF_LOG_LEVEL:$logLevel));
+		$this->crlValidity = $option_values['crlValidity'];
+		$this->logger = new Logger($this->pkiPath.self::LOG_FILE_NAME,array('logLevel'=>$option_values['logLevel']));
 		
 		//sert traslation
 		$this->SUBJ_FLD_TRANSLATION = [
@@ -263,8 +281,8 @@ class PKIManager {
 	private function gen_cert_fromb64($b64File){
 		$der = $this->replace_extension($b64File,'der');
 		$pem = $this->replace_extension($b64File,'pem');
-		$this->run_shell_cmd2(sprintf('openssl base64 -d -A -in "%s" -out "%s"',$b64File,$der));
-		$this->run_shell_cmd2(sprintf('openssl x509 -in "%s" -inform der -outform pem -out "%s"',$der,$pem));
+		$this->run_shell_cmd2(sprintf($this->opensslPath.'openssl base64 -d -A -in "%s" -out "%s"',$b64File,$der));
+		$this->run_shell_cmd2(sprintf($this->opensslPath.'openssl x509 -in "%s" -inform der -outform pem -out "%s"',$der,$pem));
 	}	
 	
 	private function subj_fld_alias($fld){
@@ -327,7 +345,7 @@ class PKIManager {
 		$id = uniqid();		
 		//$pat = dirname($sigFile).DIRECTORY_SEPARATOR.$id;
 		$pat = $this->tmpPath.$id;
-		$this->run_shell_cmd2(sprintf('openssl pkcs7 -in "%s" -print_certs -inform DER -outform pem | awk \'/BEGIN/ { i++; } /BEGIN/, /END CERT/ { print > "%s."i }\'',$derFile,$pat));
+		$this->run_shell_cmd2(sprintf($this->opensslPath.'openssl pkcs7 -in "%s" -print_certs -inform DER -outform pem | awk \'/BEGIN/ { i++; } /BEGIN/, /END CERT/ { print > "%s."i }\'',$derFile,$pat));
 		$pem_list = glob($pat.".*");
 		if (!count($pem_list)){
 			$this->logger->add('Unable to get certificates from bundle '.$sigFile,'error');
@@ -344,7 +362,7 @@ class PKIManager {
 			$issuers = [];
 			$subjects = [];			
 			foreach($pem_list as $pem_file){
-				$cert_data = $this->run_shell_cmd(sprintf('openssl x509 -subject_hash -issuer_hash -in "%s" -noout',$pem_file));
+				$cert_data = $this->run_shell_cmd(sprintf($this->opensslPath.'openssl x509 -subject_hash -issuer_hash -in "%s" -noout',$pem_file));
 				$cert_ar = explode(PHP_EOL,trim($cert_data));
 				if (count($cert_ar)<2){
 					$this->logger->add('Unable to get certificate data from '.$cert_data,'error');
@@ -399,7 +417,7 @@ class PKIManager {
 	 *			{string} OCSP
 	 */
 	public function getCertInf($pemFile,&$certData){
-		$cert_str = $this->run_shell_cmd(sprintf('openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "%s" -noout',$pemFile));
+		$cert_str = $this->run_shell_cmd(sprintf($this->opensslPath.'openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "%s" -noout',$pemFile));
 		$cert_ar = explode(PHP_EOL,trim($cert_str));
 		if (count($cert_ar)<7){
 			$this->logger->add('Could not get certificate data from '.$cert_str,'error');
@@ -444,7 +462,7 @@ class PKIManager {
 		}
 	
 		//subject issuer
-		$cert_lines = $this->run_shell_cmd(sprintf('openssl x509 -subject -issuer -inform pem -in "%s" -noout -nameopt multiline',$pemFile));
+		$cert_lines = $this->run_shell_cmd(sprintf($this->opensslPath.'openssl x509 -subject -issuer -inform pem -in "%s" -noout -nameopt multiline',$pemFile));
 		$p = strpos($cert_lines,'issuer=');
 		if ($p>=0){
 			$certData->issuer = $this->decode_cert_inf(substr($cert_lines,$p+strlen('issuer=')));
@@ -512,7 +530,7 @@ class PKIManager {
 							$this->run_shell_cmd2(sprintf('wget -O "%s" %s',$issuer_der,$url));
 							
 							if (file_exists($issuer_der)){
-								$this->run_shell_cmd2(sprintf('openssl x509 -in "%s" -inform der -outform pem -out "%s"',$issuer_der,$issuer_pem));
+								$this->run_shell_cmd2(sprintf($this->opensslPath.'openssl x509 -in "%s" -inform der -outform pem -out "%s"',$issuer_der,$issuer_pem));
 								if (file_exists($issuer_pem))break;
 							}
 							
@@ -544,7 +562,7 @@ class PKIManager {
 			while(!$crl_passed && file_exists($ocsp_issuer_pem = $this->pkiPath.$certData->issuerHash.'.'.$issuer_index)){
 				$crl_res = '';
 				try{
-					$crl_res = $this->run_shell_cmd(sprintf('openssl ocsp -issuer "%s" -CApath "%s" -cert "%s" -url %s',
+					$crl_res = $this->run_shell_cmd(sprintf($this->opensslPath.'openssl ocsp -issuer "%s" -CApath "%s" -cert "%s" -url %s',
 						$ocsp_issuer_pem,
 						$this->pkiPath,
 						$certFile,
@@ -588,7 +606,7 @@ class PKIManager {
 								$this->run_shell_cmd2(sprintf('wget -O "%s" %s',$crl_der,$url));
 					
 								if (file_exists($crl_der)){
-									$this->run_shell_cmd2(sprintf('openssl crl -in "%s" -inform DER -out "%s"',$crl_der,$crl_pem));
+									$this->run_shell_cmd2(sprintf($this->opensslPath.'openssl crl -in "%s" -inform DER -out "%s"',$crl_der,$crl_pem));
 									$crl_passed = TRUE;
 									break;
 								}
@@ -681,7 +699,7 @@ class PKIManager {
 					$this->getCertInf($pem_file,$cert_data);						
 					array_push($verifResult->signatures,$cert_data);
 					
-					if ($option_values['unqualifiedCertTreatAsError'] && !array_key_exists('СНИЛС',$cert_data->subject)){
+					if ($option_values['unqualifiedCertTreatAsError'] && !array_key_exists('СНИЛС',$cert_data->subject) && !array_key_exists('SNILS',$cert_data->subject)){
 						$verifResult->checkError = self::ER_UNQUALIFIED_CERT;
 						$verifResult->checkPassed = FALSE;
 					}
@@ -703,7 +721,7 @@ class PKIManager {
 				try{
 					//-noverify -crl_check -CRLfile crl_check_all					
 					$verif_cmd = sprintf(
-						'openssl smime -verify -content "%s" -purpose any -out /dev/null -inform der -in "%s"',
+						$this->opensslPath.'openssl smime -verify -content "%s" -purpose any -out /dev/null -inform der -in "%s"',
 						$contentFile,
 						$der_file
 						
@@ -851,7 +869,7 @@ class PKIManager {
 	public function getSigAttributes($file,$binForamt){
 		$ret = NULL;
 		try{
-			$res_str = $this->run_shell_cmd(sprintf('openssl cms -inform %s -in "%s" -noout -cmsout -print',($binForamt? 'der':'pem'),$file));
+			$res_str = $this->run_shell_cmd(sprintf($this->opensslPath.'openssl cms -inform %s -in "%s" -noout -cmsout -print',($binForamt? 'der':'pem'),$file));
 			$ret = $this->get_sig_attributes($res_str);
 		}
 		finally{
@@ -866,7 +884,7 @@ class PKIManager {
 	 */
 	public function decodeSigFromBase64($sigFile,$derFile){
 		try{
-			$this->run_shell_cmd2(sprintf('openssl enc -d -base64 -in "%s" -out "%s"',$sigFile,$derFile));
+			$this->run_shell_cmd2(sprintf($this->opensslPath.'openssl enc -d -base64 -in "%s" -out "%s"',$sigFile,$derFile));
 		}
 		finally{
 			$this->logger->dump();
@@ -941,15 +959,15 @@ class PKIManager {
 								try{
 									//pem
 									file_put_contents($b64, $sert->Данные);
-									$this->run_shell_cmd2(sprintf('openssl base64 -d -A -in "%s" -out "%s"',$b64,$der));
+									$this->run_shell_cmd2(sprintf($this->opensslPath.'openssl base64 -d -A -in "%s" -out "%s"',$b64,$der));
 								
-									$hash = trim($this->run_shell_cmd(sprintf('openssl x509 -hash -inform der -in "%s" -noout',$der)));
+									$hash = trim($this->run_shell_cmd(sprintf($this->opensslPath.'openssl x509 -hash -inform der -in "%s" -noout',$der)));
 									
 									$ind = 0;
 									while(file_exists($pem = $this->pkiPath.$hash.'.'.$ind)){
 										$ind++;	
 									}
-									$this->run_shell_cmd2(sprintf('openssl x509 -in "%s" -inform der -outform pem -out "%s"',$der,$pem));
+									$this->run_shell_cmd2(sprintf($this->opensslPath.'openssl x509 -in "%s" -inform der -outform pem -out "%s"',$der,$pem));
 								}	
 								finally{
 									if (file_exists($b64))unlink($b64);

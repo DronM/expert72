@@ -842,7 +842,7 @@ class DocFlowOut_Controller extends DocFlow_Controller{
 			throw $exception;
 		}
 		
-		$pki_man = new PKIManager(PKI_PATH,PKI_CRL_VALIDITY,'error');
+		$pki_man = pki_create_manager();
 		$hash = pki_get_hash(
 			$fl,
 			$this->getExtDbVal($pm,'file_id'),
