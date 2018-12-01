@@ -127,11 +127,21 @@ BEGIN
 			--			Отметить возврат контракта в контракте
 			--			Перевести статус контракта в ожидание оплаты, только тек.статус=ожидание контракта
 			
+			--	4) Продление срока
+			--		Действия:
+			--			Создать входящее письмо на отдел приема
+			--			email на отдел приема
+			--			Напоминание&&email admin
+			
 			--************* Входящее письмо НАШЕ ***********************************
 			--Либо отделу приема
 			--Либо главному отделу контракта
 			IF (v_main_department_id IS NULL)
-			OR (NEW.doc_flow_out_client_type='contr_return'::doc_flow_out_client_types) THEN
+			OR (NEW.doc_flow_out_client_type='contr_return'::doc_flow_out_client_types)
+			OR (NEW.doc_flow_out_client_type='contr_other'::doc_flow_out_client_types)
+			OR (NEW.doc_flow_out_client_type='date_prolongate'::doc_flow_out_client_types)
+			OR (NEW.doc_flow_out_client_type='app_contr_revoke'::doc_flow_out_client_types)
+			THEN
 				v_recip_department_id = (SELECT const_app_recipient_department_val()->'keys'->>'id')::int;				
 			ELSE
 				v_recip_department_id = v_main_department_id;
@@ -164,7 +174,7 @@ BEGIN
 				
 				v_doc_flow_subject = NEW.subject||', контракт №'||v_contract_number||', '||(v_applicant->>'name')::text;
 			ELSE
-				v_doc_flow_subject = NEW.subject;
+				v_doc_flow_subject = enum_doc_flow_out_client_types_val(NEW.doc_flow_out_client_type,'ru');
 				IF v_contract_number IS NOT NULL THEN
 					v_doc_flow_subject = v_doc_flow_subject ||', контракт №'||v_contract_number;
 				END IF;
@@ -196,6 +206,13 @@ BEGIN
 						(pdfn_doc_flow_types_contr_paper_return()->'keys'->>'id')::int
 					WHEN NEW.doc_flow_out_client_type='contr_resp'::doc_flow_out_client_types THEN
 						(pdfn_doc_flow_types_contr_resp()->'keys'->>'id')::int
+					WHEN NEW.doc_flow_out_client_type='contr_other'::doc_flow_out_client_types THEN
+						5--Просто письмо входящее
+					WHEN NEW.doc_flow_out_client_type='date_prolongate'::doc_flow_out_client_types THEN
+						16--Продление срока
+					WHEN NEW.doc_flow_out_client_type='app_contr_revoke'::doc_flow_out_client_types AND v_contract_id IS NULL THEN
+						13--Отзыв
+					
 					ELSE (pdfn_doc_flow_types_app()->'keys'->>'id')::int
 				END,
 				

@@ -370,6 +370,8 @@ DocFlowInDialog_View.prototype.setAppVis = function(){
 		(v==window.getApp().getPredefinedItem("doc_flow_types","app").getKey()
 		||v==window.getApp().getPredefinedItem("doc_flow_types","contr_resp").getKey()
 		||v==window.getApp().getPredefinedItem("doc_flow_types","contr_paper_return").getKey()
+		||v==window.getApp().getPredefinedItem("doc_flow_types","date_prolongate").getKey()
+		||v==window.getApp().getPredefinedItem("doc_flow_types","app_contr_revoke").getKey()
 		)
 	);
 	

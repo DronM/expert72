@@ -2,7 +2,7 @@
 <metadata owner="expert72">
 	<versions>
 		<version dateOpen="2017-09-27 12:09:48" dateClose="2017-12-08 10:12:08">1.001 
-		<lastBuild>2018-11-27 06:08:11</lastBuild></version>
+		<lastBuild>2018-12-01 07:12:41</lastBuild></version>
 		<version dateOpen="2017-12-08 11:12:01" dateClose="2017-12-08 11:12:04">1.002</version>
 		<version dateOpen="2017-12-08 11:12:20" dateClose="2017-12-08 11:12:20">1.0.3</version>
 		<version dateOpen="2017-12-12 11:12:07" dateClose="2017-12-12 11:12:07">1.0.4</version>
@@ -95,6 +95,7 @@
 		<version dateOpen="2018-11-16 14:11:35" dateClose="2018-11-24 06:11:17">1.0.92</version>
 		<version dateOpen="2018-11-24 06:11:17" dateClose="2018-11-26 05:11:53">1.0.93</version>
 		<version dateOpen="2018-11-26 05:11:56" dateClose="2018-11-27 06:11:08">1.0.94</version>
+		<version dateOpen="2018-11-27 06:11:08" dateClose="2018-12-01 07:12:13">1.0.95</version>
 	</versions>
 	<globalFilters>
 		<field id="user_id"/>
@@ -1382,6 +1383,18 @@
 					<num_prefix>&#x418;&#x441;&#x445;-</num_prefix>
 					<name>&#x414;&#x43E;&#x433;&#x43E;&#x432;&#x43E;&#x440;&#x43D;&#x44B;&#x435; &#x434;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;</name>
 					<doc_flow_types_type_id>out</doc_flow_types_type_id>
+				</predefinedItem>
+				<predefinedItem alias="date_prolongate">
+					<id>16</id>
+					<num_prefix>&#x412;&#x445;-</num_prefix>
+					<name>&#x41F;&#x440;&#x43E;&#x434;&#x43B;&#x435;&#x43D;&#x438;&#x435; &#x441;&#x440;&#x43E;&#x43A;&#x430;</name>
+					<doc_flow_types_type_id>in</doc_flow_types_type_id>
+				</predefinedItem>
+				<predefinedItem alias="app_contr_revoke">
+					<id>17</id>
+					<num_prefix>&#x412;&#x445;-</num_prefix>
+					<name>&#x41E;&#x442;&#x437;&#x44B;&#x432; &#x437;&#x430;&#x44F;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x44F;/&#x43A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x430;</name>
+					<doc_flow_types_type_id>in</doc_flow_types_type_id>
 				</predefinedItem>
 			</predefinedItems>
 		</model>

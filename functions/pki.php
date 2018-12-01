@@ -6,9 +6,10 @@
 	function pki_create_manager(){
 		return (new PKIManager(array(
 				'pkiPath' => PKI_PATH,
+				'logFile' => PKI_LOG_FILE,
 				'crlValidity' => PKI_CRL_VALIDITY,
 				'logLevel' => PKI_MODE,
-				'tmpPath' => PKI_PATH.'tmp/',
+				'tmpPath' => OUTPUT_PATH,
 				'opensslPath' => PKI_OPENSSL_PATH
 		)));	
 	}

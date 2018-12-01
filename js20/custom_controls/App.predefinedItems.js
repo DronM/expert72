@@ -22,6 +22,8 @@ App.prototype.m_predefinedItems = {
 ,"contr_return":new RefType({"dataType":"doc_flow_types","descr":"Отзыв (возврат) в ходе экспертизы","keys":{"id":13}})
 ,"contr_paper_return":new RefType({"dataType":"doc_flow_types","descr":"Возврат контракта","keys":{"id":14}})
 ,"signed_documents":new RefType({"dataType":"doc_flow_types","descr":"Договорные документы","keys":{"id":15}})
+,"date_prolongate":new RefType({"dataType":"doc_flow_types","descr":"Продление срока","keys":{"id":16}})
+,"app_contr_revoke":new RefType({"dataType":"doc_flow_types","descr":"Отзыв заявления/контракта","keys":{"id":17}})
 }
 ,"doc_flow_importance_types":{"common":new RefType({"dataType":"doc_flow_importance_types","descr":"Обычная","keys":{"id":1}})
 }

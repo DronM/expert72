@@ -576,7 +576,7 @@ function ContractDialog_View(id,options){
 		);
 		
 		//Архив - только admin и юристы!
-		if (role=="admin" || options.templateOptions.notExpert){
+		//if (role=="admin" || options.templateOptions.notExpert){
 			this.addElement(new ButtonCmd(id+":cmdZipAll",{
 				"caption":"Скачать документацию ",
 				"glyph":"glyphicon-compressed",
@@ -592,7 +592,7 @@ function ContractDialog_View(id,options){
 					});
 				}
 			}));
-		}
+		//}
 				
 		/*
 		this.addElement(new ButtonCmd(id+":cmdObjInf",{

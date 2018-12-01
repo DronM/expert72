@@ -18,9 +18,10 @@ return;
 	require_once('functions/PKIManager.php');
 	$pki_man = new PKIManager(array(
 			'pkiPath' => PKI_PATH,
+			'logPath' => OUTPUT_PATH,
 			'crlValidity' => PKI_CRL_VALIDITY,
 			'logLevel' => 'debug',
-			'tmpPath' => PKI_PATH.'tmp/',
+			'tmpPath' => OUTPUT_PATH,
 			'opensslPath' => PKI_OPENSSL_PATH
 	));	
 	/*
@@ -36,8 +37,8 @@ return;
 	);
 	*/
 	$verif_res = $pki_man->verifySig(
-		'/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/111/Информационно-удостоверяющий лист ИОС1.pdf.sig',
-		'/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/111/Информационно-удостоверяющий лист ИОС1.pdf',
+		'/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/09-01-01 Утилизация ТБО 40(48).xlsx.sig',
+		'/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/09-01-01 Утилизация ТБО 40(48).xlsx',
 		array(
 			'noChainVerification' => FALSE,
 			'onlineRevocCheck' => TRUE,

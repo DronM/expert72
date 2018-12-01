@@ -47,7 +47,7 @@ https://www.webucator.com/tutorial/learn-xsl-fo
 
 <xsl:template match="model[@id='SigCheck_Model']">
 	<fo:block-container font-family="Arial" font-style="normal">	
-		<fo:table table-layout="fixed">
+		<fo:table table-layout="fixed" width="100%">
 			<fo:table-column column-width="3%"/>
 			<fo:table-column column-width="40%"/>
 			<fo:table-column column-width="20%"/>

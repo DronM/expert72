@@ -130,7 +130,8 @@ class EmailSender {
 		//sending
 		if ($emailMessage){
 			if(!$emailMessage->Send()){				
-				throw new Exception("Error: ".$emailMessage->ErrorInfo."\n");
+				//throw new Exception("Error: ".$emailMessage->ErrorInfo."\n");
+				error_log("EmailSender error: ".$emailMessage->ErrorInfo."\n");
 			}
 			else{
 				try{
@@ -153,7 +154,8 @@ class EmailSender {
 				}
 				catch(Exception $e){
 					$dbLink->query("ROLLBACK");
-					throw $e;
+					//throw $e;
+					error_log("EmailSender error: ".$e->getMessage()."\n");
 				}
 			}		
 		}

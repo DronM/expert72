@@ -2543,13 +2543,13 @@ class Application_Controller extends ControllerSQL{
 		$applicant_m = json_decode($ar['applicant'],TRUE);
 		$inn = $applicant_m['inn'].( (strlen($applicant_m['kpp']))? ('/'.$applicant_m['kpp']):'' );
 		if ($applicant_m['client_type']=='enterprise'){
-			$person_head = json_decode($applicant_m['responsable_person_head'],TRUE);
+			$person_head = array_key_exists('responsable_person_head',$applicant_m)? json_decode($applicant_m['responsable_person_head'],TRUE) : [];
 		}
 		else{
 			//pboul and person = name
 			$person_head = array('name'=>$applicant_m['name_full'],'post'=>'');
 		}
-		if (strlen($applicant_m['base_document_for_contract'])){
+		if (isset($applicant_m['base_document_for_contract'])&&strlen($applicant_m['base_document_for_contract'])){
 			try{
 				$base_document_for_contract = Morpher::declension(array('s'=>$applicant_m['base_document_for_contract'],'flags'=>'common'),$this->getDbLinkMaster(),$this->getDbLink())['Р'];
 			}
@@ -2560,7 +2560,8 @@ class Application_Controller extends ControllerSQL{
 		else{
 			$base_document_for_contract = '';
 		}
-		if (strlen($person_head['name'])){
+		if (is_array($person_head)&&isset($person_head['name'])&&strlen($person_head['name'])){
+			$person_head_name = $person_head['name'];
 			try{
 				$person_head_name_rod = get_short_name(Morpher::declension(array('s'=>$person_head['name'],'flags'=>'name'),$this->getDbLinkMaster(),$this->getDbLink())['Р']);
 			}
@@ -2569,9 +2570,11 @@ class Application_Controller extends ControllerSQL{
 			}
 		}
 		else{
+			$person_head_name = '';
 			$person_head_name_rod = '';
 		}		
-		if (strlen($person_head['post'])){
+		if (is_array($person_head)&&isset($person_head['post'])&&strlen($person_head['post'])){
+			$person_head_post = $person_head['post'];
 			try{
 				$person_head_post_rod = Morpher::declension(array('s'=>$person_head['post'],'flags'=>'common'),$this->getDbLinkMaster(),$this->getDbLink())['Р'];
 			}
@@ -2580,6 +2583,7 @@ class Application_Controller extends ControllerSQL{
 			}				
 		}
 		else{
+			$person_head_post = '';
 			$person_head_post_rod = '';
 		}				
 		$applicant_contacts = '';
@@ -2609,8 +2613,8 @@ class Application_Controller extends ControllerSQL{
 			sprintf('<field id="Юридический адрес">%s</field>',$ar['applicant_legal_address']).
 			sprintf('<field id="Почтовый адрес">%s</field>',$ar['applicant_post_address']).
 			sprintf('<field id="Банк">%s</field>',$ar['applicant_bank']).			
-			sprintf('<field id="ФИО руководителя">%s</field>',$person_head['name']).
-			sprintf('<field id="Должность руководителя">%s</field>',$person_head['post']).
+			sprintf('<field id="ФИО руководителя">%s</field>',$person_head_name).
+			sprintf('<field id="Должность руководителя">%s</field>',$person_head_post).
 			sprintf('<field id="Действует на основании">%s</field>',$base_document_for_contract).
 			sprintf('<person_head_name_rod>%s</person_head_name_rod>',$person_head_name_rod).
 			sprintf('<person_head_post_rod>%s</person_head_post_rod>',$person_head_post_rod).			
@@ -2629,14 +2633,14 @@ class Application_Controller extends ControllerSQL{
 		$customer_m = json_decode($ar['customer'],TRUE);
 		$inn = $customer_m['inn'].( (strlen($customer_m['kpp']))? ('/'.$customer_m['kpp']):'' );		
 		if ($customer_m['client_type']=='enterprise'){
-			$person_head = json_decode($customer_m['responsable_person_head'],TRUE);
+			$person_head = array_key_exists('responsable_person_head',$customer_m)? json_decode($customer_m['responsable_person_head'],TRUE) : [];
 		}
 		else{
 			//pboul and person = name
 			$person_head = array('name'=>$customer_m['name_full'],'post'=>'');			
 		}
 		
-		if (strlen($customer_m['base_document_for_contract'])){
+		if (isset($customer_m['base_document_for_contract'])&&strlen($customer_m['base_document_for_contract'])){
 			try{
 				$base_document_for_contract = Morpher::declension(array('s'=>$customer_m['base_document_for_contract'],'flags'=>'common'),$this->getDbLinkMaster(),$this->getDbLink())['Р'];
 			}
@@ -2648,7 +2652,8 @@ class Application_Controller extends ControllerSQL{
 			$base_document_for_contract = '';
 		}
 		
-		if (array_key_exists('name',$person_head) && strlen($person_head['name'])){
+		if (is_array($person_head) && array_key_exists('name',$person_head) && strlen($person_head['name'])){
+			$person_head_name = $person_head['name'];
 			try{
 				$person_head_name_rod = Morpher::declension(array('s'=>$person_head['name'],'flags'=>'name'),$this->getDbLinkMaster(),$this->getDbLink())['Р'];
 			}
@@ -2657,9 +2662,11 @@ class Application_Controller extends ControllerSQL{
 			}				
 		}
 		else{
+			$person_head_name = '';
 			$person_head_name_rod = '';
-		}		
-		if (array_key_exists('post',$person_head) && strlen($person_head['post'])){
+		}
+		if (is_array($person_head) && array_key_exists('post',$person_head) && strlen($person_head['post'])){
+			$person_head_post = $person_head['post'];
 			try{
 				$person_head_post_rod = Morpher::declension(array('s'=>$person_head['post'],'flags'=>'common'),$this->getDbLinkMaster(),$this->getDbLink())['Р'];
 			}
@@ -2668,6 +2675,7 @@ class Application_Controller extends ControllerSQL{
 			}				
 		}
 		else{
+			$person_head_post = '';
 			$person_head_post_rod = '';
 		}								
 		$ar['customer'] =
@@ -2676,8 +2684,8 @@ class Application_Controller extends ControllerSQL{
 			sprintf('<field id="Юридический адрес">%s</field>',$ar['customer_legal_address']).
 			sprintf('<field id="Почтовый адрес">%s</field>',$ar['customer_post_address']).
 			sprintf('<field id="Банк">%s</field>',$ar['customer_bank']).		
-			sprintf('<field id="ФИО руководителя">%s</field>',$person_head['name']).
-			sprintf('<field id="Должность руководителя">%s</field>',$person_head['post']).
+			sprintf('<field id="ФИО руководителя">%s</field>',$person_head_name).
+			sprintf('<field id="Должность руководителя">%s</field>',$person_head_post).
 			sprintf('<field id="Действует на основании">%s</field>',$base_document_for_contract).
 			sprintf('<person_head_name_rod>%s</person_head_name_rod>',$person_head_name_rod).
 			sprintf('<person_head_post_rod>%s</person_head_post_rod>',$person_head_post_rod)			
@@ -2687,14 +2695,14 @@ class Application_Controller extends ControllerSQL{
 		$developer_m = json_decode($ar['developer'],TRUE);
 		$inn = $developer_m['inn'].( (strlen($developer_m['kpp']))? ('/'.$developer_m['kpp']):'' );		
 		if ($developer_m['client_type']=='enterprise'){
-			$person_head = json_decode($developer_m['responsable_person_head'],TRUE);
+			$person_head = array_key_exists('responsable_person_head',$developer_m)? json_decode($developer_m['responsable_person_head'],TRUE) : [];
 		}
 		else{
 			//pboul and person = name
 			$person_head = array('name'=>$developer_m['name_full'],'post'=>'');			
 		}
 		
-		if (strlen($developer_m['base_document_for_contract'])){
+		if (isset($developer_m['base_document_for_contract'])&&strlen($developer_m['base_document_for_contract'])){
 			try{
 				$base_document_for_contract = Morpher::declension(array('s'=>$developer_m['base_document_for_contract'],'flags'=>'common'),$this->getDbLinkMaster(),$this->getDbLink())['Р'];
 			}
@@ -2706,7 +2714,8 @@ class Application_Controller extends ControllerSQL{
 			$base_document_for_contract = '';
 		}
 		
-		if (strlen($person_head['name'])){
+		if (isset($person_head['name'])&&strlen($person_head['name'])){
+			$person_head_name = $person_head['name'];
 			try{
 				$person_head_name_rod = Morpher::declension(array('s'=>$person_head['name'],'flags'=>'name'),$this->getDbLinkMaster(),$this->getDbLink())['Р'];
 			}
@@ -2715,9 +2724,11 @@ class Application_Controller extends ControllerSQL{
 			}				
 		}
 		else{
+			$person_head_name = '';
 			$person_head_name_rod = '';
 		}		
-		if (strlen($person_head['post'])){
+		if (isset($person_head['post'])&&strlen($person_head['post'])){
+			$person_head_post = $person_head['post'];
 			try{
 				$person_head_post_rod = Morpher::declension(array('s'=>$person_head['post'],'flags'=>'common'),$this->getDbLinkMaster(),$this->getDbLink())['Р'];
 			}
@@ -2726,6 +2737,7 @@ class Application_Controller extends ControllerSQL{
 			}				
 		}
 		else{
+			$person_head_post = '';
 			$person_head_post_rod = '';
 		}								
 		$ar['developer'] =
@@ -2734,8 +2746,8 @@ class Application_Controller extends ControllerSQL{
 			sprintf('<field id="Юридический адрес">%s</field>',$ar['developer_legal_address']).
 			sprintf('<field id="Почтовый адрес">%s</field>',$ar['developer_post_address']).
 			sprintf('<field id="Банк">%s</field>',$ar['developer_bank']).		
-			sprintf('<field id="ФИО руководителя">%s</field>',$person_head['name']).
-			sprintf('<field id="Должность руководителя">%s</field>',$person_head['post']).
+			sprintf('<field id="ФИО руководителя">%s</field>',$person_head_name).
+			sprintf('<field id="Должность руководителя">%s</field>',$person_head_post).
 			sprintf('<field id="Действует на основании">%s</field>',$base_document_for_contract).
 			sprintf('<person_head_name_rod>%s</person_head_name_rod>',$person_head_name_rod).
 			sprintf('<person_head_post_rod>%s</person_head_post_rod>',$person_head_post_rod)			
@@ -2748,14 +2760,14 @@ class Application_Controller extends ControllerSQL{
 			$contractor_m = $contractor['contractor'];
 			$inn = $contractor_m['inn'].( (strlen($contractor_m['kpp']))? ('/'.$contractor_m['kpp']):'' );			
 			if ($contractor_m['client_type']=='enterprise'){
-				$person_head = json_decode($contractor_m['responsable_person_head'],TRUE);
+				$person_head = array_key_exists('responsable_person_head',$contractor_m)? json_decode($contractor_m['responsable_person_head'],TRUE) : [];
 			}
 			else{
 				//pboul and person = name
 				$person_head = array('name'=>$contractor_m['name_full'],'post'=>'');			
 			}
 			
-			if (strlen($contractor_m['base_document_for_contract'])){
+			if (isset($contractor_m['base_document_for_contract'])&&strlen($contractor_m['base_document_for_contract'])){
 				try{
 					$base_document_for_contract = Morpher::declension(array('s'=>$contractor_m['base_document_for_contract'],'flags'=>'common'),$this->getDbLinkMaster(),$this->getDbLink())['Р'];
 				}
@@ -2766,7 +2778,8 @@ class Application_Controller extends ControllerSQL{
 			else{
 				$base_document_for_contract = '';
 			}		
-			if (strlen($person_head['name'])){
+			if (isset($person_head['name'])&&strlen($person_head['name'])){
+				$person_head_name = $person_head['name'];
 				try{
 					$person_head_name_rod = Morpher::declension(array('s'=>$person_head['name'],'flags'=>'name'),$this->getDbLinkMaster(),$this->getDbLink())['Р'];
 				}
@@ -2775,9 +2788,11 @@ class Application_Controller extends ControllerSQL{
 				}									
 			}
 			else{
+				$person_head_name = '';
 				$person_head_name_rod = '';
 			}		
-			if (strlen($person_head['post'])){
+			if (isset($person_head['post'])&&strlen($person_head['post'])){
+				$person_head_post = $person_head['post'];
 				try{
 					$person_head_post_rod = Morpher::declension(array('s'=>$person_head['post'],'flags'=>'common'),$this->getDbLinkMaster(),$this->getDbLink())['Р'];
 				}
@@ -2786,6 +2801,7 @@ class Application_Controller extends ControllerSQL{
 				}									
 			}
 			else{
+				$person_head_post = '';
 				$person_head_post_rod = '';
 			}								
 			
@@ -2796,8 +2812,8 @@ class Application_Controller extends ControllerSQL{
 				sprintf('<field id="Юридический адрес">%s</field>',$contractor['legal_address']).
 				sprintf('<field id="Почтовый адрес">%s</field>',$contractor['post_address']).
 				sprintf('<field id="Банк">%s</field>',$contractor['bank']).				
-				sprintf('<field id="ФИО руководителя">%s</field>',$person_head['name']).
-				sprintf('<field id="Должность руководителя">%s</field>',$person_head['post']).				
+				sprintf('<field id="ФИО руководителя">%s</field>',$person_head_name).
+				sprintf('<field id="Должность руководителя">%s</field>',$person_head_post).				
 				sprintf('<field id="Действует на основании">%s</field>',$base_document_for_contract).
 				sprintf('<person_head_name_rod>%s</person_head_name_rod>',$person_head_name_rod).
 				sprintf('<person_head_post_rod>%s</person_head_post_rod>',$person_head_post_rod).				

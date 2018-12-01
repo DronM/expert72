@@ -153,8 +153,19 @@ class PKIManager {
 	 * old style $pkiPath,$crlValidity=NULL,$logLevel=NULL,$tmpPath=NULL
 	 */
 	public function __construct($options=NULL){
+		
+		function check_dir(&$dir,$id){
+			if (is_null($dir) || !strlen($dir)){
+				throw new Exception($id.' is not defined!');
+			}
+			if ($dir[strlen($dir)-1]!=DIRECTORY_SEPARATOR){
+				$dir.=DIRECTORY_SEPARATOR;
+			}		
+		}
+		
 		$option_values = array(
 			'pkiPath' => self::DEF_PKI_PATH,
+			'logFile' => self::DEF_PKI_PATH.self::LOG_FILE_NAME,
 			'crlValidity' => self::DEF_CRL_VALIDITY,
 			'logLevel' => self::DEF_LOG_LEVEL,
 			'tmpPath' => self::DEF_TMP_PATH,
@@ -171,19 +182,12 @@ class PKIManager {
 		$this->opensslPath = $option_values['opensslPath'];
 		
 		$this->pkiPath = $option_values['pkiPath'];
-		if (is_null($this->pkiPath) || !strlen($this->pkiPath)){
-			throw new Exception('pkiPath is not defined!');
-		}
-		if ($this->pkiPath[strlen($this->pkiPath)-1]!=DIRECTORY_SEPARATOR){
-			$this->pkiPath.=DIRECTORY_SEPARATOR;
-		}
+		check_dir($this->pkiPath,'pkiPath');
 		$this->tmpPath = $option_values['tmpPath'];
-		if ($this->tmpPath[strlen($this->tmpPath)-1]!=DIRECTORY_SEPARATOR){
-			$this->tmpPath.=DIRECTORY_SEPARATOR;
-		}
+		check_dir($this->tmpPath,'tmpPath');
 		
 		$this->crlValidity = $option_values['crlValidity'];
-		$this->logger = new Logger($this->pkiPath.self::LOG_FILE_NAME,array('logLevel'=>$option_values['logLevel']));
+		$this->logger = new Logger($option_values['logFile'],array('logLevel'=>$option_values['logLevel']));
 		
 		//sert traslation
 		$this->SUBJ_FLD_TRANSLATION = [
@@ -678,7 +682,6 @@ class PKIManager {
 				$this->parseSigFile($sigFile,$der_file,$signer_pem_files);
 				
 				$sig_attrs = $this->getSigAttributes($der_file,TRUE);
-				
 				if (!count($signer_pem_files)){
 					throw new Exception(self::ER_NO_CERT_FOUND);
 				}
@@ -824,8 +827,16 @@ class PKIManager {
 			}
 			else if ($serial_found && strpos($line,'serialNumber:')!==FALSE){
 				$p=strpos($line,':')+1;
-				$cur_serial = dec2hex(trim(substr($line,$p)));
-				if (strlen($cur_serial)%2==1)$cur_serial='0'.$cur_serial;
+				$cur_serial_s = trim(substr($line,$p));
+				if (substr($cur_serial_s,0,2)=='0x'){
+					//openssl 1.1.1 already hex value
+					$cur_serial = substr($cur_serial_s,2);
+				}
+				else{
+					//openssl 1.0.1
+					$cur_serial = dec2hex($cur_serial_s);
+					if (strlen($cur_serial)%2==1)$cur_serial='0'.$cur_serial;
+				}				
 				$res[$cur_serial] = new stdClass();
 				$res[$cur_serial]->signedDate = NULL;
 				$res[$cur_serial]->algorithm = NULL;				
@@ -847,7 +858,7 @@ class PKIManager {
 				}
 				$alg_found = FALSE;
 			}
-			else if  ($signed_dt_found && $line=='value.set:' ){
+			else if  ($signed_dt_found && ($line=='value.set:'||$line=='set:' )){//openssl 1.1.1 correction
 				$signed_dt_val_next = TRUE;
 			}
 			else if ($line=='digestAlgorithm:'){

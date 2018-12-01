@@ -3,17 +3,18 @@ class ExtProg{
 
 	private static function parseHeaders($headers){
 	    $head = array();
-	    foreach( $headers as $k=>$v )
-	    {
-		$t = explode( ':', $v, 2 );
-		if( isset( $t[1] ) )
-		    $head[ trim($t[0]) ] = trim( $t[1] );
-		else{
-		    $head[] = $v;
-		    if( preg_match( "#HTTP/[0-9\.]+\s+([0-9]+)#",$v, $out ) )
-		        $head['reponse_code'] = intval($out[1]);
-		        $head['reponse_descr'] = $v;
-		}
+	    if (is_array($headers)){
+		    foreach( $headers as $k=>$v ){
+			$t = explode( ':', $v, 2 );
+			if( isset( $t[1] ) )
+			    $head[ trim($t[0]) ] = trim( $t[1] );
+			else{
+			    $head[] = $v;
+			    if( preg_match( "#HTTP/[0-9\.]+\s+([0-9]+)#",$v, $out ) )
+				$head['response_code'] = intval($out[1]);
+				$head['response_descr'] = $v;
+			}
+		    }
 	    }
 	    return $head;
 	}
@@ -69,8 +70,8 @@ class ExtProg{
 		$contents = file_get_contents('http://'.HOST_1C.':'.PORT_1C.'/API1c.php', FALSE, $context);
 		
 		$header_res = self::parseHeaders($http_response_header);
-		if ($header_res['reponse_code'] && $header_res['reponse_code']!=200){
-			throw new Exception($header_res['reponse_descr']);
+		if ($header_res['response_code'] && $header_res['response_code']!=200){
+			throw new Exception($header_res['response_descr']);
 		}
 		
 		//ответ всегда в ANSI
