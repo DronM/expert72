@@ -213,7 +213,7 @@ function merge_sig($relDir,$contentFile,$origFile,$newName,$fileId,$dbFileId,&$d
 		//После мерджа исключений не должно быть, чтобы все оставить в базе		
 		try{	
 			//new file verification
-			pki_log_sig_check($newName, $contentFile, $dbFileId, $pki_man, $dbLink);	
+			pki_log_sig_check($newName, $contentFile, $dbFileId, $pki_man, $dbLink,TRUE);	
 		}
 		catch(Exception $e){
 		}

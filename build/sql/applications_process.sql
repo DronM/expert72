@@ -26,6 +26,11 @@ BEGIN
 		END IF;
 			
 		RETURN OLD;
+	ELSIF (TG_WHEN='BEFORE' AND (TG_OP='UPDATE' OR TG_OP='INSERT') ) THEN			
+		IF const_client_lk_val() OR const_debug_val() THEN			
+			NEW.update_dt = now();
+		END IF;
+		RETURN NEW;
 	END IF;
 END;
 $BODY$

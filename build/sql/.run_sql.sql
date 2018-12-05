@@ -235,7 +235,7 @@ BEGIN
 			--*********************************************************************
 			
 			
-			IF v_contract_id IS NULL THEN
+			IF v_contract_id IS NULL THEN --AND NEW.doc_flow_out_client_type='app'::doc_flow_out_client_types THEN
 				--НЕТ контракта - Передача на рассмотрение в отдел приема
 				INSERT INTO doc_flow_examinations (
 					date_time,

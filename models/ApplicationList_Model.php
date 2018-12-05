@@ -330,6 +330,14 @@ class ApplicationList_Model extends ModelSQL{
 		$this->addField($f_auth_letter_file);
 		//********************
 		
+		//*** Field update_dt ***
+		$f_opts = array();
+		$f_opts['id']="update_dt";
+				
+		$f_update_dt=new FieldSQLDateTimeTZ($this->getDbLink(),$this->getDbName(),$this->getTableName(),"update_dt",$f_opts);
+		$this->addField($f_update_dt);
+		//********************
+		
 		//*** Field users_ref ***
 		$f_opts = array();
 		$f_opts['id']="users_ref";

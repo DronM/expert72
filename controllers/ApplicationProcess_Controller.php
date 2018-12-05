@@ -22,6 +22,9 @@ require_once(FRAME_WORK_PATH.'basic_classes/FieldExtXML.php');
  */
 
 
+
+require_once(USER_CONTROLLERS_PATH.'Application_Controller.php');
+
 class ApplicationProcess_Controller extends ControllerSQL{
 	public function __construct($dbLinkMaster=NULL,$dbLink=NULL){
 		parent::__construct($dbLinkMaster,$dbLink);
@@ -161,7 +164,16 @@ class ApplicationProcess_Controller extends ControllerSQL{
 		if ($_SESSION['role_id']!='admin'){
 			throw new Exception('Статусы удалять может только администратор!');
 		}
-		parent::delete($pm);
+		
+		$q = sprintf("DELETE FROM application_processes%s
+		WHERE application_id=%d AND date_trunc('second',date_time)=date_trunc('second',%s::timestampTZ)",
+			Application_Controller::LKPostfix(),
+			$this->getExtDbVal($pm,'application_id'),
+			$this->getExtDbVal($pm,'date_time')
+		);
+		//throw new Exception($q);
+		$this->getDbLinkMaster()->query($q);
+		//parent::delete($pm);
 	}
 
 

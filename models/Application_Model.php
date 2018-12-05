@@ -323,6 +323,14 @@ class Application_Model extends ModelSQL{
 		$f_auth_letter_file=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"auth_letter_file",$f_opts);
 		$this->addField($f_auth_letter_file);
 		//********************
+		
+		//*** Field update_dt ***
+		$f_opts = array();
+		$f_opts['id']="update_dt";
+				
+		$f_update_dt=new FieldSQLDateTimeTZ($this->getDbLink(),$this->getDbName(),$this->getTableName(),"update_dt",$f_opts);
+		$this->addField($f_update_dt);
+		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}
 

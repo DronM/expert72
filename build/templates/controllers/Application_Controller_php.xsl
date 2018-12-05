@@ -857,6 +857,10 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			}			
 		}
 
+		if (($p_id=$pm->getParamValue('primary_application_id')) &amp;&amp; $p_id==$pm->getParamValue('old_id')){
+			throw new Exception(self::ER_PRIM_APP);
+		}
+
 		$this->getDbLinkMaster()->query("BEGIN");
 		try{			
 			//parent::update($pm);
@@ -866,7 +870,6 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			
 			$set_sent_v = $pm->getParamValue('set_sent');
 			$set_sent = (isset($set_sent_v) &amp;&amp; $set_sent_v=='1');
-			
 			$ar = NULL;
 			$q = $model->getUpdateQuery();
 			if (strlen($q) &amp;&amp; $set_sent){

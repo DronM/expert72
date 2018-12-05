@@ -34,11 +34,12 @@ class DocFlowOutClient_Controller extends ControllerSQL{
 	const ER_NO_DOC = 'Document not found!';
 	const ER_DOC_SENT = 'Документ отправлен!';
 	const ER_WRONG_STATE = 'Невозможно отправить исходящий документ по заявлению с данным статусом!';
-	const ER_NO_ATTACHMENTS = 'У документа нет вложений!';
+	const ER_NO_ATTACHMENTS = 'Вложенные файлы отсутствуют!';
 	const ER_NO_DOC_FILE = 'Файл с данными не найден!';
 	const ER_VERIF_SIG = 'Ошибка проверки подписи:%s';
 	const ER_UNSENT_DOC_EXISTS = 'По данному заявлению уже есть неотправленный документ с таким видом письма от %s';
 	const ER_COULD_NOT_REMOVE_SIG = 'Ошибка при удалении подписи заказчика!';
+	const ER_NO_SIG_ATTACHMENTS = 'Нет подписанных Вами документов!';
 
 	public function __construct($dbLinkMaster=NULL,$dbLink=NULL){
 		parent::__construct($dbLinkMaster,$dbLink);
@@ -411,14 +412,16 @@ class DocFlowOutClient_Controller extends ControllerSQL{
 		}
 		
 		if ($this->getExtVal($pm,'sent')=='true'){
-			$ar = $this->getDbLink()->query_first(sprintf(
-				"SELECT count(*) AS cnt
-				FROM doc_flow_out_client_document_files
-				WHERE doc_flow_out_client_id=%d",
+			$ar_cnt = $this->getDbLink()->query_first(sprintf(
+				"SELECT
+					(SELECT count(*) FROM doc_flow_out_client_document_files WHERE doc_flow_out_client_id=%d) AS cnt,
+					(SELECT count(*) FROM doc_flow_out_client_document_files WHERE doc_flow_out_client_id=%d AND signature) AS cnt_sig
+				",
+				$this->getExtDbVal($pm,'old_id'),
 				$this->getExtDbVal($pm,'old_id')
 			
 			));
-			if (!count($ar)||!intval($ar['cnt'])){
+			if (!count($ar_cnt)||!intval($ar_cnt['cnt'])){
 				throw new Exception(self::ER_NO_ATTACHMENTS);
 			}
 			
@@ -441,9 +444,13 @@ class DocFlowOutClient_Controller extends ControllerSQL{
 				throw new Exception(self::ER_NO_DOC);
 			}
 
-			if ($this->getExtVal($pm,'sent')=='true' && $ar['doc_flow_out_client_sent']=='t'){
+			if ($ar['doc_flow_out_client_sent']=='t'){
 				throw new Exception(self::ER_DOC_SENT);
 			}	
+			
+			if ($ar['doc_flow_out_client_type']=='contr_return' && !intval($ar_cnt['cnt_sig'])){
+				throw new Exception(self::ER_NO_SIG_ATTACHMENTS);
+			}
 			
 			if (
 			$ar['state']=='archive'

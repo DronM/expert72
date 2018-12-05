@@ -181,6 +181,9 @@ class Application_Controller extends ControllerSQL{
 		$param = new FieldExtJSONB('auth_letter_file'
 				,array());
 		$pm->addParam($param);
+		$param = new FieldExtDateTimeTZ('update_dt'
+				,array());
+		$pm->addParam($param);
 		
 		$pm->addParam(new FieldExtInt('ret_id'));
 		
@@ -367,6 +370,10 @@ class Application_Controller extends ControllerSQL{
 			));
 			$pm->addParam($param);
 		$param = new FieldExtJSONB('auth_letter_file'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtDateTimeTZ('update_dt'
 				,array(
 			));
 			$pm->addParam($param);
@@ -1761,6 +1768,10 @@ class Application_Controller extends ControllerSQL{
 			}			
 		}
 
+		if (($p_id=$pm->getParamValue('primary_application_id')) && $p_id==$pm->getParamValue('old_id')){
+			throw new Exception(self::ER_PRIM_APP);
+		}
+
 		$this->getDbLinkMaster()->query("BEGIN");
 		try{			
 			//parent::update($pm);
@@ -1770,7 +1781,6 @@ class Application_Controller extends ControllerSQL{
 			
 			$set_sent_v = $pm->getParamValue('set_sent');
 			$set_sent = (isset($set_sent_v) && $set_sent_v=='1');
-			
 			$ar = NULL;
 			$q = $model->getUpdateQuery();
 			if (strlen($q) && $set_sent){

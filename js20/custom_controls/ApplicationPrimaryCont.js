@@ -136,18 +136,23 @@ ApplicationPrimaryCont.prototype.setValue = function(v){
 
 ApplicationPrimaryCont.prototype.setInitValue = function(v){
 	var tp = "primary";
+	var init_primary_ref = {"id":null};
+	var init_primary_reg_number = null;
 	if (v && typeof v =="object"){
 		if (v[this.m_primaryFieldId]){
 			//number
-			this.getElement("primary_reg_number").setInitValue(v[this.m_primaryFieldId]);
+			init_primary_reg_number = v[this.m_primaryFieldId];
 			tp = "not_primary";			
 		}
 		if (v.backward_ord && v.backward_ord.length){
 			//ref						
-			this.getElement("primary_ref").setInitValue(v.backward_ord[0]);
+			init_primary_ref = v.backward_ord[0];
 			tp = "not_primary";
 		}
 	}
+	this.getElement("primary_ref").setInitValue(init_primary_ref);
+	this.getElement("primary_reg_number").setInitValue(init_primary_reg_number);
+	
 	if (!this.m_isModification){
 		this.getElement("grp").setInitValue(tp);
 		this.setType(tp);

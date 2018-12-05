@@ -216,7 +216,7 @@ function ApplicationServiceCont(id,options){
 								ctrl.setEnabled(true);
 							}
 							else{
-								ctrl.reset();
+								if(!ctrl.isNull())ctrl.reset();
 								ctrl.setEnabled(false);
 							}
 							

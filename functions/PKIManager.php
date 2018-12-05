@@ -148,20 +148,20 @@ class PKIManager {
 			unlink($flg);
 		}
 	}
+	private function check_pred_dir(&$dir,$id){
+		if (is_null($dir) || !strlen($dir)){
+			throw new Exception($id.' is not defined!');
+		}
+		if ($dir[strlen($dir)-1]!=DIRECTORY_SEPARATOR){
+			$dir.=DIRECTORY_SEPARATOR;
+		}		
+	}
+	
 	
 	/**
 	 * old style $pkiPath,$crlValidity=NULL,$logLevel=NULL,$tmpPath=NULL
 	 */
 	public function __construct($options=NULL){
-		
-		function check_dir(&$dir,$id){
-			if (is_null($dir) || !strlen($dir)){
-				throw new Exception($id.' is not defined!');
-			}
-			if ($dir[strlen($dir)-1]!=DIRECTORY_SEPARATOR){
-				$dir.=DIRECTORY_SEPARATOR;
-			}		
-		}
 		
 		$option_values = array(
 			'pkiPath' => self::DEF_PKI_PATH,
@@ -182,9 +182,9 @@ class PKIManager {
 		$this->opensslPath = $option_values['opensslPath'];
 		
 		$this->pkiPath = $option_values['pkiPath'];
-		check_dir($this->pkiPath,'pkiPath');
+		$this->check_pred_dir($this->pkiPath,'pkiPath');
 		$this->tmpPath = $option_values['tmpPath'];
-		check_dir($this->tmpPath,'tmpPath');
+		$this->check_pred_dir($this->tmpPath,'tmpPath');
 		
 		$this->crlValidity = $option_values['crlValidity'];
 		$this->logger = new Logger($option_values['logFile'],array('logLevel'=>$option_values['logLevel']));

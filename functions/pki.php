@@ -83,13 +83,13 @@
 		return $fatal_res;
 	}
 	
-	function pki_log_sig_check($fileDocSig, $fileDoc,$dbFileId,&$pkiMan,&$dbLink,$passExpired=FALSE){
+	function pki_log_sig_check($fileDocSig, $fileDoc,$dbFileId,&$pkiMan,&$dbLink,$noChainVerification=FALSE){
 		//$pkiMan->setLogLevel('error');
 		$verif_res = $pkiMan->verifySig(
 			$fileDocSig,
 			$fileDoc,
 			array(
-				'noChainVerification' => PKI_NO_CHAIN_VERIFICATION,
+				'noChainVerification' => $noChainVerification? TRUE:PKI_NO_CHAIN_VERIFICATION,
 				'onlineRevocCheck' => TRUE,
 				'notRemoveTempFiles' => FALSE,
 				'unqualifiedCertTreatAsError' => TRUE

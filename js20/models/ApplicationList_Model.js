@@ -319,6 +319,14 @@ function ApplicationList_Model(options){
 	filed_options.autoInc = false;	
 	
 	options.fields.auth_letter_file = new FieldJSONB("auth_letter_file",filed_options);
+		
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.update_dt = new FieldDateTimeTZ("update_dt",filed_options);
 	
 			
 				
