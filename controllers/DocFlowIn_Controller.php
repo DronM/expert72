@@ -416,7 +416,7 @@ class DocFlowIn_Controller extends DocFlow_Controller{
 			if (
 			!file_exists($file_zip = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_dir.DIRECTORY_SEPARATOR.$fl_name)
 				&&
-			(defined('FILE_STORAGE_DIR_MAIN') && !file_exists($file_zip = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$rel_dir.DIRECTORY_SEPARATOR.$fl_name))
+			(!defined('FILE_STORAGE_DIR_MAIN') || !file_exists($file_zip = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$rel_dir.DIRECTORY_SEPARATOR.$fl_name))
 			){
 				//generate
 				$files = json_decode($ar['files']);
@@ -457,8 +457,8 @@ class DocFlowIn_Controller extends DocFlow_Controller{
 						$file->file_id
 					;
 					if (
-						file_exists($file_for_zip=FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_file)
-						||(defined('FILE_STORAGE_DIR_MAIN') &&  file_exists($file_for_zip=FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$rel_file) )
+						(file_exists($file_for_zip=FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_file) && !is_dir($file_for_zip) )
+						||(defined('FILE_STORAGE_DIR_MAIN') &&  (file_exists($file_for_zip=FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$rel_file)&&!is_dir($file_for_zip)) )
 					){
 						$rel_file_path = (($ar_paths[$file->file_id]['document_id']==0)? '' : Application_Controller::dirNameOnDocType($ar_paths[$file->file_id]['document_type']).DIRECTORY_SEPARATOR.$file->file_path ).DIRECTORY_SEPARATOR;
 						$zip->addFile($file_for_zip, $rel_file_path.$file->file_name);
@@ -482,7 +482,10 @@ class DocFlowIn_Controller extends DocFlow_Controller{
 					throw new Exception(self::ER_NO_ATTACH);
 				}
 				
-				$zip->close();
+				if($zip->close()===FALSE){
+					$er_h_stat = 500;
+					throw new Exception('Ошибка создания архива:'.$zip->getStatusString());
+				}
 			}
 
 			ob_clean();
@@ -490,11 +493,6 @@ class DocFlowIn_Controller extends DocFlow_Controller{
 			downloadFile($file_zip, $mime,'attachment;','Файлы по вход.документу №'.$ar['reg_number'].'.zip');
 			return TRUE;
 	
-			while($file = $this->getDbLink()->fetch_array($qid)){
-				if (is_null($rel_dir_zip)){
-					$rel_dir_zip =	Application_Controller::APP_DIR_PREF.$file['from_application_id'];
-				}
-			}
 		}
 		catch(Exception $e){
 			$this->setHeaderStatus($er_h_stat);

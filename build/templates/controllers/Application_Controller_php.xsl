@@ -1282,125 +1282,140 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 	}
 	
 	public function zip_all($pm){
-		$ar_app = $this->getDbLink()->query_first(sprintf(
-			"SELECT				
-				app.user_id,
-				app.app_print_expertise,
-				app.expertise_type,
-				app.app_print_cost_eval,
-				app.cost_eval_validity,
-				app.app_print_modification,
-				app.modification,
-				app.app_print_audit,
-				app.audit,
-				app.auth_letter_file
-			FROM applications app			
-			WHERE app.id=%s",
-			$this->getExtDbVal($pm,'application_id')
-		));			
+		$er_h_stat = 500;//unknown
+		try{
 	
-		if ($_SESSION['role_id']=='client' &amp;&amp; $_SESSION['user_id']!=$ar_app['user_id']){
-			throw new Exception(self::ER_OTHER_USER_APP);
-		}
-	
-		$rel_dir_zip =	self::APP_DIR_PREF.$this->getExtVal($pm,'application_id');
-				
-		if (!file_exists($file_zip = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_dir_zip.DIRECTORY_SEPARATOR.self::ALL_DOC_ZIP_FILE)
-		){
-			//Всегда на клиентском сервере
-			mkdir(FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_dir_zip,0775,TRUE);
-			$file_zip = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_dir_zip.DIRECTORY_SEPARATOR.self::ALL_DOC_ZIP_FILE;
-			
-			//make zip			
-			$zip = new ZipArchive();
-			if ($zip->open($file_zip, ZIPARCHIVE::CREATE)!==TRUE) {
-				throw new Exception(self::ER_MAKE_ZIP);
-			}
-
-			$cnt = 0;
-			
-			$qid = $this->getDbLink()->query(sprintf(
-				"SELECT
-					file_id,
-					file_name,
-					file_path,
-					file_signed,
-					document_type,
-					document_id
-				FROM application_document_files
-				WHERE application_id=%s",
+			$ar_app = $this->getDbLink()->query_first(sprintf(
+				"SELECT				
+					app.user_id,
+					app.app_print_expertise,
+					app.expertise_type,
+					app.app_print_cost_eval,
+					app.cost_eval_validity,
+					app.app_print_modification,
+					app.modification,
+					app.app_print_audit,
+					app.audit,
+					app.auth_letter_file
+				FROM applications app			
+				WHERE app.id=%s",
 				$this->getExtDbVal($pm,'application_id')
 			));			
-			while($file = $this->getDbLink()->fetch_array($qid)){
-				$rel_path = self::dirNameOnDocType($file['document_type']).DIRECTORY_SEPARATOR.
-						$file['document_id'].DIRECTORY_SEPARATOR;
-						
-				if (mb_strlen($file['file_path'])>self::MAX_FILE_LEN){
-					$file_path_conc = mb_substr($file['file_path'],0,self::MAX_FILE_LEN).'...';
-				}
-				else{
-					$file_path_conc = $file['file_path'];
+	
+			if ($_SESSION['role_id']=='client' &amp;&amp; $_SESSION['user_id']!=$ar_app['user_id']){
+				$er_h_stat = 400;
+				throw new Exception(self::ER_OTHER_USER_APP);
+			}
+	
+			$rel_dir_zip =	self::APP_DIR_PREF.$this->getExtVal($pm,'application_id');
+				
+			if (!file_exists($file_zip = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_dir_zip.DIRECTORY_SEPARATOR.self::ALL_DOC_ZIP_FILE)
+			){
+				//Всегда на клиентском сервере
+				mkdir(FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_dir_zip,0775,TRUE);
+				$file_zip = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_dir_zip.DIRECTORY_SEPARATOR.self::ALL_DOC_ZIP_FILE;
+			
+				//make zip			
+				$zip = new ZipArchive();
+				if ($zip->open($file_zip, ZIPARCHIVE::CREATE)!==TRUE) {
+					$er_h_stat = 400;
+					throw new Exception(self::ER_MAKE_ZIP);
 				}
 
-				if (mb_strlen($file['file_name'])>self::MAX_FILE_LEN){
-					$file_name_conc = mb_substr($file['file_name'],0,self::MAX_FILE_LEN).'...';
-				}
-				else{
-					$file_name_conc = $file['file_name'];
-				}
-				
-				$rel_path_for_zip = self::dirNameOnDocType($file['document_type']).DIRECTORY_SEPARATOR.
-						$file_path_conc.DIRECTORY_SEPARATOR;
+				$cnt = 0;
+			
+				$qid = $this->getDbLink()->query(sprintf(
+					"SELECT
+						file_id,
+						file_name,
+						file_path,
+						file_signed,
+						document_type,
+						document_id
+					FROM application_document_files
+					WHERE application_id=%s",
+					$this->getExtDbVal($pm,'application_id')
+				));			
+				while($file = $this->getDbLink()->fetch_array($qid)){
+					$rel_path = self::dirNameOnDocType($file['document_type']).DIRECTORY_SEPARATOR.
+							$file['document_id'].DIRECTORY_SEPARATOR;
 						
-				if (file_exists($file_doc = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_dir_zip.DIRECTORY_SEPARATOR. $rel_path. $file['file_id'])
-				|| (defined('FILE_STORAGE_DIR_MAIN') &amp;&amp; file_exists($file_doc = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$rel_dir_zip.DIRECTORY_SEPARATOR. $rel_path. $file['file_id']) )
-				){
-					$zip->addFile($file_doc, $rel_path_for_zip. $file_name_conc);
-					$cnt++;				
+					if (mb_strlen($file['file_path'])>self::MAX_FILE_LEN){
+						$file_path_conc = mb_substr($file['file_path'],0,self::MAX_FILE_LEN).'...';
+					}
+					else{
+						$file_path_conc = $file['file_path'];
+					}
+
+					if (mb_strlen($file['file_name'])>self::MAX_FILE_LEN){
+						$file_name_conc = mb_substr($file['file_name'],0,self::MAX_FILE_LEN).'...';
+					}
+					else{
+						$file_name_conc = $file['file_name'];
+					}
+				
+					$rel_path_for_zip = self::dirNameOnDocType($file['document_type']).DIRECTORY_SEPARATOR.
+							$file_path_conc.DIRECTORY_SEPARATOR;
+						
+					if (file_exists($file_doc = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_dir_zip.DIRECTORY_SEPARATOR. $rel_path. $file['file_id'])
+					|| (defined('FILE_STORAGE_DIR_MAIN') &amp;&amp; file_exists($file_doc = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$rel_dir_zip.DIRECTORY_SEPARATOR. $rel_path. $file['file_id']) )
+					){
+						$zip->addFile($file_doc, $rel_path_for_zip. $file_name_conc);
+						$cnt++;				
 					
-					if ($file['file_signed']=='t'){
-						if (file_exists($file_doc = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_dir_zip.DIRECTORY_SEPARATOR.$rel_path.$file['file_id'].self::SIG_EXT)
-						|| (defined('FILE_STORAGE_DIR_MAIN') &amp;&amp; file_exists($file_doc = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$rel_dir_zip.DIRECTORY_SEPARATOR.$rel_path.$file['file_id'].self::SIG_EXT) )
-						){
-							$zip->addFile($file_doc,$rel_path_for_zip.$file_name_conc.self::SIG_EXT);
-							$cnt++;									
-						}
-					}					
+						if ($file['file_signed']=='t'){
+							if (file_exists($file_doc = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_dir_zip.DIRECTORY_SEPARATOR.$rel_path.$file['file_id'].self::SIG_EXT)
+							|| (defined('FILE_STORAGE_DIR_MAIN') &amp;&amp; file_exists($file_doc = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$rel_dir_zip.DIRECTORY_SEPARATOR.$rel_path.$file['file_id'].self::SIG_EXT) )
+							){
+								$zip->addFile($file_doc,$rel_path_for_zip.$file_name_conc.self::SIG_EXT);
+								$cnt++;									
+							}
+						}					
+					}
 				}
-			}
 			
-			//Заявления
-			if ($ar_app['expertise_type']){
-				self::add_print_to_zip('app_print_expertise',$ar_app['app_print_expertise'],$rel_dir_zip,$zip,$cnt);
-			}
-			if ($ar_app['cost_eval_validity']=='t'){
-				self::add_print_to_zip('app_print_cost_eval_validity',$ar_app['app_print_cost_eval'],$rel_dir_zip,$zip,$cnt);
-			}
-			if ($ar_app['modification']=='t'){
-				self::add_print_to_zip('app_print_modification',$ar_app['app_print_modification'],$rel_dir_zip,$zip,$cnt);
-			}
-			if ($ar_app['audit']=='t'){
-				self::add_print_to_zip('app_print_audit',$ar_app['app_print_audit'],$rel_dir_zip,$zip,$cnt);
-			}
-			//Доверенность
-			if ($ar_app['auth_letter_file']){
-				self::add_print_to_zip('auth_letter_file',$ar_app['auth_letter_file'],$rel_dir_zip,$zip,$cnt);
-			}
+				//Заявления
+				if ($ar_app['expertise_type']){
+					self::add_print_to_zip('app_print_expertise',$ar_app['app_print_expertise'],$rel_dir_zip,$zip,$cnt);
+				}
+				if ($ar_app['cost_eval_validity']=='t'){
+					self::add_print_to_zip('app_print_cost_eval_validity',$ar_app['app_print_cost_eval'],$rel_dir_zip,$zip,$cnt);
+				}
+				if ($ar_app['modification']=='t'){
+					self::add_print_to_zip('app_print_modification',$ar_app['app_print_modification'],$rel_dir_zip,$zip,$cnt);
+				}
+				if ($ar_app['audit']=='t'){
+					self::add_print_to_zip('app_print_audit',$ar_app['app_print_audit'],$rel_dir_zip,$zip,$cnt);
+				}
+				//Доверенность
+				if ($ar_app['auth_letter_file']){
+					self::add_print_to_zip('auth_letter_file',$ar_app['auth_letter_file'],$rel_dir_zip,$zip,$cnt);
+				}
 			
-			if (!$cnt){
-				throw new Exception(self::ER_NO_FILES_FOR_ZIP);
-			}
-			$zip->close();
+				if (!$cnt){
+					$er_h_stat = 400;
+					throw new Exception(self::ER_NO_FILES_FOR_ZIP);
+				}
+				if($zip->close()===FALSE){
+					$er_h_stat = 500;
+					throw new Exception('Error creating zip:'.$zip->getStatusString());
+				}
 			
-		}
-		if (!file_exists($file_zip)){
-			throw new Exception(self::ER_MAKE_ZIP);
-		}
+			}
+			if (!file_exists($file_zip)){
+				$er_h_stat = 500;
+				throw new Exception(self::ER_MAKE_ZIP);
+			}
 		
-		ob_clean();
-		downloadFile($file_zip, 'application/zip','attachment;',sprintf('ДокументацияПоЗаявлению№%d.zip',$this->getExtVal($pm,'application_id')));
-		return TRUE;
-		
+			ob_clean();
+			downloadFile($file_zip, 'application/zip','attachment;',sprintf('ДокументацияПоЗаявлению№%d.zip',$this->getExtVal($pm,'application_id')));
+			return TRUE;
+		}
+		catch(Exception $e){
+			$this->setHeaderStatus($er_h_stat);
+			throw $e;
+		}
+				
 	}
 	
 	private function move_files_to_new_app($storage,&amp;$ar){

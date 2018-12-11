@@ -415,6 +415,10 @@ wget -O crypto_plugin.txt https://www.cryptopro.ru/sites/default/files/products/
 applications_trigger.sql
 applications_process.sql
 
+1.0.97
+1) Формирование ZIP из нашего входящего письма - проверить
+2) Формирование ZIP из заявления - проверить
+
 - 1) FOP warnings Arial normal 700 есть Arial normal 700, INFO
 
 

@@ -135,7 +135,6 @@ class EmailSender {
 			}
 			else{
 				try{
-					$dbLink->query("BEGIN");
 					$dbLink->query(
 					"UPDATE mail_for_sending
 					SET
@@ -150,10 +149,8 @@ class EmailSender {
 							}
 						}
 					}
-					$dbLink->query("COMMIT");
 				}
 				catch(Exception $e){
-					$dbLink->query("ROLLBACK");
 					//throw $e;
 					error_log("EmailSender error: ".$e->getMessage()."\n");
 				}
