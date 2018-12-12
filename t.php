@@ -37,10 +37,10 @@ return;
 	);
 	*/
 	$verif_res = $pki_man->verifySig(
-		'/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/09-01-01 Утилизация ТБО 40(48).xlsx.sig',
-		'/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/09-01-01 Утилизация ТБО 40(48).xlsx',
+		'/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/Expired/299-Д Контракт УКС.pdf.sig',
+		'/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/Expired/299-Д Контракт УКС.pdf',
 		array(
-			'noChainVerification' => FALSE,
+			'noChainVerification' => TRUE,
 			'onlineRevocCheck' => TRUE,
 			'notRemoveTempFiles' => TRUE,
 			'unqualifiedCertTreatAsError' => TRUE

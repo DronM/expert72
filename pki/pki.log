@@ -125,3 +125,58 @@
 30/11/2018 10:47 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/34fa2b3d.0" -noout
 30/11/2018 10:47 Called run_shell_cmd /usr/local/bin/openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/34fa2b3d.0" -noout -nameopt multiline
 30/11/2018 10:47 Called run_shell_cmd /usr/local/bin/openssl smime -verify -content "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/09-01-01 Утилизация ТБО 40(48).xlsx" -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/output/5c00cefba7a81.der" -CApath "/home/andrey/www/htdocs/expert72/pki/"
+11/12/2018 14:47 Called verifySig
+11/12/2018 14:47 parseSigFile
+11/12/2018 14:47 Called run_shell_cmd2 /usr/local/bin/openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/output/5c0f87c0b854a.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END CERT/ { print > "/home/andrey/www/htdocs/expert72/output/5c0f87c0cc6ac."i }'
+11/12/2018 14:47 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5c0f87c0cc6ac.1" -noout
+11/12/2018 14:47 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5c0f87c0cc6ac.2" -noout
+11/12/2018 14:47 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5c0f87c0cc6ac.3" -noout
+11/12/2018 14:47 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5c0f87c0cc6ac.4" -noout
+11/12/2018 14:47 Found signer certificates:1
+11/12/2018 14:47 Called run_shell_cmd /usr/local/bin/openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/output/5c0f87c0b854a.der" -noout -cmsout -print
+11/12/2018 14:47 Parsing certificate file /home/andrey/www/htdocs/expert72/output/5c0f87c0cc6ac.4
+11/12/2018 14:47 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/output/5c0f87c0cc6ac.4" -noout
+11/12/2018 14:47 Called run_shell_cmd /usr/local/bin/openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/output/5c0f87c0cc6ac.4" -noout -nameopt multiline
+11/12/2018 14:47 Need certificate for hash:9e757460
+11/12/2018 14:47 OCSP checking http://ocsp.72to.ru/ocsp/ocsp.srf
+11/12/2018 14:47 Called run_shell_cmd /usr/local/bin/openssl ocsp -issuer "/home/andrey/www/htdocs/expert72/pki/9e757460.0" -CApath "/home/andrey/www/htdocs/expert72/pki/" -cert "/home/andrey/www/htdocs/expert72/output/5c0f87c0cc6ac.4" -url http://ocsp.72to.ru/ocsp/ocsp.srf
+11/12/2018 14:47 Response Verify Failure
+3072902912:error:27069070:OCSP routines:OCSP_basic_verify:root ca not trusted:crypto/ocsp/ocsp_vfy.c:121:
+3072902912:error:27069070:OCSP routines:OCSP_basic_verify:root ca not trusted:crypto/ocsp/ocsp_vfy.c:121:
+
+11/12/2018 14:47 Called run_shell_cmd /usr/local/bin/openssl ocsp -issuer "/home/andrey/www/htdocs/expert72/pki/9e757460.1" -CApath "/home/andrey/www/htdocs/expert72/pki/" -cert "/home/andrey/www/htdocs/expert72/output/5c0f87c0cc6ac.4" -url http://ocsp.72to.ru/ocsp/ocsp.srf
+11/12/2018 14:47 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/9e757460.0" -noout
+11/12/2018 14:47 Called run_shell_cmd /usr/local/bin/openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/9e757460.0" -noout -nameopt multiline
+11/12/2018 14:47 Need certificate for hash:4db0c08c
+11/12/2018 14:47 Looking for CRL file /home/andrey/www/htdocs/expert72/pki/4db0c08c.r0
+11/12/2018 14:47 Trying to download new CRL file
+11/12/2018 14:47 Called run_shell_cmd2 wget -O "/home/andrey/www/htdocs/expert72/pki/4db0c08c.r0.der" http://rostelecom.ru/cdp/vguc1_3.crl
+11/12/2018 14:47 Called run_shell_cmd2 /usr/local/bin/openssl crl -in "/home/andrey/www/htdocs/expert72/pki/4db0c08c.r0.der" -inform DER -out "/home/andrey/www/htdocs/expert72/pki/4db0c08c.r0"
+11/12/2018 14:47 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/4db0c08c.0" -noout
+11/12/2018 14:47 Called run_shell_cmd /usr/local/bin/openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/4db0c08c.0" -noout -nameopt multiline
+11/12/2018 14:47 Need certificate for hash:34fa2b3d
+11/12/2018 14:47 Looking for CRL file /home/andrey/www/htdocs/expert72/pki/34fa2b3d.r0
+11/12/2018 14:47 Trying to download new CRL file
+11/12/2018 14:47 Called run_shell_cmd2 wget -O "/home/andrey/www/htdocs/expert72/pki/34fa2b3d.r0.der" http://rostelecom.ru/cdp/guc.crl
+11/12/2018 14:47 Called run_shell_cmd2 /usr/local/bin/openssl crl -in "/home/andrey/www/htdocs/expert72/pki/34fa2b3d.r0.der" -inform DER -out "/home/andrey/www/htdocs/expert72/pki/34fa2b3d.r0"
+11/12/2018 14:47 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/34fa2b3d.0" -noout
+11/12/2018 14:47 Called run_shell_cmd /usr/local/bin/openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/34fa2b3d.0" -noout -nameopt multiline
+11/12/2018 14:47 Called run_shell_cmd /usr/local/bin/openssl smime -verify -content "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/Expired/299-Д Контракт УКС.pdf" -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/output/5c0f87c0b854a.der" -CApath "/home/andrey/www/htdocs/expert72/pki/"
+11/12/2018 14:47 Verification failure
+3072075520:error:21075075:PKCS7 routines:PKCS7_verify:certificate verify error:crypto/pkcs7/pk7_smime.c:285:Verify error:certificate has expired
+
+11/12/2018 14:47 Verification error:Verification failure 3072075520:error:21075075:PKCS7 routines:PKCS7_verify:certificate verify error:crypto/pkcs7/pk7_smime.c:285:Verify error:certificate has expired 
+CMD=/usr/local/bin/openssl smime -verify -content "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/Expired/299-Д Контракт УКС.pdf" -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/output/5c0f87c0b854a.der" -CApath "/home/andrey/www/htdocs/expert72/pki/"
+11/12/2018 14:48 Called verifySig
+11/12/2018 14:48 parseSigFile
+11/12/2018 14:48 Called run_shell_cmd2 /usr/local/bin/openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/output/5c0f87d156341.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END CERT/ { print > "/home/andrey/www/htdocs/expert72/output/5c0f87d156454."i }'
+11/12/2018 14:48 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5c0f87d156454.1" -noout
+11/12/2018 14:48 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5c0f87d156454.2" -noout
+11/12/2018 14:48 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5c0f87d156454.3" -noout
+11/12/2018 14:48 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5c0f87d156454.4" -noout
+11/12/2018 14:48 Found signer certificates:1
+11/12/2018 14:48 Called run_shell_cmd /usr/local/bin/openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/output/5c0f87d156341.der" -noout -cmsout -print
+11/12/2018 14:48 Parsing certificate file /home/andrey/www/htdocs/expert72/output/5c0f87d156454.4
+11/12/2018 14:48 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/output/5c0f87d156454.4" -noout
+11/12/2018 14:48 Called run_shell_cmd /usr/local/bin/openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/output/5c0f87d156454.4" -noout -nameopt multiline
+11/12/2018 14:48 Called run_shell_cmd /usr/local/bin/openssl smime -verify -content "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/Expired/299-Д Контракт УКС.pdf" -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/output/5c0f87d156341.der" -noverify
