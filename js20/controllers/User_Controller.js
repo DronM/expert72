@@ -39,6 +39,7 @@ function User_Controller(options){
 	this.add_logout_html();
 	this.add_email_confirm();
 	this.add_hide();
+	this.add_send_email_confirm();
 		
 }
 extend(User_Controller,ControllerObjServer);
@@ -556,6 +557,13 @@ extend(User_Controller,ControllerObjServer);
 		pm.addField(new FieldInt("id",options));
 	
 			
+	this.addPublicMethod(pm);
+}
+
+			User_Controller.prototype.add_send_email_confirm = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('send_email_confirm',opts);
+	
 	this.addPublicMethod(pm);
 }
 

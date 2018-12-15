@@ -132,6 +132,14 @@ class MailForSending_Model extends ModelSQL{
 		$this->addField($f_sent_date_time);
 		//********************
 		
+		//*** Field error_str ***
+		$f_opts = array();
+		$f_opts['id']="error_str";
+				
+		$f_error_str=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"error_str",$f_opts);
+		$this->addField($f_error_str);
+		//********************
+		
 		//*** Field email_type ***
 		$f_opts = array();
 		$f_opts['id']="email_type";

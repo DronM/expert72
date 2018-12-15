@@ -155,7 +155,7 @@ function RepReestrExpertise_Model(options){
 	filed_options.alias = 'Дата заключения';
 	filed_options.autoInc = false;	
 	
-	options.fields.expertise_result_date = new FieldString("expertise_result_date",filed_options);
+	options.fields.expertise_result_date = new FieldDate("expertise_result_date",filed_options);
 	
 				
 	

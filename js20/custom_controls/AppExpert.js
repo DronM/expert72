@@ -185,9 +185,16 @@ AppExpert.prototype.getCadesAPI = function(){
 	return this.m_cades;
 }
 AppExpert.prototype.setDoNotLoadCadesPlugin = function(v){
-	//console.log("Setting doNotLoadCadesPlugin to "+v)
 	this.storageSet("doNotLoadCadesPlugin",v);
 }
 AppExpert.prototype.getDoNotLoadCadesPlugin = function(){
 	return this.storageGet("doNotLoadCadesPlugin");
+}
+
+AppExpert.prototype.setDoNotNotifyOnEmailConfirmation = function(v){
+	this.storageSet("doNotNotifyOnEmailConfirmation",v);
+}
+
+AppExpert.prototype.getDoNotNotifyOnEmailConfirmation = function(){
+	return (this.storageGet("doNotNotifyOnEmailConfirmation")=="true");
 }

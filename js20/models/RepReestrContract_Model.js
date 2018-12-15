@@ -155,7 +155,7 @@ function RepReestrContract_Model(options){
 	filed_options.alias = 'Дата на доработку';
 	filed_options.autoInc = false;	
 	
-	options.fields.back_to_work_date = new FieldDate("back_to_work_date",filed_options);
+	options.fields.back_to_work_date = new FieldString("back_to_work_date",filed_options);
 	
 				
 	

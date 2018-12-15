@@ -152,13 +152,28 @@
 		<td><xsl:value-of select="expertise_result_number"/></td>
 		<td><xsl:value-of select="customer"/></td>
 		<td><xsl:value-of select="constr_name"/></td>
-		<td align="center"><xsl:value-of select="work_start_date"/></td>
+		<td align="center">
+			<xsl:call-template name="format_date">
+				<xsl:with-param name="val" select="work_start_date/node()"/>
+				<xsl:with-param name="fromatStr" select="''"/>
+			</xsl:call-template>																									
+		</td>
 		<td align="center"><xsl:value-of select="primary_expertise_result_number"/></td>
 		<td align="center">
-		<xsl:if test="expertise_result='negative'"><xsl:value-of select="expertise_result_date"/></xsl:if>
+		<xsl:if test="expertise_result='negative'">
+			<xsl:call-template name="format_date">
+				<xsl:with-param name="val" select="expertise_result_date/node()"/>
+				<xsl:with-param name="fromatStr" select="''"/>
+			</xsl:call-template>																									
+		</xsl:if>
 		</td>
 		<td align="center">
-		<xsl:if test="expertise_result='positive'"><xsl:value-of select="expertise_result_date"/></xsl:if>
+		<xsl:if test="expertise_result='positive'">
+			<xsl:call-template name="format_date">
+				<xsl:with-param name="val" select="expertise_result_date/node()"/>
+				<xsl:with-param name="fromatStr" select="''"/>
+			</xsl:call-template>																									
+		</xsl:if>
 		</td>
 		
 		<xsl:variable name="build_type_id" select="build_type_id"/>

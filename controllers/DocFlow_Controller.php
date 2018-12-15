@@ -339,7 +339,7 @@ class DocFlow_Controller extends ControllerSQL{
 					
 					$pki_man = pki_create_manager();
 					$db_link = $this->getDbLinkMaster();
-					pki_log_sig_check($new_cur_sig, $file_doc, $this->getExtDbVal($pm,'file_id'), $pki_man, $db_link);
+					pki_log_sig_check($new_cur_sig, $file_doc, $this->getExtDbVal($pm,'file_id'), $pki_man, $db_link,TRUE);
 				}
 				else if (!$max_ind){
 					//no index file					

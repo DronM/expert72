@@ -419,6 +419,22 @@ applications_process.sql
 1) Формирование ZIP из нашего входящего письма
 2) Формирование ZIP из заявления
 
+
+1.0.99 15/12/18
+1) Отправка почты: новая стратегия отправки, колонка ошибка (отражает ошибку с сервера при отправке).отправка только на подтвержденные адреса
+* EmailSender.php,ExpertEmailSender.php
+* Дополнительные данные в константе outmail_data вместо Config.php
+* При регистрации письмо о новом аккаунте содержит ссылку для подтверждения адреса почты (User_Controller.php->register())
+* Отправка только на подтвержденные адреса: reminders_process(),doc_flow_in_client_process()
+* users_before_update обнуление email_confirmed при смене адреса
+* view EmailConfirm.html
+2) Правильная ссылка при подтверждении мыла пользователя v=EmailConfirm
+3) Убрал проверку цепи при удалении подписей в наших исходящих (DocFlow_Controller) и клиента (DocFlowOutClient_Controller) при вызове pki_log_sig_check()
+4) Реестр оплат экспеорт в Ексель, поля даты
+5) Серверный шаблон ModelToExcel.xls.xsl
+
+-2) Исполнители: добавить, добавить еще. Удалитьпервого. Теперьдобавить невозможно из-за индекса.
+
 - 1) FOP warnings Arial normal 700 есть Arial normal 700, INFO
 
 

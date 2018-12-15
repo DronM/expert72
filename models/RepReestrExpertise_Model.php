@@ -165,7 +165,7 @@ class RepReestrExpertise_Model extends ModelReportSQL{
 		$f_opts['alias']='Дата заключения';
 		$f_opts['id']="expertise_result_date";
 				
-		$f_expertise_result_date=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expertise_result_date",$f_opts);
+		$f_expertise_result_date=new FieldSQLDate($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expertise_result_date",$f_opts);
 		$this->addField($f_expertise_result_date);
 		//********************
 		

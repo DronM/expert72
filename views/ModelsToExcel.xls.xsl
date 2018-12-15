@@ -48,7 +48,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 <xsl:variable name="EXCEl_DT_FLOAT" select="'Number'"/>
 <xsl:variable name="EXCEl_DT_STRING" select="'String'"/>
 <xsl:variable name="EXCEl_DT_DATETIME" select="'DateTime'"/>
-<xsl:variable name="EXCEl_DT_DATE" select="'DateTime'"/>
+<xsl:variable name="EXCEl_DT_DATE" select="'Date'"/>
 
 <xsl:template name="string-replace-all">
   <xsl:param name="text" />
@@ -69,6 +69,24 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
       <xsl:value-of select="$text" />
     </xsl:otherwise>
   </xsl:choose>
+</xsl:template>
+
+<xsl:template name="format_date">
+	<xsl:param name="val"/>
+	<xsl:param name="formatStr"/>
+	<xsl:choose>
+		<xsl:when test="string-length($val)=10">
+			<xsl:variable name="val_year" select="substring-before($val,'-')"/>
+			<xsl:variable name="part_month" select="substring-after($val,'-')"/>
+			<xsl:variable name="val_month" select="substring-before($part_month,'-')"/>
+			<xsl:variable name="part_date" select="substring-after($part_month,'-')"/>
+			<xsl:variable name="val_date" select="$part_date"/>
+			<xsl:value-of select="concat($val_date,'/',$val_month,'/',$val_year)" />
+		</xsl:when>
+		<xsl:otherwise>
+			<xsl:value-of select="$val" />
+		</xsl:otherwise>
+	</xsl:choose>
 </xsl:template>
 
 <!-- Main template-->
@@ -277,6 +295,12 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 									<xsl:choose>
 										<xsl:when test="$field_dt=$DT_BOOL and node()='true'"><xsl:value-of select="'да'"/></xsl:when>
 										<xsl:when test="$field_dt=$DT_BOOL and node()='false'"><xsl:value-of select="'нет'"/></xsl:when>
+										<xsl:when test="$field_dt=$DT_DATE">
+											<xsl:call-template name="format_date">
+												<xsl:with-param name="val" select="node()" />
+												<xsl:with-param name="formatStr" select="''" />
+											</xsl:call-template>		
+										</xsl:when>
 										<xsl:otherwise><xsl:value-of select="node()"/></xsl:otherwise>
 									</xsl:choose>
 								</xsl:variable>

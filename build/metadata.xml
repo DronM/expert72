@@ -2,7 +2,7 @@
 <metadata owner="expert72">
 	<versions>
 		<version dateOpen="2017-09-27 12:09:48" dateClose="2017-12-08 10:12:08">1.001 
-		<lastBuild>2018-12-12 06:04:49</lastBuild></version>
+		<lastBuild>2018-12-15 06:10:59</lastBuild></version>
 		<version dateOpen="2017-12-08 11:12:01" dateClose="2017-12-08 11:12:04">1.002</version>
 		<version dateOpen="2017-12-08 11:12:20" dateClose="2017-12-08 11:12:20">1.0.3</version>
 		<version dateOpen="2017-12-12 11:12:07" dateClose="2017-12-12 11:12:07">1.0.4</version>
@@ -99,6 +99,7 @@
 		<version dateOpen="2018-12-01 07:12:13" dateClose="2018-12-05 06:12:38">1.0.96</version>
 		<version dateOpen="2018-12-05 06:12:40" dateClose="2018-12-11 05:12:47">1.0.97</version>
 		<version dateOpen="2018-12-11 06:12:30" dateClose="2018-12-12 06:12:05">1.0.98</version>
+		<version dateOpen="2018-12-12 06:12:05" dateClose="2018-12-15 06:12:11">1.0.99</version>
 	</versions>
 	<globalFilters>
 		<field id="user_id"/>
@@ -749,6 +750,7 @@
 			<field id="subject" dataType="Text"/>
 			<field id="sent" dataType="Bool" defaultValue="false"/>
 			<field id="sent_date_time" dataType="DateTimeTZ"/>
+			<field id="error_str" dataType="Text"/>
 			<field id="email_type" dataType="Enum" enumId="email_types"/>
 			<index id="mail_for_sending_date_time_idx" unique="FALSE">
 				<field id="date_time"/>
@@ -772,6 +774,7 @@
 			<field id="sent" dataType="Bool" defaultValue="false" alias="&#x41E;&#x442;&#x43F;&#x440;&#x430;&#x432;&#x43B;&#x435;&#x43D;&#x43E;"/>
 			<field id="sent_date_time" dataType="DateTimeTZ" alias="&#x414;&#x430;&#x442;&#x430; &#x43E;&#x442;&#x43F;&#x440;&#x430;&#x432;&#x43A;&#x438;"/>
 			<field id="email_type" dataType="Enum" enumId="email_types" alias="&#x422;&#x438;&#x43F;"/>
+			<field id="error_str" dataType="Text" alias="&#x41E;&#x448;&#x438;&#x431;&#x43A;&#x430; &#x43E;&#x442;&#x43F;&#x440;&#x430;&#x432;&#x43A;&#x438;"/>
 		</model>
 		<model id="MailForSendingAttachment" parent="ModelSQL" dataTable="mail_for_sending_attachments" virtual="FALSE">
 			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE" required="TRUE"/>
@@ -2701,7 +2704,7 @@
 			<field id="exeprtise_res_descr" dataType="String" alias="&#x420;&#x435;&#x437;&#x443;&#x43B;&#x44C;&#x442;&#x430;&#x442; &#x44D;&#x43A;&#x441;&#x43F;&#x435;&#x440;&#x442;&#x438;&#x437;&#x44B;"/>
 			<field id="exeprtise_type" dataType="String" alias="&#x412;&#x438;&#x434; &#x44D;&#x43A;&#x441;&#x43F;&#x435;&#x440;&#x442;&#x438;&#x437;&#x44B;"/>
 			<field id="reg_number" dataType="String" alias="&#x2116; &#x44D;&#x43A;&#x441;&#x43F;&#x435;&#x440;&#x442;&#x43D;&#x43E;&#x433;&#x43E; &#x437;&#x430;&#x43A;&#x43B;&#x44E;&#x447;&#x435;&#x43D;&#x438;&#x44F;"/>
-			<field id="expertise_result_date" dataType="String" alias="&#x414;&#x430;&#x442;&#x430; &#x437;&#x430;&#x43A;&#x43B;&#x44E;&#x447;&#x435;&#x43D;&#x438;&#x44F;"/>
+			<field id="expertise_result_date" dataType="Date" alias="&#x414;&#x430;&#x442;&#x430; &#x437;&#x430;&#x43A;&#x43B;&#x44E;&#x447;&#x435;&#x43D;&#x438;&#x44F;"/>
 			<field id="date_time" dataType="Date" alias="&#x414;&#x430;&#x442;&#x430; &#x43F;&#x440;&#x435;&#x434;&#x43E;&#x441;&#x442;&#x430;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x44F; &#x434;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x43E;&#x432;"/>
 			<field id="pay_date" dataType="Date" alias="&#x414;&#x430;&#x442;&#x430; &#x432;&#x43D;&#x435;&#x441;&#x435;&#x43D;&#x438;&#x44F; &#x43F;&#x43B;&#x430;&#x442;&#x44B;"/>
 			<field id="expertise_result_ret_date" dataType="Date" alias="&#x414;&#x430;&#x442;&#x430; &#x432;&#x440;&#x443;&#x447;&#x435;&#x43D;&#x438;&#x44F; &#x437;&#x430;&#x43A;&#x43B;&#x44E;&#x447;&#x435;&#x43D;&#x438;&#x44F;"/>
@@ -2746,7 +2749,7 @@
 			<field id="work_start_date" dataType="Date" alias="&#x414;&#x430;&#x442;&#x430; &#x43D;&#x430;&#x447;.&#x440;&#x430;&#x431;&#x43E;&#x442;"/>
 			<field id="main_expert" dataType="String" alias="&#x41E;&#x442;&#x432;.&#x44D;&#x43A;&#x441;&#x43F;&#x435;&#x440;&#x442;"/>
 			<field id="expertise_result_date_positive" dataType="Date" alias="&#x414;&#x430;&#x442;&#x430; &#x43F;&#x43E;&#x43B;&#x43E;&#x436;&#x438;&#x442;.&#x437;&#x430;&#x43A;&#x43B;&#x44E;&#x447;."/>
-			<field id="back_to_work_date" dataType="Date" alias="&#x414;&#x430;&#x442;&#x430; &#x43D;&#x430; &#x434;&#x43E;&#x440;&#x430;&#x431;&#x43E;&#x442;&#x43A;&#x443;"/>
+			<field id="back_to_work_date" dataType="String" alias="&#x414;&#x430;&#x442;&#x430; &#x43D;&#x430; &#x434;&#x43E;&#x440;&#x430;&#x431;&#x43E;&#x442;&#x43A;&#x443;"/>
 			<field id="akt_number_date" dataType="String" alias="&#x410;&#x43A;&#x442;"/>
 			<field id="comment_text" dataType="String" alias="&#x41A;&#x43E;&#x43C;&#x43C;&#x435;&#x43D;&#x442;&#x430;&#x440;&#x438;&#x439;"/>
 		</model>
@@ -2998,6 +3001,7 @@
 			<publicMethod id="hide">
 				<field id="id" dataType="Int" required="TRUE"/>
 			</publicMethod>
+			<publicMethod id="send_email_confirm"/>
 		</controller>
 		<controller id="MailForSending" parentId="ControllerSQL">
 			<publicMethod id="get_list" modelId="MailForSendingList"/>
@@ -3934,6 +3938,7 @@
 		<permission type="allow" controllerId="User" methodId="password_recover" roleId="guest"/>
 		<permission type="allow" controllerId="User" methodId="name_check" roleId="guest"/>
 		<permission type="allow" controllerId="User" methodId="register" roleId="guest"/>
+		<permission type="allow" controllerId="User" methodId="email_confirm" roleId="guest"/>
 		<permission type="allow" controllerId="Captcha" methodId="get" roleId="guest"/>
 		<!-- CLIENT PERMISSIONS-->
 		<permission type="allow" controllerId="User" methodId="all" roleId="client"/>
@@ -4120,6 +4125,7 @@
 		<jsTemplate id="ShortMessage" file="tmpl/ShortMessage.html"/>
 		<jsTemplate id="ShortMessageChat" file="tmpl/ShortMessageChat.html"/>
 		<jsTemplate id="DocFlowOutClientCorrectionList" file="tmpl/DocFlowOutClientCorrectionList.html"/>
+		<jsTemplate id="UserEmailConfirmation_View" file="tmpl/UserEmailConfirmation_View.html"/>
 	</jsTemplates>
 	<packages>
 		<package id="Bank" version="1.0.0" author="Andrey Mikhalevich"/>
@@ -4648,6 +4654,7 @@
 		<jsScript file="views/RepReestrContract_View.js"/>
 		<jsScript file="views/RepReestrPay_View.js"/>
 		<jsScript file="views/RepQuarter_View.js"/>
+		<jsScript file="views/UserEmailConfirmation_View.js"/>
 		<jsScript file="tmpl/App.templates.js" compressed="FALSE" standalone="FALSE"/>
 		<jsScript file="custom_controls/App.enums.js"/>
 		<jsScript file="custom_controls/App.predefinedItems.js"/>

@@ -166,7 +166,7 @@ class RepReestrContract_Model extends ModelReportSQL{
 		$f_opts['alias']='Дата на доработку';
 		$f_opts['id']="back_to_work_date";
 				
-		$f_back_to_work_date=new FieldSQLDate($this->getDbLink(),$this->getDbName(),$this->getTableName(),"back_to_work_date",$f_opts);
+		$f_back_to_work_date=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"back_to_work_date",$f_opts);
 		$this->addField($f_back_to_work_date);
 		//********************
 		

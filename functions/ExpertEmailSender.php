@@ -5,6 +5,19 @@ require_once("EmailSender.php");
 
 class ExpertEmailSender extends EmailSender{
 
+	public static function getMailAuth(&$dbLink){
+		return $dbLink->query_first(
+			"WITH mail_data AS (SELECT const_outmail_data_val() AS v)
+			SELECT
+				(SELECT v->>'smtp_host' FROM mail_data) AS smtp_host,
+				(SELECT v->>'smtp_port' FROM mail_data) AS smtp_port,
+				(SELECT v->>'smtp_user' FROM mail_data) AS smtp_user,
+				(SELECT v->>'smtp_pwd' FROM mail_data) AS smtp_pwd,
+				(SELECT v->>'from_name' FROM mail_data) AS from_name,
+				(SELECT v->>'from_addr' FROM mail_data) AS from_addr"
+		);	
+	}
+
 	public static function regMail(
 			$dbLink,
 			$funcText,
@@ -24,12 +37,15 @@ class ExpertEmailSender extends EmailSender{
 		
 		$mail_id = NULL;
 		if (is_array($ar) && count($ar)){
+		
+			$auth = self::getMailAuth($dbLink);
+			
 			$mail_id = EmailSender::addEMail(
 				$dbLink,
-				EMAIL_FROM_ADDR,EMAIL_FROM_NAME,
+				$auth['from_addr'],$auth['from_name'],
 				$ar['email'],$ar['client'],
-				EMAIL_FROM_ADDR,EMAIL_FROM_NAME,
-				EMAIL_FROM_ADDR,
+				$auth['from_addr'],$auth['from_name'],
+				$auth['from_addr'],
 				$ar['mes_subject'],
 				$ar['body']	,
 				$smsType			
@@ -45,13 +61,14 @@ class ExpertEmailSender extends EmailSender{
 	public static function sendAllMail($delFiles=TRUE,&$db,
 			$smtpHost=NULL,$smtpPort=NULL,$smtpUser=NULL,$smtpPwd=NULL){
 		
-		$smtpHost = is_null($smtpHost)? SMTP_HOST:$smtpHost;
-		$smtpPort = is_null($smtpPort)? SMTP_PORT:$smtpPort;
-		$smtpUser = is_null($smtpUser)? SMTP_USER:$smtpUser;
-		$smtpPwd = is_null($smtpPwd)? SMTP_PWD:$smtpPwd;
+		//$smtpHost = is_null($smtpHost)? SMTP_HOST:$smtpHost;
+		//$smtpPort = is_null($smtpPort)? SMTP_PORT:$smtpPort;
+		//$smtpUser = is_null($smtpUser)? SMTP_USER:$smtpUser;
+		//$smtpPwd = is_null($smtpPwd)? SMTP_PWD:$smtpPwd;
+		$ar = self::getMailAuth($db);
 		
 		parent::sendAllMail($delFiles,$db,
-				$smtpHost,$smtpPort,$smtpUser,$smtpPwd
+				$ar['smtp_host'],$ar['smtp_port'],$ar['smtp_user'],$ar['smtp_pwd']
 		);
 	}
 	

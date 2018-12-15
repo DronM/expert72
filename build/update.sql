@@ -47314,3 +47314,470 @@ $BODY$
   COST 100;
 ALTER FUNCTION doc_flow_out_client_process() OWNER TO expert72;
 
+
+-- ******************* update 14/12/2018 06:32:06 ******************
+
+		ALTER TABLE mail_for_sending ADD COLUMN error_str text;
+
+
+-- ******************* update 14/12/2018 06:57:04 ******************
+-- VIEW: mail_for_sending_list
+
+--DROP VIEW mail_for_sending_list;
+
+CREATE OR REPLACE VIEW mail_for_sending_list AS
+	SELECT
+		id,
+		date_time,
+		subject,
+		from_addr,
+		from_name,
+		to_addr,
+		to_name,
+		sent,
+		sent_date_time,
+		email_type,
+		coalesce((SELECT TRUE FROM mail_for_sending_attachments AS at WHERE at.mail_for_sending_id=mail_for_sending.id LIMIT 1),FALSE) AS attachments_exist,
+		error_str
+	FROM mail_for_sending
+	ORDEr BY date_time DESC
+	;
+	
+ALTER VIEW mail_for_sending_list OWNER TO expert72;
+
+-- ******************* update 14/12/2018 07:05:53 ******************
+-- Function: email_new_account(user_id int,new_pwd text)
+
+--DROP FUNCTION email_new_account(user_id int,new_pwd text);
+
+CREATE OR REPLACE FUNCTION email_new_account(user_id int,new_pwd text)
+  RETURNS RECORD  AS
+$BODY$
+	WITH 
+		templ AS (
+		SELECT t.template AS v,t.mes_subject AS s
+		FROM email_templates t
+		WHERE t.email_type='new_account'
+		)	
+	SELECT
+		sms_templates_text(
+			ARRAY[
+				ROW('user',u.name::text)::template_value,
+				ROW('pwd',$2)::template_value
+			],
+			(SELECT v FROM templ)
+		)
+		AS mes_body,		
+		u.email::text AS email,
+		(SELECT s FROM templ) AS mes_subject,
+		''::text AS firm,
+		u.name::text AS client
+	FROM users u
+	WHERE u.id=$1 AND u.email_confirmed;
+$BODY$
+  LANGUAGE sql VOLATILE
+  COST 100;
+ALTER FUNCTION email_new_account(user_id int,new_pwd text) OWNER TO expert72;
+
+-- ******************* update 14/12/2018 07:14:46 ******************
+-- Function: email_new_account(user_id int,new_pwd text,key text)
+
+--DROP FUNCTION email_new_account(user_id int,new_pwd text,key text);
+
+CREATE OR REPLACE FUNCTION email_new_account(user_id int,new_pwd text,key text)
+  RETURNS RECORD  AS
+$BODY$
+	WITH 
+		templ AS (
+		SELECT t.template AS v,t.mes_subject AS s
+		FROM email_templates t
+		WHERE t.email_type='new_account'
+		)	
+	SELECT
+		sms_templates_text(
+			ARRAY[
+				ROW('user',u.name::text)::template_value,
+				ROW('pwd',$2)::template_value,
+				ROW('key',$3)::template_value
+			],
+			(SELECT v FROM templ)
+		)
+		AS mes_body,		
+		u.email::text AS email,
+		(SELECT s FROM templ) AS mes_subject,
+		''::text AS firm,
+		u.name::text AS client
+	FROM users u
+	WHERE u.id=$1 AND u.email_confirmed;
+$BODY$
+  LANGUAGE sql VOLATILE
+  COST 100;
+ALTER FUNCTION email_new_account(user_id int,new_pwd text,key text) OWNER TO expert72;
+
+-- ******************* update 14/12/2018 07:16:45 ******************
+-- Function: email_new_account(user_id int,new_pwd text,key text)
+
+--DROP FUNCTION email_new_account(user_id int,new_pwd text,key text);
+
+CREATE OR REPLACE FUNCTION email_new_account(user_id int,new_pwd text,key text)
+  RETURNS RECORD  AS
+$BODY$
+	WITH 
+		templ AS (
+		SELECT t.template AS v,t.mes_subject AS s
+		FROM email_templates t
+		WHERE t.email_type='new_account'
+		)	
+	SELECT
+		sms_templates_text(
+			ARRAY[
+				ROW('user',u.name::text)::template_value,
+				ROW('pwd',$2)::template_value,
+				ROW('key',$3)::template_value
+			],
+			(SELECT v FROM templ)
+		)
+		AS mes_body,		
+		u.email::text AS email,
+		(SELECT s FROM templ) AS mes_subject,
+		''::text AS firm,
+		u.name::text AS client
+	FROM users u
+	WHERE u.id=$1;
+$BODY$
+  LANGUAGE sql VOLATILE
+  COST 100;
+ALTER FUNCTION email_new_account(user_id int,new_pwd text,key text) OWNER TO expert72;
+
+-- ******************* update 14/12/2018 07:21:18 ******************
+-- Function: reminders_process()
+
+-- DROP FUNCTION reminders_process();
+
+CREATE OR REPLACE FUNCTION reminders_process()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+	IF (TG_WHEN='AFTER' AND (TG_OP='INSERT' OR TG_OP='UPDATE')) THEN
+		
+		INSERT INTO mail_for_sending
+		(to_addr,to_name,body,subject,email_type)
+		(WITH 
+			templ AS (
+				SELECT
+					t.template AS v,
+					t.mes_subject AS s
+				FROM email_templates t
+				WHERE t.email_type= 'new_remind'::email_types
+			)
+		SELECT
+			users.email::text,
+			employees.name::text,
+			sms_templates_text(
+				ARRAY[
+					ROW('content', NEW.content)::template_value,
+					ROW('id',NEW.id)::template_value
+				],
+				(SELECT v FROM templ)
+			) AS mes_body,		
+			(SELECT s FROM templ),
+			'new_remind'::email_types
+		FROM employees
+		LEFT JOIN users ON users.id=employees.user_id
+		WHERE
+			employees.id=NEW.recipient_employee_id
+			AND users.email IS NOT NULL
+			AND users.reminders_to_email
+			AND users.email_confirmed					
+		);				
+		
+			
+		RETURN NEW;
+
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION reminders_process() OWNER TO expert72;
+
+-- ******************* update 14/12/2018 07:24:32 ******************
+-- Function: doc_flow_in_client_process()
+
+-- DROP FUNCTION doc_flow_in_client_process();
+
+CREATE OR REPLACE FUNCTION doc_flow_in_client_process()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+	IF (TG_WHEN='BEFORE' AND TG_OP='INSERT') THEN		
+		IF const_client_lk_val() OR const_debug_val() THEN
+			--Если это достоверность одновременно с ПД - сделать не одновременно
+			--это при возврате заявления без рассмотрения
+			UPDATE applications AS app
+			SET cost_eval_validity_simult = FALSE
+			FROM (
+				SELECT t.id
+				FROM applications t
+				WHERE t.id=NEW.application_id
+				AND coalesce(t.cost_eval_validity,FALSE) AND coalesce(t.cost_eval_validity_simult,FALSE)
+				AND NEW.doc_flow_type_id=(pdfn_doc_flow_types_app_resp_return()->'keys'->>'id')::int
+			) AS base
+			WHERE app.id=base.id;
+		END IF;
+		
+		RETURN NEW;
+				
+	ELSIF (TG_WHEN='AFTER' AND TG_OP='INSERT') THEN		
+		IF NOT const_client_lk_val() OR const_debug_val() THEN
+			--письмо клиенту со ссылкой на вход.документ
+			INSERT INTO mail_for_sending
+			(to_addr,to_name,body,subject,email_type)
+			(WITH 
+				templ AS (
+					SELECT
+						t.template AS v,
+						t.mes_subject AS s
+					FROM email_templates t
+					WHERE t.email_type= 'out_mail_to_app'::email_types
+				)
+			SELECT
+				users.email,
+				coalesce(users.name_full,users.name),
+				sms_templates_text(
+					ARRAY[
+						ROW('subject', NEW.subject)::template_value,
+						ROW('id',NEW.id)::template_value
+					],
+					(SELECT v FROM templ)
+				) AS mes_body,		
+				(SELECT s FROM templ),
+				'out_mail_to_app'::email_types
+			FROM users
+			WHERE
+				users.id=NEW.user_id
+				AND users.email IS NOT NULL
+				AND users.reminders_to_email
+				AND users.email_confirmed					
+			);
+		END IF;
+		
+		RETURN NEW;
+		
+	ELSIF (TG_WHEN='BEFORE' AND TG_OP='DELETE') THEN		
+		IF const_client_lk_val() OR const_debug_val() THEN
+			DELETE FROM doc_flow_in_client_reg_numbers WHERE doc_flow_in_client_id=OLD.id;
+		END IF;
+		RETURN OLD;
+		
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION doc_flow_in_client_process() OWNER TO expert72;
+
+
+-- ******************* update 14/12/2018 10:34:36 ******************
+-- Function: users_process()
+
+-- DROP FUNCTION users_process();
+
+CREATE OR REPLACE FUNCTION users_process()
+  RETURNS trigger AS
+$BODY$
+DECLARE
+	i json;
+	ind int;
+	v_applicant json;
+	v_customer json;
+	v_contractors json;
+BEGIN
+	IF (TG_WHEN='AFTER' AND TG_OP='INSERT') THEN		
+		IF NOT const_client_lk_val() OR const_debug_val() THEN
+			PERFORM contacts_insert(NEW.id, 'users'::data_types,1,
+				json_build_object(
+					'name',NEW.name_full,
+					'email',NEW.email,
+					'tel',NEW.phone_cel
+				),
+				NULL
+			);
+		END IF;
+						
+		RETURN NEW;
+		
+	ELSIF (TG_WHEN='AFTER' AND TG_OP='UPDATE') THEN		
+		IF
+		(NOT const_client_lk_val() OR const_debug_val())
+		AND
+		(OLD.name_full<>NEW.name_full) OR (OLD.email<>NEW.email) OR (OLD.phone_cel<>NEW.phone_cel)
+		THEN
+			DELETE FROM contacts WHERE parent_id=OLD.id AND parent_type='users'::data_types;
+			PERFORM contacts_insert(NEW.id, 'users'::data_types, 1,
+				json_build_object(
+					'name',NEW.name_full,
+					'email',NEW.email,
+					'tel',NEW.phone_cel
+				),
+				NULL
+			);
+		END IF;				
+		RETURN NEW;
+	
+	ELSIF (TG_WHEN='BEFORE' AND TG_OP='UPDATE') THEN		
+		IF NEW.email IS NOT NULL AND NEW.email<>OLD.email THEN
+			NEW.email_confirmed = FALSE;
+		END IF;
+		
+		RETURN NEW;
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION users_process() OWNER TO expert72;
+
+
+-- ******************* update 14/12/2018 13:34:48 ******************
+-- Function: email_new_account(user_id int,new_pwd text,key text)
+
+DROP FUNCTION email_new_account(user_id int,new_pwd text,key text);
+/*
+CREATE OR REPLACE FUNCTION email_new_account(user_id int,new_pwd text,key text)
+  RETURNS RECORD  AS
+$BODY$
+	WITH 
+		templ AS (
+		SELECT t.template AS v,t.mes_subject AS s
+		FROM email_templates t
+		WHERE t.email_type='new_account'
+		)	
+	SELECT
+		sms_templates_text(
+			ARRAY[
+				ROW('user',u.name::text)::template_value,
+				ROW('pwd',$2)::template_value,
+				ROW('key',$3)::template_value
+			],
+			(SELECT v FROM templ)
+		)
+		AS mes_body,		
+		u.email::text AS email,
+		(SELECT s FROM templ) AS mes_subject,
+		''::text AS firm,
+		u.name::text AS client
+	FROM users u
+	WHERE u.id=$1;
+$BODY$
+  LANGUAGE sql VOLATILE
+  COST 100;
+ALTER FUNCTION email_new_account(user_id int,new_pwd text,key text) OWNER TO expert72;
+*/
+
+-- ******************* update 14/12/2018 13:35:04 ******************
+-- Function: email_new_account(user_id int,new_pwd text)
+
+-- DROP FUNCTION email_new_account(user_id int,new_pwd text);
+
+CREATE OR REPLACE FUNCTION email_new_account(user_id int,new_pwd text)
+  RETURNS RECORD  AS
+$BODY$
+	WITH 
+		templ AS (
+		SELECT t.template AS v,t.mes_subject AS s
+		FROM email_templates t
+		WHERE t.email_type='new_account'
+		)	
+	SELECT
+		sms_templates_text(
+			ARRAY[
+				ROW('user',u.name::text)::template_value,
+				ROW('pwd',$2)::template_value,
+				ROW('key',$3)::template_value
+			],
+			(SELECT v FROM templ)
+		)
+		AS mes_body,		
+		u.email::text AS email,
+		(SELECT s FROM templ) AS mes_subject,
+		''::text AS firm,
+		u.name::text AS client
+	FROM users u
+	WHERE u.id=$1;
+$BODY$
+  LANGUAGE sql VOLATILE
+  COST 100;
+ALTER FUNCTION email_new_account(user_id int,new_pwd text,key text) OWNER TO expert72;
+
+
+-- ******************* update 14/12/2018 13:35:18 ******************
+-- Function: email_new_account(user_id int,new_pwd text)
+
+-- DROP FUNCTION email_new_account(user_id int,new_pwd text);
+
+CREATE OR REPLACE FUNCTION email_new_account(user_id int,new_pwd text)
+  RETURNS RECORD  AS
+$BODY$
+	WITH 
+		templ AS (
+		SELECT t.template AS v,t.mes_subject AS s
+		FROM email_templates t
+		WHERE t.email_type='new_account'
+		)	
+	SELECT
+		sms_templates_text(
+			ARRAY[
+				ROW('user',u.name::text)::template_value,
+				ROW('pwd',$2)::template_value,
+				ROW('key',$3)::template_value
+			],
+			(SELECT v FROM templ)
+		)
+		AS mes_body,		
+		u.email::text AS email,
+		(SELECT s FROM templ) AS mes_subject,
+		''::text AS firm,
+		u.name::text AS client
+	FROM users u
+	WHERE u.id=$1;
+$BODY$
+  LANGUAGE sql VOLATILE
+  COST 100;
+ALTER FUNCTION email_new_account(user_id int,new_pwd text) OWNER TO expert72;
+
+
+-- ******************* update 14/12/2018 13:35:27 ******************
+-- Function: email_new_account(user_id int,new_pwd text)
+
+-- DROP FUNCTION email_new_account(user_id int,new_pwd text);
+
+CREATE OR REPLACE FUNCTION email_new_account(user_id int,new_pwd text)
+  RETURNS RECORD  AS
+$BODY$
+	WITH 
+		templ AS (
+		SELECT t.template AS v,t.mes_subject AS s
+		FROM email_templates t
+		WHERE t.email_type='new_account'
+		)	
+	SELECT
+		sms_templates_text(
+			ARRAY[
+				ROW('user',u.name::text)::template_value,
+				ROW('pwd',$2)::template_value
+			],
+			(SELECT v FROM templ)
+		)
+		AS mes_body,		
+		u.email::text AS email,
+		(SELECT s FROM templ) AS mes_subject,
+		''::text AS firm,
+		u.name::text AS client
+	FROM users u
+	WHERE u.id=$1;
+$BODY$
+  LANGUAGE sql VOLATILE
+  COST 100;
+ALTER FUNCTION email_new_account(user_id int,new_pwd text) OWNER TO expert72;
+

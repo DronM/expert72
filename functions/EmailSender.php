@@ -129,32 +129,31 @@ class EmailSender {
 		$emailId,$emailMessage,$mailFiles,$delFiles){			
 		//sending
 		if ($emailMessage){
-			if(!$emailMessage->Send()){				
-				//throw new Exception("Error: ".$emailMessage->ErrorInfo."\n");
-				error_log("EmailSender error: ".$emailMessage->ErrorInfo."\n");
-			}
-			else{
-				try{
-					$dbLink->query(
-					"UPDATE mail_for_sending
-					SET
-						sent=TRUE,
-						sent_date_time=now()::timestamp
-					WHERE id=".$emailId);
-					
-					if (count($mailFiles)&&$delFiles){
-						foreach ($mailFiles as $file_name){
-							if (file_exists($file_name)){
-								unlink($file_name);
-							}
+			try{
+				$error_str = ($emailMessage->Send())? 'NULL':"'".$emailMessage->ErrorInfo."'";
+				
+				$dbLink->query(sprintf(
+				"UPDATE mail_for_sending
+				SET
+					sent = TRUE,
+					sent_date_time = now(),
+					error_str = %s
+				WHERE id=%d",
+				$error_str,$emailId
+				));
+				
+				if (count($mailFiles)&&$delFiles){
+					foreach ($mailFiles as $file_name){
+						if (file_exists($file_name)){
+							unlink($file_name);
 						}
 					}
 				}
-				catch(Exception $e){
-					//throw $e;
-					error_log("EmailSender error: ".$e->getMessage()."\n");
-				}
-			}		
+			}
+			catch(Exception $e){
+				//throw $e;
+				error_log("EmailSender error: ".$e->getMessage()."\n");
+			}
 		}
 	}
 }

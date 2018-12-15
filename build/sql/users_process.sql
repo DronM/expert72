@@ -43,7 +43,13 @@ BEGIN
 			);
 		END IF;				
 		RETURN NEW;
+	
+	ELSIF (TG_WHEN='BEFORE' AND TG_OP='UPDATE') THEN		
+		IF NEW.email IS NOT NULL AND NEW.email<>OLD.email THEN
+			NEW.email_confirmed = FALSE;
+		END IF;
 		
+		RETURN NEW;
 	END IF;
 END;
 $BODY$

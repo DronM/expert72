@@ -1,6 +1,6 @@
 -- Function: email_new_account(user_id int,new_pwd text)
 
---DROP FUNCTION email_new_account(user_id int,new_pwd text);
+-- DROP FUNCTION email_new_account(user_id int,new_pwd text);
 
 CREATE OR REPLACE FUNCTION email_new_account(user_id int,new_pwd text)
   RETURNS RECORD  AS
@@ -30,3 +30,4 @@ $BODY$
   LANGUAGE sql VOLATILE
   COST 100;
 ALTER FUNCTION email_new_account(user_id int,new_pwd text) OWNER TO ;
+

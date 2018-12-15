@@ -434,6 +434,11 @@ class User_Controller extends ControllerSQL{
 			
 		$this->addPublicMethod($pm);
 
+			
+		$pm = new PublicMethod('send_email_confirm');
+		
+		$this->addPublicMethod($pm);
+
 		
 	}
 		
@@ -455,7 +460,7 @@ class User_Controller extends ControllerSQL{
 		$model = new $model_id($this->getDbLinkMaster());
 		$inserted_id_ar = $this->modelInsert($model,TRUE);
 		
-		$this->pwd_notify($inserted_id_ar['id'],"'".$new_pwd."'");
+		$this->pwd_notify($inserted_id_ar['id'],"'".$new_pwd."'",FALSE);
 			
 		$fields = array();
 		foreach($inserted_id_ar as $key=>$val){
@@ -508,6 +513,8 @@ class User_Controller extends ControllerSQL{
 		$_SESSION['color_palette'] 	= $ar['color_palette'];
 		$_SESSION['cades_load_timeout'] = $ar['cades_load_timeout'];
 		$_SESSION['cades_chunk_size'] 	= $ar['cades_chunk_size'];
+		$_SESSION['user_email_confirmed']= $ar['email_confirmed'];
+		$_SESSION['user_email'] 	= $ar['email'];
 						
 		if ($ar['role_id']!='client'){
 			$_SESSION['employees_ref'] = $ar['employees_ref'];
@@ -807,8 +814,8 @@ class User_Controller extends ControllerSQL{
 		));		
 	}
 		
-	private function pwd_notify($userId,$pwd){
-		//email
+	private function pwd_notify($userId,$pwd,$confirmEmail){
+		//email		
 		ExpertEmailSender::regMail(
 			$this->getDbLinkMaster(),
 			sprintf("email_reset_pwd(%d,%s)",
@@ -818,6 +825,11 @@ class User_Controller extends ControllerSQL{
 			NULL,
 			'reset_pwd'
 		);
+		
+		if($confirmEmail){
+			$email_key = "'".$this->gen_confirm_key($userId)."'";
+			$this->email_confirm_notify($userId,$email_key);
+		}		
 	}
 	
 	private function email_confirm_notify($userId,$key){
@@ -837,7 +849,11 @@ class User_Controller extends ControllerSQL{
 			$this->check_captcha($pm);	
 		
 			$ar = $this->getDbLink()->query_first(sprintf(
-			"SELECT id FROM users WHERE email=%s",
+			"SELECT
+				id,
+				email_confirmed
+			FROM users
+			WHERE email=%s",
 			$this->getExtDbVal($pm,'email')
 			));
 			if (!is_array($ar) || !count($ar)){
@@ -854,7 +870,7 @@ class User_Controller extends ControllerSQL{
 					WHERE id=%d",
 					$pwd,$ar['id'])
 				);
-				$this->pwd_notify($ar['id'],$pwd);
+				$this->pwd_notify($ar['id'],$pwd,($ar['email_confirmed']!='t'));
 			
 				$this->getDbLinkMaster()->query('COMMIT');
 			}
@@ -889,6 +905,16 @@ class User_Controller extends ControllerSQL{
 		if ($_SESSION['captcha']!=$this->getExtVal($pm,'captcha_key')){
 			throw new Exception(self::ER_WRONG_CAPTCHA);
 		}
+	}
+	
+	private function gen_confirm_key($userId){
+		$ar_email_key = $this->getDbLinkMaster()->query_first(sprintf(
+			"INSERT INTO user_email_confirmations (key,user_id)
+			values (md5(CURRENT_TIMESTAMP::text),%d)
+			RETURNING key",
+			$userId
+		));
+		return $ar_email_key['key'];
 	}
 	
 	public function register($pm){
@@ -935,24 +961,16 @@ class User_Controller extends ControllerSQL{
 					throw new Exception(self::ER_REG);
 				}
 
-				$ar_email_key = $this->getDbLinkMaster()->query_first(sprintf(
-					"INSERT INTO user_email_confirmations (key,user_id)
-					values (md5(CURRENT_TIMESTAMP::text),%d)
-					RETURNING key",
-					$inserted_id_ar['id']
-				));
-	
 				ExpertEmailSender::regMail(
 					$this->getDbLinkMaster(),
 					sprintf("email_new_account(%d,%s)",
-						$inserted_id_ar['id'],$this->getExtDbVal($pm,'pwd')
+						$inserted_id_ar['id'],
+						$this->getExtDbVal($pm,'pwd')
 					),
 					NULL,
-					'reset_pwd'
+					'new_account'
 				);
-		
-				$this->email_confirm_notify($inserted_id_ar['id'],"'".$ar_email_key['key']."'");
-		
+				
 				//From same server!!!!
 				$ar = $this->getDbLinkMaster()->query_first(
 					sprintf(
@@ -1002,12 +1020,12 @@ class User_Controller extends ControllerSQL{
 			$ar = $this->getDbLinkMaster()->query_first(sprintf(
 				"UPDATE user_email_confirmations
 				SET confirmed=TRUE
-				WHERE key=%s AND confirmed=FALSE
+				WHERE key=%s AND coalesce(confirmed,FALSE)=FALSE AND dt::date=now()::date
 				RETURNING user_id",
 				$this->getExtDbVal($pm,'key')
 			));
-			if (!count($ar)){
-				throw new Exception('ER');
+			if (!count($ar) || !isset($ar['user_id'])){
+				throw new Exception('Неверная или устаревшая ссылка. Отправьте заново подтверждение из личного кабинета.');
 			}
 
 			$this->getDbLinkMaster()->query(sprintf(
@@ -1019,12 +1037,11 @@ class User_Controller extends ControllerSQL{
 			
 			$this->getDbLinkMaster()->query('COMMIT');
 			
-			header('index.php?v=EmailConfirmed');
 		}	
 		catch(Exception $e){
 			$this->getDbLinkMaster()->query('ROLLBACK');
 			
-			header('HTTP/1.0 404 Not Found');
+			throw $e;
 		}
 	}
 	public function get_profile(){
@@ -1057,6 +1074,14 @@ class User_Controller extends ControllerSQL{
 			}
 			*/			
 			$_SESSION['user_name'] = $new_name;
+		}
+		
+		$new_email = $pm->getParamValue('email');
+		if (isset($new_email)){
+			$_SESSION['user_email_confirmed'] = FALSE;
+			$_SESSION['user_email'] = $new_email;
+			$_SESSION['email_confirm_sent'] = FALSE;
+			$this->send_email_confirm($pm);
 		}
 		
 		$this->update_session_vars($pm);
@@ -1103,6 +1128,16 @@ class User_Controller extends ControllerSQL{
 		
 		}
 			
+	}
+	
+	public function send_email_confirm($pm){		
+		if (isset($_SESSION['email_confirm_sent']) && $_SESSION['email_confirm_sent']){
+			throw new Exception('На указанный адрес уже было отправлено письмо!');
+		}
+		$email_key = $this->gen_confirm_key($_SESSION['user_id']);
+		$this->email_confirm_notify($_SESSION['user_id'],"'".$email_key."'");
+		
+		$_SESSION['email_confirm_sent'] = TRUE;
 	}
 	
 

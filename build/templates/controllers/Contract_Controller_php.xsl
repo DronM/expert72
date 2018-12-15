@@ -703,15 +703,15 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				
 				t.reg_number,
 				
-				to_char(t.expertise_result_date,'DD/MM/YY') AS expertise_result_date,
+				t.expertise_result_date::date AS expertise_result_date,
 				
-				to_char(t.date_time,'DD/MM/YY') AS date_time,
+				t.date_time::date AS date_time,
 				
-				(SELECT to_char(max(p.pay_date),'DD/MM/YY') FROM client_payments AS p
+				(SELECT max(p.pay_date::date) FROM client_payments AS p
 				WHERE p.contract_id=t.id
 				) AS pay_date,
 				
-				to_char(t.expertise_result_date,'DD/MM/YY') AS expertise_result_ret_date
+				t.expertise_result_date AS expertise_result_ret_date
 				
 			FROM contracts AS t
 			LEFT JOIN applications AS app ON app.id=t.application_id
@@ -867,12 +867,12 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				app.customer->>'name' AS customer,
 				contracts.contract_number,
 				contracts.constr_name,	
-				to_char(contracts.work_start_date,'DD/MM/YY') As work_start_date,
+				contracts.work_start_date::date AS work_start_date::date,
 				contracts.expertise_cost_budget,
 				contracts.expertise_cost_self_fund,
 				p.total,
 				p.pay_docum_number,
-				to_char(p.pay_docum_date,'DD/MM/YY') As pay_docum_date
+				p.pay_docum_date::date AS pay_docum_date
 			FROM client_payments AS p
 			LEFT JOIN contracts ON contracts.id=p.contract_id
 			LEFT JOIN applications AS app ON app.id=contracts.application_id
@@ -979,7 +979,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			"SELECT
 				row_number() OVER (ORDER BY %s) AS ord,
 				contracts.expertise_result_number,
-				to_char(contracts.date_time,'DD/MM/YY') AS date,
+				contracts.date_time::date AS date,
 				(CASE WHEN coalesce(primary_ct.expertise_result_number,contracts.primary_contract_reg_number) IS NOT NULL THEN 'Повтор' ELSE '' END) AS primary_exists,				
 				app.applicant->>'name' AS applicant,
 				app.customer->>'name' AS customer,
@@ -995,13 +995,13 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				
 				coalesce(payments.total,0) AS pay_total,
 				
-				to_char(contracts.work_start_date,'DD/MM/YY') As work_start_date,
+				contracts.work_start_date::date AS work_start_date,
 				
 				person_init(employees.name,FALSE) AS main_expert,
 				
 				CASE
-					WHEN contracts.expertise_result='positive' THEN to_char(contracts.expertise_result_date,'DD/MM/YY')
-					ELSE ''
+					WHEN contracts.expertise_result='positive' THEN contracts.expertise_result_date
+					ELSE NULL
 				END AS expertise_result_date_positive,
 				
 				coalesce(primary_ct.expertise_result_number,contracts.primary_contract_reg_number) AS back_to_work_date,
@@ -1158,13 +1158,13 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			"SELECT
 				row_number() OVER (ORDER BY contracts.expertise_result_date) AS ord,
 				contracts.expertise_result_number,
-				to_char(contracts.date_time,'DD/MM/YY') AS date,
+				contracts.date_time::date AS date,
 				app.customer->>'name' AS customer,
 				contracts.constr_name,	
-				to_char(contracts.work_start_date,'DD/MM/YY') AS work_start_date,
+				contracts.work_start_date::date AS work_start_date,
 				coalesce(primary_ct.expertise_result_number,contracts.primary_contract_reg_number) AS primary_expertise_result_number,
 				contracts.expertise_result,
-				to_char(contracts.expertise_result_date,'DD/MM/YY') AS expertise_result_date,
+				contracts.expertise_result_date::date AS expertise_result_date,
 				app.build_type_id,
 				build_types.name AS build_type_name,
 				

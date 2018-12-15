@@ -16,6 +16,8 @@ $permissions = array();
 		
 			$permissions['User_Controller_register']=TRUE;
 		
+			$permissions['User_Controller_email_confirm']=TRUE;
+		
 			$permissions['Captcha_Controller_get']=TRUE;
 		
 return array_key_exists($contrId.'_'.$methId,$permissions);

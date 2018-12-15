@@ -669,7 +669,7 @@ class DocFlowOutClient_Controller extends ControllerSQL{
 				if (defined('FILE_STORAGE_DIR_MAIN') && file_exists($fl=FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$rel_dir.DIRECTORY_SEPARATOR.$ar['file_id'].'.sig'))unlink($fl);
 				
 				$pki_man = pki_create_manager();
-				pki_log_sig_check($sig_file, $file_doc, $file_id_for_db, $pki_man, $dbLinkMaster);
+				pki_log_sig_check($sig_file, $file_doc, $file_id_for_db, $pki_man, $dbLinkMaster,TRUE);
 				
 				$dbLinkMaster->query("COMMIT");
 			}
@@ -793,7 +793,7 @@ class DocFlowOutClient_Controller extends ControllerSQL{
 						//sig.s(1) -> .sig
 						$file_sig = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$sig_rel_file;
 						exec(sprintf('mv -f "%s" "%s"',$prev_sig,$file_sig));					
-						pki_log_sig_check($file_sig, $file_doc, "'".$ar['file_id']."'", $pki_man, $dbLinkMaster);
+						pki_log_sig_check($file_sig, $file_doc, "'".$ar['file_id']."'", $pki_man, $dbLinkMaster,TRUE);
 					}
 					
 					$dbLinkMaster->query(sprintf(

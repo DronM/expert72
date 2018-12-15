@@ -59,4 +59,22 @@
 	</xsl:choose>
 </xsl:template>
 
+<xsl:template name="format_date">
+	<xsl:param name="val"/>
+	<xsl:param name="formatStr"/>
+	<xsl:choose>
+		<xsl:when test="string-length($val)=10">
+			<xsl:variable name="val_year" select="substring-before($val,'-')"/>
+			<xsl:variable name="part_month" select="substring-after($val,'-')"/>
+			<xsl:variable name="val_month" select="substring-before($part_month,'-')"/>
+			<xsl:variable name="part_date" select="substring-after($part_month,'-')"/>
+			<xsl:variable name="val_date" select="$part_date"/>
+			<xsl:value-of select="concat($val_date,'/',$val_month,'/',$val_year)" />
+		</xsl:when>
+		<xsl:otherwise>
+			<xsl:value-of select="$val" />
+		</xsl:otherwise>
+	</xsl:choose>
+</xsl:template>
+
 </xsl:stylesheet>

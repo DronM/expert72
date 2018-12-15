@@ -3,26 +3,37 @@
 		<h3 class="panel-title">{{HEAD_TITLE}}</h3>
 	</div>
 	
-	<div id="{{id}}:name">
-	</div>
-	<div id="{{id}}:name_full">
-	</div>
-	
-	<div id="{{id}}:email">
-	</div>
-	<div id="{{id}}:phone_cel">
-	</div>
-	
-	<div id="{{id}}:color_palette">
-	</div>
-	
-	<div id="{{id}}:reminders_to_email">
-	</div>
-
-	<div class="panel">
-		<div class="panel-heading">
-			<h6 class="panel-title">Настройки КриптоПро ЭЦП плагина</h6>
+	<fieldset>
+		<legend class="panel-title">Личные данные</legend>
+		<div id="{{id}}:name">
 		</div>
+		<div id="{{id}}:name_full">
+		</div>
+	
+		<div id="{{id}}:email">
+		</div>
+		<div id="{{id}}:phone_cel">
+		</div>
+	
+		<div id="{{id}}:color_palette">
+		</div>
+	
+		<div id="{{id}}:reminders_to_email">
+		</div>
+		
+		<div id="{{id}}:pwd">
+		</div>
+		<div id="{{id}}:pwd_confirm">
+		</div>		
+	</fieldset>
+	
+	{{#email_not_confirmed}}
+	<div id="{{id}}:email_confirmation">
+	</div>
+	{{/email_not_confirmed}}
+
+	<fieldset>
+		<legend class="panel-title">Настройки КриптоПро ЭЦП плагина</legend>
 	
 		<div id="{{id}}:cades_load_timeout">
 		</div>
@@ -33,13 +44,8 @@
 			<input class="doNotCadesLoadPlugin" type="checkbox" id="doNotCadesLoadPlugin" name="doNotCadesLoadPlugin" value="doNotCadesLoadPlugin" style="margin:5px 5px;"/>
 			<label for="doNotCadesLoadPlugin">Не пытаться загружать КриптоПро ЭЦП браузер плагин</label>
 		</div>		
-	</div>
+	</fieldset>
 	
-	<div id="{{id}}:pwd">
-	</div>
-	<div id="{{id}}:pwd_confirm">
-	</div>
-		
 	<div class="panel-footer">
 		<div class="heading-elements">
 			<div class="heading-btn pull-left">

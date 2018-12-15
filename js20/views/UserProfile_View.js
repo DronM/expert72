@@ -9,95 +9,109 @@ function UserProfile_View(id,options){
 	options.cmdOk = false;
 	options.cmdCancel = false;
 	
+	var user_email_confirmed = (window.getApp().getServVar("user_email_confirmed")=="t");
+	options.templateOptions = {
+		"email_not_confirmed":!user_email_confirmed
+	}
+	
+	var self = this;
+	options.addElement = function(){
+		this.addElement(new HiddenKey(id+":id"));	
+	
+		this.addElement(new UserNameEdit(id+":name",{			
+			"labelCaption":"Логин:",
+			"focus":true,
+			"events":{
+				"keyup":function(){
+					self.getControlSave().setEnabled(true);
+					self.getElement("name").checkName();
+				}
+			}
+		
+		}));	
+
+		this.addElement(new EditString(id+":name_full",{				
+			"labelCaption":"ФИО пользователя:"
+		}));	
+
+		this.addElement(new UserPwdEdit(id+":pwd",{
+			"labelCaption":"Пароль:",
+			"view":this,
+			"events":{
+				"keyup":function(){
+					self.getControlSave().setEnabled(true);
+				}
+			}				
+		}));	
+		this.addElement(new UserPwdEdit(id+":pwd_confirm",{
+			"required":false,
+			"labelCaption":"Подтверждение пароля:",
+			"view":this
+		}));	
+
+		this.addElement(new EditEmail(id+":email",{
+			"labelCaption":"Эл.почта:",
+			"required":false,
+			"events":{
+				"keyup":function(){
+					self.getControlSave().setEnabled(true);
+				}
+			}		
+		}));	
+
+		this.addElement(new EditPhone(id+":phone_cel",{
+			"labelCaption":"Моб.телефон:",
+			"events":{
+				"keyup":function(){
+					self.getControlSave().setEnabled(true);
+				}
+			}		
+		}));	
+
+		this.addElement(new EditColorPalette(id+":color_palette",{
+			"labelCaption":"Цветовая схема:",
+			"events":{
+				"change":function(){
+					self.getControlSave().setEnabled(true);
+				}
+			}				
+		}));	
+
+		this.addElement(new EditInt(id+":cades_load_timeout",{
+			"labelCaption":"Время загрузки плагина, (мс.)",
+			"events":{
+				"keyup":function(){
+					self.getControlSave().setEnabled(true);
+				}
+			}						
+		}));								
+		this.addElement(new EditInt(id+":cades_chunk_size",{
+			"labelCaption":"Размер части файла при подписании, байт",
+			"events":{
+				"keyup":function(){
+					self.getControlSave().setEnabled(true);
+				}
+			}								
+		}));								
+
+		this.addElement(new EditCheckBox(id+":reminders_to_email",{
+			"labelCaption":"Дублировать напоминания на электронную почту",
+			"visible":(window.getApp().getServVar("role_id")!="client"),
+			"events":{
+				"change":function(){
+					self.getControlSave().setEnabled(true);
+				}
+			}						
+		}));								
+
+		if(!user_email_confirmed){
+			this.addElement(new UserEmailConfirmation_View(id+":email_confirmation"));
+		}
+	
+	}
+	
 	UserProfile_View.superclass.constructor.call(this,id,options);
 		
-	var self = this;
-
-	this.addElement(new HiddenKey(id+":id"));	
-	
-	this.addElement(new UserNameEdit(id+":name",{
-		"focus":true,
-		"events":{
-			"keyup":function(){
-				self.getControlSave().setEnabled(true);
-				self.getElement("name").checkName();
-			}
-		}
-		
-	}));	
-
-	this.addElement(new EditString(id+":name_full",{				
-		"labelCaption":"ФИО пользователя:"
-	}));	
-
-	this.addElement(new UserPwdEdit(id+":pwd",{
-		"labelCaption":"Пароль:",
-		"view":this,
-		"events":{
-			"keyup":function(){
-				self.getControlSave().setEnabled(true);
-			}
-		}				
-	}));	
-	this.addElement(new UserPwdEdit(id+":pwd_confirm",{
-		"required":false,
-		"labelCaption":"Подтверждение пароля:",
-		"view":this
-	}));	
-
-	this.addElement(new EditEmail(id+":email",{
-		"labelCaption":"Эл.почта:",
-		"required":false,
-		"events":{
-			"keyup":function(){
-				self.getControlSave().setEnabled(true);
-			}
-		}		
-	}));	
-
-	this.addElement(new EditPhone(id+":phone_cel",{
-		"labelCaption":"Моб.телефон:",
-		"events":{
-			"keyup":function(){
-				self.getControlSave().setEnabled(true);
-			}
-		}		
-	}));	
-
-	this.addElement(new EditColorPalette(id+":color_palette",{
-		"labelCaption":"Цветовая схема:",
-		"events":{
-			"change":function(){
-				self.getControlSave().setEnabled(true);
-			}
-		}				
-	}));	
-
-	this.addElement(new EditInt(id+":cades_load_timeout",{
-		"labelCaption":"Время загрузки плагина, (мс.)",
-		"events":{
-			"keyup":function(){
-				self.getControlSave().setEnabled(true);
-			}
-		}						
-	}));								
-	this.addElement(new EditInt(id+":cades_chunk_size",{
-		"labelCaption":"Размер части файла при подписании, байт",
-		"events":{
-			"keyup":function(){
-				self.getControlSave().setEnabled(true);
-			}
-		}								
-	}));								
-
-	this.addElement(new EditCheckBox(id+":reminders_to_email",{
-		"labelCaption":"Дублировать напоминания на электронную почту",
-		"events":{
-			"change":function(){
-				self.getControlSave().setEnabled(true);
-			}
-		}						
-	}));								
 
 	//****************************************************
 	var contr = new User_Controller();

@@ -162,6 +162,16 @@ class MailForSendingList_Model extends ModelSQL{
 		$f_email_type=new FieldSQLEnum($this->getDbLink(),$this->getDbName(),$this->getTableName(),"email_type",$f_opts);
 		$this->addField($f_email_type);
 		//********************
+		
+		//*** Field error_str ***
+		$f_opts = array();
+		
+		$f_opts['alias']='Ошибка отправки';
+		$f_opts['id']="error_str";
+				
+		$f_error_str=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"error_str",$f_opts);
+		$this->addField($f_error_str);
+		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}
 

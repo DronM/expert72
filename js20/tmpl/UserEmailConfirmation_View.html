@@ -1,0 +1,22 @@
+<div id="{{id}}" class="alert alert-warning alert-styled-left">
+	<h5>Требуется подтверждение алреса электронной почты</h5>
+
+	<div>Письма о смене статусов прохождения экспертизы отправляются только на подтвержденные адреса электронно почты.
+	</div>
+	<div>Чтобы подтвердить адрес электронной почты, Вам необходимо:
+	</div>
+	<ol>
+		<li>Нажать на кнопку "Отправить письмо". На Ваш адрес <strong>{{email}}</strong> будет отправлено письмо, содержащее ссылку.
+		</li>
+		<li>Найти письмо в Вашем почтовом ящике и перейти по ссылке, указанной в письме.
+		</li>
+	</ol>
+
+	<div id="{{id}}:cmdConfirm">
+	</div>
+	
+	<div class="doNotNotifyOnEmailConfirmationCont">
+		<input class="doNotNotifyOnEmailConfirmation" {{doNotNotifyChecked}} type="checkbox" id="doNotNotifyOnEmailConfirmation" name="doNotNotifyOnEmailConfirmation" value="doNotCadesLoadPlugin" style="margin:5px 5px;"/>
+		<label for="doNotNotifyOnEmailConfirmation">Не напоминать при входе в программу</label>
+	</div>
+</div>	

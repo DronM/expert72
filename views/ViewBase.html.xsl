@@ -28,6 +28,7 @@
 			function pageLoad(){							
 				<xsl:call-template name="initApp"/>
 				<xsl:call-template name="initReminder"/>
+				<xsl:call-template name="emailConfNote"/>
 				
 				<xsl:call-template name="checkForError"/>
 								
@@ -165,6 +166,32 @@
 		application.reminder.updateTaskList(t_model);
 		</xsl:if>
 		application.reminder.start();
+	</xsl:if>
+</xsl:template>
+
+<xsl:template name="emailConfNote">
+	<xsl:if test="not(/document/model[@id='ModelVars']/row/user_email_confirmed='t')">
+	//var no_note = window.getApp().getDoNotNotifyOnEmailConfirmation();
+	//console.dir(no_note)
+	//console.log(typeof(no_note))
+	if (!window.getApp().getDoNotNotifyOnEmailConfirmation()){
+		var email_conf_on_close = function(){
+			email_conf_view.delDOM();
+			email_conf_form.close();
+		};	
+		var email_conf_view = new UserEmailConfirmation_View("emailConf:body:view",{"onClose":email_conf_on_close});
+		var email_conf_form = new WindowFormModalBS("emailConf",{
+			"cmdCancel":true,
+			"controlCancelCaption":"Закрыть",
+			"controlCancelTitle":"Закрыть",
+			"cmdOk":false,
+			"onClickCancel":email_conf_on_close,	
+			"content":email_conf_view,
+			"contentHead":"Пожтверждение электронной почты"
+		});
+
+		email_conf_form.open();
+	}	
 	</xsl:if>
 </xsl:template>
 

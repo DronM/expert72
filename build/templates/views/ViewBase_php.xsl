@@ -150,6 +150,9 @@ class ViewBase extends ViewHTMLXSLT {
 			$this->getVarModel()->addField(new Field('cades_load_timeout',DT_INT));
 			$this->getVarModel()->addField(new Field('cades_chunk_size',DT_INT));
 			
+			$this->getVarModel()->addField(new Field('user_email',DT_STRING));
+			$this->getVarModel()->addField(new Field('user_email_confirmed',DT_STRING));
+			
 			if (defined('CUSTOM_APP_UPLOAD_SERVER')){
 				$this->getVarModel()->addField(new Field('custom_app_upload_server',DT_STRING));
 			}
@@ -188,6 +191,9 @@ class ViewBase extends ViewHTMLXSLT {
 			$this->setVarValue('color_palette',$_SESSION['color_palette']);
 			$this->setVarValue('cades_load_timeout',$_SESSION['cades_load_timeout']);
 			$this->setVarValue('cades_chunk_size',$_SESSION['cades_chunk_size']);
+			
+			$this->setVarValue('user_email',$_SESSION['user_email']);
+			$this->setVarValue('user_email_confirmed',$_SESSION['user_email_confirmed']);
 		
 			$this->setVarValue('role_id',$_SESSION['role_id']);
 			$this->setVarValue('user_name',$_SESSION['user_name']);

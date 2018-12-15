@@ -89,6 +89,9 @@ extend(MailForSending_Controller,ControllerObjServer);
 	var f_opts = {};
 	f_opts.alias = "Тип";
 	pm.addField(new FieldEnum("email_type",f_opts));
+	var f_opts = {};
+	f_opts.alias = "Ошибка отправки";
+	pm.addField(new FieldText("error_str",f_opts));
 }
 
 			MailForSending_Controller.prototype.addGetObject = function(){

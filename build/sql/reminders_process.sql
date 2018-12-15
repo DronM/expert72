@@ -36,7 +36,7 @@ BEGIN
 			employees.id=NEW.recipient_employee_id
 			AND users.email IS NOT NULL
 			AND users.reminders_to_email
-			--AND users.email_confirmed					
+			AND users.email_confirmed					
 		);				
 		
 			

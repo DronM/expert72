@@ -106,6 +106,8 @@ $permissions = array();
 				
 					$permissions['User_Controller_hide']=TRUE;
 				
+					$permissions['User_Controller_send_email_confirm']=TRUE;
+				
 					$permissions['MailForSending_Controller_get_list']=TRUE;
 				
 					$permissions['MailForSending_Controller_get_object']=TRUE;

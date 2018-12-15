@@ -36,6 +36,8 @@ $permissions = array();
 			
 				$permissions['User_Controller_hide']=TRUE;
 			
+				$permissions['User_Controller_send_email_confirm']=TRUE;
+			
 			$permissions['Captcha_Controller_get']=TRUE;
 		
 				$permissions['Application_Controller_insert']=TRUE;
