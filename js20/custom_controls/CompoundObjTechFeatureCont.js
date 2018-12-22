@@ -29,6 +29,8 @@ function CompoundObjTechFeatureCont(id,options){
 				new_elem.toDOM(self.m_container.getNode());
 				self.addPanelEvents();
 				self.m_mainView.calcFillPercent();
+				
+				self.scrollToElement(new_elem);
 			}
 		}));	
 	}

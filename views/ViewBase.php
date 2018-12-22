@@ -1152,6 +1152,7 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/DocFlowApprovementTemplate_Form.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/DocFlowApprovementTemplateList_Form.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/ShortMessage_Form.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/Manual_Form.js'));
 		
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/UserDialog_Form.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/Login_View.js'));
@@ -1309,7 +1310,10 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/RepReestrContract_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/RepReestrPay_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/RepQuarter_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ManualList_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/Manual_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/UserEmailConfirmation_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ManualForUser_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'tmpl/App.templates.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/App.enums.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/App.predefinedItems.js'));
@@ -1704,6 +1708,13 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/RepQuarter_Model.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowOutCorrection_Model.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowOutClientCorrectionList_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/Manual_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/Manual_Controller.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ManualList_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/RoleTypeList_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/RoleType_Controller.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/ManualContent_Controller.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ManualContent_Model.js'));
 	
 			if (isset($_SESSION['scriptId'])){
 				$script_id = $_SESSION['scriptId'];

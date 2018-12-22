@@ -30,10 +30,12 @@ function ApplicationClientContainer(id,options){
 				self.addPanelEvents();
 				self.m_mainView.calcFillPercent();
 				new_elem.getElement("name").focus();
+				self.scrollToElement(new_elem);
+				/*
 				$([document.documentElement, document.body]).animate({
 					scrollTop: $(new_elem.getNode()).offset().top
 				}, 600);
-				
+				*/
 			}
 		}));	
 	}

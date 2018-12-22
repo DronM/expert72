@@ -946,6 +946,38 @@ $permissions = array();
 				
 					$permissions['ShortMessage_Controller_download_file']=TRUE;
 				
+					$permissions['Manual_Controller_insert']=TRUE;
+				
+					$permissions['Manual_Controller_update']=TRUE;
+				
+					$permissions['Manual_Controller_delete']=TRUE;
+				
+					$permissions['Manual_Controller_get_object']=TRUE;
+				
+					$permissions['Manual_Controller_get_list']=TRUE;
+				
+					$permissions['Manual_Controller_get_list_for_user']=TRUE;
+				
+					$permissions['RoleType_Controller_insert']=TRUE;
+				
+					$permissions['RoleType_Controller_update']=TRUE;
+				
+					$permissions['RoleType_Controller_delete']=TRUE;
+				
+					$permissions['RoleType_Controller_get_list']=TRUE;
+				
+					$permissions['RoleType_Controller_get_object']=TRUE;
+				
+					$permissions['ManualContent_Controller_insert']=TRUE;
+				
+					$permissions['ManualContent_Controller_update']=TRUE;
+				
+					$permissions['ManualContent_Controller_delete']=TRUE;
+				
+					$permissions['ManualContent_Controller_get_object']=TRUE;
+				
+					$permissions['ManualContent_Controller_get_list']=TRUE;
+				
 return array_key_exists($contrId.'_'.$methId,$permissions);
 }
 ?>

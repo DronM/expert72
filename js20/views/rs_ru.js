@@ -82,3 +82,6 @@ ApplicationProcessList_View.prototype.HEAD_TITLE = "Статусы контра�
 
 DocFlowInsideList_View.prototype.HEAD_TITLE = "Внутренние документы";
 DocFlowInsideDialog_View.prototype.HEAD_TITLE = "Внутренний документ";
+
+ManualList_View.prototype.HEAD_TITLE = "Список справок для ролей";
+Manual_View.prototype.HEAD_TITLE = "Редактирование справки";

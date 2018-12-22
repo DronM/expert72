@@ -67,8 +67,24 @@ BaseContainer.prototype.createNewElement = function(){
 	
 	self = this;	
 	opts.onClosePanel = function(e){
-		self.m_container.delElement(this.getAttr("ind"));
+		//self.m_container.delElement(this.getAttr("ind"));
+		//this.delDOM();
+		var cur_index = this.getAttr("ind");
+		var element = self.findElementByIndex(cur_index);
+		self.m_container.delElement(element.getName());
 		this.delDOM();
+		var elem_list = self.m_container.getElements();
+		for(var id in elem_list){
+			if (elem_list[id]){
+				var elem_ind = parseInt(elem_list[id].getAttr("ind"),10);
+				if ( elem_ind>=cur_index){
+					elem_ind--;
+					elem_list[id].setAttr("ind",elem_ind);
+					elem_list[id].setAttr("class",("panel panel-"+((elem_ind%2==0)? "even":"odd")));
+				}
+			}
+		}				
+		
 		self.m_mainView.calcFillPercent();
 	}
 	opts.templateOptions = {
@@ -180,3 +196,20 @@ BaseContainer.prototype.addPanelEvents = function(){
 	    });
 }
 
+BaseContainer.prototype.findElementByIndex = function(ind){
+	var res;
+	var elem_list = this.m_container.getElements();
+	for(var elem_id in elem_list){
+		if (elem_list[elem_id].getAttr("ind")==ind){
+			res = elem_list[elem_id]; 
+			break;
+		}
+	}
+	return res;
+}
+
+BaseContainer.prototype.scrollToElement = function(element){
+	$([document.documentElement, document.body]).animate({
+		scrollTop: $(element.getNode()).offset().top
+	}, 600);	
+}

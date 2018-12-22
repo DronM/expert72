@@ -2,7 +2,7 @@
 <metadata owner="expert72">
 	<versions>
 		<version dateOpen="2017-09-27 12:09:48" dateClose="2017-12-08 10:12:08">1.001 
-		<lastBuild>2018-12-15 06:10:59</lastBuild></version>
+		<lastBuild>2018-12-22 06:01:53</lastBuild></version>
 		<version dateOpen="2017-12-08 11:12:01" dateClose="2017-12-08 11:12:04">1.002</version>
 		<version dateOpen="2017-12-08 11:12:20" dateClose="2017-12-08 11:12:20">1.0.3</version>
 		<version dateOpen="2017-12-12 11:12:07" dateClose="2017-12-12 11:12:07">1.0.4</version>
@@ -100,6 +100,7 @@
 		<version dateOpen="2018-12-05 06:12:40" dateClose="2018-12-11 05:12:47">1.0.97</version>
 		<version dateOpen="2018-12-11 06:12:30" dateClose="2018-12-12 06:12:05">1.0.98</version>
 		<version dateOpen="2018-12-12 06:12:05" dateClose="2018-12-15 06:12:11">1.0.99</version>
+		<version dateOpen="2018-12-15 06:12:13" dateClose="2018-12-22 06:12:02">1.0.100</version>
 	</versions>
 	<globalFilters>
 		<field id="user_id"/>
@@ -2844,6 +2845,24 @@
 			<field id="date_time" dataType="DateTimeTZ" required="TRUE"/>
 			<field id="employee_id" dataType="Int" refTable="employees" refField="id" required="TRUE"/>
 		</model>
+		<model id="Manual" parent="ModelSQL" dataTable="manuals" virtual="FALSE">
+			<field id="id" dataType="Int" required="TRUE" primaryKey="TRUE" autoInc="TRUE"/>
+			<field id="roles" dataType="JSONB"/>
+			<field id="content" dataType="JSON"/>
+		</model>
+		<model id="ManualList" parent="ModelSQL" dataTable="manuals_list" virtual="FALSE">
+			<field id="id" dataType="Int" required="TRUE" primaryKey="TRUE" autoInc="TRUE"/>
+			<field id="roles_list" dataType="String"/>
+		</model>
+		<model id="RoleTypeList" parentJS="ModelJSON" server="FALSE" virtual="TRUE">
+			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE"/>
+			<field id="role_type" dataType="Enum" enumId="role_types" required="TRUE"/>
+		</model>
+		<model id="ManualContent" parentJS="ModelJSON" server="FALSE" virtual="TRUE">
+			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE"/>
+			<field id="descr" dataType="String" length="250"/>
+			<field id="url" dataType="String" length="250"/>
+		</model>
 	</models>
 	<constants>
 		<constant id="doc_per_page_count" name="&#x41A;&#x43E;&#x43B;&#x438;&#x447;&#x435;&#x441;&#x442;&#x432;&#x43E; &#x434;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x43E;&#x432; &#x43D;&#x430; &#x441;&#x442;&#x440;&#x430;&#x43D;&#x438;&#x446;&#x435;" descr="&#x41A;&#x43E;&#x43B;&#x438;&#x447;&#x435;&#x441;&#x442;&#x432;&#x43E; &#x434;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x43E;&#x432; &#x43D;&#x430; &#x441;&#x442;&#x440;&#x430;&#x43D;&#x438;&#x446;&#x435; &#x432; &#x436;&#x443;&#x440;&#x43D;&#x430;&#x43B;&#x435; &#x434;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x43E;&#x432;" dataType="Int" defaultValue="60" autoload="TRUE"/>
@@ -3925,6 +3944,28 @@
 				<field id="message_id" dataType="Int"/>
 			</publicMethod>
 		</controller>
+		<controller id="Manual" parentId="ControllerSQL">
+			<publicMethod id="insert" modelId="Manual"/>
+			<publicMethod id="update" modelId="Manual"/>
+			<publicMethod id="delete" modelId="Manual"/>
+			<publicMethod id="get_object" modelId="Manual"/>
+			<publicMethod id="get_list" modelId="ManualList"/>
+			<publicMethod id="get_list_for_user"/>
+		</controller>
+		<controller id="RoleType" parentIdJS="ControllerObjClient" server="FALSE">
+			<publicMethod id="insert" modelId="RoleTypeList"/>
+			<publicMethod id="update" modelId="RoleTypeList"/>
+			<publicMethod id="delete" modelId="RoleTypeList"/>
+			<publicMethod id="get_list" modelId="RoleTypeList"/>
+			<publicMethod id="get_object" modelId="RoleTypeList"/>
+		</controller>
+		<controller id="ManualContent" parentIdJS="ControllerObjClient" server="FALSE">
+			<publicMethod id="insert" modelId="ManualContent"/>
+			<publicMethod id="update" modelId="ManualContent"/>
+			<publicMethod id="delete" modelId="ManualContent"/>
+			<publicMethod id="get_object" modelId="ManualContent"/>
+			<publicMethod id="get_list" modelId="ManualContent"/>
+		</controller>
 	</controllers>
 	<permissions>
 		<permission type="allow" controllerId="all" methodId="all" roleId="admin"/>
@@ -3992,6 +4033,7 @@
 		<view id="10026" c="Service_Controller" t="ServiceList" f="get_list" section="&#x421;&#x43F;&#x440;&#x430;&#x432;&#x43E;&#x447;&#x43D;&#x438;&#x43A;&#x438;" descr="&#x423;&#x441;&#x43B;&#x443;&#x433;&#x438;"/>
 		<view id="10027" c="ApplicationDocFolder_Controller" t="ApplicationDocFolderList" f="get_list" section="&#x421;&#x43F;&#x440;&#x430;&#x432;&#x43E;&#x447;&#x43D;&#x438;&#x43A;&#x438;" descr="&#x41F;&#x440;&#x43E;&#x447;&#x438;&#x435; &#x43F;&#x430;&#x43F;&#x43A;&#x438; &#x43F;&#x440;&#x43E;&#x435;&#x43A;&#x442;&#x430;"/>
 		<view id="10028" c="ShortMessageRecipientState_Controller" t="ShortMessageRecipientStateList" f="get_list" section="&#x421;&#x43F;&#x440;&#x430;&#x432;&#x43E;&#x447;&#x43D;&#x438;&#x43A;&#x438;" descr="&#x427;&#x430;&#x442;: &#x441;&#x442;&#x430;&#x442;&#x443;&#x441;&#x44B; &#x441;&#x43E;&#x442;&#x440;&#x443;&#x434;&#x43D;&#x438;&#x43A;&#x43E;&#x432;"/>
+		<view id="10029" c="Manual_Controller" t="ManualList" f="get_list" section="&#x421;&#x43F;&#x440;&#x430;&#x432;&#x43E;&#x447;&#x43D;&#x438;&#x43A;&#x438;" descr="&#x421;&#x43F;&#x440;&#x430;&#x432;&#x43A;&#x438;"/>
 		<view id="20000" c="Application_Controller" t="ApplicationList" f="get_list" section="&#x414;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;" descr="&#x417;&#x430;&#x44F;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x44F;"/>
 		<view id="20001" c="DocFlowExamination_Controller" t="DocFlowExaminationList" f="get_list" section="&#x414;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;" descr="&#x420;&#x430;&#x441;&#x441;&#x43C;&#x43E;&#x442;&#x440;&#x435;&#x43D;&#x438;&#x44F;"/>
 		<view id="20002" c="DocFlowInClient_Controller" t="DocFlowInClientList" f="get_list" section="&#x414;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;" descr="&#x412;&#x445;&#x43E;&#x434;&#x44F;&#x449;&#x438;&#x435; &#x43A;&#x43B;&#x438;&#x435;&#x43D;&#x442;&#x430;"/>
@@ -4019,6 +4061,7 @@
 		<view id="50005" c="ClientPayment_Controller" t="ClientPaymentList" f="get_list" section="&#x424;&#x43E;&#x440;&#x43C;&#x44B;" descr="&#x41E;&#x43F;&#x43B;&#x430;&#x442;&#x44B; &#x43A;&#x43B;&#x438;&#x435;&#x43D;&#x442;&#x43E;&#x432;"/>
 		<view id="50006" c="ProjectManager_Controller" t="ProjectManager" section="&#x424;&#x43E;&#x440;&#x43C;&#x44B;" descr="&#x423;&#x43F;&#x440;&#x430;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x435; &#x43F;&#x440;&#x43E;&#x435;&#x43A;&#x442;&#x43E;&#x43C;"/>
 		<view id="50007" c="ApplicationProcess_Controller" f="get_list" t="ApplicationProcessList" section="&#x424;&#x43E;&#x440;&#x43C;&#x44B;" descr="&#x421;&#x442;&#x430;&#x442;&#x443;&#x441;&#x44B; &#x43A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x43E;&#x432;"/>
+		<view id="50008" c="Manual_Controller" f="get_list_for_user" t="ManualForUser" section="&#x424;&#x43E;&#x440;&#x43C;&#x44B;" descr="&#x421;&#x43F;&#x440;&#x430;&#x432;&#x43A;&#x430; &#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x435;&#x43B;&#x44F;"/>
 		<view id="40000" c="Constant_Controller" t="ConstantList" f="get_list" section="&#x41A;&#x43E;&#x43D;&#x441;&#x442;&#x430;&#x43D;&#x442;&#x44B;" descr="&#x412;&#x441;&#x435; &#x43A;&#x43E;&#x43D;&#x441;&#x442;&#x430;&#x43D;&#x442;&#x44B;"/>
 	</views>
 	<serverTemplates>
@@ -4080,6 +4123,7 @@
 		<serverTemplate id="RepReestrPay"/>
 		<serverTemplate id="RepReestrContract"/>
 		<serverTemplate id="RepQuarter"/>
+		<serverTemplate id="ManualList"/>
 	</serverTemplates>
 	<jsTemplates>
 		<jsTemplate id="FatalException" file="tmpl/FatalException.html"/>
@@ -4529,6 +4573,7 @@
 		<jsScript file="forms/DocFlowApprovementTemplate_Form.js"/>
 		<jsScript file="forms/DocFlowApprovementTemplateList_Form.js"/>
 		<jsScript file="forms/ShortMessage_Form.js"/>
+		<jsScript file="forms/Manual_Form.js"/>
 		<!-- **** Views *** -->
 		<jsScript file="forms/UserDialog_Form.js"/>
 		<jsScript file="views/Login_View.js"/>
@@ -4654,7 +4699,10 @@
 		<jsScript file="views/RepReestrContract_View.js"/>
 		<jsScript file="views/RepReestrPay_View.js"/>
 		<jsScript file="views/RepQuarter_View.js"/>
+		<jsScript file="views/ManualList_View.js"/>
+		<jsScript file="views/Manual_View.js"/>
 		<jsScript file="views/UserEmailConfirmation_View.js"/>
+		<jsScript file="views/ManualForUser_View.js"/>
 		<jsScript file="tmpl/App.templates.js" compressed="FALSE" standalone="FALSE"/>
 		<jsScript file="custom_controls/App.enums.js"/>
 		<jsScript file="custom_controls/App.predefinedItems.js"/>
@@ -5049,6 +5097,13 @@
 		<jsScript file="models/RepQuarter_Model.js"/>
 		<jsScript file="models/DocFlowOutCorrection_Model.js"/>
 		<jsScript file="models/DocFlowOutClientCorrectionList_Model.js"/>
+		<jsScript file="models/Manual_Model.js"/>
+		<jsScript file="controllers/Manual_Controller.js"/>
+		<jsScript file="models/ManualList_Model.js"/>
+		<jsScript file="models/RoleTypeList_Model.js"/>
+		<jsScript file="controllers/RoleType_Controller.js"/>
+		<jsScript file="controllers/ManualContent_Controller.js"/>
+		<jsScript file="models/ManualContent_Model.js"/>
 	</jsScripts>
 	<cssScripts>
 		<cssScript file="assets/css/icons/icomoon/styles.css" compressed="TRUE" standalone="TRUE"/>

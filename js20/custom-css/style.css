@@ -410,3 +410,8 @@ table,tr,td.noBorder{
 #ApplicationDialog\:doc_flow_out\:grid td[state="not_sent"]{
 	background:#f4415e;
 }
+
+.manualURL{
+	margin:10px 10px;
+	display:block;
+}

@@ -581,7 +581,10 @@ class <xsl:value-of select="@id"/>_Controller extends ControllerSQL{
 			$ar = $this->getDbLinkMaster()->query_first(sprintf(
 				"UPDATE user_email_confirmations
 				SET confirmed=TRUE
-				WHERE key=%s AND coalesce(confirmed,FALSE)=FALSE AND dt::date=now()::date
+				WHERE
+					key=%s
+					AND coalesce(confirmed,FALSE)=FALSE
+					AND now() BETWEEN dt AND (dt+'24 hours'::interval)
 				RETURNING user_id",
 				$this->getExtDbVal($pm,'key')
 			));
@@ -598,6 +601,7 @@ class <xsl:value-of select="@id"/>_Controller extends ControllerSQL{
 			
 			$this->getDbLinkMaster()->query('COMMIT');
 			
+			$_SESSION['user_email_confirmed']= 't';
 		}	
 		catch(Exception $e){
 			$this->getDbLinkMaster()->query('ROLLBACK');

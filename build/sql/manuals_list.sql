@@ -14,4 +14,4 @@ CREATE OR REPLACE VIEW manuals_list AS
 	ORDER BY id
 	;
 	
-ALTER VIEW manuals_list OWNER TO expert72;
+ALTER VIEW manuals_list OWNER TO ;

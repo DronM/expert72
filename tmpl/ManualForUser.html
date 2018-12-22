@@ -1,0 +1,17 @@
+<div id="{{id}}" class="panel panel-flat dialogForm">
+	<div id="{{id}}:cmd-cont">
+		<div id="{{id}}:cmdOk"/>
+		<div id="{{id}}:cmdSave"/>
+		<div id="{{id}}:cmdCancel"/>
+	</div>
+	
+	<div class="panel-heading">
+		<h3 class="panel-title">Разделы справки</h3>
+	</div>
+	<div class="panel-body">
+	{{#sections}}
+		<a href="{{href}}" class="manualURL" target="_blank">{{descr}}
+		</a>
+	{{/sections}}
+	</div>
+</div>	

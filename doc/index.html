@@ -66,6 +66,8 @@
 <li><a href="#MailForSending_Controller">MailForSending_Controller</a></li>
 <li><a href="#MainMenuConstructor_Controller">MainMenuConstructor_Controller</a></li>
 <li><a href="#MainMenuContent_Controller">MainMenuContent_Controller</a></li>
+<li><a href="#Manual_Controller">Manual_Controller</a></li>
+<li><a href="#ManualContent_Controller">ManualContent_Controller</a></li>
 <li><a href="#Office_Controller">Office_Controller</a></li>
 <li><a href="#OfficeDaySchedule_Controller">OfficeDaySchedule_Controller</a></li>
 <li><a href="#Order1CList_Controller">Order1CList_Controller</a></li>
@@ -77,6 +79,7 @@
 <li><a href="#ReportTemplateField_Controller">ReportTemplateField_Controller</a></li>
 <li><a href="#ReportTemplateFile_Controller">ReportTemplateFile_Controller</a></li>
 <li><a href="#ReportTemplateInParam_Controller">ReportTemplateInParam_Controller</a></li>
+<li><a href="#RoleType_Controller">RoleType_Controller</a></li>
 <li><a href="#Service_Controller">Service_Controller</a></li>
 <li><a href="#ShortMessage_Controller">ShortMessage_Controller</a></li>
 <li><a href="#ShortMessageRecipientState_Controller">ShortMessageRecipientState_Controller</a></li>
@@ -252,6 +255,10 @@
 <li><a href="#FileSignatures_Model">FileSignatures_Model</a></li>
 <li><a href="#FileForSigningList_Model">FileForSigningList_Model</a></li>
 <li><a href="#DocFlowOutCorrection_Model">DocFlowOutCorrection_Model</a></li>
+<li><a href="#Manual_Model">Manual_Model</a></li>
+<li><a href="#ManualList_Model">ManualList_Model</a></li>
+<li><a href="#RoleTypeList_Model">RoleTypeList_Model</a></li>
+<li><a href="#ManualContent_Model">ManualContent_Model</a></li>
 </ul>
 <div class="section-title">Enumerations</div>
 <ul>
@@ -2699,6 +2706,34 @@
 <a href="#MainMenuContent_Model">Model: MainMenuContent_Model</a>
 </div>
 </div>
+<div id="Manual_Controller" class="content_box">
+<h1>Manual_Controller</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Методы:</p>
+<h2>insert</h2>
+<a href="#Manual_Model">Model: Manual_Model</a><h2>update</h2>
+<a href="#Manual_Model">Model: Manual_Model</a><h2>delete</h2>
+<a href="#Manual_Model">Model: Manual_Model</a><h2>get_object</h2>
+<a href="#Manual_Model">Model: Manual_Model</a><h2>get_list</h2>
+<a href="#ManualList_Model">Model: ManualList_Model</a><h2>get_list_for_user</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2"></div>
+</div>
+</div>
+<div id="ManualContent_Controller" class="content_box">
+<h1>ManualContent_Controller</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Методы:</p>
+<h2>insert</h2>
+<a href="#ManualContent_Model">Model: ManualContent_Model</a><h2>update</h2>
+<a href="#ManualContent_Model">Model: ManualContent_Model</a><h2>delete</h2>
+<a href="#ManualContent_Model">Model: ManualContent_Model</a><h2>get_object</h2>
+<a href="#ManualContent_Model">Model: ManualContent_Model</a><h2>get_list</h2>
+<a href="#ManualContent_Model">Model: ManualContent_Model</a>
+</div>
+</div>
 <div id="Office_Controller" class="content_box">
 <h1>Office_Controller</h1>
 <div class="content_item">
@@ -2946,6 +2981,19 @@
 <a href="#ReportTemplateInParam_Model">Model: ReportTemplateInParam_Model</a><h2>get_list</h2>
 <a href="#ReportTemplateInParam_Model">Model: ReportTemplateInParam_Model</a><h2>get_object</h2>
 <a href="#ReportTemplateInParam_Model">Model: ReportTemplateInParam_Model</a>
+</div>
+</div>
+<div id="RoleType_Controller" class="content_box">
+<h1>RoleType_Controller</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Методы:</p>
+<h2>insert</h2>
+<a href="#RoleTypeList_Model">Model: RoleTypeList_Model</a><h2>update</h2>
+<a href="#RoleTypeList_Model">Model: RoleTypeList_Model</a><h2>delete</h2>
+<a href="#RoleTypeList_Model">Model: RoleTypeList_Model</a><h2>get_list</h2>
+<a href="#RoleTypeList_Model">Model: RoleTypeList_Model</a><h2>get_object</h2>
+<a href="#RoleTypeList_Model">Model: RoleTypeList_Model</a>
 </div>
 </div>
 <div id="Service_Controller" class="content_box">
@@ -10496,6 +10544,72 @@
 <div>Precision:</div>
 </div>
 </div>
+<div id="Manual_Model" class="content_box">
+<h1>Manual_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>roles</h2>
+<div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>content</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="ManualContent_Model" class="content_box">
+<h1>ManualContent_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>descr</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:250</div>
+<div>Precision:</div>
+<h2>url</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:250</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="ManualList_Model" class="content_box">
+<h1>ManualList_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>roles_list</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
 <div id="Morpher_Model" class="content_box">
 <h1>Morpher_Model</h1>
 <div class="content_item">
@@ -11597,6 +11711,24 @@
 <div>Primary key:</div>
 <div>Required:TRUE</div>
 <div>Length:100</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="RoleTypeList_Model" class="content_box">
+<h1>RoleTypeList_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>role_type</h2>
+<div>Type:Enum</div>
+<div>Primary key:</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
 <div>Precision:</div>
 </div>
 </div>

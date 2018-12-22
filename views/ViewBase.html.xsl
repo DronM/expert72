@@ -171,9 +171,6 @@
 
 <xsl:template name="emailConfNote">
 	<xsl:if test="not(/document/model[@id='ModelVars']/row/user_email_confirmed='t')">
-	//var no_note = window.getApp().getDoNotNotifyOnEmailConfirmation();
-	//console.dir(no_note)
-	//console.log(typeof(no_note))
 	if (!window.getApp().getDoNotNotifyOnEmailConfirmation()){
 		var email_conf_on_close = function(){
 			email_conf_view.delDOM();
@@ -376,12 +373,17 @@
 		editViewOptions.models = editViewOptions.models || {};
 		<xsl:for-each select="model[not(@sysModel='1')]">
 		<xsl:variable name="m_id" select="@id"/>
-		editViewOptions.models.<xsl:value-of select="$m_id"/> = editViewOptions.models.<xsl:value-of select="$m_id"/>
-			|| new <xsl:value-of select="$m_id"/>({
-			"data":CommonHelper.longString(function () {/*
+		var m_data = CommonHelper.longString(function () {/*
 				<xsl:copy-of select="/document/model[@id=$m_id]"/>
-			*/})
-		});
+			*/});
+		if(window["<xsl:value-of select="$m_id"/>"]){
+			editViewOptions.models.<xsl:value-of select="$m_id"/> = editViewOptions.models.<xsl:value-of select="$m_id"/>
+				|| new <xsl:value-of select="$m_id"/>({"data":m_data});
+		}
+		else{
+			editViewOptions.models.<xsl:value-of select="$m_id"/> = editViewOptions.models.<xsl:value-of select="$m_id"/>
+				|| new ModelXML("<xsl:value-of select="$m_id"/>",{"data":m_data});			
+		}
 		</xsl:for-each>
 	
 		<xsl:for-each select="model[@templateId]">
@@ -389,6 +391,9 @@
 			v_opts.template = CommonHelper.longString(function () {/*
 			<xsl:copy-of select="./*"/>
 			*/});
+			//encoded curly braces
+			v_opts.template = v_opts.template.replace("%7B%7B","{{");
+			v_opts.template = v_opts.template.replace("%7D%7D","}}");
 			v_opts.variantStorage = {
 				"name":"<xsl:value-of select="@templateId"/>"
 				<xsl:if test="/document/model[@id='VariantStorage_Model']">

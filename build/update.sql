@@ -47781,3 +47781,157 @@ $BODY$
   COST 100;
 ALTER FUNCTION email_new_account(user_id int,new_pwd text) OWNER TO expert72;
 
+
+-- ******************* update 17/12/2018 10:29:29 ******************
+
+		CREATE TABLE manuals
+		(id serial NOT NULL,roles jsonb,content json,CONSTRAINT manuals_pkey PRIMARY KEY (id)
+		);
+		ALTER TABLE manuals OWNER TO expert72;
+		
+-- ******************* update 17/12/2018 10:31:57 ******************
+-- VIEW: manuals_list
+
+--DROP VIEW manuals_list;
+
+CREATE OR REPLACE VIEW manuals_list AS
+	SELECT
+		id,
+		roles
+	FROM manuals
+	;
+	
+ALTER VIEW manuals_list OWNER TO expert72;
+
+-- ******************* update 17/12/2018 10:34:23 ******************
+
+		INSERT INTO views
+		(id,c,f,t,section,descr,limited)
+		VALUES (
+		'10029',
+		'Manual_Controller',
+		'get_list',
+		'ManualList',
+		'Справочники',
+		'Справки',
+		FALSE
+		);
+	
+-- ******************* update 17/12/2018 10:51:16 ******************
+-- VIEW: manuals_list
+
+--DROP VIEW manuals_list;
+
+CREATE OR REPLACE VIEW manuals_list AS
+	SELECT
+		id,
+		roles AS roles_list
+	FROM manuals
+	;
+	
+ALTER VIEW manuals_list OWNER TO expert72;
+
+-- ******************* update 17/12/2018 10:51:23 ******************
+-- VIEW: manuals_list
+
+DROP VIEW manuals_list;
+
+CREATE OR REPLACE VIEW manuals_list AS
+	SELECT
+		id,
+		roles AS roles_list
+	FROM manuals
+	;
+	
+ALTER VIEW manuals_list OWNER TO expert72;
+
+-- ******************* update 18/12/2018 07:16:15 ******************
+-- VIEW: manuals_list
+
+DROP VIEW manuals_list;
+
+CREATE OR REPLACE VIEW manuals_list AS
+	SELECT
+		id,
+		(SELECT string_agg(enum_role_types_val((s.r->'fields'->>'role_type')::role_types,'ru'),',')
+		FROM (
+			SELECT jsonb_array_elements(roles->'rows') AS r from manuals where id= 2
+		) AS s	
+		)
+	FROM manuals
+	ORDER BY id
+	;
+	
+ALTER VIEW manuals_list OWNER TO expert72;
+
+-- ******************* update 18/12/2018 07:16:41 ******************
+-- VIEW: manuals_list
+
+DROP VIEW manuals_list;
+
+CREATE OR REPLACE VIEW manuals_list AS
+	SELECT
+		id,
+		(SELECT string_agg(enum_role_types_val((s.r->'fields'->>'role_type')::role_types,'ru'),',')
+		FROM (
+			SELECT jsonb_array_elements(roles->'rows') AS r
+		) AS s	
+		)
+	FROM manuals
+	ORDER BY id
+	;
+	
+ALTER VIEW manuals_list OWNER TO expert72;
+
+-- ******************* update 18/12/2018 07:17:42 ******************
+-- VIEW: manuals_list
+
+DROP VIEW manuals_list;
+
+CREATE OR REPLACE VIEW manuals_list AS
+	SELECT
+		id,
+		(SELECT string_agg(enum_role_types_val((s.r->'fields'->>'role_type')::role_types,'ru'),',')
+		FROM (
+			SELECT jsonb_array_elements(roles->'rows') AS r
+		) AS s	
+		) AS roles_list
+	FROM manuals
+	ORDER BY id
+	;
+	
+ALTER VIEW manuals_list OWNER TO expert72;
+
+-- ******************* update 18/12/2018 07:18:01 ******************
+-- VIEW: manuals_list
+
+DROP VIEW manuals_list;
+
+CREATE OR REPLACE VIEW manuals_list AS
+	SELECT
+		id,
+		(SELECT string_agg(enum_role_types_val((s.r->'fields'->>'role_type')::role_types,'ru'),', ')
+		FROM (
+			SELECT jsonb_array_elements(roles->'rows') AS r
+		) AS s	
+		) AS roles_list
+	FROM manuals
+	ORDER BY id
+	;
+	
+ALTER VIEW manuals_list OWNER TO expert72;
+
+-- ******************* update 18/12/2018 08:53:21 ******************
+
+		INSERT INTO views
+		(id,c,f,t,section,descr,limited)
+		VALUES (
+		'50008',
+		'Manual_Controller',
+		'get_list_for_user',
+		'ManualForUser',
+		'Формы',
+		'Справка пользователя',
+		FALSE
+		);
+	

@@ -132,24 +132,14 @@
 
 <xsl:template match="row">
 	<tr>
-			<field id="" dataType="String" alias="№ эксп.заключ." />
-			<field id="date" dataType="Date" alias="Дата пост." />
-			<field id="" dataType="String" alias="Заказчик" />
-			<field id="" dataType="String" alias="Объект строительства" />
-			<field id="" dataType="Date" alias="Дата нач.работ" />			
-			<field id="expertise_result" dataType="String" alias="Результат" />
-			<field id="expertise_result_date" dataType="Date" alias="Дата выдачи результата" />
-			<field id="build_type_id" dataType="Int" alias="Вид строительства код" />
-			<field id="build_type_name" dataType="String" alias="Вид строительства наименование" />
-			<field id="expertise_type" dataType="String" alias="Вид экспертизы" />
-			<field id="in_estim_cost" dataType="Float" alias="Вход.сметная стоим." />
-			<field id="in_estim_cost_recommend" alias="Вход.сметная рекоменд.стоим." />
-			<field id="cur_estim_cost" dataType="Float" alias="Текущая сметн.стоим." />
-			<field id="cur_estim_cost_recommend" dataType="Float" alias="Текущая рекоменд.сметн.стоим." />
-	
-		<td><xsl:value-of select="ord"/></td>
-		<td><xsl:value-of select="date"/></td>
+		<td><xsl:value-of select="ord"/></td>		
 		<td><xsl:value-of select="expertise_result_number"/></td>
+		<td align="center">
+			<xsl:call-template name="format_date">
+				<xsl:with-param name="val" select="date/node()"/>
+				<xsl:with-param name="fromatStr" select="''"/>
+			</xsl:call-template>																									
+		</td>		
 		<td><xsl:value-of select="customer"/></td>
 		<td><xsl:value-of select="constr_name"/></td>
 		<td align="center">
