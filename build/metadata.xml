@@ -2,7 +2,7 @@
 <metadata owner="expert72">
 	<versions>
 		<version dateOpen="2017-09-27 12:09:48" dateClose="2017-12-08 10:12:08">1.001 
-		<lastBuild>2018-12-22 06:01:53</lastBuild></version>
+		<lastBuild>2019-01-07 09:26:22</lastBuild></version>
 		<version dateOpen="2017-12-08 11:12:01" dateClose="2017-12-08 11:12:04">1.002</version>
 		<version dateOpen="2017-12-08 11:12:20" dateClose="2017-12-08 11:12:20">1.0.3</version>
 		<version dateOpen="2017-12-12 11:12:07" dateClose="2017-12-12 11:12:07">1.0.4</version>
@@ -101,6 +101,7 @@
 		<version dateOpen="2018-12-11 06:12:30" dateClose="2018-12-12 06:12:05">1.0.98</version>
 		<version dateOpen="2018-12-12 06:12:05" dateClose="2018-12-15 06:12:11">1.0.99</version>
 		<version dateOpen="2018-12-15 06:12:13" dateClose="2018-12-22 06:12:02">1.0.100</version>
+		<version dateOpen="2018-12-22 06:12:03" dateClose="2019-01-07 09:01:26">1.0.101</version>
 	</versions>
 	<globalFilters>
 		<field id="user_id"/>
@@ -1009,6 +1010,7 @@
 			<field id="auth_letter" dataType="Text"/>
 			<field id="auth_letter_file" dataType="JSONB"/>
 			<field id="update_dt" dataType="DateTimeTZ"/>
+			<field id="exp_cost_eval_validity" dataType="Bool" defaultValue="FALSE"/>
 			<index id="applicatios_user_idx">
 				<field id="user_id"/>
 			</index>
@@ -1070,6 +1072,7 @@
 			<field id="expertise_result_number" dataType="String"/>
 			<field id="expertise_result_date" dataType="Date"/>
 			<field id="filled_percent" dataType="Int"/>
+			<field id="exp_cost_eval_validity" dataType="Bool"/>
 			<globalFilter id="user_id"/>
 		</model>
 		<model id="ApplicationList" parent="ModelSQL" dataTable="applications_list" virtual="TRUE" baseModelId="Application">
@@ -2525,6 +2528,7 @@
 			<field id="state_end_date" dataType="Date"/>
 			<field id="for_all_employees" dataType="Bool"/>
 			<field id="state_for_color" dataType="String"/>
+			<field id="exp_cost_eval_validity" dataType="Bool"/>
 		</model>
 		<model id="ContractDialog" parent="ModelSQL" dataTable="contracts_dialog" virtual="TRUE" baseModelId="Contract">
 			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE" required="FALSE"/>
@@ -2599,6 +2603,7 @@
 			<field id="cur_estim_cost_recommend" dataType="Float" length="15" precision="2"/>
 			<field id="result_sign_expert_list" dataType="JSONB"/>
 			<field id="contract_return_date_on_sig" dataType="Bool"/>
+			<field id="exp_cost_eval_validity" dataType="Bool"/>
 		</model>
 		<model id="ExpertWork" parent="ModelSQL" dataTable="expert_works" virtual="FALSE">
 			<field id="id" dataType="Int" primaryKey="TRUE" required="FALSE" autoInc="TRUE"/>
@@ -4157,6 +4162,7 @@
 		<jsTemplate id="CompoundObjTechFeature" file="tmpl/CompoundObjTechFeature.html"/>
 		<jsTemplate id="ApplicationPrimaryContTmpl" file="tmpl/ApplicationPrimaryCont.html"/>
 		<jsTemplate id="ApplicationServiceCont" file="tmpl/ApplicationServiceCont.html"/>
+		<jsTemplate id="ApplicationServiceCont010119" file="tmpl/ApplicationServiceCont010119.html"/>
 		<jsTemplate id="IcomoonList" file="tmpl/IcomoonList.html"/>
 		<jsTemplate id="ColorPaletteList" file="tmpl/ColorPaletteList.html"/>
 		<jsTemplate id="DocFlowTaskShortList" file="tmpl/DocFlowTaskShortList.html"/>

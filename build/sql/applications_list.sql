@@ -35,7 +35,8 @@ CREATE OR REPLACE VIEW applications_list AS
 				CASE WHEN l.expertise_type='pd' THEN 'ПД'
 				WHEN l.expertise_type='eng_survey' THEN 'РИИ'
 				ELSE 'ПД и РИИ'
-				END
+				END||
+				CASE WHEN l.exp_cost_eval_validity THEN ', Достоверность' ELSE '' END
 			ELSE ''
 			END||
 			CASE WHEN l.cost_eval_validity THEN

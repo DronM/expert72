@@ -733,6 +733,14 @@ class ContractDialog_Model extends ModelSQL{
 		$f_doc_folders=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"doc_folders",$f_opts);
 		$this->addField($f_doc_folders);
 		//********************
+		
+		//*** Field exp_cost_eval_validity ***
+		$f_opts = array();
+		$f_opts['id']="exp_cost_eval_validity";
+				
+		$f_exp_cost_eval_validity=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"exp_cost_eval_validity",$f_opts);
+		$this->addField($f_exp_cost_eval_validity);
+		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}
 

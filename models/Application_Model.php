@@ -331,6 +331,15 @@ class Application_Model extends ModelSQL{
 		$f_update_dt=new FieldSQLDateTimeTZ($this->getDbLink(),$this->getDbName(),$this->getTableName(),"update_dt",$f_opts);
 		$this->addField($f_update_dt);
 		//********************
+		
+		//*** Field exp_cost_eval_validity ***
+		$f_opts = array();
+		$f_opts['defaultValue']='FALSE';
+		$f_opts['id']="exp_cost_eval_validity";
+				
+		$f_exp_cost_eval_validity=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"exp_cost_eval_validity",$f_opts);
+		$this->addField($f_exp_cost_eval_validity);
+		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}
 

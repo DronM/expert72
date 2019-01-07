@@ -145,13 +145,16 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		}
 		
 		if ($this->getExtVal($pm,'sent')=='true'){
+			$old_id = $this->getExtDbVal($pm,'old_id');
 			$ar_cnt = $this->getDbLink()->query_first(sprintf(
 				"SELECT
 					(SELECT count(*) FROM doc_flow_out_client_document_files WHERE doc_flow_out_client_id=%d) AS cnt,
-					(SELECT count(*) FROM doc_flow_out_client_document_files WHERE doc_flow_out_client_id=%d AND signature) AS cnt_sig
+					(SELECT count(*) FROM doc_flow_out_client_document_files WHERE doc_flow_out_client_id=%d AND signature) AS cnt_sig,
+					(SELECT TRUE FROM doc_flow_out_client_files_for_signing(%d) AS cl_files WHERE NOT cl_files->>'files'='null') AS docs_for_sig
 				",
-				$this->getExtDbVal($pm,'old_id'),
-				$this->getExtDbVal($pm,'old_id')
+				$old_id,
+				$old_id,
+				$app_id
 			
 			));
 			if (!count($ar_cnt)||!intval($ar_cnt['cnt'])){
@@ -163,13 +166,13 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 					application_processes_last(%d) AS state,
 					(SELECT ap.user_id=%d FROM applications AS ap WHERE ap.id=%d) AS user_check_passed,
 					(SELECT d.doc_flow_out_client_type FROM doc_flow_out_client d WHERE d.id=%d) AS doc_flow_out_client_type,
-					(SELECT d.sent FROM doc_flow_out_client d WHERE d.id=%d) AS doc_flow_out_client_sent
+					(SELECT d.sent FROM doc_flow_out_client d WHERE d.id=%d) AS doc_flow_out_client_sent					
 				",
 				$app_id,
 				$_SESSION['user_id'],
 				$app_id,
-				$this->getExtDbVal($pm,'old_id'),
-				$this->getExtDbVal($pm,'old_id')
+				$old_id,
+				$old_id
 			));
 	
 			Application_Controller::checkApp($ar);
@@ -181,7 +184,10 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				throw new Exception(self::ER_DOC_SENT);
 			}	
 			
-			if ($ar['doc_flow_out_client_type']=='contr_return' &amp;&amp; !intval($ar_cnt['cnt_sig'])){
+			/**
+			 * Возврат контракта, нет подписанных клиентом, хотя для подписания есть
+			 */
+			if ($ar['doc_flow_out_client_type']=='contr_return' &amp;&amp; !intval($ar_cnt['cnt_sig']) &amp;&amp; $ar_cnt['docs_for_sig']=='t'){
 				throw new Exception(self::ER_NO_SIG_ATTACHMENTS);
 			}
 			
@@ -196,7 +202,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		
 			if ($ar['doc_flow_out_client_type']=='contr_resp'){
 				$db_link = $this->getDbLink();
-				Application_Controller::checkIULs($db_link,$app_id,$this->getExtDbVal($pm,'old_id'));
+				Application_Controller::checkIULs($db_link,$app_id,$old_id);
 			}		
 			/*
 			if ($ar['doc_flow_out_client_type']=='contr_return' &amp;&amp; $ar['state']!='expertise'){
@@ -270,17 +276,24 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			$document_exists = ( $ar_obj['document_exists']=='t' &amp;&amp; !is_null($docId) );
 		}
 		
+		$documents = NULL;
+		if($document_exists){
+			$documents_json = json_decode($ar_obj['documents']);
+			if($documents_json){
+				foreach($documents_json as $doc){
+					Application_Controller::addDocumentFiles($doc->document,$this->getDbLink(),$doc->document_type,$files_q_id);
+				}
+				$documents = json_encode($documents_json);
+			}
+			else{
+				$document_exist = FALSE;
+			}
+		}
 		if (!$document_exists){
 			$this->addNewModel("SELECT * FROM document_templates_all_json_list",'DocumentTemplateAllList_Model');			
-			$documents = NULL;
-		}
-		else{
-			$documents_json = json_decode($ar_obj['documents']);
-			foreach($documents_json as $doc){
-				Application_Controller::addDocumentFiles($doc->document,$this->getDbLink(),$doc->document_type,$files_q_id);
-			}
-			$documents = json_encode($documents_json);
-		}
+			
+		}		
+		
 		if (!is_null($applicationId)){		
 			$this->addModel(new ModelVars(
 				array('name'=>'Vars',

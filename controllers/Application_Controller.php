@@ -184,6 +184,9 @@ class Application_Controller extends ControllerSQL{
 		$param = new FieldExtDateTimeTZ('update_dt'
 				,array());
 		$pm->addParam($param);
+		$param = new FieldExtBool('exp_cost_eval_validity'
+				,array());
+		$pm->addParam($param);
 		
 		$pm->addParam(new FieldExtInt('ret_id'));
 		
@@ -374,6 +377,10 @@ class Application_Controller extends ControllerSQL{
 			));
 			$pm->addParam($param);
 		$param = new FieldExtDateTimeTZ('update_dt'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtBool('exp_cost_eval_validity'
 				,array(
 			));
 			$pm->addParam($param);
@@ -1490,7 +1497,8 @@ class Application_Controller extends ControllerSQL{
 				NULL AS contract_date,
 				NULL AS expertise_result_number,
 				NULL AS expertise_result_date,
-				0 AS filled_percent
+				0 AS filled_percent,
+				NULL AS exp_cost_eval_validity
 				"
 			);
 		}
@@ -1637,7 +1645,7 @@ class Application_Controller extends ControllerSQL{
 			$model_name = $this->getInsertModelId();
 			$model = new $model_name($this->getDbLinkMaster());
 			$this->methodParamsToModel($pm,$model);
-			$q = $model->getInsertQuery(TRUE).',expertise_type,cost_eval_validity,modification,audit';
+			$q = $model->getInsertQuery(TRUE).',expertise_type,cost_eval_validity,modification,audit,exp_cost_eval_validity';
 			$inserted_id_ar = $this->getDbLinkMaster()->query_first($q);
 			
 			$state = NULL;
@@ -1821,6 +1829,13 @@ class Application_Controller extends ControllerSQL{
 			
 			if ($set_sent){
 				//Серверные проверки перед отправкой
+				
+				// 27/12 - ЗАПРЕТ!!!
+				if ($ar['cost_eval_validity']=='t' &&$old_state!='correcting'){
+					throw new Exception('Отправка заявлений по достоверности запрещена!');
+				}				
+				
+				
 				if (
 				($ar['expertise_type'] && $ar['app_print_expertise_set']!='t')
 				||($ar['cost_eval_validity']=='t' && $ar['app_print_cost_eval_set']!='t')
@@ -2879,7 +2894,7 @@ class Application_Controller extends ControllerSQL{
 		}
 		
 		//CostEvalValidity
-		if ($ar['cost_eval_validity']=='t'){
+		if ($ar['cost_eval_validity']=='t' or $ar['exp_cost_eval_validity']=='t'){
 			$files_q_id = $this->getDbLink()->query(sprintf(
 				"SELECT
 					f.file_name,

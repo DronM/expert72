@@ -155,9 +155,8 @@ try{
 	$view = (isset($_REQUEST[PARAM_VIEW]) && strlen($_REQUEST[PARAM_VIEW]))? $_REQUEST[PARAM_VIEW]:DEF_VIEW;
 	//throw new Exception("contr=".$contr.' meth='.$meth.' view='.$view);
 	/* controller checking*/
-	
 	if (!is_null($contr) && !file_exists($script=USER_CONTROLLERS_PATH.$contr.'.php')){	
-		if (!isset($_SESSION['LOGGED'])){
+		if (!isset($_SESSION['LOGGED'])){			
 			throw new Exception(ERR_AUTH_NOT_LOGGED);
 		}
 		else{		
@@ -172,7 +171,11 @@ try{
 		$script=FRAME_WORK_PATH.'basic_classes/Controller.php'; 
 	}
 	//checking if method is allowed
-	if (!is_null($meth)){
+	if (isset($_REQUEST['redir'])){
+		$contr = UNLOGGED_DEF_CONTROLLER;
+		$view = UNLOGGED_DEF_VIEW;			
+	}
+	else if (!is_null($meth)){
 		$role_id = (isset($_SESSION['LOGGED']) && isset($_SESSION['role_id']))? $_SESSION['role_id'] : 'guest';
 		require(PERM_PATH.'permission_'.$role_id.'.php');
 		//throw new Exception($contr.'__'.$meth.'__'.$role_id);

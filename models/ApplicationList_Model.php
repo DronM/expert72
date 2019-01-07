@@ -338,6 +338,15 @@ class ApplicationList_Model extends ModelSQL{
 		$this->addField($f_update_dt);
 		//********************
 		
+		//*** Field exp_cost_eval_validity ***
+		$f_opts = array();
+		$f_opts['defaultValue']='FALSE';
+		$f_opts['id']="exp_cost_eval_validity";
+				
+		$f_exp_cost_eval_validity=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"exp_cost_eval_validity",$f_opts);
+		$this->addField($f_exp_cost_eval_validity);
+		//********************
+		
 		//*** Field users_ref ***
 		$f_opts = array();
 		$f_opts['id']="users_ref";

@@ -46,7 +46,8 @@ CREATE OR REPLACE VIEW applications_print AS
 		kladr_parse_addr((d.developer->>'post_address')::jsonb) AS developer_post_address,
 		kladr_parse_addr((d.developer->>'legal_address')::jsonb) AS developer_legal_address,
 		
-		d.auth_letter
+		d.auth_letter,
+		d.exp_cost_eval_validity
 		
 		
 	FROM applications AS d

@@ -53,7 +53,9 @@ CREATE OR REPLACE VIEW contracts_list AS
 			WHEN st.state='returned' OR st.state='closed_no_expertise' THEN 'returned'
 			WHEN t.expertise_result IS NULL AND t.expertise_result_date<=now()::date THEN 'no_result'
 			ELSE NULL
-		END AS state_for_color
+		END AS state_for_color,
+		
+		applications.exp_cost_eval_validity
 		
 	FROM contracts AS t
 	LEFT JOIN applications ON applications.id=t.application_id

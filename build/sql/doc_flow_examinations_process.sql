@@ -241,7 +241,8 @@ BEGIN
 						base_document_for_contract = v_app_applicant->>'base_document_for_contract',
 						person_id_paper	= v_app_applicant->'person_id_paper',
 						person_registr_paper = v_app_applicant->'person_registr_paper'
-					WHERE name = v_app_applicant->>'name' OR (inn=v_app_applicant->>'inn' AND kpp=v_app_applicant->>'kpp')
+					WHERE (inn=v_app_applicant->>'inn' AND kpp=v_app_applicant->>'kpp')
+					--name = v_app_applicant->>'name' OR 
 					RETURNING id INTO v_app_client_id;
 				
 					IF NOT FOUND THEN

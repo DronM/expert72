@@ -32,7 +32,7 @@ function ApplicationServiceCont(id,options){
 	this.m_mainView = options.mainView;
 	
 	options.templateOptions = options.templateOptions || {};
-	//options.template = window.getApp().getTemplate("ApplicationServiceCont");
+	options.template = window.getApp().getTemplate(this.m_mainView.m_order010119? "ApplicationServiceCont010119":"ApplicationServiceCont");
 	
 	var self = this;
 	options.addElement = function(){
@@ -52,22 +52,36 @@ function ApplicationServiceCont(id,options){
 					var cur_val = this.getValue();
 					
 					//other services
-					self.getElement("modification").setEnabled(!cur_val);
-					self.getElement("audit").setEnabled( (!cur_val && !self.getElement("cost_eval_validity").getValue()) );
+					
+					if(!self.m_mainView.m_order010119){
+						self.getElement("modification").setEnabled(!cur_val);
+						self.getElement("audit").setEnabled( (!cur_val && !self.getElement("cost_eval_validity").getValue()) );
+					}
+					else{
+						self.getElement("audit").setEnabled(!cur_val);
+					}
 					
 					var ctrl = self.getElement("expertise_type");
 					ctrl.setEnabled(cur_val);
+					if(self.m_mainView.m_order010119){
+						self.getElement("exp_cost_eval_validity").setEnabled(cur_val);
+					}
 					if (!cur_val){
 						ctrl.setValue(null);
+						if(self.m_mainView.m_order010119){
+							self.getElement("exp_cost_eval_validity").setValue(false);
+						}
 						self.onChangeExpertiseType();
 					}
 					self.m_mainView.getElement("app_print_expertise").setActive(cur_val);
 					self.toggleService("expertise",cur_val);
 					
-					var sim_en = (self.getElement("cost_eval_validity").getValue()&&cur_val);
-					self.getElement("cost_eval_validity_simult").setEnabled(sim_en);
-					if (!sim_en&&!self.getElement("cost_eval_validity").getValue()&&self.getElement("cost_eval_validity_simult").getValue()){
-						self.getElement("cost_eval_validity_simult").setValue(false);
+					if(!self.m_mainView.m_order010119){
+						var sim_en = (self.getElement("cost_eval_validity").getValue()&&cur_val);
+						self.getElement("cost_eval_validity_simult").setEnabled(sim_en);
+						if (!sim_en&&!self.getElement("cost_eval_validity").getValue()&&self.getElement("cost_eval_validity_simult").getValue()){
+							self.getElement("cost_eval_validity_simult").setValue(false);
+						}
 					}
 				}
 			}
@@ -130,122 +144,159 @@ function ApplicationServiceCont(id,options){
 		})
 		);
 		
-		this.addElement(new ServiceCheckBox(id+":cost_eval_validity",{
-			"inline":true,
-			"labelCaption":"Достоверность",
-			"labelAlign":"right",
-			"labelClassName":"",			
-			"events":{
-				"change":function(){
-					var cur_val = this.getValue();
+		if(!this.m_mainView.m_order010119){
+			this.addElement(new ServiceCheckBox(id+":cost_eval_validity",{
+				"inline":true,
+				"labelCaption":"Достоверность",
+				"labelAlign":"right",
+				"labelClassName":"",			
+				"events":{
+					"change":function(){
+						var cur_val = this.getValue();
 					
-					self.m_mainView.getElement("limit_cost_eval").setVisible(cur_val);
-					self.m_mainView.getElement("limit_cost_eval").setAttr("percentcalc",cur_val);
+						self.m_mainView.getElement("limit_cost_eval").setVisible(cur_val);
+						self.m_mainView.getElement("limit_cost_eval").setAttr("percentcalc",cur_val);
 					
-					self.getElement("cost_eval_validity_simult").setEnabled(cur_val);
-					if (!cur_val && self.getElement("cost_eval_validity_simult").getValue()){
-						self.getElement("cost_eval_validity_simult").setValue(false);
-					}
-					//Если флаг сняли - вкладка не нужна!					
-					var doc_types_for_remove = [];
-					var tab_name = "cost_eval_validity";
-					if (!cur_val && self.m_mainView.m_documentTabs[tab_name].control && self.m_mainView.m_documentTabs[tab_name].control.getTotalFileCount()){
-						doc_types_for_remove.push(tab_name);
-					}
-					var this_cont = this;
-					self.m_mainView.removeDocumentTypeWithWarn(doc_types_for_remove,
-						function(){
-							var sim_ctrl = self.getElement("cost_eval_validity_simult");
-							if (cur_val){
-								sim_ctrl.setEnabled(self.getElement("expertise").getValue());
-							}
-							else{
-								sim_ctrl.setValue(false);
-								sim_ctrl.setEnabled(false);
-							}
-							
-							//other services
-							self.getElement("audit").setEnabled( (!cur_val && !self.getElement("expertise").getValue() && !self.getElement("modification").getValue()) );
-							
-							self.m_mainView.getElement("app_print_cost_eval").setActive(cur_val);
-													
-							self.toggleService("cost_eval_validity",cur_val);
-							self.m_mainView.toggleDocTypeVis();
-							
-						},
-						function(){
-							//set back old value
-							this_cont.setValue(!cur_val);
+						self.getElement("cost_eval_validity_simult").setEnabled(cur_val);
+						if (!cur_val && self.getElement("cost_eval_validity_simult").getValue()){
+							self.getElement("cost_eval_validity_simult").setValue(false);
 						}
-					);
+						//Если флаг сняли - вкладка не нужна!					
+						var doc_types_for_remove = [];
+						var tab_name = "cost_eval_validity";
+						if (!cur_val && self.m_mainView.m_documentTabs[tab_name].control && self.m_mainView.m_documentTabs[tab_name].control.getTotalFileCount()){
+							doc_types_for_remove.push(tab_name);
+						}
+						var this_cont = this;
+						self.m_mainView.removeDocumentTypeWithWarn(doc_types_for_remove,
+							function(){
+								var sim_ctrl = self.getElement("cost_eval_validity_simult");
+								if (cur_val){
+									sim_ctrl.setEnabled(self.getElement("expertise").getValue());
+								}
+								else{
+									sim_ctrl.setValue(false);
+									sim_ctrl.setEnabled(false);
+								}
+							
+								//other services
+								self.getElement("audit").setEnabled( (!cur_val && !self.getElement("expertise").getValue() && !self.getElement("modification").getValue()) );
+							
+								self.m_mainView.getElement("app_print_cost_eval").setActive(cur_val);
+													
+								self.toggleService("cost_eval_validity",cur_val);
+								self.m_mainView.toggleDocTypeVis();
+							
+							},
+							function(){
+								//set back old value
+								this_cont.setValue(!cur_val);
+							}
+						);
+					}
 				}
-			}
-		})
-		);
-		this.addElement(new EditCheckBox(id+":cost_eval_validity_simult",{
-			"inline":true,
-			"labelAlign":"right",
-			"labelClassName":"",
-			"enabled":false,
-			"labelCaption":"Одновременно с ПД"
-		}));	
+			})
+			);
+			this.addElement(new EditCheckBox(id+":cost_eval_validity_simult",{
+				"inline":true,
+				"labelAlign":"right",
+				"labelClassName":"",
+				"enabled":false,
+				"labelCaption":"Одновременно с ПД"
+			}));	
 
-		this.addElement(new ServiceCheckBox(id+":modification",{
-			"inline":true,
-			"labelCaption":"Модификация",
-			"labelAlign":"right",
-			"labelClassName":"",
-			"events":{
-				"change":function(){
-					var cur_val = this.getValue();
-					self.getElement("primary_application").setEnabled(cur_val);
-					if (!cur_val && !self.getElement("primary_application").isNull()){
-						self.getElement("primary_application").reset();
-					}
-					//Если флаг сняли - вкладка не нужна!					
-					var doc_types_for_remove = [];
-					var tab_name = "modification";
-					if (!cur_val && self.m_mainView.m_documentTabs[tab_name].control && self.m_mainView.m_documentTabs[tab_name].control.getTotalFileCount()){
-						doc_types_for_remove.push(tab_name);
-					}
-					var this_cont = this;
-					self.m_mainView.removeDocumentTypeWithWarn(doc_types_for_remove,
-						function(){
-							var ctrl = self.getElement("primary_application");
-							if (cur_val){
-								ctrl.setEnabled(true);
-							}
-							else{
-								if(!ctrl.isNull())ctrl.reset();
-								ctrl.setEnabled(false);
-							}
-							
-							//other services
-							self.getElement("expertise").setEnabled(!cur_val);
-							self.getElement("audit").setEnabled( (!cur_val && !self.getElement("cost_eval_validity").getValue()) );
-							
-							self.m_mainView.getElement("app_print_modification").setActive(cur_val);
-													
-							self.toggleService("modification",cur_val);
-							self.m_mainView.toggleDocTypeVis();
-						},
-						function(){
-							//set back old value
-							this_cont.setValue(!cur_val);
+			this.addElement(new ServiceCheckBox(id+":modification",{
+				"inline":true,
+				"labelCaption":"Модификация",
+				"labelAlign":"right",
+				"labelClassName":"",
+				"events":{
+					"change":function(){
+						var cur_val = this.getValue();
+						self.getElement("primary_application").setEnabled(cur_val);
+						if (!cur_val && !self.getElement("primary_application").isNull()){
+							self.getElement("primary_application").reset();
 						}
-					);
+						//Если флаг сняли - вкладка не нужна!					
+						var doc_types_for_remove = [];
+						var tab_name = "modification";
+						if (!cur_val && self.m_mainView.m_documentTabs[tab_name].control && self.m_mainView.m_documentTabs[tab_name].control.getTotalFileCount()){
+							doc_types_for_remove.push(tab_name);
+						}
+						var this_cont = this;
+						self.m_mainView.removeDocumentTypeWithWarn(doc_types_for_remove,
+							function(){
+								var ctrl = self.getElement("primary_application");
+								if (cur_val){
+									ctrl.setEnabled(true);
+								}
+								else{
+									if(!ctrl.isNull())ctrl.reset();
+									ctrl.setEnabled(false);
+								}
+							
+								//other services
+								self.getElement("expertise").setEnabled(!cur_val);
+								self.getElement("audit").setEnabled( (!cur_val && !self.getElement("cost_eval_validity").getValue()) );
+							
+								self.m_mainView.getElement("app_print_modification").setActive(cur_val);
+													
+								self.toggleService("modification",cur_val);
+								self.m_mainView.toggleDocTypeVis();
+							},
+							function(){
+								//set back old value
+								this_cont.setValue(!cur_val);
+							}
+						);
+					}
 				}
-			}
-		})
-		);
-		this.addElement(new ApplicationPrimaryCont(id+":primary_application",{
-			"isModification":true,
-			"editClass":ApplicationEditRef,
-			"editLabelCaption":"Первичное заявление:",
-			"primaryFieldId":"primary_application_reg_number",
-			"mainView":options.mainView
-		}));
+			})
+			);
+			this.addElement(new ApplicationPrimaryCont(id+":primary_application",{
+				"isModification":true,
+				"editClass":ApplicationEditRef,
+				"editLabelCaption":"Первичное заявление:",
+				"primaryFieldId":"primary_application_reg_number",
+				"mainView":options.mainView
+			}));
+		}
+		else{
+			this.addElement(new ServiceCheckBox(id+":exp_cost_eval_validity",{
+				"inline":true,
+				"enabled":false,
+				"labelCaption":"Достоверность",
+				"labelAlign":"right",
+				"labelClassName":"",			
+				"events":{
+					"change":function(){
+						var cur_val = this.getValue();
+						if (!cur_val){
+							var this_cont = this;
+							var doc_types_for_remove = [];
+							var tab_name = "cost_eval_validity";
+							if (self.m_mainView.m_documentTabs[tab_name].control && self.m_mainView.m_documentTabs[tab_name].control.getTotalFileCount()){
+								doc_types_for_remove.push(tab_name);
+							}
+							
+							self.m_mainView.removeDocumentTypeWithWarn(doc_types_for_remove,
+								function(){
+									self.m_mainView.toggleDocTypeVis();
+								},
+								function(){
+									//set back old value
+									self.getElement("exp_cost_eval_validity").setValue(!cur_val);
+								}
+							);
+						}						
+						else{
+							self.m_mainView.toggleDocTypeVis();
+						}
+					}				
+				}
+			}));
 		
+		}		
 		this.addElement(new ServiceCheckBox(id+":audit",{
 			"inline":true,
 			"labelCaption":"Аудит",
@@ -258,10 +309,10 @@ function ApplicationServiceCont(id,options){
 					
 					self.toggleService("audit",cur_val);
 					
-					var exp_ctrl = self.getElement("expertise");
+					/*var exp_ctrl = self.getElement("expertise");
 					var mofid_ctrl = self.getElement("modification");
 					var ev_ctrl = self.getElement("cost_eval_validity");
-					
+					*/
 					self.m_mainView.getElement("app_print_audit").setActive(cur_val);
 					
 					if (this.m_started && !cur_val){
@@ -275,9 +326,10 @@ function ApplicationServiceCont(id,options){
 							function(){
 								//other services
 								self.getElement("expertise").setEnabled(!cur_val);
-								self.getElement("cost_eval_validity").setEnabled(!cur_val);
-								self.getElement("modification").setEnabled(!cur_val);
-							
+								if(!self.m_mainView.m_order010119){
+									self.getElement("cost_eval_validity").setEnabled(!cur_val);
+									self.getElement("modification").setEnabled(!cur_val);
+								}
 								self.m_mainView.toggleDocTypeVis();
 							},
 							function(){
@@ -290,9 +342,10 @@ function ApplicationServiceCont(id,options){
 					else if (this.m_started && cur_val){
 						//other services
 						self.getElement("expertise").setEnabled(!cur_val);
-						self.getElement("cost_eval_validity").setEnabled(!cur_val);
-						self.getElement("modification").setEnabled(!cur_val);
-					
+						if(!self.m_mainView.m_order010119){
+							self.getElement("cost_eval_validity").setEnabled(!cur_val);
+							self.getElement("modification").setEnabled(!cur_val);
+						}
 						self.m_mainView.toggleDocTypeVis();
 					}
 					else if (!this.m_started){
@@ -313,7 +366,7 @@ function ApplicationServiceCont(id,options){
 		if ( this.isNull() ){
 			perc = 0;
 		}
-		else if (self.getElement("modification").getValue()){		
+		else if (!self.m_mainView.m_order010119&&self.getElement("modification").getValue()){		
 			perc = self.getElement("primary_application").isNull()? 0:100;	
 		}
 		else{
@@ -395,8 +448,8 @@ ApplicationServiceCont.prototype.isNull = function(){
 	var r = 
 		(
 			!this.getElement("expertise").getValue()
-			&& !this.getElement("cost_eval_validity").getValue()
-			&& !this.getElement("modification").getValue()
+			&& (!this.m_mainView.m_order010119 && !this.getElement("cost_eval_validity").getValue())
+			&& (!this.m_mainView.m_order010119 && !this.getElement("modification").getValue())
 			&& !this.getElement("audit").getValue()
 		);		
 	return r;

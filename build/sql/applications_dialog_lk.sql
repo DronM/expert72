@@ -72,7 +72,7 @@ CREATE OR REPLACE VIEW applications_dialog_lk AS
 				l.document_type IN (
 					CASE WHEN d.expertise_type='pd' OR d.expertise_type='pd_eng_survey' THEN 'pd'::document_types ELSE NULL END,
 					CASE WHEN d.expertise_type='eng_survey' OR d.expertise_type='pd_eng_survey' THEN 'eng_survey'::document_types ELSE NULL END,
-					CASE WHEN d.cost_eval_validity THEN 'cost_eval_validity'::document_types ELSE NULL END,
+					CASE WHEN d.cost_eval_validity OR d.exp_cost_eval_validity THEN 'cost_eval_validity'::document_types ELSE NULL END,
 					CASE WHEN d.modification THEN 'modification'::document_types ELSE NULL END,
 					CASE WHEN d.audit THEN 'audit'::document_types ELSE NULL END			
 					)

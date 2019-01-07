@@ -72,7 +72,7 @@ CREATE OR REPLACE VIEW applications_dialog AS
 				l.document_type IN (
 					CASE WHEN d.expertise_type='pd' OR d.expertise_type='pd_eng_survey' THEN 'pd'::document_types ELSE NULL END,
 					CASE WHEN d.expertise_type='eng_survey' OR d.expertise_type='pd_eng_survey' THEN 'eng_survey'::document_types ELSE NULL END,
-					CASE WHEN d.cost_eval_validity THEN 'cost_eval_validity'::document_types ELSE NULL END,
+					CASE WHEN d.cost_eval_validity OR d.exp_cost_eval_validity THEN 'cost_eval_validity'::document_types ELSE NULL END,
 					CASE WHEN d.modification THEN 'modification'::document_types ELSE NULL END,
 					CASE WHEN d.audit THEN 'audit'::document_types ELSE NULL END			
 					)
@@ -110,7 +110,8 @@ CREATE OR REPLACE VIEW applications_dialog AS
 		contr.expertise_result_number,
 		contr.expertise_result_date,
 		
-		d.filled_percent
+		d.filled_percent,
+		d.exp_cost_eval_validity
 		
 	FROM applications AS d
 	LEFT JOIN offices ON offices.id=d.office_id

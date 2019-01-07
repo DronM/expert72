@@ -78,7 +78,16 @@ Login_View.prototype.login = function(){
 	var self = this;
 	this.execCommand("login",
 		function(){
-			document.location.href = window.getApp().getHost();
+			var REDIR_PAR = "?redir=";
+			var p = window.location.href.indexOf(REDIR_PAR);
+			var redir;
+			if(p>=0){
+				redir = "?"+CommonHelper.unserialize(decodeURI(window.location.href.substr(p+REDIR_PAR.length))).ref;
+			}
+			else{
+				redir = window.location.href;
+			}
+			document.location.href = redir;//window.getApp().getHost();
 		},
 		function(resp,errCode,errStr){
 			if (errCode==100){

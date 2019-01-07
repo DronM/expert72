@@ -145,7 +145,7 @@
 	<xsl:if test="$def_menu_item">
 	if(window.location.href.indexOf("?") &lt; 0 || window.location.href.indexOf("token=") &gt;=0) {
 		var iRef = DOMHelper.getElementsByAttr("true", CommonHelper.nd("side-menu"), "defaultItem",true,"A")[0];
-		application.showMenuItem(iRef,'<xsl:value-of select="$def_menu_item/@c"/>','<xsl:value-of select="$def_menu_item/@f"/>','<xsl:value-of select="$def_menu_item/@t"/>');
+		application.showMenuItem(iRef,'<xsl:value-of select="$def_menu_item/@c"/>','<xsl:value-of select="$def_menu_item/@f"/>','<xsl:value-of select="$def_menu_item/@t"/>',null,'<xsl:value-of select="$def_menu_item/@viewdescr"/>');
 	}
 	</xsl:if>
 		
@@ -184,7 +184,7 @@
 			"cmdOk":false,
 			"onClickCancel":email_conf_on_close,	
 			"content":email_conf_view,
-			"contentHead":"Пожтверждение электронной почты"
+			"contentHead":"Подтверждение электронной почты"
 		});
 
 		email_conf_form.open();
@@ -240,21 +240,21 @@
 					<ul class="hidden-ul" style="display: none;">
 						<li>
 							<a href="index.php?c=View_Controller&amp;f=get_list&amp;t=ViewList"
-							onclick="window.getApp().showMenuItem(this,'View_Controller','get_list','ViewList');return false;">
+							onclick="window.getApp().showMenuItem(this,'View_Controller','get_list','ViewList',null,'Все формы');return false;">
 							Все формы
 							</a>
 						</li>		        				
 				
 						<li>
 							<a href="index.php?c=Constant_Controller&amp;f=get_list&amp;t=ConstantList"
-							onclick="window.getApp().showMenuItem(this,'Constant_Controller','get_list','ConstantList');return false;">
+							onclick="window.getApp().showMenuItem(this,'Constant_Controller','get_list','ConstantList',null,'Константы');return false;">
 							Константы
 							</a>
 						</li>		        				
 				
 						<li>
 							<a href="index.php?c=MainMenuConstructor_Controller&amp;f=get_list&amp;t=MainMenuConstructorList"
-							onclick="window.getApp().showMenuItem(this,'MainMenuConstructor_Controller','get_list','MainMenuConstructorList');return false;">
+							onclick="window.getApp().showMenuItem(this,'MainMenuConstructor_Controller','get_list','MainMenuConstructorList',null,'Конструктор меню');return false;">
 							Конструктор меню
 							</a>
 						</li>		        				
@@ -301,7 +301,7 @@
 			<!-- one level-->
 			<li>
 			    <a href="index.php?c={@c}&amp;f={@f}&amp;t={@t}{$TOKEN}"
-			    onclick="window.getApp().showMenuItem(this,'{@c}','{@f}','{@t}{$TOKEN}');return false;"
+			    onclick="window.getApp().showMenuItem(this,'{@c}','{@f}','{@t}{$TOKEN}',null,'{@viewdescr}');return false;"
 			    defaultItem="{@default='true'}">
 			    <xsl:if test="@glyphclass and string-length(@glyphclass) &gt; 0 and not(@glyphclass='null')"><i class="{@glyphclass}"></i></xsl:if>
 			    	<span><xsl:value-of select="@descr"/></span>
@@ -553,7 +553,7 @@ throw Error(CommonHelper.longString(function () {/*
 					<ul class="dropdown-menu dropdown-menu-right">
 						<li>
 							<a href="index.php?c=User_Controller&amp;f=get_profile&amp;t=UserProfile{$TOKEN}"
-							onclick="window.getApp().showMenuItem(this,'User_Controller','get_profile','UserProfile{$TOKEN}');return false;">
+							onclick="window.getApp().showMenuItem(this,'User_Controller','get_profile','UserProfile{$TOKEN}',null,'Профиль');return false;">
 							<i class="icon-user-plus"></i> Профиль
 							</a>
 						</li>					        

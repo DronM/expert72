@@ -327,6 +327,15 @@ function ApplicationDialog_Model(options){
 	filed_options.autoInc = false;	
 	
 	options.fields.update_dt = new FieldDateTimeTZ("update_dt",filed_options);
+		
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	filed_options.defValue = true;
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.exp_cost_eval_validity = new FieldBool("exp_cost_eval_validity",filed_options);
 	
 			
 			
@@ -530,6 +539,7 @@ function ApplicationDialog_Model(options){
 	
 	options.fields.expertise_result_date = new FieldDate("expertise_result_date",filed_options);
 	
+			
 			
 			
 		ApplicationDialog_Model.superclass.constructor.call(this,id,options);

@@ -129,7 +129,7 @@ DocumentDialog_View.prototype.toggleDocTypeVisOnModel = function(model){
 	var exp_type = model? model.getFieldValue("expertise_type") : null;
 	this.toggleDocTab("pd",(exp_type=="pd" || exp_type=="pd_eng_survey"));
 	this.toggleDocTab("eng_survey",(exp_type=="eng_survey" || exp_type=="pd_eng_survey"));
-	this.toggleDocTab("cost_eval_validity", model? model.getFieldValue("cost_eval_validity") : false);
+	this.toggleDocTab("cost_eval_validity", model? model.getFieldValue("cost_eval_validity")||model.getFieldValue("exp_cost_eval_validity") : false);
 	this.toggleDocTab("modification", model? model.getFieldValue("modification") : false);
 	this.toggleDocTab("audit", model? model.getFieldValue("audit") : false);
 	
@@ -148,8 +148,15 @@ DocumentDialog_View.prototype.toggleDocTypeVis = function(){
 	var exp_type = service_ctrl.getElement("expertise_type").getValue();
 	this.toggleDocTab("pd",(exp_type=="pd" || exp_type=="pd_eng_survey"));
 	this.toggleDocTab("eng_survey",(exp_type=="eng_survey" || exp_type=="pd_eng_survey"));
-	this.toggleDocTab("cost_eval_validity",service_ctrl.getElement("cost_eval_validity").getValue());
-	this.toggleDocTab("modification",service_ctrl.getElement("modification").getValue());
+	if(this.m_order010119!=undefined&&!this.m_order010119){
+		this.toggleDocTab("cost_eval_validity",service_ctrl.getElement("cost_eval_validity").getValue());
+		this.toggleDocTab("modification",service_ctrl.getElement("modification").getValue());
+	}
+	else{
+		//new order 01/01/19
+		this.toggleDocTab("cost_eval_validity",service_ctrl.getElement("exp_cost_eval_validity").getValue());
+		this.toggleDocTab("modification",false);
+	}
 	this.toggleDocTab("audit",service_ctrl.getElement("audit").getValue());
 }
 

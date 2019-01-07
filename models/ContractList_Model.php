@@ -598,6 +598,14 @@ class ContractList_Model extends ModelSQL{
 		$f_state_for_color=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"state_for_color",$f_opts);
 		$this->addField($f_state_for_color);
 		//********************
+		
+		//*** Field exp_cost_eval_validity ***
+		$f_opts = array();
+		$f_opts['id']="exp_cost_eval_validity";
+				
+		$f_exp_cost_eval_validity=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"exp_cost_eval_validity",$f_opts);
+		$this->addField($f_exp_cost_eval_validity);
+		//********************
 	
 		$order = new ModelOrderSQL();		
 		$this->setDefaultModelOrder($order);		

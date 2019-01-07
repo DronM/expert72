@@ -166,7 +166,9 @@ CREATE OR REPLACE VIEW contracts_dialog AS
 		
 		t.experts_for_notification,
 		
-		t.contract_return_date_on_sig
+		t.contract_return_date_on_sig,
+		
+		app.exp_cost_eval_validity
 		
 	FROM contracts t
 	LEFT JOIN applications_dialog AS app ON app.id=t.application_id

@@ -96,8 +96,8 @@ AppExpert.prototype.makeItemCurrent = function(elem){
 	}
 }
 
-AppExpert.prototype.showMenuItem = function(item,c,f,t,extra){
-	AppExpert.superclass.showMenuItem.call(this,c,f,t,extra);
+AppExpert.prototype.showMenuItem = function(item,c,f,t,extra,title){
+	AppExpert.superclass.showMenuItem.call(this,item,c,f,t,extra,title);
 	this.makeItemCurrent(item);
 }
 
