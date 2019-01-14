@@ -2,7 +2,7 @@
 <metadata owner="expert72">
 	<versions>
 		<version dateOpen="2017-09-27 12:09:48" dateClose="2017-12-08 10:12:08">1.001 
-		<lastBuild>2019-01-07 09:26:22</lastBuild></version>
+		<lastBuild>2019-01-14 06:16:19</lastBuild></version>
 		<version dateOpen="2017-12-08 11:12:01" dateClose="2017-12-08 11:12:04">1.002</version>
 		<version dateOpen="2017-12-08 11:12:20" dateClose="2017-12-08 11:12:20">1.0.3</version>
 		<version dateOpen="2017-12-12 11:12:07" dateClose="2017-12-12 11:12:07">1.0.4</version>
@@ -102,6 +102,7 @@
 		<version dateOpen="2018-12-12 06:12:05" dateClose="2018-12-15 06:12:11">1.0.99</version>
 		<version dateOpen="2018-12-15 06:12:13" dateClose="2018-12-22 06:12:02">1.0.100</version>
 		<version dateOpen="2018-12-22 06:12:03" dateClose="2019-01-07 09:01:26">1.0.101</version>
+		<version dateOpen="2019-01-07 09:01:27" dateClose="2019-01-14 06:01:16">1.0.102</version>
 	</versions>
 	<globalFilters>
 		<field id="user_id"/>
@@ -172,6 +173,12 @@
 			</value>
 			<value id="ca_update_error">
 				<ru descr="&#x41E;&#x448;&#x438;&#x431;&#x43A;&#x430; &#x43E;&#x431;&#x43D;&#x43E;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x44F; &#x433;&#x43E;&#x43B;&#x43E;&#x432;&#x43D;&#x44B;&#x445; &#x441;&#x435;&#x440;&#x442;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x43E;&#x432;"/>
+			</value>
+			<value id="warn_expert_work_end">
+				<ru descr="&#x417;&#x430;&#x432;&#x435;&#x440;&#x435;&#x448;&#x435;&#x43D;&#x438;&#x435; &#x441;&#x440;&#x43E;&#x43A;&#x430; &#x440;&#x430;&#x431;&#x43E;&#x442;"/>
+			</value>
+			<value id="warn_work_end">
+				<ru descr="&#x417;&#x430;&#x432;&#x435;&#x440;&#x435;&#x448;&#x435;&#x43D;&#x438;&#x435; &#x441;&#x440;&#x43E;&#x43A;&#x430; &#x432;&#x44B;&#x434;&#x430;&#x447;&#x438; &#x437;&#x430;&#x43A;&#x43B;&#x44E;&#x447;&#x435;&#x43D;&#x438;&#x44F;"/>
 			</value>
 		</enum>
 		<enum id="client_types" descr="&#x422;&#x438;&#x43F; &#x43A;&#x43B;&#x438;&#x435;&#x43D;&#x442;&#x430;">
@@ -1169,6 +1176,7 @@
 			<field id="deleted" dataType="Bool" defaultValue="FALSE"/>
 			<field id="deleted_dt" dataType="DateTimeTZ"/>
 			<field id="file_signed_by_client" dataType="Bool" defaultValue="FALSE"/>
+			<field id="information_list" dataType="Bool" defaultValue="FALSE"/>
 			<index id="application_document_files_application_idx">
 				<field id="application_id"/>
 			</index>
@@ -1540,6 +1548,7 @@
 			<field id="state_end_dt" dataType="DateTimeTZ"/>
 			<field id="state_register_doc" dataType="JSON"/>
 			<field id="applicant_descr" dataType="Text"/>
+			<field id="content" dataType="Text"/>
 		</model>
 		<model id="DocFlowOutDialog" parent="ModelSQL" dataTable="doc_flow_out_dialog" virtual="TRUE" baseModelId="DocFlowOut">
 			<defaultOrder>
@@ -1933,6 +1942,7 @@
 			<field id="close_employees_ref" dataType="JSON"/>
 			<field id="close_employee_id" dataType="Int"/>
 			<field id="application_resolution_state" dataType="String"/>
+			<field id="employee_id" dataType="Int"/>
 		</model>
 		<model id="DocFlowExaminationDialog" parent="ModelSQL" dataTable="doc_flow_examinations_dialog" virtual="TRUE">
 			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE" required="FALSE"/>
@@ -2005,6 +2015,7 @@
 			<field id="current_step" dataType="Int"/>
 			<field id="close_result" dataType="Enum" enumId="doc_flow_approvement_results"/>
 			<field id="contract_state" dataType="Enum" enumId="application_states"/>
+			<field id="employee_id" dataType="Int"/>
 		</model>
 		<model id="DocFlowApprovementDialog" parent="ModelSQL" dataTable="doc_flow_approvements_dialog" virtual="TRUE">
 			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE" required="FALSE"/>
@@ -2082,6 +2093,7 @@
 			<field id="date_time" dataType="DateTimeTZ"/>
 			<field id="subject_docs_ref" dataType="JSON"/>
 			<field id="employees_ref" dataType="JSON"/>
+			<field id="employee_id" dataType="Int"/>
 		</model>
 		<model id="DocFlowRegistrationDialog" parent="ModelSQL" dataTable="doc_flow_registrations_dialog" virtual="TRUE">
 			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE" required="FALSE"/>

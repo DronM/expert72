@@ -26,7 +26,8 @@ CREATE OR REPLACE VIEW doc_flow_examinations_list AS
 		employees_ref(close_empl) AS close_employees_ref,
 		t.close_employee_id,
 		
-		t.application_resolution_state
+		t.application_resolution_state,
+		t.employee_id
 		
 	FROM doc_flow_examinations AS t
 	LEFT JOIN doc_flow_in ON doc_flow_in.id = (t.subject_doc->'keys'->>'id')::int AND t.subject_doc->>'dataType'='doc_flow_in'

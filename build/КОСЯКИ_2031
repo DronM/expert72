@@ -87,3 +87,28 @@ INSERT INTO public.file_verifications(
 
 
 --DELETE FROM application_document_files WHERE file_id='ad1f3ee9-aac2-478e-bffc-777c8d9272bd'
+
+
+
+
+
+/*
+update applications
+	SET cost_eval_validity=FALSE,
+	exp_cost_eval_validity=TRUE
+FROM (	
+select l.id from applications_list AS l
+join applications app on app.id=l.id
+where l.application_state='filling'
+	--AND l.service_list='Достоверность'
+	AND app.cost_eval_validity=TRUE
+) AS sub
+WHERE sub.id=applications.id
+*/
+select l.id from applications_list AS l
+join applications app on app.id=l.id
+where l.application_state='filling'
+	--AND l.service_list='Достоверность'
+	AND app.cost_eval_validity=TRUE
+
+

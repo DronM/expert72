@@ -58,6 +58,15 @@ function DocFlowRegistrationList_Model(options){
 	
 	options.fields.employees_ref = new FieldJSON("employees_ref",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.employee_id = new FieldInt("employee_id",filed_options);
+	
 		DocFlowRegistrationList_Model.superclass.constructor.call(this,id,options);
 }
 extend(DocFlowRegistrationList_Model,ModelXML);

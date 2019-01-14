@@ -1,6 +1,6 @@
 -- VIEW: doc_flow_out_list
 
-DROP VIEW doc_flow_out_list;
+--DROP VIEW doc_flow_out_list;
 
 CREATE OR REPLACE VIEW doc_flow_out_list AS
 	SELECT
@@ -22,7 +22,9 @@ CREATE OR REPLACE VIEW doc_flow_out_list AS
 		
 		(applications.applicant->>'name')::text||' '||(applications.applicant->>'inn')::text AS applicant_descr,
 		
-		applications.constr_name AS to_constr_name
+		applications.constr_name AS to_constr_name,
+		
+		doc_flow_out.content
 		
 	FROM doc_flow_out
 	LEFT JOIN applications ON applications.id=doc_flow_out.to_application_id

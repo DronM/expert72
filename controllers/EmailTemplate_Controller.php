@@ -37,7 +37,7 @@ class EmailTemplate_Controller extends ControllerSQL{
 			));
 			$pm->addParam($param);
 		
-				$param = new FieldExtEnum('email_type',',','new_account,reset_pwd,user_email_conf,out_mail,new_app,app_change,new_remind,out_mail_to_app,contract_state_change,app_to_correction,contr_return,expert_work_change,ca_update_error'
+				$param = new FieldExtEnum('email_type',',','new_account,reset_pwd,user_email_conf,out_mail,new_app,app_change,new_remind,out_mail_to_app,contract_state_change,app_to_correction,contr_return,expert_work_change,ca_update_error,warn_expert_work_end,warn_work_end'
 				,array(
 			
 				'alias'=>'Тип email'

@@ -53,6 +53,14 @@ class DocFlowRegistrationList_Model extends ModelSQL{
 		$f_employees_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"employees_ref",$f_opts);
 		$this->addField($f_employees_ref);
 		//********************
+		
+		//*** Field employee_id ***
+		$f_opts = array();
+		$f_opts['id']="employee_id";
+				
+		$f_employee_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"employee_id",$f_opts);
+		$this->addField($f_employee_id);
+		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}
 

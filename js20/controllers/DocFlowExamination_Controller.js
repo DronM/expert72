@@ -302,6 +302,9 @@ extend(DocFlowExamination_Controller,ControllerObjServer);
 	var f_opts = {};
 	
 	pm.addField(new FieldString("application_resolution_state",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldInt("employee_id",f_opts));
 }
 
 			DocFlowExamination_Controller.prototype.add_resolve = function(){

@@ -141,6 +141,16 @@ function ApplicationDocumentFile_Model(options){
 	
 	options.fields.file_signed_by_client = new FieldBool("file_signed_by_client",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	filed_options.defValue = true;
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.information_list = new FieldBool("information_list",filed_options);
+	
 			
 		ApplicationDocumentFile_Model.superclass.constructor.call(this,id,options);
 }

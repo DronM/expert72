@@ -182,6 +182,11 @@ function DocFlowExaminationList_View(id,options){
 			"columns":[
 				new GridColumnRef({
 					"field":model.getField("close_employees_ref"),
+					"ctrlClass":EmployeeEditRef,
+					"searchOptions":{
+						"field":new FieldInt("close_employee_id"),
+						"searchType":"on_match"
+					},															
 					"formatFunction":function(fields){
 						return (
 							(!fields.close_employees_ref.isNull())?
@@ -198,6 +203,11 @@ function DocFlowExaminationList_View(id,options){
 			"columns":[
 				new GridColumnRef({
 					"field":model.getField("employees_ref"),
+					"ctrlClass":EmployeeEditRef,
+					"searchOptions":{
+						"field":new FieldInt("employee_id"),
+						"searchType":"on_match"
+					},															
 					"formatFunction":function(fields){
 						return (
 							(!fields.employees_ref.isNull())?

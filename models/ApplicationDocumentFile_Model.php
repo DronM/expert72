@@ -124,6 +124,15 @@ class ApplicationDocumentFile_Model extends ModelSQL{
 		$f_file_signed_by_client=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"file_signed_by_client",$f_opts);
 		$this->addField($f_file_signed_by_client);
 		//********************
+		
+		//*** Field information_list ***
+		$f_opts = array();
+		$f_opts['defaultValue']='FALSE';
+		$f_opts['id']="information_list";
+				
+		$f_information_list=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"information_list",$f_opts);
+		$this->addField($f_information_list);
+		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}
 

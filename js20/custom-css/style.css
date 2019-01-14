@@ -293,6 +293,9 @@ h2 div.btn{
 #ApplicationList\:grid td[state="archive"]{
 	background:#42f4aa;
 }
+#ApplicationList\:grid td[unviewed="true"]{
+	background:#ff6666;
+}
 
 /*
 #ContractList\:grid td[state_for_color="no_pay"]{
@@ -323,7 +326,9 @@ h2 div.btn{
 .notSignedNotUploaded{
 	background:#ffa889;
 }
-
+.informList{
+	background:#c4c4c4;
+}
 .appFileDeleted{
 	text-decoration: line-through;
 }

@@ -200,6 +200,17 @@ function DocFlowOutList_View(id,options){
 			]
 		})	
 	);
+
+	columns.push(
+		new GridCellHead(id+":grid:head:content",{
+			"value":"Содержание",
+			"columns":[
+				new GridColumn({									
+					"field":model.getField("content")
+				})
+			]
+		})	
+	);
 	
 	this.addElement(new GridAjx(id+":grid",{
 		"model":model,

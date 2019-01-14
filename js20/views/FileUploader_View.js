@@ -373,6 +373,13 @@ FileUploader_View.prototype.addFileToContainer = function(container,itemFile,ite
 		templateOptions.refTitle = ref_title;
 		templateOptions.refClass = ref_class;
 	}
+	if(itemFile.information_list=="t"){
+		templateOptions.refClass = templateOptions.refClass || "";
+		templateOptions.refClass+=(templateOptions.refClass=="")? "":" ";
+		templateOptions.refClass+="informList";
+		templateOptions.refTitle = templateOptions.refTitle || "";
+		templateOptions.refTitle = "ИУЛ"+((templateOptions.refTitle=="")? "":", ") + templateOptions.refTitle;
+	}
 	
 	if (this.m_onFillTemplateOptions)this.m_onFillTemplateOptions(templateOptions,itemFile);
 	

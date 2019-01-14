@@ -28,6 +28,7 @@ DECLARE
 	v_contract_return_date timestampTZ;
 	v_corrected_sections_t text;
 	v_corrected_sections_o jsonb;
+	v_doc_flow_in doc_flow_in;
 BEGIN
 	IF TG_WHEN='BEFORE' AND ( TG_OP='INSERT' OR TG_OP='UPDATE') THEN		
 		IF (const_client_lk_val() OR const_debug_val())
@@ -234,6 +235,9 @@ BEGIN
 			VALUES (NEW.id,NEW.application_id,v_reg_number);
 			--*********************************************************************
 			
+			--************** all rows ********************************************
+			SELECT INTO v_doc_flow_in * FROM doc_flow_in WHERE id=v_doc_flow_in_id;
+			--********************************************************************
 			
 			IF v_contract_id IS NULL THEN --AND NEW.doc_flow_out_client_type='app'::doc_flow_out_client_types THEN
 				--НЕТ контракта - Передача на рассмотрение в отдел приема
@@ -257,7 +261,7 @@ BEGIN
 					FROM departments
 					WHERE id=(const_app_recipient_department_val()->'keys'->>'id')::int
 					),
-					doc_flow_in_ref( (SELECT doc_flow_in FROM doc_flow_in WHERE id=v_doc_flow_in_id) ),
+					doc_flow_in_ref(v_doc_flow_in),
 					v_recipient				
 				);
 						
@@ -271,10 +275,7 @@ BEGIN
 					)),
 					employees.id,
 					NEW.subject,
-					doc_flow_in_ref((SELECT doc_flow_in
-								FROM doc_flow_in
-								WHERE id = v_doc_flow_in_id
-					))
+					doc_flow_in_ref(v_doc_flow_in)
 				FROM employees
 				WHERE
 					employees.user_id IN (SELECT id FROM users WHERE role_id='boss')
@@ -292,10 +293,7 @@ BEGIN
 						)),
 						v_main_expert_id,
 						v_doc_flow_subject||' Разделы:'||v_corrected_sections_t,
-						doc_flow_in_ref((SELECT doc_flow_in
-									FROM doc_flow_in
-									WHERE id = v_doc_flow_in_id
-						))					
+						doc_flow_in_ref(v_doc_flow_in)					
 					);
 				END IF;
 				
@@ -308,10 +306,7 @@ BEGIN
 					)),
 					(sub.expert_fields->'fields'->'expert'->'keys'->>'id')::int AS expert_id,
 					v_doc_flow_subject||' Разделы:'||v_corrected_sections_t,
-					doc_flow_in_ref((SELECT doc_flow_in
-								FROM doc_flow_in
-								WHERE id = v_doc_flow_in_id
-					))					
+					doc_flow_in_ref(v_doc_flow_in)					
 					
 				FROM (
 					SELECT jsonb_array_elements(experts_for_notification->'rows') AS expert_fields
@@ -342,7 +337,7 @@ BEGIN
 					],
 					(SELECT v FROM templ)
 				) AS mes_body,		
-				v_doc_flow_subject,
+				v_doc_flow_subject||', Рег.№'||v_doc_flow_in.reg_number,
 				'contr_return'
 				FROM departments
 				WHERE
@@ -360,11 +355,8 @@ BEGIN
 									WHERE id = NEW.application_id
 						)),
 						employees.id,
-						v_doc_flow_subject,
-						doc_flow_in_ref((SELECT doc_flow_in
-									FROM doc_flow_in
-									WHERE id = v_doc_flow_in_id
-						))
+						v_doc_flow_subject||', Рег.№'||v_doc_flow_in.reg_number,
+						doc_flow_in_ref(v_doc_flow_in)
 					FROM employees
 					LEFT JOIN users ON users.id=employees.user_id
 					WHERE employees.id=v_contract_employee_id AND users.email IS NOT NULL
@@ -430,7 +422,7 @@ BEGIN
 					],
 					(SELECT v FROM templ)
 				) AS mes_body,		
-				v_doc_flow_subject,
+				v_doc_flow_subject||', Рег.№'||v_doc_flow_in.reg_number,
 				'app_change'
 				FROM departments
 				WHERE
@@ -449,11 +441,8 @@ BEGIN
 							WHERE id = NEW.application_id
 				)),
 				employees.id,
-				v_doc_flow_subject,
-				doc_flow_in_ref((SELECT doc_flow_in
-							FROM doc_flow_in
-							WHERE id = v_doc_flow_in_id
-				))
+				v_doc_flow_subject||', Рег.№'||v_doc_flow_in.reg_number,
+				doc_flow_in_ref(v_doc_flow_in)
 			FROM employees
 			WHERE
 				employees.user_id IN (SELECT id FROM users WHERE role_id='admin')

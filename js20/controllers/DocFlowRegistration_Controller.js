@@ -121,6 +121,9 @@ extend(DocFlowRegistration_Controller,ControllerObjServer);
 	var f_opts = {};
 	
 	pm.addField(new FieldJSON("employees_ref",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldInt("employee_id",f_opts));
 }
 
 			DocFlowRegistration_Controller.prototype.add_register = function(){

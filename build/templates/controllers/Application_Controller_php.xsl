@@ -265,6 +265,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 						$file_o->file_signed	= ($file['file_signed']=='t')? TRUE:FALSE;
 						$file_o->file_uploaded	= TRUE;
 						$file_o->signatures	= $file['signatures'];
+						$file_o->information_list= $file['information_list'];
 						
 						if ($file['doc_flow_out_client_id']){
 							$file_o->doc_flow_out	= new stdClass();
@@ -467,7 +468,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				-- Здесь Всегда одна подпись, можно без сортировки!!!
 			) AS sign ON sign.file_id=adf.file_id			
 			WHERE adf.application_id=%d %s
-			ORDER BY adf.document_type,adf.document_id,adf.file_name,adf.deleted_dt ASC NULLS LAST",
+			ORDER BY adf.document_type,adf.document_id,adf.information_list,adf.file_name,adf.deleted_dt ASC NULLS LAST",
 		$tb_postf,$tb_postf,$tb_postf,
 		$appId,
 		$deletedCond
@@ -528,6 +529,13 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				$ar_obj['expertise_result_number'] = NULL;
 				$ar_obj['expertise_result_date'] = NULL;
 				$ar_obj['application_state'] = 'filling';
+				
+				//new order from 01/01/2019
+				if($ar_obj['cost_eval_validity']=='t'){
+					$ar_obj['exp_cost_eval_validity'] = 't';
+					$ar_obj['cost_eval_validity'] = NULL;
+					$ar_obj['expertise_type'] = 'pd';
+				}
 			}
 		}
 		else{

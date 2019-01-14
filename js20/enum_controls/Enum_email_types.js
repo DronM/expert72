@@ -28,6 +28,8 @@ function Enum_email_types(id,options){
 ,"ru_contr_return":"Возврат подписанного контракта"
 ,"ru_expert_work_change":"Изменния по локальным заключениям"
 ,"ru_ca_update_error":"Ошибка обновления головных сертификатов"
+,"ru_warn_expert_work_end":"Заверешение срока работ"
+,"ru_warn_work_end":"Заверешение срока выдачи заключения"
 };
 	options.options = [{"value":"new_account",
 "descr":multy_lang_values[window.getApp().getLocale()+"_"+"new_account"],
@@ -68,6 +70,12 @@ checked:(options.defaultValue&&options.defaultValue=="expert_work_change")}
 ,{"value":"ca_update_error",
 "descr":multy_lang_values[window.getApp().getLocale()+"_"+"ca_update_error"],
 checked:(options.defaultValue&&options.defaultValue=="ca_update_error")}
+,{"value":"warn_expert_work_end",
+"descr":multy_lang_values[window.getApp().getLocale()+"_"+"warn_expert_work_end"],
+checked:(options.defaultValue&&options.defaultValue=="warn_expert_work_end")}
+,{"value":"warn_work_end",
+"descr":multy_lang_values[window.getApp().getLocale()+"_"+"warn_work_end"],
+checked:(options.defaultValue&&options.defaultValue=="warn_work_end")}
 ];
 	
 	Enum_email_types.superclass.constructor.call(this,id,options);

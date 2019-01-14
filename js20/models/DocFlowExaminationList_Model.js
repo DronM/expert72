@@ -139,6 +139,15 @@ function DocFlowExaminationList_Model(options){
 	
 	options.fields.application_resolution_state = new FieldString("application_resolution_state",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.employee_id = new FieldInt("employee_id",filed_options);
+	
 		DocFlowExaminationList_Model.superclass.constructor.call(this,id,options);
 }
 extend(DocFlowExaminationList_Model,ModelXML);

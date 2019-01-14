@@ -323,6 +323,9 @@ extend(DocFlowApprovement_Controller,ControllerObjServer);
 	var f_opts = {};
 	
 	pm.addField(new FieldEnum("contract_state",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldInt("employee_id",f_opts));
 }
 
 			DocFlowApprovement_Controller.prototype.add_set_approved = function(){

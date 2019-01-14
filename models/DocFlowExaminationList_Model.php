@@ -128,6 +128,14 @@ class DocFlowExaminationList_Model extends ModelSQL{
 		$f_application_resolution_state=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"application_resolution_state",$f_opts);
 		$this->addField($f_application_resolution_state);
 		//********************
+		
+		//*** Field employee_id ***
+		$f_opts = array();
+		$f_opts['id']="employee_id";
+				
+		$f_employee_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"employee_id",$f_opts);
+		$this->addField($f_employee_id);
+		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}
 

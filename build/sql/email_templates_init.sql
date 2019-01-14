@@ -151,4 +151,58 @@ VALUES (
 
 
 
+INSERT INTO email_templates (
+	email_type,
+	template,
+	mes_subject,comment_text,fields
+
+	)
+
+VALUES (
+	'warn_expert_work_end',
+	'[end_date] заканчивается срок экспертных работ по контракту [contract_number] по объекту [constr_name]',
+	'Окончание срока экспертных работ',
+	'Отправляется клиенту контракта',
+	json_build_object(
+		'id','ReportTemplateField_Model',
+		'rows','[{"fields":{"id":"end_date","descr":"Дата окончания работ"}
+			,{"fields":{"id":"contract_number","descr":"Номер контракта"}
+			,{"fields":{"id":"contract_date","descr":"Дата контракта"}
+			,{"fields":{"id":"user_name","descr":"Имя пользователя"}
+			,{"fields":{"id":"applicant","descr":"Заказчик"}
+			,{"fields":{"id":"constr_name","descr":"Объект"}
+			]'
+	)
+);
+
+
+
+INSERT INTO email_templates (
+	email_type,
+	template,
+	mes_subject,comment_text,fields
+
+	)
+
+VALUES (
+	'warn_work_end',
+	'[end_date] заканчивается срок выдачи заключения по контракту [contract_number] по объекту [constr_name]',
+	'Окончание срока выдачи заключения',
+	'Отправляется клиенту контракта',
+	json_build_object(
+		'id','ReportTemplateField_Model',
+		'rows','[{"fields":{"id":"end_date","descr":"Дата окончания работ"}
+			,{"fields":{"id":"contract_number","descr":"Номер контракта"}
+			,{"fields":{"id":"contract_date","descr":"Дата контракта"}
+			,{"fields":{"id":"user_name","descr":"Имя пользователя"}
+			,{"fields":{"id":"applicant","descr":"Заказчик"}
+			,{"fields":{"id":"constr_name","descr":"Объект"}
+			]'
+	)
+);
+
+
+
+
+
 

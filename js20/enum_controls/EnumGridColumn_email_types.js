@@ -43,6 +43,10 @@ function EnumGridColumn_email_types(options){
 	options.multyLangValues["ru"]["expert_work_change"] = "Изменния по локальным заключениям";
 
 	options.multyLangValues["ru"]["ca_update_error"] = "Ошибка обновления головных сертификатов";
+
+	options.multyLangValues["ru"]["warn_expert_work_end"] = "Заверешение срока работ";
+
+	options.multyLangValues["ru"]["warn_work_end"] = "Заверешение срока выдачи заключения";
 EnumGridColumn_email_types.superclass.constructor.call(this,options);
 	
 }

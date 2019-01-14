@@ -260,6 +260,7 @@ function DocFlowOutList_Model(options){
 	
 	options.fields.applicant_descr = new FieldText("applicant_descr",filed_options);
 	
+			
 		DocFlowOutList_Model.superclass.constructor.call(this,id,options);
 }
 extend(DocFlowOutList_Model,ModelXML);

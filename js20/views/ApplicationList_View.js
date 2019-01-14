@@ -218,6 +218,20 @@ function ApplicationList_View(id,options){
 	}
 	fields.push(new GridCellHead(id+":grid:head:unviewed_in_docs",{
 			"value":"Новые письма",
+			"colAttrs":{
+				"title":function(fields){
+					if(fields.unviewed_in_docs.getValue()){
+						return "Непрочитанные письма";
+					}
+				},
+				"unviewed":function(fields){
+					var res;
+					if(fields.unviewed_in_docs.getValue()){
+						res = "true";
+					}
+					return res;
+				}
+			},			
 			"columns":[
 				new GridColumnRef({
 					"field":model.getField("unviewed_in_docs"),
