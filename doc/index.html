@@ -58,6 +58,7 @@
 <li><a href="#Enum_Controller">Enum_Controller</a></li>
 <li><a href="#ExpertNotification_Controller">ExpertNotification_Controller</a></li>
 <li><a href="#ExpertWork_Controller">ExpertWork_Controller</a></li>
+<li><a href="#ExpertiseProlongation_Controller">ExpertiseProlongation_Controller</a></li>
 <li><a href="#ExpertiseRejectType_Controller">ExpertiseRejectType_Controller</a></li>
 <li><a href="#FundSource_Controller">FundSource_Controller</a></li>
 <li><a href="#Holiday_Controller">Holiday_Controller</a></li>
@@ -234,6 +235,8 @@
 <li><a href="#ContractDialog_Model">ContractDialog_Model</a></li>
 <li><a href="#ExpertWork_Model">ExpertWork_Model</a></li>
 <li><a href="#ExpertWorkList_Model">ExpertWorkList_Model</a></li>
+<li><a href="#ExpertiseProlongation_Model">ExpertiseProlongation_Model</a></li>
+<li><a href="#ExpertiseProlongationList_Model">ExpertiseProlongationList_Model</a></li>
 <li><a href="#AccessPermission_Model">AccessPermission_Model</a></li>
 <li><a href="#ExpertNotification_Model">ExpertNotification_Model</a></li>
 <li><a href="#ViewLocal_Model">ViewLocal_Model</a></li>
@@ -2368,6 +2371,43 @@
 <p>Required:
 								Да</p>
 <p>Length:32</p>
+</div>
+</div>
+</div>
+</div>
+<div id="ExpertiseProlongation_Controller" class="content_box">
+<h1>ExpertiseProlongation_Controller</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Методы:</p>
+<h2>insert</h2>
+<a href="#ExpertiseProlongation_Model">Model: ExpertiseProlongation_Model</a><h2>update</h2>
+<a href="#ExpertiseProlongation_Model">Model: ExpertiseProlongation_Model</a><h2>delete</h2>
+<a href="#ExpertiseProlongation_Model">Model: ExpertiseProlongation_Model</a><h2>get_object</h2>
+<a href="#ExpertiseProlongationList_Model">Model: ExpertiseProlongationList_Model</a><h2>get_list</h2>
+<a href="#ExpertiseProlongationList_Model">Model: ExpertiseProlongationList_Model</a><h2>calc_work_end_date</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>contract_id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Да</p>
+</div>
+<h3>date_type</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Enum</p>
+<p>Required:
+								Да</p>
+</div>
+<h3>day_count</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Да</p>
 </div>
 </div>
 </div>
@@ -10010,6 +10050,114 @@
 <div>Precision:</div>
 <h2>files</h2>
 <div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="ExpertiseProlongation_Model" class="content_box">
+<h1>ExpertiseProlongation_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>contract_id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>date_time</h2>
+<div>Type:DateTime</div>
+<div>Primary key:TRUE</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>day_count</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>date_type</h2>
+<div>Type:Enum</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>new_end_date</h2>
+<div>Type:Date</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>employee_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>comment_text</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="ExpertiseProlongationList_Model" class="content_box">
+<h1>ExpertiseProlongationList_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>contract_id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>date_time</h2>
+<div>Type:DateTime</div>
+<div>Primary key:TRUE</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>day_count</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>date_type</h2>
+<div>Type:Enum</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>new_end_date</h2>
+<div>Type:Date</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>employees_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>contracts_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>employee_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>comment_text</h2>
+<div>Type:Text</div>
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>

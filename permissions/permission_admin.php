@@ -978,6 +978,18 @@ $permissions = array();
 				
 					$permissions['ManualContent_Controller_get_list']=TRUE;
 				
+					$permissions['ExpertiseProlongation_Controller_insert']=TRUE;
+				
+					$permissions['ExpertiseProlongation_Controller_update']=TRUE;
+				
+					$permissions['ExpertiseProlongation_Controller_delete']=TRUE;
+				
+					$permissions['ExpertiseProlongation_Controller_get_object']=TRUE;
+				
+					$permissions['ExpertiseProlongation_Controller_get_list']=TRUE;
+				
+					$permissions['ExpertiseProlongation_Controller_calc_work_end_date']=TRUE;
+				
 return array_key_exists($contrId.'_'.$methId,$permissions);
 }
 ?>

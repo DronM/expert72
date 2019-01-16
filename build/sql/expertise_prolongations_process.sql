@@ -40,5 +40,5 @@ END;
 $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
-ALTER FUNCTION expertise_prolongations_process() OWNER TO expert72;
+ALTER FUNCTION expertise_prolongations_process() OWNER TO ;
 	

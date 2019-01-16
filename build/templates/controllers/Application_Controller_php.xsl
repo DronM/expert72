@@ -886,6 +886,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 					id,
 					expertise_type,
 					cost_eval_validity,
+					exp_cost_eval_validity,
 					modification,
 					audit,
 					app_print_expertise IS NOT NULL AS app_print_expertise_set,
@@ -901,6 +902,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 					id,
 					expertise_type,
 					cost_eval_validity,
+					exp_cost_eval_validity,
 					modification,
 					audit,
 					app_print_expertise IS NOT NULL AS app_print_expertise_set,
@@ -919,6 +921,11 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			
 			if ($set_sent){
 				//Серверные проверки перед отправкой
+				
+				//Есть новая достоверность, но нет ПД
+				if ($ar['exp_cost_eval_validity']=='t' &amp;&amp; !$ar['expertise_type'] ){
+					throw new Exception('Отправка заявлений только по достоверности запрещена!');
+				}				
 				
 				// 27/12 - ЗАПРЕТ!!!
 				if ($ar['cost_eval_validity']=='t' &amp;&amp;$old_state!='correcting'){

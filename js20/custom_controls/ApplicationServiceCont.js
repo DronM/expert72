@@ -73,6 +73,9 @@ function ApplicationServiceCont(id,options){
 						}
 						self.onChangeExpertiseType();
 					}
+					else if (!ctrl.getValue()){
+						ctrl.setValue("pd");
+					}
 					self.m_mainView.getElement("app_print_expertise").setActive(cur_val);
 					self.toggleService("expertise",cur_val);
 					

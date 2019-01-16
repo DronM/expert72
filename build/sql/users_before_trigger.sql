@@ -1,4 +1,4 @@
-- Trigger: users_before_trigger on public.users
+-- Trigger: users_before_trigger on public.users
 
 -- DROP TRIGGER users_before_trigger ON public.users;
 

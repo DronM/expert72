@@ -565,6 +565,20 @@ function ContractDialog_View(id,options){
 				"DocFlowInsideDialog_Model": dlg_m
 			}
 		});
+
+		//*** Пролонгация сроков экспертизы ***
+		this.addElement(new ExpertiseProlongationList_View(id+":expertise_prolongations_list",{
+			"contractDialog":this,
+			"date_type":options.model.getFieldValue("date_type"),
+			"expertise_day_count":options.model.getFieldValue("expertise_day_count"),
+			"fromApp":true,
+			"autoRefresh":true,
+			"filters":[{
+				"field":"contract_id",
+				"sign":"e",
+				"val":options.model.getFieldValue("id")
+			}]
+		}));
 		
 		//Выписка
 		this.addElement(
@@ -771,6 +785,11 @@ function ContractDialog_View(id,options){
 			"controlFieldId":"contract_id",
 			"value":options.model.getFieldValue("id")
 		});
+		this.addDetailDataSet({
+			"control":this.getElement("expertise_prolongations_list").getElement("grid"),
+			"controlFieldId":"contract_id",
+			"value":options.model.getFieldValue("id")
+		});		
 		this.addDetailDataSet({
 			"control":this.getElement("application_process_list").getElement("grid"),
 			"controlFieldId":"application_id",

@@ -1314,6 +1314,7 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/Manual_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/UserEmailConfirmation_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ManualForUser_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ExpertiseProlongationList_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'tmpl/App.templates.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/App.enums.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/App.predefinedItems.js'));
@@ -1715,6 +1716,9 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/RoleType_Controller.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/ManualContent_Controller.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ManualContent_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ExpertiseProlongation_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ExpertiseProlongationList_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/ExpertiseProlongation_Controller.js'));
 	
 			if (isset($_SESSION['scriptId'])){
 				$script_id = $_SESSION['scriptId'];

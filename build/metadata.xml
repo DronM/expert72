@@ -2,7 +2,7 @@
 <metadata owner="expert72">
 	<versions>
 		<version dateOpen="2017-09-27 12:09:48" dateClose="2017-12-08 10:12:08">1.001 
-		<lastBuild>2019-01-14 06:16:19</lastBuild></version>
+		<lastBuild>2019-01-16 06:01:48</lastBuild></version>
 		<version dateOpen="2017-12-08 11:12:01" dateClose="2017-12-08 11:12:04">1.002</version>
 		<version dateOpen="2017-12-08 11:12:20" dateClose="2017-12-08 11:12:20">1.0.3</version>
 		<version dateOpen="2017-12-12 11:12:07" dateClose="2017-12-12 11:12:07">1.0.4</version>
@@ -103,6 +103,7 @@
 		<version dateOpen="2018-12-15 06:12:13" dateClose="2018-12-22 06:12:02">1.0.100</version>
 		<version dateOpen="2018-12-22 06:12:03" dateClose="2019-01-07 09:01:26">1.0.101</version>
 		<version dateOpen="2019-01-07 09:01:27" dateClose="2019-01-14 06:01:16">1.0.102</version>
+		<version dateOpen="2019-01-14 06:01:17" dateClose="2019-01-16 06:01:02">1.0.103</version>
 	</versions>
 	<globalFilters>
 		<field id="user_id"/>
@@ -2642,6 +2643,29 @@
 			<field id="date_time" dataType="DateTime" required="TRUE"/>
 			<field id="files" dataType="JSONB"/>
 		</model>
+		<model id="ExpertiseProlongation" parent="ModelSQL" dataTable="expertise_prolongations" virtual="FALSE">
+			<field id="contract_id" dataType="Int" refTable="contracts" refField="id" required="TRUE" primaryKey="TRUE"/>
+			<field id="date_time" dataType="DateTime" required="TRUE" primaryKey="TRUE" defaultValue="CURRENT_TIMESTAMP"/>
+			<field id="day_count" dataType="Int" required="TRUE"/>
+			<field id="date_type" dataType="Enum" enumId="date_types"/>
+			<field id="new_end_date" dataType="Date"/>
+			<field id="employee_id" dataType="Int" refTable="employees" refField="id"/>
+			<field id="comment_text" dataType="Text" alias="&#x41A;&#x43E;&#x43C;&#x43C;&#x435;&#x43D;&#x442;&#x430;&#x440;&#x438;&#x439;"/>
+		</model>
+		<model id="ExpertiseProlongationList" parent="ModelSQL" dataTable="expertise_prolongations_list" virtual="TRUE">
+			<defaultOrder>
+				<field id="date_time" sortDirect="DESC"/>
+			</defaultOrder>
+			<field id="contract_id" dataType="Int" refTable="contracts" refField="id" required="TRUE" primaryKey="TRUE"/>
+			<field id="date_time" dataType="DateTime" required="TRUE" primaryKey="TRUE" defaultValue="CURRENT_TIMESTAMP"/>
+			<field id="day_count" dataType="Int" required="TRUE"/>
+			<field id="date_type" dataType="Enum" enumId="date_types"/>
+			<field id="new_end_date" dataType="Date"/>
+			<field id="employees_ref" dataType="JSON"/>
+			<field id="contracts_ref" dataType="JSON"/>
+			<field id="employee_id" dataType="Int" refTable="employees" refField="id"/>
+			<field id="comment_text" dataType="Text" alias="&#x41A;&#x43E;&#x43C;&#x43C;&#x435;&#x43D;&#x442;&#x430;&#x440;&#x438;&#x439;"/>
+		</model>
 		<model id="AccessPermission" parentJS="ModelJSON" virtual="TRUE" server="FALSE">
 			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE"/>
 			<field id="obj" dataType="JSON"/>
@@ -3983,6 +4007,18 @@
 			<publicMethod id="get_object" modelId="ManualContent"/>
 			<publicMethod id="get_list" modelId="ManualContent"/>
 		</controller>
+		<controller id="ExpertiseProlongation" parentId="ControllerSQL">
+			<publicMethod id="insert" modelId="ExpertiseProlongation"/>
+			<publicMethod id="update" modelId="ExpertiseProlongation"/>
+			<publicMethod id="delete" modelId="ExpertiseProlongation"/>
+			<publicMethod id="get_object" modelId="ExpertiseProlongationList"/>
+			<publicMethod id="get_list" modelId="ExpertiseProlongationList"/>
+			<publicMethod id="calc_work_end_date">
+				<field id="contract_id" dataType="Int" required="TRUE"/>
+				<field id="date_type" dataType="Enum" enumId="date_types" required="TRUE"/>
+				<field id="day_count" dataType="Int" required="TRUE"/>
+			</publicMethod>
+		</controller>
 	</controllers>
 	<permissions>
 		<permission type="allow" controllerId="all" methodId="all" roleId="admin"/>
@@ -4051,6 +4087,7 @@
 		<view id="10027" c="ApplicationDocFolder_Controller" t="ApplicationDocFolderList" f="get_list" section="&#x421;&#x43F;&#x440;&#x430;&#x432;&#x43E;&#x447;&#x43D;&#x438;&#x43A;&#x438;" descr="&#x41F;&#x440;&#x43E;&#x447;&#x438;&#x435; &#x43F;&#x430;&#x43F;&#x43A;&#x438; &#x43F;&#x440;&#x43E;&#x435;&#x43A;&#x442;&#x430;"/>
 		<view id="10028" c="ShortMessageRecipientState_Controller" t="ShortMessageRecipientStateList" f="get_list" section="&#x421;&#x43F;&#x440;&#x430;&#x432;&#x43E;&#x447;&#x43D;&#x438;&#x43A;&#x438;" descr="&#x427;&#x430;&#x442;: &#x441;&#x442;&#x430;&#x442;&#x443;&#x441;&#x44B; &#x441;&#x43E;&#x442;&#x440;&#x443;&#x434;&#x43D;&#x438;&#x43A;&#x43E;&#x432;"/>
 		<view id="10029" c="Manual_Controller" t="ManualList" f="get_list" section="&#x421;&#x43F;&#x440;&#x430;&#x432;&#x43E;&#x447;&#x43D;&#x438;&#x43A;&#x438;" descr="&#x421;&#x43F;&#x440;&#x430;&#x432;&#x43A;&#x438;"/>
+		<view id="10030" c="ExpertiseProlongation_Controller" t="ExpertiseProlongationList" f="get_list" section="&#x421;&#x43F;&#x440;&#x430;&#x432;&#x43E;&#x447;&#x43D;&#x438;&#x43A;&#x438;" descr="&#x41F;&#x440;&#x43E;&#x434;&#x43B;&#x435;&#x43D;&#x438;&#x435; &#x44D;&#x43A;&#x441;&#x43F;&#x435;&#x440;&#x442;&#x438;&#x437;&#x44B;"/>
 		<view id="20000" c="Application_Controller" t="ApplicationList" f="get_list" section="&#x414;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;" descr="&#x417;&#x430;&#x44F;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x44F;"/>
 		<view id="20001" c="DocFlowExamination_Controller" t="DocFlowExaminationList" f="get_list" section="&#x414;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;" descr="&#x420;&#x430;&#x441;&#x441;&#x43C;&#x43E;&#x442;&#x440;&#x435;&#x43D;&#x438;&#x44F;"/>
 		<view id="20002" c="DocFlowInClient_Controller" t="DocFlowInClientList" f="get_list" section="&#x414;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;" descr="&#x412;&#x445;&#x43E;&#x434;&#x44F;&#x449;&#x438;&#x435; &#x43A;&#x43B;&#x438;&#x435;&#x43D;&#x442;&#x430;"/>
@@ -4141,6 +4178,7 @@
 		<serverTemplate id="RepReestrContract"/>
 		<serverTemplate id="RepQuarter"/>
 		<serverTemplate id="ManualList"/>
+		<serverTemplate id="ExpertiseProlongationList"/>
 	</serverTemplates>
 	<jsTemplates>
 		<jsTemplate id="FatalException" file="tmpl/FatalException.html"/>
@@ -4721,6 +4759,7 @@
 		<jsScript file="views/Manual_View.js"/>
 		<jsScript file="views/UserEmailConfirmation_View.js"/>
 		<jsScript file="views/ManualForUser_View.js"/>
+		<jsScript file="views/ExpertiseProlongationList_View.js"/>
 		<jsScript file="tmpl/App.templates.js" compressed="FALSE" standalone="FALSE"/>
 		<jsScript file="custom_controls/App.enums.js"/>
 		<jsScript file="custom_controls/App.predefinedItems.js"/>
@@ -5122,6 +5161,9 @@
 		<jsScript file="controllers/RoleType_Controller.js"/>
 		<jsScript file="controllers/ManualContent_Controller.js"/>
 		<jsScript file="models/ManualContent_Model.js"/>
+		<jsScript file="models/ExpertiseProlongation_Model.js"/>
+		<jsScript file="models/ExpertiseProlongationList_Model.js"/>
+		<jsScript file="controllers/ExpertiseProlongation_Controller.js"/>
 	</jsScripts>
 	<cssScripts>
 		<cssScript file="assets/css/icons/icomoon/styles.css" compressed="TRUE" standalone="TRUE"/>

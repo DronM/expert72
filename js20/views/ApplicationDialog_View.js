@@ -38,7 +38,7 @@ function ApplicationDialog_View(id,options){
 		options.templateOptions.is_admin = (role_id=="admin");
 		options.readOnly = (options.model.getField("application_state").isSet() && options.model.getFieldValue("application_state")!="filling" && options.model.getFieldValue("application_state")!="correcting");
 		
-		if (options.readOnly&&options.model.getFieldValue("create_dt")<(new Date(2019,0,1))){
+		if (!options.model.getFieldValue("exp_cost_eval_validity")&&options.readOnly&&options.model.getFieldValue("create_dt")<(new Date(2019,0,1))){
 			this.m_order010119 = false;
 		}
 		

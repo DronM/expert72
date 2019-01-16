@@ -85,3 +85,5 @@ DocFlowInsideDialog_View.prototype.HEAD_TITLE = "Внутренний докум
 
 ManualList_View.prototype.HEAD_TITLE = "Список справок для ролей";
 Manual_View.prototype.HEAD_TITLE = "Редактирование справки";
+
+ExpertiseProlongationList_View.prototype.HEAD_TITLE = "Продление сроков экспертизы";
