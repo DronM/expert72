@@ -927,11 +927,12 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 					throw new Exception('Отправка заявлений только по достоверности запрещена!');
 				}				
 				
-				// 27/12 - ЗАПРЕТ!!!
+				// 27/12 - ЗАПРЕТ!!! - УБАРЛ 17/01/19
+				/*
 				if ($ar['cost_eval_validity']=='t' &amp;&amp;$old_state!='correcting'){
 					throw new Exception('Отправка заявлений по достоверности запрещена!');
 				}				
-				
+				*/
 				
 				if (
 				($ar['expertise_type'] &amp;&amp; $ar['app_print_expertise_set']!='t')

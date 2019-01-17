@@ -1845,11 +1845,12 @@ class Application_Controller extends ControllerSQL{
 					throw new Exception('Отправка заявлений только по достоверности запрещена!');
 				}				
 				
-				// 27/12 - ЗАПРЕТ!!!
+				// 27/12 - ЗАПРЕТ!!! - УБАРЛ 17/01/19
+				/*
 				if ($ar['cost_eval_validity']=='t' &&$old_state!='correcting'){
 					throw new Exception('Отправка заявлений по достоверности запрещена!');
 				}				
-				
+				*/
 				
 				if (
 				($ar['expertise_type'] && $ar['app_print_expertise_set']!='t')

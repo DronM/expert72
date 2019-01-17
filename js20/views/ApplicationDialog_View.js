@@ -29,7 +29,7 @@ function ApplicationDialog_View(id,options){
 	
 	options.templateOptions = options.templateOptions || {};
 
-	this.m_order010119 = true;
+	this.m_order010119 = false;//always!!! 17/01/19
 
 	//все прочие папки		
 	var doc_folders;
@@ -37,11 +37,11 @@ function ApplicationDialog_View(id,options){
 	if (options.model && (options.model.getRowIndex()>=0 || options.model.getNextRow()) ){			
 		options.templateOptions.is_admin = (role_id=="admin");
 		options.readOnly = (options.model.getField("application_state").isSet() && options.model.getFieldValue("application_state")!="filling" && options.model.getFieldValue("application_state")!="correcting");
-		
+		/*
 		if (!options.model.getFieldValue("exp_cost_eval_validity")&&options.readOnly&&options.model.getFieldValue("create_dt")<(new Date(2019,0,1))){
 			this.m_order010119 = false;
 		}
-		
+		*/
 		options.templateOptions.contractExists = options.model.getField("contract_number").isSet();
 		if (options.templateOptions.contractExists){
 			options.templateOptions.contractNumber = options.model.getField("contract_number").getValue();
