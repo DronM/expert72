@@ -154,6 +154,31 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		foreach($ar_obj as $k=>$v){
 			array_push($values,new Field($k,DT_STRING,array('value'=>$v)));
 		}
+		
+		//extra value, document visibility for expert
+		$contract_document_visib = TRUE;
+		if ($_SESSION['role_id']=='expert'){			
+			if (!isset($_SESSION['contract_document_visib'])){
+				$contract_document_visib = FALSE;
+				$emp_id = intval(json_decode($_SESSION['employees_ref'])->keys->id);
+				$ar = $this->getDbLink()->query_first(sprintf("SELECT const_contract_document_visib_expert_list_val() AS v"));
+				if(count($ar)){
+					$l = json_decode($ar['v']);
+					foreach ($l->rows as $r){
+						if (intval($r->fields->id)==$emp_id){
+							$contract_document_visib = TRUE;
+							break;
+						}
+					}
+					$_SESSION['contract_document_visib'] = $contract_document_visib;
+				}
+			}
+			else{
+				$contract_document_visib = $_SESSION['contract_document_visib'];
+			}			
+		}	
+		array_push($values,new Field('contract_document_visib',DT_BOOL,array('value'=>$contract_document_visib)));
+		
 		$this->addModel(new ModelVars(
 			array('name'=>'Vars',
 				'id'=>'ContractDialog_Model',
@@ -161,7 +186,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				)
 			)
 		);		
-			
+		
 	}
 	
 	public function get_list($pm){

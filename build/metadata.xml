@@ -2,7 +2,7 @@
 <metadata owner="expert72">
 	<versions>
 		<version dateOpen="2017-09-27 12:09:48" dateClose="2017-12-08 10:12:08">1.001 
-		<lastBuild>2019-01-17 12:30:23</lastBuild></version>
+		<lastBuild>2019-01-28 07:01:01</lastBuild></version>
 		<version dateOpen="2017-12-08 11:12:01" dateClose="2017-12-08 11:12:04">1.002</version>
 		<version dateOpen="2017-12-08 11:12:20" dateClose="2017-12-08 11:12:20">1.0.3</version>
 		<version dateOpen="2017-12-12 11:12:07" dateClose="2017-12-12 11:12:07">1.0.4</version>
@@ -105,6 +105,7 @@
 		<version dateOpen="2019-01-07 09:01:27" dateClose="2019-01-14 06:01:16">1.0.102</version>
 		<version dateOpen="2019-01-14 06:01:17" dateClose="2019-01-16 06:01:02">1.0.103</version>
 		<version dateOpen="2019-01-16 06:01:02" dateClose="2019-01-17 12:01:30">1.0.104</version>
+		<version dateOpen="2019-01-17 12:01:31" dateClose="2019-01-28 07:01:01">1.0.105</version>
 	</versions>
 	<globalFilters>
 		<field id="user_id"/>
@@ -2618,6 +2619,7 @@
 			<field id="result_sign_expert_list" dataType="JSONB"/>
 			<field id="contract_return_date_on_sig" dataType="Bool"/>
 			<field id="exp_cost_eval_validity" dataType="Bool"/>
+			<field id="contract_document_visib" dataType="Bool"/>
 		</model>
 		<model id="ExpertWork" parent="ModelSQL" dataTable="expert_works" virtual="FALSE">
 			<field id="id" dataType="Int" primaryKey="TRUE" required="FALSE" autoInc="TRUE"/>
@@ -2925,6 +2927,7 @@
 		<constant id="cades_include_certificate" name="&#x41A;&#x440;&#x438;&#x43F;&#x442;&#x43E;&#x41F;&#x440;&#x43E; &#x43F;&#x43B;&#x430;&#x433;&#x438;&#x43D;: &#x41F;&#x43E;&#x440;&#x44F;&#x434;&#x43E;&#x43A; &#x432;&#x43B;&#x44E;&#x447;&#x435;&#x43D;&#x438;&#x44F; &#x441;&#x435;&#x440;&#x442;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x43E;&#x432; &#x432; &#x43F;&#x43E;&#x434;&#x43F;&#x438;&#x441;&#x44C;" descr="0 - &#x432;&#x43A;&#x43B;&#x44E;&#x447;&#x430;&#x442;&#x44C; &#x441;&#x435;&#x440;&#x442;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x44B; &#x43A;&#x440;&#x43E;&#x43C;&#x435; &#x433;&#x43E;&#x43B;&#x43E;&#x432;&#x43D;&#x43E;&#x433;&#x43E;, 1 - &#x432;&#x43A;&#x43B;&#x44E;&#x447;&#x430;&#x442;&#x44C; &#x432;&#x441;&#x435; &#x441;&#x435;&#x440;&#x442;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x44B;, 2 - &#x432;&#x43A;&#x43B;&#x44E;&#x447;&#x430;&#x442;&#x44C; &#x442;&#x43E;&#x43B;&#x44C;&#x43A;&#x43E; &#x441;&#x435;&#x440;&#x442;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442; &#x43F;&#x43E;&#x434;&#x43F;&#x438;&#x441;&#x430;&#x43D;&#x442;&#x430;" dataType="Int" defaultValue="1" autoload="TRUE"/>
 		<constant id="cades_signature_type" name="&#x41A;&#x440;&#x438;&#x43F;&#x442;&#x43E;&#x41F;&#x440;&#x43E; &#x43F;&#x43B;&#x430;&#x433;&#x438;&#x43D;: &#x422;&#x438;&#x43F; &#x443;&#x441;&#x43E;&#x432;&#x435;&#x440;&#x448;&#x435;&#x43D;&#x441;&#x442;&#x432;&#x43E;&#x432;&#x430;&#x43D;&#x43D;&#x43E;&#x439; &#x43F;&#x43E;&#x434;&#x43F;&#x438;&#x441;&#x438;" descr="1- &#x422;&#x438;&#x43F; &#x43F;&#x43E;&#x434;&#x43F;&#x438;&#x441;&#x438; CAdES BES, 0- &#x422;&#x438;&#x43F; &#x43F;&#x43E;&#x434;&#x43F;&#x438;&#x441;&#x438; &#x43F;&#x43E; &#x443;&#x43C;&#x43E;&#x43B;&#x447;&#x430;&#x43D;&#x438;&#x44E; (CAdES-X Long Type 1), 5- &#x422;&#x438;&#x43F; &#x43F;&#x43E;&#x434;&#x43F;&#x438;&#x441;&#x438; CAdES T, 93- &#x422;&#x438;&#x43F; &#x43F;&#x43E;&#x434;&#x43F;&#x438;&#x441;&#x438; CAdES-X Long Type 1" dataType="Int" defaultValue="1" autoload="TRUE"/>
 		<constant id="cades_hash_algorithm" name="&#x41A;&#x440;&#x438;&#x43F;&#x442;&#x43E;&#x41F;&#x440;&#x43E; &#x43F;&#x43B;&#x430;&#x433;&#x438;&#x43D;: &#x410;&#x43B;&#x433;&#x43E;&#x440;&#x438;&#x442;&#x43C; &#x445;&#x44D;&#x448;&#x438;&#x440;&#x43E;&#x432;&#x430;&#x43D;&#x438;&#x44F;" descr="100 - &#x410;&#x43B;&#x433;&#x43E;&#x440;&#x438;&#x442;&#x43C; &#x413;&#x41E;&#x421;&#x422; &#x420; 34.11-94, 101 - &#x410;&#x43B;&#x433;&#x43E;&#x440;&#x438;&#x442;&#x43C; &#x413;&#x41E;&#x421;&#x422; &#x420; 34.10-2012 256 &#x431;&#x438;&#x442;, 102 - &#x410;&#x43B;&#x433;&#x43E;&#x440;&#x438;&#x442;&#x43C; &#x413;&#x41E;&#x421;&#x422; &#x420; 34.10-2012 512 &#x431;&#x438;&#x442;" dataType="Int" defaultValue="100" autoload="TRUE"/>
+		<constant id="contract_document_visib_expert_list" name="&#x421;&#x43F;&#x438;&#x441;&#x43E;&#x43A; &#x44D;&#x43A;&#x441;&#x43F;&#x435;&#x440;&#x442;&#x43E;&#x432;, &#x443; &#x43A;&#x43E;&#x442;&#x43E;&#x440;&#x44B;&#x445; &#x434;&#x43E;&#x441;&#x442;&#x443;&#x43F;&#x43D;&#x430; &#x437;&#x430;&#x43A;&#x43B;&#x430;&#x434;&#x43A;&#x430; '&#x414;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;' &#x432; &#x43A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x435;" descr="&#x417;&#x430;&#x43A;&#x43B;&#x430;&#x434;&#x43A;&#x430; '&#x414;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;' &#x432; &#x43A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x435; &#x43D;&#x435; &#x434;&#x43E;&#x441;&#x442;&#x443;&#x43F;&#x43D;&#x430; &#x434;&#x43B;&#x44F; &#x440;&#x43E;&#x43B;&#x438; '&#x44D;&#x43A;&#x441;&#x43F;&#x435;&#x440;&#x442;'. &#x41E;&#x434;&#x43D;&#x430;&#x43A;&#x43E; &#x43C;&#x43E;&#x436;&#x43D;&#x43E; &#x437;&#x430;&#x434;&#x430;&#x442;&#x44C; &#x441;&#x43F;&#x438;&#x441;&#x43E;&#x43A; &#x44D;&#x43A;&#x441;&#x43F;&#x435;&#x440;&#x442;&#x43E;&#x432;, &#x434;&#x43B;&#x44F; &#x43A;&#x43E;&#x442;&#x43E;&#x440;&#x44B;&#x445; &#x437;&#x430;&#x43A;&#x43B;&#x430;&#x434;&#x43A;&#x430; &#x431;&#x443;&#x434;&#x435;&#x442; &#x432;&#x438;&#x434;&#x438;&#x43C;&#x430;." dataType="JSON"/>
 	</constants>
 	<controllers>
 		<controller id="Constant" parentId="ControllerSQL">

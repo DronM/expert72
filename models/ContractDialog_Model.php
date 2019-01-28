@@ -741,6 +741,14 @@ class ContractDialog_Model extends ModelSQL{
 		$f_exp_cost_eval_validity=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"exp_cost_eval_validity",$f_opts);
 		$this->addField($f_exp_cost_eval_validity);
 		//********************
+		
+		//*** Field contract_document_visib ***
+		$f_opts = array();
+		$f_opts['id']="contract_document_visib";
+				
+		$f_contract_document_visib=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"contract_document_visib",$f_opts);
+		$this->addField($f_contract_document_visib);
+		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}
 

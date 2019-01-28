@@ -812,6 +812,15 @@ function ContractDialog_Model(options){
 	
 	options.fields.exp_cost_eval_validity = new FieldBool("exp_cost_eval_validity",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.contract_document_visib = new FieldBool("contract_document_visib",filed_options);
+	
 		ContractDialog_Model.superclass.constructor.call(this,id,options);
 }
 extend(ContractDialog_Model,ModelXML);

@@ -28,7 +28,9 @@ DECLARE
 	v_contract_return_date timestampTZ;
 	v_corrected_sections_t text;
 	v_corrected_sections_o jsonb;
+	v_corrected_files_t text;
 	v_doc_flow_in doc_flow_in;
+	v_server_for_href text;
 BEGIN
 	IF TG_WHEN='BEFORE' AND ( TG_OP='INSERT' OR TG_OP='UPDATE') THEN		
 		IF (const_client_lk_val() OR const_debug_val())
@@ -50,6 +52,9 @@ BEGIN
 		IF
 		( (TG_OP='INSERT' AND NEW.sent) OR (TG_OP='UPDATE' AND NEW.sent AND NOT coalesce(OLD.sent,FALSE)) )
 		AND (NOT const_client_lk_val() OR const_debug_val()) THEN
+		
+			v_server_for_href = 'http://192.168.1.134/expert72/';
+		
 			--main programm
 			--*********** Исходные данные *************************
 			SELECT
@@ -152,11 +157,13 @@ BEGIN
 			IF NEW.doc_flow_out_client_type='contr_return' THEN
 				v_doc_flow_subject = NEW.subject||' №'||v_contract_number||', '||(v_applicant->>'name')::text;
 			ELSIF NEW.doc_flow_out_client_type='contr_resp' THEN
-				--Разделы с изменениями для ответов на замечания
+				--Разделы с изменениями для ответов на замечания, свернуто
 				SELECT
 					string_agg(paths.file_path,','),
 					jsonb_agg(paths.section_o)
-				INTO v_corrected_sections_t,v_corrected_sections_o
+				INTO
+					v_corrected_sections_t,
+					v_corrected_sections_o
 				FROM
 				(
 					SELECT 
@@ -228,6 +235,30 @@ BEGIN
 			RETURNING id,recipient,reg_number
 			INTO v_doc_flow_in_id,v_recipient,v_reg_number;
 			--**********************************************************
+			
+			IF NEW.doc_flow_out_client_type='contr_resp' THEN
+				--Файлы развернуто со ссылками
+				SELECT
+					string_agg(fl.f_descr,E'\n\n')
+				INTO
+					v_corrected_files_t
+				FROM(	
+					SELECT 
+						CASE WHEN app_f.information_list THEN 'Удостоверяющий лист ' ELSE '' END||
+						app_f.file_path||'/'||app_f.file_name||
+						format(E'\n%s?c=DocFlowOut_Controller&f=get_file&v=ViewXML&file_id=%s&doc_id=%s',
+						v_server_for_href,app_f.file_id,v_doc_flow_in_id)
+						AS f_descr
+					FROM doc_flow_out_client_document_files AS doc_f
+					LEFT JOIN application_document_files AS app_f ON app_f.file_id=doc_f.file_id
+					WHERE
+						doc_f.doc_flow_out_client_id=NEW.id
+						AND app_f.document_id<>0
+						AND doc_f.is_new
+					ORDER BY app_f.information_list,app_f.file_path,app_f.file_name
+				) AS fl				
+				;
+			END IF;
 			
 			--************** Рег номер наш - клиенту ******************************
 			INSERT INTO doc_flow_out_client_reg_numbers
@@ -418,7 +449,9 @@ BEGIN
 						ROW('constr_name',v_constr_name)::template_value,
 						ROW('application_id',NEW.application_id)::template_value,
 						ROW('contract_id',v_contract_id)::template_value,						
-						ROW('sections',v_corrected_sections_t)::template_value
+						ROW('sections',v_corrected_sections_t)::template_value,
+						ROW('files',v_corrected_files_t)::template_value,
+						ROW('server',v_server_for_href)::template_value
 					],
 					(SELECT v FROM templ)
 				) AS mes_body,		

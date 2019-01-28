@@ -23,6 +23,8 @@ function ContractDialog_View(id,options){
 	
 	//options.cmdSave = false;
 	
+	var role = window.getApp().getServVar("role_id");
+					
 	options.uploaderClass = FileUploaderContract_View;
 	
 	options.templateOptions = options.templateOptions || {};
@@ -30,6 +32,7 @@ function ContractDialog_View(id,options){
 	
 	if (options.model && (options.model.getRowIndex()>=0 || options.model.getNextRow()) ){			
 		options.templateOptions.expertise_sections = options.model.getFieldValue("expertise_sections");
+		options.templateOptions.documVisib = options.model.getFieldValue("contract_document_visib");
 	}
 	
 	//все прочие папки	
@@ -42,7 +45,7 @@ function ContractDialog_View(id,options){
 	options.templateOptions.costEvalValidity = options.model.getFieldValue("cost_eval_validity") || options.templateOptions.expCostEvalValidity;
 	options.templateOptions.pd = (options.model.getFieldValue("document_type")=="pd");	
 	
-	options.templateOptions.notExpert = (window.getApp().getServVar("role_id")!="expert");
+	options.templateOptions.notExpert = (role!="expert");
 	options.templateOptions.expert = !options.templateOptions.notExpert;
 	
 	var employee_main_expert = (options.model.getFieldValue("main_experts_ref").getKey("id")==CommonHelper.unserialize(window.getApp().getServVar("employees_ref")).getKey("id"));
@@ -62,7 +65,7 @@ function ContractDialog_View(id,options){
 		var bs = window.getBsCol();
 		var editContClassName = "input-group "+bs+"9";
 		var labelClassName = "control-label "+bs+"3";
-		var role = window.getApp().getServVar("role_id");
+		
 		var is_admin = (role=="admin");
 
 		this.addElement(new HiddenKey(id+":id"));
@@ -370,6 +373,9 @@ function ContractDialog_View(id,options){
 			//********* contractors list grid ***********************
 			this.addElement(new ContractorListGrid(id+":contractors_list"));		
 		
+		}
+		
+		if (options.templateOptions.documVisib){
 			//Вкладка с документами
 			this.addElement(new DocFolder_View(id+":doc_folders",{
 				"items":doc_folders,

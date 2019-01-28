@@ -29,9 +29,12 @@
 			{{/setAccess}}
 			
 			<li id="{{id}}:tab-documents"><a href="#documents" data-toggle="tab" aria-expanded="false">Документация</a></li>
+
+			{{#documVisib}}
+			<li id="{{id}}:tab-doc_folders"><a href="#doc_folders" data-toggle="tab" aria-expanded="false">Документы</a></li>
+			{{/documVisib}}
 			
 			{{#notExpert}}
-			<li id="{{id}}:tab-doc_folders"><a href="#doc_folders" data-toggle="tab" aria-expanded="false">Документы</a></li>
 			<li id="{{id}}:tab-expertise"><a href="#expertise" data-toggle="tab" aria-expanded="false">Экспертиза</a></li>
 			{{/notExpert}}
 			
@@ -281,11 +284,11 @@
 			</div>
 		</div>
 
-		{{#notExpert}}
+		{{#documVisib}}
 		<div class="tab-pane fade" id="doc_folders">
 			<div id="{{id}}:doc_folders"/>
 		</div>
-		{{/notExpert}}
+		{{/documVisib}}
 
 		<div class="tab-pane fade{{#expert}} active in{{/expert}}" id="expertise">
 			{{#expert}}

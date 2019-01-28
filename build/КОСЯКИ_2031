@@ -112,3 +112,13 @@ where l.application_state='filling'
 	AND app.cost_eval_validity=TRUE
 
 
+
+update applications
+set exp_cost_eval_validity=NULL,cost_eval_validity=TRUE
+FROM(
+SELECT a.id
+FROM applications a
+where a.exp_cost_eval_validity=TRUE
+) AS app
+where applications.id=app.id
+

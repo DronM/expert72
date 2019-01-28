@@ -155,7 +155,7 @@
 		$struc->Вставить('ДатаДокумента',date('YmdHis'));
 		$struc->Вставить('Руководитель',$v8->Справочники->Сотрудники->НайтиПоНаименованию(CONST_1C_RUK));
 		$struc->Вставить('ГлБухгалтер',$v8->Справочники->Сотрудники->НайтиПоНаименованию(CONST_1C_BUH));
-		$struc->Вставить('ЛС',$params['acc_number']);
+		$struc->Вставить('ЛС',CONST_1C_LSCHET);
 		$struc->Вставить('КЭК', CONST_1C_KEK);
 		$struc->Вставить('НаправленияДеятельности', CONST_1C_ACT_NAME);		
 		$struc->Вставить('КПС', CONST_1C_KPS_CODE);
@@ -167,18 +167,7 @@
 		$struc->Вставить('item_1c_descr_full', $params['item_1c_descr_full']);
 		$struc->Вставить('item_1c_doc_descr', $params['item_1c_doc_descr']);
 		$struc->Вставить('document_type', $params['document_type']);		
-		$struc->Вставить('reg_number', $params['reg_number']);
-		
-		$pay_list = $v8->NewObject('ТаблицаЗначений');
-		$pay_list->Колонки->Добавить("ДатаДокумента");
-		$pay_list->Колонки->Добавить("НомерДокумента");
-		$payments = json_decode($params['payment']);
-		foreach($payments as $payment){
-			$pay = $pay_list->Добавить();
-			$pay->ДатаДокумента = dateISO_to_date1c($payment->pay_docum_date);
-			$pay->НомерДокумента = $payment->pay_docum_number;
-		}
-		$struc->Вставить('ТаблицаОплат', $pay_list);
+		$struc->Вставить('reg_number', $params['reg_number']);		
 	}
 	
 	function float1c_to_float($float1c){

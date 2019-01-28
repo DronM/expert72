@@ -33,7 +33,7 @@ class EmailSender {
 					(!$replyName||$replyName=='')? 'NULL':"'".$replyName."'",
 					(!$sender||$sender=='')? 'NULL':"'".$sender."'",
 					(!$subject||$subject=='')? 'NULL':"'".$subject."'",
-					(!$body||$body=='')? 'NULL':"'".$body."'",
+					(!$body||$body=='')? 'NULL':"E'".$body."'",
 					is_null($smsType)? 'NULL':"'".$smsType."'"
 			));
 			
