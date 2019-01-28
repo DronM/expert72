@@ -572,20 +572,22 @@ function ContractDialog_View(id,options){
 			}
 		});
 
-		//*** Пролонгация сроков экспертизы ***
-		this.addElement(new ExpertiseProlongationList_View(id+":expertise_prolongations_list",{
-			"contractDialog":this,
-			"date_type":options.model.getFieldValue("date_type"),
-			"expertise_day_count":options.model.getFieldValue("expertise_day_count"),
-			"fromApp":true,
-			"autoRefresh":true,
-			"filters":[{
-				"field":"contract_id",
-				"sign":"e",
-				"val":options.model.getFieldValue("id")
-			}]
-		}));
-		
+		if (options.templateOptions.notExpert){
+			//*** Пролонгация сроков экспертизы ***
+			this.addElement(new ExpertiseProlongationList_View(id+":expertise_prolongations_list",{
+				"contractDialog":this,
+				"date_type":options.model.getFieldValue("date_type"),
+				"expertise_day_count":options.model.getFieldValue("expertise_day_count"),
+				"fromApp":true,
+				"autoRefresh":true,
+				"filters":[{
+					"field":"contract_id",
+					"sign":"e",
+					"val":options.model.getFieldValue("id")
+				}]
+			}));
+		}
+				
 		//Выписка
 		this.addElement(
 			new ContractObjInfBtn(id+":cmdObjInf",{
