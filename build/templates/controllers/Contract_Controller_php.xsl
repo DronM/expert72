@@ -165,7 +165,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				if(count($ar)){
 					$l = json_decode($ar['v']);
 					foreach ($l->rows as $r){
-						if (intval($r->fields->id)==$emp_id){
+						if (intval($r->fields->employees_ref->keys->id)==$emp_id){
 							$contract_document_visib = TRUE;
 							break;
 						}

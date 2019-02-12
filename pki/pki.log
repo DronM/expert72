@@ -180,3 +180,16 @@ CMD=/usr/local/bin/openssl smime -verify -content "/home/andrey/www/htdocs/exper
 11/12/2018 14:48 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/output/5c0f87d156454.4" -noout
 11/12/2018 14:48 Called run_shell_cmd /usr/local/bin/openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/output/5c0f87d156454.4" -noout -nameopt multiline
 11/12/2018 14:48 Called run_shell_cmd /usr/local/bin/openssl smime -verify -content "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/Expired/299-Д Контракт УКС.pdf" -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/output/5c0f87d156341.der" -noverify
+08/02/2019 10:13 Called verifySig
+08/02/2019 10:13 parseSigFile
+08/02/2019 10:13 Called run_shell_cmd2 /usr/local/bin/openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/output/5c5d0fdc5e217.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END CERT/ { print > "/home/andrey/www/htdocs/expert72/output/5c5d0fdc76a70."i }'
+08/02/2019 10:13 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5c5d0fdc76a70.1" -noout
+08/02/2019 10:13 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5c5d0fdc76a70.2" -noout
+08/02/2019 10:13 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5c5d0fdc76a70.3" -noout
+08/02/2019 10:13 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5c5d0fdc76a70.4" -noout
+08/02/2019 10:13 Found signer certificates:1
+08/02/2019 10:13 Called run_shell_cmd /usr/local/bin/openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/output/5c5d0fdc5e217.der" -noout -cmsout -print
+08/02/2019 10:13 Parsing certificate file /home/andrey/www/htdocs/expert72/output/5c5d0fdc76a70.4
+08/02/2019 10:13 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/output/5c5d0fdc76a70.4" -noout
+08/02/2019 10:13 Called run_shell_cmd /usr/local/bin/openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/output/5c5d0fdc76a70.4" -noout -nameopt multiline
+08/02/2019 10:13 Called run_shell_cmd /usr/local/bin/openssl smime -verify -content "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/Expired/299-Д Контракт УКС.pdf" -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/output/5c5d0fdc5e217.der" -noverify

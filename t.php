@@ -1,4 +1,6 @@
 <?php
+	echo time();
+	exit;
 //	echo 11%2;
 //	exit;
 /*

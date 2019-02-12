@@ -223,7 +223,7 @@
 
 <!-- ************** Main Menu ******************** -->
 <xsl:template name="initMenu">
-	<xsl:if test="model[@id='MainMenu_Model']">
+	<xsl:if test="model[@id='MainMenu_Model'] or /document/model[@id='ModelVars']/row/role_id='admin'">
 	<!-- Main navigation -->
 	<div class="sidebar-category sidebar-category-visible" id="side-menu">
 		<div class="category-content no-padding">

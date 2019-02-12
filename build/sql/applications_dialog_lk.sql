@@ -1,7 +1,7 @@
 -- VIEW: applications_dialog_lk
 
 --DROP VIEW contracts_dialog_lk;
-DROP VIEW applications_dialog_lk;
+--DROP VIEW applications_dialog_lk;
 
 CREATE OR REPLACE VIEW applications_dialog_lk AS
 	SELECT
@@ -172,8 +172,8 @@ CREATE OR REPLACE VIEW applications_dialog_lk AS
 					'signatures',--sign.signatures
 					CASE
 						WHEN sign.signatures IS NULL AND f_ver.file_id IS NOT NULL THEN
-							jsonb_build_array(
-								jsonb_build_object(
+							json_build_array(
+								json_build_object(
 									'sign_date_time',f_ver.date_time,
 									'check_result',f_ver.check_result,
 									'error_str',f_ver.error_str
@@ -193,11 +193,11 @@ CREATE OR REPLACE VIEW applications_dialog_lk AS
 		LEFT JOIN (
 			SELECT
 				files_t.file_id,
-				jsonb_agg(files_t.signatures) AS signatures
+				json_agg(files_t.signatures) AS signatures
 			FROM
 			(SELECT
 				f_sig.file_id,
-				jsonb_build_object(
+				json_build_object(
 					'owner',u_certs.subject_cert,
 					'cert_from',u_certs.date_time_from,
 					'cert_to',u_certs.date_time_to,

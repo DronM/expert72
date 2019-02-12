@@ -1058,7 +1058,7 @@ class Contract_Controller extends ControllerSQL{
 				if(count($ar)){
 					$l = json_decode($ar['v']);
 					foreach ($l->rows as $r){
-						if (intval($r->fields->id)==$emp_id){
+						if (intval($r->fields->employees_ref->keys->id)==$emp_id){
 							$contract_document_visib = TRUE;
 							break;
 						}
