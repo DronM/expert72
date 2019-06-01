@@ -29,8 +29,14 @@ function EnumGridColumn_document_types(options){
 	options.multyLangValues["ru"]["audit"] = "Аудит";
 
 	options.multyLangValues["ru"]["documents"] = "Документы";
-EnumGridColumn_document_types.superclass.constructor.call(this,options);
+
 	
+	options.ctrlClass = options.ctrlClass || Enum_document_types;
+	options.searchOptions = options.searchOptions || {};
+	options.searchOptions.searchType = options.searchOptions.searchType || "on_match";
+	options.searchOptions.typeChange = (options.searchOptions.typeChange!=undefined)? options.searchOptions.typeChange:false;
+	
+	EnumGridColumn_document_types.superclass.constructor.call(this,options);		
 }
 extend(EnumGridColumn_document_types,GridColumnEnum);
 

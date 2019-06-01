@@ -1,9 +1,9 @@
-/*
- * gcc -o cmsmerge cmsmerge.c -lssl -lcrypto
+/**
+ * gcc -o cmsmerge cmsmerge.c -L/usr/local/lib -lssl -lcrypto
  */
 #include <unistd.h>
 #include <stdio.h> 
-#include <openssl/evp.h>
+//#include <openssl/evp.h>
 #include <openssl/bio.h>
 #include <openssl/pkcs7.h>
 #include <openssl/pem.h>
@@ -21,16 +21,18 @@
 
 int main(int argc, char **argv){
 	BIO *source = NULL, *dest = NULL, *out = NULL;
-	PKCS7 *p7_s, *p7_d;
+	PKCS7 *p7_s = NULL, *p7_d = NULL;
 
 	STACK_OF(PKCS7_SIGNER_INFO) *signers_s = NULL;
 	STACK_OF(X509_INFO) *certs_s = NULL;
 	
-	int i,n;
+	int i;
 
 	int informat = FORMAT_ASN1, outformat = FORMAT_ASN1;//FORMAT_PEM	
 	
 	char *infile_s = NULL, *infile_d = NULL, *outfile = NULL;
+	
+	int ret = 1;
 	
 	int c;
 	while ((c = getopt (argc, argv, "s:d:o:")) != -1)		
@@ -53,16 +55,16 @@ int main(int argc, char **argv){
 		}
 	
 	if(!infile_s) {
-		printf("Source file is not defined.\n");
-		exit(-1);
+		fprintf(stderr, "Source file is not defined.\n");
+		goto err;
 	}
 	if(!infile_d) {
-		printf("Destination file is not defined.\n");
-		exit(-1);
+		fprintf(stderr, "Destination file is not defined.\n");
+		goto err;
 	}
 	if(!outfile) {
-		printf("Output file is not defined.\n");
-		exit(-1);
+		fprintf(stderr, "Output file is not defined.\n");
+		goto err;
 	}
 	
 	//infile_s = "1.der";
@@ -74,9 +76,8 @@ int main(int argc, char **argv){
 	ERR_load_crypto_strings();
   
 	if ((source = BIO_new_file(infile_s, "rb"))==NULL){
-		printf(ER_CREATE_FILE,"source");
-		ERR_print_errors_fp(stderr);
-		exit(-1);
+		fprintf(stderr, ER_CREATE_FILE,"source");
+		goto err;
 	}
 	
 	if (informat == FORMAT_ASN1)
@@ -85,15 +86,13 @@ int main(int argc, char **argv){
 		p7_s = PEM_read_bio_PKCS7(source, NULL, NULL, NULL);	
 		
     	if (p7_s==NULL){
-    		printf(ER_READ_SMIME,"source");
-    		ERR_print_errors_fp(stderr);
-    		exit(-1);
+    		fprintf(stderr, ER_READ_SMIME,"source");
+    		goto err;
     	}
 
 	if ((dest = BIO_new_file(infile_d, "rb"))==NULL){
-		printf(ER_CREATE_FILE,"destination");
-		ERR_print_errors_fp(stderr);
-		exit(-1);
+		fprintf(stderr, ER_CREATE_FILE,"destination");
+		goto err;
 	}
 	if (informat == FORMAT_ASN1)
         	p7_d = d2i_PKCS7_bio(dest, NULL);
@@ -101,22 +100,19 @@ int main(int argc, char **argv){
 		p7_d = PEM_read_bio_PKCS7(dest, NULL, NULL, NULL);	
 	
     	if (p7_d==NULL){
-    		printf(ER_READ_SMIME,"destination");
-    		ERR_print_errors_fp(stderr);
-    		exit(-1);
+    		fprintf(stderr, ER_READ_SMIME,"destination");
+    		goto err;
     	}
 	
 	
 	if ((signers_s = PKCS7_get_signer_info(p7_s))==NULL){
-		printf(ER_NO_SIGN,"source");
-		ERR_print_errors_fp(stderr);
-		exit(1);
+		fprintf(stderr, ER_NO_SIGN,"source");
+		goto err;
 	}
 	
 	//merging signers
 	PKCS7_SIGNER_INFO *si;
-	n = sk_PKCS7_SIGNER_INFO_num(signers_s);
-	for (i=0; i<n; i++){
+	for (i=0; i < sk_PKCS7_SIGNER_INFO_num(signers_s); i++){
 		//add to source
 		if ((si = sk_PKCS7_SIGNER_INFO_value(signers_s,i))==NULL){
 			printf("Error reading signer with index %d from source signer info!",i);
@@ -133,17 +129,16 @@ int main(int argc, char **argv){
 	} else if(i == NID_pkcs7_signedAndEnveloped) {
 		certs_s = p7_s->d.signed_and_enveloped->cert;
 	}	
-	n = sk_X509_num(certs_s);
-	for (i = 0; certs_s && i < n; i++) {
+	
+	for (i = 0; certs_s && i < sk_X509_num(certs_s); i++) {
 		X509 *x = sk_X509_value(certs_s,i);
 		PKCS7_add_certificate(p7_d, x);
 	}	
 
 	out = BIO_new_file(outfile, "wb");
 	if (out == NULL){
-		printf("Unable to open output file\n");
-		ERR_print_errors_fp(stderr);
-		exit(-1);
+		fprintf(stderr, "Unable to open output file\n");
+		goto err;
 	}	
 	
 	if (outformat == FORMAT_ASN1)
@@ -152,21 +147,32 @@ int main(int argc, char **argv){
 		i = PEM_write_bio_PKCS7(out, p7_d);
 	
 	i = i2d_PKCS7_bio(out, p7_d);
-	if (!i) {
-    		printf("Unable to write pkcs7 object\n");
-    		ERR_print_errors_fp(stderr);
-		exit(-1);
+	if (!i) {		
+    		fprintf(stderr, "Unable to write pkcs7 object\n");
+    		goto err;
+	}
+	ret = 0;
+ err:	
+ 	if(p7_s){
+		PKCS7_free(p7_s);
+	}
+	if(p7_d){
+		PKCS7_free(p7_d);
+	}
+	if(certs_s){
+		X509_free(certs_s);
 	}
 	
-	/*
-	BIO_free(source);	
-	BIO_free(dest);
-	if (out != NULL)
+	if(certs_s){
+		BIO_free(source);	
+	}
+	if(dest){
+		BIO_free(dest);
+	}
+	if(out){
 		BIO_free(out);
+	}
 	
-	PKCS7_free(p7_s);
-	PKCS7_free(p7_d);
-	*/
-	return 0;
+	return ret;
 }
 

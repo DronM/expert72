@@ -45,7 +45,8 @@ function ContractDialog_View(id,options){
 	options.templateOptions.costEvalValidity = options.model.getFieldValue("cost_eval_validity") || options.templateOptions.expCostEvalValidity;
 	options.templateOptions.pd = (options.model.getFieldValue("document_type")=="pd");	
 	
-	options.templateOptions.notExpert = (role!="expert");
+	options.templateOptions.notExpert = (role!="expert" && role!="expert_ext");
+	options.templateOptions.notExpertExt = (role!="expert_ext");
 	options.templateOptions.expert = !options.templateOptions.notExpert;
 	
 	var employee_main_expert = (options.model.getFieldValue("main_experts_ref").getKey("id")==CommonHelper.unserialize(window.getApp().getServVar("employees_ref")).getKey("id"));
@@ -482,61 +483,65 @@ function ContractDialog_View(id,options){
 		
 		//Вкладки с документацией
 		this.addDocumentTabs(options.model,null,true);
-		
-		//*** OUT ****
-		var app_key = options.model.getFieldValue("applications_ref").getKey("id");
-		var tab_out = new DocFlowOutList_View(id+":doc_flow_out_list",{
-			"fromApp":true,
-			"autoRefresh":true,
-			"filters":[{
-				"field":"to_application_id",
-				"sign":"e",
-				"val":app_key
-			}],
-			"readOnly":!options.templateOptions.setAccess
-		});
-		this.addElement(tab_out);
+
 		var this_ref = new RefType(
 		{
 			"keys":{"id":options.model.getFieldValue("id")},
 			"descr":"Контракт №"+options.model.getFieldValue("expertise_result_number")+" от "+DateHelper.format(options.model.getFieldValue("date_time"),"d/m/Y"),
 			"dataType":"contract"
 		});
-		var pm = (new DocFlowOut_Controller()).getPublicMethod("get_object");
-		pm.setFieldValue("mode","insert");
-		pm.run({
-			"async":false
-		});
-		var dlg_m = pm.getController().getResponse().getModel("DocFlowOutDialog_Model");
-		dlg_m.getNextRow();
-		//var dlg_m = new DocFlowOutDialog_Model();
-		dlg_m.setFieldValue("to_contracts_ref",this_ref);
 		
-		dlg_m.setFieldValue("subject","Замечания по "+this_ref.getDescr());
-		dlg_m.setFieldValue("doc_flow_types_ref", window.getApp().getPredefinedItem("doc_flow_types","contr"));
-		dlg_m.setFieldValue("employees_ref", CommonHelper.unserialize(window.getApp().getServVar("employees_ref")) );
-		dlg_m.setFieldValue("signed_by_employees_ref",null);
-		/*
-		var out_fld_ref = window.getApp().getPredefinedItem("application_doc_folders","doc_flow_out");
-		dlg_m.setFieldValue("files",
-			[{
-				"files":[],
-				"fields":{
-					"id":out_fld_ref.getKey(),
-					"descr":out_fld_ref.getDescr(),
-					"required":false,
-					"require_client_sig":false
+		var app_key = options.model.getFieldValue("applications_ref").getKey("id");
+		
+		//*** OUT ****
+		if(role!="expert_ext"){			
+			var tab_out = new DocFlowOutList_View(id+":doc_flow_out_list",{
+				"fromApp":true,
+				"autoRefresh":true,
+				"filters":[{
+					"field":"to_application_id",
+					"sign":"e",
+					"val":app_key
+				}],
+				"readOnly":!options.templateOptions.setAccess
+			});
+			this.addElement(tab_out);
+			var pm = (new DocFlowOut_Controller()).getPublicMethod("get_object");
+			pm.setFieldValue("mode","insert");
+			pm.run({
+				"async":false
+			});
+			var dlg_m = pm.getController().getResponse().getModel("DocFlowOutDialog_Model");
+			dlg_m.getNextRow();
+			//var dlg_m = new DocFlowOutDialog_Model();
+			dlg_m.setFieldValue("to_contracts_ref",this_ref);
+		
+			dlg_m.setFieldValue("subject","Замечания по "+this_ref.getDescr());
+			dlg_m.setFieldValue("doc_flow_types_ref", window.getApp().getPredefinedItem("doc_flow_types","contr"));
+			dlg_m.setFieldValue("employees_ref", CommonHelper.unserialize(window.getApp().getServVar("employees_ref")) );
+			dlg_m.setFieldValue("signed_by_employees_ref",null);
+			/*
+			var out_fld_ref = window.getApp().getPredefinedItem("application_doc_folders","doc_flow_out");
+			dlg_m.setFieldValue("files",
+				[{
+					"files":[],
+					"fields":{
+						"id":out_fld_ref.getKey(),
+						"descr":out_fld_ref.getDescr(),
+						"required":false,
+						"require_client_sig":false
+					}
+				}]
+			);
+			*/
+			//dlg_m.recInsert();
+			tab_out.getElement("grid").setInsertViewOptions({
+				"models":{
+					"DocFlowOutDialog_Model": dlg_m
 				}
-			}]
-		);
-		*/
-		//dlg_m.recInsert();
-		tab_out.getElement("grid").setInsertViewOptions({
-			"models":{
-				"DocFlowOutDialog_Model": dlg_m
-			}
-		});
-				
+			});
+		}
+						
 		//*** IN ***
 		this.addElement(new DocFlowInList_View(id+":doc_flow_in_list",{
 			"fromApp":true,
@@ -587,17 +592,19 @@ function ContractDialog_View(id,options){
 				}]
 			}));
 		}
-				
-		//Выписка
-		this.addElement(
-			new ContractObjInfBtn(id+":cmdObjInf",{
-				"controller":options.controller,
-				"getContractId":function(){
-					return self.getElement("id").getValue();
-				}
-			})
-		);
 		
+		if(role!="expert_ext"){
+			//Выписка
+			this.addElement(
+				new ContractObjInfBtn(id+":cmdObjInf",{
+					"controller":options.controller,
+					"getContractId":function(){
+						return self.getElement("id").getValue();
+					}
+				})
+			);
+		}
+				
 		//Архив - только admin и юристы!
 		//if (role=="admin" || options.templateOptions.notExpert){
 			this.addElement(new ButtonCmd(id+":cmdZipAll",{
@@ -606,7 +613,8 @@ function ContractDialog_View(id,options){
 				"title":"Скачать все документы одним архивом",
 				"onClick":function(){	
 					var contr = new Application_Controller();
-					contr.getPublicMethod("zip_all").setFieldValue("application_id",self.getElement("applications_ref").getValue().getKey("id"));
+					//self.getElement("applications_ref").getValue().getKey("id")
+					contr.getPublicMethod("zip_all").setFieldValue("application_id",self.getModel().getFieldValue("applications_ref").getKey("id"));
 					contr.download("zip_all",null,null,function(n,descr){
 						self.getElement("cmdZipAll").setEnabled(true);
 						if (n){

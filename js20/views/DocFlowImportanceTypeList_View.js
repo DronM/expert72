@@ -43,7 +43,7 @@ function DocFlowImportanceTypeList_View(id,options){
 				new GridRow(id+":grid:head:row0",{					
 					"elements":[
 						new GridCellHead(id+":grid:head:name",{
-							"value":this.COL_CAP_name,
+							"value":"Наименование",
 							"columns":[
 								new GridColumn({"field":model.getField("name")})
 							],

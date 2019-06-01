@@ -1,6 +1,6 @@
 -- VIEW: contracts_list
 
---DROP VIEW contracts_list;
+DROP VIEW contracts_list;
 
 CREATE OR REPLACE VIEW contracts_list AS
 	SELECT
@@ -31,7 +31,6 @@ CREATE OR REPLACE VIEW contracts_list AS
 		
 		contracts_ref(t) AS self_ref,
 		
-		t.permission_ar,
 		t.main_expert_id,
 		t.main_department_id,
 		m_exp.name AS main_expert_descr,
@@ -55,7 +54,9 @@ CREATE OR REPLACE VIEW contracts_list AS
 			ELSE NULL
 		END AS state_for_color,
 		
-		applications.exp_cost_eval_validity
+		applications.exp_cost_eval_validity,
+		
+		t.permission_ar AS condition_ar
 		
 	FROM contracts AS t
 	LEFT JOIN applications ON applications.id=t.application_id

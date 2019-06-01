@@ -68,23 +68,28 @@ ContractList_View.prototype.addGrid = function(options){
 				"sign":"le"
 				}
 			]
-		}
-		,"client":{
+		}		
+	};
+	
+	var is_expert_ext = (role_id=="expert_ext");
+	if(!is_expert_ext){
+		filters.client = {
 			"binding":new CommandBinding({
 				"control":new ClientEditRef(id+":filter-ctrl-client",{"labelCaption":"Заявитель:","contClassName":"form-group-filter"}),
 				"field":new FieldInt("client_id")
 			}),
 			"sign":"e"
-		}
+		};
 		
-		,"expert":{
+		filters.expert = {
 			"binding":new CommandBinding({
 				"control":new EmployeeEditRef(id+":filter-ctrl-expert",{"labelCaption":"Эксперт:","contClassName":"form-group-filter"}),
 				"field":new FieldInt("main_expert_id")
 			}),
 			"sign":"e"
-		}
-		,"constr_name":{
+		};
+		
+		filters.constr_name = {
 			"binding":new CommandBinding({
 				"control":new EditString(id+":filter-ctrl-constr_name",{"labelCaption":"Объект:","contClassName":"form-group-filter"}),
 				"field":new FieldString("constr_name")
@@ -93,9 +98,9 @@ ContractList_View.prototype.addGrid = function(options){
 			"icase":true,
 			"lwcards":true,
 			"rwcards":true
-		}
-		
-	};
+		};	
+	}
+	
 	if (this.GRID_ALL){
 		filters.document_type = {
 				"binding":new CommandBinding({
@@ -180,12 +185,20 @@ ContractList_View.prototype.addGrid = function(options){
 			"columns":[
 				new GridColumn({
 					"field":model.getField("client_descr"),
-					"ctrlClass":ClientEditRef,
-					"searchOptions":{
-						"field":new FieldInt("client_id"),
-						"searchType":"on_match",
-						"typeChange":false
-					}
+					"ctrlClass":is_expert_ext? EditString:ClientEditRef,
+					"searchOptions":(is_expert_ext?
+						{
+							"field":new FieldString("client_descr"),
+							"searchType":"on_part",
+							"typeChange":true
+						}					
+						:
+						{
+							"field":new FieldInt("client_id"),
+							"searchType":"on_match",
+							"typeChange":false
+						}
+					)
 				})
 			],
 			"sortable":true
@@ -219,12 +232,20 @@ ContractList_View.prototype.addGrid = function(options){
 			"columns":[
 				new GridColumn({
 					"field":model.getField("main_expert_descr"),
-					"ctrlClass":EmployeeEditRef,
-					"searchOptions":{
-						"field":new FieldInt("main_expert_id"),
-						"searchType":"on_match",
-						"typeChange":false
-					},
+					"ctrlClass":is_expert_ext? EditString:EmployeeEditRef,
+					"searchOptions":(is_expert_ext?
+						{
+							"field":new FieldString("main_expert_descr"),
+							"searchType":"on_part",
+							"typeChange":true
+						}
+						:					
+						{
+							"field":new FieldInt("main_expert_id"),
+							"searchType":"on_match",
+							"typeChange":false
+						}
+					),
 					"formatFunction":function(fields){
 						return Employee_Controller.prototype.getInitials(fields.main_expert_descr.getValue());
 					}					
@@ -321,7 +342,7 @@ ContractList_View.prototype.addGrid = function(options){
 			"cmdFilter":true,
 			"filters":filters,
 			"variantStorage":options.variantStorage,
-			"addCustomCommands":function(commands){
+			"addCustomCommands":is_expert_ext? null:function(commands){
 				commands.push(
 					new ContractObjInfGridCmd(id+":grid:cmdObjInf",{
 						"controller":contr,

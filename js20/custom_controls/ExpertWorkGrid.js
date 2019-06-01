@@ -257,8 +257,10 @@ ExpertWorkGrid.prototype.closeEditView = function(res){
 				var m = new ContractDialog_Model({"data":resp.getModelData("ContractDialog_Model")});
 				if (m.getNextRow()){
 					var ctrl = self.m_contractView.getElement("experts_for_notification");
-					ctrl.setInitValue(m.getFieldValue("experts_for_notification"));
-					ctrl.onRefresh();
+					if(ctrl){
+						ctrl.setInitValue(m.getFieldValue("experts_for_notification"));
+						ctrl.onRefresh();
+					}
 				}
 			}
 		});

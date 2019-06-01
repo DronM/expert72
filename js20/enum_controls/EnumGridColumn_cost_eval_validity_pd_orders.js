@@ -23,8 +23,14 @@ function EnumGridColumn_cost_eval_validity_pd_orders(options){
 	options.multyLangValues["ru"]["simult_with_pd"] = "Одновременно с ПД";
 
 	options.multyLangValues["ru"]["after_pd"] = "После ПД";
-EnumGridColumn_cost_eval_validity_pd_orders.superclass.constructor.call(this,options);
+
 	
+	options.ctrlClass = options.ctrlClass || Enum_cost_eval_validity_pd_orders;
+	options.searchOptions = options.searchOptions || {};
+	options.searchOptions.searchType = options.searchOptions.searchType || "on_match";
+	options.searchOptions.typeChange = (options.searchOptions.typeChange!=undefined)? options.searchOptions.typeChange:false;
+	
+	EnumGridColumn_cost_eval_validity_pd_orders.superclass.constructor.call(this,options);		
 }
 extend(EnumGridColumn_cost_eval_validity_pd_orders,GridColumnEnum);
 

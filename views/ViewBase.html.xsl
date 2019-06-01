@@ -400,6 +400,8 @@
 				,"model":editViewOptions.models.VariantStorage_Model
 				</xsl:if>			
 			};	
+			if(v_opts.variantStorage.model)
+				v_opts.variantStorage.model.getRow(0);	
 				
 			var v_<xsl:value-of select="@templateId"/> = new <xsl:value-of select="@templateId"/>_View("<xsl:value-of select="@templateId"/>",v_opts);
 			v_<xsl:value-of select="@templateId"/>.toDOM(document.getElementById("windowData"));

@@ -41,8 +41,14 @@ function EnumGridColumn_doc_flow_inside_states(options){
 	options.multyLangValues["ru"]["acquainting"] = "На ознакомлении";
 
 	options.multyLangValues["ru"]["acquainted"] = "Ознакомлен";
-EnumGridColumn_doc_flow_inside_states.superclass.constructor.call(this,options);
+
 	
+	options.ctrlClass = options.ctrlClass || Enum_doc_flow_inside_states;
+	options.searchOptions = options.searchOptions || {};
+	options.searchOptions.searchType = options.searchOptions.searchType || "on_match";
+	options.searchOptions.typeChange = (options.searchOptions.typeChange!=undefined)? options.searchOptions.typeChange:false;
+	
+	EnumGridColumn_doc_flow_inside_states.superclass.constructor.call(this,options);		
 }
 extend(EnumGridColumn_doc_flow_inside_states,GridColumnEnum);
 

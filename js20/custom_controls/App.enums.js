@@ -16,6 +16,7 @@
 ,"ru_expert":"Эксперт"
 ,"ru_boss":"Руководитель"
 ,"ru_accountant":"Бухгалтер"
+,"ru_expert_ext":"Внешний эксперт"
 }
 
 		,"email_types":{"ru_new_account":"Новый акаунт"

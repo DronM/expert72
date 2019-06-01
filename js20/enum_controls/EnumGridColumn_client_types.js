@@ -23,8 +23,14 @@ function EnumGridColumn_client_types(options){
 	options.multyLangValues["ru"]["person"] = "Физическое лицо";
 
 	options.multyLangValues["ru"]["pboul"] = "Индивидуальный предприниматель";
-EnumGridColumn_client_types.superclass.constructor.call(this,options);
+
 	
+	options.ctrlClass = options.ctrlClass || Enum_client_types;
+	options.searchOptions = options.searchOptions || {};
+	options.searchOptions.searchType = options.searchOptions.searchType || "on_match";
+	options.searchOptions.typeChange = (options.searchOptions.typeChange!=undefined)? options.searchOptions.typeChange:false;
+	
+	EnumGridColumn_client_types.superclass.constructor.call(this,options);		
 }
 extend(EnumGridColumn_client_types,GridColumnEnum);
 

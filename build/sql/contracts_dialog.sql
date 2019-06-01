@@ -1,6 +1,6 @@
 -- VIEW: contracts_dialog
 
---DROP VIEW contracts_dialog;
+DROP VIEW contracts_dialog;
 
 CREATE OR REPLACE VIEW contracts_dialog AS
 	SELECT
@@ -13,7 +13,7 @@ CREATE OR REPLACE VIEW contracts_dialog AS
 		t.expertise_result_number,
 		
 		--applications
-		app.applications_ref,
+		applications_ref(app) AS applications_ref,
 		applications_client_descr(app.applicant) AS applicant_descr,
 		applications_client_descr(app.customer) AS customer_descr,
 		applications_client_descr(app.developer) AS developer_descr,
@@ -41,7 +41,7 @@ CREATE OR REPLACE VIEW contracts_dialog AS
 		)
 		AS contractors_list,
 		
-		app.construction_types_ref,
+		construction_types_ref(construction_types) AS construction_types_ref,
 		t.constr_name AS constr_name,
 		--kladr_parse_addr(t.constr_address) AS constr_address,
 		t.constr_address,
@@ -49,9 +49,9 @@ CREATE OR REPLACE VIEW contracts_dialog AS
 		t.constr_technical_features_in_compound_obj,
 		app.total_cost_eval,
 		app.limit_cost_eval,
-		app.build_types_ref,
+		build_types_ref(build_types) AS build_types_ref,
 		app.cost_eval_validity_simult,
-		app.fund_sources_ref,
+		fund_sources_ref(fund_sources) AS fund_sources_ref,
 		coalesce(t.primary_contract_reg_number,app.primary_application_reg_number) AS primary_contract_reg_number,
 		app.modif_primary_application_reg_number AS modif_primary_contract_reg_number,
 		contracts_ref(prim_contr) AS primary_contracts_ref,
@@ -59,7 +59,23 @@ CREATE OR REPLACE VIEW contracts_dialog AS
 		app.cost_eval_validity,
 		app.modification,
 		app.audit,
-		app.documents,
+		
+		--Documents
+		array_to_json((
+			SELECT array_agg(l.documents) FROM document_templates_all_list_for_date(app.create_dt::date) l
+			WHERE
+				(app.construction_type_id IS NOT NULL)
+				AND
+				(l.construction_type_id=app.construction_type_id AND
+				l.document_type IN (
+					CASE WHEN app.expertise_type='pd' OR app.expertise_type='pd_eng_survey' THEN 'pd'::document_types ELSE NULL END,
+					CASE WHEN app.expertise_type='eng_survey' OR app.expertise_type='pd_eng_survey' THEN 'eng_survey'::document_types ELSE NULL END,
+					CASE WHEN app.cost_eval_validity OR app.exp_cost_eval_validity THEN 'cost_eval_validity'::document_types ELSE NULL END,
+					CASE WHEN app.modification THEN 'modification'::document_types ELSE NULL END,
+					CASE WHEN app.audit THEN 'audit'::document_types ELSE NULL END			
+					)
+				)
+		)) AS documents,		
 		--***********************
 		
 		t.contract_number,
@@ -125,12 +141,12 @@ CREATE OR REPLACE VIEW contracts_dialog AS
 						
 					) AS sec_data
 				FROM expert_sections AS sec
-				WHERE sec.document_type=t.document_type AND construction_type_id=(app.construction_types_ref->'keys'->>'id')::int
+				WHERE sec.document_type=t.document_type AND construction_type_id=app.construction_type_id
 				AND sec.create_date=(
 					SELECT max(sec2.create_date)
 					FROM expert_sections AS sec2
 					WHERE sec2.document_type=t.document_type
-						AND sec2.construction_type_id=(app.construction_types_ref->'keys'->>'id')::int
+						AND sec2.construction_type_id=app.construction_type_id
 						AND sec2.create_date<=t.date_time
 				)
 				ORDER BY sec.section_index				
@@ -154,7 +170,7 @@ CREATE OR REPLACE VIEW contracts_dialog AS
 		t.expert_work_day_count,
 		t.expert_work_end_date,
 		
-		app.doc_folders,
+		folders.files AS doc_folders,
 		
 		t.for_all_employees,
 		t.in_estim_cost,
@@ -168,10 +184,101 @@ CREATE OR REPLACE VIEW contracts_dialog AS
 		
 		t.contract_return_date_on_sig,
 		
-		app.exp_cost_eval_validity
+		app.exp_cost_eval_validity,
+		
+		t.main_department_id,
+		t.main_expert_id,
+		t.permission_ar AS condition_ar
 		
 	FROM contracts t
-	LEFT JOIN applications_dialog AS app ON app.id=t.application_id
+	LEFT JOIN applications AS app ON app.id=t.application_id
+	LEFT JOIN construction_types ON construction_types.id=app.construction_type_id
+	LEFT JOIN build_types ON build_types.id=app.build_type_id
+	LEFT JOIN fund_sources ON fund_sources.id=app.fund_source_id
+	LEFT JOIN
+		(
+		SELECT
+			doc_att.application_id,
+			json_agg(
+				json_build_object(
+					'fields',json_build_object('id',doc_att.folder_id,'descr',doc_att.folder_descr),
+					'parent_id',NULL,
+					'files',doc_att.files
+				)
+			) AS files
+		FROM
+		(SELECT
+			adf_files.application_id,
+			adf_files.file_path AS folder_descr,
+			app_fd.id AS folder_id,
+			json_agg(adf_files.files) AS files
+		FROM
+			(SELECT
+				adf.application_id,
+				adf.file_path,
+				json_build_object(
+					'file_id',adf.file_id,
+					'file_name',adf.file_name,
+					'file_size',adf.file_size,
+					'file_signed',adf.file_signed,
+					'file_uploaded','true',
+					'file_path',adf.file_path,
+					'date_time',adf.date_time,
+					'signatures',
+				
+					(WITH
+					sign AS (SELECT
+						json_agg(files_t.signatures) AS signatures
+					FROM
+						(SELECT
+							f_sig.file_id,
+							json_build_object(
+								'owner',u_certs.subject_cert,
+								'cert_from',u_certs.date_time_from,
+								'cert_to',u_certs.date_time_to,
+								'sign_date_time',f_sig.sign_date_time,
+								'check_result',ver.check_result,
+								'check_time',ver.check_time,
+								'error_str',ver.error_str
+							) AS signatures
+						FROM file_signatures AS f_sig
+						LEFT JOIN file_verifications AS ver ON ver.file_id=f_sig.file_id
+						LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id
+						WHERE f_sig.file_id=adf.file_id
+						ORDER BY f_sig.sign_date_time
+						) AS files_t
+					)
+					SELECT
+						CASE
+							WHEN (SELECT sign.signatures FROM sign) IS NULL AND f_ver.file_id IS NOT NULL THEN
+								json_build_array(
+									json_build_object(
+										'sign_date_time',f_ver.date_time,
+										'check_result',f_ver.check_result,
+										'error_str',f_ver.error_str
+									)
+								)
+							ELSE (SELECT sign.signatures FROM sign)
+						END
+					),
+					'file_signed_by_client',adf.file_signed_by_client
+					--'require_client_sig',app_fd.require_client_sig
+				) AS files
+			FROM application_document_files adf			
+			--LEFT JOIN doc_flow_out AS adf_out ON adf_out.to_application_id=adf.application_id AND adf_out.doc_flow_type_id=(pdfn_doc_flow_types_app_resp()->'keys'->>'id')::int
+			--LEFT JOIN doc_flow_attachments AS adf_att ON adf_att.doc_type='doc_flow_out' AND adf_att.doc_id=adf_out.id AND adf_att.file_name=adf.file_name
+			LEFT JOIN file_verifications AS f_ver ON f_ver.file_id=adf.file_id
+		
+			WHERE adf.document_type='documents'			
+			ORDER BY adf.application_id,adf.file_path,adf.date_time
+			)  AS adf_files
+		LEFT JOIN application_doc_folders AS app_fd ON app_fd.name=adf_files.file_path
+		GROUP BY adf_files.application_id,adf_files.file_path,app_fd.id
+		ORDER BY adf_files.application_id,adf_files.file_path
+		)  AS doc_att
+		GROUP BY doc_att.application_id
+	) AS folders ON folders.application_id=app.id
+	
 	LEFT JOIN employees ON employees.id=t.employee_id
 	LEFT JOIN expertise_reject_types AS rt ON rt.id=t.expertise_reject_type_id
 	LEFT JOIN departments AS dp ON dp.id=t.main_department_id
@@ -181,4 +288,5 @@ CREATE OR REPLACE VIEW contracts_dialog AS
 	--LEFT JOIN clients ON clients.id=t.client_id
 	;
 	
-ALTER VIEW contracts_dialog OWNER TO ;
+ALTER VIEW contracts_dialog OWNER TO expert72;
+

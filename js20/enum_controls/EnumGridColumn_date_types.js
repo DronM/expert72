@@ -21,8 +21,14 @@ function EnumGridColumn_date_types(options){
 	options.multyLangValues["ru"]["calendar"] = "Календарные";
 
 	options.multyLangValues["ru"]["bank"] = "Рабочие";
-EnumGridColumn_date_types.superclass.constructor.call(this,options);
+
 	
+	options.ctrlClass = options.ctrlClass || Enum_date_types;
+	options.searchOptions = options.searchOptions || {};
+	options.searchOptions.searchType = options.searchOptions.searchType || "on_match";
+	options.searchOptions.typeChange = (options.searchOptions.typeChange!=undefined)? options.searchOptions.typeChange:false;
+	
+	EnumGridColumn_date_types.superclass.constructor.call(this,options);		
 }
 extend(EnumGridColumn_date_types,GridColumnEnum);
 

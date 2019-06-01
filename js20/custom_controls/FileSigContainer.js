@@ -162,7 +162,8 @@ FileSigContainer.prototype.sigsToDOM = function(){
 	this.m_signatures.toDOM(this.getNode());
 	
 	if (!this.m_readOnly){
-		var cades = window.getApp().getCadesAPI();
+		var app = window.getApp();
+		var cades = app.getCadesAPI? app.getCadesAPI():null;
 		if (cades){	
 			var cert_cnt = cades.getCertListCount();		
 			var sig_cnt = this.m_signatures.getCount();

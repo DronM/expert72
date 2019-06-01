@@ -954,11 +954,16 @@ class Contract_Controller extends ControllerSQL{
 			}
 		}
 	
+		//Дополнительные проверки на визимость контракта
+		$where = new ModelWhereSQL();
+		$where->addExpression('id',sprintf('id=%d',$this->getExtDbVal($pm,'id')));
+		$this->addPermissionCond($where);
+	
 		$ar_obj = $this->getDbLink()->query_first(sprintf(
-		"SELECT %s FROM %s WHERE id=%d",
+		"SELECT %s FROM %s %s",
 		$columns,
 		$tb,
-		$this->getExtDbVal($pm,'id')
+		$where->getSQL()
 		));
 	
 		if (!is_array($ar_obj) || !count($ar_obj)){
@@ -984,48 +989,49 @@ class Contract_Controller extends ControllerSQL{
 				mdf.doc_flow_out_client_id,
 				m.date_time AS doc_flow_out_date_time,
 				reg.reg_number AS doc_flow_out_reg_number,
-				CASE
-					WHEN sign.signatures IS NULL THEN
-						jsonb_build_array(
-							jsonb_build_object(
-								'id',adf.file_id,
-								'owner',NULL,
-								'sign_date_time',NULL,
-								'check_result',NULL,
-								'check_time',NULL,
-								'error_str',NULL
+				
+				(WITH sign AS (
+					SELECT
+						jsonb_agg(files_t.signatures) AS signatures
+					FROM
+					(SELECT
+						jsonb_build_object(
+							'owner',u_certs.subject_cert,
+							'sign_date_time',f_sig.sign_date_time,
+							'check_result',ver.check_result,
+							'check_time',ver.check_time,
+							'error_str',ver.error_str,
+							'cert_from',u_certs.date_time_from,
+							'cert_to',u_certs.date_time_to
+						) AS signatures
+					FROM file_signatures AS f_sig
+					LEFT JOIN file_verifications AS ver ON ver.file_id=f_sig.file_id
+					LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id
+					WHERE f_sig.file_id = adf.file_id
+					ORDER BY f_sig.sign_date_time
+					) AS files_t
+				)
+				SELECT
+					CASE
+						WHEN (SELECT sign.signatures FROM sign) IS NULL THEN
+							jsonb_build_array(
+								jsonb_build_object(
+									'id',adf.file_id,
+									'owner',NULL,
+									'sign_date_time',NULL,
+									'check_result',NULL,
+									'check_time',NULL,
+									'error_str',NULL
+								)
 							)
-						)
-					ELSE sign.signatures
-				END AS signatures
+						ELSE (SELECT sign.signatures FROM sign)
+					END
+				) AS signatures
 				
 			FROM application_document_files AS adf
 			LEFT JOIN doc_flow_out_client_document_files AS mdf ON mdf.file_id=adf.file_id
 			LEFT JOIN doc_flow_out_client AS m ON m.id=mdf.doc_flow_out_client_id
 			LEFT JOIN doc_flow_out_client_reg_numbers AS reg ON reg.doc_flow_out_client_id=m.id
-			LEFT JOIN (
-				SELECT
-					files_t.file_id,
-					jsonb_agg(files_t.signatures) AS signatures
-				FROM
-				(SELECT
-					f_sig.file_id,
-					jsonb_build_object(
-						'owner',u_certs.subject_cert,
-						'sign_date_time',f_sig.sign_date_time,
-						'check_result',ver.check_result,
-						'check_time',ver.check_time,
-						'error_str',ver.error_str,
-						'cert_from',u_certs.date_time_from,
-						'cert_to',u_certs.date_time_to
-					) AS signatures
-				FROM file_signatures AS f_sig
-				LEFT JOIN file_verifications AS ver ON ver.file_id=f_sig.file_id
-				LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id
-				ORDER BY f_sig.sign_date_time
-				) AS files_t
-				GROUP BY files_t.file_id
-			) AS sign ON sign.file_id=adf.file_id			
 			WHERE adf.application_id=%d AND adf.document_id>0
 			ORDER BY
 				adf.document_type,
@@ -1049,7 +1055,7 @@ class Contract_Controller extends ControllerSQL{
 		}
 		
 		//extra value, document visibility for expert
-		$contract_document_visib = TRUE;
+		$contract_document_visib = ($_SESSION['role_id']!='expert_ext');
 		if ($_SESSION['role_id']=='expert'){			
 			if (!isset($_SESSION['contract_document_visib'])){
 				$contract_document_visib = FALSE;
@@ -1082,6 +1088,27 @@ class Contract_Controller extends ControllerSQL{
 		
 	}
 	
+	private function addPermissionCond(&$where){
+		if ($_SESSION['role_id']!='admin' && $_SESSION['role_id']!='lawyer' && $_SESSION['role_id']!='boss'){
+			DocFlowTask_Controller::set_employee_id($this->getDbLink());
+			$where->addExpression('permission_ar',
+				sprintf(
+				"(%s
+					(main_expert_id=%d OR 'employees%s' =ANY (condition_ar) OR 'departments%s' =ANY (condition_ar)
+						OR ( %s AND main_department_id=%d )
+					)
+				)",
+				($_SESSION['role_id']=='expert')? 'for_all_employees OR ':'',
+				$_SESSION['employee_id'],
+				$_SESSION['employee_id'],
+				$_SESSION['department_id'],
+				($_SESSION['department_boss']==TRUE)? 'TRUE':'FALSE',
+				$_SESSION['department_id']
+				)
+			);	
+		}
+	}
+	
 	public function get_list($pm){
 		if ($_SESSION['role_id']=='admin' || $_SESSION['role_id']=='lawyer' || $_SESSION['role_id']=='boss'){
 			parent::get_list($pm);
@@ -1095,20 +1122,7 @@ class Contract_Controller extends ControllerSQL{
 			if (!$where){
 				$where = new ModelWhereSQL();
 			}
-			DocFlowTask_Controller::set_employee_id($this->getDbLink());
-			$where->addExpression('permission_ar',
-				sprintf(
-				"(for_all_employees
-				OR ( main_expert_id=%d OR 'employees%s' =ANY (permission_ar) OR 'departments%s' =ANY (permission_ar)
-					OR ( %s AND main_department_id=%d )
-				))",
-				$_SESSION['employee_id'],
-				$_SESSION['employee_id'],
-				$_SESSION['department_id'],
-				($_SESSION['department_boss']==TRUE)? 'TRUE':'FALSE',
-				$_SESSION['department_id']
-				)
-			);
+			$this->addPermissionCond($where);
 			
 			$from = null; $count = null;
 			$limit = $this->limitFromParams($pm,$from,$count);

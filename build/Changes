@@ -483,7 +483,24 @@ applications_process.sql
 1) Не видна таблица "Документы" у определенных экспертов
 2) Хэширование при создании ЭЦП в зависимости от сертификата CadesAPI,CadesAPI_async
 
+1.0.108
+1) ExpertiseProlongationList_View minor glitch
+2) Новая роль expert_ext,Contract_Controller
+3) applications_dialog.sql
+4) contracts_dialog.sql
+5) Модуль Application_Controller->get_object()
+6) Модуль Contract_Controller->get_object()
+7) Модуль Contract_Controller->get_list()
+8) doc_flow_in_dialog
 
+Надо:
+	doc_flow_out_client_dialog
+	
+
+- Выбрали недействительный серт, он отметился красным, потом сменили на нормальный - все равно остался красным
+
+
+ОООчень долгая инициализация часта???
 - 1) FOP warnings Arial normal 700 есть Arial normal 700, INFO
 
 

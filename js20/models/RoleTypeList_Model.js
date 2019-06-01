@@ -39,7 +39,7 @@ function RoleTypeList_Model(options){
 	filed_options.autoInc = false;	
 	
 	options.fields.role_type = new FieldEnum("role_type",filed_options);
-	filed_options.enumValues = 'admin,client,lawyer,expert,boss,accountant';
+	filed_options.enumValues = 'admin,client,lawyer,expert,boss,accountant,expert_ext';
 	options.fields.role_type.getValidator().setRequired(true);
 	
 		RoleTypeList_Model.superclass.constructor.call(this,id,options);

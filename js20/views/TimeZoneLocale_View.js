@@ -1,13 +1,7 @@
-/* Copyright (c) 2016
-	Andrey Mikhalevich, Katren ltd.
-*/
-/*	
-	Description
-*/
-/** Requirements
-*/
-
-/* constructor */
+/** Copyright (c) 2016,2019
+ *	Andrey Mikhalevich, Katren ltd.
+ */
+ 
 function TimeZoneLocale_View(id,options){	
 
 	TimeZoneLocale_View.superclass.constructor.call(this,id,options);
@@ -34,19 +28,23 @@ function TimeZoneLocale_View(id,options){
 				new GridRow(id+":grid:head:row0",{
 					"elements":[
 						new GridCellHead(id+":grid:head:name",{
+							"value":"Наименование",
 							"columns":[
-								new GridColumn("name",{"field":model.getField("name")})
+								new GridColumn({"field":model.getField("name")})
 							],
 							"sortable":true,
 							"sort":"asc"							
 						}),
 						new GridCellHead(id+":grid:head:descr",{
+							"value":"Описание",
 							"columns":[
-								new GridColumn("desc",{"field":model.getField("descr")})
+								new GridColumn({"field":model.getField("descr")})
 							],
 							"sortable":true
 						}),											
 						new GridCellHead(id+":grid:head:hour_dif",{
+							"value":"Разница GMT в часах",
+							"colAttrs":{"align":"right"},
 							"columns":[
 								new GridColumn({"field":model.getField("hour_dif")})
 							],

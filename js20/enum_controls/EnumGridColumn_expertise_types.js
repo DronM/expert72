@@ -23,8 +23,14 @@ function EnumGridColumn_expertise_types(options){
 	options.multyLangValues["ru"]["eng_survey"] = "Государственная экспертиза результатов инженерных изысканий";
 
 	options.multyLangValues["ru"]["pd_eng_survey"] = "Государственная экспертиза проектной документации и Государственная экспертиза результатов инженерных изысканий";
-EnumGridColumn_expertise_types.superclass.constructor.call(this,options);
+
 	
+	options.ctrlClass = options.ctrlClass || Enum_expertise_types;
+	options.searchOptions = options.searchOptions || {};
+	options.searchOptions.searchType = options.searchOptions.searchType || "on_match";
+	options.searchOptions.typeChange = (options.searchOptions.typeChange!=undefined)? options.searchOptions.typeChange:false;
+	
+	EnumGridColumn_expertise_types.superclass.constructor.call(this,options);		
 }
 extend(EnumGridColumn_expertise_types,GridColumnEnum);
 

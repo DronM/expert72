@@ -33,8 +33,14 @@ function EnumGridColumn_doc_flow_in_states(options){
 	options.multyLangValues["ru"]["registered"] = "Зарегистрирован";
 
 	options.multyLangValues["ru"]["registering"] = "На регистрации";
-EnumGridColumn_doc_flow_in_states.superclass.constructor.call(this,options);
+
 	
+	options.ctrlClass = options.ctrlClass || Enum_doc_flow_in_states;
+	options.searchOptions = options.searchOptions || {};
+	options.searchOptions.searchType = options.searchOptions.searchType || "on_match";
+	options.searchOptions.typeChange = (options.searchOptions.typeChange!=undefined)? options.searchOptions.typeChange:false;
+	
+	EnumGridColumn_doc_flow_in_states.superclass.constructor.call(this,options);		
 }
 extend(EnumGridColumn_doc_flow_in_states,GridColumnEnum);
 

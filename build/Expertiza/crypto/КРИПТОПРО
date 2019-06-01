@@ -1,0 +1,190 @@
+Проверка ЭЦП
+https://www.gosuslugi.ru/pgu/eds/
+Получение списка УЦ
+https://e-trust.gosuslugi.ru/CA/DownloadTSL?schemaVersion=0
+
+ГОЛОВНЫЕ
+https://e-trust.gosuslugi.ru/mainca
+
+
+https://habr.com/sandbox/94041/
+
+http://cpdn.cryptopro.ru/?url=/content/cades/phpcades.html
+
+
+nginx с КриптоПро CSP 4.0 на Ubuntu 14.04 64bit
+https://support.cryptopro.ru/index.php?/Knowledgebase/Article/View/108/0/nginx-s-kriptopro-csp-40-n-ubuntu-1404-64bit
+
+https://www.cryptopro.ru/forum2/default.aspx?g=posts&t=11365
+
+ФАК по линукс
+https://www.cryptopro.ru/category/faq/linuxunix-0
+
+
+http://pushorigin.ru/cryptopro/start
+http://pushorigin.ru/cryptopro/debian-install
+
+
+ОПИСАНИЕ РАБОТЫ ПЛЮГИНА
+http://cpdn.cryptopro.ru/default.asp?url=content/cades/plugin.html
+
+//********************************************************************************************************
+
+Получение инфы по сертификату
+certmgr -list -f /home/andrey/Expertiza/crypto/test.sig | grep 'SHA1 Hash'
+
+cryptcp -nochain -copycert -thumbprint 79dcab84b3f41ecfe498ca70f0f21c04d74123f1 -f /home/andrey/Expertiza/crypto/test.sig -df /home/andrey/Expertiza/crypto/certificate.der -der
+openssl x509 -in /home/andrey/Expertiza/crypto/certificate.der -inform der -text -noout
+| grep 'Signature Algorithm:' выдает Signature Algorithm: GOST R 34.11-94 with GOST R 34.10-2001
+
+
+
+https://www.cryptopro.ru/forum2/default.aspx?g=posts&t=6490
+
+Разобрался:
+1. openssl enc -d -base64 -in test.sig -out test.sig.der // декодируем подпись из base64 - получаем подпись в бинарном формате
+2. openssl pkcs7 -in test.sig.der -print_certs -inform DER -out test.der // извлекаем сертификат из подписи
+3. openssl x509 -noout -in test.der -dates // проверка времени действия сертификата
+notBefore=Dec 22 12:38:12 2017 GMT
+notAfter=Mar 22 12:38:12 2019 GMT
+
+
+Проверка подписи C+Python
+https://www.swe-notes.ru/post/cryptopro-python/
+
+
+openssl cms -verify -binary -in sign.bin -inform DER -CAfile CA.pem -certfile alex.pem -nodetach -out out.txt
+
+
+********************************************
+Расчет ХЭША файла
+cpverify -mk /home/andrey/Expertiza/crypto/test.pdf
+725730FB1BCBBDC6C1940061006AB1E6FD107D4101A3CEDA53CD2677DFEB0867
+
+
+DER to PEM
+https://support.ssl.com/Knowledgebase/Article/View/19/0/der-vs-crt-vs-cer-vs-pem-certificates-and-how-to-convert-them
+openssl x509 -in cert.crt -inform der -outform pem -out cert.pem
+
+
+
+
+Алгоритм действия:
+1) Выделить sig в отдельный файл если это и подпись и данные
+1) Проверить что sig и файл связаны, что эта подпись от этого файла
+2) Выделить issuer из сертификата
+	certmgr -list -f /home/andrey/Expertiza/crypto/test.sig
+	Проверить по БД если такой CA, если нет - 
+		Скачать списк УЦ https://e-trust.gosuslugi.ru/CA/DownloadTSL?schemaVersion=0 если список устарел
+		<АккредитованныеУдостоверяющиеЦентры>
+		  <УдостоверяющийЦентр>
+		    <Название>Федеральное казначейство</Название>
+		Проверить
+		    <СтатусАккредитации>
+		      <Статус>Действует</Статус>
+		
+		Найти сертификат
+		ПрограммноАппаратныеКомплексы
+			ПрограммноАппаратныйКомплекс
+				КлючиУполномоченныхЛиц
+					Ключ
+						Сертификаты
+							ДанныеСертификата
+								Данные
+		Сохранить данные в файл ca.b64
+		Вычленить сертификат в бинарном виде
+		openssl base64 -d -A -in ca.b64 -out ca.der
+		
+		перевести его в pem или crt - ASCII формат
+		openssl x509 -in cert.der -inform der -outform pem -out cert.crt
+		
+		ВСЕ СОБРАТЬ В 1
+		cat ca_main.pem > chain.pem
+		cat ca.pem >> chain.pem
+		
+
+
+I was able to convert opaque-signed messages to a detached ones with the following code:
+
+#include <openssl/evp.h>
+#include <openssl/bio.h>
+#include <openssl/pkcs7.h>
+
+int main(int argc, char **argv)
+{
+    BIO *data = NULL, *bin = NULL, *bout = NULL;
+    PKCS7 *p7, *p7b;
+
+    OpenSSL_add_all_algorithms();
+
+    bin = BIO_new_file("opaque.p7m", "rb");
+    p7 = SMIME_read_PKCS7(bin, &data);
+    p7b = PKCS7_dup(p7);
+
+    data = PKCS7_dataInit(p7, NULL);
+
+    PKCS7_set_detached(p7b, 1);
+
+    bout = BIO_new_file("detached.p7m", "wb");
+    SMIME_write_PKCS7(bout, p7b, data, PKCS7_BINARY | SMIME_DETACHED);
+}
+
+
+		
+************************************************************************************
+Порядок:
+openssl enc -d -base64 -in test.sig -out test.der // декодируем подпись из base64 - получаем подпись в бинарном формате
+openssl pkcs7 -in test.der -print_certs -inform DER -outform pem -out test.pem // извлекаем сертификат из подписи
+Только даты
+openssl x509 -noout -in test.pem -dates
+notBefore=Dec 22 12:38:12 2017 GMT
+notAfter=Mar 22 12:38:12 2019 GMT
+
+Вся инфа по сертификату:
+openssl x509 -noout -in test.pem -text
+ISSUER
+openssl x509 -in test.pem -noout -issuer
+openssl x509 -in test.pem -noout -subject
+
+Далее выделяем CN, находим хэш issuer, проверяем есть ли такой серт у нас, если нет - 
+берем список УЦ (если надо - качаем заново https://e-trust.gosuslugi.ru/CA/DownloadTSL?schemaVersion=0)
+находим УЦ по CN, берем головной, проверяем если он у нас, сели нет - все очень плохо, надо ставить руками из https://e-trust.gosuslugi.ru/mainca
+находим данные по сертификату CA
+	Сохранить данные в файл ca.b64
+	Вычленить сертификат в бинарном виде
+	openssl base64 -d -A -in ca.b64 -out ca.der
+	перевести его в pem или crt - ASCII формат
+	openssl x509 -in cert.der -inform der -outform pem -out cert.crt
+
+
+Проверяем со всеми головными всю цепочку
+openssl verify -CAfile ca_main.pem ca.pem test.pem
+ca.pem: OK
+test.pem: OK
+
+Проверяем с данными
+openssl x509 -pubkey -noout -in test.pem > test.pub выделяем публичный ключ
+openssl dgst -verify test.pub -signature test.sig test.pdf
+openssl smime -verify -content test.pdf -inform der -in test.der -CAfile ca_main.pem ca.pem
+
+!!!!!!!!!!!!
+openssl smime -verify -content test.pdf -purpose any -out /dev/null -inform der -in test.der -CAfile ca_main.pem ca.pem
+ВСЕ СОБРАТЬ В 1!!! cat crl.pem >> chain.pem
+openssl smime -verify -content test.pdf -purpose any -crl_check -out /dev/null -inform der -in test.der -CAfile chain.pem
+
+
+Обработка с учетом CRL
+openssl x509 -noout -text -inform pem -in test.pem | grep -A 4 'X509v3 CRL Distribution Points'
+wget -O crl.der http://crl.roskazna.ru/crl/ucfk.crl
+openssl crl -in your_current.crl -inform DER -out crl.pem
+
+
+
+КАК ВЫЧЛЕНИТЬ ДАННЫЕ ИЗ ФАЙЛА sig+content
+openssl asn1parse -inform der -in big.der
+166426:d=3  hl=4 l=2266 cons: cont [ 0 ]
+dd if=big.der of=big.content bs=1 count=166426
+dd if=big.der of=big.content bs=1 count=166426
+
+
+openssl x509 -hash -in cert.pem -noout

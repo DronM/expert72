@@ -38,6 +38,8 @@ $permissions = array();
 			
 				$permissions['User_Controller_send_email_confirm']=TRUE;
 			
+			$permissions['User_Controller_insert']=FALSE;
+		
 			$permissions['Captcha_Controller_get']=TRUE;
 		
 				$permissions['Application_Controller_insert']=TRUE;
@@ -177,8 +179,6 @@ $permissions = array();
 			$permissions['ConstructionType_Controller_get_object']=TRUE;
 		
 			$permissions['FundSource_Controller_get_list']=TRUE;
-		
-			$permissions['DocFlowIn_Controller_get_object']=TRUE;
 		
 			$permissions['DocFlowIn_Controller_get_object']=TRUE;
 		

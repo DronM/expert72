@@ -39,8 +39,14 @@ function EnumGridColumn_application_states(options){
 	options.multyLangValues["ru"]["closed"] = "Выдано заключение";
 
 	options.multyLangValues["ru"]["archive"] = "В архиве";
-EnumGridColumn_application_states.superclass.constructor.call(this,options);
+
 	
+	options.ctrlClass = options.ctrlClass || Enum_application_states;
+	options.searchOptions = options.searchOptions || {};
+	options.searchOptions.searchType = options.searchOptions.searchType || "on_match";
+	options.searchOptions.typeChange = (options.searchOptions.typeChange!=undefined)? options.searchOptions.typeChange:false;
+	
+	EnumGridColumn_application_states.superclass.constructor.call(this,options);		
 }
 extend(EnumGridColumn_application_states,GridColumnEnum);
 

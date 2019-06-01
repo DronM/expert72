@@ -23,8 +23,14 @@ function EnumGridColumn_doc_flow_approvement_types(options){
 	options.multyLangValues["ru"]["to_one"] = "По очереди";
 
 	options.multyLangValues["ru"]["mixed"] = "Смешанно";
-EnumGridColumn_doc_flow_approvement_types.superclass.constructor.call(this,options);
+
 	
+	options.ctrlClass = options.ctrlClass || Enum_doc_flow_approvement_types;
+	options.searchOptions = options.searchOptions || {};
+	options.searchOptions.searchType = options.searchOptions.searchType || "on_match";
+	options.searchOptions.typeChange = (options.searchOptions.typeChange!=undefined)? options.searchOptions.typeChange:false;
+	
+	EnumGridColumn_doc_flow_approvement_types.superclass.constructor.call(this,options);		
 }
 extend(EnumGridColumn_doc_flow_approvement_types,GridColumnEnum);
 

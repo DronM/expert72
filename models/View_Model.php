@@ -9,6 +9,7 @@
 require_once(FRAME_WORK_PATH.'basic_classes/ModelSQL.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLInt.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLText.php');
+require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLBool.php');
 require_once(FRAME_WORK_PATH.'basic_classes/ModelOrderSQL.php');
  
 class View_Model extends ModelSQL{
@@ -76,7 +77,7 @@ class View_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['id']="limited";
 				
-		$f_limited=new FieldSQLboolean($this->getDbLink(),$this->getDbName(),$this->getTableName(),"limited",$f_opts);
+		$f_limited=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"limited",$f_opts);
 		$this->addField($f_limited);
 		//********************
 	

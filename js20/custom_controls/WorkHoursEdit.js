@@ -70,7 +70,8 @@ WorkHoursEdit.prototype.getValueJSON = function(){
 		o.push({
 			"checked":this.getElement(this.DAYS[i]).getValue(),
 			"from":this.getElement(this.DAYS[i]+"_from").getValue(),
-			"to":this.getElement(this.DAYS[i]+"_to").getValue()
+			"to":this.getElement(this.DAYS[i]+"_to").getValue(),
+			"dow":( (i==6)? 0:(i+1))
 		});
 	}
 	
@@ -85,13 +86,23 @@ WorkHoursEdit.prototype.setValueOrInit = function(v,isInit){
 	else{
 		o = v;
 	}
-console.dir(o)	
+//console.dir(o)
+	var ind;
+	for(var i=0;i<o.length;i++){
+		ind = o[i].dow-1;
+		ind = (ind<0)? 6:ind;
+		this.getElement(this.DAYS[ind]).setValue(o[i].checked);
+		this.getElement(this.DAYS[ind]+"_from").setValue(o[i].from);
+		this.getElement(this.DAYS[ind]+"_to").setValue(o[i].to);
+		
+	}
+	/*	
 	for(var i=0;i<this.DAYS.length;i++){
 		this.getElement(this.DAYS[i]).setValue(o[i].checked);
 		this.getElement(this.DAYS[i]+"_from").setValue(o[i].from);
 		this.getElement(this.DAYS[i]+"_to").setValue(o[i].to);
 	}
-	
+	*/
 	
 }
 

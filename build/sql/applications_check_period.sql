@@ -8,23 +8,15 @@ $$
 	WITH
 		w_hours AS (
 			WITH
-				week_sched AS (SELECT jsonb_array_elements(offices.work_hours) AS hours FROM offices)
+				week_sched AS (
+					SELECT jsonb_array_elements(offices.work_hours) AS hours
+					FROM offices
+					WHERE id=in_office_id
+				)
 			SELECT
 				d::date,
-				((SELECT
-					CASE WHEN off_sched.work_hours IS NOT NULL THEN
-						off_sched.work_hours
-					ELSE
-						(SELECT week_sched.hours FROM week_sched OFFSET (CASE WHEN EXTRACT(DOW FROM d)-1<0 THEN 6 ELSE EXTRACT(DOW FROM d)-1 END ) LIMIT 1)
-					END
-				)->>'from')::time AS h_from,
-				((SELECT
-					CASE WHEN off_sched.work_hours IS NOT NULL THEN
-						off_sched.work_hours
-					ELSE
-						(SELECT week_sched.hours FROM week_sched OFFSET (CASE WHEN EXTRACT(DOW FROM d)-1<0 THEN 6 ELSE EXTRACT(DOW FROM d)-1 END ) LIMIT 1)
-					END
-				)->>'to')::time AS h_to
+				(dow_sched.hours->>'from')::time AS h_from,
+				(dow_sched.hours->>'to')::time AS h_to				
 			FROM generate_series(
 				in_date_time::date,
 				in_date_time::date+(greatest(in_days*5,30)||' days')::interval,
@@ -32,9 +24,10 @@ $$
 			) AS d
 			LEFT JOIN office_day_schedules AS off_sched ON off_sched.office_id=in_office_id AND off_sched.day=d::date
 			LEFT JOIN holidays AS hol ON hol.date=d::date
+			LEFT JOIN week_sched AS dow_sched ON (dow_sched.hours->>'dow')::int=EXTRACT(DOW FROM d)
 			WHERE
 				(hol.date IS NULL
-				AND ((SELECT week_sched.hours FROM week_sched OFFSET (CASE WHEN EXTRACT(DOW FROM d)-1<0 THEN 6 ELSE EXTRACT(DOW FROM d)-1 END ) LIMIT 1)->>'checked')::bool
+				AND (dow_sched.hours->>'checked')::bool
 				)
 				OR off_sched.work_hours IS NOT NULL
 			ORDER BY d::date

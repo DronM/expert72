@@ -28,6 +28,9 @@ require_once(USER_CONTROLLERS_PATH.'MainMenuConstructor_Controller.php');
 			
 				
 			
+			
+				
+			
 		
 class ViewBase extends ViewHTMLXSLT {	
 
@@ -560,6 +563,16 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/GridCell.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/GridCellHead.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/GridCellFoot.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/GridCellPhone.js'));
+		
+	if (
+	(isset($_SESSION['locale_id']) && $_SESSION['locale_id']=='ru')
+	||
+	(!isset($_SESSION['locale_id']) && DEF_LOCALE=='ru')
+	){
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/rs/GridCellPhone.rs_ru.js'));
+	}
+
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/GridHead.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/GridRow.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/GridFoot.js'));
@@ -1016,6 +1029,7 @@ class ViewBase extends ViewHTMLXSLT {
 	}
 
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/WindowMessage.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/WindowTempMessage.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/GridCellHeadDOCProcessed.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/GridCellHeadDOCDate.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/GridCellHeadDOCNumber.js'));

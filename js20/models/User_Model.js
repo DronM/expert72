@@ -74,7 +74,7 @@ function User_Model(options){
 	filed_options.autoInc = false;	
 	
 	options.fields.role_id = new FieldEnum("role_id",filed_options);
-	filed_options.enumValues = 'admin,client,lawyer,expert,boss,accountant';
+	filed_options.enumValues = 'admin,client,lawyer,expert,boss,accountant,expert_ext';
 	options.fields.role_id.getValidator().setRequired(true);
 	
 				

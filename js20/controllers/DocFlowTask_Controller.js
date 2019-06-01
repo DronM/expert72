@@ -147,7 +147,10 @@ extend(DocFlowTask_Controller,ControllerObjServer);
 	pm.addField(new FieldInt("id",f_opts));
 	var f_opts = {};
 	
-	pm.addField(new FieldJSON("register_docs_ref",f_opts));
+	pm.addField(new FieldJSONB("register_doc",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldJSONB("recipient",f_opts));
 	var f_opts = {};
 	
 	pm.addField(new FieldDateTimeTZ("end_date_time",f_opts));
@@ -156,25 +159,16 @@ extend(DocFlowTask_Controller,ControllerObjServer);
 	pm.addField(new FieldDateTimeTZ("date_time",f_opts));
 	var f_opts = {};
 	
-	pm.addField(new FieldJSON("doc_flow_importance_types_ref",f_opts));
-	var f_opts = {};
-	
 	pm.addField(new FieldInt("doc_flow_importance_type_id",f_opts));
 	var f_opts = {};
 	
 	pm.addField(new FieldInt("employee_id",f_opts));
 	var f_opts = {};
 	
-	pm.addField(new FieldJSON("employees_ref",f_opts));
-	var f_opts = {};
-	
-	pm.addField(new FieldJSON("recipients_ref",f_opts));
-	var f_opts = {};
-	
 	pm.addField(new FieldDateTimeTZ("close_date_time",f_opts));
 	var f_opts = {};
 	
-	pm.addField(new FieldJSON("close_docs_ref",f_opts));
+	pm.addField(new FieldJSONB("close_doc",f_opts));
 	var f_opts = {};
 	
 	pm.addField(new FieldText("description",f_opts));
@@ -184,9 +178,6 @@ extend(DocFlowTask_Controller,ControllerObjServer);
 	var f_opts = {};
 	
 	pm.addField(new FieldInt("close_employee_id",f_opts));
-	var f_opts = {};
-	
-	pm.addField(new FieldJSON("close_employees_ref",f_opts));
 	pm.getField(this.PARAM_ORD_FIELDS).setValue("date_time");
 	
 }

@@ -46,7 +46,7 @@ extend(MainMenuConstructor_Controller,ControllerObjServer);
 	
 	var options = {};
 	options.required = true;	
-	options.enumValues = 'admin,client,lawyer,expert,boss,accountant';
+	options.enumValues = 'admin,client,lawyer,expert,boss,accountant,expert_ext';
 	var field = new FieldEnum("role_id",options);
 	
 	pm.addField(field);
@@ -83,7 +83,7 @@ extend(MainMenuConstructor_Controller,ControllerObjServer);
 	
 	var options = {};
 		
-	options.enumValues = 'admin,client,lawyer,expert,boss,accountant';
+	options.enumValues = 'admin,client,lawyer,expert,boss,accountant,expert_ext';
 	options.enumValues+= (options.enumValues=='')? '':',';
 	options.enumValues+= 'null';
 	

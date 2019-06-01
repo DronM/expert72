@@ -21,8 +21,14 @@ function EnumGridColumn_doc_flow_approvement_orders(options){
 	options.multyLangValues["ru"]["after_preceding"] = "После предыдущего";
 
 	options.multyLangValues["ru"]["with_preceding"] = "Вместе с предыдущим";
-EnumGridColumn_doc_flow_approvement_orders.superclass.constructor.call(this,options);
+
 	
+	options.ctrlClass = options.ctrlClass || Enum_doc_flow_approvement_orders;
+	options.searchOptions = options.searchOptions || {};
+	options.searchOptions.searchType = options.searchOptions.searchType || "on_match";
+	options.searchOptions.typeChange = (options.searchOptions.typeChange!=undefined)? options.searchOptions.typeChange:false;
+	
+	EnumGridColumn_doc_flow_approvement_orders.superclass.constructor.call(this,options);		
 }
 extend(EnumGridColumn_doc_flow_approvement_orders,GridColumnEnum);
 

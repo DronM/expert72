@@ -25,6 +25,8 @@ require_once(FRAME_WORK_PATH.'basic_classes/FieldExtXML.php');
 
 require_once(USER_CONTROLLERS_PATH.'Application_Controller.php');
 
+require_once(FRAME_WORK_PATH.'basic_classes/ModelWhereSQL.php');
+
 class DocFlowIn_Controller extends DocFlow_Controller{
 
 	const ER_NO_ATTACH = 'У данного документ нет вложенных файлов!';
@@ -390,6 +392,66 @@ class DocFlowIn_Controller extends DocFlow_Controller{
 	
 	public function get_next_num($pm){
 		$this->get_next_num_on_type('in', $this->getExtDbVal($pm,'doc_flow_type_id'));
+	}
+
+	public function get_object($pm){
+		if($_SESSION['role_id']=='expert_ext'){
+			//только ответы на замечания!!!
+			$model_name = $this->getObjectModelId();
+			$object_model = new $model_name($this->getDbLink());
+			$where = new ModelWhereSQL();
+			$where->addExpression('doc_flow_type_cond',"(doc_flow_types_ref->'keys'->>'id')::int=(pdfn_doc_flow_types_contr_resp()->'keys'->>'id')::int");
+			
+			$this->methodParamsToWhere($where,$pm,$model);
+			$limit = new ModelLimitSQL(1);
+			$model->select(
+					FALSE,
+					$where,NULL,$limit,NULL,NULL,NULL,NULL,$toXML);
+			//
+		
+			$this->addModel($model);			
+		}
+		else{
+			parent::get_object($pm);
+		}	
+	}
+
+	public function get_list($pm){
+		if($_SESSION['role_id']=='expert_ext'){
+			//только ответы на замечания!!!
+			
+			$model = new DocFlowInList_Model($this->getDbLink());
+			
+			$from = null; $count = null;
+			$limit = $this->limitFromParams($pm,$from,$count);
+			$calc_total = ($count>0);
+			if ($from){
+				$model->setListFrom($from);
+			}
+			if ($count){
+				$model->setRowsPerPage($count);
+			}			
+			$order = $this->orderFromParams($pm,$model);
+			$where = $this->conditionFromParams($pm,$model);
+			
+			//ADDED
+			if(is_null($where)){
+				$where = new ModelWhereSQL();				
+			}
+			$where->addExpression('doc_flow_type_cond',"(doc_flow_types_ref->'keys'->>'id')::int=(pdfn_doc_flow_types_contr_resp()->'keys'->>'id')::int");
+			
+			$fields = $this->fieldsFromParams($pm);		
+			
+			$model->select(FALSE,$where,$order,
+				$limit,$fields,NULL,NULL,
+				$calc_total,TRUE);
+			//
+			$this->addModel($model);
+			
+		}
+		else{
+			parent::get_list($pm);
+		}
 	}
 
 	public function download_attachments($pm){

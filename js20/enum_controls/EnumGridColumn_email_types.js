@@ -47,8 +47,14 @@ function EnumGridColumn_email_types(options){
 	options.multyLangValues["ru"]["warn_expert_work_end"] = "Заверешение срока работ";
 
 	options.multyLangValues["ru"]["warn_work_end"] = "Заверешение срока выдачи заключения";
-EnumGridColumn_email_types.superclass.constructor.call(this,options);
+
 	
+	options.ctrlClass = options.ctrlClass || Enum_email_types;
+	options.searchOptions = options.searchOptions || {};
+	options.searchOptions.searchType = options.searchOptions.searchType || "on_match";
+	options.searchOptions.typeChange = (options.searchOptions.typeChange!=undefined)? options.searchOptions.typeChange:false;
+	
+	EnumGridColumn_email_types.superclass.constructor.call(this,options);		
 }
 extend(EnumGridColumn_email_types,GridColumnEnum);
 

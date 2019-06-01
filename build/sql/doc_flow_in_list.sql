@@ -1,6 +1,6 @@
 -- VIEW: doc_flow_in_list
 
-DROP VIEW doc_flow_in_list;
+--DROP VIEW doc_flow_in_list;
 
 CREATE OR REPLACE VIEW doc_flow_in_list AS
 	SELECT

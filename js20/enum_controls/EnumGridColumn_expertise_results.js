@@ -21,8 +21,14 @@ function EnumGridColumn_expertise_results(options){
 	options.multyLangValues["ru"]["positive"] = "Положительное заключение";
 
 	options.multyLangValues["ru"]["negative"] = "Отрицательное заключение";
-EnumGridColumn_expertise_results.superclass.constructor.call(this,options);
+
 	
+	options.ctrlClass = options.ctrlClass || Enum_expertise_results;
+	options.searchOptions = options.searchOptions || {};
+	options.searchOptions.searchType = options.searchOptions.searchType || "on_match";
+	options.searchOptions.typeChange = (options.searchOptions.typeChange!=undefined)? options.searchOptions.typeChange:false;
+	
+	EnumGridColumn_expertise_results.superclass.constructor.call(this,options);		
 }
 extend(EnumGridColumn_expertise_results,GridColumnEnum);
 

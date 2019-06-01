@@ -178,7 +178,7 @@ function ExpertiseProlongationList_View(id,options){
 		"editInline":true,
 		"editViewOptions":{
 			"onClose":function(res){
-				if(res.newKeys||res.updated){
+				if(res&&(res.newKeys||res.updated)){
 					self.m_contractDialog.getReadPublicMethod().setFieldValue("id",self.getElement("grid").getFilter("contract_id","e").val);
 					self.m_contractDialog.read("get_object");
 				}

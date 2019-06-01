@@ -46,7 +46,7 @@ extend(RoleType_Controller,ControllerObjClient);
 	
 	var options = {};
 	options.required = true;	
-	options.enumValues = 'admin,client,lawyer,expert,boss,accountant';
+	options.enumValues = 'admin,client,lawyer,expert,boss,accountant,expert_ext';
 	var field = new FieldEnum("role_type",options);
 	
 	pm.addField(field);
@@ -71,7 +71,7 @@ extend(RoleType_Controller,ControllerObjClient);
 	
 	var options = {};
 		
-	options.enumValues = 'admin,client,lawyer,expert,boss,accountant';
+	options.enumValues = 'admin,client,lawyer,expert,boss,accountant,expert_ext';
 	options.enumValues+= (options.enumValues=='')? '':',';
 	options.enumValues+= 'null';
 	

@@ -89,7 +89,7 @@ function View_Model(options){
 	
 	filed_options.autoInc = false;	
 	
-	options.fields.limited = new Fieldboolean("limited",filed_options);
+	options.fields.limited = new FieldBool("limited",filed_options);
 	
 			
 		View_Model.superclass.constructor.call(this,id,options);

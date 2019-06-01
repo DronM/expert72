@@ -2,7 +2,9 @@
 	<div id="{{id}}:cmd-cont">
 		<div id="{{id}}:cmdOk" />
 		<div id="{{id}}:cmdSave" />
+		{{#notExpertExt}}
 		<div id="{{id}}:cmdObjInf" />
+		{{/notExpertExt}}
 		<div id="{{id}}:cmdZipAll" />
 		<div id="{{id}}:cmdCancel"/>
 	</div>
@@ -43,8 +45,13 @@
 			{{/expert}}
 			
 			<li id="{{id}}:tab-doc_flow_in" class=""><a href="#doc_flow_in" data-toggle="tab" aria-expanded="false">Входящие</a></li>
+			
+			{{#notExpertExt}}
 			<li id="{{id}}:tab-doc_flow_out" class=""><a href="#doc_flow_out" data-toggle="tab" aria-expanded="false">Исходящие</a></li>
+			{{/notExpertExt}}
+			
 			<li id="{{id}}:tab-doc_flow_inside" class=""><a href="#doc_flow_inside" data-toggle="tab" aria-expanded="false">Внутренние</a></li>
+			
 			{{#notExpert}}
 			<li id="{{id}}:tab-states" class=""><a href="#states" data-toggle="tab" aria-expanded="false">Статусы</a></li>
 			{{/notExpert}}
@@ -360,9 +367,13 @@
 		<div class="tab-pane fade" id="doc_flow_in">
 			<div id="{{id}}:doc_flow_in_list"/>
 		</div>
+		
+		{{#notExpertExt}}
 		<div class="tab-pane fade" id="doc_flow_out">
 			<div id="{{id}}:doc_flow_out_list"/>
 		</div>
+		{{/notExpertExt}}
+		
 		<div class="tab-pane fade" id="doc_flow_inside">
 			<div id="{{id}}:doc_flow_inside_list"/>
 		</div>

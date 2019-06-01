@@ -19,8 +19,14 @@ function EnumGridColumn_locales(options){
 	options.multyLangValues["ru"] = {};
 
 	options.multyLangValues["ru"]["ru"] = "Русский";
-EnumGridColumn_locales.superclass.constructor.call(this,options);
+
 	
+	options.ctrlClass = options.ctrlClass || Enum_locales;
+	options.searchOptions = options.searchOptions || {};
+	options.searchOptions.searchType = options.searchOptions.searchType || "on_match";
+	options.searchOptions.typeChange = (options.searchOptions.typeChange!=undefined)? options.searchOptions.typeChange:false;
+	
+	EnumGridColumn_locales.superclass.constructor.call(this,options);		
 }
 extend(EnumGridColumn_locales,GridColumnEnum);
 

@@ -29,8 +29,16 @@ function EnumGridColumn_role_types(options){
 	options.multyLangValues["ru"]["boss"] = "Руководитель";
 
 	options.multyLangValues["ru"]["accountant"] = "Бухгалтер";
-EnumGridColumn_role_types.superclass.constructor.call(this,options);
+
+	options.multyLangValues["ru"]["expert_ext"] = "Внешний эксперт";
+
 	
+	options.ctrlClass = options.ctrlClass || Enum_role_types;
+	options.searchOptions = options.searchOptions || {};
+	options.searchOptions.searchType = options.searchOptions.searchType || "on_match";
+	options.searchOptions.typeChange = (options.searchOptions.typeChange!=undefined)? options.searchOptions.typeChange:false;
+	
+	EnumGridColumn_role_types.superclass.constructor.call(this,options);		
 }
 extend(EnumGridColumn_role_types,GridColumnEnum);
 

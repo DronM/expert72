@@ -1,0 +1,16 @@
+Certmgr 1.0 (c) "CryptoPro",  2007-2010.
+program for managing certificates, CRLs and stores
+
+=============================================================================
+1-------
+Issuer            : E=uc_fk@roskazna.ru, S=г. Москва, INN=007710568760, OGRN=1047797019830, STREET="улица Ильинка, дом 7", L=Москва, C=RU, O=Федеральное казначейство, CN=Федеральное казначейство
+Subject           : INN=720405233654, SNILS=05900543242, E=tmnroads@yandex.ru, C=RU, S=Тюменская область, L=Тюмень, O="ГКУ ТО ""УАД""", G=Андрей Николаевич, SN=Ковалев, CN=Ковалев Андрей Николаевич
+Serial            : 0x397DF88A3E36017F57E2644DEC9E39E2A9F2C485
+SHA1 Hash         : 0x79dcab84b3f41ecfe498ca70f0f21c04d74123f1
+SubjKeyID         : 95d8ff3c1d191f9626a3fa59e8d52e88b553ed50
+Not valid before  : 22/12/2017  12:38:12 UTC
+Not valid after   : 22/03/2019  12:38:12 UTC
+PrivateKey Link   : No
+=============================================================================
+
+[ErrorCode: 0x00000000]

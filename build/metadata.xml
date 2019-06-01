@@ -2,7 +2,7 @@
 <metadata owner="expert72">
 	<versions>
 		<version dateOpen="2017-09-27 12:09:48" dateClose="2017-12-08 10:12:08">1.001 
-		<lastBuild>2019-02-12 06:53:13</lastBuild></version>
+		<lastBuild>2019-06-01 05:34:53</lastBuild></version>
 		<version dateOpen="2017-12-08 11:12:01" dateClose="2017-12-08 11:12:04">1.002</version>
 		<version dateOpen="2017-12-08 11:12:20" dateClose="2017-12-08 11:12:20">1.0.3</version>
 		<version dateOpen="2017-12-12 11:12:07" dateClose="2017-12-12 11:12:07">1.0.4</version>
@@ -108,6 +108,7 @@
 		<version dateOpen="2019-01-17 12:01:31" dateClose="2019-01-28 07:01:01">1.0.105</version>
 		<version dateOpen="2019-01-28 07:01:01" dateClose="2019-01-28 07:01:11">1.0.106</version>
 		<version dateOpen="2019-01-28 07:01:11" dateClose="2019-02-12 06:02:53">1.0.107</version>
+		<version dateOpen="2019-02-12 06:02:54" dateClose="2019-06-01 05:06:35">1.0.108</version>
 	</versions>
 	<globalFilters>
 		<field id="user_id"/>
@@ -137,6 +138,9 @@
 			</value>
 			<value id="accountant">
 				<ru descr="&#x411;&#x443;&#x445;&#x433;&#x430;&#x43B;&#x442;&#x435;&#x440;"/>
+			</value>
+			<value id="expert_ext">
+				<ru descr="&#x412;&#x43D;&#x435;&#x448;&#x43D;&#x438;&#x439; &#x44D;&#x43A;&#x441;&#x43F;&#x435;&#x440;&#x442;"/>
 			</value>
 		</enum>
 		<enum id="email_types" descr="&#x422;&#x438;&#x43F;&#x44B; email &#x441;&#x43E;&#x43E;&#x431;&#x449;&#x435;&#x43D;&#x438;&#x439;">
@@ -547,7 +551,7 @@
 			<field id="t" dataType="Text"/>
 			<field id="section" dataType="Text" required="TRUE"/>
 			<field id="descr" dataType="Text" required="TRUE"/>
-			<field id="limited" dataType="boolean"/>
+			<field id="limited" dataType="Bool"/>
 			<index id="views_section_descr_idx" unique="TRUE">
 				<field id="section"/>
 				<field id="descr"/>
@@ -1791,7 +1795,7 @@
 			</index>
 			<constraint id="doc_flow_tasks_register_doc_ref" expression="check_ref_existance(register_doc,ARRAY['doc_flow_acqaintances'::data_types,'doc_flow_fulfilments'::data_types,'doc_flow_examinations'::data_types,'doc_flow_in'::data_types,'doc_flow_examinations'::data_types,'doc_flow_registrations'::data_types,'doc_flow_approvements'::data_types])"/>
 		</model>
-		<model id="DocFlowTaskList" parent="ModelSQL" dataTable="doc_flow_tasks_list" virtual="FALSE" baseModelId="DocFlowTask">
+		<model id="DocFlowTaskList" parent="ModelSQL" dataTable="doc_flow_tasks_list" virtual="TRUE" baseModelId="DocFlowTask">
 			<defaultOrder>
 				<field id="date_time" sortDirect="DESC"/>
 			</defaultOrder>
@@ -1811,7 +1815,7 @@
 			<field id="close_employee_id" dataType="Int" refTable="employees" refField="id"/>
 			<field id="close_employees_ref" dataType="JSON"/>
 		</model>
-		<model id="DocFlowTaskShortList" parent="ModelSQL" dataTable="doc_flow_tasks_short_list" virtual="FALSE" baseModelId="DocFlowTask">
+		<model id="DocFlowTaskShortList" parent="ModelSQL" dataTable="doc_flow_tasks_short_list" virtual="TRUE" baseModelId="DocFlowTask">
 			<defaultOrder>
 				<field id="date_time" sortDirect="DESC"/>
 			</defaultOrder>
@@ -2382,7 +2386,7 @@
 			<field id="for_all_views" dataType="Bool" defaultValue="FALSE"/>
 			<field id="views" dataType="JSONB"/>
 		</model>
-		<model id="ReportTemplateFileList" parent="ModelSQL" dataTable="report_template_files_list" virtual="FALSE">
+		<model id="ReportTemplateFileList" parent="ModelSQL" dataTable="report_template_files_list" virtual="TRUE">
 			<defaultOrder>
 				<field id="file_name"/>
 			</defaultOrder>
@@ -4040,8 +4044,50 @@
 		<permission type="allow" controllerId="User" methodId="register" roleId="guest"/>
 		<permission type="allow" controllerId="User" methodId="email_confirm" roleId="guest"/>
 		<permission type="allow" controllerId="Captcha" methodId="get" roleId="guest"/>
+		<!-- expert_ext PERMISSIONS-->
+		<permission type="allow" controllerId="User" methodId="all" roleId="expert_ext"/>
+		<permission type="revoke" controllerId="User" methodId="insert" roleId="expert_ext"/>
+		<permission type="allow" controllerId="Captcha" methodId="get" roleId="expert_ext"/>
+		<permission type="allow" controllerId="Constant" methodId="all" roleId="expert_ext"/>
+		<permission type="allow" controllerId="Enum" methodId="all" roleId="expert_ext"/>
+		<permission type="allow" controllerId="VariantStorage" methodId="all" roleId="expert_ext"/>
+		<permission type="allow" controllerId="Contract" methodId="get_object" roleId="expert_ext"/>
+		<permission type="allow" controllerId="Contract" methodId="get_pd_list" roleId="expert_ext"/>
+		<permission type="allow" controllerId="Contract" methodId="get_eng_survey_list" roleId="expert_ext"/>
+		<permission type="allow" controllerId="Contract" methodId="get_cost_eval_validity_list" roleId="expert_ext"/>
+		<permission type="allow" controllerId="Contract" methodId="get_audit_list" roleId="expert_ext"/>
+		<permission type="allow" controllerId="ExpertWork" methodId="all" roleId="expert_ext"/>
+		<permission type="allow" controllerId="ShortMessage" methodId="all" roleId="expert_ext"/>
+		<permission type="allow" controllerId="ShortMessageRecipientState" methodId="get_list" roleId="expert_ext"/>
+		<permission type="allow" controllerId="ShortMessageRecipientState" methodId="get_object" roleId="expert_ext"/>
+		<permission type="allow" controllerId="Manual" methodId="get_list" roleId="expert_ext"/>
+		<permission type="allow" controllerId="Manual" methodId="get_object" roleId="expert_ext"/>
+		<permission type="allow" controllerId="Manual" methodId="get_list_for_user" roleId="expert_ext"/>
+		<permission type="allow" controllerId="Reminder" methodId="get_list" roleId="expert_ext"/>
+		<permission type="allow" controllerId="Reminder" methodId="get_object" roleId="expert_ext"/>
+		<permission type="allow" controllerId="Reminder" methodId="get_unviewed_list" roleId="expert_ext"/>
+		<permission type="allow" controllerId="Reminder" methodId="set_viewed" roleId="expert_ext"/>
+		<permission type="allow" controllerId="DocFlowIn" methodId="get_list" roleId="expert_ext"/>
+		<permission type="allow" controllerId="DocFlowIn" methodId="get_object" roleId="expert_ext"/>
+		<permission type="allow" controllerId="DocFlowInside" methodId="all" roleId="expert_ext"/>
+		<permission type="allow" controllerId="DocFlowApprovement" methodId="get_object" roleId="expert_ext"/>
+		<permission type="allow" controllerId="DocFlowApprovement" methodId="get_list" roleId="expert_ext"/>
+		<permission type="allow" controllerId="DocFlowApprovement" methodId="insert" roleId="expert_ext"/>
+		<permission type="allow" controllerId="DocFlowApprovement" methodId="update" roleId="expert_ext"/>
+		<permission type="allow" controllerId="Application" methodId="get_file" roleId="expert_ext"/>
+		<permission type="allow" controllerId="Application" methodId="get_file_sig" roleId="expert_ext"/>
+		<permission type="allow" controllerId="Application" methodId="zip_all" roleId="expert_ext"/>
+		<permission type="allow" controllerId="Department" methodId="get_list" roleId="expert_ext"/>
+		<permission type="allow" controllerId="DocFlowImportanceType" methodId="get_list" roleId="expert_ext"/>
+		<permission type="allow" controllerId="DocFlowImportanceType" methodId="get_object" roleId="expert_ext"/>
+		<permission type="allow" controllerId="ReportTemplate" methodId="all" roleId="expert_ext"/>
+		<permission type="allow" controllerId="ReportTemplateFile" methodId="all" roleId="expert_ext"/>
+		<permission type="allow" controllerId="Employee" methodId="get_list" roleId="expert_ext"/>
+		<permission type="allow" controllerId="Employee" methodId="complete" roleId="expert_ext"/>
+		<permission type="allow" controllerId="DocFlowApprovementTemplate" methodId="all" roleId="expert_ext"/>
 		<!-- CLIENT PERMISSIONS-->
 		<permission type="allow" controllerId="User" methodId="all" roleId="client"/>
+		<permission type="revoke" controllerId="User" methodId="insert" roleId="client"/>
 		<permission type="allow" controllerId="Captcha" methodId="get" roleId="client"/>
 		<permission type="allow" controllerId="Application" methodId="all" roleId="client"/>
 		<permission type="allow" controllerId="Constant" methodId="all" roleId="client"/>
@@ -4053,7 +4099,6 @@
 		<permission type="allow" controllerId="ConstructionType" methodId="get_list" roleId="client"/>
 		<permission type="allow" controllerId="ConstructionType" methodId="get_object" roleId="client"/>
 		<permission type="allow" controllerId="FundSource" methodId="get_list" roleId="client"/>
-		<permission type="allow" controllerId="DocFlowIn" methodId="get_object" roleId="client"/>
 		<permission type="allow" controllerId="DocFlowIn" methodId="get_object" roleId="client"/>
 		<permission type="allow" controllerId="DocFlowIn" methodId="insert" roleId="client"/>
 		<permission type="allow" controllerId="DocFlowIn" methodId="delete" roleId="client"/>
@@ -4459,6 +4504,8 @@
 		<jsScript file="controls/GridCell.js"/>
 		<jsScript file="controls/GridCellHead.js"/>
 		<jsScript file="controls/GridCellFoot.js"/>
+		<jsScript file="controls/GridCellPhone.js"/>
+		<jsScript file="controls/rs/GridCellPhone.rs_ru.js" resource="ru"/>
 		<jsScript file="controls/GridHead.js"/>
 		<jsScript file="controls/GridRow.js"/>
 		<jsScript file="controls/GridFoot.js"/>
@@ -4563,6 +4610,7 @@
 		<jsScript file="controls/WindowFormModalBS.js"/>
 		<jsScript file="controls/rs/WindowFormModalBS.rs_ru.js" resource="ru"/>
 		<jsScript file="controls/WindowMessage.js"/>
+		<jsScript file="controls/WindowTempMessage.js"/>
 		<jsScript file="controls/GridCellHeadDOCProcessed.js"/>
 		<jsScript file="controls/GridCellHeadDOCDate.js"/>
 		<jsScript file="controls/GridCellHeadDOCNumber.js"/>

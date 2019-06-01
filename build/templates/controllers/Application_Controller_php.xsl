@@ -427,19 +427,40 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				mdf.doc_flow_out_client_id,
 				m.date_time AS doc_flow_out_date_time,
 				reg.reg_number AS doc_flow_out_reg_number,				
-				CASE
-					WHEN sign.signatures IS NULL AND f_ver.file_id IS NOT NULL THEN
-						jsonb_build_array(
+				(WITH sign AS (
+					SELECT
+						jsonb_agg(
 							jsonb_build_object(
-								'owner',NULL,
-								'sign_date_time',f_ver.date_time,
-								'check_result',f_ver.check_result,
-								'check_time',f_ver.check_time,
-								'error_str',f_ver.error_str
+								'owner',u_certs.subject_cert,
+								'cert_from',u_certs.date_time_from,
+								'cert_to',u_certs.date_time_to,
+								'sign_date_time',f_sig.sign_date_time,
+								'check_result',ver.check_result,
+								'check_time',ver.check_time,
+								'error_str',ver.error_str
 							)
-						)
-					ELSE sign.signatures
-				END AS signatures
+						) As signatures
+					FROM file_signatures%s AS f_sig
+					LEFT JOIN file_verifications%s AS ver ON ver.file_id=f_sig.file_id
+					LEFT JOIN user_certificates%s AS u_certs ON u_certs.id=f_sig.user_certificate_id
+					WHERE f_sig.file_id=adf.file_id
+					-- Здесь Всегда одна подпись, можно без сортировки!!!
+				)
+				SELECT				
+					CASE
+						WHEN (SELECT sign.signatures FROM sign) IS NULL AND f_ver.file_id IS NOT NULL THEN
+							jsonb_build_array(
+								jsonb_build_object(
+									'owner',NULL,
+									'sign_date_time',f_ver.date_time,
+									'check_result',f_ver.check_result,
+									'check_time',f_ver.check_time,
+									'error_str',f_ver.error_str
+								)
+							)
+						ELSE (SELECT sign.signatures FROM sign)
+					END
+				) AS signatures
 								
 			FROM application_document_files AS adf
 			LEFT JOIN file_verifications AS f_ver ON f_ver.file_id=adf.file_id
@@ -447,26 +468,6 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			LEFT JOIN (SELECT DISTINCT ON (cf.file_id) cf.file_id,cf.doc_flow_out_client_id FROM doc_flow_out_client_document_files cf) AS mdf ON mdf.file_id=adf.file_id
 			LEFT JOIN doc_flow_out_client AS m ON m.id=mdf.doc_flow_out_client_id
 			LEFT JOIN doc_flow_out_client_reg_numbers AS reg ON reg.doc_flow_out_client_id=m.id
-			LEFT JOIN (
-				SELECT
-					f_sig.file_id,
-					jsonb_agg(
-						jsonb_build_object(
-							'owner',u_certs.subject_cert,
-							'cert_from',u_certs.date_time_from,
-							'cert_to',u_certs.date_time_to,
-							'sign_date_time',f_sig.sign_date_time,
-							'check_result',ver.check_result,
-							'check_time',ver.check_time,
-							'error_str',ver.error_str
-						)
-					) As signatures
-				FROM file_signatures%s AS f_sig
-				LEFT JOIN file_verifications%s AS ver ON ver.file_id=f_sig.file_id
-				LEFT JOIN user_certificates%s AS u_certs ON u_certs.id=f_sig.user_certificate_id
-				GROUP BY f_sig.file_id
-				-- Здесь Всегда одна подпись, можно без сортировки!!!
-			) AS sign ON sign.file_id=adf.file_id			
 			WHERE adf.application_id=%d %s
 			ORDER BY adf.document_type,adf.document_id,adf.information_list,adf.file_name,adf.deleted_dt ASC NULLS LAST",
 		$tb_postf,$tb_postf,$tb_postf,
@@ -2664,9 +2665,10 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 					t.file_id&lt;&gt;app_f.file_id AND t.application_id=app_f.application_id
 					AND
 					lower(t.file_name) ~ ('^'||(SELECT f_name FROM file_name_explode(lower(app_f.file_name)) AS (f_name text,f_ext text))||' *- *ул *\.'||(SELECT f_ext FROM file_name_explode(lower(app_f.file_name)) AS (f_name text,f_ext text))||'$')
+				LIMIT 1
 				) IS NULL
 				AND app_f.document_type&lt;&gt;'documents'
-				%s
+				%s				
 			ORDER BY app_f.document_type,app_f.file_path,app_f.file_name",
 		$appId,
 		(	is_null($outClientId)? '':sprintf('AND (app_f.file_id IN (
@@ -2674,7 +2676,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 					cl_f.file_id
 				FROM doc_flow_out_client_document_files AS cl_f
 				WHERE cl_f.doc_flow_out_client_id=%d
-				) )',$outClientId)
+				) ) ',$outClientId)
 		)
 		));
 		
