@@ -214,7 +214,7 @@ CREATE OR REPLACE VIEW applications_dialog AS
 		)  AS doc_att
 		GROUP BY doc_att.application_id
 	) AS folders ON folders.application_id=d.id
-	ORDER BY d.id
+	--ORDER BY d.id
 	;
 	
 ALTER VIEW applications_dialog OWNER TO ;

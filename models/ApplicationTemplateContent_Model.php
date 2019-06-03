@@ -25,7 +25,7 @@ class ApplicationTemplateContent_Model extends {
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['autoInc']=TRUE;
 		$f_opts['id']="id";
-				
+						
 		$f_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"id",$f_opts);
 		$this->addField($f_id);
 		//********************
@@ -33,7 +33,7 @@ class ApplicationTemplateContent_Model extends {
 		//*** Field descr ***
 		$f_opts = array();
 		$f_opts['id']="descr";
-				
+						
 		$f_descr=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"descr",$f_opts);
 		$this->addField($f_descr);
 		//********************
@@ -41,7 +41,7 @@ class ApplicationTemplateContent_Model extends {
 		//*** Field required ***
 		$f_opts = array();
 		$f_opts['id']="required";
-				
+						
 		$f_required=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"required",$f_opts);
 		$this->addField($f_required);
 		//********************

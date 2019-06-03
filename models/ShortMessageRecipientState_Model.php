@@ -26,7 +26,7 @@ class ShortMessageRecipientState_Model extends ModelSQL{
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['autoInc']=TRUE;
 		$f_opts['id']="id";
-				
+						
 		$f_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"id",$f_opts);
 		$this->addField($f_id);
 		//********************
@@ -35,7 +35,7 @@ class ShortMessageRecipientState_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['length']=150;
 		$f_opts['id']="name";
-				
+						
 		$f_name=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"name",$f_opts);
 		$this->addField($f_name);
 		//********************
@@ -43,7 +43,7 @@ class ShortMessageRecipientState_Model extends ModelSQL{
 		//*** Field bg_class ***
 		$f_opts = array();
 		$f_opts['id']="bg_class";
-				
+						
 		$f_bg_class=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"bg_class",$f_opts);
 		$this->addField($f_bg_class);
 		//********************

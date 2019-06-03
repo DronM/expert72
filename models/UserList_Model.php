@@ -28,7 +28,7 @@ class UserList_Model extends ModelSQL{
 		
 		$f_opts['alias']='Код';
 		$f_opts['id']="id";
-				
+						
 		$f_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"id",$f_opts);
 		$this->addField($f_id);
 		//********************
@@ -39,7 +39,7 @@ class UserList_Model extends ModelSQL{
 		$f_opts['alias']='Логин';
 		$f_opts['length']=50;
 		$f_opts['id']="name";
-				
+						
 		$f_name=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"name",$f_opts);
 		$this->addField($f_name);
 		//********************
@@ -50,7 +50,7 @@ class UserList_Model extends ModelSQL{
 		$f_opts['alias']='ФИО';
 		$f_opts['length']=250;
 		$f_opts['id']="name_full";
-				
+						
 		$f_name_full=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"name_full",$f_opts);
 		$this->addField($f_name_full);
 		//********************
@@ -61,7 +61,7 @@ class UserList_Model extends ModelSQL{
 		$f_opts['alias']='Email';
 		$f_opts['length']=50;
 		$f_opts['id']="email";
-				
+						
 		$f_email=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"email",$f_opts);
 		$this->addField($f_email);
 		//********************
@@ -72,7 +72,7 @@ class UserList_Model extends ModelSQL{
 		$f_opts['alias']='Телефон';
 		$f_opts['length']=50;
 		$f_opts['id']="phone_cel";
-				
+						
 		$f_phone_cel=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"phone_cel",$f_opts);
 		$this->addField($f_phone_cel);
 		//********************
@@ -80,7 +80,7 @@ class UserList_Model extends ModelSQL{
 		//*** Field role_id ***
 		$f_opts = array();
 		$f_opts['id']="role_id";
-				
+						
 		$f_role_id=new FieldSQLEnum($this->getDbLink(),$this->getDbName(),$this->getTableName(),"role_id",$f_opts);
 		$this->addField($f_role_id);
 		//********************
@@ -88,7 +88,7 @@ class UserList_Model extends ModelSQL{
 		//*** Field create_dt ***
 		$f_opts = array();
 		$f_opts['id']="create_dt";
-				
+						
 		$f_create_dt=new FieldSQLDateTimeTZ($this->getDbLink(),$this->getDbName(),$this->getTableName(),"create_dt",$f_opts);
 		$this->addField($f_create_dt);
 		//********************

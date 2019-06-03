@@ -23,7 +23,7 @@ class ContractSection_Model extends {
 		$f_opts = array();
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['id']="section_id";
-				
+						
 		$f_section_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"section_id",$f_opts);
 		$this->addField($f_section_id);
 		//********************
@@ -31,7 +31,7 @@ class ContractSection_Model extends {
 		//*** Field section_name ***
 		$f_opts = array();
 		$f_opts['id']="section_name";
-				
+						
 		$f_section_name=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"section_name",$f_opts);
 		$this->addField($f_section_name);
 		//********************
@@ -39,7 +39,7 @@ class ContractSection_Model extends {
 		//*** Field experts_list ***
 		$f_opts = array();
 		$f_opts['id']="experts_list";
-				
+						
 		$f_experts_list=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"experts_list",$f_opts);
 		$this->addField($f_experts_list);
 		//********************

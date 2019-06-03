@@ -22,7 +22,7 @@ class OfficeBankAccList_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['id']="acc_number";
-				
+						
 		$f_acc_number=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"acc_number",$f_opts);
 		$this->addField($f_acc_number);
 		//********************
@@ -30,7 +30,7 @@ class OfficeBankAccList_Model extends ModelSQL{
 		//*** Field bank_descr ***
 		$f_opts = array();
 		$f_opts['id']="bank_descr";
-				
+						
 		$f_bank_descr=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"bank_descr",$f_opts);
 		$this->addField($f_bank_descr);
 		//********************

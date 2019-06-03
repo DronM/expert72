@@ -25,7 +25,7 @@ class ShortMessage_Model extends ModelSQL{
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['autoInc']=TRUE;
 		$f_opts['id']="id";
-				
+						
 		$f_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"id",$f_opts);
 		$this->addField($f_id);
 		//********************
@@ -34,7 +34,7 @@ class ShortMessage_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['defaultValue']='CURRENT_TIMESTAMP';
 		$f_opts['id']="date_time";
-				
+						
 		$f_date_time=new FieldSQLDateTimeTZ($this->getDbLink(),$this->getDbName(),$this->getTableName(),"date_time",$f_opts);
 		$this->addField($f_date_time);
 		//********************
@@ -42,7 +42,7 @@ class ShortMessage_Model extends ModelSQL{
 		//*** Field recipient_id ***
 		$f_opts = array();
 		$f_opts['id']="recipient_id";
-				
+						
 		$f_recipient_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"recipient_id",$f_opts);
 		$this->addField($f_recipient_id);
 		//********************
@@ -50,7 +50,7 @@ class ShortMessage_Model extends ModelSQL{
 		//*** Field to_recipient_id ***
 		$f_opts = array();
 		$f_opts['id']="to_recipient_id";
-				
+						
 		$f_to_recipient_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"to_recipient_id",$f_opts);
 		$this->addField($f_to_recipient_id);
 		//********************
@@ -58,7 +58,7 @@ class ShortMessage_Model extends ModelSQL{
 		//*** Field reminder_id ***
 		$f_opts = array();
 		$f_opts['id']="reminder_id";
-				
+						
 		$f_reminder_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"reminder_id",$f_opts);
 		$this->addField($f_reminder_id);
 		//********************

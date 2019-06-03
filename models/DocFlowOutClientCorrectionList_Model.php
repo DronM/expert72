@@ -21,7 +21,7 @@ class DocFlowOutClientCorrectionList_Model extends ModelSQL{
 		//*** Field corrected_sections ***
 		$f_opts = array();
 		$f_opts['id']="corrected_sections";
-				
+						
 		$f_corrected_sections=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"corrected_sections",$f_opts);
 		$this->addField($f_corrected_sections);
 		//********************

@@ -16,7 +16,6 @@ CREATE OR REPLACE VIEW doc_flow_in_dialog AS
 				json_build_array(
 					json_build_object(
 						'files',
-						--files2.attachments
 						(SELECT
 							json_agg(files_t.attachments) AS attachments
 						FROM
@@ -66,7 +65,6 @@ CREATE OR REPLACE VIEW doc_flow_in_dialog AS
 				json_build_array(
 					json_build_object(
 						'files',
-						--files.attachments
 						(SELECT
 							json_agg(
 								json_build_object(

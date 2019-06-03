@@ -23,7 +23,7 @@ class Morpher_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['id']="src";
-				
+						
 		$f_src=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"src",$f_opts);
 		$this->addField($f_src);
 		//********************
@@ -31,7 +31,7 @@ class Morpher_Model extends ModelSQL{
 		//*** Field res ***
 		$f_opts = array();
 		$f_opts['id']="res";
-				
+						
 		$f_res=new FieldSQLXML($this->getDbLink(),$this->getDbName(),$this->getTableName(),"res",$f_opts);
 		$this->addField($f_res);
 		//********************

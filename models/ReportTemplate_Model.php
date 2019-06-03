@@ -26,7 +26,7 @@ class ReportTemplate_Model extends ModelSQL{
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['autoInc']=TRUE;
 		$f_opts['id']="id";
-				
+						
 		$f_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"id",$f_opts);
 		$this->addField($f_id);
 		//********************
@@ -35,7 +35,7 @@ class ReportTemplate_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['length']=100;
 		$f_opts['id']="name";
-				
+						
 		$f_name=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"name",$f_opts);
 		$this->addField($f_name);
 		//********************
@@ -44,7 +44,7 @@ class ReportTemplate_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['length']=100;
 		$f_opts['id']="db_entity";
-				
+						
 		$f_db_entity=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"db_entity",$f_opts);
 		$this->addField($f_db_entity);
 		//********************
@@ -54,7 +54,7 @@ class ReportTemplate_Model extends ModelSQL{
 		
 		$f_opts['alias']='Комментарий';
 		$f_opts['id']="comment_text";
-				
+						
 		$f_comment_text=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"comment_text",$f_opts);
 		$this->addField($f_comment_text);
 		//********************
@@ -64,7 +64,7 @@ class ReportTemplate_Model extends ModelSQL{
 		
 		$f_opts['alias']='Поля шаблона';
 		$f_opts['id']="fields";
-				
+						
 		$f_fields=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"fields",$f_opts);
 		$this->addField($f_fields);
 		//********************
@@ -74,7 +74,7 @@ class ReportTemplate_Model extends ModelSQL{
 		
 		$f_opts['alias']='Параметры выборки данных';
 		$f_opts['id']="in_params";
-				
+						
 		$f_in_params=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"in_params",$f_opts);
 		$this->addField($f_in_params);
 		//********************

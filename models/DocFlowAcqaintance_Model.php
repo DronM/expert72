@@ -28,7 +28,7 @@ class DocFlowAcqaintance_Model extends ModelSQL{
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['autoInc']=TRUE;
 		$f_opts['id']="id";
-				
+						
 		$f_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"id",$f_opts);
 		$this->addField($f_id);
 		//********************
@@ -36,7 +36,7 @@ class DocFlowAcqaintance_Model extends ModelSQL{
 		//*** Field date_time ***
 		$f_opts = array();
 		$f_opts['id']="date_time";
-				
+						
 		$f_date_time=new FieldSQLDateTimeTZ($this->getDbLink(),$this->getDbName(),$this->getTableName(),"date_time",$f_opts);
 		$this->addField($f_date_time);
 		//********************
@@ -44,7 +44,7 @@ class DocFlowAcqaintance_Model extends ModelSQL{
 		//*** Field subject ***
 		$f_opts = array();
 		$f_opts['id']="subject";
-				
+						
 		$f_subject=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"subject",$f_opts);
 		$this->addField($f_subject);
 		//********************
@@ -52,7 +52,7 @@ class DocFlowAcqaintance_Model extends ModelSQL{
 		//*** Field subject_doc_type ***
 		$f_opts = array();
 		$f_opts['id']="subject_doc_type";
-				
+						
 		$f_subject_doc_type=new FieldSQLEnum($this->getDbLink(),$this->getDbName(),$this->getTableName(),"subject_doc_type",$f_opts);
 		$this->addField($f_subject_doc_type);
 		//********************
@@ -60,7 +60,7 @@ class DocFlowAcqaintance_Model extends ModelSQL{
 		//*** Field subject_doc_id ***
 		$f_opts = array();
 		$f_opts['id']="subject_doc_id";
-				
+						
 		$f_subject_doc_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"subject_doc_id",$f_opts);
 		$this->addField($f_subject_doc_id);
 		//********************
@@ -68,7 +68,7 @@ class DocFlowAcqaintance_Model extends ModelSQL{
 		//*** Field description ***
 		$f_opts = array();
 		$f_opts['id']="description";
-				
+						
 		$f_description=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"description",$f_opts);
 		$this->addField($f_description);
 		//********************
@@ -76,7 +76,7 @@ class DocFlowAcqaintance_Model extends ModelSQL{
 		//*** Field doc_flow_importance_type_id ***
 		$f_opts = array();
 		$f_opts['id']="doc_flow_importance_type_id";
-				
+						
 		$f_doc_flow_importance_type_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"doc_flow_importance_type_id",$f_opts);
 		$this->addField($f_doc_flow_importance_type_id);
 		//********************
@@ -84,7 +84,7 @@ class DocFlowAcqaintance_Model extends ModelSQL{
 		//*** Field recipients ***
 		$f_opts = array();
 		$f_opts['id']="recipients";
-				
+						
 		$f_recipients=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"recipients",$f_opts);
 		$this->addField($f_recipients);
 		//********************
@@ -92,7 +92,7 @@ class DocFlowAcqaintance_Model extends ModelSQL{
 		//*** Field end_date_time ***
 		$f_opts = array();
 		$f_opts['id']="end_date_time";
-				
+						
 		$f_end_date_time=new FieldSQLDateTimeTZ($this->getDbLink(),$this->getDbName(),$this->getTableName(),"end_date_time",$f_opts);
 		$this->addField($f_end_date_time);
 		//********************

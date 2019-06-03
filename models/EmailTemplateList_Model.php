@@ -24,7 +24,7 @@ class EmailTemplateList_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['id']="id";
-				
+						
 		$f_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"id",$f_opts);
 		$this->addField($f_id);
 		//********************
@@ -32,7 +32,7 @@ class EmailTemplateList_Model extends ModelSQL{
 		//*** Field email_type ***
 		$f_opts = array();
 		$f_opts['id']="email_type";
-				
+						
 		$f_email_type=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"email_type",$f_opts);
 		$this->addField($f_email_type);
 		//********************
@@ -40,7 +40,7 @@ class EmailTemplateList_Model extends ModelSQL{
 		//*** Field template ***
 		$f_opts = array();
 		$f_opts['id']="template";
-				
+						
 		$f_template=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"template",$f_opts);
 		$this->addField($f_template);
 		//********************

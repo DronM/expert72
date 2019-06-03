@@ -511,7 +511,7 @@ class Contract_Controller extends ControllerSQL{
 		
 			$f_params = array();
 			$param = new FieldExtString('fields'
-			,$f_params);
+			,$f_params);		
 		$pm->addParam($param);		
 		
 		
@@ -935,7 +935,7 @@ class Contract_Controller extends ControllerSQL{
 		$columns = '*';
 		$tb = 'contracts_dialog';
 		$fields = $this->getExtVal($pm,'fields');
-		if ($fields && strlen($fields) && $fields!='null'){
+		if ($fields && strlen($fields) && strtolower($fields)!='null'){
 			$aval_fields = ['experts_for_notification'];
 			$fields_ar = explode(',',$fields);
 			foreach($fields_ar as $field){
@@ -1257,7 +1257,7 @@ class Contract_Controller extends ControllerSQL{
 		$params = $this->get_data_for_1c($this->getExtDbVal($pm,'id'));
 		$params['total'] = $this->getExtDbVal($pm,'total');
 		$params['acc_number'] = $this->getExtDbVal($pm,'acc_number');
-		if ($params['acc_number']=='null'){
+		if (strtolower($params['acc_number'])=='null'){
 			//не понимает с клиента???
 			throw new Exception('Не выбран лицевой счет!');
 		}
@@ -1782,11 +1782,11 @@ class Contract_Controller extends ControllerSQL{
 	
 		$extra_cond = '';
 		$client_id = $cond->getDbVal('client_id','e',DT_INT);
-		if ($client_id && $client_id!='null'){
+		if ($client_id && strtolower($client_id)!='null'){
 			$extra_cond.= sprintf(' AND contracts.client_id=%d',$client_id);
 		}
 		$customer_name = $cond->getDbVal('customer_name','e',DT_STRING);
-		if ($customer_name && $customer_name!='null'){
+		if ($customer_name && strtolower(customer_name)!='null'){
 			$extra_cond.= sprintf(" AND app.customer->>'name'=%s",$customer_name);
 		}
 		
@@ -1859,22 +1859,22 @@ class Contract_Controller extends ControllerSQL{
 		}
 	
 		$client_id = $cond->getDbVal('client_id','e',DT_INT);
-		if ($client_id && $client_id!='null'){
+		if ($client_id && strtolower($client_id)!='null'){
 			$extra_cond.= sprintf(' AND contracts.client_id=%d',$client_id);
 		}
 		
 		$main_expert_id = $cond->getDbVal('main_expert_id','e',DT_INT);
-		if ($main_expert_id && $main_expert_id!='null'){
+		if ($main_expert_id && strtolower($main_expert_id)!='null'){
 			$extra_cond.= sprintf(' AND contracts.main_expert_id=%d',$main_expert_id);
 		}
 		
 		$customer_name = $cond->getDbVal('customer_name','e',DT_STRING);
-		if ($customer_name && $customer_name!='null'){
+		if ($customer_name && strtolower($customer_name)!='null'){
 			$extra_cond.= sprintf(" AND app.customer->>'name'=%s",$customer_name);
 		}
 
 		$contractor_name = $cond->getDbVal('contractor_name','e',DT_STRING);
-		if ($contractor_name && $contractor_name!='null'){
+		if ($contractor_name && strtolower($contractor_name)!='null'){
 			$extra_cond.= sprintf(
 				"AND (%s =ANY( ARRAY((SELECT s.contractor->>'name'
 				FROM (SELECT jsonb_array_elements(app_t.contractors) AS contractor
@@ -1886,7 +1886,7 @@ class Contract_Controller extends ControllerSQL{
 
 		$service = strtolower($cond->getVal('service','e',DT_STRING));
 		$service_descr = 'Все услуги';
-		if ($service && $service!='null'){
+		if ($service && strtolower($service)!='null'){
 			if ($service=='expertise'){
 				$extra_cond.= " AND (app.expertise_type='pd' OR app.expertise_type='eng_survey' OR app.expertise_type='pd_eng_survey')";
 				$service_descr = 'ПД и РИИ';
@@ -2006,22 +2006,22 @@ class Contract_Controller extends ControllerSQL{
 		$extra_cond = '';
 		
 		$client_id = $cond->getDbVal('client_id','e',DT_INT);
-		if ($client_id && $client_id!='null'){
+		if ($client_id && strtolower($client_id)!='null'){
 			$extra_cond.= sprintf(' AND contracts.client_id=%d',$client_id);
 		}
 
 		$build_type_id = $cond->getDbVal('build_type_id','e',DT_INT);
-		if ($build_type_id && $build_type_id!='null'){
+		if ($build_type_id && strtolower($build_type_id)!='null'){
 			$extra_cond.= sprintf(' AND app.build_type_id=%d',$build_type_id);
 		}
 		
 		$constr_name = $cond->getDbVal('constr_name','e',DT_STRING);
-		if ($constr_name && $constr_name!='null'){
+		if ($constr_name && strtolower($constr_name)!='null'){
 			$extra_cond.= sprintf(" AND coalesce(contracts.constr_name,app.constr_name) = %s",$constr_name);
 		}
 		
 		$main_expert_id = $cond->getDbVal('main_expert_id','e',DT_INT);
-		if ($main_expert_id && $main_expert_id!='null'){
+		if ($main_expert_id && strtolower($main_expert_id)!='null'){
 			$extra_cond.= sprintf(' AND contracts.main_expert_id=%d',$main_expert_id);
 		}
 		
@@ -2041,12 +2041,12 @@ class Contract_Controller extends ControllerSQL{
 		}
 		
 		$customer_name = $cond->getDbVal('customer_name','e',DT_STRING);
-		if ($customer_name && $customer_name!='null'){
+		if ($customer_name && strtolower($customer_name)!='null'){
 			$extra_cond.= sprintf(" AND app.customer->>'name'=%s",$customer_name);
 		}
 
 		$contractor_name = $cond->getDbVal('contractor_name','e',DT_STRING);
-		if ($contractor_name && $contractor_name!='null'){
+		if ($contractor_name && strtolower($contractor_name)!='null'){
 			$extra_cond.= sprintf(
 				"AND (%s =ANY( ARRAY((SELECT s.contractor->>'name'
 				FROM (SELECT jsonb_array_elements(app_t.contractors) AS contractor

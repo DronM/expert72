@@ -27,7 +27,7 @@ class UserEmailConfirmation_Model extends ModelSQL{
 		$f_opts['autoInc']=FALSE;
 		$f_opts['length']=36;
 		$f_opts['id']="key";
-				
+						
 		$f_key=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"key",$f_opts);
 		$this->addField($f_key);
 		//********************
@@ -35,7 +35,7 @@ class UserEmailConfirmation_Model extends ModelSQL{
 		//*** Field user_id ***
 		$f_opts = array();
 		$f_opts['id']="user_id";
-				
+						
 		$f_user_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"user_id",$f_opts);
 		$this->addField($f_user_id);
 		//********************
@@ -44,7 +44,7 @@ class UserEmailConfirmation_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['defaultValue']='CURRENT_TIMESTAMP';
 		$f_opts['id']="dt";
-				
+						
 		$f_dt=new FieldSQLDateTimeTZ($this->getDbLink(),$this->getDbName(),$this->getTableName(),"dt",$f_opts);
 		$this->addField($f_dt);
 		//********************
@@ -53,7 +53,7 @@ class UserEmailConfirmation_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['defaultValue']='FALSE';
 		$f_opts['id']="confirmed";
-				
+						
 		$f_confirmed=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"confirmed",$f_opts);
 		$this->addField($f_confirmed);
 		//********************

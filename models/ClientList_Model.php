@@ -23,7 +23,7 @@ class ClientList_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['id']="id";
-				
+						
 		$f_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"id",$f_opts);
 		$this->addField($f_id);
 		//********************
@@ -31,7 +31,7 @@ class ClientList_Model extends ModelSQL{
 		//*** Field name ***
 		$f_opts = array();
 		$f_opts['id']="name";
-				
+						
 		$f_name=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"name",$f_opts);
 		$this->addField($f_name);
 		//********************
@@ -39,7 +39,7 @@ class ClientList_Model extends ModelSQL{
 		//*** Field inn ***
 		$f_opts = array();
 		$f_opts['id']="inn";
-				
+						
 		$f_inn=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"inn",$f_opts);
 		$this->addField($f_inn);
 		//********************
@@ -47,7 +47,7 @@ class ClientList_Model extends ModelSQL{
 		//*** Field kpp ***
 		$f_opts = array();
 		$f_opts['id']="kpp";
-				
+						
 		$f_kpp=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"kpp",$f_opts);
 		$this->addField($f_kpp);
 		//********************
@@ -55,7 +55,7 @@ class ClientList_Model extends ModelSQL{
 		//*** Field user_id ***
 		$f_opts = array();
 		$f_opts['id']="user_id";
-				
+						
 		$f_user_id=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"user_id",$f_opts);
 		$this->addField($f_user_id);
 		//********************

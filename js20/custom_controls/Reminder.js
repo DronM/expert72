@@ -46,13 +46,34 @@ Reminder.prototype.check = function(){
 				var com_imp = (tp_ref.isNull()||tp_ref.getKey("id")==window.getApp().getPredefinedItem("doc_flow_importance_types","common").getKey("id"));
 				var sender = m.getFieldValue("short_message_sender");
 				var cont = m.getFieldValue("content");
+				
 				if (sender){
 					cont = sender+": "+cont;
 				}
+				window.showMsg(					
+					{"type":com_imp? WindowMessage.prototype.TP_INFO : WindowMessage.prototype.TP_ER,
+					"text":{
+						"value":cont,
+						"attrs":{
+							"style":"cursor:pointer;"
+							,"docs_ref":CommonHelper.serialize(m.getFieldValue("docs_ref"))
+						},
+						"events":{
+							"click":function(e){
+								e = EventHelper.fixMouseEvent(e);
+								var el = e.target;
+								while(!el.attributes||!el.attributes.docs_ref){
+									el = el.parentNode;
+								}
+								var ref = el.getAttribute("docs_ref");
+								if (ref){
+									self.openDoc(CommonHelper.unserialize(ref));
+								}
+							}
+						}
+					}
+				});		
 				
-				window.showMsg(
-					com_imp? WindowMessage.prototype.TP_INFO : WindowMessage.prototype.TP_ER,
-					{"value":cont,
 					/*
 					"addElement":function(){
 						if (!com_imp){
@@ -83,24 +104,7 @@ Reminder.prototype.check = function(){
 						}
 					},
 					*/
-					"attrs":{
-						"style":"cursor:pointer;"
-						,"docs_ref":CommonHelper.serialize(m.getFieldValue("docs_ref"))
-					},
-					"events":{
-						"click":function(e){
-							e = EventHelper.fixMouseEvent(e);
-							var el = e.target;
-							while(!el.attributes||!el.attributes.docs_ref){
-								el = el.parentNode;
-							}
-							var ref = el.getAttribute("docs_ref");
-							if (ref){
-								self.openDoc(CommonHelper.unserialize(ref));
-							}
-						}
-					}
-				});		
+				
 				id_list+= (id_list=="")? "":",";
 				id_list+= m.getFieldValue("id");
 			}

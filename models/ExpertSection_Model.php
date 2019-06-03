@@ -25,7 +25,7 @@ class ExpertSection_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['id']="document_type";
-				
+						
 		$f_document_type=new FieldSQLEnum($this->getDbLink(),$this->getDbName(),$this->getTableName(),"document_type",$f_opts);
 		$this->addField($f_document_type);
 		//********************
@@ -34,7 +34,7 @@ class ExpertSection_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['id']="construction_type_id";
-				
+						
 		$f_construction_type_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"construction_type_id",$f_opts);
 		$this->addField($f_construction_type_id);
 		//********************
@@ -43,7 +43,7 @@ class ExpertSection_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['id']="create_date";
-				
+						
 		$f_create_date=new FieldSQLDate($this->getDbLink(),$this->getDbName(),$this->getTableName(),"create_date",$f_opts);
 		$this->addField($f_create_date);
 		//********************
@@ -52,7 +52,7 @@ class ExpertSection_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['id']="section_id";
-				
+						
 		$f_section_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"section_id",$f_opts);
 		$this->addField($f_section_id);
 		//********************
@@ -60,7 +60,7 @@ class ExpertSection_Model extends ModelSQL{
 		//*** Field section_name ***
 		$f_opts = array();
 		$f_opts['id']="section_name";
-				
+						
 		$f_section_name=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"section_name",$f_opts);
 		$this->addField($f_section_name);
 		//********************
@@ -68,7 +68,7 @@ class ExpertSection_Model extends ModelSQL{
 		//*** Field section_index ***
 		$f_opts = array();
 		$f_opts['id']="section_index";
-				
+						
 		$f_section_index=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"section_index",$f_opts);
 		$this->addField($f_section_index);
 		//********************

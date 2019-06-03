@@ -30,7 +30,7 @@ class Application_Model extends ModelSQL{
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['autoInc']=TRUE;
 		$f_opts['id']="id";
-				
+						
 		$f_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"id",$f_opts);
 		$this->addField($f_id);
 		//********************
@@ -38,7 +38,7 @@ class Application_Model extends ModelSQL{
 		//*** Field user_id ***
 		$f_opts = array();
 		$f_opts['id']="user_id";
-				
+						
 		$f_user_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"user_id",$f_opts);
 		$this->addField($f_user_id);
 		//********************
@@ -47,7 +47,7 @@ class Application_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['defaultValue']='CURRENT_TIMESTAMP';
 		$f_opts['id']="create_dt";
-				
+						
 		$f_create_dt=new FieldSQLDateTimeTZ($this->getDbLink(),$this->getDbName(),$this->getTableName(),"create_dt",$f_opts);
 		$this->addField($f_create_dt);
 		//********************
@@ -55,7 +55,7 @@ class Application_Model extends ModelSQL{
 		//*** Field expertise_type ***
 		$f_opts = array();
 		$f_opts['id']="expertise_type";
-				
+						
 		$f_expertise_type=new FieldSQLEnum($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expertise_type",$f_opts);
 		$this->addField($f_expertise_type);
 		//********************
@@ -64,7 +64,7 @@ class Application_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['defaultValue']='FALSE';
 		$f_opts['id']="cost_eval_validity";
-				
+						
 		$f_cost_eval_validity=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"cost_eval_validity",$f_opts);
 		$this->addField($f_cost_eval_validity);
 		//********************
@@ -73,7 +73,7 @@ class Application_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['defaultValue']='FALSE';
 		$f_opts['id']="cost_eval_validity_simult";
-				
+						
 		$f_cost_eval_validity_simult=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"cost_eval_validity_simult",$f_opts);
 		$this->addField($f_cost_eval_validity_simult);
 		//********************
@@ -82,7 +82,7 @@ class Application_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['defaultValue']='FALSE';
 		$f_opts['id']="modification";
-				
+						
 		$f_modification=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"modification",$f_opts);
 		$this->addField($f_modification);
 		//********************
@@ -91,7 +91,7 @@ class Application_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['defaultValue']='FALSE';
 		$f_opts['id']="audit";
-				
+						
 		$f_audit=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"audit",$f_opts);
 		$this->addField($f_audit);
 		//********************
@@ -99,7 +99,7 @@ class Application_Model extends ModelSQL{
 		//*** Field fund_source_id ***
 		$f_opts = array();
 		$f_opts['id']="fund_source_id";
-				
+						
 		$f_fund_source_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"fund_source_id",$f_opts);
 		$this->addField($f_fund_source_id);
 		//********************
@@ -107,7 +107,7 @@ class Application_Model extends ModelSQL{
 		//*** Field construction_type_id ***
 		$f_opts = array();
 		$f_opts['id']="construction_type_id";
-				
+						
 		$f_construction_type_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"construction_type_id",$f_opts);
 		$this->addField($f_construction_type_id);
 		//********************
@@ -115,7 +115,7 @@ class Application_Model extends ModelSQL{
 		//*** Field applicant ***
 		$f_opts = array();
 		$f_opts['id']="applicant";
-				
+						
 		$f_applicant=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"applicant",$f_opts);
 		$this->addField($f_applicant);
 		//********************
@@ -123,7 +123,7 @@ class Application_Model extends ModelSQL{
 		//*** Field customer ***
 		$f_opts = array();
 		$f_opts['id']="customer";
-				
+						
 		$f_customer=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"customer",$f_opts);
 		$this->addField($f_customer);
 		//********************
@@ -131,7 +131,7 @@ class Application_Model extends ModelSQL{
 		//*** Field contractors ***
 		$f_opts = array();
 		$f_opts['id']="contractors";
-				
+						
 		$f_contractors=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"contractors",$f_opts);
 		$this->addField($f_contractors);
 		//********************
@@ -139,7 +139,7 @@ class Application_Model extends ModelSQL{
 		//*** Field developer ***
 		$f_opts = array();
 		$f_opts['id']="developer";
-				
+						
 		$f_developer=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"developer",$f_opts);
 		$this->addField($f_developer);
 		//********************
@@ -147,7 +147,7 @@ class Application_Model extends ModelSQL{
 		//*** Field constr_name ***
 		$f_opts = array();
 		$f_opts['id']="constr_name";
-				
+						
 		$f_constr_name=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"constr_name",$f_opts);
 		$this->addField($f_constr_name);
 		//********************
@@ -155,7 +155,7 @@ class Application_Model extends ModelSQL{
 		//*** Field constr_address ***
 		$f_opts = array();
 		$f_opts['id']="constr_address";
-				
+						
 		$f_constr_address=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"constr_address",$f_opts);
 		$this->addField($f_constr_address);
 		//********************
@@ -163,7 +163,7 @@ class Application_Model extends ModelSQL{
 		//*** Field constr_technical_features ***
 		$f_opts = array();
 		$f_opts['id']="constr_technical_features";
-				
+						
 		$f_constr_technical_features=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"constr_technical_features",$f_opts);
 		$this->addField($f_constr_technical_features);
 		//********************
@@ -171,7 +171,7 @@ class Application_Model extends ModelSQL{
 		//*** Field constr_technical_features_in_compound_obj ***
 		$f_opts = array();
 		$f_opts['id']="constr_technical_features_in_compound_obj";
-				
+						
 		$f_constr_technical_features_in_compound_obj=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"constr_technical_features_in_compound_obj",$f_opts);
 		$this->addField($f_constr_technical_features_in_compound_obj);
 		//********************
@@ -180,7 +180,7 @@ class Application_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['length']=15;
 		$f_opts['id']="total_cost_eval";
-				
+						
 		$f_total_cost_eval=new FieldSQLFloat($this->getDbLink(),$this->getDbName(),$this->getTableName(),"total_cost_eval",$f_opts);
 		$this->addField($f_total_cost_eval);
 		//********************
@@ -189,7 +189,7 @@ class Application_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['length']=15;
 		$f_opts['id']="limit_cost_eval";
-				
+						
 		$f_limit_cost_eval=new FieldSQLFloat($this->getDbLink(),$this->getDbName(),$this->getTableName(),"limit_cost_eval",$f_opts);
 		$this->addField($f_limit_cost_eval);
 		//********************
@@ -197,7 +197,7 @@ class Application_Model extends ModelSQL{
 		//*** Field filled_percent ***
 		$f_opts = array();
 		$f_opts['id']="filled_percent";
-				
+						
 		$f_filled_percent=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"filled_percent",$f_opts);
 		$this->addField($f_filled_percent);
 		//********************
@@ -205,7 +205,7 @@ class Application_Model extends ModelSQL{
 		//*** Field office_id ***
 		$f_opts = array();
 		$f_opts['id']="office_id";
-				
+						
 		$f_office_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"office_id",$f_opts);
 		$this->addField($f_office_id);
 		//********************
@@ -213,7 +213,7 @@ class Application_Model extends ModelSQL{
 		//*** Field primary_application_id ***
 		$f_opts = array();
 		$f_opts['id']="primary_application_id";
-				
+						
 		$f_primary_application_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"primary_application_id",$f_opts);
 		$this->addField($f_primary_application_id);
 		//********************
@@ -222,7 +222,7 @@ class Application_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['length']=20;
 		$f_opts['id']="primary_application_reg_number";
-				
+						
 		$f_primary_application_reg_number=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"primary_application_reg_number",$f_opts);
 		$this->addField($f_primary_application_reg_number);
 		//********************
@@ -230,7 +230,7 @@ class Application_Model extends ModelSQL{
 		//*** Field modif_primary_application_id ***
 		$f_opts = array();
 		$f_opts['id']="modif_primary_application_id";
-				
+						
 		$f_modif_primary_application_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"modif_primary_application_id",$f_opts);
 		$this->addField($f_modif_primary_application_id);
 		//********************
@@ -239,7 +239,7 @@ class Application_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['length']=20;
 		$f_opts['id']="modif_primary_application_reg_number";
-				
+						
 		$f_modif_primary_application_reg_number=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"modif_primary_application_reg_number",$f_opts);
 		$this->addField($f_modif_primary_application_reg_number);
 		//********************
@@ -247,7 +247,7 @@ class Application_Model extends ModelSQL{
 		//*** Field build_type_id ***
 		$f_opts = array();
 		$f_opts['id']="build_type_id";
-				
+						
 		$f_build_type_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"build_type_id",$f_opts);
 		$this->addField($f_build_type_id);
 		//********************
@@ -255,7 +255,7 @@ class Application_Model extends ModelSQL{
 		//*** Field app_print_expertise ***
 		$f_opts = array();
 		$f_opts['id']="app_print_expertise";
-				
+						
 		$f_app_print_expertise=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"app_print_expertise",$f_opts);
 		$this->addField($f_app_print_expertise);
 		//********************
@@ -263,7 +263,7 @@ class Application_Model extends ModelSQL{
 		//*** Field app_print_cost_eval ***
 		$f_opts = array();
 		$f_opts['id']="app_print_cost_eval";
-				
+						
 		$f_app_print_cost_eval=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"app_print_cost_eval",$f_opts);
 		$this->addField($f_app_print_cost_eval);
 		//********************
@@ -271,7 +271,7 @@ class Application_Model extends ModelSQL{
 		//*** Field app_print_modification ***
 		$f_opts = array();
 		$f_opts['id']="app_print_modification";
-				
+						
 		$f_app_print_modification=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"app_print_modification",$f_opts);
 		$this->addField($f_app_print_modification);
 		//********************
@@ -279,7 +279,7 @@ class Application_Model extends ModelSQL{
 		//*** Field app_print_audit ***
 		$f_opts = array();
 		$f_opts['id']="app_print_audit";
-				
+						
 		$f_app_print_audit=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"app_print_audit",$f_opts);
 		$this->addField($f_app_print_audit);
 		//********************
@@ -287,7 +287,7 @@ class Application_Model extends ModelSQL{
 		//*** Field base_application_id ***
 		$f_opts = array();
 		$f_opts['id']="base_application_id";
-				
+						
 		$f_base_application_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"base_application_id",$f_opts);
 		$this->addField($f_base_application_id);
 		//********************
@@ -295,7 +295,7 @@ class Application_Model extends ModelSQL{
 		//*** Field derived_application_id ***
 		$f_opts = array();
 		$f_opts['id']="derived_application_id";
-				
+						
 		$f_derived_application_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"derived_application_id",$f_opts);
 		$this->addField($f_derived_application_id);
 		//********************
@@ -303,7 +303,7 @@ class Application_Model extends ModelSQL{
 		//*** Field pd_usage_info ***
 		$f_opts = array();
 		$f_opts['id']="pd_usage_info";
-				
+						
 		$f_pd_usage_info=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"pd_usage_info",$f_opts);
 		$this->addField($f_pd_usage_info);
 		//********************
@@ -311,7 +311,7 @@ class Application_Model extends ModelSQL{
 		//*** Field auth_letter ***
 		$f_opts = array();
 		$f_opts['id']="auth_letter";
-				
+						
 		$f_auth_letter=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"auth_letter",$f_opts);
 		$this->addField($f_auth_letter);
 		//********************
@@ -319,7 +319,7 @@ class Application_Model extends ModelSQL{
 		//*** Field auth_letter_file ***
 		$f_opts = array();
 		$f_opts['id']="auth_letter_file";
-				
+						
 		$f_auth_letter_file=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"auth_letter_file",$f_opts);
 		$this->addField($f_auth_letter_file);
 		//********************
@@ -327,7 +327,7 @@ class Application_Model extends ModelSQL{
 		//*** Field update_dt ***
 		$f_opts = array();
 		$f_opts['id']="update_dt";
-				
+						
 		$f_update_dt=new FieldSQLDateTimeTZ($this->getDbLink(),$this->getDbName(),$this->getTableName(),"update_dt",$f_opts);
 		$this->addField($f_update_dt);
 		//********************
@@ -336,7 +336,7 @@ class Application_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['defaultValue']='FALSE';
 		$f_opts['id']="exp_cost_eval_validity";
-				
+						
 		$f_exp_cost_eval_validity=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"exp_cost_eval_validity",$f_opts);
 		$this->addField($f_exp_cost_eval_validity);
 		//********************

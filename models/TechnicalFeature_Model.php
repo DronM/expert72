@@ -23,7 +23,7 @@ class TechnicalFeature_Model extends {
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['length']=100;
 		$f_opts['id']="name";
-				
+						
 		$f_name=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"name",$f_opts);
 		$this->addField($f_name);
 		//********************
@@ -32,7 +32,7 @@ class TechnicalFeature_Model extends {
 		$f_opts = array();
 		$f_opts['length']=100;
 		$f_opts['id']="value";
-				
+						
 		$f_value=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"value",$f_opts);
 		$this->addField($f_value);
 		//********************

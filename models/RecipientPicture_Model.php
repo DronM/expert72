@@ -21,7 +21,7 @@ class RecipientPicture_Model extends ModelSQL{
 		//*** Field picture ***
 		$f_opts = array();
 		$f_opts['id']="picture";
-				
+						
 		$f_picture=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"picture",$f_opts);
 		$this->addField($f_picture);
 		//********************

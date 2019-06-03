@@ -26,7 +26,7 @@ class UserCertificate_Model extends ModelSQL{
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['autoInc']=TRUE;
 		$f_opts['id']="id";
-				
+						
 		$f_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"id",$f_opts);
 		$this->addField($f_id);
 		//********************
@@ -35,7 +35,7 @@ class UserCertificate_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['length']=40;
 		$f_opts['id']="fingerprint";
-				
+						
 		$f_fingerprint=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"fingerprint",$f_opts);
 		$this->addField($f_fingerprint);
 		//********************
@@ -43,7 +43,7 @@ class UserCertificate_Model extends ModelSQL{
 		//*** Field date_time ***
 		$f_opts = array();
 		$f_opts['id']="date_time";
-				
+						
 		$f_date_time=new FieldSQLDateTimeTZ($this->getDbLink(),$this->getDbName(),$this->getTableName(),"date_time",$f_opts);
 		$this->addField($f_date_time);
 		//********************
@@ -51,7 +51,7 @@ class UserCertificate_Model extends ModelSQL{
 		//*** Field date_time_from ***
 		$f_opts = array();
 		$f_opts['id']="date_time_from";
-				
+						
 		$f_date_time_from=new FieldSQLDateTimeTZ($this->getDbLink(),$this->getDbName(),$this->getTableName(),"date_time_from",$f_opts);
 		$this->addField($f_date_time_from);
 		//********************
@@ -59,7 +59,7 @@ class UserCertificate_Model extends ModelSQL{
 		//*** Field date_time_to ***
 		$f_opts = array();
 		$f_opts['id']="date_time_to";
-				
+						
 		$f_date_time_to=new FieldSQLDateTimeTZ($this->getDbLink(),$this->getDbName(),$this->getTableName(),"date_time_to",$f_opts);
 		$this->addField($f_date_time_to);
 		//********************
@@ -67,7 +67,7 @@ class UserCertificate_Model extends ModelSQL{
 		//*** Field subject_cert ***
 		$f_opts = array();
 		$f_opts['id']="subject_cert";
-				
+						
 		$f_subject_cert=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"subject_cert",$f_opts);
 		$this->addField($f_subject_cert);
 		//********************
@@ -75,7 +75,7 @@ class UserCertificate_Model extends ModelSQL{
 		//*** Field issuer_cert ***
 		$f_opts = array();
 		$f_opts['id']="issuer_cert";
-				
+						
 		$f_issuer_cert=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"issuer_cert",$f_opts);
 		$this->addField($f_issuer_cert);
 		//********************
@@ -83,7 +83,7 @@ class UserCertificate_Model extends ModelSQL{
 		//*** Field employee_id ***
 		$f_opts = array();
 		$f_opts['id']="employee_id";
-				
+						
 		$f_employee_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"employee_id",$f_opts);
 		$this->addField($f_employee_id);
 		//********************

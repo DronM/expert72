@@ -27,7 +27,7 @@ class MailForSendingList_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['id']="id";
-				
+						
 		$f_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"id",$f_opts);
 		$this->addField($f_id);
 		//********************
@@ -37,7 +37,7 @@ class MailForSendingList_Model extends ModelSQL{
 		
 		$f_opts['alias']='Дата письма';
 		$f_opts['id']="date_time";
-				
+						
 		$f_date_time=new FieldSQLDateTimeTZ($this->getDbLink(),$this->getDbName(),$this->getTableName(),"date_time",$f_opts);
 		$this->addField($f_date_time);
 		//********************
@@ -48,7 +48,7 @@ class MailForSendingList_Model extends ModelSQL{
 		$f_opts['alias']='Адрес отправителя';
 		$f_opts['length']=50;
 		$f_opts['id']="from_addr";
-				
+						
 		$f_from_addr=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"from_addr",$f_opts);
 		$this->addField($f_from_addr);
 		//********************
@@ -59,7 +59,7 @@ class MailForSendingList_Model extends ModelSQL{
 		$f_opts['alias']='Отправитель';
 		$f_opts['length']=255;
 		$f_opts['id']="from_name";
-				
+						
 		$f_from_name=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"from_name",$f_opts);
 		$this->addField($f_from_name);
 		//********************
@@ -70,7 +70,7 @@ class MailForSendingList_Model extends ModelSQL{
 		$f_opts['alias']='Адрес получателя';
 		$f_opts['length']=50;
 		$f_opts['id']="to_addr";
-				
+						
 		$f_to_addr=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"to_addr",$f_opts);
 		$this->addField($f_to_addr);
 		//********************
@@ -81,7 +81,7 @@ class MailForSendingList_Model extends ModelSQL{
 		$f_opts['alias']='Получатель';
 		$f_opts['length']=255;
 		$f_opts['id']="to_name";
-				
+						
 		$f_to_name=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"to_name",$f_opts);
 		$this->addField($f_to_name);
 		//********************
@@ -90,7 +90,7 @@ class MailForSendingList_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['length']=50;
 		$f_opts['id']="reply_addr";
-				
+						
 		$f_reply_addr=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"reply_addr",$f_opts);
 		$this->addField($f_reply_addr);
 		//********************
@@ -99,7 +99,7 @@ class MailForSendingList_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['length']=255;
 		$f_opts['id']="reply_name";
-				
+						
 		$f_reply_name=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"reply_name",$f_opts);
 		$this->addField($f_reply_name);
 		//********************
@@ -107,7 +107,7 @@ class MailForSendingList_Model extends ModelSQL{
 		//*** Field body ***
 		$f_opts = array();
 		$f_opts['id']="body";
-				
+						
 		$f_body=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"body",$f_opts);
 		$this->addField($f_body);
 		//********************
@@ -116,7 +116,7 @@ class MailForSendingList_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['length']=50;
 		$f_opts['id']="sender_addr";
-				
+						
 		$f_sender_addr=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"sender_addr",$f_opts);
 		$this->addField($f_sender_addr);
 		//********************
@@ -127,7 +127,7 @@ class MailForSendingList_Model extends ModelSQL{
 		$f_opts['alias']='Тема';
 		$f_opts['length']=255;
 		$f_opts['id']="subject";
-				
+						
 		$f_subject=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"subject",$f_opts);
 		$this->addField($f_subject);
 		//********************
@@ -138,7 +138,7 @@ class MailForSendingList_Model extends ModelSQL{
 		$f_opts['alias']='Отправлено';
 		$f_opts['defaultValue']='false';
 		$f_opts['id']="sent";
-				
+						
 		$f_sent=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"sent",$f_opts);
 		$this->addField($f_sent);
 		//********************
@@ -148,7 +148,7 @@ class MailForSendingList_Model extends ModelSQL{
 		
 		$f_opts['alias']='Дата отправки';
 		$f_opts['id']="sent_date_time";
-				
+						
 		$f_sent_date_time=new FieldSQLDateTimeTZ($this->getDbLink(),$this->getDbName(),$this->getTableName(),"sent_date_time",$f_opts);
 		$this->addField($f_sent_date_time);
 		//********************
@@ -158,7 +158,7 @@ class MailForSendingList_Model extends ModelSQL{
 		
 		$f_opts['alias']='Тип';
 		$f_opts['id']="email_type";
-				
+						
 		$f_email_type=new FieldSQLEnum($this->getDbLink(),$this->getDbName(),$this->getTableName(),"email_type",$f_opts);
 		$this->addField($f_email_type);
 		//********************
@@ -168,7 +168,7 @@ class MailForSendingList_Model extends ModelSQL{
 		
 		$f_opts['alias']='Ошибка отправки';
 		$f_opts['id']="error_str";
-				
+						
 		$f_error_str=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"error_str",$f_opts);
 		$this->addField($f_error_str);
 		//********************

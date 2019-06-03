@@ -23,7 +23,7 @@ class DocFlowOutClientRegNumber_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['id']="doc_flow_out_client_id";
-				
+						
 		$f_doc_flow_out_client_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"doc_flow_out_client_id",$f_opts);
 		$this->addField($f_doc_flow_out_client_id);
 		//********************
@@ -32,7 +32,7 @@ class DocFlowOutClientRegNumber_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['id']="application_id";
-				
+						
 		$f_application_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"application_id",$f_opts);
 		$this->addField($f_application_id);
 		//********************
@@ -41,7 +41,7 @@ class DocFlowOutClientRegNumber_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['length']=15;
 		$f_opts['id']="reg_number";
-				
+						
 		$f_reg_number=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"reg_number",$f_opts);
 		$this->addField($f_reg_number);
 		//********************

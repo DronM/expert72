@@ -26,7 +26,7 @@ class ConstructionType_Model extends ModelSQL{
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['autoInc']=TRUE;
 		$f_opts['id']="id";
-				
+						
 		$f_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"id",$f_opts);
 		$this->addField($f_id);
 		//********************
@@ -35,7 +35,7 @@ class ConstructionType_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['length']=200;
 		$f_opts['id']="name";
-				
+						
 		$f_name=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"name",$f_opts);
 		$this->addField($f_name);
 		//********************
@@ -43,7 +43,7 @@ class ConstructionType_Model extends ModelSQL{
 		//*** Field technical_features ***
 		$f_opts = array();
 		$f_opts['id']="technical_features";
-				
+						
 		$f_technical_features=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"technical_features",$f_opts);
 		$this->addField($f_technical_features);
 		//********************

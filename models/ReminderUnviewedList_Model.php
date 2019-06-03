@@ -26,7 +26,7 @@ class ReminderUnviewedList_Model extends {
 		$f_opts = array();
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['id']="id";
-				
+						
 		$f_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"id",$f_opts);
 		$this->addField($f_id);
 		//********************
@@ -34,7 +34,7 @@ class ReminderUnviewedList_Model extends {
 		//*** Field date_time ***
 		$f_opts = array();
 		$f_opts['id']="date_time";
-				
+						
 		$f_date_time=new FieldSQLDateTimeTZ($this->getDbLink(),$this->getDbName(),$this->getTableName(),"date_time",$f_opts);
 		$this->addField($f_date_time);
 		//********************
@@ -42,7 +42,7 @@ class ReminderUnviewedList_Model extends {
 		//*** Field content ***
 		$f_opts = array();
 		$f_opts['id']="content";
-				
+						
 		$f_content=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"content",$f_opts);
 		$this->addField($f_content);
 		//********************
@@ -50,7 +50,7 @@ class ReminderUnviewedList_Model extends {
 		//*** Field docs_ref ***
 		$f_opts = array();
 		$f_opts['id']="docs_ref";
-				
+						
 		$f_docs_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"docs_ref",$f_opts);
 		$this->addField($f_docs_ref);
 		//********************
@@ -58,7 +58,7 @@ class ReminderUnviewedList_Model extends {
 		//*** Field doc_flow_importance_types_ref ***
 		$f_opts = array();
 		$f_opts['id']="doc_flow_importance_types_ref";
-				
+						
 		$f_doc_flow_importance_types_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"doc_flow_importance_types_ref",$f_opts);
 		$this->addField($f_doc_flow_importance_types_ref);
 		//********************
@@ -66,7 +66,7 @@ class ReminderUnviewedList_Model extends {
 		//*** Field files ***
 		$f_opts = array();
 		$f_opts['id']="files";
-				
+						
 		$f_files=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"files",$f_opts);
 		$this->addField($f_files);
 		//********************
@@ -74,7 +74,7 @@ class ReminderUnviewedList_Model extends {
 		//*** Field short_message_sender ***
 		$f_opts = array();
 		$f_opts['id']="short_message_sender";
-				
+						
 		$f_short_message_sender=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"short_message_sender",$f_opts);
 		$this->addField($f_short_message_sender);
 		//********************

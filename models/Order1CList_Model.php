@@ -27,7 +27,7 @@ class Order1CList_Model extends {
 		$f_opts['autoInc']=FALSE;
 		$f_opts['length']=36;
 		$f_opts['id']="ext_id";
-				
+						
 		$f_ext_id=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"ext_id",$f_opts);
 		$this->addField($f_ext_id);
 		//********************
@@ -35,7 +35,7 @@ class Order1CList_Model extends {
 		//*** Field number ***
 		$f_opts = array();
 		$f_opts['id']="number";
-				
+						
 		$f_number=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"number",$f_opts);
 		$this->addField($f_number);
 		//********************
@@ -43,7 +43,7 @@ class Order1CList_Model extends {
 		//*** Field date ***
 		$f_opts = array();
 		$f_opts['id']="date";
-				
+						
 		$f_date=new FieldSQLDate($this->getDbLink(),$this->getDbName(),$this->getTableName(),"date",$f_opts);
 		$this->addField($f_date);
 		//********************
@@ -51,7 +51,7 @@ class Order1CList_Model extends {
 		//*** Field total ***
 		$f_opts = array();
 		$f_opts['id']="total";
-				
+						
 		$f_total=new FieldSQLFloat($this->getDbLink(),$this->getDbName(),$this->getTableName(),"total",$f_opts);
 		$this->addField($f_total);
 		//********************

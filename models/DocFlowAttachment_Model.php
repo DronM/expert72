@@ -28,7 +28,7 @@ class DocFlowAttachment_Model extends ModelSQL{
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['length']=36;
 		$f_opts['id']="file_id";
-				
+						
 		$f_file_id=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"file_id",$f_opts);
 		$this->addField($f_file_id);
 		//********************
@@ -36,7 +36,7 @@ class DocFlowAttachment_Model extends ModelSQL{
 		//*** Field doc_type ***
 		$f_opts = array();
 		$f_opts['id']="doc_type";
-				
+						
 		$f_doc_type=new FieldSQLEnum($this->getDbLink(),$this->getDbName(),$this->getTableName(),"doc_type",$f_opts);
 		$this->addField($f_doc_type);
 		//********************
@@ -44,7 +44,7 @@ class DocFlowAttachment_Model extends ModelSQL{
 		//*** Field doc_id ***
 		$f_opts = array();
 		$f_opts['id']="doc_id";
-				
+						
 		$f_doc_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"doc_id",$f_opts);
 		$this->addField($f_doc_id);
 		//********************
@@ -53,7 +53,7 @@ class DocFlowAttachment_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['length']=255;
 		$f_opts['id']="file_name";
-				
+						
 		$f_file_name=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"file_name",$f_opts);
 		$this->addField($f_file_name);
 		//********************
@@ -61,7 +61,7 @@ class DocFlowAttachment_Model extends ModelSQL{
 		//*** Field file_size ***
 		$f_opts = array();
 		$f_opts['id']="file_size";
-				
+						
 		$f_file_size=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"file_size",$f_opts);
 		$this->addField($f_file_size);
 		//********************
@@ -69,7 +69,7 @@ class DocFlowAttachment_Model extends ModelSQL{
 		//*** Field file_signed ***
 		$f_opts = array();
 		$f_opts['id']="file_signed";
-				
+						
 		$f_file_signed=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"file_signed",$f_opts);
 		$this->addField($f_file_signed);
 		//********************
@@ -78,7 +78,7 @@ class DocFlowAttachment_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['defaultValue']='now()';
 		$f_opts['id']="file_date";
-				
+						
 		$f_file_date=new FieldSQLDateTime($this->getDbLink(),$this->getDbName(),$this->getTableName(),"file_date",$f_opts);
 		$this->addField($f_file_date);
 		//********************
@@ -86,7 +86,7 @@ class DocFlowAttachment_Model extends ModelSQL{
 		//*** Field file_path ***
 		$f_opts = array();
 		$f_opts['id']="file_path";
-				
+						
 		$f_file_path=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"file_path",$f_opts);
 		$this->addField($f_file_path);
 		//********************
@@ -94,7 +94,7 @@ class DocFlowAttachment_Model extends ModelSQL{
 		//*** Field employee_id ***
 		$f_opts = array();
 		$f_opts['id']="employee_id";
-				
+						
 		$f_employee_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"employee_id",$f_opts);
 		$this->addField($f_employee_id);
 		//********************

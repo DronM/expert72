@@ -25,7 +25,7 @@ class ApplicationDocFolder_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['id']="id";
-				
+						
 		$f_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"id",$f_opts);
 		$this->addField($f_id);
 		//********************
@@ -33,7 +33,7 @@ class ApplicationDocFolder_Model extends ModelSQL{
 		//*** Field name ***
 		$f_opts = array();
 		$f_opts['id']="name";
-				
+						
 		$f_name=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"name",$f_opts);
 		$this->addField($f_name);
 		//********************
@@ -42,7 +42,7 @@ class ApplicationDocFolder_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['defaultValue']='FALSE';
 		$f_opts['id']="require_client_sig";
-				
+						
 		$f_require_client_sig=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"require_client_sig",$f_opts);
 		$this->addField($f_require_client_sig);
 		//********************

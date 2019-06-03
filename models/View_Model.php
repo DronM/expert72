@@ -28,7 +28,7 @@ class View_Model extends ModelSQL{
 		
 		$f_opts['alias']='Код';
 		$f_opts['id']="id";
-				
+						
 		$f_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"id",$f_opts);
 		$this->addField($f_id);
 		//********************
@@ -36,7 +36,7 @@ class View_Model extends ModelSQL{
 		//*** Field c ***
 		$f_opts = array();
 		$f_opts['id']="c";
-				
+						
 		$f_c=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"c",$f_opts);
 		$this->addField($f_c);
 		//********************
@@ -44,7 +44,7 @@ class View_Model extends ModelSQL{
 		//*** Field f ***
 		$f_opts = array();
 		$f_opts['id']="f";
-				
+						
 		$f_f=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"f",$f_opts);
 		$this->addField($f_f);
 		//********************
@@ -52,7 +52,7 @@ class View_Model extends ModelSQL{
 		//*** Field t ***
 		$f_opts = array();
 		$f_opts['id']="t";
-				
+						
 		$f_t=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"t",$f_opts);
 		$this->addField($f_t);
 		//********************
@@ -60,7 +60,7 @@ class View_Model extends ModelSQL{
 		//*** Field section ***
 		$f_opts = array();
 		$f_opts['id']="section";
-				
+						
 		$f_section=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"section",$f_opts);
 		$this->addField($f_section);
 		//********************
@@ -68,7 +68,7 @@ class View_Model extends ModelSQL{
 		//*** Field descr ***
 		$f_opts = array();
 		$f_opts['id']="descr";
-				
+						
 		$f_descr=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"descr",$f_opts);
 		$this->addField($f_descr);
 		//********************
@@ -76,7 +76,7 @@ class View_Model extends ModelSQL{
 		//*** Field limited ***
 		$f_opts = array();
 		$f_opts['id']="limited";
-				
+						
 		$f_limited=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"limited",$f_opts);
 		$this->addField($f_limited);
 		//********************

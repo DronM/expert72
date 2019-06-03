@@ -40,41 +40,18 @@ CREATE OR REPLACE VIEW doc_flow_out_dialog AS
 					'file_uploaded','true',
 					'file_path',att.file_path,
 					'date_time',f_ver.date_time,
-					'signatures',
-					(WITH sign AS
-					(SELECT
-						json_agg(files_t.signatures) AS signatures
-					FROM
-						(SELECT
-							json_build_object(
-								'owner',u_certs.subject_cert,
-								'cert_from',u_certs.date_time_from,
-								'cert_to',u_certs.date_time_to,
-								'sign_date_time',f_sig.sign_date_time,
-								'check_result',ver.check_result,
-								'check_time',ver.check_time,
-								'error_str',ver.error_str
-							) AS signatures
-						FROM file_signatures AS f_sig
-						LEFT JOIN file_verifications AS ver ON ver.file_id=f_sig.file_id
-						LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id
-						WHERE f_sig.file_id=f_ver.file_id
-						ORDER BY f_sig.sign_date_time
-						) AS files_t
-					)					
-					SELECT
-						CASE
-							WHEN (SELECT sign.signatures FROM sign) IS NULL AND f_ver.file_id IS NOT NULL THEN
-								json_build_array(
-									json_build_object(
-										'sign_date_time',f_ver.date_time,
-										'check_result',f_ver.check_result,
-										'error_str',f_ver.error_str
-									)
+					'signatures',--sign.signatures
+					CASE
+						WHEN sign.signatures IS NULL AND f_ver.file_id IS NOT NULL THEN
+							json_build_array(
+								json_build_object(
+									'sign_date_time',f_ver.date_time,
+									'check_result',f_ver.check_result,
+									'error_str',f_ver.error_str
 								)
-							ELSE (SELECT sign.signatures FROM sign)
-						END
-					),
+							)
+						ELSE sign.signatures
+					END,
 					'file_signed_by_client',(SELECT t1.file_signed_by_client FROM application_document_files t1 WHERE t1.file_id=att.file_id),
 					'require_client_sig',app_fd.require_client_sig
 				)
@@ -83,6 +60,29 @@ CREATE OR REPLACE VIEW doc_flow_out_dialog AS
 		LEFT JOIN doc_flow_attachments AS att ON
 			att.file_path=app_fd.name AND att.doc_type='doc_flow_out' AND att.doc_id=doc_flow_out.id
 		LEFT JOIN file_verifications AS f_ver ON f_ver.file_id=att.file_id
+		LEFT JOIN (
+			SELECT
+				files_t.file_id,
+				json_agg(files_t.signatures) AS signatures
+			FROM
+			(SELECT
+				f_sig.file_id,
+				json_build_object(
+					'owner',u_certs.subject_cert,
+					'cert_from',u_certs.date_time_from,
+					'cert_to',u_certs.date_time_to,
+					'sign_date_time',f_sig.sign_date_time,
+					'check_result',ver.check_result,
+					'check_time',ver.check_time,
+					'error_str',ver.error_str
+				) AS signatures
+			FROM file_signatures AS f_sig
+			LEFT JOIN file_verifications AS ver ON ver.file_id=f_sig.file_id
+			LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id
+			ORDER BY f_sig.sign_date_time
+			) AS files_t
+			GROUP BY files_t.file_id
+		) AS sign ON sign.file_id=f_ver.file_id
 		GROUP BY app_fd.id,att.file_path,app_fd.require_client_sig
 		ORDER BY app_fd.name
 		)  AS doc_att

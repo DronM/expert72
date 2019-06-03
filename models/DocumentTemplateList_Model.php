@@ -26,7 +26,7 @@ class DocumentTemplateList_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['id']="document_type";
-				
+						
 		$f_document_type=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"document_type",$f_opts);
 		$this->addField($f_document_type);
 		//********************
@@ -35,7 +35,7 @@ class DocumentTemplateList_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['id']="create_date";
-				
+						
 		$f_create_date=new FieldSQLDate($this->getDbLink(),$this->getDbName(),$this->getTableName(),"create_date",$f_opts);
 		$this->addField($f_create_date);
 		//********************
@@ -44,7 +44,7 @@ class DocumentTemplateList_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['id']="construction_type_id";
-				
+						
 		$f_construction_type_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"construction_type_id",$f_opts);
 		$this->addField($f_construction_type_id);
 		//********************
@@ -52,7 +52,7 @@ class DocumentTemplateList_Model extends ModelSQL{
 		//*** Field construction_types_ref ***
 		$f_opts = array();
 		$f_opts['id']="construction_types_ref";
-				
+						
 		$f_construction_types_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"construction_types_ref",$f_opts);
 		$this->addField($f_construction_types_ref);
 		//********************
@@ -60,7 +60,7 @@ class DocumentTemplateList_Model extends ModelSQL{
 		//*** Field comment_text ***
 		$f_opts = array();
 		$f_opts['id']="comment_text";
-				
+						
 		$f_comment_text=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"comment_text",$f_opts);
 		$this->addField($f_comment_text);
 		//********************

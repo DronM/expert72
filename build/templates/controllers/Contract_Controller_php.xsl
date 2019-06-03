@@ -42,7 +42,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		$columns = '*';
 		$tb = 'contracts_dialog';
 		$fields = $this->getExtVal($pm,'fields');
-		if ($fields &amp;&amp; strlen($fields) &amp;&amp; $fields!='null'){
+		if ($fields &amp;&amp; strlen($fields) &amp;&amp; strtolower($fields)!='null'){
 			$aval_fields = ['experts_for_notification'];
 			$fields_ar = explode(',',$fields);
 			foreach($fields_ar as $field){
@@ -364,7 +364,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		$params = $this->get_data_for_1c($this->getExtDbVal($pm,'id'));
 		$params['total'] = $this->getExtDbVal($pm,'total');
 		$params['acc_number'] = $this->getExtDbVal($pm,'acc_number');
-		if ($params['acc_number']=='null'){
+		if (strtolower($params['acc_number'])=='null'){
 			//не понимает с клиента???
 			throw new Exception('Не выбран лицевой счет!');
 		}
@@ -889,11 +889,11 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 	
 		$extra_cond = '';
 		$client_id = $cond->getDbVal('client_id','e',DT_INT);
-		if ($client_id &amp;&amp; $client_id!='null'){
+		if ($client_id &amp;&amp; strtolower($client_id)!='null'){
 			$extra_cond.= sprintf(' AND contracts.client_id=%d',$client_id);
 		}
 		$customer_name = $cond->getDbVal('customer_name','e',DT_STRING);
-		if ($customer_name &amp;&amp; $customer_name!='null'){
+		if ($customer_name &amp;&amp; strtolower(customer_name)!='null'){
 			$extra_cond.= sprintf(" AND app.customer->>'name'=%s",$customer_name);
 		}
 		
@@ -966,22 +966,22 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		}
 	
 		$client_id = $cond->getDbVal('client_id','e',DT_INT);
-		if ($client_id &amp;&amp; $client_id!='null'){
+		if ($client_id &amp;&amp; strtolower($client_id)!='null'){
 			$extra_cond.= sprintf(' AND contracts.client_id=%d',$client_id);
 		}
 		
 		$main_expert_id = $cond->getDbVal('main_expert_id','e',DT_INT);
-		if ($main_expert_id &amp;&amp; $main_expert_id!='null'){
+		if ($main_expert_id &amp;&amp; strtolower($main_expert_id)!='null'){
 			$extra_cond.= sprintf(' AND contracts.main_expert_id=%d',$main_expert_id);
 		}
 		
 		$customer_name = $cond->getDbVal('customer_name','e',DT_STRING);
-		if ($customer_name &amp;&amp; $customer_name!='null'){
+		if ($customer_name &amp;&amp; strtolower($customer_name)!='null'){
 			$extra_cond.= sprintf(" AND app.customer->>'name'=%s",$customer_name);
 		}
 
 		$contractor_name = $cond->getDbVal('contractor_name','e',DT_STRING);
-		if ($contractor_name &amp;&amp; $contractor_name!='null'){
+		if ($contractor_name &amp;&amp; strtolower($contractor_name)!='null'){
 			$extra_cond.= sprintf(
 				"AND (%s =ANY( ARRAY((SELECT s.contractor->>'name'
 				FROM (SELECT jsonb_array_elements(app_t.contractors) AS contractor
@@ -993,7 +993,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 
 		$service = strtolower($cond->getVal('service','e',DT_STRING));
 		$service_descr = 'Все услуги';
-		if ($service &amp;&amp; $service!='null'){
+		if ($service &amp;&amp; strtolower($service)!='null'){
 			if ($service=='expertise'){
 				$extra_cond.= " AND (app.expertise_type='pd' OR app.expertise_type='eng_survey' OR app.expertise_type='pd_eng_survey')";
 				$service_descr = 'ПД и РИИ';
@@ -1113,22 +1113,22 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		$extra_cond = '';
 		
 		$client_id = $cond->getDbVal('client_id','e',DT_INT);
-		if ($client_id &amp;&amp; $client_id!='null'){
+		if ($client_id &amp;&amp; strtolower($client_id)!='null'){
 			$extra_cond.= sprintf(' AND contracts.client_id=%d',$client_id);
 		}
 
 		$build_type_id = $cond->getDbVal('build_type_id','e',DT_INT);
-		if ($build_type_id &amp;&amp; $build_type_id!='null'){
+		if ($build_type_id &amp;&amp; strtolower($build_type_id)!='null'){
 			$extra_cond.= sprintf(' AND app.build_type_id=%d',$build_type_id);
 		}
 		
 		$constr_name = $cond->getDbVal('constr_name','e',DT_STRING);
-		if ($constr_name &amp;&amp; $constr_name!='null'){
+		if ($constr_name &amp;&amp; strtolower($constr_name)!='null'){
 			$extra_cond.= sprintf(" AND coalesce(contracts.constr_name,app.constr_name) = %s",$constr_name);
 		}
 		
 		$main_expert_id = $cond->getDbVal('main_expert_id','e',DT_INT);
-		if ($main_expert_id &amp;&amp; $main_expert_id!='null'){
+		if ($main_expert_id &amp;&amp; strtolower($main_expert_id)!='null'){
 			$extra_cond.= sprintf(' AND contracts.main_expert_id=%d',$main_expert_id);
 		}
 		
@@ -1148,12 +1148,12 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		}
 		
 		$customer_name = $cond->getDbVal('customer_name','e',DT_STRING);
-		if ($customer_name &amp;&amp; $customer_name!='null'){
+		if ($customer_name &amp;&amp; strtolower($customer_name)!='null'){
 			$extra_cond.= sprintf(" AND app.customer->>'name'=%s",$customer_name);
 		}
 
 		$contractor_name = $cond->getDbVal('contractor_name','e',DT_STRING);
-		if ($contractor_name &amp;&amp; $contractor_name!='null'){
+		if ($contractor_name &amp;&amp; strtolower($contractor_name)!='null'){
 			$extra_cond.= sprintf(
 				"AND (%s =ANY( ARRAY((SELECT s.contractor->>'name'
 				FROM (SELECT jsonb_array_elements(app_t.contractors) AS contractor

@@ -21,7 +21,7 @@ class ViewSectionList_Model extends ModelSQL{
 		//*** Field section ***
 		$f_opts = array();
 		$f_opts['id']="section";
-				
+						
 		$f_section=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"section",$f_opts);
 		$this->addField($f_section);
 		//********************

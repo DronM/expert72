@@ -26,7 +26,7 @@ class Contact_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['id']="parent_id";
-				
+						
 		$f_parent_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"parent_id",$f_opts);
 		$this->addField($f_parent_id);
 		//********************
@@ -35,7 +35,7 @@ class Contact_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['id']="parent_type";
-				
+						
 		$f_parent_type=new FieldSQLEnum($this->getDbLink(),$this->getDbName(),$this->getTableName(),"parent_type",$f_opts);
 		$this->addField($f_parent_type);
 		//********************
@@ -44,7 +44,7 @@ class Contact_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['id']="parent_ind";
-				
+						
 		$f_parent_ind=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"parent_ind",$f_opts);
 		$this->addField($f_parent_ind);
 		//********************
@@ -53,7 +53,7 @@ class Contact_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['length']=250;
 		$f_opts['id']="firm_name";
-				
+						
 		$f_firm_name=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"firm_name",$f_opts);
 		$this->addField($f_firm_name);
 		//********************
@@ -62,7 +62,7 @@ class Contact_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['length']=250;
 		$f_opts['id']="dep";
-				
+						
 		$f_dep=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"dep",$f_opts);
 		$this->addField($f_dep);
 		//********************
@@ -70,7 +70,7 @@ class Contact_Model extends ModelSQL{
 		//*** Field post ***
 		$f_opts = array();
 		$f_opts['id']="post";
-				
+						
 		$f_post=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"post",$f_opts);
 		$this->addField($f_post);
 		//********************
@@ -78,7 +78,7 @@ class Contact_Model extends ModelSQL{
 		//*** Field person_type ***
 		$f_opts = array();
 		$f_opts['id']="person_type";
-				
+						
 		$f_person_type=new FieldSQLEnum($this->getDbLink(),$this->getDbName(),$this->getTableName(),"person_type",$f_opts);
 		$this->addField($f_person_type);
 		//********************
@@ -87,7 +87,7 @@ class Contact_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['length']=200;
 		$f_opts['id']="name";
-				
+						
 		$f_name=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"name",$f_opts);
 		$this->addField($f_name);
 		//********************
@@ -95,7 +95,7 @@ class Contact_Model extends ModelSQL{
 		//*** Field email ***
 		$f_opts = array();
 		$f_opts['id']="email";
-				
+						
 		$f_email=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"email",$f_opts);
 		$this->addField($f_email);
 		//********************
@@ -104,7 +104,7 @@ class Contact_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['length']=15;
 		$f_opts['id']="tel";
-				
+						
 		$f_tel=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"tel",$f_opts);
 		$this->addField($f_tel);
 		//********************
@@ -112,7 +112,7 @@ class Contact_Model extends ModelSQL{
 		//*** Field contact ***
 		$f_opts = array();
 		$f_opts['id']="contact";
-				
+						
 		$f_contact=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"contact",$f_opts);
 		$this->addField($f_contact);
 		//********************

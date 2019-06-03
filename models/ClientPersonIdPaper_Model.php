@@ -23,7 +23,7 @@ class ClientPersonIdPaper_Model extends {
 		$f_opts = array();
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['id']="paper";
-				
+						
 		$f_paper=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"paper",$f_opts);
 		$this->addField($f_paper);
 		//********************
@@ -31,7 +31,7 @@ class ClientPersonIdPaper_Model extends {
 		//*** Field series ***
 		$f_opts = array();
 		$f_opts['id']="series";
-				
+						
 		$f_series=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"series",$f_opts);
 		$this->addField($f_series);
 		//********************
@@ -39,7 +39,7 @@ class ClientPersonIdPaper_Model extends {
 		//*** Field number ***
 		$f_opts = array();
 		$f_opts['id']="number";
-				
+						
 		$f_number=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"number",$f_opts);
 		$this->addField($f_number);
 		//********************
@@ -47,7 +47,7 @@ class ClientPersonIdPaper_Model extends {
 		//*** Field issue_body ***
 		$f_opts = array();
 		$f_opts['id']="issue_body";
-				
+						
 		$f_issue_body=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"issue_body",$f_opts);
 		$this->addField($f_issue_body);
 		//********************
@@ -55,7 +55,7 @@ class ClientPersonIdPaper_Model extends {
 		//*** Field issue_date ***
 		$f_opts = array();
 		$f_opts['id']="issue_date";
-				
+						
 		$f_issue_date=new FieldSQLDate($this->getDbLink(),$this->getDbName(),$this->getTableName(),"issue_date",$f_opts);
 		$this->addField($f_issue_date);
 		//********************

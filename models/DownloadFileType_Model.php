@@ -23,7 +23,7 @@ class DownloadFileType_Model extends {
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['length']=5;
 		$f_opts['id']="ext";
-				
+						
 		$f_ext=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"ext",$f_opts);
 		$this->addField($f_ext);
 		//********************

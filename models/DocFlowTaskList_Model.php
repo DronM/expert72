@@ -29,7 +29,7 @@ class DocFlowTaskList_Model extends ModelSQL{
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['autoInc']=TRUE;
 		$f_opts['id']="id";
-				
+						
 		$f_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"id",$f_opts);
 		$this->addField($f_id);
 		//********************
@@ -37,7 +37,7 @@ class DocFlowTaskList_Model extends ModelSQL{
 		//*** Field register_doc ***
 		$f_opts = array();
 		$f_opts['id']="register_doc";
-				
+						
 		$f_register_doc=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"register_doc",$f_opts);
 		$this->addField($f_register_doc);
 		//********************
@@ -45,7 +45,7 @@ class DocFlowTaskList_Model extends ModelSQL{
 		//*** Field recipient ***
 		$f_opts = array();
 		$f_opts['id']="recipient";
-				
+						
 		$f_recipient=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"recipient",$f_opts);
 		$this->addField($f_recipient);
 		//********************
@@ -53,7 +53,7 @@ class DocFlowTaskList_Model extends ModelSQL{
 		//*** Field end_date_time ***
 		$f_opts = array();
 		$f_opts['id']="end_date_time";
-				
+						
 		$f_end_date_time=new FieldSQLDateTimeTZ($this->getDbLink(),$this->getDbName(),$this->getTableName(),"end_date_time",$f_opts);
 		$this->addField($f_end_date_time);
 		//********************
@@ -61,7 +61,7 @@ class DocFlowTaskList_Model extends ModelSQL{
 		//*** Field date_time ***
 		$f_opts = array();
 		$f_opts['id']="date_time";
-				
+						
 		$f_date_time=new FieldSQLDateTimeTZ($this->getDbLink(),$this->getDbName(),$this->getTableName(),"date_time",$f_opts);
 		$this->addField($f_date_time);
 		//********************
@@ -69,7 +69,7 @@ class DocFlowTaskList_Model extends ModelSQL{
 		//*** Field doc_flow_importance_type_id ***
 		$f_opts = array();
 		$f_opts['id']="doc_flow_importance_type_id";
-				
+						
 		$f_doc_flow_importance_type_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"doc_flow_importance_type_id",$f_opts);
 		$this->addField($f_doc_flow_importance_type_id);
 		//********************
@@ -77,7 +77,7 @@ class DocFlowTaskList_Model extends ModelSQL{
 		//*** Field employee_id ***
 		$f_opts = array();
 		$f_opts['id']="employee_id";
-				
+						
 		$f_employee_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"employee_id",$f_opts);
 		$this->addField($f_employee_id);
 		//********************
@@ -85,7 +85,7 @@ class DocFlowTaskList_Model extends ModelSQL{
 		//*** Field close_date_time ***
 		$f_opts = array();
 		$f_opts['id']="close_date_time";
-				
+						
 		$f_close_date_time=new FieldSQLDateTimeTZ($this->getDbLink(),$this->getDbName(),$this->getTableName(),"close_date_time",$f_opts);
 		$this->addField($f_close_date_time);
 		//********************
@@ -93,7 +93,7 @@ class DocFlowTaskList_Model extends ModelSQL{
 		//*** Field close_doc ***
 		$f_opts = array();
 		$f_opts['id']="close_doc";
-				
+						
 		$f_close_doc=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"close_doc",$f_opts);
 		$this->addField($f_close_doc);
 		//********************
@@ -101,7 +101,7 @@ class DocFlowTaskList_Model extends ModelSQL{
 		//*** Field description ***
 		$f_opts = array();
 		$f_opts['id']="description";
-				
+						
 		$f_description=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"description",$f_opts);
 		$this->addField($f_description);
 		//********************
@@ -110,7 +110,7 @@ class DocFlowTaskList_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['defaultValue']='FALSE';
 		$f_opts['id']="closed";
-				
+						
 		$f_closed=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"closed",$f_opts);
 		$this->addField($f_closed);
 		//********************
@@ -118,7 +118,7 @@ class DocFlowTaskList_Model extends ModelSQL{
 		//*** Field close_employee_id ***
 		$f_opts = array();
 		$f_opts['id']="close_employee_id";
-				
+						
 		$f_close_employee_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"close_employee_id",$f_opts);
 		$this->addField($f_close_employee_id);
 		//********************
@@ -126,7 +126,7 @@ class DocFlowTaskList_Model extends ModelSQL{
 		//*** Field register_docs_ref ***
 		$f_opts = array();
 		$f_opts['id']="register_docs_ref";
-				
+						
 		$f_register_docs_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"register_docs_ref",$f_opts);
 		$this->addField($f_register_docs_ref);
 		//********************
@@ -134,7 +134,7 @@ class DocFlowTaskList_Model extends ModelSQL{
 		//*** Field doc_flow_importance_types_ref ***
 		$f_opts = array();
 		$f_opts['id']="doc_flow_importance_types_ref";
-				
+						
 		$f_doc_flow_importance_types_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"doc_flow_importance_types_ref",$f_opts);
 		$this->addField($f_doc_flow_importance_types_ref);
 		//********************
@@ -142,7 +142,7 @@ class DocFlowTaskList_Model extends ModelSQL{
 		//*** Field employees_ref ***
 		$f_opts = array();
 		$f_opts['id']="employees_ref";
-				
+						
 		$f_employees_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"employees_ref",$f_opts);
 		$this->addField($f_employees_ref);
 		//********************
@@ -150,7 +150,7 @@ class DocFlowTaskList_Model extends ModelSQL{
 		//*** Field recipients_ref ***
 		$f_opts = array();
 		$f_opts['id']="recipients_ref";
-				
+						
 		$f_recipients_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"recipients_ref",$f_opts);
 		$this->addField($f_recipients_ref);
 		//********************
@@ -158,7 +158,7 @@ class DocFlowTaskList_Model extends ModelSQL{
 		//*** Field close_docs_ref ***
 		$f_opts = array();
 		$f_opts['id']="close_docs_ref";
-				
+						
 		$f_close_docs_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"close_docs_ref",$f_opts);
 		$this->addField($f_close_docs_ref);
 		//********************
@@ -166,7 +166,7 @@ class DocFlowTaskList_Model extends ModelSQL{
 		//*** Field close_employees_ref ***
 		$f_opts = array();
 		$f_opts['id']="close_employees_ref";
-				
+						
 		$f_close_employees_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"close_employees_ref",$f_opts);
 		$this->addField($f_close_employees_ref);
 		//********************

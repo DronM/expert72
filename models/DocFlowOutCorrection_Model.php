@@ -25,7 +25,7 @@ class DocFlowOutCorrection_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['id']="doc_flow_out_id";
-				
+						
 		$f_doc_flow_out_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"doc_flow_out_id",$f_opts);
 		$this->addField($f_doc_flow_out_id);
 		//********************
@@ -35,7 +35,7 @@ class DocFlowOutCorrection_Model extends ModelSQL{
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['length']=36;
 		$f_opts['id']="file_id";
-				
+						
 		$f_file_id=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"file_id",$f_opts);
 		$this->addField($f_file_id);
 		//********************
@@ -44,7 +44,7 @@ class DocFlowOutCorrection_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['id']="is_new";
-				
+						
 		$f_is_new=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"is_new",$f_opts);
 		$this->addField($f_is_new);
 		//********************
@@ -52,7 +52,7 @@ class DocFlowOutCorrection_Model extends ModelSQL{
 		//*** Field date_time ***
 		$f_opts = array();
 		$f_opts['id']="date_time";
-				
+						
 		$f_date_time=new FieldSQLDateTimeTZ($this->getDbLink(),$this->getDbName(),$this->getTableName(),"date_time",$f_opts);
 		$this->addField($f_date_time);
 		//********************
@@ -60,7 +60,7 @@ class DocFlowOutCorrection_Model extends ModelSQL{
 		//*** Field employee_id ***
 		$f_opts = array();
 		$f_opts['id']="employee_id";
-				
+						
 		$f_employee_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"employee_id",$f_opts);
 		$this->addField($f_employee_id);
 		//********************

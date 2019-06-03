@@ -25,7 +25,7 @@ class MainMenuConstructorDialog_Model extends ModelSQL{
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['sysCol']=TRUE;
 		$f_opts['id']="id";
-				
+						
 		$f_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"id",$f_opts);
 		$this->addField($f_id);
 		//********************
@@ -33,7 +33,7 @@ class MainMenuConstructorDialog_Model extends ModelSQL{
 		//*** Field role_id ***
 		$f_opts = array();
 		$f_opts['id']="role_id";
-				
+						
 		$f_role_id=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"role_id",$f_opts);
 		$this->addField($f_role_id);
 		//********************
@@ -41,7 +41,7 @@ class MainMenuConstructorDialog_Model extends ModelSQL{
 		//*** Field role_descr ***
 		$f_opts = array();
 		$f_opts['id']="role_descr";
-				
+						
 		$f_role_descr=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"role_descr",$f_opts);
 		$this->addField($f_role_descr);
 		//********************
@@ -49,7 +49,7 @@ class MainMenuConstructorDialog_Model extends ModelSQL{
 		//*** Field user_id ***
 		$f_opts = array();
 		$f_opts['id']="user_id";
-				
+						
 		$f_user_id=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"user_id",$f_opts);
 		$this->addField($f_user_id);
 		//********************
@@ -57,7 +57,7 @@ class MainMenuConstructorDialog_Model extends ModelSQL{
 		//*** Field user_descr ***
 		$f_opts = array();
 		$f_opts['id']="user_descr";
-				
+						
 		$f_user_descr=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"user_descr",$f_opts);
 		$this->addField($f_user_descr);
 		//********************
@@ -65,7 +65,7 @@ class MainMenuConstructorDialog_Model extends ModelSQL{
 		//*** Field content ***
 		$f_opts = array();
 		$f_opts['id']="content";
-				
+						
 		$f_content=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"content",$f_opts);
 		$this->addField($f_content);
 		//********************

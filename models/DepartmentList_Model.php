@@ -26,7 +26,7 @@ class DepartmentList_Model extends ModelSQL{
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['autoInc']=TRUE;
 		$f_opts['id']="id";
-				
+						
 		$f_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"id",$f_opts);
 		$this->addField($f_id);
 		//********************
@@ -35,7 +35,7 @@ class DepartmentList_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['length']=200;
 		$f_opts['id']="name";
-				
+						
 		$f_name=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"name",$f_opts);
 		$this->addField($f_name);
 		//********************
@@ -43,7 +43,7 @@ class DepartmentList_Model extends ModelSQL{
 		//*** Field boss_employee_id ***
 		$f_opts = array();
 		$f_opts['id']="boss_employee_id";
-				
+						
 		$f_boss_employee_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"boss_employee_id",$f_opts);
 		$this->addField($f_boss_employee_id);
 		//********************
@@ -52,7 +52,7 @@ class DepartmentList_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['length']=50;
 		$f_opts['id']="email";
-				
+						
 		$f_email=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"email",$f_opts);
 		$this->addField($f_email);
 		//********************
@@ -60,7 +60,7 @@ class DepartmentList_Model extends ModelSQL{
 		//*** Field boss_employees_ref ***
 		$f_opts = array();
 		$f_opts['id']="boss_employees_ref";
-				
+						
 		$f_boss_employees_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"boss_employees_ref",$f_opts);
 		$this->addField($f_boss_employees_ref);
 		//********************

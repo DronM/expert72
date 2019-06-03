@@ -25,7 +25,7 @@ class ClientResponsablePerson_Model extends {
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['autoInc']=TRUE;
 		$f_opts['id']="id";
-				
+						
 		$f_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"id",$f_opts);
 		$this->addField($f_id);
 		//********************
@@ -33,7 +33,7 @@ class ClientResponsablePerson_Model extends {
 		//*** Field dep ***
 		$f_opts = array();
 		$f_opts['id']="dep";
-				
+						
 		$f_dep=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"dep",$f_opts);
 		$this->addField($f_dep);
 		//********************
@@ -41,7 +41,7 @@ class ClientResponsablePerson_Model extends {
 		//*** Field name ***
 		$f_opts = array();
 		$f_opts['id']="name";
-				
+						
 		$f_name=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"name",$f_opts);
 		$this->addField($f_name);
 		//********************
@@ -49,7 +49,7 @@ class ClientResponsablePerson_Model extends {
 		//*** Field post ***
 		$f_opts = array();
 		$f_opts['id']="post";
-				
+						
 		$f_post=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"post",$f_opts);
 		$this->addField($f_post);
 		//********************
@@ -57,7 +57,7 @@ class ClientResponsablePerson_Model extends {
 		//*** Field tel ***
 		$f_opts = array();
 		$f_opts['id']="tel";
-				
+						
 		$f_tel=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"tel",$f_opts);
 		$this->addField($f_tel);
 		//********************
@@ -65,7 +65,7 @@ class ClientResponsablePerson_Model extends {
 		//*** Field email ***
 		$f_opts = array();
 		$f_opts['id']="email";
-				
+						
 		$f_email=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"email",$f_opts);
 		$this->addField($f_email);
 		//********************
@@ -73,7 +73,7 @@ class ClientResponsablePerson_Model extends {
 		//*** Field person_type ***
 		$f_opts = array();
 		$f_opts['id']="person_type";
-				
+						
 		$f_person_type=new FieldSQLEnum($this->getDbLink(),$this->getDbName(),$this->getTableName(),"person_type",$f_opts);
 		$this->addField($f_person_type);
 		//********************

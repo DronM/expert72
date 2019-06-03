@@ -25,7 +25,7 @@ class DocFlowImportanceTypeDialog_Model extends ModelSQL{
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['autoInc']=TRUE;
 		$f_opts['id']="id";
-				
+						
 		$f_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"id",$f_opts);
 		$this->addField($f_id);
 		//********************
@@ -34,7 +34,7 @@ class DocFlowImportanceTypeDialog_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['length']=250;
 		$f_opts['id']="name";
-				
+						
 		$f_name=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"name",$f_opts);
 		$this->addField($f_name);
 		//********************
@@ -42,7 +42,7 @@ class DocFlowImportanceTypeDialog_Model extends ModelSQL{
 		//*** Field approve_interval ***
 		$f_opts = array();
 		$f_opts['id']="approve_interval";
-				
+						
 		$f_approve_interval=new FieldSQLInterval($this->getDbLink(),$this->getDbName(),$this->getTableName(),"approve_interval",$f_opts);
 		$this->addField($f_approve_interval);
 		//********************

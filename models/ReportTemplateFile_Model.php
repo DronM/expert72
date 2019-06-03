@@ -27,7 +27,7 @@ class ReportTemplateFile_Model extends ModelSQL{
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['autoInc']=TRUE;
 		$f_opts['id']="id";
-				
+						
 		$f_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"id",$f_opts);
 		$this->addField($f_id);
 		//********************
@@ -35,7 +35,7 @@ class ReportTemplateFile_Model extends ModelSQL{
 		//*** Field report_template_id ***
 		$f_opts = array();
 		$f_opts['id']="report_template_id";
-				
+						
 		$f_report_template_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"report_template_id",$f_opts);
 		$this->addField($f_report_template_id);
 		//********************
@@ -43,7 +43,7 @@ class ReportTemplateFile_Model extends ModelSQL{
 		//*** Field file_inf ***
 		$f_opts = array();
 		$f_opts['id']="file_inf";
-				
+						
 		$f_file_inf=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"file_inf",$f_opts);
 		$this->addField($f_file_inf);
 		//********************
@@ -51,7 +51,7 @@ class ReportTemplateFile_Model extends ModelSQL{
 		//*** Field file_data ***
 		$f_opts = array();
 		$f_opts['id']="file_data";
-				
+						
 		$f_file_data=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"file_data",$f_opts);
 		$this->addField($f_file_data);
 		//********************
@@ -61,7 +61,7 @@ class ReportTemplateFile_Model extends ModelSQL{
 		
 		$f_opts['alias']='Комментарий';
 		$f_opts['id']="comment_text";
-				
+						
 		$f_comment_text=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"comment_text",$f_opts);
 		$this->addField($f_comment_text);
 		//********************
@@ -69,7 +69,7 @@ class ReportTemplateFile_Model extends ModelSQL{
 		//*** Field permissions ***
 		$f_opts = array();
 		$f_opts['id']="permissions";
-				
+						
 		$f_permissions=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"permissions",$f_opts);
 		$this->addField($f_permissions);
 		//********************
@@ -77,7 +77,7 @@ class ReportTemplateFile_Model extends ModelSQL{
 		//*** Field permission_ar ***
 		$f_opts = array();
 		$f_opts['id']="permission_ar";
-				
+						
 		$f_permission_ar=new FieldSQLArray($this->getDbLink(),$this->getDbName(),$this->getTableName(),"permission_ar",$f_opts);
 		$this->addField($f_permission_ar);
 		//********************
@@ -86,7 +86,7 @@ class ReportTemplateFile_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['defaultValue']='FALSE';
 		$f_opts['id']="for_all_views";
-				
+						
 		$f_for_all_views=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"for_all_views",$f_opts);
 		$this->addField($f_for_all_views);
 		//********************
@@ -94,7 +94,7 @@ class ReportTemplateFile_Model extends ModelSQL{
 		//*** Field views ***
 		$f_opts = array();
 		$f_opts['id']="views";
-				
+						
 		$f_views=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"views",$f_opts);
 		$this->addField($f_views);
 		//********************
@@ -102,7 +102,7 @@ class ReportTemplateFile_Model extends ModelSQL{
 		//*** Field view_ar ***
 		$f_opts = array();
 		$f_opts['id']="view_ar";
-				
+						
 		$f_view_ar=new FieldSQLArray($this->getDbLink(),$this->getDbName(),$this->getTableName(),"view_ar",$f_opts);
 		$this->addField($f_view_ar);
 		//********************
@@ -110,7 +110,7 @@ class ReportTemplateFile_Model extends ModelSQL{
 		//*** Field employee_id ***
 		$f_opts = array();
 		$f_opts['id']="employee_id";
-				
+						
 		$f_employee_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"employee_id",$f_opts);
 		$this->addField($f_employee_id);
 		//********************

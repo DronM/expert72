@@ -21,7 +21,7 @@ class DocumentTemplateAllList_Model extends ModelSQL{
 		//*** Field documents ***
 		$f_opts = array();
 		$f_opts['id']="documents";
-				
+						
 		$f_documents=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"documents",$f_opts);
 		$this->addField($f_documents);
 		//********************

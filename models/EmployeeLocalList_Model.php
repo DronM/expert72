@@ -24,7 +24,7 @@ class EmployeeLocalList_Model extends {
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['autoInc']=TRUE;
 		$f_opts['id']="id";
-				
+						
 		$f_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"id",$f_opts);
 		$this->addField($f_id);
 		//********************
@@ -32,7 +32,7 @@ class EmployeeLocalList_Model extends {
 		//*** Field employees_ref ***
 		$f_opts = array();
 		$f_opts['id']="employees_ref";
-				
+						
 		$f_employees_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"employees_ref",$f_opts);
 		$this->addField($f_employees_ref);
 		//********************

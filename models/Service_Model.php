@@ -26,7 +26,7 @@ class Service_Model extends ModelSQL{
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['autoInc']=TRUE;
 		$f_opts['id']="id";
-				
+						
 		$f_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"id",$f_opts);
 		$this->addField($f_id);
 		//********************
@@ -35,7 +35,7 @@ class Service_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['length']=50;
 		$f_opts['id']="name";
-				
+						
 		$f_name=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"name",$f_opts);
 		$this->addField($f_name);
 		//********************
@@ -43,7 +43,7 @@ class Service_Model extends ModelSQL{
 		//*** Field date_type ***
 		$f_opts = array();
 		$f_opts['id']="date_type";
-				
+						
 		$f_date_type=new FieldSQLEnum($this->getDbLink(),$this->getDbName(),$this->getTableName(),"date_type",$f_opts);
 		$this->addField($f_date_type);
 		//********************
@@ -51,7 +51,7 @@ class Service_Model extends ModelSQL{
 		//*** Field work_day_count ***
 		$f_opts = array();
 		$f_opts['id']="work_day_count";
-				
+						
 		$f_work_day_count=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"work_day_count",$f_opts);
 		$this->addField($f_work_day_count);
 		//********************
@@ -59,7 +59,7 @@ class Service_Model extends ModelSQL{
 		//*** Field expertise_day_count ***
 		$f_opts = array();
 		$f_opts['id']="expertise_day_count";
-				
+						
 		$f_expertise_day_count=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expertise_day_count",$f_opts);
 		$this->addField($f_expertise_day_count);
 		//********************
@@ -68,7 +68,7 @@ class Service_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['length']=5;
 		$f_opts['id']="contract_postf";
-				
+						
 		$f_contract_postf=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"contract_postf",$f_opts);
 		$this->addField($f_contract_postf);
 		//********************

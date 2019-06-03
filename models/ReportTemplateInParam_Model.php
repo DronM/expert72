@@ -24,7 +24,7 @@ class ReportTemplateInParam_Model extends {
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['length']=50;
 		$f_opts['id']="id";
-				
+						
 		$f_id=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"id",$f_opts);
 		$this->addField($f_id);
 		//********************
@@ -32,7 +32,7 @@ class ReportTemplateInParam_Model extends {
 		//*** Field cond ***
 		$f_opts = array();
 		$f_opts['id']="cond";
-				
+						
 		$f_cond=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"cond",$f_opts);
 		$this->addField($f_cond);
 		//********************
@@ -40,7 +40,7 @@ class ReportTemplateInParam_Model extends {
 		//*** Field editCtrlClass ***
 		$f_opts = array();
 		$f_opts['id']="editCtrlClass";
-				
+						
 		$f_editCtrlClass=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"editCtrlClass",$f_opts);
 		$this->addField($f_editCtrlClass);
 		//********************
@@ -48,7 +48,7 @@ class ReportTemplateInParam_Model extends {
 		//*** Field editCtrlOptions ***
 		$f_opts = array();
 		$f_opts['id']="editCtrlOptions";
-				
+						
 		$f_editCtrlOptions=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"editCtrlOptions",$f_opts);
 		$this->addField($f_editCtrlOptions);
 		//********************

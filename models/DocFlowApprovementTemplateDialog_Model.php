@@ -29,7 +29,7 @@ class DocFlowApprovementTemplateDialog_Model extends ModelSQL{
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['autoInc']=TRUE;
 		$f_opts['id']="id";
-				
+						
 		$f_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"id",$f_opts);
 		$this->addField($f_id);
 		//********************
@@ -40,7 +40,7 @@ class DocFlowApprovementTemplateDialog_Model extends ModelSQL{
 		$f_opts['alias']='Наименование';
 		$f_opts['length']=100;
 		$f_opts['id']="name";
-				
+						
 		$f_name=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"name",$f_opts);
 		$this->addField($f_name);
 		//********************
@@ -50,7 +50,7 @@ class DocFlowApprovementTemplateDialog_Model extends ModelSQL{
 		
 		$f_opts['alias']='Комментарий';
 		$f_opts['id']="comment_text";
-				
+						
 		$f_comment_text=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"comment_text",$f_opts);
 		$this->addField($f_comment_text);
 		//********************
@@ -58,7 +58,7 @@ class DocFlowApprovementTemplateDialog_Model extends ModelSQL{
 		//*** Field recipient_list_ref ***
 		$f_opts = array();
 		$f_opts['id']="recipient_list_ref";
-				
+						
 		$f_recipient_list_ref=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"recipient_list_ref",$f_opts);
 		$this->addField($f_recipient_list_ref);
 		//********************
@@ -66,7 +66,7 @@ class DocFlowApprovementTemplateDialog_Model extends ModelSQL{
 		//*** Field permissions ***
 		$f_opts = array();
 		$f_opts['id']="permissions";
-				
+						
 		$f_permissions=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"permissions",$f_opts);
 		$this->addField($f_permissions);
 		//********************
@@ -74,7 +74,7 @@ class DocFlowApprovementTemplateDialog_Model extends ModelSQL{
 		//*** Field permission_ar ***
 		$f_opts = array();
 		$f_opts['id']="permission_ar";
-				
+						
 		$f_permission_ar=new FieldSQLArray($this->getDbLink(),$this->getDbName(),$this->getTableName(),"permission_ar",$f_opts);
 		$this->addField($f_permission_ar);
 		//********************
@@ -82,7 +82,7 @@ class DocFlowApprovementTemplateDialog_Model extends ModelSQL{
 		//*** Field employees_ref ***
 		$f_opts = array();
 		$f_opts['id']="employees_ref";
-				
+						
 		$f_employees_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"employees_ref",$f_opts);
 		$this->addField($f_employees_ref);
 		//********************
@@ -91,7 +91,7 @@ class DocFlowApprovementTemplateDialog_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['defaultValue']='FALSE';
 		$f_opts['id']="for_all_employees";
-				
+						
 		$f_for_all_employees=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"for_all_employees",$f_opts);
 		$this->addField($f_for_all_employees);
 		//********************
@@ -99,7 +99,7 @@ class DocFlowApprovementTemplateDialog_Model extends ModelSQL{
 		//*** Field doc_flow_approvement_type ***
 		$f_opts = array();
 		$f_opts['id']="doc_flow_approvement_type";
-				
+						
 		$f_doc_flow_approvement_type=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"doc_flow_approvement_type",$f_opts);
 		$this->addField($f_doc_flow_approvement_type);
 		//********************

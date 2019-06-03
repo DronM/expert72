@@ -28,7 +28,7 @@ class DocFlowApprovementRecipientList_Model extends {
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['autoInc']=TRUE;
 		$f_opts['id']="id";
-				
+						
 		$f_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"id",$f_opts);
 		$this->addField($f_id);
 		//********************
@@ -36,7 +36,7 @@ class DocFlowApprovementRecipientList_Model extends {
 		//*** Field employee ***
 		$f_opts = array();
 		$f_opts['id']="employee";
-				
+						
 		$f_employee=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"employee",$f_opts);
 		$this->addField($f_employee);
 		//********************
@@ -44,7 +44,7 @@ class DocFlowApprovementRecipientList_Model extends {
 		//*** Field step ***
 		$f_opts = array();
 		$f_opts['id']="step";
-				
+						
 		$f_step=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"step",$f_opts);
 		$this->addField($f_step);
 		//********************
@@ -52,7 +52,7 @@ class DocFlowApprovementRecipientList_Model extends {
 		//*** Field employee_comment ***
 		$f_opts = array();
 		$f_opts['id']="employee_comment";
-				
+						
 		$f_employee_comment=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"employee_comment",$f_opts);
 		$this->addField($f_employee_comment);
 		//********************
@@ -60,7 +60,7 @@ class DocFlowApprovementRecipientList_Model extends {
 		//*** Field approvement_result ***
 		$f_opts = array();
 		$f_opts['id']="approvement_result";
-				
+						
 		$f_approvement_result=new FieldSQLEnum($this->getDbLink(),$this->getDbName(),$this->getTableName(),"approvement_result",$f_opts);
 		$this->addField($f_approvement_result);
 		//********************
@@ -68,7 +68,7 @@ class DocFlowApprovementRecipientList_Model extends {
 		//*** Field approvement_dt ***
 		$f_opts = array();
 		$f_opts['id']="approvement_dt";
-				
+						
 		$f_approvement_dt=new FieldSQLDateTimeTZ($this->getDbLink(),$this->getDbName(),$this->getTableName(),"approvement_dt",$f_opts);
 		$this->addField($f_approvement_dt);
 		//********************
@@ -76,7 +76,7 @@ class DocFlowApprovementRecipientList_Model extends {
 		//*** Field approvement_order ***
 		$f_opts = array();
 		$f_opts['id']="approvement_order";
-				
+						
 		$f_approvement_order=new FieldSQLEnum($this->getDbLink(),$this->getDbName(),$this->getTableName(),"approvement_order",$f_opts);
 		$this->addField($f_approvement_order);
 		//********************
@@ -84,7 +84,7 @@ class DocFlowApprovementRecipientList_Model extends {
 		//*** Field closed ***
 		$f_opts = array();
 		$f_opts['id']="closed";
-				
+						
 		$f_closed=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"closed",$f_opts);
 		$this->addField($f_closed);
 		//********************

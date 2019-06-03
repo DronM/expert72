@@ -33,7 +33,7 @@ class ContractDialog_Model extends ModelSQL{
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['autoInc']=TRUE;
 		$f_opts['id']="id";
-				
+						
 		$f_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"id",$f_opts);
 		$this->addField($f_id);
 		//********************
@@ -42,7 +42,7 @@ class ContractDialog_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['defaultValue']='CURRENT_TIMESTAMP';
 		$f_opts['id']="date_time";
-				
+						
 		$f_date_time=new FieldSQLDateTimeTZ($this->getDbLink(),$this->getDbName(),$this->getTableName(),"date_time",$f_opts);
 		$this->addField($f_date_time);
 		//********************
@@ -50,7 +50,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field application_id ***
 		$f_opts = array();
 		$f_opts['id']="application_id";
-				
+						
 		$f_application_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"application_id",$f_opts);
 		$this->addField($f_application_id);
 		//********************
@@ -58,7 +58,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field client_id ***
 		$f_opts = array();
 		$f_opts['id']="client_id";
-				
+						
 		$f_client_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"client_id",$f_opts);
 		$this->addField($f_client_id);
 		//********************
@@ -66,7 +66,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field employee_id ***
 		$f_opts = array();
 		$f_opts['id']="employee_id";
-				
+						
 		$f_employee_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"employee_id",$f_opts);
 		$this->addField($f_employee_id);
 		//********************
@@ -74,7 +74,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field reg_number ***
 		$f_opts = array();
 		$f_opts['id']="reg_number";
-				
+						
 		$f_reg_number=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"reg_number",$f_opts);
 		$this->addField($f_reg_number);
 		//********************
@@ -82,7 +82,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field expertise_type ***
 		$f_opts = array();
 		$f_opts['id']="expertise_type";
-				
+						
 		$f_expertise_type=new FieldSQLEnum($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expertise_type",$f_opts);
 		$this->addField($f_expertise_type);
 		//********************
@@ -90,7 +90,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field document_type ***
 		$f_opts = array();
 		$f_opts['id']="document_type";
-				
+						
 		$f_document_type=new FieldSQLEnum($this->getDbLink(),$this->getDbName(),$this->getTableName(),"document_type",$f_opts);
 		$this->addField($f_document_type);
 		//********************
@@ -98,7 +98,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field user_id ***
 		$f_opts = array();
 		$f_opts['id']="user_id";
-				
+						
 		$f_user_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"user_id",$f_opts);
 		$this->addField($f_user_id);
 		//********************
@@ -106,7 +106,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field contract_number ***
 		$f_opts = array();
 		$f_opts['id']="contract_number";
-				
+						
 		$f_contract_number=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"contract_number",$f_opts);
 		$this->addField($f_contract_number);
 		//********************
@@ -114,7 +114,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field contract_date ***
 		$f_opts = array();
 		$f_opts['id']="contract_date";
-				
+						
 		$f_contract_date=new FieldSQLDate($this->getDbLink(),$this->getDbName(),$this->getTableName(),"contract_date",$f_opts);
 		$this->addField($f_contract_date);
 		//********************
@@ -122,7 +122,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field contract_return_date ***
 		$f_opts = array();
 		$f_opts['id']="contract_return_date";
-				
+						
 		$f_contract_return_date=new FieldSQLDate($this->getDbLink(),$this->getDbName(),$this->getTableName(),"contract_return_date",$f_opts);
 		$this->addField($f_contract_return_date);
 		//********************
@@ -130,7 +130,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field expertise_result_number ***
 		$f_opts = array();
 		$f_opts['id']="expertise_result_number";
-				
+						
 		$f_expertise_result_number=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expertise_result_number",$f_opts);
 		$this->addField($f_expertise_result_number);
 		//********************
@@ -139,7 +139,7 @@ class ContractDialog_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['length']=15;
 		$f_opts['id']="expertise_cost_budget";
-				
+						
 		$f_expertise_cost_budget=new FieldSQLFloat($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expertise_cost_budget",$f_opts);
 		$this->addField($f_expertise_cost_budget);
 		//********************
@@ -148,7 +148,7 @@ class ContractDialog_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['length']=15;
 		$f_opts['id']="expertise_cost_self_fund";
-				
+						
 		$f_expertise_cost_self_fund=new FieldSQLFloat($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expertise_cost_self_fund",$f_opts);
 		$this->addField($f_expertise_cost_self_fund);
 		//********************
@@ -156,7 +156,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field cost_eval_validity_pd_order ***
 		$f_opts = array();
 		$f_opts['id']="cost_eval_validity_pd_order";
-				
+						
 		$f_cost_eval_validity_pd_order=new FieldSQLEnum($this->getDbLink(),$this->getDbName(),$this->getTableName(),"cost_eval_validity_pd_order",$f_opts);
 		$this->addField($f_cost_eval_validity_pd_order);
 		//********************
@@ -164,7 +164,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field work_start_date ***
 		$f_opts = array();
 		$f_opts['id']="work_start_date";
-				
+						
 		$f_work_start_date=new FieldSQLDate($this->getDbLink(),$this->getDbName(),$this->getTableName(),"work_start_date",$f_opts);
 		$this->addField($f_work_start_date);
 		//********************
@@ -172,7 +172,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field work_end_date ***
 		$f_opts = array();
 		$f_opts['id']="work_end_date";
-				
+						
 		$f_work_end_date=new FieldSQLDate($this->getDbLink(),$this->getDbName(),$this->getTableName(),"work_end_date",$f_opts);
 		$this->addField($f_work_end_date);
 		//********************
@@ -180,7 +180,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field expert_work_end_date ***
 		$f_opts = array();
 		$f_opts['id']="expert_work_end_date";
-				
+						
 		$f_expert_work_end_date=new FieldSQLDate($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expert_work_end_date",$f_opts);
 		$this->addField($f_expert_work_end_date);
 		//********************
@@ -188,7 +188,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field expert_work_day_count ***
 		$f_opts = array();
 		$f_opts['id']="expert_work_day_count";
-				
+						
 		$f_expert_work_day_count=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expert_work_day_count",$f_opts);
 		$this->addField($f_expert_work_day_count);
 		//********************
@@ -196,7 +196,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field expertise_day_count ***
 		$f_opts = array();
 		$f_opts['id']="expertise_day_count";
-				
+						
 		$f_expertise_day_count=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expertise_day_count",$f_opts);
 		$this->addField($f_expertise_day_count);
 		//********************
@@ -204,7 +204,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field akt_number ***
 		$f_opts = array();
 		$f_opts['id']="akt_number";
-				
+						
 		$f_akt_number=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"akt_number",$f_opts);
 		$this->addField($f_akt_number);
 		//********************
@@ -213,7 +213,7 @@ class ContractDialog_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['defaultValue']='0';
 		$f_opts['id']="akt_date";
-				
+						
 		$f_akt_date=new FieldSQLDate($this->getDbLink(),$this->getDbName(),$this->getTableName(),"akt_date",$f_opts);
 		$this->addField($f_akt_date);
 		//********************
@@ -222,7 +222,7 @@ class ContractDialog_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['length']=15;
 		$f_opts['id']="akt_total";
-				
+						
 		$f_akt_total=new FieldSQLFloat($this->getDbLink(),$this->getDbName(),$this->getTableName(),"akt_total",$f_opts);
 		$this->addField($f_akt_total);
 		//********************
@@ -231,7 +231,7 @@ class ContractDialog_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['length']=36;
 		$f_opts['id']="akt_ext_id";
-				
+						
 		$f_akt_ext_id=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"akt_ext_id",$f_opts);
 		$this->addField($f_akt_ext_id);
 		//********************
@@ -239,7 +239,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field kadastr_number ***
 		$f_opts = array();
 		$f_opts['id']="kadastr_number";
-				
+						
 		$f_kadastr_number=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"kadastr_number",$f_opts);
 		$this->addField($f_kadastr_number);
 		//********************
@@ -247,7 +247,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field grad_plan_number ***
 		$f_opts = array();
 		$f_opts['id']="grad_plan_number";
-				
+						
 		$f_grad_plan_number=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"grad_plan_number",$f_opts);
 		$this->addField($f_grad_plan_number);
 		//********************
@@ -255,7 +255,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field area_document ***
 		$f_opts = array();
 		$f_opts['id']="area_document";
-				
+						
 		$f_area_document=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"area_document",$f_opts);
 		$this->addField($f_area_document);
 		//********************
@@ -263,7 +263,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field expertise_result ***
 		$f_opts = array();
 		$f_opts['id']="expertise_result";
-				
+						
 		$f_expertise_result=new FieldSQLEnum($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expertise_result",$f_opts);
 		$this->addField($f_expertise_result);
 		//********************
@@ -271,7 +271,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field expertise_result_date ***
 		$f_opts = array();
 		$f_opts['id']="expertise_result_date";
-				
+						
 		$f_expertise_result_date=new FieldSQLDate($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expertise_result_date",$f_opts);
 		$this->addField($f_expertise_result_date);
 		//********************
@@ -279,7 +279,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field comment_text ***
 		$f_opts = array();
 		$f_opts['id']="comment_text";
-				
+						
 		$f_comment_text=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"comment_text",$f_opts);
 		$this->addField($f_comment_text);
 		//********************
@@ -287,7 +287,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field expertise_reject_type_id ***
 		$f_opts = array();
 		$f_opts['id']="expertise_reject_type_id";
-				
+						
 		$f_expertise_reject_type_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expertise_reject_type_id",$f_opts);
 		$this->addField($f_expertise_reject_type_id);
 		//********************
@@ -295,7 +295,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field main_department_id ***
 		$f_opts = array();
 		$f_opts['id']="main_department_id";
-				
+						
 		$f_main_department_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"main_department_id",$f_opts);
 		$this->addField($f_main_department_id);
 		//********************
@@ -303,7 +303,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field main_expert_id ***
 		$f_opts = array();
 		$f_opts['id']="main_expert_id";
-				
+						
 		$f_main_expert_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"main_expert_id",$f_opts);
 		$this->addField($f_main_expert_id);
 		//********************
@@ -311,7 +311,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field permissions ***
 		$f_opts = array();
 		$f_opts['id']="permissions";
-				
+						
 		$f_permissions=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"permissions",$f_opts);
 		$this->addField($f_permissions);
 		//********************
@@ -319,7 +319,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field permission_ar ***
 		$f_opts = array();
 		$f_opts['id']="permission_ar";
-				
+						
 		$f_permission_ar=new FieldSQLArray($this->getDbLink(),$this->getDbName(),$this->getTableName(),"permission_ar",$f_opts);
 		$this->addField($f_permission_ar);
 		//********************
@@ -328,7 +328,7 @@ class ContractDialog_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['defaultValue']='FALSE';
 		$f_opts['id']="for_all_employees";
-				
+						
 		$f_for_all_employees=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"for_all_employees",$f_opts);
 		$this->addField($f_for_all_employees);
 		//********************
@@ -336,7 +336,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field primary_contract_id ***
 		$f_opts = array();
 		$f_opts['id']="primary_contract_id";
-				
+						
 		$f_primary_contract_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"primary_contract_id",$f_opts);
 		$this->addField($f_primary_contract_id);
 		//********************
@@ -344,7 +344,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field modif_primary_contract_id ***
 		$f_opts = array();
 		$f_opts['id']="modif_primary_contract_id";
-				
+						
 		$f_modif_primary_contract_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"modif_primary_contract_id",$f_opts);
 		$this->addField($f_modif_primary_contract_id);
 		//********************
@@ -353,7 +353,7 @@ class ContractDialog_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['length']=36;
 		$f_opts['id']="contract_ext_id";
-				
+						
 		$f_contract_ext_id=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"contract_ext_id",$f_opts);
 		$this->addField($f_contract_ext_id);
 		//********************
@@ -362,7 +362,7 @@ class ContractDialog_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['length']=15;
 		$f_opts['id']="payment";
-				
+						
 		$f_payment=new FieldSQLFloat($this->getDbLink(),$this->getDbName(),$this->getTableName(),"payment",$f_opts);
 		$this->addField($f_payment);
 		//********************
@@ -371,7 +371,7 @@ class ContractDialog_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['length']=36;
 		$f_opts['id']="invoice_ext_id";
-				
+						
 		$f_invoice_ext_id=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"invoice_ext_id",$f_opts);
 		$this->addField($f_invoice_ext_id);
 		//********************
@@ -379,7 +379,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field invoice_number ***
 		$f_opts = array();
 		$f_opts['id']="invoice_number";
-				
+						
 		$f_invoice_number=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"invoice_number",$f_opts);
 		$this->addField($f_invoice_number);
 		//********************
@@ -387,7 +387,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field invoice_date ***
 		$f_opts = array();
 		$f_opts['id']="invoice_date";
-				
+						
 		$f_invoice_date=new FieldSQLDate($this->getDbLink(),$this->getDbName(),$this->getTableName(),"invoice_date",$f_opts);
 		$this->addField($f_invoice_date);
 		//********************
@@ -395,7 +395,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field linked_contracts ***
 		$f_opts = array();
 		$f_opts['id']="linked_contracts";
-				
+						
 		$f_linked_contracts=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"linked_contracts",$f_opts);
 		$this->addField($f_linked_contracts);
 		//********************
@@ -403,7 +403,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field date_type ***
 		$f_opts = array();
 		$f_opts['id']="date_type";
-				
+						
 		$f_date_type=new FieldSQLEnum($this->getDbLink(),$this->getDbName(),$this->getTableName(),"date_type",$f_opts);
 		$this->addField($f_date_type);
 		//********************
@@ -411,7 +411,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field argument_document ***
 		$f_opts = array();
 		$f_opts['id']="argument_document";
-				
+						
 		$f_argument_document=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"argument_document",$f_opts);
 		$this->addField($f_argument_document);
 		//********************
@@ -419,7 +419,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field order_document ***
 		$f_opts = array();
 		$f_opts['id']="order_document";
-				
+						
 		$f_order_document=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"order_document",$f_opts);
 		$this->addField($f_order_document);
 		//********************
@@ -427,7 +427,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field constr_name ***
 		$f_opts = array();
 		$f_opts['id']="constr_name";
-				
+						
 		$f_constr_name=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"constr_name",$f_opts);
 		$this->addField($f_constr_name);
 		//********************
@@ -435,7 +435,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field constr_address ***
 		$f_opts = array();
 		$f_opts['id']="constr_address";
-				
+						
 		$f_constr_address=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"constr_address",$f_opts);
 		$this->addField($f_constr_address);
 		//********************
@@ -443,7 +443,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field constr_technical_features ***
 		$f_opts = array();
 		$f_opts['id']="constr_technical_features";
-				
+						
 		$f_constr_technical_features=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"constr_technical_features",$f_opts);
 		$this->addField($f_constr_technical_features);
 		//********************
@@ -451,7 +451,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field constr_technical_features_in_compound_obj ***
 		$f_opts = array();
 		$f_opts['id']="constr_technical_features_in_compound_obj";
-				
+						
 		$f_constr_technical_features_in_compound_obj=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"constr_technical_features_in_compound_obj",$f_opts);
 		$this->addField($f_constr_technical_features_in_compound_obj);
 		//********************
@@ -460,7 +460,7 @@ class ContractDialog_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['length']=15;
 		$f_opts['id']="in_estim_cost";
-				
+						
 		$f_in_estim_cost=new FieldSQLFloat($this->getDbLink(),$this->getDbName(),$this->getTableName(),"in_estim_cost",$f_opts);
 		$this->addField($f_in_estim_cost);
 		//********************
@@ -469,7 +469,7 @@ class ContractDialog_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['length']=15;
 		$f_opts['id']="in_estim_cost_recommend";
-				
+						
 		$f_in_estim_cost_recommend=new FieldSQLFloat($this->getDbLink(),$this->getDbName(),$this->getTableName(),"in_estim_cost_recommend",$f_opts);
 		$this->addField($f_in_estim_cost_recommend);
 		//********************
@@ -478,7 +478,7 @@ class ContractDialog_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['length']=15;
 		$f_opts['id']="cur_estim_cost";
-				
+						
 		$f_cur_estim_cost=new FieldSQLFloat($this->getDbLink(),$this->getDbName(),$this->getTableName(),"cur_estim_cost",$f_opts);
 		$this->addField($f_cur_estim_cost);
 		//********************
@@ -487,7 +487,7 @@ class ContractDialog_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['length']=15;
 		$f_opts['id']="cur_estim_cost_recommend";
-				
+						
 		$f_cur_estim_cost_recommend=new FieldSQLFloat($this->getDbLink(),$this->getDbName(),$this->getTableName(),"cur_estim_cost_recommend",$f_opts);
 		$this->addField($f_cur_estim_cost_recommend);
 		//********************
@@ -495,7 +495,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field result_sign_expert_list ***
 		$f_opts = array();
 		$f_opts['id']="result_sign_expert_list";
-				
+						
 		$f_result_sign_expert_list=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"result_sign_expert_list",$f_opts);
 		$this->addField($f_result_sign_expert_list);
 		//********************
@@ -504,7 +504,7 @@ class ContractDialog_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['length']=20;
 		$f_opts['id']="primary_contract_reg_number";
-				
+						
 		$f_primary_contract_reg_number=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"primary_contract_reg_number",$f_opts);
 		$this->addField($f_primary_contract_reg_number);
 		//********************
@@ -512,7 +512,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field experts_for_notification ***
 		$f_opts = array();
 		$f_opts['id']="experts_for_notification";
-				
+						
 		$f_experts_for_notification=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"experts_for_notification",$f_opts);
 		$this->addField($f_experts_for_notification);
 		//********************
@@ -521,7 +521,7 @@ class ContractDialog_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['defaultValue']='FALSE';
 		$f_opts['id']="contract_return_date_on_sig";
-				
+						
 		$f_contract_return_date_on_sig=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"contract_return_date_on_sig",$f_opts);
 		$this->addField($f_contract_return_date_on_sig);
 		//********************
@@ -529,7 +529,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field applications_ref ***
 		$f_opts = array();
 		$f_opts['id']="applications_ref";
-				
+						
 		$f_applications_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"applications_ref",$f_opts);
 		$this->addField($f_applications_ref);
 		//********************
@@ -537,7 +537,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field employees_ref ***
 		$f_opts = array();
 		$f_opts['id']="employees_ref";
-				
+						
 		$f_employees_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"employees_ref",$f_opts);
 		$this->addField($f_employees_ref);
 		//********************
@@ -545,7 +545,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field applicant_descr ***
 		$f_opts = array();
 		$f_opts['id']="applicant_descr";
-				
+						
 		$f_applicant_descr=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"applicant_descr",$f_opts);
 		$this->addField($f_applicant_descr);
 		//********************
@@ -553,7 +553,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field customer_descr ***
 		$f_opts = array();
 		$f_opts['id']="customer_descr";
-				
+						
 		$f_customer_descr=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"customer_descr",$f_opts);
 		$this->addField($f_customer_descr);
 		//********************
@@ -561,7 +561,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field contractors_list ***
 		$f_opts = array();
 		$f_opts['id']="contractors_list";
-				
+						
 		$f_contractors_list=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"contractors_list",$f_opts);
 		$this->addField($f_contractors_list);
 		//********************
@@ -569,7 +569,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field developer_descr ***
 		$f_opts = array();
 		$f_opts['id']="developer_descr";
-				
+						
 		$f_developer_descr=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"developer_descr",$f_opts);
 		$this->addField($f_developer_descr);
 		//********************
@@ -577,7 +577,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field build_types_ref ***
 		$f_opts = array();
 		$f_opts['id']="build_types_ref";
-				
+						
 		$f_build_types_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"build_types_ref",$f_opts);
 		$this->addField($f_build_types_ref);
 		//********************
@@ -585,7 +585,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field construction_types_ref ***
 		$f_opts = array();
 		$f_opts['id']="construction_types_ref";
-				
+						
 		$f_construction_types_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"construction_types_ref",$f_opts);
 		$this->addField($f_construction_types_ref);
 		//********************
@@ -593,7 +593,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field expertise_period_days ***
 		$f_opts = array();
 		$f_opts['id']="expertise_period_days";
-				
+						
 		$f_expertise_period_days=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expertise_period_days",$f_opts);
 		$this->addField($f_expertise_period_days);
 		//********************
@@ -601,7 +601,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field expertise_reject_types_ref ***
 		$f_opts = array();
 		$f_opts['id']="expertise_reject_types_ref";
-				
+						
 		$f_expertise_reject_types_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expertise_reject_types_ref",$f_opts);
 		$this->addField($f_expertise_reject_types_ref);
 		//********************
@@ -609,7 +609,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field main_departments_ref ***
 		$f_opts = array();
 		$f_opts['id']="main_departments_ref";
-				
+						
 		$f_main_departments_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"main_departments_ref",$f_opts);
 		$this->addField($f_main_departments_ref);
 		//********************
@@ -617,7 +617,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field main_experts_ref ***
 		$f_opts = array();
 		$f_opts['id']="main_experts_ref";
-				
+						
 		$f_main_experts_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"main_experts_ref",$f_opts);
 		$this->addField($f_main_experts_ref);
 		//********************
@@ -625,7 +625,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field expertise_sections ***
 		$f_opts = array();
 		$f_opts['id']="expertise_sections";
-				
+						
 		$f_expertise_sections=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expertise_sections",$f_opts);
 		$this->addField($f_expertise_sections);
 		//********************
@@ -633,7 +633,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field total_cost_eval ***
 		$f_opts = array();
 		$f_opts['id']="total_cost_eval";
-				
+						
 		$f_total_cost_eval=new FieldSQLFloat($this->getDbLink(),$this->getDbName(),$this->getTableName(),"total_cost_eval",$f_opts);
 		$this->addField($f_total_cost_eval);
 		//********************
@@ -641,7 +641,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field limit_cost_eval ***
 		$f_opts = array();
 		$f_opts['id']="limit_cost_eval";
-				
+						
 		$f_limit_cost_eval=new FieldSQLFloat($this->getDbLink(),$this->getDbName(),$this->getTableName(),"limit_cost_eval",$f_opts);
 		$this->addField($f_limit_cost_eval);
 		//********************
@@ -649,7 +649,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field cost_eval_validity_simult ***
 		$f_opts = array();
 		$f_opts['id']="cost_eval_validity_simult";
-				
+						
 		$f_cost_eval_validity_simult=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"cost_eval_validity_simult",$f_opts);
 		$this->addField($f_cost_eval_validity_simult);
 		//********************
@@ -657,7 +657,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field fund_sources_ref ***
 		$f_opts = array();
 		$f_opts['id']="fund_sources_ref";
-				
+						
 		$f_fund_sources_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"fund_sources_ref",$f_opts);
 		$this->addField($f_fund_sources_ref);
 		//********************
@@ -665,7 +665,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field primary_contracts_ref ***
 		$f_opts = array();
 		$f_opts['id']="primary_contracts_ref";
-				
+						
 		$f_primary_contracts_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"primary_contracts_ref",$f_opts);
 		$this->addField($f_primary_contracts_ref);
 		//********************
@@ -673,7 +673,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field modif_primary_contract_reg_number ***
 		$f_opts = array();
 		$f_opts['id']="modif_primary_contract_reg_number";
-				
+						
 		$f_modif_primary_contract_reg_number=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"modif_primary_contract_reg_number",$f_opts);
 		$this->addField($f_modif_primary_contract_reg_number);
 		//********************
@@ -681,7 +681,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field modif_primary_contracts_ref ***
 		$f_opts = array();
 		$f_opts['id']="modif_primary_contracts_ref";
-				
+						
 		$f_modif_primary_contracts_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"modif_primary_contracts_ref",$f_opts);
 		$this->addField($f_modif_primary_contracts_ref);
 		//********************
@@ -689,7 +689,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field documents ***
 		$f_opts = array();
 		$f_opts['id']="documents";
-				
+						
 		$f_documents=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"documents",$f_opts);
 		$this->addField($f_documents);
 		//********************
@@ -697,7 +697,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field cost_eval_validity ***
 		$f_opts = array();
 		$f_opts['id']="cost_eval_validity";
-				
+						
 		$f_cost_eval_validity=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"cost_eval_validity",$f_opts);
 		$this->addField($f_cost_eval_validity);
 		//********************
@@ -705,7 +705,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field modification ***
 		$f_opts = array();
 		$f_opts['id']="modification";
-				
+						
 		$f_modification=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"modification",$f_opts);
 		$this->addField($f_modification);
 		//********************
@@ -713,7 +713,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field audit ***
 		$f_opts = array();
 		$f_opts['id']="audit";
-				
+						
 		$f_audit=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"audit",$f_opts);
 		$this->addField($f_audit);
 		//********************
@@ -721,7 +721,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field auth_letter ***
 		$f_opts = array();
 		$f_opts['id']="auth_letter";
-				
+						
 		$f_auth_letter=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"auth_letter",$f_opts);
 		$this->addField($f_auth_letter);
 		//********************
@@ -729,7 +729,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field doc_folders ***
 		$f_opts = array();
 		$f_opts['id']="doc_folders";
-				
+						
 		$f_doc_folders=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"doc_folders",$f_opts);
 		$this->addField($f_doc_folders);
 		//********************
@@ -737,7 +737,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field exp_cost_eval_validity ***
 		$f_opts = array();
 		$f_opts['id']="exp_cost_eval_validity";
-				
+						
 		$f_exp_cost_eval_validity=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"exp_cost_eval_validity",$f_opts);
 		$this->addField($f_exp_cost_eval_validity);
 		//********************
@@ -745,7 +745,7 @@ class ContractDialog_Model extends ModelSQL{
 		//*** Field contract_document_visib ***
 		$f_opts = array();
 		$f_opts['id']="contract_document_visib";
-				
+						
 		$f_contract_document_visib=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"contract_document_visib",$f_opts);
 		$this->addField($f_contract_document_visib);
 		//********************

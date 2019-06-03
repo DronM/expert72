@@ -29,7 +29,7 @@ class DocFlowInClient_Model extends ModelSQL{
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['autoInc']=TRUE;
 		$f_opts['id']="id";
-				
+						
 		$f_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"id",$f_opts);
 		$this->addField($f_id);
 		//********************
@@ -37,7 +37,7 @@ class DocFlowInClient_Model extends ModelSQL{
 		//*** Field date_time ***
 		$f_opts = array();
 		$f_opts['id']="date_time";
-				
+						
 		$f_date_time=new FieldSQLDateTimeTZ($this->getDbLink(),$this->getDbName(),$this->getTableName(),"date_time",$f_opts);
 		$this->addField($f_date_time);
 		//********************
@@ -46,7 +46,7 @@ class DocFlowInClient_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['length']=30;
 		$f_opts['id']="reg_number";
-				
+						
 		$f_reg_number=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"reg_number",$f_opts);
 		$this->addField($f_reg_number);
 		//********************
@@ -54,7 +54,7 @@ class DocFlowInClient_Model extends ModelSQL{
 		//*** Field application_id ***
 		$f_opts = array();
 		$f_opts['id']="application_id";
-				
+						
 		$f_application_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"application_id",$f_opts);
 		$this->addField($f_application_id);
 		//********************
@@ -62,7 +62,7 @@ class DocFlowInClient_Model extends ModelSQL{
 		//*** Field user_id ***
 		$f_opts = array();
 		$f_opts['id']="user_id";
-				
+						
 		$f_user_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"user_id",$f_opts);
 		$this->addField($f_user_id);
 		//********************
@@ -70,7 +70,7 @@ class DocFlowInClient_Model extends ModelSQL{
 		//*** Field subject ***
 		$f_opts = array();
 		$f_opts['id']="subject";
-				
+						
 		$f_subject=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"subject",$f_opts);
 		$this->addField($f_subject);
 		//********************
@@ -78,7 +78,7 @@ class DocFlowInClient_Model extends ModelSQL{
 		//*** Field content ***
 		$f_opts = array();
 		$f_opts['id']="content";
-				
+						
 		$f_content=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"content",$f_opts);
 		$this->addField($f_content);
 		//********************
@@ -86,7 +86,7 @@ class DocFlowInClient_Model extends ModelSQL{
 		//*** Field comment_text ***
 		$f_opts = array();
 		$f_opts['id']="comment_text";
-				
+						
 		$f_comment_text=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"comment_text",$f_opts);
 		$this->addField($f_comment_text);
 		//********************
@@ -94,7 +94,7 @@ class DocFlowInClient_Model extends ModelSQL{
 		//*** Field files ***
 		$f_opts = array();
 		$f_opts['id']="files";
-				
+						
 		$f_files=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"files",$f_opts);
 		$this->addField($f_files);
 		//********************
@@ -103,7 +103,7 @@ class DocFlowInClient_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['defaultValue']='FALSE';
 		$f_opts['id']="viewed";
-				
+						
 		$f_viewed=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"viewed",$f_opts);
 		$this->addField($f_viewed);
 		//********************
@@ -111,7 +111,7 @@ class DocFlowInClient_Model extends ModelSQL{
 		//*** Field doc_flow_type_id ***
 		$f_opts = array();
 		$f_opts['id']="doc_flow_type_id";
-				
+						
 		$f_doc_flow_type_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"doc_flow_type_id",$f_opts);
 		$this->addField($f_doc_flow_type_id);
 		//********************
@@ -119,7 +119,7 @@ class DocFlowInClient_Model extends ModelSQL{
 		//*** Field doc_flow_out_id ***
 		$f_opts = array();
 		$f_opts['id']="doc_flow_out_id";
-				
+						
 		$f_doc_flow_out_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"doc_flow_out_id",$f_opts);
 		$this->addField($f_doc_flow_out_id);
 		//********************

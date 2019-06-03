@@ -23,7 +23,7 @@ class ClientPersonRegistrPaper_Model extends {
 		$f_opts = array();
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['id']="id";
-				
+						
 		$f_id=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"id",$f_opts);
 		$this->addField($f_id);
 		//********************
@@ -31,7 +31,7 @@ class ClientPersonRegistrPaper_Model extends {
 		//*** Field issue_date ***
 		$f_opts = array();
 		$f_opts['id']="issue_date";
-				
+						
 		$f_issue_date=new FieldSQLDate($this->getDbLink(),$this->getDbName(),$this->getTableName(),"issue_date",$f_opts);
 		$this->addField($f_issue_date);
 		//********************

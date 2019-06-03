@@ -27,7 +27,7 @@ class ClientPaymentList_Model extends ModelSQL{
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['autoInc']=TRUE;
 		$f_opts['id']="id";
-				
+						
 		$f_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"id",$f_opts);
 		$this->addField($f_id);
 		//********************
@@ -35,7 +35,7 @@ class ClientPaymentList_Model extends ModelSQL{
 		//*** Field clients_ref ***
 		$f_opts = array();
 		$f_opts['id']="clients_ref";
-				
+						
 		$f_clients_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"clients_ref",$f_opts);
 		$this->addField($f_clients_ref);
 		//********************
@@ -43,7 +43,7 @@ class ClientPaymentList_Model extends ModelSQL{
 		//*** Field contracts_ref ***
 		$f_opts = array();
 		$f_opts['id']="contracts_ref";
-				
+						
 		$f_contracts_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"contracts_ref",$f_opts);
 		$this->addField($f_contracts_ref);
 		//********************
@@ -51,7 +51,7 @@ class ClientPaymentList_Model extends ModelSQL{
 		//*** Field contract_id ***
 		$f_opts = array();
 		$f_opts['id']="contract_id";
-				
+						
 		$f_contract_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"contract_id",$f_opts);
 		$this->addField($f_contract_id);
 		//********************
@@ -59,7 +59,7 @@ class ClientPaymentList_Model extends ModelSQL{
 		//*** Field clients_id ***
 		$f_opts = array();
 		$f_opts['id']="clients_id";
-				
+						
 		$f_clients_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"clients_id",$f_opts);
 		$this->addField($f_clients_id);
 		//********************
@@ -67,7 +67,7 @@ class ClientPaymentList_Model extends ModelSQL{
 		//*** Field pay_date ***
 		$f_opts = array();
 		$f_opts['id']="pay_date";
-				
+						
 		$f_pay_date=new FieldSQLDate($this->getDbLink(),$this->getDbName(),$this->getTableName(),"pay_date",$f_opts);
 		$this->addField($f_pay_date);
 		//********************
@@ -75,7 +75,7 @@ class ClientPaymentList_Model extends ModelSQL{
 		//*** Field total ***
 		$f_opts = array();
 		$f_opts['id']="total";
-				
+						
 		$f_total=new FieldSQLFloat($this->getDbLink(),$this->getDbName(),$this->getTableName(),"total",$f_opts);
 		$this->addField($f_total);
 		//********************
@@ -83,7 +83,7 @@ class ClientPaymentList_Model extends ModelSQL{
 		//*** Field contract_id ***
 		$f_opts = array();
 		$f_opts['id']="contract_id";
-				
+						
 		$f_contract_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"contract_id",$f_opts);
 		$this->addField($f_contract_id);
 		//********************
@@ -91,7 +91,7 @@ class ClientPaymentList_Model extends ModelSQL{
 		//*** Field client_id ***
 		$f_opts = array();
 		$f_opts['id']="client_id";
-				
+						
 		$f_client_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"client_id",$f_opts);
 		$this->addField($f_client_id);
 		//********************
@@ -99,7 +99,7 @@ class ClientPaymentList_Model extends ModelSQL{
 		//*** Field pay_docum_date ***
 		$f_opts = array();
 		$f_opts['id']="pay_docum_date";
-				
+						
 		$f_pay_docum_date=new FieldSQLDate($this->getDbLink(),$this->getDbName(),$this->getTableName(),"pay_docum_date",$f_opts);
 		$this->addField($f_pay_docum_date);
 		//********************
@@ -107,7 +107,7 @@ class ClientPaymentList_Model extends ModelSQL{
 		//*** Field pay_docum_number ***
 		$f_opts = array();
 		$f_opts['id']="pay_docum_number";
-				
+						
 		$f_pay_docum_number=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"pay_docum_number",$f_opts);
 		$this->addField($f_pay_docum_number);
 		//********************

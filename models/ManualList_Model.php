@@ -24,7 +24,7 @@ class ManualList_Model extends ModelSQL{
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['autoInc']=TRUE;
 		$f_opts['id']="id";
-				
+						
 		$f_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"id",$f_opts);
 		$this->addField($f_id);
 		//********************
@@ -32,7 +32,7 @@ class ManualList_Model extends ModelSQL{
 		//*** Field roles_list ***
 		$f_opts = array();
 		$f_opts['id']="roles_list";
-				
+						
 		$f_roles_list=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"roles_list",$f_opts);
 		$this->addField($f_roles_list);
 		//********************

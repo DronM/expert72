@@ -483,18 +483,36 @@ applications_process.sql
 1) Не видна таблица "Документы" у определенных экспертов
 2) Хэширование при создании ЭЦП в зависимости от сертификата CadesAPI,CadesAPI_async
 
-1.0.108
+1.0.108 01/06/19
 1) ExpertiseProlongationList_View minor glitch
 2) Новая роль expert_ext,Contract_Controller
 3) applications_dialog.sql
-4) contracts_dialog.sql
+4) contracts_dialog.sql,contracts_list.sql
 5) Модуль Application_Controller->get_object()
 6) Модуль Contract_Controller->get_object()
 7) Модуль Contract_Controller->get_list()
 8) doc_flow_in_dialog
+9) doc_flow_out_client_dialog queru 9sec
+10) doc_flow_in_client_dialog
+11) doc_flow_out_dialog
+12) doc_flow_inside_dialog
+
+Заявления - 7сек - 3 сек
+Контракты - 12сек - 5 сек
+Наши Вход.письма - 5сек - 2 сек
+Исх.письма у клиента запрос - 9 сек - 58милсек
+Вход.письма у клиента запрос - 10 сек - 13милсек
+Наше исходящее - 5 сек - 3 сек
+Внутренние окрытие формы 5 сек - 
+1.0.109
+
+
+1.0.109 03/06/19
+1) Небольшой косяк при выводе сообщений WindowMessage.show() параметр text может быть объектом
+
 
 Надо:
-	doc_flow_out_client_dialog
+	
 	
 
 - Выбрали недействительный серт, он отметился красным, потом сменили на нормальный - все равно остался красным

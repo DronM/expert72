@@ -22,7 +22,7 @@ class ApplicationClientList_Model extends ModelSQL{
 		//*** Field name ***
 		$f_opts = array();
 		$f_opts['id']="name";
-				
+						
 		$f_name=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"name",$f_opts);
 		$this->addField($f_name);
 		//********************
@@ -30,7 +30,7 @@ class ApplicationClientList_Model extends ModelSQL{
 		//*** Field inn ***
 		$f_opts = array();
 		$f_opts['id']="inn";
-				
+						
 		$f_inn=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"inn",$f_opts);
 		$this->addField($f_inn);
 		//********************
@@ -38,7 +38,7 @@ class ApplicationClientList_Model extends ModelSQL{
 		//*** Field kpp ***
 		$f_opts = array();
 		$f_opts['id']="kpp";
-				
+						
 		$f_kpp=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"kpp",$f_opts);
 		$this->addField($f_kpp);
 		//********************
@@ -46,7 +46,7 @@ class ApplicationClientList_Model extends ModelSQL{
 		//*** Field ogrn ***
 		$f_opts = array();
 		$f_opts['id']="ogrn";
-				
+						
 		$f_ogrn=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"ogrn",$f_opts);
 		$this->addField($f_ogrn);
 		//********************
@@ -54,7 +54,7 @@ class ApplicationClientList_Model extends ModelSQL{
 		//*** Field client_type ***
 		$f_opts = array();
 		$f_opts['id']="client_type";
-				
+						
 		$f_client_type=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"client_type",$f_opts);
 		$this->addField($f_client_type);
 		//********************
@@ -62,7 +62,7 @@ class ApplicationClientList_Model extends ModelSQL{
 		//*** Field client_data ***
 		$f_opts = array();
 		$f_opts['id']="client_data";
-				
+						
 		$f_client_data=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"client_data",$f_opts);
 		$this->addField($f_client_data);
 		//********************

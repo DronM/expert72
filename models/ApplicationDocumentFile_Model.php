@@ -28,7 +28,7 @@ class ApplicationDocumentFile_Model extends ModelSQL{
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['length']=36;
 		$f_opts['id']="file_id";
-				
+						
 		$f_file_id=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"file_id",$f_opts);
 		$this->addField($f_file_id);
 		//********************
@@ -36,7 +36,7 @@ class ApplicationDocumentFile_Model extends ModelSQL{
 		//*** Field application_id ***
 		$f_opts = array();
 		$f_opts['id']="application_id";
-				
+						
 		$f_application_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"application_id",$f_opts);
 		$this->addField($f_application_id);
 		//********************
@@ -44,7 +44,7 @@ class ApplicationDocumentFile_Model extends ModelSQL{
 		//*** Field document_id ***
 		$f_opts = array();
 		$f_opts['id']="document_id";
-				
+						
 		$f_document_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"document_id",$f_opts);
 		$this->addField($f_document_id);
 		//********************
@@ -52,7 +52,7 @@ class ApplicationDocumentFile_Model extends ModelSQL{
 		//*** Field document_type ***
 		$f_opts = array();
 		$f_opts['id']="document_type";
-				
+						
 		$f_document_type=new FieldSQLEnum($this->getDbLink(),$this->getDbName(),$this->getTableName(),"document_type",$f_opts);
 		$this->addField($f_document_type);
 		//********************
@@ -61,7 +61,7 @@ class ApplicationDocumentFile_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['defaultValue']='now()';
 		$f_opts['id']="date_time";
-				
+						
 		$f_date_time=new FieldSQLDateTimeTZ($this->getDbLink(),$this->getDbName(),$this->getTableName(),"date_time",$f_opts);
 		$this->addField($f_date_time);
 		//********************
@@ -69,7 +69,7 @@ class ApplicationDocumentFile_Model extends ModelSQL{
 		//*** Field file_name ***
 		$f_opts = array();
 		$f_opts['id']="file_name";
-				
+						
 		$f_file_name=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"file_name",$f_opts);
 		$this->addField($f_file_name);
 		//********************
@@ -77,7 +77,7 @@ class ApplicationDocumentFile_Model extends ModelSQL{
 		//*** Field file_path ***
 		$f_opts = array();
 		$f_opts['id']="file_path";
-				
+						
 		$f_file_path=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"file_path",$f_opts);
 		$this->addField($f_file_path);
 		//********************
@@ -86,7 +86,7 @@ class ApplicationDocumentFile_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['defaultValue']='FALSE';
 		$f_opts['id']="file_signed";
-				
+						
 		$f_file_signed=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"file_signed",$f_opts);
 		$this->addField($f_file_signed);
 		//********************
@@ -94,7 +94,7 @@ class ApplicationDocumentFile_Model extends ModelSQL{
 		//*** Field file_size ***
 		$f_opts = array();
 		$f_opts['id']="file_size";
-				
+						
 		$f_file_size=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"file_size",$f_opts);
 		$this->addField($f_file_size);
 		//********************
@@ -103,7 +103,7 @@ class ApplicationDocumentFile_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['defaultValue']='FALSE';
 		$f_opts['id']="deleted";
-				
+						
 		$f_deleted=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"deleted",$f_opts);
 		$this->addField($f_deleted);
 		//********************
@@ -111,7 +111,7 @@ class ApplicationDocumentFile_Model extends ModelSQL{
 		//*** Field deleted_dt ***
 		$f_opts = array();
 		$f_opts['id']="deleted_dt";
-				
+						
 		$f_deleted_dt=new FieldSQLDateTimeTZ($this->getDbLink(),$this->getDbName(),$this->getTableName(),"deleted_dt",$f_opts);
 		$this->addField($f_deleted_dt);
 		//********************
@@ -120,7 +120,7 @@ class ApplicationDocumentFile_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['defaultValue']='FALSE';
 		$f_opts['id']="file_signed_by_client";
-				
+						
 		$f_file_signed_by_client=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"file_signed_by_client",$f_opts);
 		$this->addField($f_file_signed_by_client);
 		//********************
@@ -129,7 +129,7 @@ class ApplicationDocumentFile_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['defaultValue']='FALSE';
 		$f_opts['id']="information_list";
-				
+						
 		$f_information_list=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"information_list",$f_opts);
 		$this->addField($f_information_list);
 		//********************

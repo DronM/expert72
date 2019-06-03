@@ -28,7 +28,7 @@ class DocFlowExaminationDialog_Model extends ModelSQL{
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['autoInc']=TRUE;
 		$f_opts['id']="id";
-				
+						
 		$f_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"id",$f_opts);
 		$this->addField($f_id);
 		//********************
@@ -36,7 +36,7 @@ class DocFlowExaminationDialog_Model extends ModelSQL{
 		//*** Field date_time ***
 		$f_opts = array();
 		$f_opts['id']="date_time";
-				
+						
 		$f_date_time=new FieldSQLDateTimeTZ($this->getDbLink(),$this->getDbName(),$this->getTableName(),"date_time",$f_opts);
 		$this->addField($f_date_time);
 		//********************
@@ -44,7 +44,7 @@ class DocFlowExaminationDialog_Model extends ModelSQL{
 		//*** Field subject ***
 		$f_opts = array();
 		$f_opts['id']="subject";
-				
+						
 		$f_subject=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"subject",$f_opts);
 		$this->addField($f_subject);
 		//********************
@@ -52,7 +52,7 @@ class DocFlowExaminationDialog_Model extends ModelSQL{
 		//*** Field subject_docs_ref ***
 		$f_opts = array();
 		$f_opts['id']="subject_docs_ref";
-				
+						
 		$f_subject_docs_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"subject_docs_ref",$f_opts);
 		$this->addField($f_subject_docs_ref);
 		//********************
@@ -60,7 +60,7 @@ class DocFlowExaminationDialog_Model extends ModelSQL{
 		//*** Field description ***
 		$f_opts = array();
 		$f_opts['id']="description";
-				
+						
 		$f_description=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"description",$f_opts);
 		$this->addField($f_description);
 		//********************
@@ -68,7 +68,7 @@ class DocFlowExaminationDialog_Model extends ModelSQL{
 		//*** Field doc_flow_importance_types_ref ***
 		$f_opts = array();
 		$f_opts['id']="doc_flow_importance_types_ref";
-				
+						
 		$f_doc_flow_importance_types_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"doc_flow_importance_types_ref",$f_opts);
 		$this->addField($f_doc_flow_importance_types_ref);
 		//********************
@@ -76,7 +76,7 @@ class DocFlowExaminationDialog_Model extends ModelSQL{
 		//*** Field end_date_time ***
 		$f_opts = array();
 		$f_opts['id']="end_date_time";
-				
+						
 		$f_end_date_time=new FieldSQLDateTimeTZ($this->getDbLink(),$this->getDbName(),$this->getTableName(),"end_date_time",$f_opts);
 		$this->addField($f_end_date_time);
 		//********************
@@ -84,7 +84,7 @@ class DocFlowExaminationDialog_Model extends ModelSQL{
 		//*** Field recipients_ref ***
 		$f_opts = array();
 		$f_opts['id']="recipients_ref";
-				
+						
 		$f_recipients_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"recipients_ref",$f_opts);
 		$this->addField($f_recipients_ref);
 		//********************
@@ -92,7 +92,7 @@ class DocFlowExaminationDialog_Model extends ModelSQL{
 		//*** Field employees_ref ***
 		$f_opts = array();
 		$f_opts['id']="employees_ref";
-				
+						
 		$f_employees_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"employees_ref",$f_opts);
 		$this->addField($f_employees_ref);
 		//********************
@@ -100,7 +100,7 @@ class DocFlowExaminationDialog_Model extends ModelSQL{
 		//*** Field resolution ***
 		$f_opts = array();
 		$f_opts['id']="resolution";
-				
+						
 		$f_resolution=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"resolution",$f_opts);
 		$this->addField($f_resolution);
 		//********************
@@ -108,7 +108,7 @@ class DocFlowExaminationDialog_Model extends ModelSQL{
 		//*** Field close_date_time ***
 		$f_opts = array();
 		$f_opts['id']="close_date_time";
-				
+						
 		$f_close_date_time=new FieldSQLDateTimeTZ($this->getDbLink(),$this->getDbName(),$this->getTableName(),"close_date_time",$f_opts);
 		$this->addField($f_close_date_time);
 		//********************
@@ -116,7 +116,7 @@ class DocFlowExaminationDialog_Model extends ModelSQL{
 		//*** Field closed ***
 		$f_opts = array();
 		$f_opts['id']="closed";
-				
+						
 		$f_closed=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"closed",$f_opts);
 		$this->addField($f_closed);
 		//********************
@@ -124,7 +124,7 @@ class DocFlowExaminationDialog_Model extends ModelSQL{
 		//*** Field state ***
 		$f_opts = array();
 		$f_opts['id']="state";
-				
+						
 		$f_state=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"state",$f_opts);
 		$this->addField($f_state);
 		//********************
@@ -132,7 +132,7 @@ class DocFlowExaminationDialog_Model extends ModelSQL{
 		//*** Field state_dt ***
 		$f_opts = array();
 		$f_opts['id']="state_dt";
-				
+						
 		$f_state_dt=new FieldSQLDateTimeTZ($this->getDbLink(),$this->getDbName(),$this->getTableName(),"state_dt",$f_opts);
 		$this->addField($f_state_dt);
 		//********************
@@ -140,7 +140,7 @@ class DocFlowExaminationDialog_Model extends ModelSQL{
 		//*** Field state_end_dt ***
 		$f_opts = array();
 		$f_opts['id']="state_end_dt";
-				
+						
 		$f_state_end_dt=new FieldSQLDateTimeTZ($this->getDbLink(),$this->getDbName(),$this->getTableName(),"state_end_dt",$f_opts);
 		$this->addField($f_state_end_dt);
 		//********************
@@ -148,7 +148,7 @@ class DocFlowExaminationDialog_Model extends ModelSQL{
 		//*** Field application_resolution_state ***
 		$f_opts = array();
 		$f_opts['id']="application_resolution_state";
-				
+						
 		$f_application_resolution_state=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"application_resolution_state",$f_opts);
 		$this->addField($f_application_resolution_state);
 		//********************
@@ -156,7 +156,7 @@ class DocFlowExaminationDialog_Model extends ModelSQL{
 		//*** Field application_based ***
 		$f_opts = array();
 		$f_opts['id']="application_based";
-				
+						
 		$f_application_based=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"application_based",$f_opts);
 		$this->addField($f_application_based);
 		//********************
@@ -164,7 +164,7 @@ class DocFlowExaminationDialog_Model extends ModelSQL{
 		//*** Field close_employees_ref ***
 		$f_opts = array();
 		$f_opts['id']="close_employees_ref";
-				
+						
 		$f_close_employees_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"close_employees_ref",$f_opts);
 		$this->addField($f_close_employees_ref);
 		//********************
@@ -172,7 +172,7 @@ class DocFlowExaminationDialog_Model extends ModelSQL{
 		//*** Field doc_flow_in_processes_chain ***
 		$f_opts = array();
 		$f_opts['id']="doc_flow_in_processes_chain";
-				
+						
 		$f_doc_flow_in_processes_chain=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"doc_flow_in_processes_chain",$f_opts);
 		$this->addField($f_doc_flow_in_processes_chain);
 		//********************
@@ -180,7 +180,7 @@ class DocFlowExaminationDialog_Model extends ModelSQL{
 		//*** Field doc_flow_out_ref ***
 		$f_opts = array();
 		$f_opts['id']="doc_flow_out_ref";
-				
+						
 		$f_doc_flow_out_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"doc_flow_out_ref",$f_opts);
 		$this->addField($f_doc_flow_out_ref);
 		//********************
@@ -188,7 +188,7 @@ class DocFlowExaminationDialog_Model extends ModelSQL{
 		//*** Field applications_ref ***
 		$f_opts = array();
 		$f_opts['id']="applications_ref";
-				
+						
 		$f_applications_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"applications_ref",$f_opts);
 		$this->addField($f_applications_ref);
 		//********************

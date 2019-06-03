@@ -26,7 +26,7 @@ class DocumentTemplate_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['id']="document_type";
-				
+						
 		$f_document_type=new FieldSQLEnum($this->getDbLink(),$this->getDbName(),$this->getTableName(),"document_type",$f_opts);
 		$this->addField($f_document_type);
 		//********************
@@ -35,7 +35,7 @@ class DocumentTemplate_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['id']="construction_type_id";
-				
+						
 		$f_construction_type_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"construction_type_id",$f_opts);
 		$this->addField($f_construction_type_id);
 		//********************
@@ -47,7 +47,7 @@ class DocumentTemplate_Model extends ModelSQL{
 		$f_opts['alias']='Дата создания';
 		$f_opts['defaultValue']='now()::date';
 		$f_opts['id']="create_date";
-				
+						
 		$f_create_date=new FieldSQLDate($this->getDbLink(),$this->getDbName(),$this->getTableName(),"create_date",$f_opts);
 		$this->addField($f_create_date);
 		//********************
@@ -57,7 +57,7 @@ class DocumentTemplate_Model extends ModelSQL{
 		
 		$f_opts['alias']='Содержимое шаблона';
 		$f_opts['id']="content";
-				
+						
 		$f_content=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"content",$f_opts);
 		$this->addField($f_content);
 		//********************
@@ -67,7 +67,7 @@ class DocumentTemplate_Model extends ModelSQL{
 		
 		$f_opts['alias']='Содержимое шаблона';
 		$f_opts['id']="content_for_experts";
-				
+						
 		$f_content_for_experts=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"content_for_experts",$f_opts);
 		$this->addField($f_content_for_experts);
 		//********************
@@ -77,7 +77,7 @@ class DocumentTemplate_Model extends ModelSQL{
 		
 		$f_opts['alias']='Комментарий';
 		$f_opts['id']="comment_text";
-				
+						
 		$f_comment_text=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"comment_text",$f_opts);
 		$this->addField($f_comment_text);
 		//********************

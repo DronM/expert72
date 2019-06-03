@@ -29,7 +29,7 @@ class DocFlowApprovementDialog_Model extends ModelSQL{
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['autoInc']=TRUE;
 		$f_opts['id']="id";
-				
+						
 		$f_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"id",$f_opts);
 		$this->addField($f_id);
 		//********************
@@ -37,7 +37,7 @@ class DocFlowApprovementDialog_Model extends ModelSQL{
 		//*** Field date_time ***
 		$f_opts = array();
 		$f_opts['id']="date_time";
-				
+						
 		$f_date_time=new FieldSQLDateTimeTZ($this->getDbLink(),$this->getDbName(),$this->getTableName(),"date_time",$f_opts);
 		$this->addField($f_date_time);
 		//********************
@@ -45,7 +45,7 @@ class DocFlowApprovementDialog_Model extends ModelSQL{
 		//*** Field subject ***
 		$f_opts = array();
 		$f_opts['id']="subject";
-				
+						
 		$f_subject=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"subject",$f_opts);
 		$this->addField($f_subject);
 		//********************
@@ -53,7 +53,7 @@ class DocFlowApprovementDialog_Model extends ModelSQL{
 		//*** Field subject_docs_ref ***
 		$f_opts = array();
 		$f_opts['id']="subject_docs_ref";
-				
+						
 		$f_subject_docs_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"subject_docs_ref",$f_opts);
 		$this->addField($f_subject_docs_ref);
 		//********************
@@ -61,7 +61,7 @@ class DocFlowApprovementDialog_Model extends ModelSQL{
 		//*** Field description ***
 		$f_opts = array();
 		$f_opts['id']="description";
-				
+						
 		$f_description=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"description",$f_opts);
 		$this->addField($f_description);
 		//********************
@@ -69,7 +69,7 @@ class DocFlowApprovementDialog_Model extends ModelSQL{
 		//*** Field doc_flow_importance_types_ref ***
 		$f_opts = array();
 		$f_opts['id']="doc_flow_importance_types_ref";
-				
+						
 		$f_doc_flow_importance_types_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"doc_flow_importance_types_ref",$f_opts);
 		$this->addField($f_doc_flow_importance_types_ref);
 		//********************
@@ -77,7 +77,7 @@ class DocFlowApprovementDialog_Model extends ModelSQL{
 		//*** Field end_date_time ***
 		$f_opts = array();
 		$f_opts['id']="end_date_time";
-				
+						
 		$f_end_date_time=new FieldSQLDateTimeTZ($this->getDbLink(),$this->getDbName(),$this->getTableName(),"end_date_time",$f_opts);
 		$this->addField($f_end_date_time);
 		//********************
@@ -85,7 +85,7 @@ class DocFlowApprovementDialog_Model extends ModelSQL{
 		//*** Field recipient_list_ref ***
 		$f_opts = array();
 		$f_opts['id']="recipient_list_ref";
-				
+						
 		$f_recipient_list_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"recipient_list_ref",$f_opts);
 		$this->addField($f_recipient_list_ref);
 		//********************
@@ -93,7 +93,7 @@ class DocFlowApprovementDialog_Model extends ModelSQL{
 		//*** Field employees_ref ***
 		$f_opts = array();
 		$f_opts['id']="employees_ref";
-				
+						
 		$f_employees_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"employees_ref",$f_opts);
 		$this->addField($f_employees_ref);
 		//********************
@@ -101,7 +101,7 @@ class DocFlowApprovementDialog_Model extends ModelSQL{
 		//*** Field close_date_time ***
 		$f_opts = array();
 		$f_opts['id']="close_date_time";
-				
+						
 		$f_close_date_time=new FieldSQLDateTimeTZ($this->getDbLink(),$this->getDbName(),$this->getTableName(),"close_date_time",$f_opts);
 		$this->addField($f_close_date_time);
 		//********************
@@ -109,7 +109,7 @@ class DocFlowApprovementDialog_Model extends ModelSQL{
 		//*** Field closed ***
 		$f_opts = array();
 		$f_opts['id']="closed";
-				
+						
 		$f_closed=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"closed",$f_opts);
 		$this->addField($f_closed);
 		//********************
@@ -117,7 +117,7 @@ class DocFlowApprovementDialog_Model extends ModelSQL{
 		//*** Field doc_flow_approvement_type ***
 		$f_opts = array();
 		$f_opts['id']="doc_flow_approvement_type";
-				
+						
 		$f_doc_flow_approvement_type=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"doc_flow_approvement_type",$f_opts);
 		$this->addField($f_doc_flow_approvement_type);
 		//********************
@@ -125,7 +125,7 @@ class DocFlowApprovementDialog_Model extends ModelSQL{
 		//*** Field state ***
 		$f_opts = array();
 		$f_opts['id']="state";
-				
+						
 		$f_state=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"state",$f_opts);
 		$this->addField($f_state);
 		//********************
@@ -133,7 +133,7 @@ class DocFlowApprovementDialog_Model extends ModelSQL{
 		//*** Field state_dt ***
 		$f_opts = array();
 		$f_opts['id']="state_dt";
-				
+						
 		$f_state_dt=new FieldSQLDateTimeTZ($this->getDbLink(),$this->getDbName(),$this->getTableName(),"state_dt",$f_opts);
 		$this->addField($f_state_dt);
 		//********************
@@ -141,7 +141,7 @@ class DocFlowApprovementDialog_Model extends ModelSQL{
 		//*** Field state_end_dt ***
 		$f_opts = array();
 		$f_opts['id']="state_end_dt";
-				
+						
 		$f_state_end_dt=new FieldSQLDateTimeTZ($this->getDbLink(),$this->getDbName(),$this->getTableName(),"state_end_dt",$f_opts);
 		$this->addField($f_state_end_dt);
 		//********************
@@ -149,7 +149,7 @@ class DocFlowApprovementDialog_Model extends ModelSQL{
 		//*** Field doc_flow_out_processes_chain ***
 		$f_opts = array();
 		$f_opts['id']="doc_flow_out_processes_chain";
-				
+						
 		$f_doc_flow_out_processes_chain=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"doc_flow_out_processes_chain",$f_opts);
 		$this->addField($f_doc_flow_out_processes_chain);
 		//********************
@@ -157,7 +157,7 @@ class DocFlowApprovementDialog_Model extends ModelSQL{
 		//*** Field close_result ***
 		$f_opts = array();
 		$f_opts['id']="close_result";
-				
+						
 		$f_close_result=new FieldSQLEnum($this->getDbLink(),$this->getDbName(),$this->getTableName(),"close_result",$f_opts);
 		$this->addField($f_close_result);
 		//********************
@@ -165,7 +165,7 @@ class DocFlowApprovementDialog_Model extends ModelSQL{
 		//*** Field current_step ***
 		$f_opts = array();
 		$f_opts['id']="current_step";
-				
+						
 		$f_current_step=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"current_step",$f_opts);
 		$this->addField($f_current_step);
 		//********************
@@ -173,7 +173,7 @@ class DocFlowApprovementDialog_Model extends ModelSQL{
 		//*** Field step_count ***
 		$f_opts = array();
 		$f_opts['id']="step_count";
-				
+						
 		$f_step_count=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"step_count",$f_opts);
 		$this->addField($f_step_count);
 		//********************

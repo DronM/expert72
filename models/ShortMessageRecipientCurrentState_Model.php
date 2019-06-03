@@ -22,7 +22,7 @@ class ShortMessageRecipientCurrentState_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['id']="recipient_id";
-				
+						
 		$f_recipient_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"recipient_id",$f_opts);
 		$this->addField($f_recipient_id);
 		//********************
@@ -30,7 +30,7 @@ class ShortMessageRecipientCurrentState_Model extends ModelSQL{
 		//*** Field recipient_state_id ***
 		$f_opts = array();
 		$f_opts['id']="recipient_state_id";
-				
+						
 		$f_recipient_state_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"recipient_state_id",$f_opts);
 		$this->addField($f_recipient_state_id);
 		//********************

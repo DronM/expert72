@@ -28,7 +28,7 @@ class Client_Model extends ModelSQL{
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['autoInc']=TRUE;
 		$f_opts['id']="id";
-				
+						
 		$f_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"id",$f_opts);
 		$this->addField($f_id);
 		//********************
@@ -37,7 +37,7 @@ class Client_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['length']=100;
 		$f_opts['id']="name";
-				
+						
 		$f_name=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"name",$f_opts);
 		$this->addField($f_name);
 		//********************
@@ -45,7 +45,7 @@ class Client_Model extends ModelSQL{
 		//*** Field name_full ***
 		$f_opts = array();
 		$f_opts['id']="name_full";
-				
+						
 		$f_name_full=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"name_full",$f_opts);
 		$this->addField($f_name_full);
 		//********************
@@ -54,7 +54,7 @@ class Client_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['length']=12;
 		$f_opts['id']="inn";
-				
+						
 		$f_inn=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"inn",$f_opts);
 		$this->addField($f_inn);
 		//********************
@@ -63,7 +63,7 @@ class Client_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['length']=10;
 		$f_opts['id']="kpp";
-				
+						
 		$f_kpp=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"kpp",$f_opts);
 		$this->addField($f_kpp);
 		//********************
@@ -72,7 +72,7 @@ class Client_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['length']=15;
 		$f_opts['id']="ogrn";
-				
+						
 		$f_ogrn=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"ogrn",$f_opts);
 		$this->addField($f_ogrn);
 		//********************
@@ -81,7 +81,7 @@ class Client_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['length']=20;
 		$f_opts['id']="okpo";
-				
+						
 		$f_okpo=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"okpo",$f_opts);
 		$this->addField($f_okpo);
 		//********************
@@ -89,7 +89,7 @@ class Client_Model extends ModelSQL{
 		//*** Field okved ***
 		$f_opts = array();
 		$f_opts['id']="okved";
-				
+						
 		$f_okved=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"okved",$f_opts);
 		$this->addField($f_okved);
 		//********************
@@ -98,7 +98,7 @@ class Client_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['length']=36;
 		$f_opts['id']="ext_id";
-				
+						
 		$f_ext_id=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"ext_id",$f_opts);
 		$this->addField($f_ext_id);
 		//********************
@@ -106,7 +106,7 @@ class Client_Model extends ModelSQL{
 		//*** Field user_id ***
 		$f_opts = array();
 		$f_opts['id']="user_id";
-				
+						
 		$f_user_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"user_id",$f_opts);
 		$this->addField($f_user_id);
 		//********************
@@ -114,7 +114,7 @@ class Client_Model extends ModelSQL{
 		//*** Field post_address ***
 		$f_opts = array();
 		$f_opts['id']="post_address";
-				
+						
 		$f_post_address=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"post_address",$f_opts);
 		$this->addField($f_post_address);
 		//********************
@@ -122,7 +122,7 @@ class Client_Model extends ModelSQL{
 		//*** Field legal_address ***
 		$f_opts = array();
 		$f_opts['id']="legal_address";
-				
+						
 		$f_legal_address=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"legal_address",$f_opts);
 		$this->addField($f_legal_address);
 		//********************
@@ -130,7 +130,7 @@ class Client_Model extends ModelSQL{
 		//*** Field bank_accounts ***
 		$f_opts = array();
 		$f_opts['id']="bank_accounts";
-				
+						
 		$f_bank_accounts=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"bank_accounts",$f_opts);
 		$this->addField($f_bank_accounts);
 		//********************
@@ -139,7 +139,7 @@ class Client_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['defaultValue']='enterprise';
 		$f_opts['id']="client_type";
-				
+						
 		$f_client_type=new FieldSQLEnum($this->getDbLink(),$this->getDbName(),$this->getTableName(),"client_type",$f_opts);
 		$this->addField($f_client_type);
 		//********************
@@ -147,7 +147,7 @@ class Client_Model extends ModelSQL{
 		//*** Field base_document_for_contract ***
 		$f_opts = array();
 		$f_opts['id']="base_document_for_contract";
-				
+						
 		$f_base_document_for_contract=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"base_document_for_contract",$f_opts);
 		$this->addField($f_base_document_for_contract);
 		//********************
@@ -155,7 +155,7 @@ class Client_Model extends ModelSQL{
 		//*** Field person_id_paper ***
 		$f_opts = array();
 		$f_opts['id']="person_id_paper";
-				
+						
 		$f_person_id_paper=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"person_id_paper",$f_opts);
 		$this->addField($f_person_id_paper);
 		//********************
@@ -163,7 +163,7 @@ class Client_Model extends ModelSQL{
 		//*** Field person_registr_paper ***
 		$f_opts = array();
 		$f_opts['id']="person_registr_paper";
-				
+						
 		$f_person_registr_paper=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"person_registr_paper",$f_opts);
 		$this->addField($f_person_registr_paper);
 		//********************

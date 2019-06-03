@@ -24,7 +24,7 @@ class ShortMessageRecipientList_Model extends ModelSQL{
 		//*** Field recipient_id ***
 		$f_opts = array();
 		$f_opts['id']="recipient_id";
-				
+						
 		$f_recipient_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"recipient_id",$f_opts);
 		$this->addField($f_recipient_id);
 		//********************
@@ -32,7 +32,7 @@ class ShortMessageRecipientList_Model extends ModelSQL{
 		//*** Field recipient_descr ***
 		$f_opts = array();
 		$f_opts['id']="recipient_descr";
-				
+						
 		$f_recipient_descr=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"recipient_descr",$f_opts);
 		$this->addField($f_recipient_descr);
 		//********************
@@ -40,7 +40,7 @@ class ShortMessageRecipientList_Model extends ModelSQL{
 		//*** Field recipients_ref ***
 		$f_opts = array();
 		$f_opts['id']="recipients_ref";
-				
+						
 		$f_recipients_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"recipients_ref",$f_opts);
 		$this->addField($f_recipients_ref);
 		//********************
@@ -48,7 +48,7 @@ class ShortMessageRecipientList_Model extends ModelSQL{
 		//*** Field departments_ref ***
 		$f_opts = array();
 		$f_opts['id']="departments_ref";
-				
+						
 		$f_departments_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"departments_ref",$f_opts);
 		$this->addField($f_departments_ref);
 		//********************
@@ -56,7 +56,7 @@ class ShortMessageRecipientList_Model extends ModelSQL{
 		//*** Field department_descr ***
 		$f_opts = array();
 		$f_opts['id']="department_descr";
-				
+						
 		$f_department_descr=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"department_descr",$f_opts);
 		$this->addField($f_department_descr);
 		//********************
@@ -64,7 +64,7 @@ class ShortMessageRecipientList_Model extends ModelSQL{
 		//*** Field is_online ***
 		$f_opts = array();
 		$f_opts['id']="is_online";
-				
+						
 		$f_is_online=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"is_online",$f_opts);
 		$this->addField($f_is_online);
 		//********************
@@ -72,7 +72,7 @@ class ShortMessageRecipientList_Model extends ModelSQL{
 		//*** Field recipient_states_ref ***
 		$f_opts = array();
 		$f_opts['id']="recipient_states_ref";
-				
+						
 		$f_recipient_states_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"recipient_states_ref",$f_opts);
 		$this->addField($f_recipient_states_ref);
 		//********************
@@ -80,7 +80,7 @@ class ShortMessageRecipientList_Model extends ModelSQL{
 		//*** Field recipient_init ***
 		$f_opts = array();
 		$f_opts['id']="recipient_init";
-				
+						
 		$f_recipient_init=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"recipient_init",$f_opts);
 		$this->addField($f_recipient_init);
 		//********************

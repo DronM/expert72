@@ -23,7 +23,7 @@ class ContractorList_Model extends {
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['autoInc']=FALSE;
 		$f_opts['id']="name";
-				
+						
 		$f_name=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"name",$f_opts);
 		$this->addField($f_name);
 		//********************

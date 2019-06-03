@@ -24,7 +24,7 @@ class ExpertNotification_Model extends {
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['autoInc']=TRUE;
 		$f_opts['id']="id";
-				
+						
 		$f_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"id",$f_opts);
 		$this->addField($f_id);
 		//********************
@@ -32,7 +32,7 @@ class ExpertNotification_Model extends {
 		//*** Field expert ***
 		$f_opts = array();
 		$f_opts['id']="expert";
-				
+						
 		$f_expert=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expert",$f_opts);
 		$this->addField($f_expert);
 		//********************

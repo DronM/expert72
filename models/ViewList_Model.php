@@ -27,7 +27,7 @@ class ViewList_Model extends ModelSQL{
 		
 		$f_opts['alias']='Код';
 		$f_opts['id']="id";
-				
+						
 		$f_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"id",$f_opts);
 		$this->addField($f_id);
 		//********************
@@ -35,7 +35,7 @@ class ViewList_Model extends ModelSQL{
 		//*** Field c ***
 		$f_opts = array();
 		$f_opts['id']="c";
-				
+						
 		$f_c=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"c",$f_opts);
 		$this->addField($f_c);
 		//********************
@@ -43,7 +43,7 @@ class ViewList_Model extends ModelSQL{
 		//*** Field f ***
 		$f_opts = array();
 		$f_opts['id']="f";
-				
+						
 		$f_f=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"f",$f_opts);
 		$this->addField($f_f);
 		//********************
@@ -51,7 +51,7 @@ class ViewList_Model extends ModelSQL{
 		//*** Field t ***
 		$f_opts = array();
 		$f_opts['id']="t";
-				
+						
 		$f_t=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"t",$f_opts);
 		$this->addField($f_t);
 		//********************
@@ -59,7 +59,7 @@ class ViewList_Model extends ModelSQL{
 		//*** Field href ***
 		$f_opts = array();
 		$f_opts['id']="href";
-				
+						
 		$f_href=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"href",$f_opts);
 		$this->addField($f_href);
 		//********************
@@ -67,7 +67,7 @@ class ViewList_Model extends ModelSQL{
 		//*** Field user_descr ***
 		$f_opts = array();
 		$f_opts['id']="user_descr";
-				
+						
 		$f_user_descr=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"user_descr",$f_opts);
 		$this->addField($f_user_descr);
 		//********************
@@ -75,7 +75,7 @@ class ViewList_Model extends ModelSQL{
 		//*** Field section ***
 		$f_opts = array();
 		$f_opts['id']="section";
-				
+						
 		$f_section=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"section",$f_opts);
 		$this->addField($f_section);
 		//********************

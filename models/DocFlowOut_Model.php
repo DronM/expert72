@@ -28,7 +28,7 @@ class DocFlowOut_Model extends ModelSQL{
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['autoInc']=TRUE;
 		$f_opts['id']="id";
-				
+						
 		$f_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"id",$f_opts);
 		$this->addField($f_id);
 		//********************
@@ -38,7 +38,7 @@ class DocFlowOut_Model extends ModelSQL{
 		$f_opts['defaultValue']='CURRENT_TIMESTAMP';
 		$f_opts['id']="date_time";
 		$f_opts['retAfterInsert']=TRUE;
-				
+						
 		$f_date_time=new FieldSQLDateTimeTZ($this->getDbLink(),$this->getDbName(),$this->getTableName(),"date_time",$f_opts);
 		$this->addField($f_date_time);
 		//********************
@@ -48,7 +48,7 @@ class DocFlowOut_Model extends ModelSQL{
 		$f_opts['length']=15;
 		$f_opts['id']="reg_number";
 		$f_opts['retAfterInsert']=TRUE;
-				
+						
 		$f_reg_number=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"reg_number",$f_opts);
 		$this->addField($f_reg_number);
 		//********************
@@ -56,7 +56,7 @@ class DocFlowOut_Model extends ModelSQL{
 		//*** Field doc_flow_type_id ***
 		$f_opts = array();
 		$f_opts['id']="doc_flow_type_id";
-				
+						
 		$f_doc_flow_type_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"doc_flow_type_id",$f_opts);
 		$this->addField($f_doc_flow_type_id);
 		//********************
@@ -64,7 +64,7 @@ class DocFlowOut_Model extends ModelSQL{
 		//*** Field employee_id ***
 		$f_opts = array();
 		$f_opts['id']="employee_id";
-				
+						
 		$f_employee_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"employee_id",$f_opts);
 		$this->addField($f_employee_id);
 		//********************
@@ -72,7 +72,7 @@ class DocFlowOut_Model extends ModelSQL{
 		//*** Field signed_by_employee_id ***
 		$f_opts = array();
 		$f_opts['id']="signed_by_employee_id";
-				
+						
 		$f_signed_by_employee_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"signed_by_employee_id",$f_opts);
 		$this->addField($f_signed_by_employee_id);
 		//********************
@@ -80,7 +80,7 @@ class DocFlowOut_Model extends ModelSQL{
 		//*** Field to_addr_names ***
 		$f_opts = array();
 		$f_opts['id']="to_addr_names";
-				
+						
 		$f_to_addr_names=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"to_addr_names",$f_opts);
 		$this->addField($f_to_addr_names);
 		//********************
@@ -88,7 +88,7 @@ class DocFlowOut_Model extends ModelSQL{
 		//*** Field comment_text ***
 		$f_opts = array();
 		$f_opts['id']="comment_text";
-				
+						
 		$f_comment_text=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"comment_text",$f_opts);
 		$this->addField($f_comment_text);
 		//********************
@@ -96,7 +96,7 @@ class DocFlowOut_Model extends ModelSQL{
 		//*** Field to_user_id ***
 		$f_opts = array();
 		$f_opts['id']="to_user_id";
-				
+						
 		$f_to_user_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"to_user_id",$f_opts);
 		$this->addField($f_to_user_id);
 		//********************
@@ -104,7 +104,7 @@ class DocFlowOut_Model extends ModelSQL{
 		//*** Field to_application_id ***
 		$f_opts = array();
 		$f_opts['id']="to_application_id";
-				
+						
 		$f_to_application_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"to_application_id",$f_opts);
 		$this->addField($f_to_application_id);
 		//********************
@@ -112,7 +112,7 @@ class DocFlowOut_Model extends ModelSQL{
 		//*** Field to_contract_id ***
 		$f_opts = array();
 		$f_opts['id']="to_contract_id";
-				
+						
 		$f_to_contract_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"to_contract_id",$f_opts);
 		$this->addField($f_to_contract_id);
 		//********************
@@ -120,7 +120,7 @@ class DocFlowOut_Model extends ModelSQL{
 		//*** Field to_client_id ***
 		$f_opts = array();
 		$f_opts['id']="to_client_id";
-				
+						
 		$f_to_client_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"to_client_id",$f_opts);
 		$this->addField($f_to_client_id);
 		//********************
@@ -128,7 +128,7 @@ class DocFlowOut_Model extends ModelSQL{
 		//*** Field subject ***
 		$f_opts = array();
 		$f_opts['id']="subject";
-				
+						
 		$f_subject=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"subject",$f_opts);
 		$this->addField($f_subject);
 		//********************
@@ -136,7 +136,7 @@ class DocFlowOut_Model extends ModelSQL{
 		//*** Field content ***
 		$f_opts = array();
 		$f_opts['id']="content";
-				
+						
 		$f_content=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"content",$f_opts);
 		$this->addField($f_content);
 		//********************
@@ -144,7 +144,7 @@ class DocFlowOut_Model extends ModelSQL{
 		//*** Field doc_flow_in_id ***
 		$f_opts = array();
 		$f_opts['id']="doc_flow_in_id";
-				
+						
 		$f_doc_flow_in_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"doc_flow_in_id",$f_opts);
 		$this->addField($f_doc_flow_in_id);
 		//********************
@@ -152,7 +152,7 @@ class DocFlowOut_Model extends ModelSQL{
 		//*** Field new_contract_number ***
 		$f_opts = array();
 		$f_opts['id']="new_contract_number";
-				
+						
 		$f_new_contract_number=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"new_contract_number",$f_opts);
 		$this->addField($f_new_contract_number);
 		//********************

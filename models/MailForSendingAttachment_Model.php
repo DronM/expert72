@@ -24,7 +24,7 @@ class MailForSendingAttachment_Model extends ModelSQL{
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['autoInc']=TRUE;
 		$f_opts['id']="id";
-				
+						
 		$f_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"id",$f_opts);
 		$this->addField($f_id);
 		//********************
@@ -32,7 +32,7 @@ class MailForSendingAttachment_Model extends ModelSQL{
 		//*** Field mail_for_sending_id ***
 		$f_opts = array();
 		$f_opts['id']="mail_for_sending_id";
-				
+						
 		$f_mail_for_sending_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"mail_for_sending_id",$f_opts);
 		$this->addField($f_mail_for_sending_id);
 		//********************
@@ -41,7 +41,7 @@ class MailForSendingAttachment_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['length']=255;
 		$f_opts['id']="file_name";
-				
+						
 		$f_file_name=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"file_name",$f_opts);
 		$this->addField($f_file_name);
 		//********************

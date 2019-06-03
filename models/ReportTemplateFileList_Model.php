@@ -26,7 +26,7 @@ class ReportTemplateFileList_Model extends ModelSQL{
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['autoInc']=TRUE;
 		$f_opts['id']="id";
-				
+						
 		$f_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"id",$f_opts);
 		$this->addField($f_id);
 		//********************
@@ -34,7 +34,7 @@ class ReportTemplateFileList_Model extends ModelSQL{
 		//*** Field report_templates_name ***
 		$f_opts = array();
 		$f_opts['id']="report_templates_name";
-				
+						
 		$f_report_templates_name=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"report_templates_name",$f_opts);
 		$this->addField($f_report_templates_name);
 		//********************
@@ -42,7 +42,7 @@ class ReportTemplateFileList_Model extends ModelSQL{
 		//*** Field file_name ***
 		$f_opts = array();
 		$f_opts['id']="file_name";
-				
+						
 		$f_file_name=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"file_name",$f_opts);
 		$this->addField($f_file_name);
 		//********************
@@ -50,7 +50,7 @@ class ReportTemplateFileList_Model extends ModelSQL{
 		//*** Field employees_ref ***
 		$f_opts = array();
 		$f_opts['id']="employees_ref";
-				
+						
 		$f_employees_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"employees_ref",$f_opts);
 		$this->addField($f_employees_ref);
 		//********************
@@ -58,7 +58,7 @@ class ReportTemplateFileList_Model extends ModelSQL{
 		//*** Field employee_id ***
 		$f_opts = array();
 		$f_opts['id']="employee_id";
-				
+						
 		$f_employee_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"employee_id",$f_opts);
 		$this->addField($f_employee_id);
 		//********************

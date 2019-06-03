@@ -1,24 +1,3 @@
--- ******************* update 30/05/2019 06:53:24 ******************
-
-					ALTER TYPE role_types ADD VALUE 'expert_ext';
-	/* function */
-	CREATE OR REPLACE FUNCTION enum_role_types_val(role_types,locales)
-	RETURNS text AS $$
-		SELECT
-		CASE
-		WHEN $1='admin'::role_types AND $2='ru'::locales THEN 'Администратор'
-		WHEN $1='client'::role_types AND $2='ru'::locales THEN 'Клиент'
-		WHEN $1='lawyer'::role_types AND $2='ru'::locales THEN 'Юрист отдела приема'
-		WHEN $1='expert'::role_types AND $2='ru'::locales THEN 'Эксперт'
-		WHEN $1='boss'::role_types AND $2='ru'::locales THEN 'Руководитель'
-		WHEN $1='accountant'::role_types AND $2='ru'::locales THEN 'Бухгалтер'
-		WHEN $1='expert_ext'::role_types AND $2='ru'::locales THEN 'Внешний эксперт'
-		ELSE ''
-		END;		
-	$$ LANGUAGE sql;	
-	ALTER FUNCTION enum_role_types_val(role_types,locales) OWNER TO expert72;		
-		
-
 -- ******************* update 30/05/2019 12:56:25 ******************
 -- VIEW: contracts_dialog
 
@@ -3435,3 +3414,587 @@ CREATE OR REPLACE VIEW doc_flow_out_client_dialog AS
 	;
 	
 ALTER VIEW doc_flow_out_client_dialog OWNER TO expert72;
+
+
+-- ******************* update 01/06/2019 06:24:51 ******************
+-- VIEW: contracts_list
+
+DROP VIEW contracts_list;
+
+CREATE OR REPLACE VIEW contracts_list AS
+	SELECT
+		t.id,
+		t.date_time,
+		t.application_id,
+		applications_ref(applications) AS applications_ref,
+		
+		t.client_id,
+		clients.name AS client_descr,
+		--clients_ref(clients) AS clients_ref,
+		coalesce(t.constr_name,applications.constr_name) AS constr_name,
+		
+		t.akt_number,
+		t.akt_date,
+		coalesce(t.akt_total,0) As akt_total,
+		t.akt_ext_id,
+		t.invoice_date,
+		t.invoice_number,
+		t.invoice_ext_id,
+
+		t.employee_id,
+		employees_ref(employees) AS employees_ref,
+		
+		t.reg_number,
+		t.expertise_type,
+		t.document_type,
+		
+		contracts_ref(t) AS self_ref,
+		
+		t.main_expert_id,
+		t.main_department_id,
+		m_exp.name AS main_expert_descr,
+		--employees_ref(m_exp) AS main_experts_ref,
+		
+		t.contract_number,
+		t.contract_date,
+		t.expertise_result_number,
+		
+		t.comment_text,
+		
+		st.state AS state,
+		st.date_time AS state_dt,
+		st.end_date_time AS state_end_date,
+		
+		t.for_all_employees,
+		CASE
+			WHEN (coalesce(pm.cnt,0)=0) THEN 'no_pay'
+			WHEN st.state='returned' OR st.state='closed_no_expertise' THEN 'returned'
+			WHEN t.expertise_result IS NULL AND t.expertise_result_date<=now()::date THEN 'no_result'
+			ELSE NULL
+		END AS state_for_color,
+		
+		applications.exp_cost_eval_validity,
+		
+		t.permission_ar AS condition_ar
+		
+	FROM contracts AS t
+	LEFT JOIN applications ON applications.id=t.application_id
+	LEFT JOIN employees ON employees.id=t.employee_id
+	LEFT JOIN employees AS m_exp ON m_exp.id=t.main_expert_id
+	LEFT JOIN clients ON clients.id=t.client_id
+	LEFT JOIN (
+		SELECT
+			t.application_id,
+			max(t.date_time) AS date_time
+		FROM application_processes t
+		GROUP BY t.application_id
+	) AS h_max ON h_max.application_id=t.application_id
+	LEFT JOIN application_processes st
+		ON st.application_id=h_max.application_id AND st.date_time = h_max.date_time
+	LEFT JOIN (
+		SELECT
+			client_payments.contract_id,
+			count(*) AS cnt
+		FROM client_payments
+		GROUP BY client_payments.contract_id
+	) AS pm ON pm.contract_id=t.id
+	ORDER BY t.date_time DESC
+	;
+	
+ALTER VIEW contracts_list OWNER TO expert72;
+
+
+-- ******************* update 01/06/2019 07:07:20 ******************
+-- VIEW: doc_flow_out_client_dialog
+
+--DROP VIEW doc_flow_out_client_dialog;
+
+CREATE OR REPLACE VIEW doc_flow_out_client_dialog AS
+	SELECT
+		t.id,
+		t.date_time,
+		t.reg_number,
+		t.subject,
+		t.user_id,
+		t.comment_text,
+		t.content,
+		applications_ref(applications) AS applications_ref,
+		t.sent,
+		cl_in_regs.reg_number AS reg_number_in,
+		t.doc_flow_out_client_type,
+		
+		(WITH att AS
+		(SELECT
+			jsonb_agg(files_t.attachments) AS attachments
+		FROM
+			(SELECT
+				json_build_object(
+					'file_id',app_f.file_id,
+					'file_name',app_f.file_name,
+					'file_size',app_f.file_size,
+					'file_signed',app_f.file_signed,
+					'file_uploaded','true',
+					'file_path',app_f.file_path,
+					'signatures',
+					(SELECT
+						json_agg(sign_t.signatures) AS signatures
+					FROM
+						(SELECT
+							f_sig.file_id,
+							json_build_object(
+								'owner',u_certs.subject_cert,
+								'cert_from',u_certs.date_time_from,
+								'cert_to',u_certs.date_time_to,
+								'sign_date_time',f_sig.sign_date_time,
+								'check_result',ver.check_result,
+								'check_time',ver.check_time,
+								'error_str',ver.error_str
+							) AS signatures
+						FROM file_signatures AS f_sig						
+						LEFT JOIN file_verifications AS ver ON ver.file_id=f_sig.file_id
+						LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id
+						WHERE f_sig.file_id=out_f.file_id
+						ORDER BY f_sig.sign_date_time
+						) AS sign_t
+					),
+					'file_signed_by_client',app_f.file_signed_by_client
+				) AS attachments			
+			FROM doc_flow_out_client_document_files AS out_f
+			LEFT JOIN application_document_files AS app_f ON app_f.file_id=out_f.file_id
+			LEFT JOIN application_doc_folders AS folders ON folders.name=app_f.file_path
+			WHERE app_f.document_id=0
+				AND coalesce(folders.require_client_sig,FALSE)=FALSE
+				AND out_f.doc_flow_out_client_id = t.id
+			ORDER BY app_f.file_path,app_f.file_name
+			) AS files_t
+		)
+		SELECT
+			CASE WHEN (SELECT att.attachments FROM att) IS NULL THEN NULL
+			ELSE
+				jsonb_build_array(
+					jsonb_build_object(
+						'files',(SELECT att.attachments FROM att)
+					)
+				)
+			END
+		)
+		AS attachment_files,
+		
+		(WITH att_only_sigs AS 
+		(SELECT
+			jsonb_agg(files_t.attachments) AS attachments
+		FROM
+			(SELECT
+				jsonb_build_object(
+					'file_id',app_f.file_id,
+					'file_name',app_f.file_name,
+					'file_size',app_f.file_size,
+					'file_signed',app_f.file_signed,
+					'file_uploaded','true',
+					'file_path',app_f.file_path,
+					'signatures',
+					(SELECT
+						json_agg(sign_t.signatures) AS signatures
+					FROM
+						(SELECT
+							f_sig.file_id,
+							json_build_object(
+								'owner',u_certs.subject_cert,
+								'cert_from',u_certs.date_time_from,
+								'cert_to',u_certs.date_time_to,
+								'sign_date_time',f_sig.sign_date_time,
+								'check_result',ver.check_result,
+								'check_time',ver.check_time,
+								'error_str',ver.error_str
+							) AS signatures
+						FROM file_signatures AS f_sig
+						LEFT JOIN file_verifications AS ver ON ver.file_id=f_sig.file_id
+						LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id
+						WHERE f_sig.file_id = out_f.file_id
+						ORDER BY f_sig.sign_date_time
+						) AS sign_t
+					),
+					'file_signed_by_client',app_f.file_signed_by_client
+				) AS attachments			
+			FROM doc_flow_out_client_document_files AS out_f
+			LEFT JOIN application_document_files AS app_f ON app_f.file_id=out_f.file_id
+			LEFT JOIN application_doc_folders AS folders ON folders.name=app_f.file_path
+			WHERE
+				app_f.document_id=0 AND folders.require_client_sig
+				AND out_f.doc_flow_out_client_id = t.id
+			ORDER BY app_f.file_path,app_f.file_name
+			) AS files_t
+		)
+		SELECT
+			CASE WHEN (SELECT att_only_sigs.attachments FROM att_only_sigs) IS NULL AND t.sent THEN NULL
+			ELSE
+				jsonb_build_array(
+					jsonb_build_object(
+						'files',
+							CASE
+								WHEN t.sent THEN '[]'::jsonb
+								WHEN (doc_flow_out_client_files_for_signing(t.application_id)->'files')::text='null' THEN '[]'::jsonb
+								ELSE doc_flow_out_client_files_for_signing(t.application_id)->'files'
+							END
+							||
+							CASE WHEN (SELECT att_only_sigs.attachments FROM att_only_sigs) IS NULL THEN '[]'::jsonb ELSE (SELECT att_only_sigs.attachments FROM att_only_sigs)
+							END
+					)
+				)
+			END
+		) AS attachment_files_only_sigs
+		
+		
+	FROM doc_flow_out_client t
+	LEFT JOIN applications ON applications.id=t.application_id
+	LEFT JOIN doc_flow_out_client_reg_numbers AS cl_in_regs ON cl_in_regs.application_id=t.application_id AND cl_in_regs.doc_flow_out_client_id=t.id
+	--(SELECT pdfn_application_doc_folders_contract()->>'descr')
+	LEFT JOIN (
+		SELECT
+			files_t.doc_flow_out_client_id,
+			jsonb_agg(files_t.attachments) AS attachments
+		FROM
+		(SELECT
+			out_f.doc_flow_out_client_id,
+			json_build_object(
+				'file_id',app_f.file_id,
+				'file_name',app_f.file_name,
+				'file_size',app_f.file_size,
+				'file_signed',app_f.file_signed,
+				'file_uploaded','true',
+				'file_path',app_f.file_path,
+				'signatures',sign.signatures,
+				'file_signed_by_client',app_f.file_signed_by_client
+			) AS attachments			
+		FROM doc_flow_out_client_document_files AS out_f
+		LEFT JOIN application_document_files AS app_f ON app_f.file_id=out_f.file_id
+		LEFT JOIN application_doc_folders AS folders ON folders.name=app_f.file_path
+		LEFT JOIN (
+			SELECT
+				sign_t.file_id,
+				json_agg(sign_t.signatures) AS signatures
+			FROM
+			(SELECT
+				f_sig.file_id,
+				json_build_object(
+					'owner',u_certs.subject_cert,
+					'cert_from',u_certs.date_time_from,
+					'cert_to',u_certs.date_time_to,
+					'sign_date_time',f_sig.sign_date_time,
+					'check_result',ver.check_result,
+					'check_time',ver.check_time,
+					'error_str',ver.error_str
+				) AS signatures
+			FROM file_signatures AS f_sig
+			LEFT JOIN file_verifications AS ver ON ver.file_id=f_sig.file_id
+			LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id
+			ORDER BY f_sig.sign_date_time
+			) AS sign_t
+			GROUP BY sign_t.file_id
+		) AS sign ON sign.file_id=app_f.file_id					
+		WHERE app_f.document_id=0 AND coalesce(folders.require_client_sig,FALSE)=FALSE
+		ORDER BY app_f.file_path,app_f.file_name
+		) AS files_t
+		GROUP BY files_t.doc_flow_out_client_id
+	) AS att ON att.doc_flow_out_client_id=t.id
+	
+	ORDER BY t.date_time DESC
+	;
+	
+ALTER VIEW doc_flow_out_client_dialog OWNER TO expert72;
+
+
+-- ******************* update 01/06/2019 07:18:52 ******************
+-- VIEW: doc_flow_in_client_dialog
+
+--DROP VIEW doc_flow_in_client_dialog;
+
+CREATE OR REPLACE VIEW doc_flow_in_client_dialog AS
+	SELECT
+		t.id,
+		t.date_time,
+		t.reg_number,
+		t.subject,
+		t.user_id,
+		t.viewed,
+		applications_ref(applications) AS applications_ref,
+		t.comment_text,
+		t.content,
+		json_build_array(
+			json_build_object(
+				'files',
+				(SELECT
+					json_agg(files.files)
+				FROM
+					(SELECT					
+						jsonb_build_object(
+							'file_id',att.file_id,
+							'file_name',att.file_name,
+							'file_size',att.file_size,
+							'file_signed',att.file_signed,
+							'file_uploaded','true',
+							'file_path',att.file_path,
+							'signatures',
+							(SELECT
+								jsonb_agg(sign_t.signatures) AS signatures
+							FROM
+								(SELECT
+									f_sig.file_id,
+									jsonb_build_object(
+										'owner',u_certs.subject_cert,
+										'cert_from',u_certs.date_time_from,
+										'cert_to',u_certs.date_time_to,
+										'sign_date_time',f_sig.sign_date_time,
+										'check_result',ver.check_result,
+										'check_time',ver.check_time,
+										'error_str',ver.error_str
+									) AS signatures
+								FROM file_signatures AS f_sig
+								LEFT JOIN file_verifications AS ver ON ver.file_id=f_sig.file_id
+								LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id
+								WHERE f_sig.file_id = att.file_id
+								ORDER BY f_sig.sign_date_time
+								) AS sign_t
+							)
+							,
+							'file_signed_by_client',app_f.file_signed_by_client
+						) AS files
+					FROM doc_flow_attachments AS att
+					LEFT JOIN application_document_files AS app_f ON app_f.file_id=att.file_id
+					LEFT JOIN application_doc_folders AS folders ON folders.name=app_f.file_path
+					WHERE att.doc_type='doc_flow_out' AND att.doc_id=t.doc_flow_out_id
+					GROUP BY att.file_path,att.file_name,att.file_id,app_f.file_signed_by_client
+					ORDER BY att.file_path,att.file_name
+					) AS files
+				)
+			)
+		) AS files,
+		regs.reg_number AS reg_number_out
+		
+	FROM doc_flow_in_client t
+	LEFT JOIN applications ON applications.id=t.application_id
+	LEFT JOIN doc_flow_in_client_reg_numbers AS regs ON regs.doc_flow_in_client_id=t.id
+	ORDER BY t.date_time DESC
+	;
+	
+ALTER VIEW doc_flow_in_client_dialog OWNER TO expert72;
+
+
+-- ******************* update 01/06/2019 07:29:34 ******************
+-- VIEW: doc_flow_out_dialog
+
+--DROP VIEW doc_flow_out_dialog;
+
+CREATE OR REPLACE VIEW doc_flow_out_dialog AS
+	SELECT
+		doc_flow_out.*,
+		clients_ref(clients) AS to_clients_ref,
+		users_ref(users) AS to_users_ref,
+		applications_ref(applications) AS to_applications_ref,
+		doc_flow_in_ref(doc_flow_in) AS doc_flow_in_ref,
+		
+		/**
+		 * !!!Нужны ВСЕ папки всегда!!!
+		 */
+		(
+		SELECT
+			json_agg(
+				json_build_object(
+					'fields',json_build_object(
+						'id',doc_att.folder_id,
+						'descr',doc_att.folder_descr,
+						'require_client_sig',doc_att.require_client_sig
+					),
+					'parent_id',NULL,
+					'files',CASE WHEN (doc_att.files->(0)->'file_id')::text ='null' THEN '[]'::json ELSE doc_att.files END
+				)
+			) AS files
+		FROM
+		(SELECT
+			app_fd.name AS folder_descr,
+			app_fd.id AS folder_id,
+			app_fd.require_client_sig,
+			json_agg(
+				json_build_object(
+					'file_id',att.file_id,
+					'file_name',att.file_name,
+					'file_size',att.file_size,
+					'file_signed',att.file_signed,
+					'file_uploaded','true',
+					'file_path',att.file_path,
+					'date_time',f_ver.date_time,
+					'signatures',
+					(WITH sign AS
+					(SELECT
+						json_agg(files_t.signatures) AS signatures
+					FROM
+						(SELECT
+							json_build_object(
+								'owner',u_certs.subject_cert,
+								'cert_from',u_certs.date_time_from,
+								'cert_to',u_certs.date_time_to,
+								'sign_date_time',f_sig.sign_date_time,
+								'check_result',ver.check_result,
+								'check_time',ver.check_time,
+								'error_str',ver.error_str
+							) AS signatures
+						FROM file_signatures AS f_sig
+						LEFT JOIN file_verifications AS ver ON ver.file_id=f_sig.file_id
+						LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id
+						WHERE f_sig.file_id=f_ver.file_id
+						ORDER BY f_sig.sign_date_time
+						) AS files_t
+					)					
+					SELECT
+						CASE
+							WHEN (SELECT sign.signatures FROM sign) IS NULL AND f_ver.file_id IS NOT NULL THEN
+								json_build_array(
+									json_build_object(
+										'sign_date_time',f_ver.date_time,
+										'check_result',f_ver.check_result,
+										'error_str',f_ver.error_str
+									)
+								)
+							ELSE (SELECT sign.signatures FROM sign)
+						END
+					),
+					'file_signed_by_client',(SELECT t1.file_signed_by_client FROM application_document_files t1 WHERE t1.file_id=att.file_id),
+					'require_client_sig',app_fd.require_client_sig
+				)
+			) AS files
+		FROM application_doc_folders AS app_fd
+		LEFT JOIN doc_flow_attachments AS att ON
+			att.file_path=app_fd.name AND att.doc_type='doc_flow_out' AND att.doc_id=doc_flow_out.id
+		LEFT JOIN file_verifications AS f_ver ON f_ver.file_id=att.file_id
+		GROUP BY app_fd.id,att.file_path,app_fd.require_client_sig
+		ORDER BY app_fd.name
+		)  AS doc_att
+		) AS files,
+		
+		---***************************
+		st.state AS state,
+		st.date_time AS state_dt,
+		st.end_date_time AS state_end_dt,
+		
+		employees_ref(employees) AS employees_ref,
+		employees_ref(employees2) AS signed_by_employees_ref,
+		
+		doc_flow_types_ref(doc_flow_types) AS doc_flow_types_ref,
+		
+		contracts_ref(contracts) AS to_contracts_ref,
+		
+		doc_flow_out_processes_chain(doc_flow_out.id) AS doc_flow_out_processes_chain,
+		
+		contracts.expertise_result,
+		expertise_reject_types_ref(expertise_reject_types) AS expertise_reject_types_ref,
+		expertise_reject_types.id AS expertise_reject_type_id
+		
+	FROM doc_flow_out
+	LEFT JOIN applications ON applications.id=doc_flow_out.to_application_id
+	LEFT JOIN contracts ON contracts.id=doc_flow_out.to_contract_id
+	LEFT JOIN expertise_reject_types ON expertise_reject_types.id=contracts.expertise_reject_type_id
+	LEFT JOIN users ON users.id=doc_flow_out.to_user_id
+	LEFT JOIN clients ON clients.id=doc_flow_out.to_client_id
+	LEFT JOIN doc_flow_in ON doc_flow_in.id=doc_flow_out.doc_flow_in_id
+	LEFT JOIN doc_flow_types ON doc_flow_types.id=doc_flow_out.doc_flow_type_id
+	LEFT JOIN employees ON employees.id=doc_flow_out.employee_id
+	LEFT JOIN employees AS employees2 ON employees2.id=doc_flow_out.signed_by_employee_id
+	
+	
+	LEFT JOIN (
+		SELECT
+			t.doc_flow_out_id AS doc_id,
+			max(t.date_time) AS date_time
+		FROM doc_flow_out_processes t
+		GROUP BY t.doc_flow_out_id
+	) AS h_max ON h_max.doc_id=doc_flow_out.id
+	LEFT JOIN doc_flow_out_processes st
+		ON st.doc_flow_out_id=h_max.doc_id AND st.date_time = h_max.date_time
+	;
+	
+ALTER VIEW doc_flow_out_dialog OWNER TO expert72;
+
+
+-- ******************* update 01/06/2019 07:49:12 ******************
+-- VIEW: doc_flow_inside_dialog
+
+--DROP VIEW doc_flow_inside_dialog;
+
+CREATE OR REPLACE VIEW doc_flow_inside_dialog AS
+	SELECT
+		doc_flow_inside.*,
+		doc_flow_importance_types_ref (tp) AS doc_flow_importance_types_ref,
+		contracts_ref(ct) AS contracts_ref,
+		employees_ref(emp) AS employees_ref,
+		
+		st.state AS state,
+		st.date_time AS state_dt,
+		st.end_date_time AS state_end_dt,
+		
+		doc_flow_inside_processes_chain(doc_flow_inside.id) AS doc_flow_inside_processes_chain,
+		
+		--****************************
+		json_build_array(
+			json_build_object(
+				'files',
+				(SELECT
+					json_agg(
+						json_build_object(
+							'file_id',t.file_id,
+							'file_name',t.file_name,
+							'file_size',t.file_size,
+							'file_signed',t.file_signed,
+							'file_uploaded','true',
+							'file_path',t.file_path,
+							'signatures',
+							(
+							SELECT
+								json_agg(files_t.signatures) AS signatures
+							FROM			
+								(SELECT
+									jsonb_build_object(
+										'owner',u_certs.subject_cert,
+										'cert_from',u_certs.date_time_from,
+										'cert_to',u_certs.date_time_to,
+										'sign_date_time',f_sig.sign_date_time,
+										'check_result',ver.check_result,
+										'check_time',ver.check_time,
+										'error_str',ver.error_str,
+										'employee_id',u_certs.employee_id,
+										'verif_date_time',ver.date_time
+									) As signatures
+								FROM file_signatures AS f_sig
+								LEFT JOIN file_verifications AS ver ON ver.file_id=f_sig.file_id
+								LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id
+								WHERE f_sig.file_id = t.file_id
+								ORDER BY f_sig.sign_date_time
+								) AS files_t
+							)
+						)
+					)
+				FROM doc_flow_attachments AS t
+				LEFT JOIN file_verifications AS f_ver ON f_ver.file_id=t.file_id
+				WHERE t.doc_type='doc_flow_inside'::data_types AND t.doc_id=doc_flow_inside.id
+				)
+			)
+		) AS files
+		---***************************
+		
+	FROM doc_flow_inside
+	LEFT JOIN doc_flow_importance_types AS tp ON tp.id=doc_flow_inside.doc_flow_importance_type_id
+	LEFT JOIN contracts AS ct ON ct.id=doc_flow_inside.contract_id
+	LEFT JOIN employees AS emp ON emp.id=doc_flow_inside.employee_id
+	
+	LEFT JOIN (
+		SELECT
+			t.doc_flow_inside_id AS doc_id,
+			max(t.date_time) AS date_time
+		FROM doc_flow_inside_processes t
+		GROUP BY t.doc_flow_inside_id
+	) AS h_max ON h_max.doc_id=doc_flow_inside.id
+	LEFT JOIN doc_flow_inside_processes st
+		ON st.doc_flow_inside_id=h_max.doc_id AND st.date_time = h_max.date_time
+	
+	;
+	
+ALTER VIEW doc_flow_inside_dialog OWNER TO expert72;

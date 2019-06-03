@@ -28,7 +28,7 @@ class MainMenuConstructor_Model extends ModelSQL{
 		
 		$f_opts['alias']='Код';
 		$f_opts['id']="id";
-				
+						
 		$f_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"id",$f_opts);
 		$this->addField($f_id);
 		//********************
@@ -36,7 +36,7 @@ class MainMenuConstructor_Model extends ModelSQL{
 		//*** Field role_id ***
 		$f_opts = array();
 		$f_opts['id']="role_id";
-				
+						
 		$f_role_id=new FieldSQLEnum($this->getDbLink(),$this->getDbName(),$this->getTableName(),"role_id",$f_opts);
 		$this->addField($f_role_id);
 		//********************
@@ -44,7 +44,7 @@ class MainMenuConstructor_Model extends ModelSQL{
 		//*** Field user_id ***
 		$f_opts = array();
 		$f_opts['id']="user_id";
-				
+						
 		$f_user_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"user_id",$f_opts);
 		$this->addField($f_user_id);
 		//********************
@@ -54,7 +54,7 @@ class MainMenuConstructor_Model extends ModelSQL{
 		
 		$f_opts['alias']='Содержание';
 		$f_opts['id']="content";
-				
+						
 		$f_content=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"content",$f_opts);
 		$this->addField($f_content);
 		//********************

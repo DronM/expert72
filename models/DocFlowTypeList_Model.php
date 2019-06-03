@@ -26,7 +26,7 @@ class DocFlowTypeList_Model extends ModelSQL{
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['autoInc']=TRUE;
 		$f_opts['id']="id";
-				
+						
 		$f_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"id",$f_opts);
 		$this->addField($f_id);
 		//********************
@@ -35,7 +35,7 @@ class DocFlowTypeList_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['length']=250;
 		$f_opts['id']="name";
-				
+						
 		$f_name=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"name",$f_opts);
 		$this->addField($f_name);
 		//********************
@@ -43,7 +43,7 @@ class DocFlowTypeList_Model extends ModelSQL{
 		//*** Field def_interval ***
 		$f_opts = array();
 		$f_opts['id']="def_interval";
-				
+						
 		$f_def_interval=new FieldSQLInterval($this->getDbLink(),$this->getDbName(),$this->getTableName(),"def_interval",$f_opts);
 		$this->addField($f_def_interval);
 		//********************
@@ -51,7 +51,7 @@ class DocFlowTypeList_Model extends ModelSQL{
 		//*** Field doc_flow_types_type_id ***
 		$f_opts = array();
 		$f_opts['id']="doc_flow_types_type_id";
-				
+						
 		$f_doc_flow_types_type_id=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"doc_flow_types_type_id",$f_opts);
 		$this->addField($f_doc_flow_types_type_id);
 		//********************
@@ -60,7 +60,7 @@ class DocFlowTypeList_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['length']=10;
 		$f_opts['id']="num_prefix";
-				
+						
 		$f_num_prefix=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"num_prefix",$f_opts);
 		$this->addField($f_num_prefix);
 		//********************

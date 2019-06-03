@@ -25,7 +25,7 @@ class OfficeDaySchedule_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['id']="office_id";
-				
+						
 		$f_office_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"office_id",$f_opts);
 		$this->addField($f_office_id);
 		//********************
@@ -34,7 +34,7 @@ class OfficeDaySchedule_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['id']="day";
-				
+						
 		$f_day=new FieldSQLDate($this->getDbLink(),$this->getDbName(),$this->getTableName(),"day",$f_opts);
 		$this->addField($f_day);
 		//********************
@@ -42,7 +42,7 @@ class OfficeDaySchedule_Model extends ModelSQL{
 		//*** Field work_hours ***
 		$f_opts = array();
 		$f_opts['id']="work_hours";
-				
+						
 		$f_work_hours=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"work_hours",$f_opts);
 		$this->addField($f_work_hours);
 		//********************

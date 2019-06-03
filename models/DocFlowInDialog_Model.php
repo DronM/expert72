@@ -29,7 +29,7 @@ class DocFlowInDialog_Model extends ModelSQL{
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['autoInc']=TRUE;
 		$f_opts['id']="id";
-				
+						
 		$f_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"id",$f_opts);
 		$this->addField($f_id);
 		//********************
@@ -37,7 +37,7 @@ class DocFlowInDialog_Model extends ModelSQL{
 		//*** Field date_time ***
 		$f_opts = array();
 		$f_opts['id']="date_time";
-				
+						
 		$f_date_time=new FieldSQLDateTimeTZ($this->getDbLink(),$this->getDbName(),$this->getTableName(),"date_time",$f_opts);
 		$this->addField($f_date_time);
 		//********************
@@ -46,7 +46,7 @@ class DocFlowInDialog_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['length']=30;
 		$f_opts['id']="reg_number";
-				
+						
 		$f_reg_number=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"reg_number",$f_opts);
 		$this->addField($f_reg_number);
 		//********************
@@ -54,7 +54,7 @@ class DocFlowInDialog_Model extends ModelSQL{
 		//*** Field from_clients_ref ***
 		$f_opts = array();
 		$f_opts['id']="from_clients_ref";
-				
+						
 		$f_from_clients_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"from_clients_ref",$f_opts);
 		$this->addField($f_from_clients_ref);
 		//********************
@@ -63,7 +63,7 @@ class DocFlowInDialog_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['length']=250;
 		$f_opts['id']="from_client_signed_by";
-				
+						
 		$f_from_client_signed_by=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"from_client_signed_by",$f_opts);
 		$this->addField($f_from_client_signed_by);
 		//********************
@@ -72,7 +72,7 @@ class DocFlowInDialog_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['length']=20;
 		$f_opts['id']="from_client_number";
-				
+						
 		$f_from_client_number=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"from_client_number",$f_opts);
 		$this->addField($f_from_client_number);
 		//********************
@@ -80,7 +80,7 @@ class DocFlowInDialog_Model extends ModelSQL{
 		//*** Field from_client_date ***
 		$f_opts = array();
 		$f_opts['id']="from_client_date";
-				
+						
 		$f_from_client_date=new FieldSQLDate($this->getDbLink(),$this->getDbName(),$this->getTableName(),"from_client_date",$f_opts);
 		$this->addField($f_from_client_date);
 		//********************
@@ -89,7 +89,7 @@ class DocFlowInDialog_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['length']=250;
 		$f_opts['id']="from_addr_name";
-				
+						
 		$f_from_addr_name=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"from_addr_name",$f_opts);
 		$this->addField($f_from_addr_name);
 		//********************
@@ -97,7 +97,7 @@ class DocFlowInDialog_Model extends ModelSQL{
 		//*** Field from_users_ref ***
 		$f_opts = array();
 		$f_opts['id']="from_users_ref";
-				
+						
 		$f_from_users_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"from_users_ref",$f_opts);
 		$this->addField($f_from_users_ref);
 		//********************
@@ -105,7 +105,7 @@ class DocFlowInDialog_Model extends ModelSQL{
 		//*** Field from_applications_ref ***
 		$f_opts = array();
 		$f_opts['id']="from_applications_ref";
-				
+						
 		$f_from_applications_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"from_applications_ref",$f_opts);
 		$this->addField($f_from_applications_ref);
 		//********************
@@ -113,7 +113,7 @@ class DocFlowInDialog_Model extends ModelSQL{
 		//*** Field from_application_id ***
 		$f_opts = array();
 		$f_opts['id']="from_application_id";
-				
+						
 		$f_from_application_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"from_application_id",$f_opts);
 		$this->addField($f_from_application_id);
 		//********************
@@ -121,7 +121,7 @@ class DocFlowInDialog_Model extends ModelSQL{
 		//*** Field end_date_time ***
 		$f_opts = array();
 		$f_opts['id']="end_date_time";
-				
+						
 		$f_end_date_time=new FieldSQLDateTimeTZ($this->getDbLink(),$this->getDbName(),$this->getTableName(),"end_date_time",$f_opts);
 		$this->addField($f_end_date_time);
 		//********************
@@ -129,7 +129,7 @@ class DocFlowInDialog_Model extends ModelSQL{
 		//*** Field subject ***
 		$f_opts = array();
 		$f_opts['id']="subject";
-				
+						
 		$f_subject=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"subject",$f_opts);
 		$this->addField($f_subject);
 		//********************
@@ -137,7 +137,7 @@ class DocFlowInDialog_Model extends ModelSQL{
 		//*** Field content ***
 		$f_opts = array();
 		$f_opts['id']="content";
-				
+						
 		$f_content=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"content",$f_opts);
 		$this->addField($f_content);
 		//********************
@@ -145,7 +145,7 @@ class DocFlowInDialog_Model extends ModelSQL{
 		//*** Field doc_flow_out_ref ***
 		$f_opts = array();
 		$f_opts['id']="doc_flow_out_ref";
-				
+						
 		$f_doc_flow_out_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"doc_flow_out_ref",$f_opts);
 		$this->addField($f_doc_flow_out_ref);
 		//********************
@@ -153,7 +153,7 @@ class DocFlowInDialog_Model extends ModelSQL{
 		//*** Field doc_flow_types_ref ***
 		$f_opts = array();
 		$f_opts['id']="doc_flow_types_ref";
-				
+						
 		$f_doc_flow_types_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"doc_flow_types_ref",$f_opts);
 		$this->addField($f_doc_flow_types_ref);
 		//********************
@@ -161,7 +161,7 @@ class DocFlowInDialog_Model extends ModelSQL{
 		//*** Field comment_text ***
 		$f_opts = array();
 		$f_opts['id']="comment_text";
-				
+						
 		$f_comment_text=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"comment_text",$f_opts);
 		$this->addField($f_comment_text);
 		//********************
@@ -169,7 +169,7 @@ class DocFlowInDialog_Model extends ModelSQL{
 		//*** Field recipients_ref ***
 		$f_opts = array();
 		$f_opts['id']="recipients_ref";
-				
+						
 		$f_recipients_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"recipients_ref",$f_opts);
 		$this->addField($f_recipients_ref);
 		//********************
@@ -177,7 +177,7 @@ class DocFlowInDialog_Model extends ModelSQL{
 		//*** Field employees_ref ***
 		$f_opts = array();
 		$f_opts['id']="employees_ref";
-				
+						
 		$f_employees_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"employees_ref",$f_opts);
 		$this->addField($f_employees_ref);
 		//********************
@@ -185,7 +185,7 @@ class DocFlowInDialog_Model extends ModelSQL{
 		//*** Field files ***
 		$f_opts = array();
 		$f_opts['id']="files";
-				
+						
 		$f_files=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"files",$f_opts);
 		$this->addField($f_files);
 		//********************
@@ -193,7 +193,7 @@ class DocFlowInDialog_Model extends ModelSQL{
 		//*** Field state ***
 		$f_opts = array();
 		$f_opts['id']="state";
-				
+						
 		$f_state=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"state",$f_opts);
 		$this->addField($f_state);
 		//********************
@@ -201,7 +201,7 @@ class DocFlowInDialog_Model extends ModelSQL{
 		//*** Field state_dt ***
 		$f_opts = array();
 		$f_opts['id']="state_dt";
-				
+						
 		$f_state_dt=new FieldSQLDateTimeTZ($this->getDbLink(),$this->getDbName(),$this->getTableName(),"state_dt",$f_opts);
 		$this->addField($f_state_dt);
 		//********************
@@ -209,7 +209,7 @@ class DocFlowInDialog_Model extends ModelSQL{
 		//*** Field state_end_dt ***
 		$f_opts = array();
 		$f_opts['id']="state_end_dt";
-				
+						
 		$f_state_end_dt=new FieldSQLDateTimeTZ($this->getDbLink(),$this->getDbName(),$this->getTableName(),"state_end_dt",$f_opts);
 		$this->addField($f_state_end_dt);
 		//********************
@@ -217,7 +217,7 @@ class DocFlowInDialog_Model extends ModelSQL{
 		//*** Field state_register_doc ***
 		$f_opts = array();
 		$f_opts['id']="state_register_doc";
-				
+						
 		$f_state_register_doc=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"state_register_doc",$f_opts);
 		$this->addField($f_state_register_doc);
 		//********************
@@ -226,7 +226,7 @@ class DocFlowInDialog_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['defaultValue']='FALSE';
 		$f_opts['id']="from_client_app";
-				
+						
 		$f_from_client_app=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"from_client_app",$f_opts);
 		$this->addField($f_from_client_app);
 		//********************
@@ -234,7 +234,7 @@ class DocFlowInDialog_Model extends ModelSQL{
 		//*** Field doc_flow_in_processes_chain ***
 		$f_opts = array();
 		$f_opts['id']="doc_flow_in_processes_chain";
-				
+						
 		$f_doc_flow_in_processes_chain=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"doc_flow_in_processes_chain",$f_opts);
 		$this->addField($f_doc_flow_in_processes_chain);
 		//********************
@@ -242,7 +242,7 @@ class DocFlowInDialog_Model extends ModelSQL{
 		//*** Field from_doc_flow_out_client_id ***
 		$f_opts = array();
 		$f_opts['id']="from_doc_flow_out_client_id";
-				
+						
 		$f_from_doc_flow_out_client_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"from_doc_flow_out_client_id",$f_opts);
 		$this->addField($f_from_doc_flow_out_client_id);
 		//********************
@@ -250,7 +250,7 @@ class DocFlowInDialog_Model extends ModelSQL{
 		//*** Field corrected_sections ***
 		$f_opts = array();
 		$f_opts['id']="corrected_sections";
-				
+						
 		$f_corrected_sections=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"corrected_sections",$f_opts);
 		$this->addField($f_corrected_sections);
 		//********************

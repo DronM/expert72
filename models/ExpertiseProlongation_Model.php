@@ -26,7 +26,7 @@ class ExpertiseProlongation_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['id']="contract_id";
-				
+						
 		$f_contract_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"contract_id",$f_opts);
 		$this->addField($f_contract_id);
 		//********************
@@ -36,7 +36,7 @@ class ExpertiseProlongation_Model extends ModelSQL{
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['defaultValue']='CURRENT_TIMESTAMP';
 		$f_opts['id']="date_time";
-				
+						
 		$f_date_time=new FieldSQLDateTime($this->getDbLink(),$this->getDbName(),$this->getTableName(),"date_time",$f_opts);
 		$this->addField($f_date_time);
 		//********************
@@ -44,7 +44,7 @@ class ExpertiseProlongation_Model extends ModelSQL{
 		//*** Field day_count ***
 		$f_opts = array();
 		$f_opts['id']="day_count";
-				
+						
 		$f_day_count=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"day_count",$f_opts);
 		$this->addField($f_day_count);
 		//********************
@@ -52,7 +52,7 @@ class ExpertiseProlongation_Model extends ModelSQL{
 		//*** Field date_type ***
 		$f_opts = array();
 		$f_opts['id']="date_type";
-				
+						
 		$f_date_type=new FieldSQLEnum($this->getDbLink(),$this->getDbName(),$this->getTableName(),"date_type",$f_opts);
 		$this->addField($f_date_type);
 		//********************
@@ -60,7 +60,7 @@ class ExpertiseProlongation_Model extends ModelSQL{
 		//*** Field new_end_date ***
 		$f_opts = array();
 		$f_opts['id']="new_end_date";
-				
+						
 		$f_new_end_date=new FieldSQLDate($this->getDbLink(),$this->getDbName(),$this->getTableName(),"new_end_date",$f_opts);
 		$this->addField($f_new_end_date);
 		//********************
@@ -68,7 +68,7 @@ class ExpertiseProlongation_Model extends ModelSQL{
 		//*** Field employee_id ***
 		$f_opts = array();
 		$f_opts['id']="employee_id";
-				
+						
 		$f_employee_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"employee_id",$f_opts);
 		$this->addField($f_employee_id);
 		//********************
@@ -78,7 +78,7 @@ class ExpertiseProlongation_Model extends ModelSQL{
 		
 		$f_opts['alias']='Комментарий';
 		$f_opts['id']="comment_text";
-				
+						
 		$f_comment_text=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"comment_text",$f_opts);
 		$this->addField($f_comment_text);
 		//********************

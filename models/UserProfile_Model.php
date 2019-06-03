@@ -27,7 +27,7 @@ class UserProfile_Model extends ModelSQL{
 		
 		$f_opts['alias']='Код';
 		$f_opts['id']="id";
-				
+						
 		$f_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"id",$f_opts);
 		$this->addField($f_id);
 		//********************
@@ -37,7 +37,7 @@ class UserProfile_Model extends ModelSQL{
 		
 		$f_opts['alias']='Имя';
 		$f_opts['id']="name";
-				
+						
 		$f_name=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"name",$f_opts);
 		$this->addField($f_name);
 		//********************
@@ -46,7 +46,7 @@ class UserProfile_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['length']=250;
 		$f_opts['id']="name_full";
-				
+						
 		$f_name_full=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"name_full",$f_opts);
 		$this->addField($f_name_full);
 		//********************
@@ -56,7 +56,7 @@ class UserProfile_Model extends ModelSQL{
 		
 		$f_opts['alias']='Эл.почта';
 		$f_opts['id']="email";
-				
+						
 		$f_email=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"email",$f_opts);
 		$this->addField($f_email);
 		//********************
@@ -67,7 +67,7 @@ class UserProfile_Model extends ModelSQL{
 		$f_opts['alias']='Моб.телефон';
 		$f_opts['length']=11;
 		$f_opts['id']="phone_cel";
-				
+						
 		$f_phone_cel=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"phone_cel",$f_opts);
 		$this->addField($f_phone_cel);
 		//********************
@@ -77,7 +77,7 @@ class UserProfile_Model extends ModelSQL{
 		
 		$f_opts['alias']='Цветовая схема';
 		$f_opts['id']="color_palette";
-				
+						
 		$f_color_palette=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"color_palette",$f_opts);
 		$this->addField($f_color_palette);
 		//********************
@@ -85,7 +85,7 @@ class UserProfile_Model extends ModelSQL{
 		//*** Field cades_load_timeout ***
 		$f_opts = array();
 		$f_opts['id']="cades_load_timeout";
-				
+						
 		$f_cades_load_timeout=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"cades_load_timeout",$f_opts);
 		$this->addField($f_cades_load_timeout);
 		//********************
@@ -93,7 +93,7 @@ class UserProfile_Model extends ModelSQL{
 		//*** Field cades_chunk_size ***
 		$f_opts = array();
 		$f_opts['id']="cades_chunk_size";
-				
+						
 		$f_cades_chunk_size=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"cades_chunk_size",$f_opts);
 		$this->addField($f_cades_chunk_size);
 		//********************
@@ -101,7 +101,7 @@ class UserProfile_Model extends ModelSQL{
 		//*** Field reminders_to_email ***
 		$f_opts = array();
 		$f_opts['id']="reminders_to_email";
-				
+						
 		$f_reminders_to_email=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"reminders_to_email",$f_opts);
 		$this->addField($f_reminders_to_email);
 		//********************

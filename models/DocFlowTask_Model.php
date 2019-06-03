@@ -27,7 +27,7 @@ class DocFlowTask_Model extends ModelSQL{
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['autoInc']=TRUE;
 		$f_opts['id']="id";
-				
+						
 		$f_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"id",$f_opts);
 		$this->addField($f_id);
 		//********************
@@ -35,7 +35,7 @@ class DocFlowTask_Model extends ModelSQL{
 		//*** Field register_doc ***
 		$f_opts = array();
 		$f_opts['id']="register_doc";
-				
+						
 		$f_register_doc=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"register_doc",$f_opts);
 		$this->addField($f_register_doc);
 		//********************
@@ -43,7 +43,7 @@ class DocFlowTask_Model extends ModelSQL{
 		//*** Field recipient ***
 		$f_opts = array();
 		$f_opts['id']="recipient";
-				
+						
 		$f_recipient=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"recipient",$f_opts);
 		$this->addField($f_recipient);
 		//********************
@@ -51,7 +51,7 @@ class DocFlowTask_Model extends ModelSQL{
 		//*** Field end_date_time ***
 		$f_opts = array();
 		$f_opts['id']="end_date_time";
-				
+						
 		$f_end_date_time=new FieldSQLDateTimeTZ($this->getDbLink(),$this->getDbName(),$this->getTableName(),"end_date_time",$f_opts);
 		$this->addField($f_end_date_time);
 		//********************
@@ -59,7 +59,7 @@ class DocFlowTask_Model extends ModelSQL{
 		//*** Field date_time ***
 		$f_opts = array();
 		$f_opts['id']="date_time";
-				
+						
 		$f_date_time=new FieldSQLDateTimeTZ($this->getDbLink(),$this->getDbName(),$this->getTableName(),"date_time",$f_opts);
 		$this->addField($f_date_time);
 		//********************
@@ -67,7 +67,7 @@ class DocFlowTask_Model extends ModelSQL{
 		//*** Field doc_flow_importance_type_id ***
 		$f_opts = array();
 		$f_opts['id']="doc_flow_importance_type_id";
-				
+						
 		$f_doc_flow_importance_type_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"doc_flow_importance_type_id",$f_opts);
 		$this->addField($f_doc_flow_importance_type_id);
 		//********************
@@ -75,7 +75,7 @@ class DocFlowTask_Model extends ModelSQL{
 		//*** Field employee_id ***
 		$f_opts = array();
 		$f_opts['id']="employee_id";
-				
+						
 		$f_employee_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"employee_id",$f_opts);
 		$this->addField($f_employee_id);
 		//********************
@@ -83,7 +83,7 @@ class DocFlowTask_Model extends ModelSQL{
 		//*** Field close_date_time ***
 		$f_opts = array();
 		$f_opts['id']="close_date_time";
-				
+						
 		$f_close_date_time=new FieldSQLDateTimeTZ($this->getDbLink(),$this->getDbName(),$this->getTableName(),"close_date_time",$f_opts);
 		$this->addField($f_close_date_time);
 		//********************
@@ -91,7 +91,7 @@ class DocFlowTask_Model extends ModelSQL{
 		//*** Field close_doc ***
 		$f_opts = array();
 		$f_opts['id']="close_doc";
-				
+						
 		$f_close_doc=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"close_doc",$f_opts);
 		$this->addField($f_close_doc);
 		//********************
@@ -99,7 +99,7 @@ class DocFlowTask_Model extends ModelSQL{
 		//*** Field description ***
 		$f_opts = array();
 		$f_opts['id']="description";
-				
+						
 		$f_description=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"description",$f_opts);
 		$this->addField($f_description);
 		//********************
@@ -108,7 +108,7 @@ class DocFlowTask_Model extends ModelSQL{
 		$f_opts = array();
 		$f_opts['defaultValue']='FALSE';
 		$f_opts['id']="closed";
-				
+						
 		$f_closed=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"closed",$f_opts);
 		$this->addField($f_closed);
 		//********************
@@ -116,7 +116,7 @@ class DocFlowTask_Model extends ModelSQL{
 		//*** Field close_employee_id ***
 		$f_opts = array();
 		$f_opts['id']="close_employee_id";
-				
+						
 		$f_close_employee_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"close_employee_id",$f_opts);
 		$this->addField($f_close_employee_id);
 		//********************

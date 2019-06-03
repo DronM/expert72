@@ -24,7 +24,7 @@ class LinkedContractList_Model extends {
 		$f_opts['primaryKey'] = TRUE;
 		$f_opts['autoInc']=FALSE;
 		$f_opts['id']="id";
-				
+						
 		$f_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"id",$f_opts);
 		$this->addField($f_id);
 		//********************
@@ -32,7 +32,7 @@ class LinkedContractList_Model extends {
 		//*** Field contracts_ref ***
 		$f_opts = array();
 		$f_opts['id']="contracts_ref";
-				
+						
 		$f_contracts_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"contracts_ref",$f_opts);
 		$this->addField($f_contracts_ref);
 		//********************

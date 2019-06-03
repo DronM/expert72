@@ -1,6 +1,6 @@
 -- VIEW: contracts_list
 
-DROP VIEW contracts_list;
+--DROP VIEW contracts_list;
 
 CREATE OR REPLACE VIEW contracts_list AS
 	SELECT
@@ -79,6 +79,7 @@ CREATE OR REPLACE VIEW contracts_list AS
 		FROM client_payments
 		GROUP BY client_payments.contract_id
 	) AS pm ON pm.contract_id=t.id
+	ORDER BY t.date_time DESC
 	;
 	
 ALTER VIEW contracts_list OWNER TO ;
