@@ -1,4 +1,10 @@
 <?php
+require_once('Config.php');
+
+	require_once('common/BikInfo.php');
+	BikInfo::genFile(OUTPUT_PATH);
+exit;
+
 	echo time();
 	exit;
 //	echo 11%2;

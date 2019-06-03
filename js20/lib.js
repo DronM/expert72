@@ -1733,7 +1733,7 @@ EditDate.prototype.toISODate=function(str){if(str=="")return"";var t=str.substr(
 if(str.length>10){t+=":"+str.substr(10,2);}
 if(str.length>12){t+=":"+str.substr(12,2);}
 return t;}
-EditDate.prototype.getValue=function(){if(this.m_node&&this.m_node.value){var v="",c;for(var i=0;i<this.m_node.value.length;i++){c=this.m_node.value.charAt(i);v+=isNaN(c)?"":c;}
+EditDate.prototype.getValue=function(){if(this.m_node&&this.m_node.value){var v="",c;for(var i=0;i<this.m_node.value.length;i++){c=this.m_node.value.charAt(i);v+=(c==" "||isNaN(c))?"":c;}
 v=this.toISODate(v);if(v.length==0){v=null;}
 else if(this.m_validator){v=this.m_validator.correctValue(v);}
 return v;}}

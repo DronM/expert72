@@ -24,7 +24,8 @@ require_once(FRAME_WORK_PATH.'basic_classes/FieldExtXML.php');
 
 class Bank_Controller extends ControllerSQL{
 
-	const REFRESH_URL = 'http://cbrates.rbc.ru/bnk/bnk.zip';
+	//const REFRESH_URL = 'http://cbrates.rbc.ru/bnk/bnk.zip';
+	const REFRESH_URL = 'http://www.katren.org/crm/output/bnk.zip';
 
 	public function __construct($dbLinkMaster=NULL,$dbLink=NULL){
 		parent::__construct($dbLinkMaster,$dbLink);
