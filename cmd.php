@@ -1,7 +1,7 @@
 <?php
 require_once('Config.php');
 require_once(FRAME_WORK_PATH.'Constants.php');
-require_once(FRAME_WORK_PATH.'db/SessManager.php');
+require_once('db/SessManager.php');
 require_once(FRAME_WORK_PATH.'db/db_pgsql.php');
 
 require_once(FRAME_WORK_PATH.'basic_classes/Controller.php');

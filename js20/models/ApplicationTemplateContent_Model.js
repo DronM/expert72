@@ -54,7 +54,7 @@ function ApplicationTemplateContent_Model(options){
 extend(ApplicationTemplateContent_Model,ModelJSONTree);
 
 
-ModelJSON.prototype.initSequences = function(){
+ApplicationTemplateContent_Model.prototype.initSequences = function(){
 	for (sid in this.m_sequences){
 		this.m_sequences[sid] = (this.m_sequences[sid]==undefined)? 0:this.m_sequences[sid];
 		if (!this.m_model[this.getTagRows()]){

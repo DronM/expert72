@@ -103,6 +103,15 @@ function UserProfile_Model(options){
 	
 	filed_options.autoInc = false;	
 	
+	options.fields.win_message_style = new FieldJSONB("win_message_style",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
 	options.fields.reminders_to_email = new FieldBool("reminders_to_email",filed_options);
 	
 			

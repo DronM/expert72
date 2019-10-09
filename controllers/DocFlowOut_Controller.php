@@ -78,6 +78,12 @@ class DocFlowOut_Controller extends DocFlow_Controller{
 		$param = new FieldExtText('new_contract_number'
 				,array());
 		$pm->addParam($param);
+		$param = new FieldExtBool('allow_new_file_add'
+				,array());
+		$pm->addParam($param);
+		$param = new FieldExtJSONB('allow_edit_sections'
+				,array());
+		$pm->addParam($param);
 		
 		$pm->addParam(new FieldExtInt('ret_id'));
 		
@@ -164,6 +170,14 @@ class DocFlowOut_Controller extends DocFlow_Controller{
 			));
 			$pm->addParam($param);
 		$param = new FieldExtText('new_contract_number'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtBool('allow_new_file_add'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtJSONB('allow_edit_sections'
 				,array(
 			));
 			$pm->addParam($param);
@@ -430,6 +444,36 @@ class DocFlowOut_Controller extends DocFlow_Controller{
 		$opts['length']=36;
 		$opts['required']=TRUE;				
 		$pm->addParam(new FieldExtString('id',$opts));
+	
+			
+		$this->addPublicMethod($pm);
+
+			
+		$pm = new PublicMethod('sign_file');
+		
+				
+	$opts=array();
+	
+		$opts['length']=36;
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtString('file_id',$opts));
+	
+				
+	$opts=array();
+	
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtInt('doc_id',$opts));
+	
+				
+	$opts=array();
+					
+		$pm->addParam(new FieldExtText('file_data',$opts));
+	
+				
+	$opts=array();
+	
+		$opts['length']=250;				
+		$pm->addParam(new FieldExtString('file_path',$opts));
 	
 			
 		$this->addPublicMethod($pm);
@@ -909,6 +953,20 @@ class DocFlowOut_Controller extends DocFlow_Controller{
 			'DocFlowOutDialog_Model'
 			);			
 		}
+	}
+	
+	public function sign_file($pm){		
+		$file_data = NULL;
+		if(isset($_FILES) && isset($_FILES['file_data'])){
+			$file_data = $_FILES['file_data'];
+		}
+	
+		DocFlow_Controller::signFile(
+			$this,
+			$pm,
+			$file_data,
+			'out'
+		);
 	}
 
 

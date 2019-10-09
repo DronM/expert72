@@ -1,0 +1,42 @@
+<div id="{{id}}" class="form-group">
+	<div class="alert alert-info alert-styled-left alert-bordered">
+		<p>Установите разрешение на модификацию/добавление файлов по разделам.
+		</p>
+	</div>
+	<h2>{{descr}}
+	</h2>
+	<div>
+		<div id="{{id}}:secSetAll">
+		</div>
+		<div id="{{id}}:secUnsetAll">
+		</div>
+	</div>
+	<ul>
+		{{#sections}}
+		<li>
+			<div>
+				<input type="checkbox" id="{{id}}:section:{{fields.id}}" secId="{{fields.id}}" secIndex="{{ind}}"
+				class="sections sections-main_section {{#itemLength}}sections-with_items{{/itemLength}}"
+				{{#fields.checked}}checked="checked"{{/fields.checked}}>
+				</input>
+				 <label for="{{id}}:section:{{fields.id}}">{{fields.descr}}
+				 </label>
+			</div>	 
+			{{#itemLength}}
+			<ul parentSecIndex="{{ind}}">
+			{{#items}}
+				<li>
+					<input type="checkbox" id="{{id}}:subsection:{{fields.id}}" secId="{{fields.id}}"
+					class="sections sections-sub_section"
+					{{#fields.checked}}checked="checked"{{/fields.checked}}>
+					</input>
+					 <label for="{{id}}:subsection:{{fields.id}}">{{fields.descr}}
+					 </label>
+			 	</li>
+			{{/items}}
+			</ul>
+			{{/itemLength}}			 
+		</li>
+		{{/sections}}
+	</ul>
+</div>

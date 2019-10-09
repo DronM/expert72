@@ -12,6 +12,7 @@ CREATE OR REPLACE VIEW applications_print AS
 		d.cost_eval_validity_simult,
 		
 		fund_sources.name AS fund_sources_descr,
+		d.fund_percent,
 		
 		--applicant
 		d.applicant AS applicant,
@@ -47,7 +48,8 @@ CREATE OR REPLACE VIEW applications_print AS
 		kladr_parse_addr((d.developer->>'legal_address')::jsonb) AS developer_legal_address,
 		
 		d.auth_letter,
-		d.exp_cost_eval_validity
+		d.exp_cost_eval_validity,
+		d.cost_eval_validity_app_id
 		
 		
 	FROM applications AS d

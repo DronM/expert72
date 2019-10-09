@@ -22,6 +22,7 @@ require_once(FRAME_WORK_PATH.'basic_classes/FieldExtXML.php');
  */
 
 
+
 class DocFlowInside_Controller extends DocFlow_Controller{
 	public function __construct($dbLinkMaster=NULL,$dbLink=NULL){
 		parent::__construct($dbLinkMaster,$dbLink);
@@ -247,6 +248,36 @@ class DocFlowInside_Controller extends DocFlow_Controller{
 			
 		$this->addPublicMethod($pm);
 
+			
+		$pm = new PublicMethod('sign_file');
+		
+				
+	$opts=array();
+	
+		$opts['length']=36;
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtString('file_id',$opts));
+	
+				
+	$opts=array();
+	
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtInt('doc_id',$opts));
+	
+				
+	$opts=array();
+					
+		$pm->addParam(new FieldExtText('file_data',$opts));
+	
+				
+	$opts=array();
+	
+		$opts['length']=250;				
+		$pm->addParam(new FieldExtString('file_path',$opts));
+	
+			
+		$this->addPublicMethod($pm);
+
 		
 	}	
 	
@@ -270,6 +301,19 @@ class DocFlowInside_Controller extends DocFlow_Controller{
 	
 	}
 	
+	public function sign_file($pm){
+		$file_data = NULL;
+		if(isset($_FILES) && isset($_FILES['file_data'])){
+			$file_data = $_FILES['file_data'];
+		}
+	
+		DocFlow_Controller::signFile(
+			$this,
+			$pm,
+			$file_data,
+			'inside'
+		);
+	}
 
 
 }

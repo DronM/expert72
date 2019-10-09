@@ -1,5 +1,5 @@
-/** Copyright (c) 2017
-	Andrey Mikhalevich, Katren ltd.
+/** Copyright (c) 2017,2019
+ *	Andrey Mikhalevich, Katren ltd.
  */
 function UserProfile_View(id,options){	
 
@@ -104,6 +104,12 @@ function UserProfile_View(id,options){
 			}						
 		}));								
 
+		this.addElement(new WindowMessageStyleCtrl(id+":win_message_style",{
+			"onValueChange":function(){
+				self.getControlSave().setEnabled(true);
+			}
+		}));								
+
 		if(!user_email_confirmed){
 			this.addElement(new UserEmailConfirmation_View(id+":email_confirmation"));
 		}
@@ -129,7 +135,8 @@ function UserProfile_View(id,options){
 		new DataBinding({"control":this.getElement("color_palette")}),
 		new DataBinding({"control":this.getElement("cades_load_timeout")}),
 		new DataBinding({"control":this.getElement("cades_chunk_size")}),
-		new DataBinding({"control":this.getElement("reminders_to_email")})
+		new DataBinding({"control":this.getElement("reminders_to_email")}),
+		new DataBinding({"control":this.getElement("win_message_style")})
 	]);
 	
 	//write
@@ -144,7 +151,8 @@ function UserProfile_View(id,options){
 		new CommandBinding({"control":this.getElement("color_palette")}),
 		new CommandBinding({"control":this.getElement("cades_load_timeout")}),
 		new CommandBinding({"control":this.getElement("cades_chunk_size")}),
-		new CommandBinding({"control":this.getElement("reminders_to_email")})
+		new CommandBinding({"control":this.getElement("reminders_to_email")}),
+		new CommandBinding({"control":this.getElement("win_message_style")})
 	]);
 	
 	this.getControlSave().setEnabled(false);
@@ -157,3 +165,14 @@ function UserProfile_View(id,options){
 }
 extend(UserProfile_View,ViewObjectAjx);
 
+UserProfile_View.prototype.onSave = function(okFunc,failFunc,allFunc){	
+	var _okFunc = okFunc;
+	var self = this;
+	okFunc = function(){
+		var struc = window.getApp().getWinMessageStyle();
+		struc.win_width = self.getElement("win_message_style").getElement("win_width").getValue();
+		struc.win_position = self.getElement("win_message_style").getElement("win_position").getValue();
+		if(_okFunc)_okFunc.call(self);
+	}
+	UserProfile_View.superclass.onSave.call(this,okFunc,failFunc,allFunc);
+}

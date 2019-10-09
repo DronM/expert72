@@ -151,6 +151,22 @@ function DocFlowOutList_Model(options){
 	filed_options.autoInc = false;	
 	
 	options.fields.new_contract_number = new FieldText("new_contract_number",filed_options);
+		
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.allow_new_file_add = new FieldBool("allow_new_file_add",filed_options);
+		
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.allow_edit_sections = new FieldJSONB("allow_edit_sections",filed_options);
 	
 			
 				

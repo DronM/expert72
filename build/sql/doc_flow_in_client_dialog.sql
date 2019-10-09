@@ -62,11 +62,14 @@ CREATE OR REPLACE VIEW doc_flow_in_client_dialog AS
 				)
 			)
 		) AS files,
-		regs.reg_number AS reg_number_out
+		regs.reg_number AS reg_number_out,
+		coalesce(doc_out.allow_new_file_add,FALSE) AS allow_new_file_add,
+		doc_out.allow_edit_sections
 		
 	FROM doc_flow_in_client t
 	LEFT JOIN applications ON applications.id=t.application_id
 	LEFT JOIN doc_flow_in_client_reg_numbers AS regs ON regs.doc_flow_in_client_id=t.id
+	LEFT JOIN doc_flow_out AS doc_out ON doc_out.id = t.doc_flow_out_id
 	ORDER BY t.date_time DESC
 	;
 	

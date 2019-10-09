@@ -175,6 +175,15 @@ function RepQuarter_Model(options){
 	
 	options.fields.cur_estim_cost_recommend = new FieldFloat("cur_estim_cost_recommend",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.contract_id = new FieldInt("contract_id",filed_options);
+	
 		RepQuarter_Model.superclass.constructor.call(this,id,options);
 }
 extend(RepQuarter_Model,ModelXML);

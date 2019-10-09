@@ -158,3 +158,11 @@ FileUploaderDocFlowInside_View.prototype.getPublicMethodForFileDownload = functi
 	return pm;
 }
 
+FileUploaderDocFlowInside_View.prototype.getPublicMethodForFileSign = function(file){
+	var pm = (new DocFlowInside_Controller()).getPublicMethod("sign_file");
+	pm.setFieldValue("file_id",file.file_id);
+	pm.setFieldValue("doc_id",this.m_mainView.getElement("id").getValue());
+	pm.unsetFieldValue("file_path");
+	return pm;
+}
+

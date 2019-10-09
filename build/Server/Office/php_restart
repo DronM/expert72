@@ -1,0 +1,2 @@
+#!/bin/sh
+sudo service php7.0-fpm restart

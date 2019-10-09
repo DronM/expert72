@@ -82,6 +82,16 @@ FileUploaderDocFlowOutClient_View.prototype.getQuerySruc = function(file){
 	return struc;	
 }
 
+FileUploaderDocFlowOutClient_View.prototype.fileDeletable = function(file){
+	//Загружен этим документом - можно удалять
+	return (file.doc_flow_out && file.file_uploaded && file.doc_flow_out.id==this.m_mainView.getModel().getFieldValue("id"))? true:this.m_allowNewFileAdd;
+}
+
+FileUploaderDocFlowOutClient_View.prototype.fileSwitchable = function(file){
+	//Загружен этим документом - нельзя менять
+	return !(file.doc_flow_out && file.file_uploaded && file.doc_flow_out.id==this.m_mainView.getModel().getFieldValue("id"));
+}
+
 FileUploaderDocFlowOutClient_View.prototype.setFileOptions = function(fileOpts,file){
 	if (file.doc_flow_out){
 		if (!file.file_uploaded){
@@ -105,23 +115,17 @@ FileUploaderDocFlowOutClient_View.prototype.setFileOptions = function(fileOpts,f
 	else{
 		FileUploaderDocFlowOutClient_View.superclass.setFileOptions.call(this,fileOpts,file);
 	}	
-	/*
-	if (file.doc_flow_out || !file.file_uploaded){
-		if (!file.file_uploaded || file.doc_flow_out.id==this.m_mainView.getModel().getFieldValue("id")){
-			fileOpts.refTitle = "Загружен этим документом";	
-			fileOpts.refClass = "uploadedByThis";	
-		}
-		else{
-			fileOpts.refTitle = "Загружен документом №"+file.doc_flow_out.reg_number+" от "+DateHelper.format(DateHelper.strtotime(file.doc_flow_out.date_time),"d/m/y");	
-			fileOpts.refClass = "uploadedAfterPost";	
-		}
-	}
-	else{
-	
-		fileOpts.refTitle = "Загружен при подаче заявления";
-		fileOpts.refClass = "";	
-	}
-		
-	fileOpts.file_date_time_formatted = DateHelper.format(DateHelper.strtotime(file.date_time),"d/m/y");	
-	*/
 }
+
+FileUploaderDocFlowOutClient_View.prototype.removeUnregisteredFile = function(fileId,docId){
+	var app = this.m_mainView.getElement("applications_ref").getValue();
+	if(app&&!app.isNull()&&app.getKey()){
+		var pm = (new Application_Controller()).getPublicMethod("remove_unregistered_data_file");
+		pm.setFieldValue("file_id",fileId);
+		pm.setFieldValue("id",app.getKey());
+		pm.setFieldValue("doc_id",docId);
+		pm.setFieldValue("doc_type",this.m_documentType);		
+		pm.run();
+	}
+}
+

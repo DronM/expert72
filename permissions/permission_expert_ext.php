@@ -38,6 +38,10 @@ $permissions = array();
 			
 				$permissions['User_Controller_send_email_confirm']=TRUE;
 			
+				$permissions['User_Controller_private_delete']=TRUE;
+			
+				$permissions['User_Controller_private_put']=TRUE;
+			
 			$permissions['User_Controller_insert']=FALSE;
 		
 			$permissions['Captcha_Controller_get']=TRUE;
@@ -142,6 +146,12 @@ $permissions = array();
 		
 			$permissions['DocFlowIn_Controller_get_object']=TRUE;
 		
+			$permissions['DocFlowIn_Controller_get_file']=TRUE;
+		
+			$permissions['DocFlowIn_Controller_get_file_sig']=TRUE;
+		
+			$permissions['DocFlowIn_Controller_download_attachments']=TRUE;
+		
 				$permissions['DocFlowInside_Controller_insert']=TRUE;
 			
 				$permissions['DocFlowInside_Controller_update']=TRUE;
@@ -164,6 +174,12 @@ $permissions = array();
 			
 				$permissions['DocFlowInside_Controller_get_sig_details']=TRUE;
 			
+				$permissions['DocFlowInside_Controller_sign_file']=TRUE;
+			
+			$permissions['DocFlowOut_Controller_get_file']=TRUE;
+		
+			$permissions['DocFlowOut_Controller_get_file_sig']=TRUE;
+		
 			$permissions['DocFlowApprovement_Controller_get_object']=TRUE;
 		
 			$permissions['DocFlowApprovement_Controller_get_list']=TRUE;
@@ -228,6 +244,8 @@ $permissions = array();
 			
 				$permissions['DocFlowApprovementTemplate_Controller_complete']=TRUE;
 			
+			$permissions['DocFlowType_Controller_get_list']=TRUE;
+		
 return array_key_exists($contrId.'_'.$methId,$permissions);
 }
 ?>

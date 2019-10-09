@@ -10,6 +10,7 @@ require_once(FRAME_WORK_PATH.'basic_classes/ModelSQL.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLInt.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLString.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLText.php');
+require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLBool.php');
 require_once(FRAME_WORK_PATH.'basic_classes/ModelOrderSQL.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLDateTimeTZ.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLJSON.php');
@@ -156,6 +157,22 @@ class DocFlowOutList_Model extends ModelSQL{
 						
 		$f_new_contract_number=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"new_contract_number",$f_opts);
 		$this->addField($f_new_contract_number);
+		//********************
+		
+		//*** Field allow_new_file_add ***
+		$f_opts = array();
+		$f_opts['id']="allow_new_file_add";
+						
+		$f_allow_new_file_add=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"allow_new_file_add",$f_opts);
+		$this->addField($f_allow_new_file_add);
+		//********************
+		
+		//*** Field allow_edit_sections ***
+		$f_opts = array();
+		$f_opts['id']="allow_edit_sections";
+						
+		$f_allow_edit_sections=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"allow_edit_sections",$f_opts);
+		$this->addField($f_allow_edit_sections);
 		//********************
 		
 		//*** Field employees_ref ***

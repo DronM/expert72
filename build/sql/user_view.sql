@@ -1,6 +1,6 @@
 -- VIEW: user_view
 
-DROP VIEW user_view;
+--DROP VIEW user_view;
 
 CREATE OR REPLACE VIEW user_view AS
 	SELECT
@@ -12,7 +12,11 @@ CREATE OR REPLACE VIEW user_view AS
 		
 		CASE WHEN st.id IS NULL THEN pdfn_short_message_recipient_states_free()
 		ELSE short_message_recipient_states_ref(st)
-		END AS recipient_states_ref
+		END AS recipient_states_ref,
+		
+		(u.private_pem IS NOT NULL AND u.private_file IS NOT NULL) AS cloud_key_exists,
+		emp.snils
+		
 	FROM users u
 	LEFT JOIN time_zone_locales tzl ON tzl.id=u.time_zone_locale_id
 	LEFT JOIN employees emp ON emp.user_id=u.id

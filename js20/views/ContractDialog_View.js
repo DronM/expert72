@@ -198,7 +198,7 @@ function ContractDialog_View(id,options){
 			this.addElement(new FundSourceSelect(id+":fund_sources_ref",{			
 				"editContClassName":editContClassName,
 				"labelClassName":labelClassName,
-				"enabled":false
+				"enabled":options.templateOptions.notExpert
 			}));
 			
 			//таблица оплаты
@@ -515,6 +515,7 @@ function ContractDialog_View(id,options){
 			dlg_m.getNextRow();
 			//var dlg_m = new DocFlowOutDialog_Model();
 			dlg_m.setFieldValue("to_contracts_ref",this_ref);
+			dlg_m.setFieldValue("to_contract_main_experts_ref",options.model.getFieldValue("main_experts_ref"));
 		
 			dlg_m.setFieldValue("subject","Замечания по "+this_ref.getDescr());
 			dlg_m.setFieldValue("doc_flow_types_ref", window.getApp().getPredefinedItem("doc_flow_types","contr"));
@@ -670,6 +671,7 @@ function ContractDialog_View(id,options){
 		,new DataBinding({"control":this.getElement("linked_contracts")})
 		,new DataBinding({"control":this.getElement("contract_number")})
 		,new DataBinding({"control":this.getElement("contract_date")})
+		,new DataBinding({"control":this.getElement("fund_sources_ref"),"field":this.m_model.getField("fund_source_id")})
 		
 	];
 	
@@ -766,6 +768,7 @@ function ContractDialog_View(id,options){
 			,new CommandBinding({"control":this.getElement("expertise_cost_budget")})
 			,new CommandBinding({"control":this.getElement("expertise_cost_self_fund")})
 			,new CommandBinding({"control":this.getElement("primary_contract_reg_number")})						
+			,new CommandBinding({"control":this.getElement("fund_sources_ref"),"fieldId":"fund_source_id"})
 		];
 		if (options.templateOptions.costEvalValidity){
 			write_b.push(new CommandBinding({"control":this.getElement("order_document")}));

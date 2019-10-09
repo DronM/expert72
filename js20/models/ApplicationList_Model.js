@@ -103,6 +103,16 @@ function ApplicationList_Model(options){
 	
 	var filed_options = {};
 	filed_options.primaryKey = false;	
+	filed_options.defValue = true;
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.fund_percent = new FieldFloat("fund_percent",filed_options);
+	options.fields.fund_percent.getValidator().setMaxLength('15');
+		
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
 	
 	filed_options.autoInc = false;	
 	
@@ -336,6 +346,14 @@ function ApplicationList_Model(options){
 	filed_options.autoInc = false;	
 	
 	options.fields.exp_cost_eval_validity = new FieldBool("exp_cost_eval_validity",filed_options);
+		
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.cost_eval_validity_app_id = new FieldInt("cost_eval_validity_app_id",filed_options);
 	
 			
 				

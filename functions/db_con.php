@@ -1,7 +1,7 @@
 <?php
 require_once(dirname(__FILE__).'/../Config.php');
 require_once(FRAME_WORK_PATH.'db/db_pgsql.php');
-require_once(FRAME_WORK_PATH.'db/SessManager.php');
+require_once(dirname(__FILE__).'/../db/SessManager.php');
 require_once(FRAME_WORK_PATH.'Constants.php');
 
 	//Session connection 

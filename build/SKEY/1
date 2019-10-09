@@ -1,0 +1,51 @@
+Сертификат, экспортируемый через стандартный диалог просмотра сертификата не распознается openssl
+как можно решить проблему?
+
+http://grigory-panov.blogspot.com/2012/06/opensource-cryptopro.html
+
+http://soft.lissi.ru/ls_product/utils/p12fromcsp/
+
+To extract the private key, run the OpenSSL command:
+openssl pkcs12 -in <filename>.pfx  -nocerts -out key.pem
+
+
+
+КАК СОздать selfsigned certificate and convert it to pkcs12
+Generate private key: openssl genrsa 2048 > private.pem
+Generate the self signed certificate: openssl req -x509 -days 1000 -new -key private.pem -out public.pem
+If needed, create PFX: openssl pkcs12 -export -in public.pem -inkey private.pem -out mycert.pfx
+openssl pkcs12 -in "/home/andrey/www/htdocs/expert72/build/SKEY/private.pfx" -out "/home/andrey/www/htdocs/expert72/build/SKEY/private_out.pem" -nodes -clcerts -password pass:159753
+
+
+
+
+http://rodji.net/blog/2013/12/27/openssl-%D0%BF%D0%BE-%D0%B3%D0%BE%D1%81%D1%82-%D0%BF%D0%BE%D0%B4%D0%BF%D0%B8%D1%81%D1%8B%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5-%D1%88%D0%B8%D1%84%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5-%D0%BF%D1%80/
+Приватные ключи мoжно экспортировать из контейнеров КриптоПро при помощи P12FromGostCSP.exe (выбирается ключ из списка установленных, и имя файла вывода; формат вывода pkcs12, DER).
+
+Конвертирование pkcs12-ключа в pem-формат:
+$ openssl pkcs12 -in priv.pfx -out priv.pem -engine gost -nodes -clcerts
+Конвертирование сертификата в pem-формат:
+$ openssl x509 -inform DER -in pub.cer -out pub.crt
+
+Генерация ключа и запроса подписи сертификата:
+$ openssl req -newkey gost2001 -pkeyopt paramset:A -passout pass:your_password -subj "/C=RU/ST=Moscow/L=Moscow/O=organization/CN=sample.ru/emailAddress=user@sample.ru" -keyout priv.pem -out req.csr
+Подпись сертификата:
+$ openssl x509 -req -days 365 -in req.csr -signkey priv.pem -out pub.crt
+
+Получение публичного ключа из сертификата:
+$ openssl x509 -in pub.crt -pubkey -noout > pub.pem
+
+Получение подписи по ГОСТ (hex-вывод):
+$ openssl dgst -hex -sign priv.pem test.txt
+
+Шифрование (CMS/pkcs7):
+$ openssl smime -encrypt -engine gost -gost89 -binary -noattr -outform DER -in test.txt -out test.txt.enc pub.pem
+$ openssl smime -encrypt -engine gost -gost89 -binary -noattr -outform DER -in test.txt -out test.txt.enc priv.pem
+$ openssl smime -encrypt -engine gost -gost89 -binary -noattr -outform DER -in test.txt -out test.txt.enc priv.crt
+
+Подпись (вынесенная в отдельный файл, CMS/pkcs7):
+$ openssl smime -sign -signer priv.pem -engine gost -binary -noattr -outform DER -in test.txt -out test.txt.sig
+
+Подпись (включена в файл) и шифрование (CMS/pkcs7):
+$ openssl smime -sign -signer priv.pem -engine gost -nodetach -binary -noattr -outform DER -in test.txt -out test.txt.sig
+$ openssl smime -encrypt -engine gost -gost89 -binary -noattr -outform DER -in test.txt.sig -out test.txt.sig.enc pub.pem

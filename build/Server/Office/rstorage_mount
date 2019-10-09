@@ -2,7 +2,7 @@
 
 case "$1" in
         start)
-                sudo -u admin sshfs -o allow_other,reconnect,ServerAliveInterval=15,Server$
+                sudo -u admin sshfs -o allow_other,reconnect,ServerAliveInterval=15,ServerAliveCountMax=17280 admin@expertiza72.ru:/usr/share/client_files /media/rstorage
                 ;;
         stop)
                 sudo umount /media/rstorage

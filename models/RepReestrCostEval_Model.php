@@ -7,6 +7,7 @@
  */
 
 require_once(FRAME_WORK_PATH.'basic_classes/ModelReportSQL.php');
+require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLInt.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLString.php');
  
 class RepReestrCostEval_Model extends ModelReportSQL{
@@ -106,6 +107,15 @@ class RepReestrCostEval_Model extends ModelReportSQL{
 						
 		$f_argument_document=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"argument_document",$f_opts);
 		$this->addField($f_argument_document);
+		//********************
+		
+		//*** Field contract_id ***
+		$f_opts = array();
+		$f_opts['sysCol']=TRUE;
+		$f_opts['id']="contract_id";
+						
+		$f_contract_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"contract_id",$f_opts);
+		$this->addField($f_contract_id);
 		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}

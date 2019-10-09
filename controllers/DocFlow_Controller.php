@@ -25,6 +25,11 @@ require_once(FRAME_WORK_PATH.'basic_classes/FieldExtXML.php');
 
 require_once('common/downloader.php');
 require_once(USER_CONTROLLERS_PATH.'Application_Controller.php');
+require_once(USER_CONTROLLERS_PATH.'User_Controller.php');
+
+//ЭТО НУЖНО ДЛЯ ПОДПИСАНИЯ ВНУТРЕННИМ СЕРТИФИКАТОМ
+//ОТКЛЮЧЕНО, ТАК КАК НЕ ПРОВЕРЕНО
+//require_once(ABSOLUTE_PATH.'functions/file_upload_functions.php');
 
 require_once(ABSOLUTE_PATH.'functions/PKIManager.php');
 require_once(ABSOLUTE_PATH.'functions/pki.php');
@@ -40,6 +45,7 @@ class DocFlow_Controller extends ControllerSQL{
 	const ER_NOT_FOUND = 'Document not found!';
 	const ER_SIG_NOT_FOUND = 'ЭЦП не найдена!';
 	const ER_SIG_OTHER_OWNER = 'Владелец ЭЦП %s. Вам запрещено удалять чужую подпись';
+	const ER_SIGNATURE_NOT_FOUND = 'У сотрудника нет облачной подписи!@1005';
 
 	public function __construct($dbLinkMaster=NULL,$dbLink=NULL){
 		parent::__construct($dbLinkMaster,$dbLink);
@@ -346,22 +352,22 @@ class DocFlow_Controller extends ControllerSQL{
 					$all_sigs_deleted = TRUE;
 				}
 				
-				if ($all_sigs_deleted){
-					$this->getDbLinkMaster()->query(sprintf(
-						"UPDATE doc_flow_attachments
-						SET
-							file_signed=FALSE
-						WHERE file_id=%s
-						",
-						$this->getExtDbVal($pm,'file_id')
-					));
-					
-					$this->getDbLinkMaster()->query(sprintf(
-						"DELETE FROM file_verifications
-						WHERE file_id=%s",
-					$this->getExtDbVal($pm,'file_id'))
-					);
-				}
+			}
+
+			if ($all_sigs_deleted){
+				$this->getDbLinkMaster()->query(sprintf(
+					"UPDATE doc_flow_attachments
+					SET
+						file_signed=FALSE
+					WHERE file_id=%s",
+					$this->getExtDbVal($pm,'file_id')
+				));
+				
+				$this->getDbLinkMaster()->query(sprintf(
+					"DELETE FROM file_verifications
+					WHERE file_id=%s",
+				$this->getExtDbVal($pm,'file_id'))
+				);
 			}
 			
 			$this->getDbLinkMaster()->query("COMMIT");
@@ -490,11 +496,13 @@ class DocFlow_Controller extends ControllerSQL{
 						$ar['file_path'].
 						DIRECTORY_SEPARATOR.$this->getExtVal($pm,'file_id').$posf)
 						&&(
-							defined('FILE_STORAGE_DIR_MAIN') &&
-							!file_exists($fl = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.
-							Application_Controller::APP_DIR_PREF.$ar['to_application_id'].DIRECTORY_SEPARATOR.
-							$ar['file_path'].
-							DIRECTORY_SEPARATOR.$this->getExtVal($pm,'file_id').$posf)							
+							!defined('FILE_STORAGE_DIR_MAIN')
+							||(
+								!file_exists($fl = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.
+								Application_Controller::APP_DIR_PREF.$ar['to_application_id'].DIRECTORY_SEPARATOR.
+								$ar['file_path'].
+								DIRECTORY_SEPARATOR.$this->getExtVal($pm,'file_id').$posf)
+							)
 						)
 					)
 			)
@@ -502,8 +510,10 @@ class DocFlow_Controller extends ControllerSQL{
 				!$ar['to_application_id']
 				&& (!file_exists($fl = DOC_FLOW_FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$this->getExtVal($pm,'file_id').$posf)
 					&&(
-						defined('DOC_FLOW_FILE_STORAGE_DIR_MAIN') &&
-						!file_exists($fl = DOC_FLOW_FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$this->getExtVal($pm,'file_id').$posf)
+						!defined('DOC_FLOW_FILE_STORAGE_DIR_MAIN')
+						||(
+							!file_exists($fl = DOC_FLOW_FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$this->getExtVal($pm,'file_id').$posf)
+						)
 					)
 				)
 			)
@@ -536,6 +546,252 @@ class DocFlow_Controller extends ControllerSQL{
 			sprintf("SELECT doc_flow_%s_next_num(%d) AS num",$docFlowType,$typeId)		
 		,TRUE);
 		$this->addModel($model);	
+	}
+	
+	public static function signFile(&$controller,&$pm,&$uploadedFile,$docType){
+		prolongate_session();
+		
+		//Определим файл для подписания		
+		$upload_data = array(
+			'file_path' => $controller->getExtVal($pm,'file_path'),
+			'doc_id' => $controller->getExtDbVal($pm,'doc_id'),
+			'file_id_par' => $controller->getExtVal($pm,'file_id')			
+		);
+		
+		$db_link = $controller->getDbLinkMaster();
+							
+		$upload_data['file_signed'] = 'true';
+		
+		if($docType=='application'){
+			$sig_add = $controller->getExtVal($pm,'sig_add');
+			$upload_data['sig_add'] = (isset($sig_add)&&$sig_add=='true');		
+			$upload_data['original_file_id'] = $controller->getExtVal($pm,'original_file_id');
+			$upload_data['doc_flow_out_client_id'] = $controller->getExtVal($pm,'doc_flow_out_client_id');
+			$upload_data['db_app_id'] = $controller->getExtDbVal($pm,'application_id');
+			//$upload_data['file_signed'] = $controller->getExtVal($pm,'file_signed');
+			$upload_data['doc_type'] = $controller->getExtVal($pm,'doc_type');			
+			
+			$upload_data['file_path_par'] = $upload_data['file_path'];						
+			if ($upload_data['sig_add']){
+				check_app_folder($db_link,$upload_data['file_path']);
+				$upload_data['file_path'] = $upload_data['file_path_par'];
+			}
+			else if ($upload_data['doc_type']=='documents'){
+				//исх.письмо
+				$upload_data['file_path'] = CLIENT_OUT_FOLDER;
+				$upload_data['file_path_par'] = CLIENT_OUT_FOLDER;
+			}
+			else{
+				//раздел документации
+				//Нет никакой проверки?!
+				$upload_data['file_path'] = intval($upload_data['doc_id']);
+			}
+			
+			$upload_data['rel_dir'] = Application_Controller::APP_DIR_PREF.$upload_data['db_app_id'].DIRECTORY_SEPARATOR.
+				(($upload_data['doc_type']=='documents')? '':Application_Controller::dirNameOnDocType($upload_data['doc_type']).DIRECTORY_SEPARATOR).
+				$upload_data['file_path'];			
+				
+			$upload_data['upload_path'] = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$upload_data['rel_dir'].DIRECTORY_SEPARATOR;
+		}
+		else{
+			$upload_data['sig_add'] = 'true';
+			$upload_data['doc_type'] = $docType;
+			$upload_data['db_id'] = $controller->getExtDbVal($pm,'doc_id');
+		}		
+		
+		$file_id = $controller->getExtVal($pm,'file_id');
+		
+		if (isset($uploadedFile)&&count($uploadedFile['tmp_name'])&&is_uploaded_file($uploadedFile['tmp_name'][0])){
+			$upload_data['resumableFilename'] = $uploadedFile['name'][0];//md5($uploadedFile['tmp_name'][0]).'.'.pathinfo($uploadedFile['name'][0], PATHINFO_EXTENSION);
+			$file_uploaded = $upload_data['upload_path'].$upload_data['resumableFilename'];
+			$file_for_sign = $upload_data['upload_path'].$file_id;
+		
+			/** Загрузка файла разными функциями в зависимости от типа документа 
+			 *
+			 */
+			mkdir_or_error(dirname($file_uploaded));
+			if(!move_uploaded_file($uploadedFile['tmp_name'][0],$file_uploaded)){
+				throw_common_error('DocFlow_Controller->signFile: move_uploaded_file error');
+			}
+			 
+			if($docType=='application'){
+				process_application_file($upload_data,$db_link);
+			}
+			else{
+				process_document_file($upload_data,$db_link);
+			}
+		}
+		else{
+			//подписание уже загруженного файла
+			$ar = $db_link->query_first(sprintf(
+				"SELECT
+					at.file_name,
+					at.file_signed,
+					at.file_path,
+					CASE
+						WHEN at.doc_type='doc_flow_out' THEN out.to_application_id
+						WHEN at.doc_type='doc_flow_inside' THEN ct.application_id
+						ELSE NULL
+					END AS to_application_id
+				FROM doc_flow_attachments AS at
+				LEFT JOIN doc_flow_out AS out ON at.doc_type='doc_flow_out' AND at.doc_id=out.id
+				LEFT JOIN doc_flow_inside AS ins ON at.doc_type='doc_flow_inside' AND at.doc_id=ins.id
+				LEFT JOIN contracts AS ct ON ct.id=ins.contract_id
+				WHERE at.file_id=%s AND at.doc_id=%d AND at.doc_type='%s'",
+				$controller->getExtDbVal($pm,'file_id'),
+				$controller->getExtDbVal($pm,'doc_id'),
+				($docType=='out'||$docType=='inside')? 'doc_flow_'.$docType:'applications'
+			));
+			if(!is_array($ar) || !count($ar)){
+				throw new Exception(self::ER_STORAGE_FILE_NOT_FOUND);
+			}
+						
+			if (
+			(
+				$ar['to_application_id']
+				&& (!file_exists($file_for_sign = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
+						Application_Controller::APP_DIR_PREF.$ar['to_application_id'].DIRECTORY_SEPARATOR.
+						$ar['file_path'].
+						DIRECTORY_SEPARATOR.$file_id)
+						&&(
+							!defined('FILE_STORAGE_DIR_MAIN')
+							||(
+								!file_exists($file_for_sign = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.
+								Application_Controller::APP_DIR_PREF.$ar['to_application_id'].DIRECTORY_SEPARATOR.
+								$ar['file_path'].
+								DIRECTORY_SEPARATOR.$file_id)							
+							)
+						)
+					)
+			)
+			|| (
+				!$ar['to_application_id']
+				&& (!file_exists($file_for_sign = DOC_FLOW_FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$file_id)
+					&&(
+						!defined('DOC_FLOW_FILE_STORAGE_DIR_MAIN')
+						||(
+							!file_exists($file_for_sign = DOC_FLOW_FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$file_id)
+						)
+					)
+				)
+			)
+			|| is_dir($file_for_sign)
+			){
+				throw new Exception(self::ER_STORAGE_FILE_NOT_FOUND);
+			}
+			
+			if (isset($upload_data['file_path'])){
+				check_app_folder($db_link,$upload_data['file_path']);
+			}
+			else{
+				$upload_data['file_path'] = self::getDefAppDir($docType);
+			}
+			
+			if(isset($ar['to_application_id'])){
+				$upload_data['rel_dir'] = Application_Controller::APP_DIR_PREF.$ar['to_application_id'].DIRECTORY_SEPARATOR.$upload_data['file_path'];
+				
+				if (defined('FILE_STORAGE_DIR_MAIN')){
+					$upload_data['upload_folder_main'] = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$upload_data['rel_dir'];
+				}
+
+				//удалить zip
+				Application_Controller::removeAllZipFile($ar['to_application_id']);
+			}
+			else{
+				if (defined('DOC_FLOW_FILE_STORAGE_DIR_MAIN')){
+					$upload_data['upload_folder_main'] = DOC_FLOW_FILE_STORAGE_DIR_MAIN;
+				}
+				$upload_data['rel_dir'] = '';				
+			}
+			$upload_data['upload_path'] = dirname($file_for_sign).DIRECTORY_SEPARATOR;
+						
+		}
+		
+		//Подпись файла $file_for_sign
+		$ar = $db_link->query_first(sprintf(
+			"SELECT
+				private_pem,
+				cert_pem
+			FROM users
+			WHERE id=%d",
+			$_SESSION['user_id']
+		));
+		if(!is_array($ar) || !count($ar) || !isset($ar['private_pem'])){
+			throw new Exception(self::ER_SIGNATURE_NOT_FOUND);
+		}
+		
+		$upload_data['signature'] = 'true';
+		$upload_data['resumableFilename'] = md5(uniqid());
+		
+		try{
+			$pki_m = pki_create_manager();
+			$private_pem = $pki_m->tmpPath.md5(uniqid());
+			$cert_pem = $pki_m->tmpPath.md5(uniqid());
+			file_put_contents($private_pem,User_Controller::decrypt($ar['private_pem'], file_get_contents(PKI_PATH.'pki.1')));
+			file_put_contents($cert_pem,User_Controller::decrypt($ar['cert_pem'], file_get_contents(PKI_PATH.'pki.1')));
+			$pki_m->signFile($private_pem,$cert_pem,$file_for_sign,$upload_data['upload_path'].$upload_data['resumableFilename'],TRUE);
+		}
+		finally{
+			if(file_exists($private_pem)){
+				unlink($private_pem);
+			}
+			if(file_exists($cert_pem)){
+				unlink($cert_pem);
+			}
+			
+		}
+		
+		//обработка подписи		
+		try{
+			if($docType=='application'){
+				process_application_file($upload_data,$db_link);
+			}
+			else{
+				process_document_file($upload_data,$db_link);
+			}
+		}
+		catch(Exception $e){		
+		}
+		
+		//вернуть модель Signature_Model с информацией по подписи
+		$ar = $db_link->query_first(sprintf(
+		"SELECT
+			f_sig.id,
+			u_cert.subject_cert AS owner,
+			u_cert.date_time_from AS cert_from,
+			u_cert.date_time_to AS cert_to,
+			f_sig.sign_date_time,
+			ver.check_result AS check_result,
+			ver.check_time,
+			ver.error_str	
+		FROM file_signatures f_sig
+		LEFT JOIN user_certificates AS u_cert ON u_cert.id=f_sig.user_certificate_id
+		LEFT JOIN file_verifications AS ver ON ver.file_id=f_sig.file_id
+		WHERE f_sig.file_id=%s
+		ORDER BY f_sig.sign_date_time DESC
+		LIMIT 1",
+		$controller->getExtDbVal($pm,'file_id')
+		));
+
+		if(is_array($ar) && count($ar)){
+			$m_fields = array();
+			foreach($ar as $f_id=>$f_val){
+				array_push(
+					$m_fields,
+					new FieldXML($f_id,DT_STRING,array('value'=>$f_val))
+				);
+			}
+			$controller->addModel(
+				new ModelVars(
+					array('name'=>'Signature',
+						'id'=>'Signature_Model',
+						'values'=>$m_fields
+				))
+			);
+		}
+		else if(!is_null($e)){
+			throw $e;
+		}
 	}
 	
 

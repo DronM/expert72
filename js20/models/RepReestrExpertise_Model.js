@@ -184,6 +184,15 @@ function RepReestrExpertise_Model(options){
 	
 	options.fields.expertise_result_ret_date = new FieldDate("expertise_result_ret_date",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.contract_id = new FieldInt("contract_id",filed_options);
+	
 		RepReestrExpertise_Model.superclass.constructor.call(this,id,options);
 }
 extend(RepReestrExpertise_Model,ModelXML);

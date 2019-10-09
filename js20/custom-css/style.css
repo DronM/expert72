@@ -161,7 +161,7 @@ tr.grid_foot{
 	margin-right:1px;
 }
 
-.windowMessage{
+.windowMessageOverlap{
 	position:fixed;
 	top:0px;
 	left:80%;
@@ -173,7 +173,7 @@ tr.grid_foot{
 	height:100%;
 }
 
-.windowMessage:hover{
+.windowMessageOverlap:hover{
 	opacity:1;
 	filter: alpha(opacity=100);
 }
@@ -437,3 +437,10 @@ table,tr,td.noBorder{
 	margin:10px 10px;
 	display:block;
 }
+
+.docSectionDisabled{
+	color: transparent;
+	text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+	background-color:#ddd4d4;
+}
+

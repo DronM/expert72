@@ -38,6 +38,7 @@ function Application_Controller(options){
 	this.add_get_file_out_sig();
 	this.add_zip_all();
 	this.add_get_document_templates();
+	this.add_get_document_templates_for_contract();
 	this.add_remove_document_types();
 	this.add_download_app_print_expertise();
 	this.add_download_app_print_expertise_sig();
@@ -62,6 +63,7 @@ function Application_Controller(options){
 	this.add_get_contractor_list();
 	this.add_get_constr_name_list();
 	this.add_remove_unregistered_data_file();
+	this.add_sign_file();
 		
 }
 extend(Application_Controller,ControllerObjServer);
@@ -127,6 +129,12 @@ extend(Application_Controller,ControllerObjServer);
 	var options = {};
 	
 	var field = new FieldInt("fund_source_id",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldFloat("fund_percent",options);
 	
 	pm.addField(field);
 	
@@ -301,6 +309,12 @@ extend(Application_Controller,ControllerObjServer);
 	var options = {};
 	
 	var field = new FieldBool("exp_cost_eval_validity",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldInt("cost_eval_validity_app_id",options);
 	
 	pm.addField(field);
 	
@@ -402,6 +416,12 @@ extend(Application_Controller,ControllerObjServer);
 	
 	var options = {};
 	
+	var field = new FieldFloat("fund_percent",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
 	var field = new FieldInt("construction_type_id",options);
 	
 	pm.addField(field);
@@ -574,6 +594,12 @@ extend(Application_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	
+	var field = new FieldInt("cost_eval_validity_app_id",options);
+	
+	pm.addField(field);
+	
 		var options = {};
 				
 		pm.addField(new FieldBool("set_sent",options));
@@ -650,6 +676,16 @@ extend(Application_Controller,ControllerObjServer);
 	
 		pm.addField(new FieldString("templ",options));
 	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		options.maxlength = "4";
+	
+		pm.addField(new FieldString("doc_type",options));
+	
 			
 	this.addPublicMethod(pm);
 }
@@ -698,6 +734,9 @@ extend(Application_Controller,ControllerObjServer);
 	var f_opts = {};
 	
 	pm.addField(new FieldInt("fund_source_id",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldFloat("fund_percent",f_opts));
 	var f_opts = {};
 	
 	pm.addField(new FieldInt("construction_type_id",f_opts));
@@ -785,6 +824,9 @@ extend(Application_Controller,ControllerObjServer);
 	var f_opts = {};
 	
 	pm.addField(new FieldBool("exp_cost_eval_validity",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldInt("cost_eval_validity_app_id",f_opts));
 	pm.getField(this.PARAM_ORD_FIELDS).setValue("create_dt");
 	
 }
@@ -898,6 +940,29 @@ extend(Application_Controller,ControllerObjServer);
 	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('get_document_templates',opts);
 	
+				
+	
+	var options = {};
+	
+		pm.addField(new FieldDate("on_date",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			Application_Controller.prototype.add_get_document_templates_for_contract = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('get_document_templates_for_contract',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("contract_id",options));
+	
+			
 	this.addPublicMethod(pm);
 }
 
@@ -1438,6 +1503,88 @@ extend(Application_Controller,ControllerObjServer);
 		options.required = true;
 	
 		pm.addField(new FieldString("doc_type",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			Application_Controller.prototype.add_sign_file = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('sign_file',opts);
+	
+	pm.setRequestType('post');
+	
+	pm.setEncType(ServConnector.prototype.ENCTYPES.MULTIPART);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		options.maxlength = "36";
+	
+		pm.addField(new FieldString("file_id",options));
+	
+				
+	
+	var options = {};
+	
+		pm.addField(new FieldText("file_data",options));
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("application_id",options));
+	
+				
+	
+	var options = {};
+	
+		pm.addField(new FieldInt("original_file_id",options));
+	
+				
+	
+	var options = {};
+	
+		pm.addField(new FieldInt("doc_flow_out_client_id",options));
+	
+				
+	
+	var options = {};
+	
+		options.maxlength = "20";
+	
+		pm.addField(new FieldString("doc_type",options));
+	
+				
+	
+	var options = {};
+	
+		pm.addField(new FieldInt("doc_id",options));
+	
+				
+	
+	var options = {};
+	
+		options.maxlength = "250";
+	
+		pm.addField(new FieldString("file_path",options));
+	
+				
+	
+	var options = {};
+	
+		pm.addField(new FieldBool("sig_add",options));
+	
+				
+	
+	var options = {};
+	
+		pm.addField(new FieldBool("file_signed",options));
 	
 			
 	this.addPublicMethod(pm);

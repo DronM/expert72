@@ -235,6 +235,7 @@ Edit template instead.
 								<div id="{{{{id}}}}:service_cont"/>
 								<div id="{{{{id}}}}:primary_application"/>
 								<div id="{{{{id}}}}:fund_sources_ref"/>
+								<div id="{{{{id}}}}:fund_percent"/>
 							</div>
 							<div class="tab-pane has-padding" id="construction-tab">
 								<h3>Сведения об объекте</h3>

@@ -162,6 +162,22 @@
 	</xsl:choose>
 </xsl:template>
 
+<!-- hyper link to document -->
+<xsl:template match="row/ord">
+	<xsl:choose>
+	<xsl:when test="../contract_id">	
+		<td align="center" fieldId="ord" title="Показать контракт">
+			<a target="_blank" href="index.php?c=Contract_Controller&amp;f=get_object&amp;t=ContractDialog&amp;mode=edit&amp;v=Child&amp;id={../contract_id}">
+				<xsl:value-of select="node()"/>
+			</a>
+		</td>
+	</xsl:when>
+	<xsl:otherwise>
+		<td align="center" fieldId="ord">!!!<xsl:value-of select="node()"/>!!!</td>
+	</xsl:otherwise>
+	</xsl:choose>
+</xsl:template>
+
 <!-- заглушка -->
 <xsl:template match="row/sys_level_val">
 </xsl:template>

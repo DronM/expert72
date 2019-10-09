@@ -191,6 +191,15 @@ class RepQuarter_Model extends ModelReportSQL{
 		$f_cur_estim_cost_recommend=new FieldSQLFloat($this->getDbLink(),$this->getDbName(),$this->getTableName(),"cur_estim_cost_recommend",$f_opts);
 		$this->addField($f_cur_estim_cost_recommend);
 		//********************
+		
+		//*** Field contract_id ***
+		$f_opts = array();
+		$f_opts['sysCol']=TRUE;
+		$f_opts['id']="contract_id";
+						
+		$f_contract_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"contract_id",$f_opts);
+		$this->addField($f_contract_id);
+		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}
 

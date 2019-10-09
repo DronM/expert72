@@ -1,7 +1,7 @@
 <?php
 require_once(dirname(__FILE__)."/../Config.php");
 require_once(FRAME_WORK_PATH.'db/db_pgsql.php');
-require_once("EmailSender.php");
+require_once(dirname(__FILE__)."/EmailSender.php");
 
 class ExpertEmailSender extends EmailSender{
 
@@ -58,8 +58,7 @@ class ExpertEmailSender extends EmailSender{
 		}
 		return $mail_id;
 	}
-	public static function sendAllMail($delFiles=TRUE,&$db,
-			$smtpHost=NULL,$smtpPort=NULL,$smtpUser=NULL,$smtpPwd=NULL){
+	public static function sendAllMail($delFiles=TRUE,&$db,$smtpHost=NULL,$smtpPort=NULL,$smtpUser=NULL,$smtpPwd=NULL){
 		
 		//$smtpHost = is_null($smtpHost)? SMTP_HOST:$smtpHost;
 		//$smtpPort = is_null($smtpPort)? SMTP_PORT:$smtpPort;

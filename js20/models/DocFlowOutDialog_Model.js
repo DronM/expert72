@@ -151,6 +151,22 @@ function DocFlowOutDialog_Model(options){
 	filed_options.autoInc = false;	
 	
 	options.fields.new_contract_number = new FieldText("new_contract_number",filed_options);
+		
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.allow_new_file_add = new FieldBool("allow_new_file_add",filed_options);
+		
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.allow_edit_sections = new FieldJSONB("allow_edit_sections",filed_options);
 	
 			
 				
@@ -317,6 +333,17 @@ function DocFlowOutDialog_Model(options){
 	filed_options.autoInc = false;	
 	
 	options.fields.expertise_reject_type_id = new FieldInt("expertise_reject_type_id",filed_options);
+	
+			
+			
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.to_contract_main_experts_ref = new FieldJSONB("to_contract_main_experts_ref",filed_options);
 	
 		DocFlowOutDialog_Model.superclass.constructor.call(this,id,options);
 }

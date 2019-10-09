@@ -14,6 +14,7 @@ require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLEnum.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLBool.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLDateTimeTZ.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLJSON.php');
+require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLJSONB.php');
  
 
 require_once(ABSOLUTE_PATH.'controllers/Application_Controller.php');
@@ -151,6 +152,14 @@ class DocFlowOutClientDialog_Model extends ModelSQL{
 						
 		$f_attachment_files_only_sigs=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"attachment_files_only_sigs",$f_opts);
 		$this->addField($f_attachment_files_only_sigs);
+		//********************
+		
+		//*** Field doc_flow_out_attrs ***
+		$f_opts = array();
+		$f_opts['id']="doc_flow_out_attrs";
+						
+		$f_doc_flow_out_attrs=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"doc_flow_out_attrs",$f_opts);
+		$this->addField($f_doc_flow_out_attrs);
 		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}

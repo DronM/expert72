@@ -45,10 +45,13 @@ function DocFlowOutClientDialog_View(id,options){
 		attachments_only_sigs = options.model.getFieldValue("attachment_files_only_sigs");
 		sent = options.model.getFieldValue("sent");
 		is_contr_return = (options.model.getFieldValue("doc_flow_out_client_type")=="contr_return");
+		
+		this.m_docFlowOutAttrs = options.model.getFieldValue("doc_flow_out_attrs");
+
 	}
 	options.templateOptions = options.templateOptions || {};
 	options.templateOptions.fileCountOnlySigs = (attachments_only_sigs&&attachments_only_sigs.length&&attachments_only_sigs[0].files&&attachments_only_sigs[0].files.length)? attachments_only_sigs[0].files.length:"0";
-	options.templateOptions.fileCount = (attachments&&attachments.length&&attachments[0].files&&attachments[0].files.length)? attachments[0].files.length:"0";
+	options.templateOptions.fileCount = (attachments&&attachments.length&&attachments[0].files&&attachments[0].files.length)? attachments[0].files.length:"0";	
 	
 	this.m_cadesView = new Cades_View(id,options);
 		
@@ -130,7 +133,7 @@ function DocFlowOutClientDialog_View(id,options){
 					var v = this.getValue();
 					var app = self.getElement("applications_ref").getValue();
 					var this_ctrl = this;
-					if (app){
+					if (app&&!app.isNull()&&app.getKey()&&app.getKey()!="null"){
 						//unsent doc check
 						var pm = new DocFlowOutClient_Controller().getPublicMethod("check_type");
 						pm.setFieldValue("application_id",app.getKey());
@@ -284,20 +287,23 @@ DocFlowOutClientDialog_View.prototype.onAppClear = function(){
 }
 
 DocFlowOutClientDialog_View.prototype.onAppSelect = function(fields){
-	
 	if (fields.application_state.getValue()=="archive"
 	){
 		this.getElement("applications_ref").reset();
 		throw new Error("Неверный статус заявления!");
 	}
-	
+
 	var pm = this.getController().getPublicMethod("get_application_dialog");
 	pm.setFieldValue("application_id",fields.id.getValue());
 	pm.setFieldValue("id",this.getElement("id").getValue());
+	window.setGlobalWait(true);
 	var self = this;
 	pm.run({
 		"ok":function(resp){
 			self.onGetAppModel(resp);
+		},
+		"all":function(){
+			window.setGlobalWait(false);
 		}
 	});
 }
@@ -314,6 +320,9 @@ DocFlowOutClientDialog_View.prototype.onGetAppModel = function(resp){
 	
 	if (client_type=="contr_return"){
 		this.setFilesForSigning(resp);
+	}
+	else if (client_type=="contr_resp"){
+		this.getDocFlowOutAttrs();
 	}
 }
 
@@ -366,9 +375,9 @@ DocFlowOutClientDialog_View.prototype.onGetData = function(resp,cmd){
 	
 	this.setType(this.getElement("doc_flow_out_client_type").getValue());
 
-	if (this.m_fromApp)
+	if (this.m_fromApp){
 		this.onChangeType();
-	
+	}
 }
 
 DocFlowOutClientDialog_View.prototype.onCancel = function(){
@@ -394,11 +403,14 @@ DocFlowOutClientDialog_View.prototype.setType = function(tp){
 		DOMHelper.hide(document.getElementById(this.getId()+":documentFiles"));
 	}
 	else{
+		if(DOMHelper.hasClass(document.getElementById(this.getId()+":documentFiles"),"hidden")){
+			DOMHelper.show(document.getElementById(this.getId()+":documentFiles"));
+		}
 		var docs_n = document.getElementById(this.getId()+":tab-documentFiles-toggle");
 		var att_only_sigs_n = document.getElementById(this.getId()+":tab-commonFilesOnlySigs-toggle");
 		var att_n = document.getElementById(this.getId()+":tab-commonFiles-toggle");
 		
-		var tab;
+		var tab,tab_h1,tab_h2;
 		if (tp=="contr_return"){
 			//возврат подписанных документов
 			DOMHelper.hide(docs_n);
@@ -421,7 +433,6 @@ DocFlowOutClientDialog_View.prototype.setType = function(tp){
 		}		
 		
 		$('#documentTabs a[href="#'+tab+'"]').tab("show");
-		
 	}
 }
 
@@ -493,7 +504,7 @@ DocFlowOutClientDialog_View.prototype.setFilesForSigning = function(resp){
 
 DocFlowOutClientDialog_View.prototype.getDocsForSigning = function(){
 	var app = this.getElement("applications_ref").getValue();
-	if (app&&app.getKey()){
+	if (app&&!app.isNull()&&app.getKey()&&app.getKey()!="null"){
 		var pm = (this.getController()).getPublicMethod("get_files_for_signing");
 		pm.setFieldValue("application_id",app.getKey());
 		var self = this;
@@ -507,11 +518,15 @@ DocFlowOutClientDialog_View.prototype.getDocsForSigning = function(){
 
 DocFlowOutClientDialog_View.prototype.onChangeTypeContinue = function(){
 	var v = this.getElement("doc_flow_out_client_type").getValue();
-	this.getElement("subject").setValue(this.m_subjects[v]);
+	this.getElement("subject").setValue(this.m_subjects[v]);	
 	this.setType(v);
-	if (v=="contr_return"){
+	if (v=="contr_return"){		
 		this.getDocsForSigning();
 	}	
+	else if (v=="contr_resp"){
+		var self = this;
+		this.getDocFlowOutAttrs();
+	}
 }
 
 DocFlowOutClientDialog_View.prototype.onChangeType = function(deleteAllAttachments){
@@ -572,3 +587,69 @@ DocFlowOutClientDialog_View.prototype.changeTypeContinue = function(v,ctrlContex
 	}
 
 }
+
+DocFlowOutClientDialog_View.prototype.getDocFlowOutAttrs = function(){
+	var app = this.getElement("applications_ref").getValue();
+	if(!app||app.isNull()||!app.getKey()){
+		return;
+	}
+	var self = this;
+	var pm = (new DocFlowOutClient_Controller).getPublicMethod("get_doc_flow_out_attrs");
+	pm.setFieldValue("application_id",app.getKey());
+	pm.run({
+		"ok":function(resp){
+			var m = resp.getModel("DocFlowOutAttrList_Model");
+			if(m.getNextRow()){
+				var attrs = m.getFieldValue("attrs");
+				if(typeof(attrs)=="string"){
+					attrs = CommonHelper.unserialize(attrs);
+				}
+				self.getModel().setFieldValue("doc_flow_out_attrs",attrs);
+				self.m_docFlowOutAttrs = attrs;
+				
+				var doc_sections = DOMHelper.getElementsByAttr("docSection",self.getNode(),"class");
+				var sec_id;
+				for(var i=0;i<doc_sections.length;i++){
+					sec_id = parseInt(doc_sections[i].getAttribute("docSection"));
+					if(CommonHelper.inArray(sec_id,self.m_docFlowOutAttrs.allow_edit_sections)==-1){
+						//disable section
+						doc_sections[i].title="Изменение данного раздела запрещено.";
+						//header
+						var doc_sec_h = DOMHelper.getElementsByAttr("panel-heading",doc_sections[i],"class");
+						if(doc_sec_h.length){
+							DOMHelper.addClass(doc_sec_h[0],"docSectionDisabled");
+						}
+						//uploader
+						var doc_sec_uploader = DOMHelper.getElementsByAttr("uploader-file-add",doc_sections[i],"class");
+						for(var j=0;j< doc_sec_uploader.length;j++){
+							DOMHelper.hide(doc_sec_uploader[j]);
+						}
+					}
+					else if(!self.m_docFlowOutAttrs.allow_new_file_add){
+						//изменение разрешено - но не удаление!!!
+						var doc_sec_del = DOMHelper.getElementsByAttr("fileDeleteBtn",doc_sections[i],"class");
+						for(var j=0;j< doc_sec_del.length;j++){
+							DOMHelper.hide(doc_sec_del[j]);
+						}						
+					}					
+				}
+				if(!self.m_docFlowOutAttrs.allow_new_file_add){
+					var doc_warn = DOMHelper.getElementsByAttr("noNewFileAddWarn",self.getNode(),"class");
+					if(doc_warn.length){
+						DOMHelper.show(doc_warn[0]);
+					}				
+				}
+				for(var tab_id in self.m_documentTabs){
+					if(self.m_documentTabs[tab_id] && self.m_documentTabs[tab_id].control){
+						self.m_documentTabs[tab_id].control.m_allowNewFileAdd = self.m_docFlowOutAttrs.allow_new_file_add;
+					}
+				}
+			}
+		}
+	});
+}
+
+DocFlowOutClientDialog_View.prototype.getUploaderOptions = function(){
+	return {"allowNewFileAdd":self.m_docFlowOutAttrs? self.m_docFlowOutAttrs.allow_new_file_add:true};
+}
+

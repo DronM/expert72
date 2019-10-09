@@ -11,6 +11,13 @@
 		</div>
 	</div>
 	
+	<div class="content-group-lg noNewFileAddWarn{{#allowNewFileAdd}} hidden{{/allowNewFileAdd}}">
+		<div class="alert alert-danger alert-styled-left alert-bordered">
+			<p>Возможность добавлять новые файлы отсутствует.</p>
+			<p>Разрешена только замена старых файлов на новые и добавление информационно-удостоверяющих листов.</p>
+		</div>
+	</div>	
+	
 	<div id="upload-container">
 		<div id="{{id}}:file-sign-all" class="btn bg-{{COLOR_CLASS}} signAllBtn hidden" type="button" title="Подписать все неподписанные файлы выбранной подписью"><span class="glyphicon glyphicon-lock"></span> Подписать все файлы <span id="{{id}}:total_files_for_sign" class="badge badge-danger hidden" title="Количество файлов для подписи">0</span>
 		</div>
@@ -29,8 +36,9 @@
 	
 	<div class="panel-group panel-group-control content-group-lg">	
 		{{#items}}
-		<div class="panel">
-			<div class="panel-heading bg-info">
+		<div class="panel docSection" docSection="{{fields.id}}"
+		{{#disabled}}title="Изменение данного раздела запрещено."{{/disabled}}>
+			<div class="panel-heading bg-info{{#disabled}} docSectionDisabled{{/disabled}}">
 				<h6 class="panel-title">
 					<a data-toggle="collapse" href="#collapsible-control-group_{{docType}}_{{fields.id}}" aria-expanded="false" class="collapsed file_section">
 					{{#no_items}}<span id="{{id}}:total_item_files_{{fields.id}}" class="badge badge-danger" title="Количество файлов в разделе">{{files.length}}</span>{{/no_items}} {{fields.descr}}</a>
@@ -41,10 +49,12 @@
 					{{#no_items}}
 					<div class="uploader-file-list-{{docType}}" item_id="{{fields.id}}">						
 						{{#notReadOnly}}
+						{{#enabled}}
 						<div class="uploader-file-add-{{docType}} btn btn-sm" title="Добавить файл к данному разделу">
 							<span class="glyphicon glyphicon-plus"/>
 							<span class="text-thin">Файлы можно добавить перетаскиванием в эту область</span>
-						</div>						
+						</div>		
+						{{/enabled}}				
 						{{/notReadOnly}}
 						<ul id="{{id}}:file-list_{{fields.id}}">
 						{{#files}}
@@ -55,9 +65,10 @@
 					</div>					
 					{{/no_items}}
 					{{#items}}
-					<div class="panel-group panel-group-control content-group-sm">
+					<div class="panel-group panel-group-control content-group-sm docSection" docSection="{{fields.id}}"
+					{{#disabled}}title="Изменение данного раздела запрещено."{{/disabled}}>
 						<div class="panel panel-white">
-							<div class="panel-heading">
+							<div class="panel-heading{{#disabled}} docSectionDisabled{{/disabled}}">
 								<h6 class="panel-title">
 									<a class="collapsed" data-toggle="collapse" href="#collapsible-control-right-group-{{docType}}-{{fields.id}}" aria-expanded="false" class="file_section">
 										<span id="{{id}}:total_item_files_{{fields.id}}" class="badge badge-danger" title="Количество файлов в разделе">{{files.length}}</span> {{fields.descr}}
@@ -68,10 +79,12 @@
 								<div class="panel-body">
 									<div class="uploader-file-list-{{docType}}" item_id="{{fields.id}}">						
 										{{#notReadOnly}}
+										{{#enabled}}
 										<div class="uploader-file-add uploader-file-add-{{docType}} btn btn-sm" title="Добавить файл к данному разделу">
 											<span class="glyphicon glyphicon-plus"/>
 											<span class="text-thin">Файлы можно добавить перетаскиванием в эту область</span>
-										</div>										
+										</div>
+										{{/enabled}}
 										{{/notReadOnly}}
 										<ul id="{{id}}:file-list_{{fields.id}}">
 										{{#files}}

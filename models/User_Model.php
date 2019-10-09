@@ -15,6 +15,7 @@ require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLPassword.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLBool.php');
 require_once(FRAME_WORK_PATH.'basic_classes/ModelOrderSQL.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLDateTimeTZ.php');
+require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLJSONB.php');
  
 class User_Model extends ModelSQL{
 	
@@ -195,6 +196,31 @@ class User_Model extends ModelSQL{
 						
 		$f_cades_chunk_size=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"cades_chunk_size",$f_opts);
 		$this->addField($f_cades_chunk_size);
+		//********************
+		
+		//*** Field private_pem ***
+		$f_opts = array();
+		$f_opts['id']="private_pem";
+						
+		$f_private_pem=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"private_pem",$f_opts);
+		$this->addField($f_private_pem);
+		//********************
+		
+		//*** Field private_file ***
+		$f_opts = array();
+		$f_opts['id']="private_file";
+						
+		$f_private_file=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"private_file",$f_opts);
+		$this->addField($f_private_file);
+		//********************
+		
+		//*** Field win_message_style ***
+		$f_opts = array();
+		$f_opts['defaultValue']='{"win_width":"18","win_position":"overlap"}';
+		$f_opts['id']="win_message_style";
+						
+		$f_win_message_style=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"win_message_style",$f_opts);
+		$this->addField($f_win_message_style);
 		//********************
 	
 		$order = new ModelOrderSQL();		

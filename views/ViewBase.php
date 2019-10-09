@@ -587,6 +587,16 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/rs/Grid.rs_ru.js'));
 	}
 
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/GridSearchInf.js'));
+		
+	if (
+	(isset($_SESSION['locale_id']) && $_SESSION['locale_id']=='ru')
+	||
+	(!isset($_SESSION['locale_id']) && DEF_LOCALE=='ru')
+	){
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/rs/GridSearchInf.rs_ru.js'));
+	}
+
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/VariantStorage.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/GridCommands.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/GridCmd.js'));
@@ -1029,6 +1039,16 @@ class ViewBase extends ViewHTMLXSLT {
 	}
 
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/WindowMessage.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/WindowMessageStyleCtrl.js'));
+		
+	if (
+	(isset($_SESSION['locale_id']) && $_SESSION['locale_id']=='ru')
+	||
+	(!isset($_SESSION['locale_id']) && DEF_LOCALE=='ru')
+	){
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/rs/WindowMessageStyleCtrl.rs_ru.js'));
+	}
+
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/WindowTempMessage.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/GridCellHeadDOCProcessed.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/GridCellHeadDOCDate.js'));
@@ -1426,6 +1446,7 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/DocFlowInAttachZipBtn.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/OfficeBankAccSelect.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/FileSigContainer.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/AllowSectionEdit.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/Enum_role_types.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/rs_ru.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/rs_common_ru.js'));
@@ -1733,6 +1754,8 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ExpertiseProlongation_Model.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ExpertiseProlongationList_Model.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/ExpertiseProlongation_Controller.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/Signature_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocumentTemplateForContractList_Model.js'));
 	
 			if (isset($_SESSION['scriptId'])){
 				$script_id = $_SESSION['scriptId'];
@@ -1749,6 +1772,8 @@ class ViewBase extends ViewHTMLXSLT {
 			$this->getVarModel()->addField(new Field('departments_ref',DT_STRING));
 			$this->getVarModel()->addField(new Field('department_boss',DT_STRING));												
 			$this->getVarModel()->addField(new Field('recipient_states_ref',DT_STRING));
+			$this->getVarModel()->addField(new Field('cloud_key_exists',DT_BOOL));
+			$this->getVarModel()->addField(new Field('snils',DT_STRING));
 		}
 		if (isset($_SESSION['role_id'])){
 			$this->getVarModel()->addField(new Field('user_name_full',DT_STRING));
@@ -1761,6 +1786,7 @@ class ViewBase extends ViewHTMLXSLT {
 			
 			$this->getVarModel()->addField(new Field('user_email',DT_STRING));
 			$this->getVarModel()->addField(new Field('user_email_confirmed',DT_STRING));
+			$this->getVarModel()->addField(new Field('win_message_style',DT_STRING));
 			
 			if (defined('CUSTOM_APP_UPLOAD_SERVER')){
 				$this->getVarModel()->addField(new Field('custom_app_upload_server',DT_STRING));
@@ -1803,6 +1829,7 @@ class ViewBase extends ViewHTMLXSLT {
 			
 			$this->setVarValue('user_email',$_SESSION['user_email']);
 			$this->setVarValue('user_email_confirmed',$_SESSION['user_email_confirmed']);
+			$this->setVarValue('win_message_style',$_SESSION['win_message_style']);
 		
 			$this->setVarValue('role_id',$_SESSION['role_id']);
 			$this->setVarValue('user_name',$_SESSION['user_name']);
@@ -1822,6 +1849,8 @@ class ViewBase extends ViewHTMLXSLT {
 				$this->setVarValue('departments_ref',$_SESSION['departments_ref']);
 				$this->setVarValue('department_boss',$_SESSION['department_boss']);
 				$this->setVarValue('recipient_states_ref',$_SESSION['recipient_states_ref']);
+				$this->setVarValue('cloud_key_exists',$_SESSION['cloud_key_exists']);
+				$this->setVarValue('snils',$_SESSION['snils']);
 			}
 			
 			//wget -O crypto_plugin.txt https://www.cryptopro.ru/sites/default/files/products/cades/latest_2_0.txt

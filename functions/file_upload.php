@@ -34,6 +34,7 @@ define('ER_BAD_EXT', 'Неверное расширение файла!');
 define('ER_FILE_EXISTS_IN_FOLDER', 'Файл с таким именем уже присутствует в разделе %s данного заявления!');
 define('ER_SIGNED','Документ уже подписан!');
 define('ER_SNILS_EXISTS','Документ уже подписан физическим лицом %s');
+define('ER_NEW_FILES_NOT_ALLOWED','Добавление новых файлов запрещено!');
 
 define('DIR_MAX_LENGTH',500);
 define('CLIENT_OUT_FOLDER','Исходящие заявителя');
@@ -46,11 +47,15 @@ function throw_common_error($erStr){
 function mkdir_or_error($dir){
 	if (!file_exists($dir)){
 		if (strlen($dir)>DIR_MAX_LENGTH){
-			throw new Exception('Path lenght exceeds maximum value!');
+			throw_common_error('file_uploader Path lenght exceeds maximum value!');
 		}
-		@mkdir($dir,0775,TRUE);
-		if (!file_exists($dir)){
-			throw_common_error('file_uploader mkdir_or_error '.$dir);
+		if(@mkdir($dir,0775,TRUE)!==TRUE){
+			if (is_dir($dir)) {
+				// The directory was created by a concurrent process, so do nothing, keep calm and carry on
+			} else {
+				$error = error_get_last();
+				throw_common_error('file_uploader mkdir_or_error '.$dir.' error:'.$error['message']);
+			}		
 		}
 	}
 }
@@ -241,7 +246,8 @@ function get_doc_flow_out_client_id_for_db($dbLink,$appIdForDb,$docFlowOutClient
 		"SELECT
 			(application_id=%d) AS app_checked,
 			doc_flow_out_client_type,
-			user_id
+			user_id,
+			doc_flow_out_client_out_attrs(application_id) AS out_attrs			
 		FROM doc_flow_out_client
 		WHERE id=%d",$appIdForDb,$db_doc_flow_out_client_id
 	));
@@ -355,23 +361,34 @@ try{
 				//application state and owner				
 				if (isset($_REQUEST['doc_flow_out_client_id'])){
 					//Кроме письма клиента с отзывом - это всегда можно отправлять!					
-					$doc_flow_iut_client_fields = [];
+					$doc_flow_out_client_fields = [];
 					$db_doc_flow_out_client_id = get_doc_flow_out_client_id_for_db(
 							$dbLink,
 							$db_app_id,
 							$_REQUEST['doc_flow_out_client_id'],
-							$doc_flow_iut_client_fields
+							$doc_flow_out_client_fields
 					);
 					if (
-					($doc_flow_iut_client_fields['doc_flow_out_client_type']!='app_contr_revoke')
-					&& ($doc_flow_iut_client_fields['doc_flow_out_client_type']!='date_prolongate')
+					($doc_flow_out_client_fields['doc_flow_out_client_type']!='app_contr_revoke')
+					&& ($doc_flow_out_client_fields['doc_flow_out_client_type']!='date_prolongate')
 					){
 						//обычная проверка на статус
 						Application_Controller::checkSentState($dbLink,$db_app_id,TRUE);
 					}
-					else if ($_SESSION['role_id']!='admin' && $doc_flow_iut_client_fields['user_id']!=$_SESSION['user_id']){
+					else if ($_SESSION['role_id']!='admin' && $doc_flow_out_client_fields['user_id']!=$_SESSION['user_id']){
 						//Проверка только на пользователя
 						throw new Exception(Application_Controller::ER_OTHER_USER_APP);
+					}
+					
+					if(
+					$doc_flow_out_client_fields['doc_flow_out_client_type']=='contr_resp'
+					&&!isset($_REQUEST['original_file_id'])
+					){
+						//Дополнительная проверка - можно ли добавлять новые файлы
+						$attrs = json_decode($doc_flow_out_client_fields['out_attrs']);
+						if (!$attrs->allow_new_file_add){
+							throw new Exception(ER_NEW_FILES_NOT_ALLOWED);
+						}
 					}
 				}
 				else{

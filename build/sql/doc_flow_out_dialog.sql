@@ -104,7 +104,9 @@ CREATE OR REPLACE VIEW doc_flow_out_dialog AS
 		
 		contracts.expertise_result,
 		expertise_reject_types_ref(expertise_reject_types) AS expertise_reject_types_ref,
-		expertise_reject_types.id AS expertise_reject_type_id
+		expertise_reject_types.id AS expertise_reject_type_id,
+		
+		employees_ref(employees3) AS to_contract_main_experts_ref
 		
 	FROM doc_flow_out
 	LEFT JOIN applications ON applications.id=doc_flow_out.to_application_id
@@ -116,7 +118,7 @@ CREATE OR REPLACE VIEW doc_flow_out_dialog AS
 	LEFT JOIN doc_flow_types ON doc_flow_types.id=doc_flow_out.doc_flow_type_id
 	LEFT JOIN employees ON employees.id=doc_flow_out.employee_id
 	LEFT JOIN employees AS employees2 ON employees2.id=doc_flow_out.signed_by_employee_id
-	
+	LEFT JOIN employees AS employees3 ON employees3.id=contracts.main_expert_id
 	
 	LEFT JOIN (
 		SELECT

@@ -13,7 +13,9 @@
  */
 function ConstrTechnicalFeatureGrid(id,options){
 	options = options || {};
-	var model = new TechnicalFeature_Model();
+	var model = new TechnicalFeature_Model({
+		"primaryKeyIndex":true
+	});
 	
 	CommonHelper.merge(options,
 	{	
@@ -22,6 +24,7 @@ function ConstrTechnicalFeatureGrid(id,options){
 		"controller":new TechnicalFeature_Controller({"clientModel":model}),
 		"editInline":true,
 		"editWinClass":null,
+		"inlineInsertPlace":"last",
 		"popUpMenu":new PopUpMenu(),
 		"commands":new GridCmdContainerAjx(id+":cmd",{
 			"cmdInsert":(options.editEnabled==undefined||options.editEnabled),

@@ -17,6 +17,7 @@
 
 <xsl:template match="controller"><![CDATA[<?php]]>
 <xsl:call-template name="add_requirements"/>
+
 class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@parentId"/>{
 	public function __construct($dbLinkMaster=NULL,$dbLink=NULL){
 		parent::__construct($dbLinkMaster,$dbLink);<xsl:apply-templates/>
@@ -47,6 +48,19 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 	
 	}
 	
+	public function sign_file($pm){
+		$file_data = NULL;
+		if(isset($_FILES) &amp;&amp; isset($_FILES['file_data'])){
+			$file_data = $_FILES['file_data'];
+		}
+	
+		DocFlow_Controller::signFile(
+			$this,
+			$pm,
+			$file_data,
+			'inside'
+		);
+	}
 
 </xsl:template>
 

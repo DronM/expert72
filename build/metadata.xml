@@ -2,7 +2,7 @@
 <metadata owner="expert72">
 	<versions>
 		<version dateOpen="2017-09-27 12:09:48" dateClose="2017-12-08 10:12:08">1.001 
-		<lastBuild>2019-06-03 14:42:26</lastBuild></version>
+		<lastBuild>2019-10-09 07:13:13</lastBuild></version>
 		<version dateOpen="2017-12-08 11:12:01" dateClose="2017-12-08 11:12:04">1.002</version>
 		<version dateOpen="2017-12-08 11:12:20" dateClose="2017-12-08 11:12:20">1.0.3</version>
 		<version dateOpen="2017-12-12 11:12:07" dateClose="2017-12-12 11:12:07">1.0.4</version>
@@ -111,6 +111,7 @@
 		<version dateOpen="2019-02-12 06:02:54" dateClose="2019-06-01 05:06:35">1.0.108</version>
 		<version dateOpen="2019-06-01 05:06:40" dateClose="2019-06-03 11:06:48">1.0.109</version>
 		<version dateOpen="2019-06-03 14:06:23" dateClose="2019-06-03 14:06:42">1.0.110</version>
+		<version dateOpen="2019-06-04 14:06:40" dateClose="2019-10-09 07:10:13">1.0.111</version>
 	</versions>
 	<globalFilters>
 		<field id="user_id"/>
@@ -618,10 +619,10 @@
 			</defaultOrder>
 			<field id="bik" dataType="String" primaryKey="TRUE" autoInc="FALSE" length="9"/>
 			<field id="codegr" dataType="String" length="9"/>
-			<field id="name" dataType="String" length="50"/>
+			<field id="name" dataType="Text"/>
 			<field id="korshet" dataType="String" length="20"/>
-			<field id="adres" dataType="String" length="70"/>
-			<field id="gor" dataType="String" length="31"/>
+			<field id="adres" dataType="Text"/>
+			<field id="gor" dataType="Text"/>
 			<field id="tgroup" dataType="Bool"/>
 			<index id="banks_codegr_idx">
 				<field id="codegr"/>
@@ -702,6 +703,9 @@
 			<field id="reminders_to_email" dataType="Bool" alias="&#x414;&#x443;&#x431;&#x43B;&#x438;&#x440;&#x43E;&#x432;&#x430;&#x442;&#x44C; &#x43D;&#x430;&#x43F;&#x43E;&#x43C;&#x438;&#x43D;&#x430;&#x43D;&#x438;&#x44F; &#x43D;&#x430; &#x44D;&#x43B;&#x435;&#x43A;&#x442;&#x440;&#x43E;&#x43D;&#x43D;&#x443;&#x44E; &#x43F;&#x43E;&#x447;&#x442;&#x443;" defaultValue="TRUE"/>
 			<field id="cades_load_timeout" dataType="Int" alias="&#x41A;&#x440;&#x438;&#x43F;&#x442;&#x43E;&#x41F;&#x440;&#x43E; &#x43F;&#x43B;&#x430;&#x433;&#x438;&#x43D;: &#x412;&#x440;&#x435;&#x43C;&#x44F; &#x43E;&#x436;&#x438;&#x434;&#x430;&#x43D;&#x438;&#x44F; &#x437;&#x430;&#x433;&#x440;&#x443;&#x437;&#x43A;&#x438; &#x43F;&#x43B;&#x430;&#x433;&#x438;&#x43D;&#x430;" defaultValue="60000"/>
 			<field id="cades_chunk_size" dataType="Int" alias="&#x41A;&#x440;&#x438;&#x43F;&#x442;&#x43E;&#x41F;&#x440;&#x43E; &#x43F;&#x43B;&#x430;&#x433;&#x438;&#x43D;: &#x420;&#x430;&#x437;&#x43C;&#x435;&#x440; &#x447;&#x430;&#x441;&#x442;&#x438; &#x444;&#x430;&#x439;&#x43B;&#x430; &#x432; &#x431;&#x430;&#x439;&#x442;&#x430;&#x445; &#x43F;&#x440;&#x438; &#x43F;&#x43E;&#x442;&#x43E;&#x447;&#x43D;&#x43E;&#x439; &#x437;&#x430;&#x433;&#x440;&#x443;&#x437;&#x43A;&#x435;" defaultValue="1048576"/>
+			<field id="private_pem" dataType="Text"/>
+			<field id="private_file" dataType="JSONB"/>
+			<field id="win_message_style" dataType="JSONB" defaultValue="{&quot;win_width&quot;:&quot;18&quot;,&quot;win_position&quot;:&quot;overlap&quot;}"/>
 			<index unique="TRUE" id="users_name_idx">
 				<expression>lower(name)</expression>
 			</index>
@@ -730,13 +734,12 @@
 			<field id="name_full" dataType="String" length="250"/>
 			<field id="banned" dataType="Bool"/>
 			<field id="email" dataType="String" alias="&#x42D;&#x43B;.&#x43F;&#x43E;&#x447;&#x442;&#x430;"/>
-			<field id="role_descr" dataType="String" alias="&#x420;&#x43E;&#x43B;&#x44C;"/>
 			<field id="role_id" dataType="String"/>
-			<field id="time_zone_locale_id" dataType="Int"/>
-			<field id="time_zone_locale_descr" dataType="String"/>
+			<field id="time_zone_locales_ref" dataType="JSON"/>
 			<field id="phone_cel" dataType="String" length="11" alias="&#x41C;&#x43E;&#x431;.&#x442;&#x435;&#x43B;&#x435;&#x444;&#x43E;&#x43D;"/>
 			<field id="color_palette" dataType="Text" length="" alias="&#x426;&#x432;&#x435;&#x442;&#x43E;&#x432;&#x430;&#x44F; &#x441;&#x445;&#x435;&#x43C;&#x430;"/>
 			<field id="reminders_to_email" dataType="Bool"/>
+			<field id="private_file" dataType="JSONB"/>
 		</model>
 		<model id="UserProfile" parent="ModelSQL" dataTable="user_profile" virtual="TRUE">
 			<field id="id" dataType="Int" primaryKey="TRUE" alias="&#x41A;&#x43E;&#x434;"/>
@@ -747,6 +750,7 @@
 			<field id="color_palette" dataType="Text" length="" alias="&#x426;&#x432;&#x435;&#x442;&#x43E;&#x432;&#x430;&#x44F; &#x441;&#x445;&#x435;&#x43C;&#x430;"/>
 			<field id="cades_load_timeout" dataType="Int"/>
 			<field id="cades_chunk_size" dataType="Int"/>
+			<field id="win_message_style" dataType="JSONB"/>
 			<field id="reminders_to_email" dataType="Bool"/>
 			<globalFilter id="user_id" fieldId="id"/>
 		</model>
@@ -933,6 +937,10 @@
 		<model id="DocumentTemplateAllList" parent="ModelSQL" virtual="TRUE" dataTable="document_templates_all_list">
 			<field id="documents" dataType="JSON"/>
 		</model>
+		<model id="DocumentTemplateForContractList" parent="ModelSQL" virtual="TRUE">
+			<field id="document_type" dataType="String"/>
+			<field id="sections" dataType="JSON"/>
+		</model>
 		<model id="ExpertSection" parent="ModelSQL" dataTable="expert_sections" virtual="FALSE">
 			<field id="document_type" dataType="Enum" enumId="document_types" primaryKey="TRUE" required="TRUE"/>
 			<field id="construction_type_id" dataType="Int" primaryKey="TRUE"/>
@@ -1000,6 +1008,7 @@
 			<field id="modification" dataType="Bool" defaultValue="FALSE"/>
 			<field id="audit" dataType="Bool" defaultValue="FALSE"/>
 			<field id="fund_source_id" dataType="Int" refTable="fund_sources" refField="id"/>
+			<field id="fund_percent" dataType="Float" length="15" precision="2" defaultValue="0"/>
 			<field id="construction_type_id" dataType="Int" refTable="construction_types" refField="id"/>
 			<field id="applicant" dataType="JSONB"/>
 			<field id="customer" dataType="JSONB"/>
@@ -1029,6 +1038,7 @@
 			<field id="auth_letter_file" dataType="JSONB"/>
 			<field id="update_dt" dataType="DateTimeTZ"/>
 			<field id="exp_cost_eval_validity" dataType="Bool" defaultValue="FALSE"/>
+			<field id="cost_eval_validity_app_id" dataType="Int"/>
 			<index id="applicatios_user_idx">
 				<field id="user_id"/>
 			</index>
@@ -1053,6 +1063,7 @@
 			<field id="expertise_type" dataType="Enum" enumId="expertise_types"/>
 			<field id="construction_types_ref" dataType="JSON"/>
 			<field id="fund_sources_ref" dataType="JSON"/>
+			<field id="fund_percent" dataType="Float"/>
 			<field id="cost_eval_validity" dataType="Bool"/>
 			<field id="cost_eval_validity_simult" dataType="Bool"/>
 			<field id="modification" dataType="Bool"/>
@@ -1516,6 +1527,8 @@
 			<field id="content" dataType="Text"/>
 			<field id="doc_flow_in_id" dataType="Int" refTable="doc_flow_in" refField="id"/>
 			<field id="new_contract_number" dataType="Text"/>
+			<field id="allow_new_file_add" dataType="Bool"/>
+			<field id="allow_edit_sections" dataType="JSONB"/>
 			<index id="doc_flow_out_date_time_idx">
 				<field id="date_time"/>
 			</index>
@@ -1591,6 +1604,9 @@
 			<field id="expertise_result" dataType="String"/>
 			<field id="expertise_reject_types_ref" dataType="JSON"/>
 			<field id="expertise_reject_type_id" dataType="Int"/>
+			<field id="allow_new_file_add" dataType="Bool"/>
+			<field id="allow_edit_sections" dataType="JSONB"/>
+			<field id="to_contract_main_experts_ref" dataType="JSONB"/>
 		</model>
 		<model id="DocFlowOutProcess" parent="ModelSQL" dataTable="doc_flow_out_processes" virtual="FALSE">
 			<field id="doc_flow_out_id" dataType="Int" refTable="doc_flow_out" refField="id" required="TRUE" primaryKey="TRUE"/>
@@ -2169,6 +2185,7 @@
 			<field id="doc_flow_out_client_type" dataType="String"/>
 			<field id="attachment_files" dataType="JSON"/>
 			<field id="attachment_files_only_sigs" dataType="JSON"/>
+			<field id="doc_flow_out_attrs" dataType="JSONB"/>
 			<globalFilter id="user_id"/>
 		</model>
 		<model id="DocFlowOutClientCorrectionList" parent="ModelSQL" virtual="TRUE" server="FALSE">
@@ -2480,6 +2497,7 @@
 			<field id="primary_contract_reg_number" dataType="String" length="20"/>
 			<field id="experts_for_notification" dataType="JSONB"/>
 			<field id="contract_return_date_on_sig" dataType="Bool" defaultValue="FALSE"/>
+			<field id="fund_source_id" dataType="Int" refTable="fund_sources" refField="id"/>
 			<index id="contracts_reg_number_idx" unique="TRUE">
 				<field id="reg_number"/>
 			</index>
@@ -2761,6 +2779,7 @@
 			<field id="date_time" dataType="Date" alias="&#x414;&#x430;&#x442;&#x430; &#x43F;&#x440;&#x435;&#x434;&#x43E;&#x441;&#x442;&#x430;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x44F; &#x434;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x43E;&#x432;"/>
 			<field id="pay_date" dataType="Date" alias="&#x414;&#x430;&#x442;&#x430; &#x432;&#x43D;&#x435;&#x441;&#x435;&#x43D;&#x438;&#x44F; &#x43F;&#x43B;&#x430;&#x442;&#x44B;"/>
 			<field id="expertise_result_ret_date" dataType="Date" alias="&#x414;&#x430;&#x442;&#x430; &#x432;&#x440;&#x443;&#x447;&#x435;&#x43D;&#x438;&#x44F; &#x437;&#x430;&#x43A;&#x43B;&#x44E;&#x447;&#x435;&#x43D;&#x438;&#x44F;"/>
+			<field id="contract_id" dataType="Int" sysCol="TRUE"/>
 		</model>
 		<model id="RepReestrCostEval" parent="ModelReportSQL" virtual="TRUE" server="TRUE">
 			<field id="ord" dataType="String" alias="&#x2116;"/>
@@ -2772,6 +2791,7 @@
 			<field id="exeprtise_res_number_date" dataType="String" alias="&#x2116; &#x438; &#x434;&#x430;&#x442;&#x430; &#x437;&#x430;&#x43A;&#x43B;&#x44E;&#x447;&#x435;&#x43D;&#x438;&#x44F;"/>
 			<field id="order_document" dataType="String" alias="&#x421;&#x432;&#x435;&#x434;&#x435;&#x43D;&#x438;&#x44F; &#x43E; &#x440;&#x435;&#x448;&#x435;&#x43D;&#x438;&#x438; &#x43F;&#x43E; &#x43E;&#x431;&#x44A;&#x435;&#x43A;&#x442;&#x443;"/>
 			<field id="argument_document" dataType="String" alias="&#x421;&#x432;&#x435;&#x434;&#x435;&#x43D;&#x438;&#x44F; &#x43E;&#x431; &#x43E;&#x441;&#x43F;&#x430;&#x440;&#x438;&#x432;&#x430;&#x43D;&#x438;&#x438;"/>
+			<field id="contract_id" dataType="Int" sysCol="TRUE"/>
 		</model>
 		<model id="RepReestrPay" parent="ModelReportSQL" virtual="TRUE" server="TRUE">
 			<field id="ord" dataType="String" alias="&#x2116;"/>
@@ -2786,6 +2806,7 @@
 			<field id="total" dataType="Float" alias="&#x421;&#x443;&#x43C;&#x43C;&#x430; &#x43E;&#x43F;&#x43B;&#x430;&#x442;&#x44B;"/>
 			<field id="pay_docum_number" dataType="String" alias="&#x41D;&#x43E;&#x43C;&#x435;&#x440; &#x43F;/&#x43F;"/>
 			<field id="pay_docum_date" dataType="Date" alias="&#x414;&#x430;&#x442;&#x430; &#x43F;/&#x43F;"/>
+			<field id="contract_id" dataType="Int" sysCol="TRUE"/>
 		</model>
 		<model id="RepReestrContract" parent="ModelReportSQL" virtual="TRUE" server="TRUE">
 			<field id="ord" dataType="String" alias="&#x2116;"/>
@@ -2805,6 +2826,7 @@
 			<field id="back_to_work_date" dataType="String" alias="&#x414;&#x430;&#x442;&#x430; &#x43D;&#x430; &#x434;&#x43E;&#x440;&#x430;&#x431;&#x43E;&#x442;&#x43A;&#x443;"/>
 			<field id="akt_number_date" dataType="String" alias="&#x410;&#x43A;&#x442;"/>
 			<field id="comment_text" dataType="String" alias="&#x41A;&#x43E;&#x43C;&#x43C;&#x435;&#x43D;&#x442;&#x430;&#x440;&#x438;&#x439;"/>
+			<field id="contract_id" dataType="Int" sysCol="TRUE"/>
 		</model>
 		<model id="RepQuarter" parent="ModelReportSQL" virtual="TRUE" server="TRUE">
 			<field id="ord" dataType="String" alias="&#x2116;"/>
@@ -2824,6 +2846,7 @@
 			<field id="in_estim_cost_recommend" alias="&#x412;&#x445;&#x43E;&#x434;.&#x441;&#x43C;&#x435;&#x442;&#x43D;&#x430;&#x44F; &#x440;&#x435;&#x43A;&#x43E;&#x43C;&#x435;&#x43D;&#x434;.&#x441;&#x442;&#x43E;&#x438;&#x43C;."/>
 			<field id="cur_estim_cost" dataType="Float" alias="&#x422;&#x435;&#x43A;&#x443;&#x449;&#x430;&#x44F; &#x441;&#x43C;&#x435;&#x442;&#x43D;.&#x441;&#x442;&#x43E;&#x438;&#x43C;."/>
 			<field id="cur_estim_cost_recommend" dataType="Float" alias="&#x422;&#x435;&#x43A;&#x443;&#x449;&#x430;&#x44F; &#x440;&#x435;&#x43A;&#x43E;&#x43C;&#x435;&#x43D;&#x434;.&#x441;&#x43C;&#x435;&#x442;&#x43D;.&#x441;&#x442;&#x43E;&#x438;&#x43C;."/>
+			<field id="contract_id" dataType="Int" sysCol="TRUE"/>
 		</model>
 		<model id="Service" parent="ModelSQL" dataTable="services" virtual="FALSE">
 			<defaultOrder>
@@ -2914,6 +2937,14 @@
 			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE"/>
 			<field id="descr" dataType="String" length="250"/>
 			<field id="url" dataType="String" length="250"/>
+		</model>
+		<model id="Signature" parent="ModelSQL" virtual="TRUE">
+			<field id="id" dataType="Int" required="TRUE" primaryKey="TRUE" autoInc="TRUE"/>
+			<field id="check_result" dataType="Bool"/>
+			<field id="owner" dataType="JSON"/>
+			<field id="check_time" dataType="Float"/>
+			<field id="error_str" dataType="Text"/>
+			<field id="sign_date_time" dataType="DateTimeTZ"/>
 		</model>
 	</models>
 	<constants>
@@ -3074,6 +3105,15 @@
 				<field id="id" dataType="Int" required="TRUE"/>
 			</publicMethod>
 			<publicMethod id="send_email_confirm"/>
+			<publicMethod id="private_delete">
+				<field id="user_id" dataType="Int" required="TRUE"/>
+				<field id="file_id" dataType="String" length="36"/>
+			</publicMethod>
+			<publicMethod id="private_put" encType="multipart" requestType="post">
+				<field id="user_id" dataType="Int" required="TRUE"/>
+				<field id="private_file_data" dataType="Text"/>
+				<field id="pwd" dataType="String" length="50"/>
+			</publicMethod>
 		</controller>
 		<controller id="MailForSending" parentId="ControllerSQL">
 			<publicMethod id="get_list" modelId="MailForSendingList"/>
@@ -3246,6 +3286,7 @@
 				<field id="id" dataType="Int" required="TRUE"/>
 				<field id="inline" dataType="Int" required="TRUE"/>
 				<field id="templ" dataType="String" required="TRUE" length="100"/>
+				<field id="doc_type" dataType="String" required="TRUE" length="4"/>
 			</publicMethod>
 			<publicMethod id="get_list" modelId="ApplicationList"/>
 			<publicMethod id="complete" patternFieldId="id" modelId="ApplicationList"/>
@@ -3265,7 +3306,12 @@
 			<publicMethod id="zip_all">
 				<field id="application_id" dataType="Int" required="TRUE"/>
 			</publicMethod>
-			<publicMethod id="get_document_templates" modelId="DocumentTemplateAllList"/>
+			<publicMethod id="get_document_templates" modelId="DocumentTemplateAllList">
+				<field id="on_date" dataType="Date"/>
+			</publicMethod>
+			<publicMethod id="get_document_templates_for_contract" modelId="DocumentTemplateAllList">
+				<field id="contract_id" dataType="Int" required="TRUE"/>
+			</publicMethod>
 			<publicMethod id="remove_document_types">
 				<field id="application_id" dataType="Int" required="TRUE"/>
 				<field id="document_types" dataType="JSON" required="TRUE"/>
@@ -3361,6 +3407,18 @@
 				<field id="doc_id" dataType="Int" required="TRUE"/>
 				<field id="doc_type" dataType="String" required="TRUE"/>
 			</publicMethod>
+			<publicMethod id="sign_file" modelId="Signature" encType="multipart" requestType="post">
+				<field id="file_id" dataType="String" length="36" required="TRUE"/>
+				<field id="file_data" dataType="Text"/>
+				<field id="application_id" dataType="Int" required="TRUE"/>
+				<field id="original_file_id" dataType="Int"/>
+				<field id="doc_flow_out_client_id" dataType="Int"/>
+				<field id="doc_type" dataType="String" length="20"/>
+				<field id="doc_id" dataType="Int"/>
+				<field id="file_path" dataType="String" length="250"/>
+				<field id="sig_add" dataType="Bool"/>
+				<field id="file_signed" dataType="Bool"/>
+			</publicMethod>
 		</controller>
 		<controller id="ApplicationClient" parentIdJS="ControllerObjClient" server="FALSE">
 			<publicMethod id="insert" modelId="ApplicationClient"/>
@@ -3441,6 +3499,12 @@
 			<publicMethod id="get_sig_details">
 				<field id="id" dataType="String" length="36" required="TRUE"/>
 			</publicMethod>
+			<publicMethod id="sign_file" modelId="Signature" encType="multipart" requestType="post">
+				<field id="file_id" dataType="String" length="36" required="TRUE"/>
+				<field id="doc_id" dataType="Int" required="TRUE"/>
+				<field id="file_data" dataType="Text"/>
+				<field id="file_path" dataType="String" length="250"/>
+			</publicMethod>
 		</controller>
 		<controller id="DocFlowIn" parentId="DocFlow_Controller" parentType="user" state="TRUE">
 			<publicMethod id="insert" modelId="DocFlowIn"/>
@@ -3497,6 +3561,12 @@
 			</publicMethod>
 			<publicMethod id="get_sig_details">
 				<field id="id" dataType="String" length="36" required="TRUE"/>
+			</publicMethod>
+			<publicMethod id="sign_file" modelId="Signature" encType="multipart" requestType="post">
+				<field id="file_id" dataType="String" length="36" required="TRUE"/>
+				<field id="doc_id" dataType="Int" required="TRUE"/>
+				<field id="file_data" dataType="Text"/>
+				<field id="file_path" dataType="String" length="250"/>
 			</publicMethod>
 		</controller>
 		<controller id="DocFlowImportanceType" parentId="ControllerSQL">
@@ -3703,6 +3773,9 @@
 			</publicMethod>
 			<publicMethod id="get_correction_list">
 				<field id="id" dataType="Int" required="TRUE"/>
+			</publicMethod>
+			<publicMethod id="get_doc_flow_out_attrs">
+				<field id="application_id" dataType="Int" required="TRUE"/>
 			</publicMethod>
 		</controller>
 		<controller id="DocFlowInClient" parentId="ControllerSQL">
@@ -4071,7 +4144,12 @@
 		<permission type="allow" controllerId="Reminder" methodId="set_viewed" roleId="expert_ext"/>
 		<permission type="allow" controllerId="DocFlowIn" methodId="get_list" roleId="expert_ext"/>
 		<permission type="allow" controllerId="DocFlowIn" methodId="get_object" roleId="expert_ext"/>
+		<permission type="allow" controllerId="DocFlowIn" methodId="get_file" roleId="expert_ext"/>
+		<permission type="allow" controllerId="DocFlowIn" methodId="get_file_sig" roleId="expert_ext"/>
+		<permission type="allow" controllerId="DocFlowIn" methodId="download_attachments" roleId="expert_ext"/>
 		<permission type="allow" controllerId="DocFlowInside" methodId="all" roleId="expert_ext"/>
+		<permission type="allow" controllerId="DocFlowOut" methodId="get_file" roleId="expert_ext"/>
+		<permission type="allow" controllerId="DocFlowOut" methodId="get_file_sig" roleId="expert_ext"/>
 		<permission type="allow" controllerId="DocFlowApprovement" methodId="get_object" roleId="expert_ext"/>
 		<permission type="allow" controllerId="DocFlowApprovement" methodId="get_list" roleId="expert_ext"/>
 		<permission type="allow" controllerId="DocFlowApprovement" methodId="insert" roleId="expert_ext"/>
@@ -4087,6 +4165,7 @@
 		<permission type="allow" controllerId="Employee" methodId="get_list" roleId="expert_ext"/>
 		<permission type="allow" controllerId="Employee" methodId="complete" roleId="expert_ext"/>
 		<permission type="allow" controllerId="DocFlowApprovementTemplate" methodId="all" roleId="expert_ext"/>
+		<permission type="allow" controllerId="DocFlowType" methodId="get_list" roleId="expert_ext"/>
 		<!-- CLIENT PERMISSIONS-->
 		<permission type="allow" controllerId="User" methodId="all" roleId="client"/>
 		<permission type="revoke" controllerId="User" methodId="insert" roleId="client"/>
@@ -4245,6 +4324,11 @@
 		<jsTemplate id="WindowPrint" file="controls/tmpl/WindowPrint.html"/>
 		<jsTemplate id="VariantStorageSaveView" file="controls/tmpl/VariantStorageSaveView.html"/>
 		<jsTemplate id="VariantStorageOpenView" file="controls/tmpl/VariantStorageOpenView.html"/>
+		<!--
+		<jsTemplate id="TabManager" file="controls/tmpl/TabManager.html" />
+		<jsTemplate id="TabHead" file="controls/tmpl/TabHead.html" />
+		<jsTemplate id="TabContent" file="controls/tmpl/TabContent.html" />
+		-->
 		<jsTemplate id="ViewKladr" file="tmpl/ViewKladr.html"/>
 		<jsTemplate id="Captcha" file="tmpl/Captcha.html"/>
 		<jsTemplate id="ErrorControl" file="tmpl/ErrorControl.html"/>
@@ -4279,6 +4363,7 @@
 		<jsTemplate id="ShortMessageChat" file="tmpl/ShortMessageChat.html"/>
 		<jsTemplate id="DocFlowOutClientCorrectionList" file="tmpl/DocFlowOutClientCorrectionList.html"/>
 		<jsTemplate id="UserEmailConfirmation_View" file="tmpl/UserEmailConfirmation_View.html"/>
+		<jsTemplate id="AllowSectionEdit" file="tmpl/AllowSectionEdit.html"/>
 	</jsTemplates>
 	<packages>
 		<package id="Bank" version="1.0.0" author="Andrey Mikhalevich"/>
@@ -4514,6 +4599,8 @@
 		<jsScript file="controls/GridBody.js"/>
 		<jsScript file="controls/Grid.js"/>
 		<jsScript file="controls/rs/Grid.rs_ru.js" resource="ru"/>
+		<jsScript file="controls/GridSearchInf.js"/>
+		<jsScript file="controls/rs/GridSearchInf.rs_ru.js" resource="ru"/>
 		<jsScript file="controls/VariantStorage.js"/>
 		<jsScript file="controls/GridCommands.js"/>
 		<jsScript file="controls/GridCmd.js"/>
@@ -4612,6 +4699,8 @@
 		<jsScript file="controls/WindowFormModalBS.js"/>
 		<jsScript file="controls/rs/WindowFormModalBS.rs_ru.js" resource="ru"/>
 		<jsScript file="controls/WindowMessage.js"/>
+		<jsScript file="controls/WindowMessageStyleCtrl.js"/>
+		<jsScript file="controls/rs/WindowMessageStyleCtrl.rs_ru.js" resource="ru"/>
 		<jsScript file="controls/WindowTempMessage.js"/>
 		<jsScript file="controls/GridCellHeadDOCProcessed.js"/>
 		<jsScript file="controls/GridCellHeadDOCDate.js"/>
@@ -4913,6 +5002,7 @@
 		<jsScript file="custom_controls/DocFlowInAttachZipBtn.js"/>
 		<jsScript file="custom_controls/OfficeBankAccSelect.js"/>
 		<jsScript file="custom_controls/FileSigContainer.js"/>
+		<jsScript file="custom_controls/AllowSectionEdit.js"/>
 		<jsScript file="enum_controls/Enum_role_types.js"/>
 		<jsScript file="views/rs_ru.js"/>
 		<jsScript file="views/rs_common_ru.js"/>
@@ -5220,6 +5310,8 @@
 		<jsScript file="models/ExpertiseProlongation_Model.js"/>
 		<jsScript file="models/ExpertiseProlongationList_Model.js"/>
 		<jsScript file="controllers/ExpertiseProlongation_Controller.js"/>
+		<jsScript file="models/Signature_Model.js"/>
+		<jsScript file="models/DocumentTemplateForContractList_Model.js"/>
 	</jsScripts>
 	<cssScripts>
 		<cssScript file="assets/css/icons/icomoon/styles.css" compressed="TRUE" standalone="TRUE"/>

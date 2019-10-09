@@ -1,0 +1,23 @@
+#!/bin/sh
+
+case "$1" in
+        storage)
+                pkill -9 sshfs
+                umount /media/rstorage
+                sudo -u admin sshfs -o allow_other,reconnect,ServerAliveInterval=15,ServerAliveCountMax=17280 admin@expertiza72.ru:/usr/share/client_fil$
+                ;;
+        php)
+                service php7.0-fpm restart
+                ;;
+        nginx)
+                service nginx restart
+                ;;
+        postgres)
+                service postgresql restart
+                ;;
+        *)
+                echo "usage: php|nginx|postgres|storage"
+                exit 1
+                ;;
+esac
+exit 0

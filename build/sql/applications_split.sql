@@ -17,6 +17,7 @@ DECLARE
 BEGIN
 	-- new service
 	INSERT INTO applications(
+		id,
 		user_id, create_dt,
 		expertise_type,
 		contractors, applicant, 
@@ -41,6 +42,7 @@ BEGIN
 		base_application_id
 	)
 	(SELECT
+		coalesce(app.cost_eval_validity_app_id,nextval('applications_id_seq')),
 		app.user_id, now(),
 		NULL,
 		app.contractors, app.applicant, 

@@ -15,6 +15,7 @@ function ClientResponsableGrid(id,options){
 	options = options || {};
 	
 	this.m_mainView = options.mainView;
+	this.m_clientEditView = options.clientEditView;
 	this.m_minInf = options.minInf;
 
 	var model = new ClientResponsablePerson_Model({
@@ -78,7 +79,8 @@ function ClientResponsableGrid(id,options){
 			})																		
 		);
 	}
-
+	
+	var self = this;
 	options = {
 		"model":model,
 		"keyIds":["id"],
@@ -88,7 +90,29 @@ function ClientResponsableGrid(id,options){
 		"popUpMenu":new PopUpMenu(),
 		"commands":new GridCmdContainerAjx(id+":cmd",{
 			"cmdSearch":false,
-			"cmdExport":false
+			"cmdExport":false,
+			"addCustomCommandsAfter":function(cmd){
+				cmd.push(
+					new GridCmd(id+":cmd:copyFromRepHead",{
+						"showCmdControl":true,
+						"glyph":"glyphicon-arrow-down",
+						"title":"Добавить руководителя",
+						"caption":"Руководитель ",
+						"onCommand":function(){
+							var p = self.m_clientEditView.getElement("responsable_person_head").getValueJSON();
+							var m = self.getModel();
+							m.clear();
+							m.setFieldValue("id",m.getRowCount()+1);
+							m.setFieldValue("name",p["name"]);
+							m.setFieldValue("post",p["post"]);
+							m.setFieldValue("tel",p["tel"]);
+							m.setFieldValue("email",p["email"]);
+							m.recInsert();
+							self.onRefresh();
+						}				
+					})
+				);
+			}
 		}),
 		"head":new GridHead(id+":head",{
 			"elements":[

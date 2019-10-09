@@ -140,6 +140,8 @@ class ViewBase extends ViewHTMLXSLT {
 			$this->getVarModel()->addField(new Field('departments_ref',DT_STRING));
 			$this->getVarModel()->addField(new Field('department_boss',DT_STRING));												
 			$this->getVarModel()->addField(new Field('recipient_states_ref',DT_STRING));
+			$this->getVarModel()->addField(new Field('cloud_key_exists',DT_BOOL));
+			$this->getVarModel()->addField(new Field('snils',DT_STRING));
 		}
 		if (isset($_SESSION['role_id'])){
 			$this->getVarModel()->addField(new Field('user_name_full',DT_STRING));
@@ -152,6 +154,7 @@ class ViewBase extends ViewHTMLXSLT {
 			
 			$this->getVarModel()->addField(new Field('user_email',DT_STRING));
 			$this->getVarModel()->addField(new Field('user_email_confirmed',DT_STRING));
+			$this->getVarModel()->addField(new Field('win_message_style',DT_STRING));
 			
 			if (defined('CUSTOM_APP_UPLOAD_SERVER')){
 				$this->getVarModel()->addField(new Field('custom_app_upload_server',DT_STRING));
@@ -194,6 +197,7 @@ class ViewBase extends ViewHTMLXSLT {
 			
 			$this->setVarValue('user_email',$_SESSION['user_email']);
 			$this->setVarValue('user_email_confirmed',$_SESSION['user_email_confirmed']);
+			$this->setVarValue('win_message_style',$_SESSION['win_message_style']);
 		
 			$this->setVarValue('role_id',$_SESSION['role_id']);
 			$this->setVarValue('user_name',$_SESSION['user_name']);
@@ -213,6 +217,8 @@ class ViewBase extends ViewHTMLXSLT {
 				$this->setVarValue('departments_ref',$_SESSION['departments_ref']);
 				$this->setVarValue('department_boss',$_SESSION['department_boss']);
 				$this->setVarValue('recipient_states_ref',$_SESSION['recipient_states_ref']);
+				$this->setVarValue('cloud_key_exists',$_SESSION['cloud_key_exists']);
+				$this->setVarValue('snils',$_SESSION['snils']);
 			}
 			
 			//wget -O crypto_plugin.txt https://www.cryptopro.ru/sites/default/files/products/cades/latest_2_0.txt

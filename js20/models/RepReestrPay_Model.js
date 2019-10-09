@@ -130,6 +130,15 @@ function RepReestrPay_Model(options){
 	
 	options.fields.pay_docum_date = new FieldDate("pay_docum_date",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.contract_id = new FieldInt("contract_id",filed_options);
+	
 		RepReestrPay_Model.superclass.constructor.call(this,id,options);
 }
 extend(RepReestrPay_Model,ModelXML);

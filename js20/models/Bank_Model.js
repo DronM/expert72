@@ -53,8 +53,7 @@ function Bank_Model(options){
 	
 	filed_options.autoInc = false;	
 	
-	options.fields.name = new FieldString("name",filed_options);
-	options.fields.name.getValidator().setMaxLength('50');
+	options.fields.name = new FieldText("name",filed_options);
 	
 				
 	
@@ -73,8 +72,7 @@ function Bank_Model(options){
 	
 	filed_options.autoInc = false;	
 	
-	options.fields.adres = new FieldString("adres",filed_options);
-	options.fields.adres.getValidator().setMaxLength('70');
+	options.fields.adres = new FieldText("adres",filed_options);
 	
 				
 	
@@ -83,8 +81,7 @@ function Bank_Model(options){
 	
 	filed_options.autoInc = false;	
 	
-	options.fields.gor = new FieldString("gor",filed_options);
-	options.fields.gor.getValidator().setMaxLength('31');
+	options.fields.gor = new FieldText("gor",filed_options);
 	
 				
 	

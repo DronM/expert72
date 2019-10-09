@@ -162,6 +162,15 @@ function DocFlowOutClientDialog_Model(options){
 	
 	options.fields.attachment_files_only_sigs = new FieldJSON("attachment_files_only_sigs",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.doc_flow_out_attrs = new FieldJSONB("doc_flow_out_attrs",filed_options);
+	
 			
 		DocFlowOutClientDialog_Model.superclass.constructor.call(this,id,options);
 }

@@ -26,9 +26,26 @@ BEGIN
 		END IF;
 			
 		RETURN OLD;
+		
 	ELSIF (TG_WHEN='BEFORE' AND (TG_OP='UPDATE' OR TG_OP='INSERT') ) THEN			
 		IF const_client_lk_val() OR const_debug_val() THEN			
 			NEW.update_dt = now();
+			
+			--Если ПД+достоверность - резервируем номер под достоверность
+			IF
+			(TG_OP='INSERT' AND (NEW.expertise_type IS NOT NULL AND NEW.cost_eval_validity))
+			OR
+			(TG_OP='UPDATE' AND (NEW.expertise_type IS NOT NULL AND NEW.cost_eval_validity)
+				AND (
+					OLD.expertise_type IS NULL AND NEW.expertise_type IS NOT NULL
+					OR OLD.expertise_type<>NEW.expertise_type
+					OR coalesce(OLD.cost_eval_validity,FALSE)<>coalesce(NEW.cost_eval_validity,FALSE)
+				)
+			)
+			THEN
+				NEW.cost_eval_validity_app_id = nextval('applications_id_seq');
+				
+			END IF;
 		END IF;
 		RETURN NEW;
 	END IF;

@@ -215,6 +215,7 @@ function ApplicationClientEdit(id,options){
 		//********* responsable grid ***********************
 		this.addElement(new ClientResponsableGrid(id+":responsable_persons",{
 			"mainView":this.m_mainView,
+			"clientEditView":this,
 			"attrs":{"percentcalc":!options.minInf},
 			"minInf":options.minInf
 		}));

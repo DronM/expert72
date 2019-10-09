@@ -109,6 +109,16 @@ class ApplicationDialog_Model extends ModelSQL{
 		$this->addField($f_fund_source_id);
 		//********************
 		
+		//*** Field fund_percent ***
+		$f_opts = array();
+		$f_opts['length']=15;
+		$f_opts['defaultValue']='0';
+		$f_opts['id']="fund_percent";
+						
+		$f_fund_percent=new FieldSQLFloat($this->getDbLink(),$this->getDbName(),$this->getTableName(),"fund_percent",$f_opts);
+		$this->addField($f_fund_percent);
+		//********************
+		
 		//*** Field construction_type_id ***
 		$f_opts = array();
 		$f_opts['id']="construction_type_id";
@@ -344,6 +354,14 @@ class ApplicationDialog_Model extends ModelSQL{
 						
 		$f_exp_cost_eval_validity=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"exp_cost_eval_validity",$f_opts);
 		$this->addField($f_exp_cost_eval_validity);
+		//********************
+		
+		//*** Field cost_eval_validity_app_id ***
+		$f_opts = array();
+		$f_opts['id']="cost_eval_validity_app_id";
+						
+		$f_cost_eval_validity_app_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"cost_eval_validity_app_id",$f_opts);
+		$this->addField($f_cost_eval_validity_app_id);
 		//********************
 		
 		//*** Field construction_types_ref ***

@@ -38,6 +38,10 @@ $permissions = array();
 			
 				$permissions['User_Controller_send_email_confirm']=TRUE;
 			
+				$permissions['User_Controller_private_delete']=TRUE;
+			
+				$permissions['User_Controller_private_put']=TRUE;
+			
 			$permissions['User_Controller_insert']=FALSE;
 		
 			$permissions['Captcha_Controller_get']=TRUE;
@@ -69,6 +73,8 @@ $permissions = array();
 				$permissions['Application_Controller_zip_all']=TRUE;
 			
 				$permissions['Application_Controller_get_document_templates']=TRUE;
+			
+				$permissions['Application_Controller_get_document_templates_for_contract']=TRUE;
 			
 				$permissions['Application_Controller_remove_document_types']=TRUE;
 			
@@ -117,6 +123,8 @@ $permissions = array();
 				$permissions['Application_Controller_get_constr_name_list']=TRUE;
 			
 				$permissions['Application_Controller_remove_unregistered_data_file']=TRUE;
+			
+				$permissions['Application_Controller_sign_file']=TRUE;
 			
 				$permissions['Constant_Controller_set_value']=TRUE;
 			
@@ -217,6 +225,8 @@ $permissions = array();
 				$permissions['DocFlowOutClient_Controller_check_type']=TRUE;
 			
 				$permissions['DocFlowOutClient_Controller_get_correction_list']=TRUE;
+			
+				$permissions['DocFlowOutClient_Controller_get_doc_flow_out_attrs']=TRUE;
 			
 				$permissions['DocFlowInClient_Controller_update']=TRUE;
 			

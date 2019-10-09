@@ -127,12 +127,44 @@
 	
 	{{/loadCadesPlugin}}
 
+	<div class="tabbable">
+		<ul id="documentTabs" class="nav nav-tabs nav-tabs-highlight">				
+			<li class="active" id="{{id}}:tab-documentFiles-toggle">
+				<a href="#documentFiles" data-toggle="tab" aria-expanded="true">
+					<span id="{{id}}:attachments:total_item_files_doc" class="badge badge-danger" title="Общее количество файлов в документе">{{fileCount}}
+					</span> Вложенные файлы
+				</a>
+			</li>
+			<li id="{{id}}:tab-permissions-toggle" class="hidden">
+				<a href="#permissions" data-toggle="tab" aria-expanded="false">
+					Разрешения
+				</a>
+			</li>
+		</ul>
+	</div>
+	<div class="tab-content dialogForm">
+		<div class="tab-pane fade in active" id="documentFiles">
+			<div id="{{id}}:attachments"/>
+		</div>
+		<div class="tab-pane fade" id="permissions">
+			<div id="{{id}}:allow_new_file_add">
+			</div>
+			<div id="{{id}}:allow_edit_sections">
+			</div>			
+		</div>
+		
+	</div>
+	
+	<!--
+	{{#notContractErrors}}
 	<h4>
 		<span id="{{id}}:attachments:total_item_files_doc" class="badge badge-danger" title="Общее количество файлов в документе">{{fileCount}}
 		</span> Вложенные файлы
 	</h4>	
 	
 	<div id="{{id}}:attachments"/>
+	{{/notContractErrors}}	
+	-->
 	
 	<div id="{{id}}:comment_text"/>
 		

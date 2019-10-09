@@ -72,15 +72,6 @@ function UserDialog_Model(options){
 	
 	var filed_options = {};
 	filed_options.primaryKey = false;	
-	filed_options.alias = 'Роль';
-	filed_options.autoInc = false;	
-	
-	options.fields.role_descr = new FieldString("role_descr",filed_options);
-	
-				
-	
-	var filed_options = {};
-	filed_options.primaryKey = false;	
 	
 	filed_options.autoInc = false;	
 	
@@ -93,16 +84,7 @@ function UserDialog_Model(options){
 	
 	filed_options.autoInc = false;	
 	
-	options.fields.time_zone_locale_id = new FieldInt("time_zone_locale_id",filed_options);
-	
-				
-	
-	var filed_options = {};
-	filed_options.primaryKey = false;	
-	
-	filed_options.autoInc = false;	
-	
-	options.fields.time_zone_locale_descr = new FieldString("time_zone_locale_descr",filed_options);
+	options.fields.time_zone_locales_ref = new FieldJSON("time_zone_locales_ref",filed_options);
 	
 				
 	
@@ -131,6 +113,15 @@ function UserDialog_Model(options){
 	filed_options.autoInc = false;	
 	
 	options.fields.reminders_to_email = new FieldBool("reminders_to_email",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.private_file = new FieldJSONB("private_file",filed_options);
 	
 		UserDialog_Model.superclass.constructor.call(this,id,options);
 }

@@ -12,6 +12,7 @@ function KladrEditRef(id,options){
 	
 	this.m_controller = options.controller;
 	
+	options.cmdInsert = false;
 	options.acMinLengthForQuery = options.acMinLengthForQuery || 1;
 	options.acController = options.controller;
 	options.acModel = options.model;

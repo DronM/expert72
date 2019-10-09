@@ -164,7 +164,7 @@ AppExpert.prototype.magnify = function(dir){
 
 AppExpert.prototype.getCadesAPI = function(){
 	//cades
-	if (!this.m_cades){
+	if (!this.m_cades && !this.getCloudKeyExists()){
 		var const_list = {
 			"cades_include_certificate":null,
 			"cades_signature_type":null,
@@ -197,4 +197,8 @@ AppExpert.prototype.setDoNotNotifyOnEmailConfirmation = function(v){
 
 AppExpert.prototype.getDoNotNotifyOnEmailConfirmation = function(){
 	return (this.storageGet("doNotNotifyOnEmailConfirmation")=="true");
+}
+
+AppExpert.prototype.getCloudKeyExists = function(){
+	return (window.getApp().getServVar("cloud_key_exists")=="t");
 }

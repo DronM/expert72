@@ -11,6 +11,8 @@ require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLInt.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLString.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLText.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLBool.php');
+require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLJSON.php');
+require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLJSONB.php');
  
 class UserDialog_Model extends ModelSQL{
 	
@@ -69,16 +71,6 @@ class UserDialog_Model extends ModelSQL{
 		$this->addField($f_email);
 		//********************
 		
-		//*** Field role_descr ***
-		$f_opts = array();
-		
-		$f_opts['alias']='Роль';
-		$f_opts['id']="role_descr";
-						
-		$f_role_descr=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"role_descr",$f_opts);
-		$this->addField($f_role_descr);
-		//********************
-		
 		//*** Field role_id ***
 		$f_opts = array();
 		$f_opts['id']="role_id";
@@ -87,20 +79,12 @@ class UserDialog_Model extends ModelSQL{
 		$this->addField($f_role_id);
 		//********************
 		
-		//*** Field time_zone_locale_id ***
+		//*** Field time_zone_locales_ref ***
 		$f_opts = array();
-		$f_opts['id']="time_zone_locale_id";
+		$f_opts['id']="time_zone_locales_ref";
 						
-		$f_time_zone_locale_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"time_zone_locale_id",$f_opts);
-		$this->addField($f_time_zone_locale_id);
-		//********************
-		
-		//*** Field time_zone_locale_descr ***
-		$f_opts = array();
-		$f_opts['id']="time_zone_locale_descr";
-						
-		$f_time_zone_locale_descr=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"time_zone_locale_descr",$f_opts);
-		$this->addField($f_time_zone_locale_descr);
+		$f_time_zone_locales_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"time_zone_locales_ref",$f_opts);
+		$this->addField($f_time_zone_locales_ref);
 		//********************
 		
 		//*** Field phone_cel ***
@@ -130,6 +114,14 @@ class UserDialog_Model extends ModelSQL{
 						
 		$f_reminders_to_email=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"reminders_to_email",$f_opts);
 		$this->addField($f_reminders_to_email);
+		//********************
+		
+		//*** Field private_file ***
+		$f_opts = array();
+		$f_opts['id']="private_file";
+						
+		$f_private_file=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"private_file",$f_opts);
+		$this->addField($f_private_file);
 		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}

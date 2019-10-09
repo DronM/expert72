@@ -221,6 +221,9 @@ class Contract_Controller extends ControllerSQL{
 		$param = new FieldExtBool('contract_return_date_on_sig'
 				,array());
 		$pm->addParam($param);
+		$param = new FieldExtInt('fund_source_id'
+				,array());
+		$pm->addParam($param);
 		
 		$pm->addParam(new FieldExtInt('ret_id'));
 		
@@ -477,6 +480,10 @@ class Contract_Controller extends ControllerSQL{
 			));
 			$pm->addParam($param);
 		$param = new FieldExtBool('contract_return_date_on_sig'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtInt('fund_source_id'
 				,array(
 			));
 			$pm->addParam($param);
@@ -1089,7 +1096,7 @@ class Contract_Controller extends ControllerSQL{
 	}
 	
 	private function addPermissionCond(&$where){
-		if ($_SESSION['role_id']!='admin' && $_SESSION['role_id']!='lawyer' && $_SESSION['role_id']!='boss'){
+		if ($_SESSION['role_id']!='admin' && $_SESSION['role_id']!='lawyer' && $_SESSION['role_id']!='boss'&& $_SESSION['role_id']!='accountant'){
 			DocFlowTask_Controller::set_employee_id($this->getDbLink());
 			$where->addExpression('permission_ar',
 				sprintf(
@@ -1110,7 +1117,7 @@ class Contract_Controller extends ControllerSQL{
 	}
 	
 	public function get_list($pm){
-		if ($_SESSION['role_id']=='admin' || $_SESSION['role_id']=='lawyer' || $_SESSION['role_id']=='boss'){
+		if ($_SESSION['role_id']=='admin' || $_SESSION['role_id']=='lawyer' || $_SESSION['role_id']=='boss' || $_SESSION['role_id']=='accountant'){
 			parent::get_list($pm);
 		}
 		else{
@@ -1498,11 +1505,11 @@ class Contract_Controller extends ControllerSQL{
 		$for_all_employees = $pm->getParamValue('for_all_employees');
 		$permissions = $pm->getParamValue('permissions');
 		if(
-		$_SESSION['role_id']!='admin'
+		($_SESSION['role_id']!='admin' || $_SESSION['role_id']!='boss')
 		&&
 		( isset($for_all_employees) || isset($permissions) )
 		){
-			throw new Exception('Изменение набора прав контракта доступно только администратору!');
+			throw new Exception('Изменение набора прав контракта доступно только администраторуи руководителю!');
 		}
 		
 		parent::update($pm);
@@ -1644,7 +1651,8 @@ class Contract_Controller extends ControllerSQL{
 				WHERE p.contract_id=t.id
 				) AS pay_date,
 				
-				t.expertise_result_date AS expertise_result_ret_date
+				t.expertise_result_date AS expertise_result_ret_date,
+				t.id AS contract_id
 				
 			FROM contracts AS t
 			LEFT JOIN applications AS app ON app.id=t.application_id
@@ -1732,7 +1740,8 @@ class Contract_Controller extends ControllerSQL{
 				t.reg_number||' от '||to_char(t.expertise_result_date,'DD/MM/YY') AS exeprtise_res_number_date,			
 			
 				t.order_document,
-				t.argument_document
+				t.argument_document,
+				t.id AS contract_id
 				
 			FROM contracts AS t
 			LEFT JOIN applications AS app ON app.id=t.application_id
@@ -1786,7 +1795,7 @@ class Contract_Controller extends ControllerSQL{
 			$extra_cond.= sprintf(' AND contracts.client_id=%d',$client_id);
 		}
 		$customer_name = $cond->getDbVal('customer_name','e',DT_STRING);
-		if ($customer_name && strtolower(customer_name)!='null'){
+		if ($customer_name && strtolower($customer_name)!='null'){
 			$extra_cond.= sprintf(" AND app.customer->>'name'=%s",$customer_name);
 		}
 		
@@ -1805,7 +1814,9 @@ class Contract_Controller extends ControllerSQL{
 				contracts.expertise_cost_self_fund,
 				p.total,
 				p.pay_docum_number,
-				p.pay_docum_date::date AS pay_docum_date
+				p.pay_docum_date::date AS pay_docum_date,
+				contracts.id AS contract_id
+				
 			FROM client_payments AS p
 			LEFT JOIN contracts ON contracts.id=p.contract_id
 			LEFT JOIN applications AS app ON app.id=contracts.application_id
@@ -1941,7 +1952,9 @@ class Contract_Controller extends ControllerSQL{
 				
 				coalesce(contracts.akt_number,'..')||' от '||coalesce(to_char(contracts.akt_date,'DD/MM/YY'),'..') AS akt_number_date,
 				
-				contracts.comment_text AS comment_text
+				contracts.comment_text AS comment_text,
+				
+				contracts.id AS contract_id
 				
 			FROM contracts
 			LEFT JOIN (
@@ -2107,7 +2120,9 @@ class Contract_Controller extends ControllerSQL{
 				contracts.in_estim_cost,
 				contracts.in_estim_cost_recommend,
 				contracts.cur_estim_cost,
-				contracts.cur_estim_cost_recommend
+				contracts.cur_estim_cost_recommend,
+				contracts.id AS contract_id
+				
 			FROM contracts	
 			LEFT JOIN applications AS app ON app.id=contracts.application_id
 			LEFT JOIN build_types ON build_types.id=app.build_type_id

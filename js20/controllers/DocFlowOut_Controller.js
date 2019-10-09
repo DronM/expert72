@@ -41,6 +41,7 @@ function DocFlowOut_Controller(options){
 	this.add_alter_file_folder();
 	this.add_add_sig_to_file();
 	this.add_get_sig_details();
+	this.add_sign_file();
 		
 }
 extend(DocFlowOut_Controller,ControllerObjServer);
@@ -143,6 +144,18 @@ extend(DocFlowOut_Controller,ControllerObjServer);
 	var options = {};
 	
 	var field = new FieldText("new_contract_number",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldBool("allow_new_file_add",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldJSONB("allow_edit_sections",options);
 	
 	pm.addField(field);
 	
@@ -262,6 +275,18 @@ extend(DocFlowOut_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	
+	var field = new FieldBool("allow_new_file_add",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldJSONB("allow_edit_sections",options);
+	
+	pm.addField(field);
+	
 		var options = {};
 				
 		pm.addField(new FieldEnum("expertise_result",options));
@@ -346,6 +371,12 @@ extend(DocFlowOut_Controller,ControllerObjServer);
 	var f_opts = {};
 	
 	pm.addField(new FieldText("new_contract_number",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldBool("allow_new_file_add",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldJSONB("allow_edit_sections",f_opts));
 	pm.getField(this.PARAM_ORD_FIELDS).setValue("date_time");
 	
 }
@@ -634,6 +665,50 @@ extend(DocFlowOut_Controller,ControllerObjServer);
 		options.maxlength = "36";
 	
 		pm.addField(new FieldString("id",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			DocFlowOut_Controller.prototype.add_sign_file = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('sign_file',opts);
+	
+	pm.setRequestType('post');
+	
+	pm.setEncType(ServConnector.prototype.ENCTYPES.MULTIPART);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		options.maxlength = "36";
+	
+		pm.addField(new FieldString("file_id",options));
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("doc_id",options));
+	
+				
+	
+	var options = {};
+	
+		pm.addField(new FieldText("file_data",options));
+	
+				
+	
+	var options = {};
+	
+		options.maxlength = "250";
+	
+		pm.addField(new FieldString("file_path",options));
 	
 			
 	this.addPublicMethod(pm);

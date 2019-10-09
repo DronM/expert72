@@ -1,6 +1,6 @@
 -- View: user_view
 
---DROP VIEW user_profile;
+DROP VIEW user_profile;
 
 CREATE OR REPLACE VIEW user_profile AS 
 	SELECT
@@ -12,7 +12,8 @@ CREATE OR REPLACE VIEW user_profile AS
 		u.color_palette,
 		u.reminders_to_email,
 		u.cades_chunk_size,
-		u.cades_load_timeout
+		u.cades_load_timeout,
+		u.win_message_style
 	FROM users u;
 
 ALTER TABLE user_profile OWNER TO ;

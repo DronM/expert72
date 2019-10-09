@@ -11,6 +11,7 @@ require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLInt.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLString.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLText.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLBool.php');
+require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLJSONB.php');
  
 class UserProfile_Model extends ModelSQL{
 	
@@ -96,6 +97,14 @@ class UserProfile_Model extends ModelSQL{
 						
 		$f_cades_chunk_size=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"cades_chunk_size",$f_opts);
 		$this->addField($f_cades_chunk_size);
+		//********************
+		
+		//*** Field win_message_style ***
+		$f_opts = array();
+		$f_opts['id']="win_message_style";
+						
+		$f_win_message_style=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"win_message_style",$f_opts);
+		$this->addField($f_win_message_style);
 		//********************
 		
 		//*** Field reminders_to_email ***

@@ -32,10 +32,11 @@ require_once(FRAME_WORK_PATH.'basic_classes/ParamsSQL.php');
 require_once(FRAME_WORK_PATH.'basic_classes/ModelVars.php');
 
 require_once('common/PwdGen.php');
-require_once('functions/ExpertEmailSender.php');
-require_once('controllers/Captcha_Controller.php');
+require_once(FUNC_PATH.'ExpertEmailSender.php');
+require_once(USER_CONTROLLERS_PATH.'Captcha_Controller.php');
+require_once(FUNC_PATH.'pki.php');
 
-require_once(ABSOLUTE_PATH.'controllers/Application_Controller.php');
+require_once(USER_CONTROLLERS_PATH.'Application_Controller.php');
 
 class User_Controller extends ControllerSQL{
 
@@ -122,6 +123,15 @@ class User_Controller extends ControllerSQL{
 				,array(
 				'alias'=>'КриптоПро плагин: Размер части файла в байтах при поточной загрузке'
 			));
+		$pm->addParam($param);
+		$param = new FieldExtText('private_pem'
+				,array());
+		$pm->addParam($param);
+		$param = new FieldExtJSONB('private_file'
+				,array());
+		$pm->addParam($param);
+		$param = new FieldExtJSONB('win_message_style'
+				,array());
 		$pm->addParam($param);
 		
 		$pm->addParam(new FieldExtInt('ret_id'));
@@ -225,6 +235,18 @@ class User_Controller extends ControllerSQL{
 				,array(
 			
 				'alias'=>'КриптоПро плагин: Размер части файла в байтах при поточной загрузке'
+			));
+			$pm->addParam($param);
+		$param = new FieldExtText('private_pem'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtJSONB('private_file'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtJSONB('win_message_style'
+				,array(
 			));
 			$pm->addParam($param);
 		
@@ -439,6 +461,47 @@ class User_Controller extends ControllerSQL{
 		
 		$this->addPublicMethod($pm);
 
+			
+		$pm = new PublicMethod('private_delete');
+		
+				
+	$opts=array();
+	
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtInt('user_id',$opts));
+	
+				
+	$opts=array();
+	
+		$opts['length']=36;				
+		$pm->addParam(new FieldExtString('file_id',$opts));
+	
+			
+		$this->addPublicMethod($pm);
+
+			
+		$pm = new PublicMethod('private_put');
+		
+				
+	$opts=array();
+	
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtInt('user_id',$opts));
+	
+				
+	$opts=array();
+					
+		$pm->addParam(new FieldExtText('private_file_data',$opts));
+	
+				
+	$opts=array();
+	
+		$opts['length']=50;				
+		$pm->addParam(new FieldExtString('pwd',$opts));
+	
+			
+		$this->addPublicMethod($pm);
+
 		
 	}
 		
@@ -453,7 +516,7 @@ class User_Controller extends ControllerSQL{
 		if (!strlen($email)){
 			throw new Exception(User_Controller::ER_NO_EMAIL);
 		}
-		$new_pwd = DEF_NEW_USER_PWD;//gen_pwd(self::PWD_LEN);
+		$new_pwd = (DEBUG&&defined('DEF_NEW_USER_PWD'))? DEF_NEW_USER_PWD:gen_pwd(self::PWD_LEN);
 		$pm->setParamValue('pwd',$new_pwd);
 		
 		$model_id = $this->getInsertModelId();
@@ -515,12 +578,15 @@ class User_Controller extends ControllerSQL{
 		$_SESSION['cades_chunk_size'] 	= $ar['cades_chunk_size'];
 		$_SESSION['user_email_confirmed']= $ar['email_confirmed'];
 		$_SESSION['user_email'] 	= $ar['email'];
+		$_SESSION['win_message_style'] = $ar['win_message_style'];				
 						
 		if ($ar['role_id']!='client'){
-			$_SESSION['employees_ref'] = $ar['employees_ref'];
-			$_SESSION['departments_ref'] = $ar['departments_ref'];
-			$_SESSION['department_boss'] = ($ar['department_boss']=='t');
-			$_SESSION['recipient_states_ref'] = $ar['recipient_states_ref'];
+			$_SESSION['employees_ref']		= $ar['employees_ref'];
+			$_SESSION['departments_ref']		= $ar['departments_ref'];
+			$_SESSION['department_boss']		= ($ar['department_boss']=='t');
+			$_SESSION['recipient_states_ref']	= $ar['recipient_states_ref'];
+			$_SESSION['cloud_key_exists']		= $ar['cloud_key_exists'];
+			$_SESSION['snils'] 			= $ar['snils'];
 		}
 		
 		//global filters				
@@ -1088,6 +1154,11 @@ class User_Controller extends ControllerSQL{
 			$this->send_email_confirm($pm);
 		}
 		
+		$win_message_style = $pm->getParamValue('win_message_style');
+		if (isset($win_message_style)){
+			$_SESSION['win_message_style'] = $win_message_style;
+		}
+		
 		$this->update_session_vars($pm);
 	}
 	
@@ -1142,6 +1213,79 @@ class User_Controller extends ControllerSQL{
 		$this->email_confirm_notify($_SESSION['user_id'],"'".$email_key."'");
 		
 		$_SESSION['email_confirm_sent'] = TRUE;
+	}
+	
+	public function private_delete($pm){		
+		//Self owned private key only!!!
+		
+		$user_id = $this->getExtDbVal($pm,'user_id');
+		if($_SESSION['role_id']!='admin' && $_SESSION['user_id']!=$user_id){
+			throw new Exception('Access denied!');
+		}
+		
+		$this->getDbLinkMaster()->query(sprintf(
+		"UPDATE users
+		SET
+			private_pem = NULL,
+			private_file = NULL,
+			cert_pem = NULL
+		WHERE id=%d AND private_file IS NOT NULL AND private_file->>'id'=%s",
+		$user_id,
+		$this->getExtDbVal($pm,'file_id')
+		));
+		
+	}
+	
+	public static function encrypt($data, $key) {
+		return trim(base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($key), $data, MCRYPT_MODE_ECB, mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND))));
+	}
+	public static function decrypt($data, $key) {
+		return trim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, md5($key), base64_decode($data), MCRYPT_MODE_ECB, mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND)));
+	}	
+	
+	public function private_put($pm){		
+		$user_id = $this->getExtDbVal($pm,'user_id');
+		if($_SESSION['role_id']!='admin' && $_SESSION['user_id']!=$user_id){
+			throw new Exception('Access denied!');
+		}
+		
+		if (isset($_FILES['private_file_data'])){
+			try{	
+				$file_name = $_FILES['private_file_data']['name'][0];
+				$file_size = $_FILES['private_file_data']['size'][0];
+				$file_pfx = $_FILES['private_file_data']['tmp_name'][0];
+				
+				$pki_m = pki_create_manager();			
+				$pem_content = $pki_m->getPEMContentFromPFX($file_pfx,$this->getExtVal($pm,'pwd'));
+				$cert_content = $pki_m->getCertContentFromPFX($file_pfx,$this->getExtVal($pm,'pwd'));
+				if(!$pem_content || !strlen($pem_content) || !$cert_content || !strlen($cert_content)){
+					throw new Exception('Ошибка чтения файла!');
+				}
+			}
+			finally{
+				unlink($file_pfx);
+			}
+			
+			$this->getDbLinkMaster()->query(sprintf(
+			"UPDATE users
+			SET
+				private_pem = '%s',
+				cert_pem = '%s',
+				private_file = json_build_object(
+					'id','%s',
+					'name','%s',					
+					'size',%d
+				)
+			WHERE id=%d",
+			self::encrypt($pem_content, file_get_contents(PKI_PATH.'pki.1')),
+			self::encrypt($cert_content, file_get_contents(PKI_PATH.'pki.1')),
+			md5(uniqid()),
+			$file_name,			
+			$file_size,
+			$user_id
+			));
+			
+		}			
 	}
 	
 

@@ -1,6 +1,6 @@
 -- VIEW: contracts_dialog
 
-DROP VIEW contracts_dialog;
+--DROP VIEW contracts_dialog;
 
 CREATE OR REPLACE VIEW contracts_dialog AS
 	SELECT
@@ -194,7 +194,7 @@ CREATE OR REPLACE VIEW contracts_dialog AS
 	LEFT JOIN applications AS app ON app.id=t.application_id
 	LEFT JOIN construction_types ON construction_types.id=app.construction_type_id
 	LEFT JOIN build_types ON build_types.id=app.build_type_id
-	LEFT JOIN fund_sources ON fund_sources.id=app.fund_source_id
+	LEFT JOIN fund_sources AS fund_sources ON fund_sources.id = coalesce(t.fund_source_id,app.fund_source_id)
 	LEFT JOIN
 		(
 		SELECT

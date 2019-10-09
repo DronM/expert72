@@ -100,7 +100,9 @@ class PKIManager {
 	const SIG_HEADER = '----';
 	
 	//directory for storing cach files: certificates,crls
-	private $pkiPath;
+	public $pkiPath;
+	
+	public $tmpPath;
 	
 	private $opensslPath;
 	
@@ -119,6 +121,7 @@ class PKIManager {
 		$this->logger->add('Called get_ca_list_file','note');
 		
 		$caListFile = $this->pkiPath.'ca_list.xml';
+		
 		if (!file_exists($caListFile)){
 			$this->logger->add('Downloading CA list','note');			
 			self::getCAList($caListFile);
@@ -138,14 +141,15 @@ class PKIManager {
 		if ($flg_exists && file_exists($caListFile)){
 			return;
 		}
-		file_put_contents($flg,'FLAG FILE');
+		file_put_contents('FLAG FILE',$flg);
 		try{
 			$fl = dirname($caListFile).DIRECTORY_SEPARATOR.uniqid();
 			exec(sprintf('wget -O "%s" %s',$fl,self::CA_LIST_URL));
 			rename($fl,$caListFile);
 		}
 		finally{
-			unlink($flg);
+			if(file_exists($flg))
+				unlink($flg);
 		}
 	}
 	private function check_pred_dir(&$dir,$id){
@@ -549,12 +553,12 @@ class PKIManager {
 				if (file_exists($issuer_der))unlink($issuer_der);
 			}
 			if (!file_exists($issuer_pem)){
-				throw new Exception(sprintf(self::ER_UNABLE_LOAD_CA_CERT,$certData->issuer['Наименование']));
+				throw new Exception( sprintf(self::ER_UNABLE_LOAD_CA_CERT,isset($certData->issuer['Наименование'])? $certData->issuer['Наименование']:'НЕ ОПРЕДЕЛЕН') );
 			}										
 		}
 		else if (!file_exists($issuer_pem)){
 			$this->logger->add('Unable to get issuer certificate - no URI','error');
-			throw new Exception(self::ER_UNABLE_LOAD_CA_CERT);
+			throw new Exception(sprintf(self::ER_UNABLE_LOAD_CA_CERT,'НЕ ОПРЕДЕЛЕН'));
 		}
 		
 		//CRLs
@@ -940,14 +944,91 @@ class PKIManager {
 		$this->logger->setLogLevel($logLevel);
 	}
 	
+	public function getPEMContentFromPFX($filePFX,$pwd){
+		$res = NULL;
+		$file_pem = $this->tmpPath.uniqid();
+		try{
+			//-engine gost -clcerts
+			$this->run_shell_cmd(
+				sprintf($this->opensslPath.'openssl pkcs12 -in "%s" -out "%s" -nodes -nocerts%s',
+				$filePFX,
+				$file_pem,
+				($pwd)? (' -password pass:'.$pwd):''
+				)
+			);
+			$res = file_get_contents($file_pem);
+		}
+		finally{
+			$this->logger->dump();
+			if(file_exists($file_pem)){
+				unlink($file_pem);
+			}
+		}		
+		return $res;				
+	}
+
+	public function getCertContentFromPFX($filePFX,$pwd){
+		$res = NULL;
+		$file_cert = $this->tmpPath.uniqid();
+		try{
+			//-engine gost -clcerts
+			$this->run_shell_cmd(
+				sprintf($this->opensslPath.'openssl pkcs12 -in "%s" -nokeys -out "%s"%s',
+				$filePFX,
+				$file_cert,
+				($pwd)? (' -password pass:'.$pwd):''
+				)
+			);
+			$res = file_get_contents($file_cert);
+		}
+		finally{
+			$this->logger->dump();
+			if(file_exists($file_cert)){
+				unlink($file_cert);
+			}
+		}		
+		return $res;				
+	}
+	
+	/**
+	 * returns sig_file
+	 */
+	public function signFile($privatePEM,$sert,$fileForSign,$outFile,$detached=TRUE,$engine='gost'){
+		try{
+			$cmd = '';
+			if($detached){
+				$cmd = sprintf(
+					$this->opensslPath.'openssl smime -sign -inkey "%s" -signer "%s" -engine %s -binary -noattr -outform pem -in "%s" -out "%s"',
+					$privatePEM,
+					$sert,
+					$engine,
+					$fileForSign,
+					$outFile
+				);
+			}
+			else{
+				throw new Exception('Not supported');
+			}	
+			$this->run_shell_cmd2($cmd);
+		}
+		finally{
+			$this->logger->dump();
+		}
+	}
+	
 	/*
 	 * Installs all CA certificates to this->pkiPath
 	 */
 	public function makeCACertificates(){	
+		if(file_exists($this->pkiPath.'ca_list.xml')){
+			unlink($this->pkiPath.'ca_list.xml');
+		}
 		$ca_list_file = '';
 		$this->get_ca_list_file($ca_list_file);
 		$ca_data = @simplexml_load_file($ca_list_file);
-	
+		if($ca_data===FALSE){
+			throw new Exception("Ошибка парсинга XML документа ".$ca_list_file);
+		}
 		$cur = new DateTime();
 		
 		$ca_list = $ca_data->children()->УдостоверяющийЦентр;

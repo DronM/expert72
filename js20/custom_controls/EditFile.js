@@ -158,7 +158,7 @@ EditFile.prototype.setValue = function(v){
 		cont.clear();
 		for (var i=0;i<v.length;i++){
 			v[i].uploaded = true;
-			this.addFile(v[i]);
+			this.addFile(v[i],true);
 		}
 		cont.toDOM(this.m_node);
 	}
@@ -294,11 +294,7 @@ EditFile.prototype.addFile =  function(fileInf){
 				}
 			}
 		}));
-	}
-	if (this.m_onFileAdded){
-		this.m_onFileAdded();
-	}
-	
+	}	
 }
 
 EditFile.prototype.deleteFileFromDOM = function(fileId){
@@ -435,13 +431,19 @@ EditFile.prototype.fileAdded = function(){
 					"file_uploaded":false,
 					"file_signed":false,
 					"signatures":[]
-				});	
+				});
+				if (this.m_onFileAdded){
+					this.m_onFileAdded();
+				}					
 			}
 		}
 		
 	}
 	for (var n in ctrls_to_add){
 		this.addFile(ctrls_to_add[n]);
+		if (this.m_onFileAdded){
+			this.m_onFileAdded();
+		}		
 	}
 	this.getElement("file_cont").toDOM();
 	

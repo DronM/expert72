@@ -77,11 +77,19 @@ class PKIManager {
 	const ER_CERT_FIELD_NOT_FOUND = 'Нет поля %s в объекте %s';
 	const ER_NO_CERT_FOUND = 'Не найдено ни одного сертификата!';
 	const ER_CERT_EXPIRED = 'Сертификат просрочен!';
+	const ER_BAD_CERT = 'Неверная структура сертификата!';
+	const ER_UNABLE_LOAD_CA_CERT = 'Невозможно установить сертификат удостоверяющего центра %s';
+	const ER_NO_CRL = 'Невозможно получить список отозванных сертификатов!';
+	const ER_REVOKED = 'Сертификат владелец:%s, издатель:%s отозван!';
+	const ER_INNER = 'Внутренняя ошибка!';
+	const ER_UNQUALIFIED_CERT = 'Сертификат неквалифицированный';
 
 	const CA_LIST_URL = 'https://e-trust.gosuslugi.ru/CA/DownloadTSL?schemaVersion=0';		
 	const DEF_CRL_VALIDITY = 86400;//24*60*60
 	const DEF_LOG_LEVEL = 'error';
 	const LOG_FILE_NAME = 'pki.log';
+	const DEF_PKI_PATH = 'pki/';
+	const DEF_TMP_PATH = '/tmp/';
 
 	const SUBJ_FLD_OGRN = '1.2.643.100.1';
 	const SUBJ_FLD_SNILS = '1.2.643.100.3';
@@ -91,7 +99,10 @@ class PKIManager {
 	const SUBJ_FLD_POST_ADDR = '2.5.4.16';
 	const SIG_HEADER = '----';
 	
+	//directory for storing cach files: certificates,crls
 	private $pkiPath;
+	
+	private $opensslPath;
 	
 	private $logger;
 	
@@ -99,6 +110,105 @@ class PKIManager {
 	
 	//CRL validity in seconds
 	private $crlValidity;
+		
+	/*
+	 * @param {string} caListFile
+	 * @return bool TRUE - если был загружен свежий
+	 */
+	private function get_ca_list_file(&$caListFile){
+		$this->logger->add('Called get_ca_list_file','note');
+		
+		$caListFile = $this->pkiPath.'ca_list.xml';
+		if (!file_exists($caListFile)){
+			$this->logger->add('Downloading CA list','note');			
+			self::getCAList($caListFile);
+			return TRUE;
+		}
+	}
+	
+	public static function getCAList($caListFile){
+		$flg = $caListFile.'.flg';
+		$flg_exists = FALSE;
+		$wait_t = 60;
+		while (file_exists($flg) && $wait_t){
+			$flg_exists = TRUE;
+			sleep(1);		
+			$wait_t--;
+		}
+		if ($flg_exists && file_exists($caListFile)){
+			return;
+		}
+		file_put_contents('FLAG FILE',$flg);
+		try{
+			$fl = dirname($caListFile).DIRECTORY_SEPARATOR.uniqid();
+			exec(sprintf('wget -O "%s" %s',$fl,self::CA_LIST_URL));
+			rename($fl,$caListFile);
+		}
+		finally{
+			unlink($flg);
+		}
+	}
+	private function check_pred_dir(&$dir,$id){
+		if (is_null($dir) || !strlen($dir)){
+			throw new Exception($id.' is not defined!');
+		}
+		if ($dir[strlen($dir)-1]!=DIRECTORY_SEPARATOR){
+			$dir.=DIRECTORY_SEPARATOR;
+		}		
+	}
+	
+	
+	/**
+	 * old style $pkiPath,$crlValidity=NULL,$logLevel=NULL,$tmpPath=NULL
+	 */
+	public function __construct($options=NULL){
+		
+		$option_values = array(
+			'pkiPath' => self::DEF_PKI_PATH,
+			'logFile' => self::DEF_PKI_PATH.self::LOG_FILE_NAME,
+			'crlValidity' => self::DEF_CRL_VALIDITY,
+			'logLevel' => self::DEF_LOG_LEVEL,
+			'tmpPath' => self::DEF_TMP_PATH,
+			'opensslPath' => ''
+		);
+		if (!is_null($options)&&is_array($options)){
+			foreach($options as $opt=>$val){
+				if(array_key_exists($opt,$option_values)){
+					$option_values[$opt] = $val;
+				}
+			}
+		}
+		
+		$this->opensslPath = $option_values['opensslPath'];
+		
+		$this->pkiPath = $option_values['pkiPath'];
+		$this->check_pred_dir($this->pkiPath,'pkiPath');
+		$this->tmpPath = $option_values['tmpPath'];
+		$this->check_pred_dir($this->tmpPath,'tmpPath');
+		
+		$this->crlValidity = $option_values['crlValidity'];
+		$this->logger = new Logger($option_values['logFile'],array('logLevel'=>$option_values['logLevel']));
+		
+		//sert traslation
+		$this->SUBJ_FLD_TRANSLATION = [
+			'1.2.643.100.1'=>'ОГРН',
+			'1.2.643.3.131.1.1'=>'ИНН',
+			'1.2.643.100.3'=>'СНИЛС',
+			'countryName'=>'Страна',
+			'stateOrProvinceName'=>'Регион',
+			'localityName'=>'Город',
+			'streetAddress'=>'Адрес',
+			'organizationalUnitName'=>'Подразделение',
+			'organizationName'=>'Организация',
+			'commonName'=>'Наименование',
+			'title'=>'Должность',
+			'surname'=>'Фамилия',
+			'emailAddress'=>'Эл.почта',
+			'givenName'=>'Имя'
+		];
+		
+	}
+	
 
 	private function run_shell_cmd2($command){		
 		$this->logger->add('Called run_shell_cmd2 '.$command,'note');
@@ -123,7 +233,7 @@ class PKIManager {
 		} else {
 			$env = array_merge($_ENV, $envopts);
 		}
-		$resource = proc_open($command, $descriptorspec, $pipes, OUTPUT_PATH, $env);
+		$resource = proc_open($command, $descriptorspec, $pipes, $this->tmpPath, $env);
 		
 		$stdout = stream_get_contents($pipes[1]);
 		$stderr = stream_get_contents($pipes[2]);
@@ -141,8 +251,15 @@ class PKIManager {
 	}
 
 	private function replace_extension($filename, $new_extension) {
-		$info = pathinfo($filename, PATHINFO_FILENAME);
-		return dirname($filename).DIRECTORY_SEPARATOR.$info.'.'.$new_extension;
+		$filename_ar = explode('.',$filename);
+		if (!count($filename_ar)){
+			$this->logger->add('Could not find file extension for '.$filename,'error');	
+			throw new Exception(self::ER_INNER);
+		}
+		array_splice($filename_ar,count($filename_ar)-1);
+		return implode('.',$filename_ar).'.'.$new_extension;
+		//$info = pathinfo($filename, PATHINFO_FILENAME);
+		//return dirname($filename).DIRECTORY_SEPARATOR.$info.'.'.$new_extension;
 	}
 	
 	private function parse_fields($delim,$txt){
@@ -164,362 +281,16 @@ class PKIManager {
 		return DateTime::createFromFormat('Y-m-d H:i:s', $d);
 	}
 	
-	/**
-	 * @rapam {string} sigFile
-	 * @rapam {string} derFile
-	 * @rapam {array} pemFiles
-	 * @descr pem файлов может быть много - сколько подписей в контейнере. Оставляем только сертификаты подписантов, цепь построим сами!!!
-	 */
-	private function parseSigFile($sigFile,&$derFile,&$pemFiles){
-		$this->logger->add('parseSigFile','note');
-		
-		$derFile = $this->replace_extension($sigFile,'der');				
-		if (!file_exists($derFile)){
-			//проверяем файл
-			$need_decode = $this->isBase64Encoded($sigFile);
-			// декодируем подпись из base64 - получаем подпись в бинарном формате
-			if ($need_decode){
-				$this->decodeSigFromBase64($sigFile,$derFile);
-			}
-			else{
-				//der = sig
-				symlink($sigFile,$derFile);
-			}
-		}
-		// извлекаем сертификаты из подписи
-		//Получаем несколько файлов, в каждом 1 сертификат
-		$id = uniqid();		
-		$pat = dirname($sigFile).DIRECTORY_SEPARATOR.$id;
-		$this->run_shell_cmd2(sprintf('openssl pkcs7 -in "%s" -print_certs -inform DER -outform pem | awk \'/BEGIN/ { i++; } /BEGIN/, /END/ { print > "%s."i }\'',$derFile,$pat));
-		$pem_list = glob($pat.".*");
-		if (!count($pem_list)){
-			$this->logger->add('Unable to get certificates from bundle '.$sigFile,'error');
-			throw new Exception(self::ER_NO_CERT_FOUND);		
-		}
-		else if (count($pem_list)==1){
-			array_push($pemFiles,$pat.'.1');
-		}
-		else{
-			/* несколько сертификатов в контейнере
-			 * надо найти все последние, на которых заканчивается цепь,
-			 * их может быть несколько, если в контейнере несколько подписей
-			 */
-			$issuers = [];
-			$subjects = [];			
-			foreach($pem_list as $pem_file){
-				$cert_data = $this->run_shell_cmd(sprintf('openssl x509 -subject_hash -issuer_hash -in "%s" -noout',$pem_file));
-				$cert_ar = explode(PHP_EOL,trim($cert_data));
-				if (count($cert_ar)<2){
-					$this->logger->add('Unable to get certificate data from '.$cert_data,'error');
-					throw new Exception(self::ER_BROKEN_CHAIN);
-				}
-				$issuers[$cert_ar[1]] = TRUE;
-				$subjects[$cert_ar[0]] = $pem_file;
-			}
-			
-			//собираем в $pemFiles сертификаты, которые не для кого не являются issuer, последние в цепи
-			foreach($subjects as $subject_hash=>$pem_file){
-				if (!array_key_exists($subject_hash,$issuers)){
-					array_push($pemFiles,$pem_file);
-				}
-			}
-			if (!count($pemFiles)){
-				//нет сертификата, который бы был последним в цепи???
-				$this->logger->add('Unable to get last certificate in bundle '.$sigFile,'error');
-				throw new Exception(self::ER_BROKEN_CHAIN);				
-			}
-			//оставляем только последние pem файлы из цепи
-			foreach($pem_list as $pem_file){
-				if (!in_array($pem_file,$pemFiles)){
-					unlink($pem_file);
-				}
-			}
-		}
-		//Only signer certificates!!!
-		$this->logger->add('Found signer certificates:'.count($pemFiles),'note');
-	}
-	
-	public function update_ca_certs(){
-		$ca_list_file = '';
-		if (!$this->get_ca_list_file($ca_list_file)){
-			$m = 'Unable to download XML CA list!';
-			$this->logger->add($m,'error');
-			throw new Exception($m);			
-		}
-		
-		try{
-			$ca_data = @simplexml_load_file($ca_list_file);
-			if ($ca_data===FALSE){
-				$m = 'Unable to parse XML CA list!';
-				$this->logger->add($m,'error');
-				throw new Exception($m);
-			}
-	
-			$ca_list = $ca_data->children()->УдостоверяющийЦентр;
-			foreach($ca_list as $ca){
-				foreach($ca->ПрограммноАппаратныеКомплексы->ПрограммноАппаратныйКомплекс as $prog){
-					foreach($prog->КлючиУполномоченныхЛиц->Ключ as $key){
-						foreach($key->Сертификаты->ДанныеСертификата as $sert){
-							//проверка pem файла сертификата
-							$fingerprint = trim($sert->Отпечаток);
-							$flag = $this->pkiPath.$fingerprint.'.flag';
-							//Если файла $flag нет значит нет и сертификата
-							if (!file_exists($flag)){
-								$b64 = $this->pkiPath.$fingerprint.'.b64';
-								$der = $this->pkiPath.$fingerprint.'.der';
-								try{
-									file_put_contents($b64, $sert->Данные);
-									$this->run_shell_cmd2(sprintf('openssl base64 -d -A -in "%s" -out "%s"',$b64,$der));
-									$cert_fields = $this->run_shell_cmd(sprintf('openssl x509 -hash -issuer_hash -inform der -in "%s" -noout',$der));
-									$cert_fields_ar = explode(PHP_EOL,trim($cert_fields));
-									if (count($cert_fields_ar)<2){
-										$this->logger->add('Could not get cert fields from '.$cert_fields,'error');
-										throw new Exception(self::ER_BROKEN_CHAIN);
-									}
-									//hashes
-									$hash = $cert_fields_ar[0];
-									$issuer_hash = $cert_fields_ar[1];
-									$pem = $this->pkiPath.$hash.'.pem';
-									//Генерим pem
-									$this->run_shell_cmd2(sprintf('openssl x509 -in "%s" -inform der -outform pem -out "%s"',$der,$pem));
-							
-									file_put_contents($flag, '');
-								}
-								finally{
-									if(file_exists($b64))unlink($b64);
-									if(file_exists($der))unlink($der);
-								}
-							}
-						}
-					}
-				}				
-			}		
-		}
-		finally{
-			unlink($ca_list_file);
-		}
-	}
-	
-	/**	 
- 	 * @param {string} chainFile файл для проверки, в который собираются все сертификаты цепи с вместе CRL
-	 * @param {String} orgCommonName УдостоверяющийЦентр->ПрограммноАппаратныеКомплексы->ПрограммноАппаратныйКомплекс->Псевдоним
-	 * @param {String} org УдостоверяющийЦентр->ПрограммноАппаратныеКомплексы->ПрограммноАппаратныйКомплекс->Псевдоним
-	 * @param {XMLElement} caData
-	 * @param {array} addedCerts full certificate chain of stdClass
-	 * @param {int} oldestCertTime
-	 
-	 *
-	 * Рекурсивно собирает все сертификаты цепи и создает pem файлы
-	 * Также создаются файлы crl со списками листов отзыва
-	 *
-	 * @returns {bool} TRUE - if cert is found
-	 */
-	private function get_ca_certs($chainFile,$orgCommonName,$org,$caOGRN,&$caData,&$addedCerts,&$oldestCertTime){
-	
-		$this->logger->add(sprintf(
-			'Called get_ca_certs orgCommonName=%s,org=%s,caOGRN=%s',
-			$orgCommonName,$org,$caOGRN
-		),'note');
-		
-		$crl_invalid_time = time() - $this->crlValidity;
-		$ca_found = FALSE;
-		$ca_list = $caData->children()->УдостоверяющийЦентр;
-		foreach($ca_list as $ca){
-			if ($ca->ОГРН!=$caOGRN)continue;
-			
-			if ($ca->СтатусАккредитации->Статус=='Действует'){
-				$prog_list = $ca->ПрограммноАппаратныеКомплексы->ПрограммноАппаратныйКомплекс;
-				foreach($prog_list as $prog){
-					if ($prog->Псевдоним!=$orgCommonName && str_replace('"','',$prog->Псевдоним)!=$org)continue;
-					
-					foreach($prog->КлючиУполномоченныхЛиц->Ключ as $key){
-						$crl_ar = [];
-						foreach($key->АдресаСписковОтзыва->Адрес as $crl){
-							array_push($crl_ar,(string)$crl);
-						}
-						
-						foreach($key->Сертификаты->ДанныеСертификата as $sert){
-							$fingerprint = trim($sert->Отпечаток);
-							if (array_key_exists($fingerprint,$addedCerts))continue;
-							
-							$to = $this->date_from_ISO((string)$sert->ПериодДействияДо);
-							$from = $this->date_from_ISO((string)$sert->ПериодДействияС);
-							$cur = new DateTime();
-							if ($cur<$to && $cur>$from){
-								
-								$ca_found = TRUE;
-								array_push($addedCerts, $fingerprint);
-								$this->logger->add('Certificate found, making pem','note');
-								
-								$b64 = $this->pkiPath.$fingerprint.'.b64';
-								$der = $this->pkiPath.$fingerprint.'.der';								
-								
-								try{
-									//pem
-									file_put_contents($b64, $sert->Данные);
-									$this->run_shell_cmd2(sprintf('openssl base64 -d -A -in "%s" -out "%s"',$b64,$der));
-								
-									$cert_fields = $this->run_shell_cmd(sprintf('openssl x509 -hash -issuer_hash -subject -issuer -inform der -in "%s" -noout',$der));
-									$cert_fields_ar = explode(PHP_EOL,trim($cert_fields));
-									if (count($cert_fields_ar)<4){
-										$this->logger->add('Could not get cert fields from '.$cert_fields,'error');
-										throw new Exception(self::ER_BROKEN_CHAIN);
-									}
-									//hashes
-									$hash = $cert_fields_ar[0];
-									$issuer_hash = $cert_fields_ar[1];
-									//subject
-									$subject_ar = $this->parse_fields('/',$cert_fields_ar[2]);
-									$this->check_subj_fields($subject_ar,array('CN',self::SUBJ_FLD_OGRN));
-									//issuer
-									$issuer_ar = $this->parse_fields('/',$cert_fields_ar[3]);
-									$this->check_subj_fields($issuer_ar,array('CN','O',self::SUBJ_FLD_OGRN));
-									
-									$pem = $this->pkiPath.$fingerprint.'.pem';
-									if (!file_exists($pem) || filemtime($pem)<$crl_invalid_time ){								
-										//Генерим новый pem с сертификатом и качаем новый список
-										$this->run_shell_cmd2(sprintf('openssl x509 -in "%s" -inform der -outform pem -out "%s"',$der,$pem));
-									
-										//Помещаем crl данные в файл с сертификатом hash.pem										
-										if (count($crl_ar)){
-											$this->logger->add('CRL urls exist','note');
-											
-											$crl_pem = $this->pkiPath.$fingerprint.'.crl';
-											$crl_der = $this->pkiPath.$fingerprint.'.crl.der';
-											try{
-												foreach($crl_ar as $crl_url){
-													$er = FALSE;
-													try{										
-														$this->run_shell_cmd2(sprintf('wget -O "%s" %s',$crl_der,$crl_url));
-													}
-													catch(Exception $e){
-														$er = TRUE;
-													}
-													if ($er)continue;//try next crl url
-									
-													break;
-												}
-												if(!file_exists($crl_der)){
-													$m = sprintf(self::ER_UNABLE_LOAD_CRL,$subject_ar['CN'],$subject_ar[self::SUBJ_FLD_OGRN]);
-													$this->logger->add($m,'error');
-													throw new Exception($m);
-												}									
-												$this->run_shell_cmd2(sprintf('openssl crl -in "%s" -inform DER -out "%s"',$crl_der,$crl_pem));
-												
-												$this->logger->add('Appending crl to pem file','note');
-												file_put_contents($pem, file_get_contents($crl_pem),FILE_APPEND);
-											}
-											finally{
-												if (file_exists($crl_der))unlink($crl_der);
-												if (file_exists($crl_pem))unlink($crl_pem);
-											}
-										}
-									}
-									$pem_time = filemtime($pem);
-									if ($oldestCertTime > $pem_time){
-										$oldestCertTime = $pem_time;
-									}
-									//pem with CRL
-									$this->logger->add('Adding certificate pem with crl to chain file','note');
-									file_put_contents($chainFile, file_get_contents($pem), FILE_APPEND);									
-								}	
-								finally{
-									if (file_exists($b64))unlink($b64);
-									if (file_exists($der))unlink($der);
-								}
-								
-								if ($issuer_hash!=$hash){
-									$this->logger->add('Looking for parent certificate','note');
-									if (!$this->get_ca_certs($chainFile,$issuer_ar['CN'],$issuer_ar['O'],$issuer_ar[self::SUBJ_FLD_OGRN],$caData,$addedCerts,$oldestCertTime)){
-										$this->logger->add('Could not find certificate','error');
-										throw new Exception(self::ER_BROKEN_CHAIN);
-									}
-								}									
-							}
-						}
-					}
-					if ($ca_found)break;
-				}				
-			}
-			return $ca_found;			
-		}		
-	}
-	
-	/*
-	 * @param {string} caListFile
-	 * @return bool TRUE - если был загружен свежий
-	 */
-	private function get_ca_list_file(&$caListFile){
-		$this->logger->add('Called get_ca_list_file','note');
-		
-		$caListFile = $this->pkiPath.'ca_list.xml';
-		if (!file_exists($caListFile)){
-			$this->logger->add('Downloading CA list','note');			
-			self::getCAList($caListFile);
-			return TRUE;
-		}
-	}
 	
 	private function gen_cert_fromb64($b64File){
 		$der = $this->replace_extension($b64File,'der');
 		$pem = $this->replace_extension($b64File,'pem');
-		$this->run_shell_cmd2(sprintf('openssl base64 -d -A -in "%s" -out "%s"',$b64File,$der));
-		$this->run_shell_cmd2(sprintf('openssl x509 -in "%s" -inform der -outform pem -out "%s"',$der,$pem));
+		$this->run_shell_cmd2(sprintf($this->opensslPath.'openssl base64 -d -A -in "%s" -out "%s"',$b64File,$der));
+		$this->run_shell_cmd2(sprintf($this->opensslPath.'openssl x509 -in "%s" -inform der -outform pem -out "%s"',$der,$pem));
 	}	
 	
 	private function subj_fld_alias($fld){
 		return isset($this->SUBJ_FLD_TRANSLATION[$fld])? $this->SUBJ_FLD_TRANSLATION[$fld] : $fld;
-	}
-	
-	public function __construct($pkiPath,$crlValidity=NULL,$logLevel=NULL){
-		$this->pkiPath = $pkiPath;
-		$this->crlValidity = isset($crlValidity)? $crlValidity : self::DEF_CRL_VALIDITY;
-		$this->logger = new Logger($this->pkiPath.self::LOG_FILE_NAME,array('logLevel'=>is_null($logLevel)? self::DEF_LOG_LEVEL:$logLevel));
-		
-		//sert traslation
-		$this->SUBJ_FLD_TRANSLATION = [
-			'1.2.643.100.1'=>'ОГРН',
-			'1.2.643.3.131.1.1'=>'ИНН',
-			'1.2.643.100.3'=>'СНИЛС',
-			'countryName'=>'Страна',
-			'stateOrProvinceName'=>'Регион',
-			'localityName'=>'Город',
-			'streetAddress'=>'Адрес',
-			'organizationalUnitName'=>'Подразделение',
-			'organizationName'=>'Организация',
-			'commonName'=>'Наименование',
-			'title'=>'Должность',
-			'surname'=>'Фамилия',
-			'emailAddress'=>'Эл.почта',
-			'givenName'=>'Имя'
-		];
-	}
-	
-	public function setLogLevel($logLevel){
-		$this->logger->setLogLevel($logLevel);
-	}
-	
-	public static function getCAList($caListFile){
-		$flg = $caListFile.'.flg';
-		$flg_exists = FALSE;
-		$wait_t = 60;
-		while (file_exists($flg) && $wait_t){
-			$flg_exists = TRUE;
-			sleep(1);		
-			$wait_t--;
-		}
-		if ($flg_exists && file_exists($caListFile)){
-			return;
-		}
-		file_put_contents($flg,'FLAG FILE');
-		try{
-			$fl = dirname($caListFile).DIRECTORY_SEPARATOR.uniqid();
-			exec(sprintf('wget -O "%s" %s',$fl,self::CA_LIST_URL));
-			rename($fl,$caListFile);
-		}
-		finally{
-			unlink($flg);
-		}
 	}
 	
 	private function check_subj_fields(&$subjAr,$fieldAr){		
@@ -553,20 +324,321 @@ class PKIManager {
 	}
 	
 	/**
-	 * Возвращает пользовательскую структуру сертификата
+	 * @rapam {string} sigFile
+	 * @rapam {string} derFile
+	 * @rapam {array} signerPemFiles
+	 * @descr pem файлов может быть много - сколько подписей в контейнере. Оставляем только сертификаты подписантов, цепь построим сами!!!
 	 */
-	public function getCertInf($pemFile,&$subject,&$issuer){
-		//данные по сертификату
-		$cert_lines = $this->run_shell_cmd(sprintf('openssl x509 -subject -issuer -inform pem -in "%s" -noout -nameopt multiline',$pemFile));
+	public function parseSigFile($sigFile,&$derFile,&$signerPemFiles){
+		$this->logger->add('parseSigFile','note');
+		
+		//$derFile = $this->replace_extension($sigFile,'der');				
+		$derFile = $this->tmpPath.uniqid().'.der';
+		//проверяем файл
+		$need_decode = $this->isBase64Encoded($sigFile);
+		// декодируем подпись из base64 - получаем подпись в бинарном формате
+		if ($need_decode){
+			$this->decodeSigFromBase64($sigFile,$derFile);
+		}
+		else{
+			//der = sig
+			symlink($sigFile,$derFile);
+		}
+		// извлекаем сертификаты из подписи
+		//Получаем несколько файлов, в каждом 1 сертификат
+		$id = uniqid();		
+		//$pat = dirname($sigFile).DIRECTORY_SEPARATOR.$id;
+		$pat = $this->tmpPath.$id;
+		$this->run_shell_cmd2(sprintf($this->opensslPath.'openssl pkcs7 -in "%s" -print_certs -inform DER -outform pem | awk \'/BEGIN/ { i++; } /BEGIN/, /END CERT/ { print > "%s."i }\'',$derFile,$pat));
+		$pem_list = glob($pat.".*");
+		if (!count($pem_list)){
+			$this->logger->add('Unable to get certificates from bundle '.$sigFile,'error');
+			throw new Exception(self::ER_NO_CERT_FOUND);		
+		}
+		else if (count($pem_list)==1){
+			array_push($signerPemFiles,$pat.'.1');
+		}
+		else{
+			/* несколько сертификатов в контейнере
+			 * надо найти все последние, на которых заканчивается цепь,
+			 * их может быть несколько, если в контейнере несколько подписей
+			 */
+			$issuers = [];
+			$subjects = [];			
+			foreach($pem_list as $pem_file){
+				$cert_data = $this->run_shell_cmd(sprintf($this->opensslPath.'openssl x509 -subject_hash -issuer_hash -in "%s" -noout',$pem_file));
+				$cert_ar = explode(PHP_EOL,trim($cert_data));
+				if (count($cert_ar)<2){
+					$this->logger->add('Unable to get certificate data from '.$cert_data,'error');
+					throw new Exception(self::ER_BROKEN_CHAIN);
+				}
+				$issuers[$cert_ar[1]] = TRUE;
+				$subjects[$cert_ar[0]] = $pem_file;
+			}
+			
+			//собираем в $signerPemFiles сертификаты, которые не для кого не являются issuer, последние в цепи
+			foreach($subjects as $subject_hash=>$pem_file){
+				if (!array_key_exists($subject_hash,$issuers)){
+					array_push($signerPemFiles,$pem_file);
+				}
+			}
+			if (!count($signerPemFiles)){
+				//нет сертификата, который бы был последним в цепи???
+				$this->logger->add('Unable to get last certificate in bundle '.$sigFile,'error');
+				throw new Exception(self::ER_BROKEN_CHAIN);				
+			}
+			//оставляем только последние pem файлы из цепи, остальные в папку с сертификатами hash.0
+			foreach($pem_list as $pem_file){
+				if (!in_array($pem_file,$signerPemFiles)){
+					$hash = array_search($pem_file,$subjects);
+					if ($hash!==FALSE && !file_exists($perm_pem_file=$this->pkiPath.$hash.'.0')){
+						rename($pem_file,$perm_pem_file);
+					}
+					else{
+						unlink($pem_file);
+					}					
+				}
+			}
+		}
+		//Only signer certificates!!!
+		$this->logger->add('Found signer certificates:'.count($signerPemFiles),'note');
+	}
+		
+	/**
+	 * returns certificate structure from pem file
+	 * @param{string} pemFile path ti Certificate pem file
+	 * @param{stdClass} certData:
+	 *			{date} dateFrom,
+	 *			{date} dateTo,
+	 *			{string} fingerprint,
+	 *			{string} serialHex,
+	 *			{array} issuer,
+	 *			{array} subject
+	 *			{array} certURI
+	 *			{array} CRL
+	 *			{string} subjectHash
+	 *			{string} issuerHash
+	 *			{string} OCSP
+	 */
+	public function getCertInf($pemFile,&$certData){
+		$cert_str = $this->run_shell_cmd(sprintf($this->opensslPath.'openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "%s" -noout',$pemFile));
+		$cert_ar = explode(PHP_EOL,trim($cert_str));
+		if (count($cert_ar)<7){
+			$this->logger->add('Could not get certificate data from '.$cert_str,'error');
+			throw new Exception(self::ER_BAD_CERT);
+		}
+
+		//hashes
+		$certData->subjectHash = $cert_ar[0];
+		$certData->issuerHash = $cert_ar[1];
+
+		//validity
+		$p = strpos($cert_ar[2],'=');
+		if ($p>=0){
+			$certData->dateFrom = strtotime(substr($cert_ar[2],$p+1));
+		}
+		$p = strpos($cert_ar[3],'=');
+		if ($p>=0){
+			$certData->dateTo = strtotime(substr($cert_ar[3],$p+1));
+		}
+
+		//fingerprint
+		$p = strpos($cert_ar[4],'=');
+		if ($p>=0){
+			$certData->fingerprint = substr($cert_ar[4],$p+1);
+			$p = strpos($certData->fingerprint,'=');
+			if ($p>=0){
+				$certData->fingerprint = substr($certData->fingerprint,$p+1);
+			}
+			$certData->fingerprint = str_replace(':','',$certData->fingerprint);
+		}
+		
+		//serial
+		$p = strpos($cert_ar[5],'=');
+		if ($p>=0){
+			$certData->serialHex = substr($cert_ar[5],$p+1);
+		}
+		
+		//ocsp_uri
+		$certData->OCSP = NULL;
+		if (strpos($cert_ar[6],'http')!==FALSE){
+			$certData->OCSP = $cert_ar[6];
+		}
+	
+		//subject issuer
+		$cert_lines = $this->run_shell_cmd(sprintf($this->opensslPath.'openssl x509 -subject -issuer -inform pem -in "%s" -noout -nameopt multiline',$pemFile));
 		$p = strpos($cert_lines,'issuer=');
 		if ($p>=0){
-			$issuer = $this->decode_cert_inf(substr($cert_lines,$p+strlen('issuer=')));
+			$certData->issuer = $this->decode_cert_inf(substr($cert_lines,$p+strlen('issuer=')));
 			$p2 = strpos($cert_lines,'subject=');
 			if ($p2>=0){
-				$subject = $this->decode_cert_inf(substr($cert_lines,$p2+strlen('subject='),$p-$p2-strlen('subject=')));
+				$certData->subject = $this->decode_cert_inf(substr($cert_lines,$p2+strlen('subject='),$p-$p2-strlen('subject=')));
 			}
-		}	
+		}
+		
+		//certificate file URIS, CRL
+		$certData->CRL = [];
+		$certData->certURI = [];
+		$access_f = FALSE;
+		$crl_f = FALSE;
+		
+		$crl_key = 'URI:';
+		$url_key = 'CA Issuers - URI:';
+		
+		for ($i=6;$i<count($cert_ar);$i++){
+			$s = trim($cert_ar[$i]);
+			if (!$crl_f && $s=='X509v3 CRL Distribution Points:'){
+				$crl_f = TRUE;
+				$access_f = FALSE;
+			}
+			else if ($crl_f && ($v_pos = strpos($s,$crl_key))!==FALSE ){
+				$v = trim(substr($s,$v_pos+strlen($crl_key)));
+				if (strlen($v))
+					array_push($certData->CRL,$v);
+			}
+			else if (!$access_f && $s=='Authority Information Access:'){
+				$access_f = TRUE;
+				$crl_f = FALSE;
+			}
+			else if ($access_f && ($v_pos = strpos($s,$url_key))!==FALSE ){
+				$v = trim(substr($s,$v_pos+strlen($url_key)));
+				if (strlen($v))
+					array_push($certData->certURI,$v);
+			}			
+		}
+			
 	}
+	
+	private function build_chain($certFile,$onlineRevocCheck,&$certData,&$includedHashes){
+	
+		if (array_key_exists($certData->issuerHash,$includedHashes)){
+			//already included
+			return;
+		}
+		
+		$crl_invalid_time = time() - $this->crlValidity;
+
+		//certificate
+		$issuer_pem = $this->pkiPath.$certData->issuerHash.'.0';
+		$this->logger->add('Need certificate for hash:'.$certData->issuerHash,'debug');
+		if (!file_exists($issuer_pem) && isset($certData->certURI) && is_array($certData->certURI)){
+			$this->logger->add('Trying to download certificate file','debug');
+			$issuer_der = $this->pkiPath.$certData->issuerHash.'.der';
+			try{
+				$cert_postf = '.crt';
+				foreach($certData->certURI as $url){
+					try{	
+						$this->logger->add('Got URI from certificate '.$url,'debug');						
+						if (substr(strtolower($url),strlen($url)-strlen($cert_postf))==$cert_postf){
+							$this->logger->add('URL recognized as certificate file','debug');
+							$this->run_shell_cmd2(sprintf('wget -O "%s" %s',$issuer_der,$url));
+							
+							if (file_exists($issuer_der)){
+								$this->run_shell_cmd2(sprintf($this->opensslPath.'openssl x509 -in "%s" -inform der -outform pem -out "%s"',$issuer_der,$issuer_pem));
+								if (file_exists($issuer_pem))break;
+							}
+							
+						}
+					}
+					catch(Exception $e){
+						$this->logger->add('Could not download certificate file','debug');						
+					}					
+				}
+			}
+			finally{
+				if (file_exists($issuer_der))unlink($issuer_der);
+			}
+			if (!file_exists($issuer_pem)){
+				throw new Exception(sprintf(self::ER_UNABLE_LOAD_CA_CERT,$certData->issuer['Наименование']));
+			}										
+		}
+		else if (!file_exists($issuer_pem)){
+			$this->logger->add('Unable to get issuer certificate - no URI','error');
+			throw new Exception(self::ER_UNABLE_LOAD_CA_CERT);
+		}
+		
+		//CRLs
+		$crl_passed = FALSE;
+		$revoked = FALSE;
+		if ($onlineRevocCheck && $certData->OCSP){
+			$this->logger->add('OCSP checking '.$certData->OCSP,'debug');
+			$issuer_index = 0;
+			while(!$crl_passed && file_exists($ocsp_issuer_pem = $this->pkiPath.$certData->issuerHash.'.'.$issuer_index)){
+				$crl_res = '';
+				try{
+					$crl_res = $this->run_shell_cmd(sprintf($this->opensslPath.'openssl ocsp -issuer "%s" -CApath "%s" -cert "%s" -url %s',
+						$ocsp_issuer_pem,
+						$this->pkiPath,
+						$certFile,
+						$certData->OCSP
+					));
+				}
+				catch(Exception $e){			
+				}
+			
+				if (strlen($crl_res)){
+					$crl_res_ar = explode(PHP_EOL,trim($crl_res));				
+					foreach($crl_res_ar as $crl_str){
+						if (strpos($crl_str,': good')!==FALSE){
+							$crl_passed = TRUE;
+							break;
+						}
+						else if (strpos($crl_str,': revoked')!==FALSE){
+							$this->logger->add('OCSP not passed: владелец:'.$certData->subject['Наименование'].' issuer:'.$certData->issuer['Наименование'],'debug');
+							throw new Exception(sprintf(self::ER_REVOKED,$certData->subject['Наименование'],$certData->issuer['Наименование']));						
+						}
+						
+					}
+				}
+				$issuer_index++;
+			}
+		}
+		
+		if (!$crl_passed ){
+			$crl_pem = $this->pkiPath.$certData->issuerHash.'.r0';
+			if (isset($certData->CRL) && is_array($certData->CRL)){
+				$this->logger->add('Looking for CRL file '.$crl_pem,'debug');
+			
+				if (!($crl_pem_exists=file_exists($crl_pem)) || (filemtime($crl_pem))<$crl_invalid_time ){
+					//new CRL
+					$this->logger->add('Trying to download new CRL file','debug');
+					if($crl_pem_exists) unlink($crl_pem);
+					$crl_der = $this->pkiPath.$certData->issuerHash.'.r0.der';
+					try{
+						foreach($certData->CRL as $url){
+							try{
+								$this->run_shell_cmd2(sprintf('wget -O "%s" %s',$crl_der,$url));
+					
+								if (file_exists($crl_der)){
+									$this->run_shell_cmd2(sprintf($this->opensslPath.'openssl crl -in "%s" -inform DER -out "%s"',$crl_der,$crl_pem));
+									$crl_passed = TRUE;
+									break;
+								}
+							}
+							catch(Exception $e){
+								$this->logger->add('Could not download CRL file','debug');
+							}
+						}
+					}
+					finally{
+						if (file_exists($crl_der))unlink($crl_der);
+					}
+				
+				}			
+			}
+			else{
+				$this->logger->add('No CRL link for '.$crl_pem,'error');	
+			}
+		}		
+		$includedHashes[$certData->issuerHash] = TRUE;
+		$issuer_data = new stdClass();
+		$this->getCertInf($issuer_pem,$issuer_data);
+			
+		if ($issuer_data->subjectHash!=$issuer_data->issuerHash){
+			$this->build_chain($issuer_pem,$onlineRevocCheck,$issuer_data,$includedHashes);
+		}		
+	}
+	
 	
 	/**
 	 * @returns {stdClass}
@@ -577,11 +649,25 @@ class PKIManager {
 	 *			subject,issuer,dateFrom,dateTo
 	 * @param{string} sigFile Full path to signature file
 	 * @param{string} contentFile Full path to data file
+	 * Options
+	 * @param{bool} [noChainVerification=FALSE]
+	 * @param{bool} [onlineRevocCheck=FALSE]
 	 * @param{bool} [notRemoveTempFiles=FALSE] Leave temporary pem,der files for debugging purposes
 	 */	
-	public function verifySig($sigFile,$contentFile,$notRemoveTempFiles=FALSE){
-	//$this->setLogLevel('debug');
-	//$notRemoveTempFiles=TRUE;
+	public function verifySig($sigFile,$contentFile,$options=NULL){
+		$option_values = array(
+			'noChainVerification' => FALSE,
+			'onlineRevocCheck' => FALSE,
+			'notRemoveTempFiles' => FALSE,
+			'unqualifiedCertTreatAsError' => TRUE
+		);
+		if (!is_null($options)&&is_array($options)){
+			foreach($options as $opt=>$val){
+				if(array_key_exists($opt,$option_values)){
+					$option_values[$opt] = $val;
+				}
+			}
+		}
 		$verifResult = new stdClass();
 		$verifResult->checkPassed = TRUE;
 		$verifResult->checkTime = microtime(TRUE);
@@ -589,168 +675,82 @@ class PKIManager {
 		$verifResult->signatures = [];
 		try{
 			$der_file = '';
-			$pem_files = [];//for many signers!
-			$chain_file_for_verif = NULL;
+			$signer_pem_files = [];//for many signers!
 			try{
 				$this->logger->add('Called verifySig','note');
 		
-				$this->parseSigFile($sigFile,$der_file,$pem_files);
+				$this->parseSigFile($sigFile,$der_file,$signer_pem_files);
 				
 				$sig_attrs = $this->getSigAttributes($der_file,TRUE);
-				/*echo var_dump($sig_attrs);
-				echo '</br>';
-				echo '</br>';
-				*/
-				
-				if (!count($pem_files)){
+				if (!count($signer_pem_files)){
 					throw new Exception(self::ER_NO_CERT_FOUND);
 				}
 				$crl_expir_tries = 1;
-			chain_build:	
+				$crl_invalid_time = time() - $this->crlValidity;
+			chain_build:
 				/** build chains to signer certificates, add all certificates with CRL for verification
 				 * If there is one signer (1 pem file with certificate) then one chain file on issuer_hash can be used
 				 * If there are more than one signer, unique chain for this sig container should be used!
 				 */				
-				foreach($pem_files as $pem_file){
-					$this->logger->add('Parsing pem file '.$pem_file,'note');
-					try{	
-						$cert_data = new stdClass();		
-						$cert_data->signedDate = NULL;
-						$cert_data->algorithm = NULL;
-						$cert_data->subject = [];
-						$cert_data->issuer = [];
-						$this->getCertInf($pem_file,$cert_data->subject,$cert_data->issuer);
-						
-						$cert_str = $this->run_shell_cmd(sprintf('openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -issuer -in "%s" -noout',$pem_file));
-						$cert_ar = explode(PHP_EOL,trim($cert_str));
-						if (count($cert_ar)<7){
-							$this->logger->add('Could not get certificate data from '.$cert_str,'error');
-							throw new Exception(self::ER_BROKEN_CHAIN);
-						}
-			
-						//hashes
-						$subject_hash = $cert_ar[0];
-						$issuer_hash = $cert_ar[1];
-			
-						//validity
-						$p = strpos($cert_ar[2],'=');
-						if ($p>=0){
-							$cert_data->dateFrom = strtotime(substr($cert_ar[2],$p+1));
-						}
-						$p = strpos($cert_ar[3],'=');
-						if ($p>=0){
-							$cert_data->dateTo = strtotime(substr($cert_ar[3],$p+1));
-						}
-
-						//fingerprint
-						$p = strpos($cert_ar[4],'=');
-						if ($p>=0){
-							$cert_data->fingerprint = substr($cert_ar[4],$p+1);
-							$p = strpos($cert_data->fingerprint,'=');
-							if ($p>=0){
-								$cert_data->fingerprint = substr($cert_data->fingerprint,$p+1);
-							}
-							$cert_data->fingerprint = str_replace(':','',$cert_data->fingerprint);
-						}
-						
-						//serial
-						$p = strpos($cert_ar[5],'=');
-						if ($p>=0){
-							$serial_hex = substr($cert_ar[5],$p+1);
-							if (isset($sig_attrs[$serial_hex])){
-								$cert_data->signedDate = $sig_attrs[$serial_hex]->signedDate;
-								$cert_data->algorithm = $sig_attrs[$serial_hex]->algorithm;
-							}
-						}
-						array_push($verifResult->signatures,$cert_data);
-						
-						//issuer
-						$issuer = $this->parse_fields('/',$cert_ar[6]);
-						$this->check_subj_fields($issuer, array('CN','O',self::SUBJ_FLD_OGRN));
-			
-						//файл со всеми головными сертами (УЦ и root) и crl
-						$chain_file = $this->pkiPath.$issuer_hash.'.chain.pem';
-
-						$crl_invalid_time = time() - $this->crlValidity;
-						if (!file_exists($chain_file) || filemtime($chain_file)<$crl_invalid_time ){
-							if(file_exists($chain_file)) unlink($chain_file);
-							
-							$oldest_cert_time = time();
-							$tries = 2;
-							$ca_found = FALSE;
-							while(!$ca_found && $tries){
-								$ca_list_file = '';
-								$new_ca_list = $this->get_ca_list_file($ca_list_file);
-								if (file_exists($ca_list_file)){
-									$ca_data = @simplexml_load_file($ca_list_file);
-									if ($ca_data===FALSE){
-										$this->logger->add('Unable to parse XML CA list!','error');
-										throw new Exception(self::ER_BROKEN_CHAIN);
-									}
-									$added_certs = [];
-									$ca_found = $this->get_ca_certs($chain_file,$issuer['CN'],$issuer['O'],$issuer[self::SUBJ_FLD_OGRN],$ca_data,$added_certs,$oldest_cert_time);
-									if (!$ca_found && !$new_ca_list){
-										//if file is not new but recent - give up!
-										if (filemtime($ca_list_file)>$crl_invalid_time){
-											break;
-										}
-										unlink($ca_list_file);
-									}
-									else if (!$ca_found && $new_ca_list){
-										break;
-									}
-								}
-								$tries--;
-							}
-							if (!$ca_found){
-								$this->logger->add('CA not found after all tries, cert issuer CN='.$issuer['CN'].' ОГРН='.$issuer[self::SUBJ_FLD_OGRN],'error');
-								throw new Exception(self::ER_BROKEN_CHAIN);
-							}
-							touch($chain_file,$oldest_cert_time);
-						}
-					}
-					finally{
-						if (file_exists($pem_file)){						
-							if(!$notRemoveTempFiles){
-								unlink($pem_file);
-							}
-							else{
-								$this->logger->add('Temporary pem file is not removed '.$pem_file,'note');
-							}									
-						}
+				
+				foreach($signer_pem_files as $pem_file){
+					$this->logger->add('Parsing certificate file '.$pem_file,'debug');
+					
+					$cert_data = new stdClass();		
+					$cert_data->signedDate = NULL;
+					$cert_data->algorithm = NULL;
+					$this->getCertInf($pem_file,$cert_data);						
+					array_push($verifResult->signatures,$cert_data);
+					
+					if ($option_values['unqualifiedCertTreatAsError'] && !array_key_exists('СНИЛС',$cert_data->subject) && !array_key_exists('SNILS',$cert_data->subject)){
+						$verifResult->checkError = self::ER_UNQUALIFIED_CERT;
+						$verifResult->checkPassed = FALSE;
 					}
 					
-				
-					if (count($pem_files)==1){
-						$chain_file_for_verif = $chain_file;
+					//setting sign date
+					if (isset($sig_attrs[$cert_data->serialHex])){
+						$cert_data->signedDate = $sig_attrs[$cert_data->serialHex]->signedDate;
+						$cert_data->algorithm = $sig_attrs[$cert_data->serialHex]->algorithm;
 					}
-					else{
-						//combine all chains from all certificates
-						if (is_null($chain_file_for_verif)){
-							$chain_file_for_verif = $this->pkiPath.uniqid().'chain.pem';
-						}
-						file_put_contents($chain_file_for_verif, file_get_contents($chain_file), FILE_APPEND);						
+					
+					if (!$option_values['noChainVerification']){
+						$included_hases = [];
+						$this->build_chain($pem_file,$option_values['onlineRevocCheck'],$cert_data,$included_hases);						
 					}
+						
 				}
 				
 				//verification
 				try{
-					//-noverify -crl_check -CRLfile -crl_download					
-					$this->run_shell_cmd(sprintf(
-						'openssl smime -verify -content "%s" -purpose any -noverify -out /dev/null -inform der -in "%s" -CAfile "%s"',
+					//-noverify -crl_check -CRLfile crl_check_all					
+					$verif_cmd = sprintf(
+						$this->opensslPath.'openssl smime -verify -content "%s" -purpose any -out /dev/null -inform der -in "%s"',
 						$contentFile,
-						$der_file,
-						$chain_file_for_verif
-					));
-					
+						$der_file
+						
+					);
+					if (!$option_values['onlineRevocCheck']){
+						$verif_cmd.= ' -crl_check_all';
+					}
+					if (!$option_values['noChainVerification']){
+						$verif_cmd.=sprintf(' -CApath "%s"',$this->pkiPath);
+					}
+					else{
+						$verif_cmd.=' -noverify';
+					}
+					$this->run_shell_cmd($verif_cmd);
 				}
 				catch(Exception $e){
 					$user_m = str_replace(PHP_EOL,' ',$e->getMessage());
-					$this->logger->add('Verification error:'.$user_m,'error');
+					$this->logger->add('Verification error:'.$user_m.PHP_EOL.'CMD='.$verif_cmd,'error');
 					
 					if (strpos($user_m,'CRL has expired')!==FALSE && $crl_expir_tries){
 						$crl_expir_tries--;
+						$crl_invalid_time = time();
 						goto chain_build;
+					}
+					else if (strpos($user_m,'unable to get certificate CRL')!==FALSE){
+						$user_m = self::ER_NO_CRL;
 					}
 					else if (strpos($user_m,'certificate has expired')!==FALSE){
 						$user_m = self::ER_CERT_EXPIRED;
@@ -761,39 +761,27 @@ class PKIManager {
 					else if (strpos($user_m,'unable to get issuer certificate')!==FALSE){
 						$user_m = self::ER_BROKEN_CHAIN;
 					}
+					else if (strpos($user_m,'unable to get local issuer certificate')!==FALSE){
+						$user_m = self::ER_BROKEN_CHAIN;
+					}
 					else{
 						$user_m = self::ER_VERIF_FAIL;					
 					}
-					if(file_exists($chain_file)){
-						if(!$notRemoveTempFiles){
-							unlink($chain_file);
-						}
-						else{
-							$this->logger->add('Chain file is not removed on error '.$chain_file,'note');
-						}									
-					}
-					
 					$verifResult->checkError = (is_null($verifResult->checkError)? '':($verifResult->checkError.', ')). $user_m;
 					$verifResult->checkPassed = FALSE;
 				}
 				
-				
 			}
 			finally{
-				if (file_exists($der_file)){
-					if(!$notRemoveTempFiles){
+				if (!$option_values['notRemoveTempFiles']){
+					foreach($signer_pem_files as $pem_file){
+						if (file_exists($pem_file))unlink($pem_file);
+					}
+					if (file_exists($der_file)){
 						$this->logger->add('Deleting der file '.$der_file,'debug');
 						unlink($der_file);
 					}
-					else{
-						$this->logger->add('Temporary der file is not removed '.$der_file,'debug');
-					}													
-				}
-				
-				if (!is_null($chain_file_for_verif) && count($pem_files)>1 && !$notRemoveTempFiles && file_exists($chain_file_for_verif)){
-					unlink($chain_file_for_verif);
-				}
-				
+				}				
 				$this->logger->dump();
 	
 				$verifResult->checkTime = microtime(TRUE) - $verifResult->checkTime;
@@ -807,8 +795,8 @@ class PKIManager {
 		return $verifResult;
 	}
 	
-	public function getFileHash($contentFile){
-		$res_str = $this->run_shell_cmd(sprintf('cat "%s" | openssl dgst -md_gost94',$contentFile));
+	public function getFileHash($contentFile,$algorithm='md_gost94'){
+		$res_str = $this->run_shell_cmd(sprintf('cat "%s" | openssl dgst -%s',$contentFile,$algorithm));
 		$p = strpos($res_str,'=');
 		$hash = NULL;
 		if ($p>=0){
@@ -839,8 +827,16 @@ class PKIManager {
 			}
 			else if ($serial_found && strpos($line,'serialNumber:')!==FALSE){
 				$p=strpos($line,':')+1;
-				$cur_serial = dec2hex(trim(substr($line,$p)));
-				if (strlen($cur_serial)==31)$cur_serial='0'.$cur_serial;
+				$cur_serial_s = trim(substr($line,$p));
+				if (substr($cur_serial_s,0,2)=='0x'){
+					//openssl 1.1.1 already hex value
+					$cur_serial = substr($cur_serial_s,2);
+				}
+				else{
+					//openssl 1.0.1
+					$cur_serial = dec2hex($cur_serial_s);
+					if (strlen($cur_serial)%2==1)$cur_serial='0'.$cur_serial;
+				}				
 				$res[$cur_serial] = new stdClass();
 				$res[$cur_serial]->signedDate = NULL;
 				$res[$cur_serial]->algorithm = NULL;				
@@ -862,7 +858,7 @@ class PKIManager {
 				}
 				$alg_found = FALSE;
 			}
-			else if  ($signed_dt_found && $line=='value.set:' ){
+			else if  ($signed_dt_found && ($line=='value.set:'||$line=='set:' )){//openssl 1.1.1 correction
 				$signed_dt_val_next = TRUE;
 			}
 			else if ($line=='digestAlgorithm:'){
@@ -884,7 +880,7 @@ class PKIManager {
 	public function getSigAttributes($file,$binForamt){
 		$ret = NULL;
 		try{
-			$res_str = $this->run_shell_cmd(sprintf('openssl cms -inform %s -in "%s" -noout -cmsout -print',($binForamt? 'der':'pem'),$file));
+			$res_str = $this->run_shell_cmd(sprintf($this->opensslPath.'openssl cms -inform %s -in "%s" -noout -cmsout -print',($binForamt? 'der':'pem'),$file));
 			$ret = $this->get_sig_attributes($res_str);
 		}
 		finally{
@@ -899,7 +895,7 @@ class PKIManager {
 	 */
 	public function decodeSigFromBase64($sigFile,$derFile){
 		try{
-			$this->run_shell_cmd2(sprintf('openssl enc -d -base64 -in "%s" -out "%s"',$sigFile,$derFile));
+			$this->run_shell_cmd2(sprintf($this->opensslPath.'openssl enc -d -base64 -in "%s" -out "%s"',$sigFile,$derFile));
 		}
 		finally{
 			$this->logger->dump();
@@ -910,10 +906,10 @@ class PKIManager {
 	 * @param {string} sSigFile source sig file id der format
 	 * @param {string} dSigFile destinations sig file id der format
 	 * @param {string} oSigFile output sig file id der format
+	 * Uses external utility to merge containers
 	 */	
 	public function mergeSigs($sSigFile,$dSigFile,$oSigFile){
 		try{
-			//file_put_contents(OUTPUT_PATH.'cmsmerge',sprintf($this->pkiPath.'cmsmerge -s "%s" -d "%s" -o "%s"',$sSigFile,$dSigFile,$oSigFile));
 			$this->run_shell_cmd2(sprintf($this->pkiPath.'cmsmerge -s "%s" -d "%s" -o "%s"',$sSigFile,$dSigFile,$oSigFile));
 		}
 		finally{
@@ -927,9 +923,10 @@ class PKIManager {
 		try{
 			$handle = @fopen($sigFile, "r");
 			if ($handle===FALSE){
-				throw new Exception('Unable to open sig file!');
+				throw new Exception('isBase64Encoded:unable to open sig file!');
 			}	
-			$is_base64 = (@fread($handle,strlen(self::SIG_HEADER))==self::SIG_HEADER);
+			$start_s = @fread($handle,strlen(self::SIG_HEADER));
+			$is_base64 = ($start_s==self::SIG_HEADER || substr($start_s,0,2)=='MI');
 			fclose($handle);
 		}
 		finally{
@@ -937,6 +934,70 @@ class PKIManager {
 		}			
 		
 		return $is_base64;
+	}
+	
+	public function setLogLevel($logLevel){
+		$this->logger->setLogLevel($logLevel);
+	}
+	
+	/*
+	 * Installs all CA certificates to this->pkiPath
+	 */
+	public function makeCACertificates(){	
+		if(file_exists($this->pkiPath.'ca_list.xml')){
+			unlink($this->pkiPath.'ca_list.xml');
+		}
+
+		$ca_list_file = '';
+		$this->get_ca_list_file($ca_list_file);
+		$ca_data = simplexml_load_file($ca_list_file);
+		if($ca_data===FALSE){
+			throw new Exception("Ошибка парсинга XML документа ".$ca_list_file);
+		}
+	
+		$cur = new DateTime();
+		
+		$ca_list = $ca_data->children()->УдостоверяющийЦентр;
+		foreach($ca_list as $ca){
+			if ($ca->СтатусАккредитации->Статус=='Действует'){
+				$prog_list = $ca->ПрограммноАппаратныеКомплексы->ПрограммноАппаратныйКомплекс;
+				foreach($prog_list as $prog){
+					foreach($prog->КлючиУполномоченныхЛиц->Ключ as $key){
+						foreach($key->Сертификаты->ДанныеСертификата as $sert){
+							$fingerprint = trim($sert->Отпечаток);
+							
+							$to = $this->date_from_ISO((string)$sert->ПериодДействияДо);
+							$from = $this->date_from_ISO((string)$sert->ПериодДействияС);
+							
+							if ($cur<$to && $cur>$from){
+								
+								$b64 = $this->pkiPath.$fingerprint.'.b64';
+								$der = $this->pkiPath.$fingerprint.'.der';								
+								
+								try{
+									//pem
+									file_put_contents($b64, $sert->Данные);
+									$this->run_shell_cmd2(sprintf($this->opensslPath.'openssl base64 -d -A -in "%s" -out "%s"',$b64,$der));
+								
+									$hash = trim($this->run_shell_cmd(sprintf($this->opensslPath.'openssl x509 -hash -inform der -in "%s" -noout',$der)));
+									
+									$ind = 0;
+									while(file_exists($pem = $this->pkiPath.$hash.'.'.$ind)){
+										$ind++;	
+									}
+									$this->run_shell_cmd2(sprintf($this->opensslPath.'openssl x509 -in "%s" -inform der -outform pem -out "%s"',$der,$pem));
+								}	
+								finally{
+									if (file_exists($b64))unlink($b64);
+									if (file_exists($der))unlink($der);
+								}								
+							}
+						}
+					}
+				}				
+			}
+		}		
+	
 	}
 }
 

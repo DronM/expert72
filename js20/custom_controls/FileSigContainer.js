@@ -50,7 +50,8 @@ extend(FileSigContainer,Control);
 FileSigContainer.prototype.IMG_WAIT = "fa fa-spinner fa-spin";
 FileSigContainer.prototype.IMG_KEY = "icon-key";
 FileSigContainer.prototype.ADD_SIG_TITLE = "Подписать файл выбранной подписью";
-FileSigContainer.prototype.SIG_PROCESS_TITLE = "Подписать файл выбранной подписью";
+FileSigContainer.prototype.ADD_CLOUD_SIG_TITLE = "Подписать файл облачной подписью";
+FileSigContainer.prototype.SIG_PROCESS_TITLE = "Подписание файла...";
 FileSigContainer.prototype.SIG_ERR_CLASS = "border-danger";
 
 /* private members */
@@ -163,9 +164,9 @@ FileSigContainer.prototype.sigsToDOM = function(){
 	
 	if (!this.m_readOnly){
 		var app = window.getApp();
-		var cades = app.getCadesAPI? app.getCadesAPI():null;
-		if (cades){	
-			var cert_cnt = cades.getCertListCount();		
+		var cades = app.getCadesAPI? app.getCadesAPI():null;		
+		if (cades || app.getCloudKeyExists()){	
+			var cert_cnt = app.getCloudKeyExists()? 1:cades.getCertListCount();		
 			var sig_cnt = this.m_signatures.getCount();
 			var vs= (
 				(!this.m_maxSignatureCount || sig_cnt<this.m_maxSignatureCount)
@@ -180,7 +181,7 @@ FileSigContainer.prototype.sigsToDOM = function(){
 				"className":"btn btn-sm"+(
 					((sig_cnt>=this.m_maxSignatureCount)||(this.m_signatures.getCount()&&!this.m_multiSignature))? "":" fileSignNoSig"
 					),
-				"title":this.ADD_SIG_TITLE,
+				"title":this.getSigTitle(),
 				"visible":vs,
 				"elements":[
 					new Control(this.getId()+":addSign:pic","I",{
@@ -222,7 +223,7 @@ FileSigContainer.prototype.setWait = function(v){
 		//console.log("FileSigContainer.prototype.setWait="+v)
 		//this.m_addSignControl.getElement("pic").setClassName( (v? this.IMG_WAIT:this.IMG_KEY) );
 		this.m_addSignControl.getElement("pic").setAttr("class",(v? this.IMG_WAIT:this.IMG_KEY));
-		this.m_addSignControl.setAttr("title", (v? this.SIG_PROCESS_TITLE:this.ADD_SIG_TITLE) );
+		this.m_addSignControl.setAttr("title", (v? this.SIG_PROCESS_TITLE:this.getSigTitle()) );
 	}	
 }
 
@@ -387,3 +388,6 @@ FileSigContainer.prototype.setMaxSignatureCount = function(v){
 	this.m_maxSignatureCount = v;
 }
 
+FileSigContainer.prototype.getSigTitle= function(){
+	return (window.getApp().getCloudKeyExists())? this.ADD_CLOUD_SIG_TITLE : this.ADD_SIG_TITLE;
+}

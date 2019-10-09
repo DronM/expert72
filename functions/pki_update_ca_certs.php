@@ -3,7 +3,7 @@
 	require_once('PKIManager.php');
 	require_once("ExpertEmailSender.php");
 	
-	$pki_man = new PKIManager(PKI_PATH);
+	$pki_man = new PKIManager(array("pkiPath"=>PKI_PATH));
 	$pki_man->makeCACertificates();
 	/*
 	try{

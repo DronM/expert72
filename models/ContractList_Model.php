@@ -527,6 +527,14 @@ class ContractList_Model extends ModelSQL{
 		$this->addField($f_contract_return_date_on_sig);
 		//********************
 		
+		//*** Field fund_source_id ***
+		$f_opts = array();
+		$f_opts['id']="fund_source_id";
+						
+		$f_fund_source_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"fund_source_id",$f_opts);
+		$this->addField($f_fund_source_id);
+		//********************
+		
 		//*** Field applications_ref ***
 		$f_opts = array();
 		$f_opts['id']="applications_ref";

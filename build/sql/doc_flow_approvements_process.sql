@@ -125,9 +125,11 @@ BEGIN
 						NEW.end_date_time
 					);
 			
-					--Если это исх.письмо по контракту - сразу зарегистрируем
+					--Если это исх.письмо по контракту (замечания) - сразу зарегистрируем
+					--Добавлено 08/06/19: или заключение экспертизы - сразу зарегистрируем
 					IF ((NEW.close_result)::text)::doc_flow_out_states='approved'::doc_flow_out_states
-					AND NEW.subject_doc->>'dataType'='doc_flow_out' THEN
+					AND NEW.subject_doc->>'dataType'='doc_flow_out'
+					THEN
 						SELECT
 							t.doc_flow_type_id,
 							t.reg_number,
@@ -139,7 +141,11 @@ BEGIN
 						FROM doc_flow_out t				
 						WHERE t.id = (NEW.subject_doc->'keys'->>'id')::int;
 				
-						IF (v_doc_flow_type_id=(pdfn_doc_flow_types_contr()->'keys'->>'id')::int) THEN
+						--08/06/19 +contr_close
+						IF
+							v_doc_flow_type_id=(pdfn_doc_flow_types_contr()->'keys'->>'id')::int
+							OR v_doc_flow_type_id=(pdfn_doc_flow_types_contr_close()->'keys'->>'id')::int	
+						THEN
 							IF v_reg_number IS NULL THEN
 								UPDATE doc_flow_out
 								SET reg_number=doc_flow_out_next_num(v_doc_flow_type_id)

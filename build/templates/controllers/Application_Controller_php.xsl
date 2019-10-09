@@ -18,6 +18,7 @@
 <xsl:template match="controller"><![CDATA[<?php]]>
 <xsl:call-template name="add_requirements"/>
 
+require_once(USER_CONTROLLERS_PATH.'DocFlow_Controller.php');
 require_once(USER_CONTROLLERS_PATH.'DocFlowOutClient_Controller.php');
 
 require_once('common/downloader.php');
@@ -549,6 +550,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				FALSE AS cost_eval_validity,
 				FALSE AS cost_eval_validity_simult,				
 				NULL AS fund_sources_ref,
+				NULL AS fund_total,
 				NULL AS construction_types_ref,
 				NULL AS applicant,
 				NULL AS customer,
@@ -719,6 +721,25 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			self::APP_DIR_PREF.$applicationId.DIRECTORY_SEPARATOR.
 			self::FILE_AUDIT.'.pdf'
 		);
+		//docx
+		self::delFileFromStorage(
+			self::APP_DIR_PREF.$applicationId.DIRECTORY_SEPARATOR.
+			self::FILE_APPLICATION.'.docx'
+		);
+
+		self::delFileFromStorage(
+			self::APP_DIR_PREF.$applicationId.DIRECTORY_SEPARATOR.
+			self::FILE_COST_EVAL_VALIDITY.'.docx'
+		);
+		self::delFileFromStorage(
+			self::APP_DIR_PREF.$applicationId.DIRECTORY_SEPARATOR.
+			self::FILE_MODIFICATION.'.docx'
+		);
+		self::delFileFromStorage(
+			self::APP_DIR_PREF.$applicationId.DIRECTORY_SEPARATOR.
+			self::FILE_AUDIT.'.docx'
+		);
+		
 		self::removeSigCheckReport($applicationId);
 	}
 
@@ -1573,6 +1594,12 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			throw new Exception(self::ER_NO_ATT);
 		}
 		
+		$doc_type = strtolower($this->getExtVal($pm,'doc_type'));
+		if(!($doc_type=='pdf' || $doc_type=='doc' || $doc_type=='docx')){
+			$this->setHeaderStatus(400);
+			throw new Exception('Unsupported document type!');
+		}
+		
 		$templ_name = $pm->getParamValue('templ');
 		$out_file_name = '';
 		if ($templ_name=='Application'){
@@ -1597,7 +1624,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			chmod($dir, 0775);
 		}
 		
-		$rel_out_file = $rel_dir.DIRECTORY_SEPARATOR.$out_file_name.".pdf";		
+		$rel_out_file = $rel_dir.DIRECTORY_SEPARATOR.$out_file_name. '.'. $doc_type;		
 		$out_file = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_out_file;
 			
 		if (
@@ -1606,11 +1633,13 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			&amp;&amp; file_exists($out_pdf=FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$rel_out_file)
 			)
 		){
+			$mime = getMimeTypeOnExt($out_pdf);
+			ob_clean();
 			downloadFile(
 				$out_pdf,
-				'application/pdf',
+				$mime,
 				(isset($_REQUEST['inline']) &amp;&amp; $_REQUEST['inline']=='1')? 'inline;':'attachment;',
-				$out_file_name.".pdf"
+				$out_file_name.'.'. $doc_type
 			);
 			return TRUE;			
 		}
@@ -2042,32 +2071,129 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				'values'=>$m_fields
 		));
 		
-		if ($_REQUEST['v']=='ViewPDF'){
+		if ($_REQUEST['v']=='ViewPDF' || $_REQUEST['v']=='ViewWord'){
 			$cont = $model->dataToXML(TRUE);
-			return $this->print_pdf($templ_name,$out_file_name,$out_file,$cont);		
+			return $this->print_document($templ_name,$out_file_name,$out_file,$cont,$doc_type);		
 		}
 		else{
 			$this->addModel($model);
 		}	
 	}
 	
-	private function print_pdf($templName,$outFileName,$outFile,&amp;$content){
+	/**
+	 * @param {string} outFile
+	 */
+	public static function makeDOCXFile($xmlFile,$outFile){
+		$CONTENT_NAME = 'word/document2.xml';
+		
+		//Создание копии для исходного файла
+		copy(USER_VIEWS_PATH.'Application.docx',$outFile);	
+		try{
+			//Открываем архиватором
+			$zip = new ZipArchive();
+			$res = $zip->open($outFile);
+			if ($res===TRUE) {
+				$zip->deleteName($CONTENT_NAME);			
+				$zip->addFile($xmlFile, $CONTENT_NAME);        
+				$zip->close();	
+			}
+			else{
+				throw new Exception('Error opening file as archive, code:'.$res);
+			}
+		}
+		catch(Exception $e){
+			unlink($outFile);			
+			throw $e;
+		}
+	}
+	
+	/**
+	 * @param {string} content XML content
+	 * @param {string} documentType pdf|doc
+	 */
+	private function print_document($templName,$outFileName,$outFile,&amp;$content,$documentType){
 		$xml = '&lt;?xml version="1.0" encoding="UTF-8"?&gt;';
 		$xml.= '&lt;document&gt;';
 		$xml.= $content;
 		$xml.= '&lt;/document&gt;';
-		$xml_file = OUTPUT_PATH.uniqid().".xml";
-		file_put_contents($xml_file,$xml);
-		//FOP
-		$xslt_file = USER_VIEWS_PATH.$templName.".pdf.xsl";
-		$out_file_tmp = OUTPUT_PATH.uniqid().".pdf";
-		$cmd = sprintf(PDF_CMD_TEMPLATE,$xml_file, $xslt_file, $out_file_tmp);
-		exec($cmd);
+		$out_file_tmp = OUTPUT_PATH.uniqid().".".$documentType;
+		
+		if($documentType=='pdf'){
+			$xml_file = OUTPUT_PATH.uniqid().".xml";
+			file_put_contents($xml_file,$xml);
+			try{
+				//FOP
+				$xslt_file = USER_VIEWS_PATH.$templName.".".$documentType.".xsl";			
+				$cmd = sprintf(PDF_CMD_TEMPLATE,$xml_file, $xslt_file, $out_file_tmp);
+				exec($cmd);
+			}
+			finally{
+				if (file_exists($xml_file)){
+					unlink($xml_file);
+				}			
+			}
+		}
+		else{
+			//word
+			$xslt_file = USER_VIEWS_PATH.$_REQUEST['templ'].sprintf(".%s.xsl",$documentType);
+			if(!file_exists($xslt_file)){
+				throw new Exception('Template not found!');
+			}
+			$xml_file = OUTPUT_PATH.uniqid().".xml";
+			file_put_contents($xml_file,$xml);
+			try{
+				$xml_transformed = OUTPUT_PATH.uniqid().".xml";
 			
+				/*exec(sprintf("xsltproc '%s' '%s' > '%s'",$xslt_file,$xml_file,$xml_transformed));
+				$tidy = new tidy();
+				$str = $tidy->repairString($xml_transformed,'/home/andrey/www/htdocs/expert72/views/enum/tidy.md.ini');
+				file_put_contents($xml_transformed,$str);
+				*/
+			
+				$doc = new DOMDocument();     
+				$xsl = new XSLTProcessor();
+				set_error_handler(function($number, $error){
+					if (preg_match('/^DOMDocument::loadXML\(\): (.+)$/', $error, $m) === 1) {
+						throw new Exception($m[1]);
+					}
+				});			
+				$doc->load($xslt_file);
+				restore_error_handler();
+			
+				libxml_use_internal_errors(true);
+				$result = $xsl->importStyleSheet($doc);
+				if (!$result) {
+					$er_str = '';
+					foreach (libxml_get_errors() as $error) {
+						 $er_str.= ($er_str==''? '':' ');
+						 $er_str.= "Libxml error: {$error->message}\n";
+					}
+					throw new $er_str;
+				}
+				libxml_use_internal_errors(false);			
+			
+				$xmlDoc = new DOMDocument();
+				$xmlDoc->loadXML($xml);
+				//$xmlDoc->formatOutput=TRUE;
+				//$xmlDoc->save(OUTPUT_PATH.'page.xml');			
+				$xml = $xsl->transformToXML($xmlDoc);
+				file_put_contents($xml_transformed,$xml);
+				try{
+					self::makeDOCXFile($xml_transformed,$out_file_tmp);
+				}
+				finally{
+					unlink($xml_transformed);
+				}
+			}
+			finally{
+				unlink($xml_file);
+			}
+		}
+		
 		if (!file_exists($out_file_tmp)){
 			$this->setHeaderStatus(400);
 			$m = NULL;
-			if (DEBUG){
+			if (DEBUG &amp;&amp; $documentType=='pdf'){
 				$m = 'Ошибка формирования файла! CMD='.$cmd;
 			}
 			else{
@@ -2076,26 +2202,59 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			}
 			throw new Exception($m);
 		}
-		
-		rename($out_file_tmp, $outFile);
-		ob_clean();
-		downloadFile(
-			$outFile,
-			'application/pdf',
-			(isset($_REQUEST['inline']) &amp;&amp; $_REQUEST['inline']=='1')? 'inline;':'attachment;',
-			$outFileName.".pdf"
-		);
-		unlink($xml_file);
-		if (file_exists($out_file_tmp)){
+		try{
 			rename($out_file_tmp, $outFile);
+			ob_clean();
+			downloadFile(
+				$outFile,
+				'application/'.$documentType,
+				(isset($_REQUEST['inline']) &amp;&amp; $_REQUEST['inline']=='1')? 'inline;':'attachment;',
+				$outFileName.".".$documentType
+			);
 		}
-	
+		finally{
+			if (file_exists($out_file_tmp)){
+				rename($out_file_tmp, $outFile);
+			}
+		}	
 		return TRUE;
-	
 	}
 	
 	public function get_document_templates($pm){
+		//параметр on_date не используется - всегда последний!
 		$this->addNewModel("SELECT * FROM document_templates_all_json_list",'DocumentTemplateAllList_Model');
+	}
+	
+	public function get_document_templates_for_contract($pm){
+		$this->addNewModel(sprintf(
+			"WITH contr_data AS (
+				SELECT
+					app.cost_eval_validity,
+					app.expertise_type,
+					app.modification,
+					app.audit,
+					app.construction_type_id
+				FROM contracts ct
+				LEFT JOIN applications AS app ON app.id=ct.application_id
+				WHERE ct.id=%d
+			)
+			SELECT
+				t.document_type,
+				t.documents->'document' AS sections
+			FROM document_templates_all_list AS t
+			WHERE
+				t.construction_type_id=(SELECT contr_data.construction_type_id FROM contr_data)
+				AND (
+					(t.document_type='pd' AND (SELECT contr_data.expertise_type FROM contr_data) IN ('pd','pd_eng_survey') )
+					OR (t.document_type='eng_survey' AND (SELECT contr_data.expertise_type FROM contr_data) IN ('eng_survey','pd_eng_survey') )
+					OR (t.document_type='cost_eval_validity' AND (SELECT contr_data.cost_eval_validity FROM contr_data) )
+					OR (t.document_type='modification' AND (SELECT contr_data.modification FROM contr_data) )
+					OR (t.document_type='audit' AND (SELECT contr_data.audit FROM contr_data) )
+				)",
+			$this->getExtDbVal($pm,'contract_id')
+			),
+			'DocumentTemplateForContractList_Model'
+		);
 	}
 
 	public function remove_document_types($pm){
@@ -2524,7 +2683,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		);
 		if ($_REQUEST['v']=='ViewPDF'){
 			$cont = $h->dataToXML(TRUE).html_entity_decode($m->dataToXML(TRUE));
-			return $this->print_pdf('ApplicationSigCheck',$templ_name,$out_file,$cont);
+			return $this->print_document('ApplicationSigCheck',$templ_name,$out_file,$cont,'pdf');
 		}
 		else{
 			$this->addModel($h);
@@ -2710,6 +2869,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		));
 		
 		if (is_array($ar) &amp;&amp; count($ar) &amp;&amp; $ar['file_exists']=='t'){
+			//registered!!!
 			throw new Exception(self::ER_STORAGE_FILE_NOT_FOUND);
 		}
 		
@@ -2743,6 +2903,20 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				|| LK
 			)? '_lk':'';
 	}
+	
+	public function sign_file($pm){
+		$file_data = NULL;
+		if(isset($_FILES) &amp;&amp; isset($_FILES['file_data'])){
+			$file_data = $_FILES['file_data'];
+		}
+		DocFlow_Controller::signFile(
+			$this,
+			$pm,
+			$file_data,
+			'application'
+		);
+	}
+	
 	
 </xsl:template>
 

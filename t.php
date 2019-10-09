@@ -1,8 +1,9 @@
 <?php
 require_once('Config.php');
 
-	require_once('common/BikInfo.php');
-	BikInfo::genFile(OUTPUT_PATH);
+//	require_once('common/BikInfo.php');
+//	BikInfo::genFile(OUTPUT_PATH);
+echo preg_match('/^.+ *- *УЛ *\.{1}.+$/','820.17_Книга01_ИИ_изм.01 - 1УЛ.pdf');
 exit;
 
 	echo time();

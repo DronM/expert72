@@ -203,6 +203,34 @@ function User_Model(options){
 	
 	options.fields.cades_chunk_size = new FieldInt("cades_chunk_size",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.private_pem = new FieldText("private_pem",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.private_file = new FieldJSONB("private_file",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	filed_options.defValue = true;
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.win_message_style = new FieldJSONB("win_message_style",filed_options);
+	
 			
 			
 			

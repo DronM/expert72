@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?mso-application progid="Word.Document"?>
+<w:wordDocument xmlns:w="http://schemas.microsoft.com/office/word/2003/wordml">
+<w:styles>
+    <w:style w:styleId="P1" w:type="paragraph">
+      <w:basedOn w:val="Standard"/>
+      <w:name w:val="P1"/>
+      <w:hidden w:val="on"/>
+      <w:pPr xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0">
+        <w:adjustRightInd w:val="off"/>
+        <w:jc w:val="center"/>
+        <w:spacing/>
+        <w:ind/>
+        <w:widowControl w:val="off"/>
+        <w:pBdr/>
+        <w:ind/>
+      </w:pPr>
+      <w:rPr xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0">
+        <w:b/>
+      </w:rPr>
+    </w:style>
+</w:styles>
+
+  <w:body>
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="P1"/>
+      </w:pPr>
+    
+      <w:r>
+        <w:t>Текст в центре</w:t>
+      </w:r>
+    </w:p>
+    
+    <w:p>
+      <w:r>
+        <w:t>MS-2124, C# Programming</w:t>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:r>
+        <w:t>NET2, .NET 2.0 Early Adopter</w:t>
+      </w:r>
+    </w:p>
+  </w:body>
+</w:wordDocument>

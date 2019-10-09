@@ -40,6 +40,8 @@ function User_Controller(options){
 	this.add_email_confirm();
 	this.add_hide();
 	this.add_send_email_confirm();
+	this.add_private_delete();
+	this.add_private_put();
 		
 }
 extend(User_Controller,ControllerObjServer);
@@ -156,6 +158,24 @@ extend(User_Controller,ControllerObjServer);
 	var options = {};
 	options.alias = "КриптоПро плагин: Размер части файла в байтах при поточной загрузке";
 	var field = new FieldInt("cades_chunk_size",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldText("private_pem",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldJSONB("private_file",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldJSONB("win_message_style",options);
 	
 	pm.addField(field);
 	
@@ -282,6 +302,24 @@ extend(User_Controller,ControllerObjServer);
 	var options = {};
 	options.alias = "КриптоПро плагин: Размер части файла в байтах при поточной загрузке";
 	var field = new FieldInt("cades_chunk_size",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldText("private_pem",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldJSONB("private_file",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldJSONB("win_message_style",options);
 	
 	pm.addField(field);
 	
@@ -564,6 +602,64 @@ extend(User_Controller,ControllerObjServer);
 	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('send_email_confirm',opts);
 	
+	this.addPublicMethod(pm);
+}
+
+			User_Controller.prototype.add_private_delete = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('private_delete',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("user_id",options));
+	
+				
+	
+	var options = {};
+	
+		options.maxlength = "36";
+	
+		pm.addField(new FieldString("file_id",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			User_Controller.prototype.add_private_put = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('private_put',opts);
+	
+	pm.setRequestType('post');
+	
+	pm.setEncType(ServConnector.prototype.ENCTYPES.MULTIPART);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("user_id",options));
+	
+				
+	
+	var options = {};
+	
+		pm.addField(new FieldText("private_file_data",options));
+	
+				
+	
+	var options = {};
+	
+		options.maxlength = "50";
+	
+		pm.addField(new FieldString("pwd",options));
+	
+			
 	this.addPublicMethod(pm);
 }
 

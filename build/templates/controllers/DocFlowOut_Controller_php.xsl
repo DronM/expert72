@@ -504,6 +504,20 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			);			
 		}
 	}
+	
+	public function sign_file($pm){		
+		$file_data = NULL;
+		if(isset($_FILES) &amp;&amp; isset($_FILES['file_data'])){
+			$file_data = $_FILES['file_data'];
+		}
+	
+		DocFlow_Controller::signFile(
+			$this,
+			$pm,
+			$file_data,
+			'out'
+		);
+	}
 
 </xsl:template>
 

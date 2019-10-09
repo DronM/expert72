@@ -103,6 +103,15 @@ function RepReestrCostEval_Model(options){
 	
 	options.fields.argument_document = new FieldString("argument_document",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.contract_id = new FieldInt("contract_id",filed_options);
+	
 		RepReestrCostEval_Model.superclass.constructor.call(this,id,options);
 }
 extend(RepReestrCostEval_Model,ModelXML);

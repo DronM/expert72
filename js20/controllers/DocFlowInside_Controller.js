@@ -35,6 +35,7 @@ function DocFlowInside_Controller(options){
 	this.add_get_file();
 	this.add_get_file_sig();
 	this.add_get_sig_details();
+	this.add_sign_file();
 		
 }
 extend(DocFlowInside_Controller,ControllerObjServer);
@@ -344,6 +345,50 @@ extend(DocFlowInside_Controller,ControllerObjServer);
 		options.maxlength = "36";
 	
 		pm.addField(new FieldString("id",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			DocFlowInside_Controller.prototype.add_sign_file = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('sign_file',opts);
+	
+	pm.setRequestType('post');
+	
+	pm.setEncType(ServConnector.prototype.ENCTYPES.MULTIPART);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		options.maxlength = "36";
+	
+		pm.addField(new FieldString("file_id",options));
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("doc_id",options));
+	
+				
+	
+	var options = {};
+	
+		pm.addField(new FieldText("file_data",options));
+	
+				
+	
+	var options = {};
+	
+		options.maxlength = "250";
+	
+		pm.addField(new FieldString("file_path",options));
 	
 			
 	this.addPublicMethod(pm);

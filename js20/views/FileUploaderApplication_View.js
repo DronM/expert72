@@ -20,6 +20,30 @@ function FileUploaderApplication_View(id,options){
 	options.constDownloadTypes = "client_download_file_types";
 	options.constDownloadMaxSize = "client_download_file_max_size";
 	
+	//Установка недоступности разделов
+	var en_items;
+	if (options.mainView.m_docFlowOutAttrs){
+		en_items = options.mainView.m_docFlowOutAttrs.allow_edit_sections;
+		options.allowNewFileAdd = options.mainView.m_docFlowOutAttrs.allow_new_file_add;		
+	}
+	
+	var correct_items = function(items){
+		for(var i=0;i<items.length;i++){	
+			if(en_items && CommonHelper.inArray(items[i].fields.id,en_items)<0){
+				items[i].disabled = true;
+				items[i].enabled = false;
+			}
+			else{
+				items[i].disabled = false;
+				items[i].enabled = true;
+			}	
+			if(items[i].items){
+				correct_items(items[i].items);
+			}
+		}				
+	}
+	correct_items(options.items);		
+	
 	this.m_mainView = options.mainView;
 	this.m_documentType = options.documentType;
 	this.m_documentTitle = options.documentTitle;
@@ -31,7 +55,9 @@ function FileUploaderApplication_View(id,options){
 	
 	options.templateOptions = {
 		"docType" : this.m_documentType,
-		"notReadOnly":!options.readOnly
+		"notReadOnly":!options.readOnly,
+		"notAllowNewFileAdd":!options.allowNewFileAdd,
+		"allowNewFileAdd":options.allowNewFileAdd
 	};	
 	options.fileTemplate = window.getApp().getTemplate("ApplicationFile"); 
 	options.fileTemplateOptions = {
@@ -91,6 +117,12 @@ FileUploaderApplication_View.prototype.uploadAll = function(){
 		this.upload();
 	}
 }
+
+FileUploaderApplication_View.prototype.deleteSigFromServer = function(fileId,itemId){
+	this.deleteFileFromServer(fileId,itemId);
+}
+
+
 FileUploaderApplication_View.prototype.deleteFileFromServer = function(fileId,itemId){
 	var self = this;
 	
@@ -214,3 +246,17 @@ FileUploaderApplication_View.prototype.fireFileError = function(file,message){
 }
 
 */
+FileUploaderApplication_View.prototype.getPublicMethodForFileSign = function(file){
+	var pm = (new Application_Controller()).getPublicMethod("sign_file");
+	pm.setFieldValue("file_id",file.file_id);
+	pm.setFieldValue("application_id",this.m_mainView.getElement("id").getValue());
+	pm.setFieldValue("doc_type",this.m_documentType);		
+	pm.setFieldValue("doc_id",file.doc_id);
+	pm.setFieldValue("file_path",file.file_path);
+	if(file.original_file){
+		pm.setFieldValue("original_file_id",file.original_file.fileId);
+	}
+	
+	return pm;
+}
+

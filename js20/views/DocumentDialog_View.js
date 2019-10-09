@@ -105,16 +105,21 @@ DocumentDialog_View.prototype.fillDocumentTemplates = function(model){
 	}
 }
 
+DocumentDialog_View.prototype.getUploaderOptions = function(){
+	return {};
+}
+
 DocumentDialog_View.prototype.addDocTab = function(tabName,items,toDOM){
-	this.m_documentTabs[tabName].control = new this.m_uploaderClass(this.getId()+":documents_"+tabName,{
-		"mainView":this,
-		"documentType":tabName,
-		"documentTitle":this.m_documentTabs[tabName].title,
-		"maxFileSize":this.m_maxFileSize,
-		"allowedFileExt":this.m_allowedFileExt,
-		"items":items,
-		"readOnly":this.m_readOnly
-	});
+	var opts = this.getUploaderOptions();
+	opts.mainView = this;
+	opts.documentType = tabName;
+	opts.documentTitle = this.m_documentTabs[tabName].title;
+	opts.maxFileSize = this.m_maxFileSize;
+	opts.allowedFileExt = this.m_allowedFileExt;
+	opts.items = items;
+	opts.readOnly = this.m_readOnly;
+	
+	this.m_documentTabs[tabName].control = new this.m_uploaderClass(this.getId()+":documents_"+tabName,opts);
 	this.addElement(this.m_documentTabs[tabName].control);
 	if (toDOM){
 		this.m_documentTabs[tabName].control.toDOM(document.getElementById("documents_"+tabName));

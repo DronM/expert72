@@ -522,6 +522,14 @@ function ContractDialog_Model(options){
 	filed_options.autoInc = false;	
 	
 	options.fields.contract_return_date_on_sig = new FieldBool("contract_return_date_on_sig",filed_options);
+		
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.fund_source_id = new FieldInt("fund_source_id",filed_options);
 	
 			
 			

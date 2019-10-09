@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<xsl:stylesheet version="1.0" 
- xmlns:html="http://www.w3.org/TR/REC-html40"
- xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
- xmlns:fo="http://www.w3.org/1999/XSL/Format">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <xsl:import href="Application.pdf.xsl"/>
 
@@ -21,6 +18,17 @@
 </xsl:template>
 
 <xsl:template match="documents_pd">
+</xsl:template>
+
+<xsl:template name="doc_number">
+	<xsl:choose>
+	<xsl:when test="string-length(row/cost_eval_validity_app_id)&gt;0">
+		<xsl:value-of select="row/cost_eval_validity_app_id"/>
+	</xsl:when>
+	<xsl:otherwise>
+		<xsl:value-of select="row/id"/>
+	</xsl:otherwise>
+	</xsl:choose>
 </xsl:template>
 
 </xsl:stylesheet>

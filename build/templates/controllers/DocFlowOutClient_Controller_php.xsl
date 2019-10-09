@@ -35,6 +35,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 	const ER_UNSENT_DOC_EXISTS = 'По данному заявлению уже есть неотправленный документ с таким видом письма от %s';
 	const ER_COULD_NOT_REMOVE_SIG = 'Ошибка при удалении подписи заказчика!';
 	const ER_NO_SIG_ATTACHMENTS = 'Нет подписанных Вами документов!';
+	const ER_DEL_NOT_ALLOWED = 'Удаление файлов запрещено!@1010';
 
 	public function __construct($dbLinkMaster=NULL,$dbLink=NULL){
 		parent::__construct($dbLinkMaster,$dbLink);<xsl:apply-templates/>
@@ -627,8 +628,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 	private function add_files_for_signing($applicationId){			
 		$this->addNewModel(sprintf(
 		"SELECT jsonb_agg(doc_flow_out_client_files_for_signing(%d)) AS attachment_files_only_sigs",
-		$applicationId,
-		$_SESSION['user_id']
+		$applicationId
 		),"FileForSigningList_Model");
 		
 	}
@@ -655,6 +655,30 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		$doc_flow_out_client_id_for_db = $this->getExtDbVal($pm,'doc_flow_out_client_id');
 		
 		$this->check_user_and_state($doc_flow_out_client_id_for_db);
+		
+		//А можно ли удалять файлы?
+		$ar = $this->getDbLink()->query_first(
+			sprintf(
+				"SELECT
+					doc_flow_out_client_out_attrs(
+						(SELECT t.application_id FROM doc_flow_out_client AS t WHERE t.id=%d)
+					) AS attrs,
+					(SELECT t.doc_flow_out_client_id=%d
+					FROM doc_flow_out_client_document_files t
+					WHERE t.file_id=%s
+					) AS added_by_this_doc
+				",
+				$doc_flow_out_client_id_for_db,
+				$doc_flow_out_client_id_for_db,
+				$file_id_for_db
+			)
+		);
+		if(is_array($ar) &amp;&amp; count($ar)  &amp;&amp; isset($ar['attrs'])){
+			$attrs = json_decode($ar['attrs']);
+			if (!$attrs->allow_new_file_add &amp;&amp; $ar['added_by_this_doc']=='f'){
+				throw new Exception(self::ER_DEL_NOT_ALLOWED);
+			}
+		}
 		
 		try{
 			$dbLinkMaster= $this->getDbLinkMaster();
@@ -739,6 +763,21 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		),
 		"DocFlowOutClientCorrectionList_Model");
 	
+	}
+	
+	/**
+	 * Возвращает объект
+	 *	- allow_new_file_add bool
+	 *	- allow_edit_sections array on int
+	 * Информация из НАШЕГО последнего письма
+	 */
+	public function get_doc_flow_out_attrs($pm){
+		$this->addNewModel(sprintf(
+			"SELECT doc_flow_out_client_out_attrs(%d) AS attrs",
+			$this->getExtDbVal($pm,'application_id')
+		),
+		'DocFlowOutAttrList_Model'
+		);
 	}
 	
 </xsl:template>

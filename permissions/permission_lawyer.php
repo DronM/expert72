@@ -108,6 +108,10 @@ $permissions = array();
 				
 					$permissions['User_Controller_send_email_confirm']=TRUE;
 				
+					$permissions['User_Controller_private_delete']=TRUE;
+				
+					$permissions['User_Controller_private_put']=TRUE;
+				
 					$permissions['MailForSending_Controller_get_list']=TRUE;
 				
 					$permissions['MailForSending_Controller_get_object']=TRUE;
@@ -280,6 +284,8 @@ $permissions = array();
 				
 					$permissions['Application_Controller_get_document_templates']=TRUE;
 				
+					$permissions['Application_Controller_get_document_templates_for_contract']=TRUE;
+				
 					$permissions['Application_Controller_remove_document_types']=TRUE;
 				
 					$permissions['Application_Controller_download_app_print_expertise']=TRUE;
@@ -327,6 +333,8 @@ $permissions = array();
 					$permissions['Application_Controller_get_constr_name_list']=TRUE;
 				
 					$permissions['Application_Controller_remove_unregistered_data_file']=TRUE;
+				
+					$permissions['Application_Controller_sign_file']=TRUE;
 				
 					$permissions['ApplicationClient_Controller_insert']=TRUE;
 				
@@ -390,6 +398,8 @@ $permissions = array();
 				
 					$permissions['DocFlowOut_Controller_get_sig_details']=TRUE;
 				
+					$permissions['DocFlowOut_Controller_sign_file']=TRUE;
+				
 					$permissions['DocFlowIn_Controller_insert']=TRUE;
 				
 					$permissions['DocFlowIn_Controller_update']=TRUE;
@@ -435,6 +445,8 @@ $permissions = array();
 					$permissions['DocFlowInside_Controller_get_file_sig']=TRUE;
 				
 					$permissions['DocFlowInside_Controller_get_sig_details']=TRUE;
+				
+					$permissions['DocFlowInside_Controller_sign_file']=TRUE;
 				
 					$permissions['DocFlowImportanceType_Controller_insert']=TRUE;
 				
@@ -649,6 +661,8 @@ $permissions = array();
 					$permissions['DocFlowOutClient_Controller_check_type']=TRUE;
 				
 					$permissions['DocFlowOutClient_Controller_get_correction_list']=TRUE;
+				
+					$permissions['DocFlowOutClient_Controller_get_doc_flow_out_attrs']=TRUE;
 				
 					$permissions['DocFlowInClient_Controller_update']=TRUE;
 				

@@ -175,6 +175,15 @@ function RepReestrContract_Model(options){
 	
 	options.fields.comment_text = new FieldString("comment_text",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.contract_id = new FieldInt("contract_id",filed_options);
+	
 		RepReestrContract_Model.superclass.constructor.call(this,id,options);
 }
 extend(RepReestrContract_Model,ModelXML);

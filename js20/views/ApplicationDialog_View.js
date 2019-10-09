@@ -126,6 +126,18 @@ function ApplicationDialog_View(id,options){
 			}			
 		}));	
 
+		this.addElement(new EditFloat(id+":fund_percent",{
+			"attrs":{"percentCalc":"true"},
+			"labelClassName": "control-label percentcalc "+bs,
+			"labelCaption":"Размер финансирования (%):",
+			"placeholder":"Процент финансирования"
+			,"events":{
+				"change":function(){
+					self.calcFillPercent();					
+				}
+			}
+		}));	
+
 		this.addElement(new BuildTypeSelect(id+":build_types_ref",{
 			"attrs":{"percentCalc":"true"},
 			"labelClassName": "control-label percentcalc "+bs,
@@ -268,12 +280,24 @@ function ApplicationDialog_View(id,options){
 			"labelCaption":"Заявление на проведение государственной экспертизы (ПД,РИИ)",
 			"template":window.getApp().getTemplate("EditFileApp"),
 			"addControls":function(){
-				this.addElement(new ButtonCtrl(this.getId()+":print",{
-					"glyph":"glyphicon-print",
-					"title":"Печать заявления",
+				this.addElement(new ButtonCtrl(this.getId()+":printAppWord",{
+					"imageFontName":"fa",
+					"imageClass":"fa-file-word-o",
+					"title":"Печать заявления в виде документа Word, с возможностью редактирования",
 					"onClick":function(){
 						self.checkSaveExecute(function(){
-							self.printAppOnTempl("Application",0);
+							self.printAppOnTempl("Application",0,"docx");
+						},true,false);
+					}
+				}));
+			
+				this.addElement(new ButtonCtrl(this.getId()+":printAppPDF",{
+					"imageFontName":"fa",
+					"imageClass":"fa-file-pdf-o",
+					"title":"Печать заявления в виде документа PDF, без возможности редактирования",
+					"onClick":function(){
+						self.checkSaveExecute(function(){
+							self.printAppOnTempl("Application",0,"pdf");
 						},true,false);
 					}
 				}));
@@ -312,15 +336,27 @@ function ApplicationDialog_View(id,options){
 				"labelCaption":"Заявление на проведение проверки достоверности сметной стоимости",
 				"template":window.getApp().getTemplate("EditFileApp"),
 				"addControls":function(){
-					this.addElement(new ButtonCtrl(this.getId()+":print",{
-						"glyph":"glyphicon-print",
-						"title":"Печать заявления",
+					this.addElement(new ButtonCtrl(this.getId()+":printCostEvalWord",{
+						"imageFontName":"fa",
+						"imageClass":"fa-file-word-o",
+						"title":"Печать заявления в виде документа Word, с возможностью редактирования",
 						"onClick":function(){
 							self.checkSaveExecute(function(){
-								self.printAppOnTempl("ApplicationCostEvalValidity",0);
+								self.printAppOnTempl("ApplicationCostEvalValidity",0,"docx");
 							},true,false);
 						}
 					}));
+			
+					this.addElement(new ButtonCtrl(this.getId()+":printCostEvalPDF",{
+						"imageFontName":"fa",
+						"imageClass":"fa-file-pdf-o",
+						"title":"Печать заявления в виде документа PDF, без возможности редактирования",
+						"onClick":function(){
+							self.checkSaveExecute(function(){
+								self.printAppOnTempl("ApplicationCostEvalValidity",0,"pdf");
+							},true,false);
+						}
+					}));					
 				},
 				"printTitle":"Распечатать заявление на проверки достоверности сметной стоимости",
 				"mainView":this,
@@ -355,15 +391,27 @@ function ApplicationDialog_View(id,options){
 				"labelCaption":"Заявление на модификацию",
 				"template":window.getApp().getTemplate("EditFileApp"),
 				"addControls":function(){
-					this.addElement(new ButtonCtrl(this.getId()+":print",{
-						"glyph":"glyphicon-print",
-						"title":"Печать заявления",
+					this.addElement(new ButtonCtrl(this.getId()+":printModWord",{
+						"imageFontName":"fa",
+						"imageClass":"fa-file-word-o",
+						"title":"Печать заявления в виде документа Word, с возможностью редактирования",
 						"onClick":function(){
 							self.checkSaveExecute(function(){
-								self.printAppOnTempl("ApplicationModification",0);
+								self.printAppOnTempl("ApplicationModification",0,"docx");
 							},true,false);
 						}
 					}));
+			
+					this.addElement(new ButtonCtrl(this.getId()+":printModPDF",{
+						"imageFontName":"fa",
+						"imageClass":"fa-file-pdf-o",
+						"title":"Печать заявления в виде документа PDF, без возможности редактирования",
+						"onClick":function(){
+							self.checkSaveExecute(function(){
+								self.printAppOnTempl("ApplicationModification",0,"pdf");
+							},true,false);
+						}
+					}));					
 				},
 				"printTitle":"Распечатать заявление на модификацию",
 				"mainView":this,
@@ -398,15 +446,27 @@ function ApplicationDialog_View(id,options){
 			"labelCaption":"Заявление на аудит цен",
 			"template":window.getApp().getTemplate("EditFileApp"),
 			"addControls":function(){
-				this.addElement(new ButtonCtrl(this.getId()+":print",{
-					"glyph":"glyphicon-print",
-					"title":"Печать заявления",
+				this.addElement(new ButtonCtrl(this.getId()+":printAuditWord",{
+					"imageFontName":"fa",
+					"imageClass":"fa-file-word-o",
+					"title":"Печать заявления в виде документа Word, с возможностью редактирования",
 					"onClick":function(){
 						self.checkSaveExecute(function(){
-							self.printAppOnTempl("ApplicationAudit",0);
+							self.printAppOnTempl("ApplicationAudit",0,"doc");
 						},true,false);
 					}
 				}));
+		
+				this.addElement(new ButtonCtrl(this.getId()+":printAuditPDF",{
+					"imageFontName":"fa",
+					"imageClass":"fa-file-pdf-o",
+					"title":"Печать заявления в виде документа PDF, без возможности редактирования",
+					"onClick":function(){
+						self.checkSaveExecute(function(){
+							self.printAppOnTempl("ApplicationAudit",0,"pdf");
+						},true,false);
+					}
+				}));				
 			},
 			"printTitle":"Распечатать заявление на проведение аудита цен",
 			"mainView":this,
@@ -579,6 +639,7 @@ function ApplicationDialog_View(id,options){
 		,new DataBinding({"control":this.getElement("service_cont").getElement("expertise_type"),"fieldId":"expertise_type"})
 		,new DataBinding({"control":this.getElement("service_cont").getElement("audit"),"fieldId":"audit"})				
 		,new DataBinding({"control":this.getElement("fund_sources_ref")})
+		,new DataBinding({"control":this.getElement("fund_percent")})
 		,new DataBinding({"control":this.getElement("build_types_ref")})
 		,new DataBinding({"control":this.getElement("construction_types_ref")})				
 		,new DataBinding({"control":this.getElement("applicant")})
@@ -623,6 +684,7 @@ function ApplicationDialog_View(id,options){
 		,new CommandBinding({"control":this.getElement("service_cont").getElement("audit"),"fieldId":"audit"})
 		
 		,new CommandBinding({"control":this.getElement("fund_sources_ref")})
+		,new CommandBinding({"control":this.getElement("fund_percent")})
 		,new CommandBinding({"control":this.getElement("build_types_ref")})
 		,new CommandBinding({"control":this.getElement("construction_types_ref")})
 		,new CommandBinding({"control":this.getElement("applicant")})
@@ -1101,18 +1163,37 @@ ApplicationDialog_View.prototype.printApp = function(){
 	}
 }
 
-ApplicationDialog_View.prototype.printAppOnTempl = function(templ,offset){
+ApplicationDialog_View.prototype.printAppOnTemplDone = function(){
+	window.showTempNote("Подпишите и загрузите заявление",null,30000);
+}
+
+ApplicationDialog_View.prototype.printAppOnTempl = function(templ,offset,docType){
 	this.checkBeforePrint();
 	var contr = new Application_Controller();
 	var pm = contr.getPublicMethod("get_print");
 	pm.setFieldValue("id",this.getElement("id").getValue());
+	pm.setFieldValue("doc_type",docType);
 	pm.setFieldValue("templ",templ);
-	pm.setFieldValue("inline","1");
-	var h = $( window ).width()/3*2;
-	var left = $( window ).width()/2;
-	var w = left - 20;
-	contr.openHref("get_print","ViewPDF","location=0,menubar=0,status=0,titlebar=0,top="+(50+offset)+",left="+(left+offset)+",width="+w+",height="+h);
-	window.showNote("Подпишите и загрузить заявление");					
+	pm.setFieldValue("inline",(docType=="pdf")? "1":"0");
+	
+	if(docType=="pdf"){
+		var h = $( window ).width()/3*2;
+		var left = $( window ).width()/2;
+		var w = left - 20;
+		contr.openHref("get_print","ViewPDF","location=0,menubar=0,status=0,titlebar=0,top="+(50+offset)+",left="+(left+offset)+",width="+w+",height="+h);
+		this.printAppOnTemplDone();
+	}
+	else{
+		var self = this;
+		contr.download("get_print","ViewWord",0,function(res,descr){
+			if(res==0){
+				self.printAppOnTemplDone();
+			}
+			else{
+				throw new Error(descr);
+			}
+		});
+	}	
 }
 
 
@@ -1358,3 +1439,8 @@ ApplicationDialog_View.prototype.afterPrintDeleted = function(){
 		pm.run();	
 	}
 }
+
+ApplicationDialog_View.prototype.getUploaderOptions = function(){
+	return {"allowNewFileAdd":true};
+}
+

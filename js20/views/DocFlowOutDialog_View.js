@@ -40,7 +40,8 @@ function DocFlowOutDialog_View(id,options){
 		if (!options.readOnly || (options.readOnly && items[i].files && items[i].files.length) ){
 			items[i].showItem = true;
 		}
-	}	
+	}
+	
 	//********** cades plugin *******************
 	this.m_cadesView = new Cades_View(id,options);
 	//********** cades plugin *******************		
@@ -132,7 +133,15 @@ function DocFlowOutDialog_View(id,options){
 				if (self.elementExists("akt1c")){
 					self.getElement("akt1c").update(fields);
 				}
+				//self.getElement("doc_flow_types_ref").getValue
 				self.setSubjectFromContract();
+				
+				self.getModel().setFieldValue("to_contract_main_experts_ref",fields.main_experts_ref.getValue());
+				var tp = self.getElement("doc_flow_types_ref").getValue();
+				if(tp&&tp.getKey()==window.getApp().getPredefinedItem("doc_flow_types","contr").getKey()){
+					self.fillSections();
+				}
+				
 			}
 		}));	
 
@@ -165,6 +174,9 @@ function DocFlowOutDialog_View(id,options){
 			"events":{
 				"change":function(){
 					self.setDocVis();
+					if(this.getValue()&&this.getValue().getKey()==window.getApp().getPredefinedItem("doc_flow_types","contr").getKey()){
+						self.fillSections();
+					}
 				}
 			}			
 		}));	
@@ -306,6 +318,12 @@ function DocFlowOutDialog_View(id,options){
 		}));
 		*/
 		this.addElement(new BtnNextNum(id+":cmdNextNum",{"view":this}));
+		
+		this.addElement(new EditCheckBox(id+":allow_new_file_add",{
+			"labelCaption":"Разрешить добавление новых файлов"
+		}));
+		this.addElement(new AllowSectionEdit(id+":allow_edit_sections",{
+		}));		
 	}
 	
 	//steps
@@ -331,7 +349,9 @@ function DocFlowOutDialog_View(id,options){
 		,new DataBinding({"control":this.getElement("employees_ref"),"model":this.m_model})
 		,new DataBinding({"control":this.getElement("signed_by_employees_ref")})
 		,new DataBinding({"control":this.getElement("expertise_reject_types_ref")})
-		,new DataBinding({"control":this.getElement("expertise_result")})		
+		,new DataBinding({"control":this.getElement("expertise_result")})
+		,new DataBinding({"control":this.getElement("allow_new_file_add")})
+		,new DataBinding({"control":this.getElement("allow_edit_sections")})								
 	]);
 	
 	//write
@@ -350,7 +370,9 @@ function DocFlowOutDialog_View(id,options){
 		,new CommandBinding({"control":this.getElement("employees_ref"),"fieldId":"employee_id"})
 		,new CommandBinding({"control":this.getElement("signed_by_employees_ref"),"fieldId":"signed_by_employee_id"})
 		,new CommandBinding({"control":this.getElement("expertise_reject_types_ref"),"fieldId":"expertise_reject_type_id"})
-		,new CommandBinding({"control":this.getElement("expertise_result")})		
+		,new CommandBinding({"control":this.getElement("expertise_result")})
+		,new CommandBinding({"control":this.getElement("allow_new_file_add")})
+		,new CommandBinding({"control":this.getElement("allow_edit_sections")})								
 	]);
 	
 	this.m_cadesView.afterViewConstructed();	
@@ -405,6 +427,58 @@ DocFlowOutDialog_View.prototype.getParamsOnDocFlowType = function(){
 	return res;
 }
 
+DocFlowOutDialog_View.prototype.fillSections = function(){
+	if (!this.m_documentTemplates){
+		//fill documentTemplates
+		var self = this;
+		var pm = (new Application_Controller()).getPublicMethod("get_document_templates_for_contract");
+		var contr_ref = this.getElement("to_contracts_ref").getValue();
+		if(!contr_ref||contr_ref.isNull()){
+			return;
+		}
+		pm.setFieldValue("contract_id",contr_ref.getKey());
+		pm.run({
+			"ok":function(resp){
+				self.m_documentTemplates = resp.getModel("DocumentTemplateForContractList_Model");
+				if(self.m_documentTemplates.getNextRow()){
+					var descr;
+					var doc_type = self.m_documentTemplates.getFieldValue("document_type");
+					if(doc_type=="pd"){
+						descr = "Проектная документация";
+					}
+					else if(doc_type=="eng_survey"){
+						descr = "Результаты инженерных изысканий";
+					}
+					else if(doc_type=="cost_eval_validity"){
+						descr = "Определение достоверности сметной стоимости";
+					}
+					else if(doc_type=="modification"){
+						descr = "Модификация";
+					}
+					else if(doc_type=="audit"){
+						descr = "Аудит цен";
+					}
+					var sections = self.m_documentTemplates.getFieldValue("sections");
+					var sections_with_items = [];
+					for(var i=0;i<sections.length;i++){
+						sections[i].itemLength = (sections[i].items&&sections[i].items.length)? sections[i].items.length:null;
+						sections[i].ind = i;
+					}
+					
+					self.getElement("allow_edit_sections").setValue({
+						"descr":descr,
+						"sections":sections
+					});
+					self.setSectionControls();					
+				}
+			}
+		});
+	}
+	else{
+		this.addDocTabTemplate(tabName);
+	}			
+}
+
 DocFlowOutDialog_View.prototype.setDocVis = function(){
 	var params = this.getParamsOnDocFlowType();
 	
@@ -430,6 +504,15 @@ DocFlowOutDialog_View.prototype.setDocVis = function(){
 	}
 	else if (params.contr_vis){
 		this.setSubjectFromContract(params.doc_type);
+	}
+	
+	var perm_n = document.getElementById(this.getId()+":tab-permissions-toggle");
+	if(params.doc_type=="contr" && DOMHelper.hasClass(perm_n,"hidden") ){
+		DOMHelper.delClass(perm_n,"hidden");
+	}
+	else if(params.doc_type!="contr" && !DOMHelper.hasClass(perm_n,"hidden") ){
+		DOMHelper.addClass(perm_n,"hidden");
+		$('#documentTabs a[href="#documentFiles"]').tab("show");
 	}
 	
 	this.updateFolderVisibility();
@@ -496,6 +579,19 @@ DocFlowOutDialog_View.prototype.onGetData = function(resp,cmd){
 		this.getElement("attachments").initDownload();
 	}
 	
+	var tp = this.getElement("doc_flow_types_ref").getValue();
+	var contr = this.getElement("to_contracts_ref").getValue();
+	if (tp && tp.getKey()==window.getApp().getPredefinedItem("doc_flow_types","contr").getKey()
+	&& contr && !contr.isNull()
+	){
+		//if new - fill
+		if(!this.m_model.getFieldValue("id")){
+			this.fillSections();
+		}
+		else{
+			this.setSectionControls();
+		}
+	}
 }
 
 DocFlowOutDialog_View.prototype.passToRegister = function(){
@@ -503,6 +599,8 @@ DocFlowOutDialog_View.prototype.passToRegister = function(){
 	if (!this.getElement("reg_number").getValue()){
 		throw Error("У документ нет регистрационного номера!");
 	}
+	
+	this.checkContractLetter();
 	
 	var self = this;
 	var model = new DocFlowRegistrationDialog_Model();
@@ -534,11 +632,41 @@ DocFlowOutDialog_View.prototype.passToRegister = function(){
 	this.m_docForm.open();
 }
 
+DocFlowOutDialog_View.prototype.checkContractLetter = function(){
+	var tp = this.getElement("doc_flow_types_ref").getValue();
+	if (tp && tp.getKey()==window.getApp().getPredefinedItem("doc_flow_types","contr").getKey()){
+		//проверка отметок у разделов		
+		var sec = this.getElement("allow_edit_sections").getValue();
+		if(sec && sec.sections){
+			var res = false;
+			for(var i=0;i<sec.sections.length;i++){
+				if (sec.sections[i].fields.checked){
+					res = true;
+					break;
+				}
+				if(sec.sections[i].items){
+					for(var j=0;j<sec.sections[i].items.length;j++){				
+						if (sec.sections[i].items[j].fields.checked){
+							res = true;
+							break;
+						}					
+					}
+				}
+			}
+			if(!res){
+				throw new Error("Не отмечен ни один раздел для замены файлов документации!");
+			}
+		}
+	}
+}
+
 DocFlowOutDialog_View.prototype.passToApprove = function(){
 	if (!this.getElement("reg_number").getValue() && !this.getElement("subject").getValue()){
 		throw Error("У документ нет ни регистрационного номера ни темы!");
 	}
-		
+	
+	this.checkContractLetter();
+				
 	var self = this;
 	var model = new DocFlowApprovementDialog_Model();
 	model.setFieldValue("employees_ref",CommonHelper.unserialize(window.getApp().getServVar("employees_ref")));
@@ -611,7 +739,7 @@ DocFlowOutDialog_View.prototype.addProcessChainEvents = function(){
 }
 
 DocFlowOutDialog_View.prototype.setSubject = function(docType,docId,pm){
-	if (!docType)docType = this.getParamsOnDocFlowType();
+	if (!docType)docType = this.getParamsOnDocFlowType().doc_type;
 	
 	var subj = window.getApp().getPredefinedItem("doc_flow_types",docType).getDescr();
 
@@ -662,5 +790,71 @@ DocFlowOutDialog_View.prototype.updateFolderVisibility = function(){
 	else{
 		//все показать
 		$(".docFlowFolder").removeClass("hidden");
+	}
+}
+
+DocFlowOutDialog_View.prototype.secSetValue = function(v){
+	var sections = DOMHelper.getElementsByAttr("sections", this.getElement("allow_edit_sections").getNode(), "class");
+	for(var i=0;i<sections.length;i++){
+		sections[i].checked = v;
+	}
+}
+
+DocFlowOutDialog_View.prototype.secSubSetValue = function(mainSecNode){
+	var n = DOMHelper.getParentByTagName(mainSecNode,"li");
+	var sections = DOMHelper.getElementsByAttr("sections-sub_section", n, "class");
+	for(var i=0;i<sections.length;i++){
+		sections[i].checked = mainSecNode.checked;
+	}
+}
+
+DocFlowOutDialog_View.prototype.setSectionControls = function(){
+	//set main sec control
+	var sections = DOMHelper.getElementsByAttr("sections-with_items",this.getElement("allow_edit_sections").getNode(),"class");
+	var self = this;
+	for(var i=0;i<sections.length;i++){
+		EventHelper.add(sections[i],"change",(function(){
+			return function(e){
+				e = EventHelper.fixMouseEvent(e);
+				self.secSubSetValue(e.target);
+			}
+		})());
+	}
+	
+	//buttons
+	(new ButtonCtrl(this.getId()+":allow_edit_sections:secSetAll",{
+		"glyph":"glyphicon-check",
+		"title":"Отметить все разделы",
+		"onClick":function(){
+			self.secSetValue(true);
+		}
+	})).toDOM();
+	(new ButtonCtrl(this.getId()+":allow_edit_sections:secUnsetAll",{
+		"glyph":"glyphicon-unchecked",
+		"title":"Снять отметку со всех разделов",
+		"onClick":function(){
+			self.secSetValue(false);
+		}
+	})).toDOM();
+	
+	/**
+	 * Разрешено редактировать:
+	 *	- админу - всегда
+	 *	- главному эксперту и автору письма - только не зарегитрированное
+	 *	- остальным - запрет
+	 */	
+	var role = window.getApp().getServVar("role_id");		
+	if(role!="admin"){
+		var contr_empl = this.getModel().getFieldValue("to_contract_main_experts_ref");		
+		var auth_empl = this.getElement("employees_ref").getValue();
+		var cur_empl_key = CommonHelper.unserialize(window.getApp().getServVar("employees_ref")).getKey();		
+		var en = (
+			this.getModel().getFieldValue("state")!="registered"
+			&&( (contr_empl&&contr_empl.getKey()==cur_empl_key)
+				||(auth_empl&&auth_empl.getKey()==cur_empl_key)
+			)
+		);
+		
+		this.getElement("allow_edit_sections").setEnabled(en);
 	}
 }

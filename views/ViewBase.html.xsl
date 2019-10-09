@@ -11,7 +11,7 @@
 <xsl:variable name="COLOR_PALETTE" select="/document/model[@id='Page_Model']/row[1]/DEFAULT_COLOR_PALETTE"/>
 <xsl:variable name="TOKEN">
 	<xsl:choose>
-		<xsl:when test="not(/document/model[@id='ModelVars']/row[1]/token='')"><xsl:value-of select="concat('&amp;token=',/document/model[@id='ModelVars']/row[1]/token)"/></xsl:when>
+		<xsl:when test="/document/model[@id='ModelVars']/row[1]/token and not(/document/model[@id='ModelVars']/row[1]/token='')"><xsl:value-of select="concat('&amp;token=',/document/model[@id='ModelVars']/row[1]/token)"/></xsl:when>
 		<xsl:otherwise></xsl:otherwise>
 	</xsl:choose>
 </xsl:variable>
@@ -31,7 +31,6 @@
 				<xsl:call-template name="emailConfNote"/>
 				
 				<xsl:call-template name="checkForError"/>
-								
 				showView();
 			}
 		</script>
@@ -75,7 +74,7 @@
 						
 						<!-- Footer -->
 						<div class="footer text-muted text-center">
-							2017. <a href="#">Катрэн+</a>
+							2017-2019. <a href="#">Катрэн+</a>
 						</div>
 						<!-- /footer -->
 
@@ -195,7 +194,7 @@
 <!--************* Window instance ******************** -->
 <xsl:template name="initAppWin">	
 	var applicationWin = new AppWin({
-		"bsCol":("col-"+$('#users-device-size').find('div:visible').first().attr('id')+"-"),
+		"widthType":$("#users-device-size").find("div:visible").first().attr("id"),
 		"app":application
 		<!--
 		<xsl:if test="not(/document/model[@id='ModelServResponse']/row/result='0')">

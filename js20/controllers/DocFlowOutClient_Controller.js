@@ -37,6 +37,7 @@ function DocFlowOutClient_Controller(options){
 	this.add_get_file();
 	this.add_check_type();
 	this.add_get_correction_list();
+	this.add_get_doc_flow_out_attrs();
 		
 }
 extend(DocFlowOutClient_Controller,ControllerObjServer);
@@ -419,6 +420,22 @@ extend(DocFlowOutClient_Controller,ControllerObjServer);
 		options.required = true;
 	
 		pm.addField(new FieldInt("id",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			DocFlowOutClient_Controller.prototype.add_get_doc_flow_out_attrs = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('get_doc_flow_out_attrs',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("application_id",options));
 	
 			
 	this.addPublicMethod(pm);
