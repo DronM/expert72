@@ -30,7 +30,8 @@ extend(AllowSectionEdit,Control);
 
 AllowSectionEdit.prototype.getModified = function(){
 	var v = this.getValue();
-	return ( this.m_valueHash!= (v? CommonHelper.md5(CommonHelper.serialize(v)):0 ) );
+	var m = ( this.m_valueHash!= (v? CommonHelper.md5(CommonHelper.serialize(v)):0 ) );
+	return m;
 }
 
 AllowSectionEdit.prototype.setValue = function(v){

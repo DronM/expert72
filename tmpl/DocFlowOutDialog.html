@@ -135,24 +135,28 @@
 					</span> Вложенные файлы
 				</a>
 			</li>
+			
+			{{#permissionsVisible}}
 			<li id="{{id}}:tab-permissions-toggle" class="hidden">
 				<a href="#permissions" data-toggle="tab" aria-expanded="false">
 					Разрешения
 				</a>
 			</li>
+			{{/permissionsVisible}}
 		</ul>
 	</div>
 	<div class="tab-content dialogForm">
 		<div class="tab-pane fade in active" id="documentFiles">
 			<div id="{{id}}:attachments"/>
 		</div>
+		{{#permissionsVisible}}
 		<div class="tab-pane fade" id="permissions">
 			<div id="{{id}}:allow_new_file_add">
 			</div>
 			<div id="{{id}}:allow_edit_sections">
 			</div>			
 		</div>
-		
+		{{/permissionsVisible}}
 	</div>
 	
 	<!--

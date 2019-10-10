@@ -456,7 +456,10 @@ DocFlowOutClientDialog_View.prototype.checkForUploadFileCount = function(){
 	}
 	var tp = this.getElement("doc_flow_out_client_type").getValue();
 	if ((tp=="date_prolongate"||tp=="app_contr_revoke") && !att.getTotalFileCount()){
-		throw new Error("Нет ни одного вложенного файла!");		
+		throw new Error("Нет ни одного вложенного файла!");
+	}
+	else if (tp=="contr_resp" && !att.getTotalFileCount()){
+		throw new Error("Отсутствует сопроводительное письмо!");			
 	}
 }
 DocFlowOutClientDialog_View.prototype.checkRequiredFiles = function(){
@@ -611,7 +614,7 @@ DocFlowOutClientDialog_View.prototype.getDocFlowOutAttrs = function(){
 				var sec_id;
 				for(var i=0;i<doc_sections.length;i++){
 					sec_id = parseInt(doc_sections[i].getAttribute("docSection"));
-					if(CommonHelper.inArray(sec_id,self.m_docFlowOutAttrs.allow_edit_sections)==-1){
+					if(self.m_docFlowOutAttrs.allow_edit_sections && CommonHelper.inArray(sec_id,self.m_docFlowOutAttrs.allow_edit_sections)==-1){
 						//disable section
 						doc_sections[i].title="Изменение данного раздела запрещено.";
 						//header

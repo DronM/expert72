@@ -383,6 +383,7 @@ try{
 					if(
 					$doc_flow_out_client_fields['doc_flow_out_client_type']=='contr_resp'
 					&&!isset($_REQUEST['original_file_id'])
+					&&(!isset($_REQUEST['doc_type']) || $_REQUEST['doc_type']!='documents')
 					){
 						//Дополнительная проверка - можно ли добавлять новые файлы
 						$attrs = json_decode($doc_flow_out_client_fields['out_attrs']);

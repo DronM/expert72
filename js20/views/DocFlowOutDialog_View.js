@@ -42,6 +42,8 @@ function DocFlowOutDialog_View(id,options){
 		}
 	}
 	
+	options.templateOptions.permissionsVisible = is_admin;
+	
 	//********** cades plugin *******************
 	this.m_cadesView = new Cades_View(id,options);
 	//********** cades plugin *******************		
@@ -427,7 +429,7 @@ DocFlowOutDialog_View.prototype.getParamsOnDocFlowType = function(){
 	return res;
 }
 
-DocFlowOutDialog_View.prototype.fillSections = function(){
+DocFlowOutDialog_View.prototype.fillSections = function(callBack){
 	if (!this.m_documentTemplates){
 		//fill documentTemplates
 		var self = this;
@@ -463,19 +465,30 @@ DocFlowOutDialog_View.prototype.fillSections = function(){
 					for(var i=0;i<sections.length;i++){
 						sections[i].itemLength = (sections[i].items&&sections[i].items.length)? sections[i].items.length:null;
 						sections[i].ind = i;
+						//default=true
+						/*
+						sections[i].fields.checked = true;
+						if(sections[i].itemLength){
+							for(var j=0;j<sections[i].items.length;j++){
+								sections[i].items[j].fields.checked = true;
+							}
+						}
+						*/
 					}
 					
 					self.getElement("allow_edit_sections").setValue({
 						"descr":descr,
 						"sections":sections
 					});
-					self.setSectionControls();					
+					self.setSectionControls();
+					if(callBack)callBack();
 				}
 			}
 		});
 	}
 	else{
 		this.addDocTabTemplate(tabName);
+		if(callBack)callBack();
 	}			
 }
 
@@ -543,6 +556,8 @@ DocFlowOutDialog_View.prototype.onGetData = function(resp,cmd){
 	
 	this.setDocVis();
 	
+	var self = this;
+	
 	var st = this.getModel().getFieldValue("state");
 	if (st){						
 		this.getElement("cmdApprove").setEnabled((st=="not_approved"||st=="approved_with_notes"));
@@ -558,7 +573,7 @@ DocFlowOutDialog_View.prototype.onGetData = function(resp,cmd){
 			)+
 			")"
 		);
-		var self = this;
+		
 		EventHelper.add(n, "click", function(){
 			self.showStateReport();
 		}, true);
@@ -586,7 +601,9 @@ DocFlowOutDialog_View.prototype.onGetData = function(resp,cmd){
 	){
 		//if new - fill
 		if(!this.m_model.getFieldValue("id")){
-			this.fillSections();
+			this.fillSections(function(){
+				self.secSetValue(true);
+			});			
 		}
 		else{
 			this.setSectionControls();
@@ -858,3 +875,4 @@ DocFlowOutDialog_View.prototype.setSectionControls = function(){
 		this.getElement("allow_edit_sections").setEnabled(en);
 	}
 }
+

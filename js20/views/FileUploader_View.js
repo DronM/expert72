@@ -1107,7 +1107,7 @@ FileUploader_View.prototype.initDownload = function(){
 			else{
 				//ordinary file
 				var is_id_list = (new RegExp("^.+ *- *УЛ *\.{1}.+$","i")).test(file.fileName);
-				debugger				
+				//debugger				
 				if(!self.m_allowNewFileAdd
 				&& !file.file.original_file
 				&& window.getApp().getServVar("role_id")!="admin"

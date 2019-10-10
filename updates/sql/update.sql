@@ -1,6 +1,3 @@
-
-
-
 -- ******************* update 09/10/2019 10:58:16 ******************
 -- Function: doc_flow_approvements_process()
 
@@ -1302,4 +1299,3 @@ $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 ALTER FUNCTION doc_flow_approvements_process() OWNER TO expert72;
-

@@ -9,6 +9,9 @@ DECLARE
 	v_doc_flow_type_id int;
 	v_id int;
 	v_reg_number text;
+	v_auto_reg boolean;
+	v_examination_id int;
+	v_to_application_id int;
 BEGIN
 	IF (TG_WHEN='AFTER' AND TG_OP='INSERT') THEN
 		IF NOT const_client_lk_val() OR const_debug_val() THEN
@@ -127,25 +130,43 @@ BEGIN
 			
 					--Если это исх.письмо по контракту (замечания) - сразу зарегистрируем
 					--Добавлено 08/06/19: или заключение экспертизы - сразу зарегистрируем
+					--Добавлено 09/10/19: Заключение только по Достоверности
 					IF ((NEW.close_result)::text)::doc_flow_out_states='approved'::doc_flow_out_states
 					AND NEW.subject_doc->>'dataType'='doc_flow_out'
 					THEN
 						SELECT
 							t.doc_flow_type_id,
 							t.reg_number,
-							t.id
+							t.id,
+							
+							-- 08/06/19 + contr_close (09/10/19 Только достоверность!)
+							(							
+								(
+								t.doc_flow_type_id=(pdfn_doc_flow_types_contr_close()->'keys'->>'id')::int
+								AND
+								app.cost_eval_validity
+								)
+							OR
+							-- contr Ответы на замечания все всегда!!!
+							t.doc_flow_type_id=(pdfn_doc_flow_types_contr()->'keys'->>'id')::int
+							),
+							exam.id,
+							t.to_application_id
 						INTO 
 							v_doc_flow_type_id,
 							v_reg_number,
-							v_id
-						FROM doc_flow_out t				
+							v_id,
+							v_auto_reg,
+							v_examination_id,
+							v_to_application_id
+						FROM doc_flow_out t
+						LEFT JOIN applications AS app ON app.id=t.to_application_id
+						LEFT JOIN doc_flow_in ON doc_flow_in.id=t.doc_flow_in_id
+						LEFT JOIN doc_flow_examinations AS exam ON doc_flow_in.id=(exam.subject_doc->'keys'->>'id')::int AND exam.subject_doc->>'dataType'='doc_flow_in'						
 						WHERE t.id = (NEW.subject_doc->'keys'->>'id')::int;
 				
-						--08/06/19 +contr_close
-						IF
-							v_doc_flow_type_id=(pdfn_doc_flow_types_contr()->'keys'->>'id')::int
-							OR v_doc_flow_type_id=(pdfn_doc_flow_types_contr_close()->'keys'->>'id')::int	
-						THEN
+						
+						IF v_auto_reg THEN
 							IF v_reg_number IS NULL THEN
 								UPDATE doc_flow_out
 								SET reg_number=doc_flow_out_next_num(v_doc_flow_type_id)
@@ -157,6 +178,36 @@ BEGIN
 							VALUES (
 							now()+'1 second'::interval,NEW.subject_doc,NEW.employee_id,'Создано автоматически'
 							);
+							
+							--09/10/19 смена статуса заявления, полностью повторяет DocFlowRegistration_Controller
+							IF v_examination_id iS NOT NULL THEN
+								--Есть рассмотрение(?) а может вообще такое быть???
+								--DocFlowExamination_Controller->setResolved
+								UPDATE doc_flow_examinations
+								SET
+									resolution=NULL,
+									close_date_time=now()+'1 second'::interval,
+									application_resolution_state='closed'::application_states,
+									close_employee_id=NEW.employee_id,
+									closed=TRUE
+								WHERE id=v_examination_id;
+							ELSE
+								--Нет рассмотрения - обычный случай
+								INSERT INTO application_processes (
+									application_id,
+									date_time,
+									state,
+									user_id,
+									end_date_time
+								)
+								VALUES (
+									v_to_application_id,
+									now()+'1 second'::interval,
+									'closed',
+									(SELECT user_id FROM employees WHERE id=NEW.employee_id),
+									NULL
+								);								
+							END IF;
 						END IF;
 					END IF;
 				

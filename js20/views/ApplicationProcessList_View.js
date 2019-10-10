@@ -144,7 +144,8 @@ function ApplicationProcessList_View(id,options){
 						"dateFormat":"d/m/Y H:i",
 						"ctrlClass":EditDateTime,
 						"ctrlOptions":{
-							"cmdClear":false
+							"cmdClear":false,
+							"dateFormat":"d/m/Y H:i:s"
 						},
 						"searchOptions":{
 							"field":new FieldDate("date_time"),
@@ -175,13 +176,14 @@ function ApplicationProcessList_View(id,options){
 					"field":model.getField("end_date_time"),
 					"ctrlClass":EditDateTime,
 					"ctrlOptions":{
-						"cmdClear":false
+						"cmdClear":false,
+						"dateFormat":"d/m/Y H:i:s"
 					},
 					"searchOptions":{
 						"field":new FieldDate("end_date_time"),
 						"searchType":"on_beg"
 					},
-					"dateFormat":"d/m/Y H:i"											
+					"dateFormat":"d/m/Y H:i"
 				})
 			]
 		})					
