@@ -319,13 +319,16 @@ function DocFlowOutDialog_View(id,options){
 			}
 		}));
 		*/
+		
 		this.addElement(new BtnNextNum(id+":cmdNextNum",{"view":this}));
 		
-		this.addElement(new EditCheckBox(id+":allow_new_file_add",{
-			"labelCaption":"Разрешить добавление новых файлов"
-		}));
-		this.addElement(new AllowSectionEdit(id+":allow_edit_sections",{
-		}));		
+		if (options.templateOptions.permissionsVisible){
+			this.addElement(new EditCheckBox(id+":allow_new_file_add",{
+				"labelCaption":"Разрешить добавление новых файлов"
+			}));
+			this.addElement(new AllowSectionEdit(id+":allow_edit_sections",{
+			}));		
+		}
 	}
 	
 	//steps
@@ -335,7 +338,7 @@ function DocFlowOutDialog_View(id,options){
 	
 	//****************************************************
 	//read
-	this.setDataBindings([
+	var read_b = [
 		new DataBinding({"control":this.getElement("id"),"model":this.m_model})
 		,new DataBinding({"control":this.getElement("date_time"),"model":this.m_model})
 		,new DataBinding({"control":this.getElement("reg_number"),"model":this.m_model})	
@@ -352,12 +355,15 @@ function DocFlowOutDialog_View(id,options){
 		,new DataBinding({"control":this.getElement("signed_by_employees_ref")})
 		,new DataBinding({"control":this.getElement("expertise_reject_types_ref")})
 		,new DataBinding({"control":this.getElement("expertise_result")})
-		,new DataBinding({"control":this.getElement("allow_new_file_add")})
-		,new DataBinding({"control":this.getElement("allow_edit_sections")})								
-	]);
-	
+	];	
+	if (options.templateOptions.permissionsVisible){
+		read_b.push(new DataBinding({"control":this.getElement("allow_new_file_add")}));
+		read_b.push(new DataBinding({"control":this.getElement("allow_edit_sections")}));
+	}	
+	this.setDataBindings(read_b);
+		
 	//write
-	this.setWriteBindings([
+	var write_b = [
 		new CommandBinding({"control":this.getElement("date_time")})
 		,new CommandBinding({"control":this.getElement("reg_number")})
 		,new CommandBinding({"control":this.getElement("doc_flow_types_ref"),"fieldId":"doc_flow_type_id"})
@@ -373,9 +379,12 @@ function DocFlowOutDialog_View(id,options){
 		,new CommandBinding({"control":this.getElement("signed_by_employees_ref"),"fieldId":"signed_by_employee_id"})
 		,new CommandBinding({"control":this.getElement("expertise_reject_types_ref"),"fieldId":"expertise_reject_type_id"})
 		,new CommandBinding({"control":this.getElement("expertise_result")})
-		,new CommandBinding({"control":this.getElement("allow_new_file_add")})
-		,new CommandBinding({"control":this.getElement("allow_edit_sections")})								
-	]);
+	];
+	if (options.templateOptions.permissionsVisible){
+		write_b.push(new CommandBinding({"control":this.getElement("allow_new_file_add")}));
+		write_b.push(new CommandBinding({"control":this.getElement("allow_edit_sections")}));
+	}	
+	this.setWriteBindings(write_b);
 	
 	this.m_cadesView.afterViewConstructed();	
 }
