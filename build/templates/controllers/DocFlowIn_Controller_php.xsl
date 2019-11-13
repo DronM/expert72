@@ -77,14 +77,14 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			$where = new ModelWhereSQL();
 			$where->addExpression('doc_flow_type_cond',"(doc_flow_types_ref->'keys'->>'id')::int=(pdfn_doc_flow_types_contr_resp()->'keys'->>'id')::int");
 			
-			$this->methodParamsToWhere($where,$pm,$model);
+			$this->methodParamsToWhere($where,$pm,$object_model);
 			$limit = new ModelLimitSQL(1);
-			$model->select(
+			$object_model->select(
 					FALSE,
-					$where,NULL,$limit,NULL,NULL,NULL,NULL,$toXML);
+					$where,NULL,$limit,NULL,NULL,NULL,NULL,TRUE);
 			//
 		
-			$this->addModel($model);			
+			$this->addModel($object_model);			
 		}
 		else{
 			parent::get_object($pm);

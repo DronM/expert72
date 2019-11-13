@@ -32,16 +32,111 @@ FileUploaderDocFlowOutClient_View.prototype.checkRequiredFiles = function(){
 	//NO required documents
 }
 
+FileUploaderDocFlowOutClient_View.prototype.deleteFileFromServerContinue2 = function(rereadTab,fileId,itemId){
+	window.showTempNote(this.NT_FILE_DELETED,null,5000);
+	if(!rereadTab){		
+		this.deleteFileCont(fileId,itemId);
+		this.decTotalFileCount();
+		this.calcFileTotals(itemId);
+	}
+	else{
+		var pm = (new DocFlowOutClient_Controller()).getPublicMethod("get_object");
+		pm.setFieldValue("id",this.m_mainView.getElement("id").getValue());
+		var self = this;
+		pm.run({
+			"ok":function(resp){
+				//self.addFileControls(this.m_items);	
+				var m = resp.getModel("ApplicationDialog_Model");
+				if(m.getNextRow()){
+					var docs = m.getFieldValue("documents");
+					//console.log(docs)
+					if(docs && docs.length){
+						for(var i=0;i<docs.length;i++){
+							if(docs[i].document_type==self.m_documentType){
+								//expanded nodes
+								var nodes = DOMHelper.getElementsByAttr("file_section", self.m_mainView.getNode(),"class");
+								var expanded_nodes = [];
+								for(var k=0;k<nodes.length;k++){
+									if(nodes[k].getAttribute("aria-expanded")=="true"){
+										expanded_nodes.push(nodes[k].getAttribute("href"));
+									}
+								}
+								self.m_mainView.m_documentTabs[self.m_documentType].control.delDOM();
+								delete self.m_mainView.m_documentTabs[self.m_documentType].control;
+								self.m_mainView.addDocTab(self.m_documentType,docs[i]["document"],true);
+								
+								for(var k=0;k<expanded_nodes.length;k++){									
+									$(expanded_nodes[k]).collapse();
+								}
+								break;
+							}
+						}
+					}
+				}
+			}
+		})
+	}
+}
+
 FileUploaderDocFlowOutClient_View.prototype.deleteFileFromServerContinue = function(docId,fileId,itemId){
+	var file_cont = this.getElement("file-list_"+itemId);
+	var file_ctrl = file_cont.getElement("file_"+fileId);
+	var h_ref = document.getElementById(this.getId()+":file_"+fileId+"_href");
+	/** Если удаляется документ загруженный этим письмом, то надо проверить файлы на загруженность
+	 * если не все загружены - предупреждение
+	 * если все загружены: 1) запрос на удаление 2) перечитать файлы (возможно какие-то были восстановлены)
+	 */	
+	var reread_tabs = (file_ctrl.m_originalFile || (h_ref && DOMHelper.hasClass(h_ref,"uploadedByThis")) );
+	if(reread_tabs && this.getForUploadFileCount()){
+		throw new Error('Загрузить все незагруженные файлы!');
+	}
+	/*
+	if(reread_tabs){
+		var pm = (new DocFlowOutClient_Controller()).getPublicMethod("get_object");
+		pm.setFieldValue("id",this.m_mainView.getElement("id").getValue());
+		var self = this;
+		pm.run({
+			"ok":function(resp){
+				//self.addFileControls(this.m_items);	
+				var m = resp.getModel("ApplicationDialog_Model");
+				if(m.getNextRow()){
+					var docs = m.getFieldValue("documents");
+					//console.log(docs)
+					if(docs && docs.length){
+						for(var i=0;i<docs.length;i++){
+							if(docs[i].document_type==self.m_documentType){
+								//expanded nodes
+								var nodes = DOMHelper.getElementsByAttr("file_section", self.m_mainView.getNode(),"class");
+								var expanded_nodes = [];
+								for(var k=0;k<nodes.length;k++){
+									if(nodes[k].getAttribute("aria-expanded")=="true"){
+										expanded_nodes.push(nodes[k].getAttribute("href"));
+									}
+								}
+								self.m_mainView.m_documentTabs[self.m_documentType].control.delDOM();
+								delete self.m_mainView.m_documentTabs[self.m_documentType].control;
+								self.m_mainView.addDocTab(self.m_documentType,docs[i]["document"],true);
+								
+								for(var k=0;k<expanded_nodes.length;k++){									
+									$(expanded_nodes[k]).collapse();
+								}
+								break;
+							}
+						}
+					}
+				}
+			}
+		})
+		
+	}
+	return;
+	*/
 	var self = this;	
 	var pm = (new DocFlowOutClient_Controller()).getPublicMethod("remove_document_file");
 	pm.setFieldValue("file_id",fileId);
 	pm.setFieldValue("doc_flow_out_client_id",docId);
 	pm.run({"ok":function(){
-		window.showNote(self.NT_FILE_DELETED);
-		self.deleteFileCont(fileId,itemId);
-		self.decTotalFileCount();
-		self.calcFileTotals(itemId);
+		self.deleteFileFromServerContinue2(reread_tabs,fileId,itemId);
 	}});				
 }
 
@@ -129,3 +224,17 @@ FileUploaderDocFlowOutClient_View.prototype.removeUnregisteredFile = function(fi
 	}
 }
 
+FileUploaderDocFlowOutClient_View.prototype.setFileUploaded = function(file){
+console.log("FileUploaderDocFlowOutClient_View.prototype.setFileUploaded")
+	FileUploaderDocFlowOutClient_View.superclass.setFileUploaded.call(this,file);
+	
+	if (!file)return;
+	
+	var href = document.getElementById(this.getId()+":file_"+file.file_id+"_href");
+	if (href){
+		DOMHelper.setAttr(href,"title","Загружен этим документом");
+		DOMHelper.setAttr(href,"class","uploadedByThis");
+	}
+	var file_cont = this.getElement("file-list_"+file.doc_id);
+	DOMHelper.hide(file_cont.getElement("file_"+file.file_id+"_switch").getNode());
+}

@@ -2,7 +2,7 @@
 <metadata owner="expert72">
 	<versions>
 		<version dateOpen="2017-09-27 12:09:48" dateClose="2017-12-08 10:12:08">1.001 
-		<lastBuild>2019-10-09 08:53:36</lastBuild></version>
+		<lastBuild>2019-11-13 07:10:13</lastBuild></version>
 		<version dateOpen="2017-12-08 11:12:01" dateClose="2017-12-08 11:12:04">1.002</version>
 		<version dateOpen="2017-12-08 11:12:20" dateClose="2017-12-08 11:12:20">1.0.3</version>
 		<version dateOpen="2017-12-12 11:12:07" dateClose="2017-12-12 11:12:07">1.0.4</version>
@@ -114,6 +114,7 @@
 		<version dateOpen="2019-06-04 14:06:40" dateClose="2019-10-09 07:10:13">1.0.111</version>
 		<version dateOpen="2019-10-09 08:10:48" dateClose="2019-10-09 08:10:53">1.0.112</version>
 		<version dateOpen="2019-10-09 10:10:03" dateClose="2019-10-10 07:10:12">1.0.113</version>
+		<version dateOpen="2019-10-16 17:10:02" dateClose="2019-11-13 07:11:10">1.0.114</version>
 	</versions>
 	<globalFilters>
 		<field id="user_id"/>
@@ -2948,6 +2949,11 @@
 			<field id="error_str" dataType="Text"/>
 			<field id="sign_date_time" dataType="DateTimeTZ"/>
 		</model>
+		<model id="DocFlowOutClientOriginalFile" parent="ModelSQL" dataTable="doc_flow_out_client_original_files" virtual="FALSE">
+			<field id="doc_flow_out_client_id" dataType="Int" refTable="doc_flow_out_client" refField="id" required="TRUE" primaryKey="TRUE"/>
+			<field id="original_file_id" dataType="String" length="36" required="TRUE" primaryKey="TRUE"/>
+			<field id="new_file_id" dataType="String" length="36" required="TRUE"/>
+		</model>
 	</models>
 	<constants>
 		<constant id="doc_per_page_count" name="&#x41A;&#x43E;&#x43B;&#x438;&#x447;&#x435;&#x441;&#x442;&#x432;&#x43E; &#x434;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x43E;&#x432; &#x43D;&#x430; &#x441;&#x442;&#x440;&#x430;&#x43D;&#x438;&#x446;&#x435;" descr="&#x41A;&#x43E;&#x43B;&#x438;&#x447;&#x435;&#x441;&#x442;&#x432;&#x43E; &#x434;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x43E;&#x432; &#x43D;&#x430; &#x441;&#x442;&#x440;&#x430;&#x43D;&#x438;&#x446;&#x435; &#x432; &#x436;&#x443;&#x440;&#x43D;&#x430;&#x43B;&#x435; &#x434;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x43E;&#x432;" dataType="Int" defaultValue="60" autoload="TRUE"/>
@@ -5314,6 +5320,7 @@
 		<jsScript file="controllers/ExpertiseProlongation_Controller.js"/>
 		<jsScript file="models/Signature_Model.js"/>
 		<jsScript file="models/DocumentTemplateForContractList_Model.js"/>
+		<jsScript file="models/DocFlowOutClientOriginalFile_Model.js"/>
 	</jsScripts>
 	<cssScripts>
 		<cssScript file="assets/css/icons/icomoon/styles.css" compressed="TRUE" standalone="TRUE"/>

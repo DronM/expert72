@@ -52,6 +52,8 @@ function FileUploader_View(id,options){
 	
 	this.m_allowNewFileAdd = (options.allowNewFileAdd!=undefined)? options.allowNewFileAdd:true;
 	
+	this.m_documentType = options.documentType;
+	
 	if (options.constDownloadTypes && options.constDownloadMaxSize){
 		var constants = {};
 		constants[options.constDownloadTypes] = null;
@@ -157,6 +159,7 @@ FileUploader_View.prototype.TITLE_UPLOADED = "Скачать файл";
 FileUploader_View.prototype.TITLE_NOT_SIGNED = "Необходимо подписать файл";
 FileUploader_View.prototype.TITLE_NOT_UPLOADED = "Необходимо загрузить файл";
 
+FileUploader_View.prototype.WARN_TIMEOUT = 5000;
 /* private members */
 
 FileUploader_View.prototype.m_maxFileSize;
@@ -713,25 +716,53 @@ FileUploader_View.prototype.switchFileContinue = function(fileId,itemId){
 			"callBack":function(res){
 				if (res==WindowQuestion.RES_YES){
 					var input = document.getElementById("dynInputForSelect");
-					if (!input){
-						input = document.createElement("INPUT");
-						input.type = "file";
-						input.id = "dynInputForSelect";
-						input.style = "visibility:hidden;";
-						document.body.appendChild(input);
-						EventHelper.add(input,"change",function(){							
-							if (this.files&&this.files.length){
-								this.files[0].original_file = {
-									"itemId":itemId,
-									"fileId":fileId,
-									"fileName":file_ctrl.m_fileName,
-									"fileSigned":file_ctrl.getAttr("file_signed")
-								};
-								this.files[0].doc_id = itemId;
-								self.m_uploader.addFile(this.files[0]);
-							}							
-						});
+					//debugger
+					if (input){
+						DOMHelper.delNode(input);
 					}
+					input = document.createElement("INPUT");
+					input.type = "file";
+					input.id = "dynInputForSelect";
+					input.style = "visibility:hidden;";
+					document.body.appendChild(input);
+					EventHelper.add(input,"change",function(){							
+						if (this.files&&this.files.length){
+							//new file added in exchange
+							this.files[0].original_file = {
+								"itemId":itemId,
+								"fileId":fileId,
+								"fileName":file_ctrl.m_fileName,
+								"fileSigned":file_ctrl.getAttr("file_signed")
+							};
+							this.files[0].doc_id = itemId;
+							self.m_uploader.addFile(this.files[0]);
+							//Что если есть ИУЛ?!
+							//alert("itemId="+itemId+" fileId="+fileId+" Name="+file_ctrl.m_fileName);
+							var nm_ar = file_ctrl.m_fileName.split(".");
+							var nm_ext = nm_ar.length? nm_ar[nm_ar.length-1] : "";
+							nm_ar.pop();//removes extension last
+							var nm_name = nm_ar.join(".");
+							var cont_files = file_cont.getElements();
+							var is_this_file_id_list;								
+							for (var f_id in cont_files){
+								if(cont_files[f_id] && cont_files[f_id].m_fileName){
+									if ((new RegExp("^"+nm_name+" *- *УЛ *\."+nm_ext+"$","i")).test(cont_files[f_id].m_fileName)){
+										var list_n = cont_files[f_id].m_fileName; 
+										this.files[0].original_idlist = {
+											"itemId":itemId,
+											"fileId":cont_files[f_id].m_fileId,
+											"fileName":list_n,
+											"fileSigned":cont_files[f_id].getAttr("file_signed")
+										};
+										//
+										self.deleteFileCont(cont_files[f_id].m_fileId,itemId);
+										window.showTempWarn("Удален информационно-удостоверяющий лист "+list_n,null,self.WARN_TIMEOUT);
+										break;
+									}
+								}
+							}
+						}							
+					});
 					$(input).trigger("click");
 				}
 			}
@@ -834,8 +865,30 @@ FileUploader_View.prototype.deleteFile = function(fileId,itemId){
 				},
 				itemId
 			);
+		}		
+		if (file_ctrl.m_originalIdList){
+			this.addFileToContainer(
+				file_cont,
+				{
+					"file_id":file_ctrl.m_originalIdList.m_fileId,
+					"file_date_time":file_ctrl.m_originalIdList.m_dateTime,
+					"file_name":file_ctrl.m_originalIdList.m_fileName,
+					"file_size":file_ctrl.m_originalIdList.m_fileSize,
+					"file_uploaded":true,
+					"file_signed":file_ctrl.m_originalIdList.m_fileSigned,
+					"signatures":file_ctrl.m_originalIdList.m_signatures
+				},
+				itemId
+			);
+		}
+		if (file_ctrl.m_originalFile||file_ctrl.m_originalIdList){
 			file_cont.toDOM();
-			window.showWarn("Восстановлен прежний файл");
+			if(file_ctrl.m_originalFile){
+				window.showTempWarn("Восстановлен прежний файл",null,this.WARN_TIMEOUT);
+			}
+			if(file_ctrl.m_originalIdList){
+				window.showTempWarn("Восстановлен прежний информационно-удостоверяющий лист",null,this.WARN_TIMEOUT);
+			}			
 		}		
 	}
 }
@@ -1062,7 +1115,7 @@ FileUploader_View.prototype.initDownload = function(){
 						 * чтобы подпись прикладывали на загруженные данные с заменой - такого НЕТ!
 						 */
 						file.original_file = self.m_uploader.files[i].original_file;
-						
+						file.original_idlist = self.m_uploader.files[i].original_idlist;
 						break;
 					}
 				}
@@ -1181,8 +1234,14 @@ FileUploader_View.prototype.initDownload = function(){
 				
 				if (file.file.original_file){
 					file.original_file = file.file.original_file;
-					file_cont.getElement("file_"+file.file_id).m_originalFile = file_cont.getElement("file_"+file.file.original_file.fileId);
+					file.original_idlist = file.file.original_idlist;
+					var fl_ctrl = file_cont.getElement("file_"+file.file_id);
+					fl_ctrl.m_originalFile = file_cont.getElement("file_"+file.file.original_file.fileId);					
 					self.deleteLocalFileFromUpload(file.file.original_file.fileId,file.file.original_file.itemId);					
+					if(fl_ctrl.m_originalIdList){
+						fl_ctrl.m_originalIdList = file_cont.getElement("file_"+file.file.original_idlist.fileId);
+						self.deleteLocalFileFromUpload(file.file.original_idlist.fileId,file.file.original_idlist.itemId);
+					}
 				}
 				
 				if (file.file.original_file||is_id_list){
@@ -1261,6 +1320,7 @@ FileUploader_View.prototype.decTotalFileCount = function(){
 
 FileUploader_View.prototype.toDOM = function(parent){
 	FileUploader_View.superclass.toDOM.call(this,parent);
+	
 	this.addFileControls(this.m_items);	
 
 	this.setUploadOnAdd(this.m_uploadOnAdd);
@@ -1283,6 +1343,9 @@ FileUploader_View.prototype.getQuerySruc = function(file){
 	
 	if(file.original_file){
 		struc.original_file_id = file.original_file.fileId;
+	}
+	if(file.original_idlist){
+		struc.original_idlist_id = file.original_idlist.fileId;
 	}
 	
 	return struc;

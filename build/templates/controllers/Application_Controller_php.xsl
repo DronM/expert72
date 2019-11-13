@@ -2916,6 +2916,34 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			'application'
 		);
 	}
+
+	public static function getIdListIdForFile($dbLink,$fileIdForDb,$appId){
+		$ar = $dbLink->query_first(
+			sprintf(
+			"WITH
+				orig_file AS (
+					SELECT
+						document_id,
+						document_type,
+						lower(file_name) AS l_file_name
+					FROM application_document_files
+					WHERE file_id=%s
+				)
+			SELECT 
+				app_f.file_id
+			FROM application_document_files AS app_f
+			WHERE app_f.application_id=%d
+				AND app_f.document_id=(SELECT of.document_id FROM orig_file AS of)
+				AND app_f.document_type=(SELECT of.document_type FROM orig_file AS of)
+				--AND app_f.information_list
+				AND lower(app_f.file_name) ~ ('^'||(SELECT f_name FROM file_name_explode((SELECT of.l_file_name FROM orig_file AS of)) AS (f_name text,f_ext text))||' *- *ул *\.'||(SELECT f_ext FROM file_name_explode((SELECT of.l_file_name FROM orig_file AS of)) AS (f_name text,f_ext text))||'$')
+			",
+			$fileIdForDb,$appId)
+		);
+		if(count($ar)){
+			return $ar['file_id'];
+		}
+	}
 	
 	
 </xsl:template>

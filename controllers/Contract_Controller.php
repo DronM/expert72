@@ -964,7 +964,7 @@ class Contract_Controller extends ControllerSQL{
 		//Дополнительные проверки на визимость контракта
 		$where = new ModelWhereSQL();
 		$where->addExpression('id',sprintf('id=%d',$this->getExtDbVal($pm,'id')));
-		$this->addPermissionCond($where);
+		$this->addPermissionCond($where,$tb);
 	
 		$ar_obj = $this->getDbLink()->query_first(sprintf(
 		"SELECT %s FROM %s %s",
@@ -1095,13 +1095,16 @@ class Contract_Controller extends ControllerSQL{
 		
 	}
 	
-	private function addPermissionCond(&$where){
+	private function addPermissionCond(&$where,$tb){
 		if ($_SESSION['role_id']!='admin' && $_SESSION['role_id']!='lawyer' && $_SESSION['role_id']!='boss'&& $_SESSION['role_id']!='accountant'){
 			DocFlowTask_Controller::set_employee_id($this->getDbLink());
+			
+			$perm_col = ($tb=='contracts')? 'permission_ar':'condition_ar';
+			
 			$where->addExpression('permission_ar',
 				sprintf(
 				"(%s
-					(main_expert_id=%d OR 'employees%s' =ANY (condition_ar) OR 'departments%s' =ANY (condition_ar)
+					(main_expert_id=%d OR 'employees%s' =ANY (".$perm_col.") OR 'departments%s' =ANY (".$perm_col.")
 						OR ( %s AND main_department_id=%d )
 					)
 				)",
@@ -1129,7 +1132,7 @@ class Contract_Controller extends ControllerSQL{
 			if (!$where){
 				$where = new ModelWhereSQL();
 			}
-			$this->addPermissionCond($where);
+			$this->addPermissionCond($where,'contracts_list');
 			
 			$from = null; $count = null;
 			$limit = $this->limitFromParams($pm,$from,$count);
@@ -1505,11 +1508,11 @@ class Contract_Controller extends ControllerSQL{
 		$for_all_employees = $pm->getParamValue('for_all_employees');
 		$permissions = $pm->getParamValue('permissions');
 		if(
-		($_SESSION['role_id']!='admin' || $_SESSION['role_id']!='boss')
+		($_SESSION['role_id']!='admin' && $_SESSION['role_id']!='boss')
 		&&
 		( isset($for_all_employees) || isset($permissions) )
 		){
-			throw new Exception('Изменение набора прав контракта доступно только администраторуи руководителю!');
+			throw new Exception('Изменение набора прав контракта доступно только администратору и руководителю!');
 		}
 		
 		parent::update($pm);

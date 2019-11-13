@@ -340,13 +340,13 @@ class Kladr_Controller extends ControllerSQL{
 		
 		$pattern = $params->getDbVal('pattern');
 		
-		if ($params->getVal('naspunkt_code') && $params->getVal('naspunkt_code')!='null'){
+		if ($params->getVal('naspunkt_code') && strtolower($params->getVal('naspunkt_code'))!='null'){
 			$code = "'".substr($params->getVal('naspunkt_code'),0,11)."'";
 		}
-		else if ($params->getVal('gorod_code') && $params->getVal('gorod_code')!='null'){
+		else if ($params->getVal('gorod_code') && strtolower($params->getVal('gorod_code'))!='null'){
 			$code = "'".substr($params->getVal('gorod_code'),0,11)."'";
 		}
-		else if ($params->getVal('raion_code') && $params->getVal('raion_code')!='null'){
+		else if ($params->getVal('raion_code') && strtolower($params->getVal('raion_code'))!='null'){
 			$code = "'".substr($params->getVal('raion_code'),0,11)."'";
 		}
 		else{

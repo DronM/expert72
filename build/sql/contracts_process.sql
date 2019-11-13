@@ -1,8 +1,8 @@
--- Function: contracts_process()
+-- Function: public.contracts_process()
 
--- DROP FUNCTION contracts_process();
+-- DROP FUNCTION public.contracts_process();
 
-CREATE OR REPLACE FUNCTION contracts_process()
+CREATE OR REPLACE FUNCTION public.contracts_process()
   RETURNS trigger AS
 $BODY$
 BEGIN
@@ -12,6 +12,20 @@ BEGIN
 		OR (TG_OP='UPDATE' AND NEW.permissions<>OLD.permissions))
 		AND (NOT const_client_lk_val() OR const_debug_val())
 		THEN
+			-- Проверка на пустых!!!
+			IF NEW.permissions IS NOT NULL THEN
+				SELECT
+					sub.employees_ref
+				FROM
+				(SELECT
+					jsonb_array_elements(NEW.permissions->'rows') AS employees_ref
+				) AS sub
+				WHERE employees_ref->'fields'->'obj'->'keys'->>'id'='null';
+				IF FOUND THEN
+					RAISE EXCEPTION 'В списке прав доступа есть пустой сотрудник!';
+				END IF;
+			END IF;
+			
 			SELECT
 				array_agg( ((sub.obj->'fields'->>'obj')::json->>'dataType')||((sub.obj->'fields'->>'obj')::json->'keys'->>'id') )
 			INTO NEW.permission_ar
@@ -78,4 +92,6 @@ END;
 $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
-ALTER FUNCTION contracts_process() OWNER TO ;
+ALTER FUNCTION public.contracts_process()
+  OWNER TO expert72;
+

@@ -861,7 +861,11 @@ class DocFlowOutClient_Controller extends ControllerSQL{
 						else{
 							//move back to documentation
 							$dbLinkMaster->query(sprintf(
-								"UPDATE application_document_files SET deleted=FALSE WHERE file_id=%s",
+								"UPDATE application_document_files
+								SET
+									deleted=FALSE,
+									deleted_dt = NULL
+								WHERE file_id=%s",
 							"'".$ar['file_id']."'"
 							));
 							
@@ -889,6 +893,12 @@ class DocFlowOutClient_Controller extends ControllerSQL{
 						
 			$dbLinkMaster->query(sprintf(
 				"DELETE FROM doc_flow_out_client_document_files
+				WHERE doc_flow_out_client_id=%d",
+			$this->getExtDbVal($pm,'id')
+			));
+						
+			$dbLinkMaster->query(sprintf(
+				"DELETE FROM doc_flow_out_client_original_files
 				WHERE doc_flow_out_client_id=%d",
 			$this->getExtDbVal($pm,'id')
 			));
@@ -976,10 +986,80 @@ class DocFlowOutClient_Controller extends ControllerSQL{
 			
 			$unlink_file = (count($ar) && $ar['unlink_file']=='t');
 					
-			Application_Controller::removeFile($dbLinkMaster, $file_id_for_db,$unlink_file);		
-		
 			if ($unlink_file){				
+				//Восстановим файлы, удаленные взамен этому (файл и возможно УЛ и подписи)
+				$q_id = $dbLinkMaster->query(sprintf(
+					"SELECT
+						orig_f.original_file_id AS file_id,
+						app_f.document_type,
+						app_f.document_id,
+						app_f.file_name,
+						app_f.file_signed,
+						app_f.deleted,
+						app_f.application_id,
+						app_f.file_signed
+					FROM doc_flow_out_client_original_files AS orig_f
+					LEFT JOIN application_document_files AS app_f ON orig_f.original_file_id=app_f.file_id
+					WHERE orig_f.doc_flow_out_client_id=%d AND orig_f.new_file_id=%s",			
+				$doc_flow_out_client_id_for_db,
+				$file_id_for_db
+				));
+				$orig_file_str = "";
+				while($ar= $dbLinkMaster->fetch_array($q_id)){
+					$orig_file_str.= ($orig_file_str=="")? "":",";
+					$orig_file_str.= "'".$ar['file_id']."'";
+					
+					//Фактическое восстановление файла: копирование из Удаленные в нужную папку документации
+					$file_rel = DIRECTORY_SEPARATOR.Application_Controller::APP_DIR_PREF.$ar['application_id'].DIRECTORY_SEPARATOR.
+						Application_Controller::APP_DIR_DELETED_FILES.DIRECTORY_SEPARATOR.$ar['file_id'];
+					$restor_file_rel = DIRECTORY_SEPARATOR.Application_Controller::APP_DIR_PREF.$ar['application_id'].DIRECTORY_SEPARATOR.
+						(($ar['document_type']!='documents')? (Application_Controller::dirNameOnDocType($ar['document_type']).DIRECTORY_SEPARATOR.$ar['document_id']) : $ar['file_path']).DIRECTORY_SEPARATOR.
+						$ar['file_id'];
+					if (
+					file_exists($file=FILE_STORAGE_DIR.$file_rel)
+					|| (defined('FILE_STORAGE_DIR_MAIN') && file_exists($file=FILE_STORAGE_DIR_MAIN.$file_rel))
+					){							
+						//move back to documentation
+						rename($file,FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$restor_file_rel);							
+					}								
+					if (
+					$ar['file_signed']
+					&&
+					(file_exists($file=FILE_STORAGE_DIR.$file_rel.'.sig')
+					|| (defined('FILE_STORAGE_DIR_MAIN') && file_exists($file=FILE_STORAGE_DIR_MAIN.$file_rel.'.sig'))
+					)
+					){							
+						//move back to documentation
+						rename($file,FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$restor_file_rel.'.sig');							
+					}								
+					
+				}
+				
 				$dbLinkMaster->query(sprintf("DELETE FROM doc_flow_out_client_document_files WHERE file_id=%s", $file_id_for_db));
+				
+				if(strlen($orig_file_str)){
+					$dbLinkMaster->query(sprintf(
+						"UPDATE application_document_files
+						SET
+							deleted = FALSE,
+							deleted_dt = NULL
+						WHERE file_id IN (%s)",
+					$orig_file_str
+					));
+				
+					$dbLinkMaster->query(sprintf(
+						"DELETE FROM doc_flow_out_client_original_files
+						WHERE doc_flow_out_client_id=%d AND original_file_id IN (%s)",
+					$doc_flow_out_client_id_for_db,
+					$orig_file_str
+					));
+				
+					$dbLinkMaster->query(sprintf(
+						"DELETE FROM doc_flow_out_client_document_files
+						WHERE file_id IN (%s)",
+					$orig_file_str
+					));
+				}
 			}
 			else{
 				//просто пометили на удаление - отметим принадлежность к этому письму
@@ -990,7 +1070,10 @@ class DocFlowOutClient_Controller extends ControllerSQL{
 				$file_id_for_db,
 				$doc_flow_out_client_id_for_db
 				));
-			}		
+			}
+			
+			Application_Controller::removeFile($dbLinkMaster, $file_id_for_db,$unlink_file);		
+					
 			$dbLinkMaster->query("COMMIT");
 		}
 		catch(Exception $e){
@@ -1057,6 +1140,35 @@ class DocFlowOutClient_Controller extends ControllerSQL{
 		),
 		'DocFlowOutAttrList_Model'
 		);
+	}
+	
+	public static function removeOriginalFile($dbLink,$origFileIdForDb,$newFileId,$docFlowOutClientIdForDb){
+		//if uploaded by this same document - actual unlinking!
+		$ar = $dbLink->query_first(sprintf(		
+		"SELECT TRUE AS present
+		FROM doc_flow_out_client_document_files
+		WHERE file_id=%s AND doc_flow_out_client_id=%d",
+		$origFileIdForDb,$docFlowOutClientIdForDb
+		));
+		$unlink_file = (count($ar) && $ar['present']=='t');
+		Application_Controller::removeFile($dbLink,$origFileIdForDb,$unlink_file);
+
+		if (!$unlink_file){
+			$dbLink->query(sprintf(		
+				"INSERT INTO doc_flow_out_client_document_files
+				(file_id,doc_flow_out_client_id,is_new)
+				VALUES (%s,%d,FALSE)
+				ON CONFLICT DO NOTHING",
+			$origFileIdForDb,$docFlowOutClientIdForDb
+			));
+			
+			$dbLink->query(sprintf(
+				"INSERT INTO doc_flow_out_client_original_files
+				(doc_flow_out_client_id,original_file_id,new_file_id)
+				VALUES (%d,%s,%s) ON CONFLICT DO NOTHING",
+			$docFlowOutClientIdForDb,$origFileIdForDb,$newFileId
+			));
+		}
 	}
 	
 

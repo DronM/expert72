@@ -494,6 +494,11 @@ BEGIN
 				)
 			);
 		
+		ELSIF
+		(TG_OP='UPDATE' AND NEW.sent=FALSE AND OLD.sent=TRUE)
+		AND (NOT const_client_lk_val() OR const_debug_val()) THEN
+			--отмена отправки
+			DELETE FROM doc_flow_out_client_reg_numbers WHERE application_id=NEW.application_id AND doc_flow_out_client_id=NEW.id;
 		END IF;
 	
 		RETURN NEW;

@@ -180,34 +180,36 @@ BEGIN
 							);
 							
 							--09/10/19 смена статуса заявления, полностью повторяет DocFlowRegistration_Controller
-							IF v_examination_id iS NOT NULL THEN
-								--Есть рассмотрение(?) а может вообще такое быть???
-								--DocFlowExamination_Controller->setResolved
-								UPDATE doc_flow_examinations
-								SET
-									resolution=NULL,
-									close_date_time=now()+'1 second'::interval,
-									application_resolution_state='closed'::application_states,
-									close_employee_id=NEW.employee_id,
-									closed=TRUE
-								WHERE id=v_examination_id;
-							ELSE
-								--Нет рассмотрения - обычный случай
-								INSERT INTO application_processes (
-									application_id,
-									date_time,
-									state,
-									user_id,
-									end_date_time
-								)
-								VALUES (
-									v_to_application_id,
-									now()+'1 second'::interval,
-									'closed',
-									(SELECT user_id FROM employees WHERE id=NEW.employee_id),
-									NULL
-								);								
-							END IF;
+							IF v_doc_flow_type_id=(pdfn_doc_flow_types_contr_close()->'keys'->>'id')::int THEN
+								IF v_examination_id iS NOT NULL THEN
+									--Есть рассмотрение(?) а может вообще такое быть???
+									--DocFlowExamination_Controller->setResolved
+									UPDATE doc_flow_examinations
+									SET
+										resolution=NULL,
+										close_date_time=now()+'1 second'::interval,
+										application_resolution_state='closed'::application_states,
+										close_employee_id=NEW.employee_id,
+										closed=TRUE
+									WHERE id=v_examination_id;
+								ELSE
+									--Нет рассмотрения - обычный случай
+									INSERT INTO application_processes (
+										application_id,
+										date_time,
+										state,
+										user_id,
+										end_date_time
+									)
+									VALUES (
+										v_to_application_id,
+										now()+'1 second'::interval,
+										'closed',
+										(SELECT user_id FROM employees WHERE id=NEW.employee_id),
+										NULL
+									);								
+								END IF;
+							END IF;	
 						END IF;
 					END IF;
 				

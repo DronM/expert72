@@ -717,7 +717,6 @@ class DocFlowOut_Controller extends DocFlow_Controller{
 
 
 	public function insert($pm){
-		//throw new Exception($this->getExtVal($pm,"allow_edit_sections"));
 		try{
 			$this->getDbLinkMaster()->query("BEGIN");
 			

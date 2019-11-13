@@ -1756,6 +1756,7 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/ExpertiseProlongation_Controller.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/Signature_Model.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocumentTemplateForContractList_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowOutClientOriginalFile_Model.js'));
 	
 			if (isset($_SESSION['scriptId'])){
 				$script_id = $_SESSION['scriptId'];

@@ -7,6 +7,7 @@ require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLInt.php');
 require_once(ABSOLUTE_PATH.'controllers/Application_Controller.php');
 require_once(ABSOLUTE_PATH.'controllers/DocFlow_Controller.php');
 require_once(ABSOLUTE_PATH.'controllers/DocFlowOut_Controller.php');
+require_once(ABSOLUTE_PATH.'controllers/DocFlowOutClient_Controller.php');
 
 require_once(ABSOLUTE_PATH.'functions/PKIManager.php');
 require_once(ABSOLUTE_PATH.'functions/pki.php');
@@ -380,12 +381,15 @@ try{
 						throw new Exception(Application_Controller::ER_OTHER_USER_APP);
 					}
 					
+					//Дополнительная проверка - можно ли добавлять новые файлы					
+					//ИУЛ можно всегда грузить
+					//(??? контроль только по названию, т.к. сам файл может быть не загружен)					
 					if(
 					$doc_flow_out_client_fields['doc_flow_out_client_type']=='contr_resp'
 					&&!isset($_REQUEST['original_file_id'])
 					&&(!isset($_REQUEST['doc_type']) || $_REQUEST['doc_type']!='documents')
+					&&!preg_match('/^.+ *- *УЛ *\.{1}.+$/',mb_strtoupper($_REQUEST['resumableFilename'],'UTF-8'))
 					){
-						//Дополнительная проверка - можно ли добавлять новые файлы
 						$attrs = json_decode($doc_flow_out_client_fields['out_attrs']);
 						if (!$attrs->allow_new_file_add){
 							throw new Exception(ER_NEW_FILES_NOT_ALLOWED);
@@ -568,6 +572,21 @@ try{
 							
 							if (isset($_REQUEST['original_file_id'])&&isset($_REQUEST['doc_flow_out_client_id'])){
 								//Загружен новый файл с подписью - удаление оригинального файлы, который заменили
+								
+								$db_original_file_id = NULL;
+								FieldSQLString::formatForDb($dbLink,$_REQUEST['original_file_id'],$db_original_file_id);
+								if ($db_original_file_id!='null'){
+									//id list search
+									$id_list_id = Application_Controller::getIdListIdForFile($dbLink,$db_original_file_id,$db_file_id,$db_app_id);
+									if($id_list_id){
+										//Есть ИУЛ - удалить...
+										//throw new Exception('Deleting IdList '.$id_list_id);
+										DocFlowOutClient_Controller::removeOriginalFile($dbLink,"'".$id_list_id."'",$db_file_id,$db_doc_flow_out_client_id);
+									}
+									//throw new Exception('Deleting original file '.$db_original_file_id);
+									DocFlowOutClient_Controller::removeOriginalFile($dbLink,$db_original_file_id,$db_file_id,$db_doc_flow_out_client_id);
+								}
+								/*
 								$db_original_file_id = NULL;
 								FieldSQLString::formatForDb($dbLink,$_REQUEST['original_file_id'],$db_original_file_id);
 								if ($db_original_file_id!='null'){
@@ -591,6 +610,7 @@ try{
 										));
 									}
 								}
+								*/
 							}
 							
 							$dbLink->query('COMMIT');
