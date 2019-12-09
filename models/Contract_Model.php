@@ -534,6 +534,15 @@ class Contract_Model extends ModelSQL{
 		$f_fund_source_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"fund_source_id",$f_opts);
 		$this->addField($f_fund_source_id);
 		//********************
+		
+		//*** Field allow_new_file_add ***
+		$f_opts = array();
+		$f_opts['defaultValue']='FALSE';
+		$f_opts['id']="allow_new_file_add";
+						
+		$f_allow_new_file_add=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"allow_new_file_add",$f_opts);
+		$this->addField($f_allow_new_file_add);
+		//********************
 	
 		$order = new ModelOrderSQL();		
 		$this->setDefaultModelOrder($order);		

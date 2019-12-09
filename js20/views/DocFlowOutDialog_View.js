@@ -42,6 +42,7 @@ function DocFlowOutDialog_View(id,options){
 		}
 	}
 	
+	this.m_permissionsVisible = is_admin; 
 	options.templateOptions.permissionsVisible = is_admin;
 	
 	//********** cades plugin *******************
@@ -322,7 +323,7 @@ function DocFlowOutDialog_View(id,options){
 		
 		this.addElement(new BtnNextNum(id+":cmdNextNum",{"view":this}));
 		
-		if (options.templateOptions.permissionsVisible){
+		if (this.m_permissionsVisible){
 			this.addElement(new EditCheckBox(id+":allow_new_file_add",{
 				"labelCaption":"Разрешить добавление новых файлов"
 			}));
@@ -356,7 +357,7 @@ function DocFlowOutDialog_View(id,options){
 		,new DataBinding({"control":this.getElement("expertise_reject_types_ref")})
 		,new DataBinding({"control":this.getElement("expertise_result")})
 	];	
-	if (options.templateOptions.permissionsVisible){
+	if (this.m_permissionsVisible){
 		read_b.push(new DataBinding({"control":this.getElement("allow_new_file_add")}));
 		read_b.push(new DataBinding({"control":this.getElement("allow_edit_sections")}));
 	}	
@@ -380,7 +381,7 @@ function DocFlowOutDialog_View(id,options){
 		,new CommandBinding({"control":this.getElement("expertise_reject_types_ref"),"fieldId":"expertise_reject_type_id"})
 		,new CommandBinding({"control":this.getElement("expertise_result")})
 	];
-	if (options.templateOptions.permissionsVisible){
+	if (this.m_permissionsVisible){
 		write_b.push(new CommandBinding({"control":this.getElement("allow_new_file_add")}));
 		write_b.push(new CommandBinding({"control":this.getElement("allow_edit_sections")}));
 	}	
@@ -469,27 +470,29 @@ DocFlowOutDialog_View.prototype.fillSections = function(callBack){
 					else if(doc_type=="audit"){
 						descr = "Аудит цен";
 					}
-					var sections = self.m_documentTemplates.getFieldValue("sections");
-					var sections_with_items = [];
-					for(var i=0;i<sections.length;i++){
-						sections[i].itemLength = (sections[i].items&&sections[i].items.length)? sections[i].items.length:null;
-						sections[i].ind = i;
-						//default=true
-						/*
-						sections[i].fields.checked = true;
-						if(sections[i].itemLength){
-							for(var j=0;j<sections[i].items.length;j++){
-								sections[i].items[j].fields.checked = true;
+					if(self.m_permissionsVisible){
+						var sections = self.m_documentTemplates.getFieldValue("sections");
+						var sections_with_items = [];
+						for(var i=0;i<sections.length;i++){
+							sections[i].itemLength = (sections[i].items&&sections[i].items.length)? sections[i].items.length:null;
+							sections[i].ind = i;
+							//default=true
+							/*
+							sections[i].fields.checked = true;
+							if(sections[i].itemLength){
+								for(var j=0;j<sections[i].items.length;j++){
+									sections[i].items[j].fields.checked = true;
+								}
 							}
+							*/
 						}
-						*/
-					}
 					
-					self.getElement("allow_edit_sections").setValue({
-						"descr":descr,
-						"sections":sections
-					});
-					self.setSectionControls();
+						self.getElement("allow_edit_sections").setValue({
+							"descr":descr,
+							"sections":sections
+						});
+						self.setSectionControls();
+					}
 					if(callBack)callBack();
 				}
 			}
@@ -662,25 +665,27 @@ DocFlowOutDialog_View.prototype.checkContractLetter = function(){
 	var tp = this.getElement("doc_flow_types_ref").getValue();
 	if (tp && tp.getKey()==window.getApp().getPredefinedItem("doc_flow_types","contr").getKey()){
 		//проверка отметок у разделов		
-		var sec = this.getElement("allow_edit_sections").getValue();
-		if(sec && sec.sections){
-			var res = false;
-			for(var i=0;i<sec.sections.length;i++){
-				if (sec.sections[i].fields.checked){
-					res = true;
-					break;
-				}
-				if(sec.sections[i].items){
-					for(var j=0;j<sec.sections[i].items.length;j++){				
-						if (sec.sections[i].items[j].fields.checked){
-							res = true;
-							break;
-						}					
+		if(this.m_permissionsVisible){
+			var sec = this.getElement("allow_edit_sections").getValue();
+			if(sec && sec.sections){
+				var res = false;
+				for(var i=0;i<sec.sections.length;i++){
+					if (sec.sections[i].fields.checked){
+						res = true;
+						break;
+					}
+					if(sec.sections[i].items){
+						for(var j=0;j<sec.sections[i].items.length;j++){				
+							if (sec.sections[i].items[j].fields.checked){
+								res = true;
+								break;
+							}					
+						}
 					}
 				}
-			}
-			if(!res){
-				throw new Error("Не отмечен ни один раздел для замены файлов документации!");
+				if(!res){
+					throw new Error("Не отмечен ни один раздел для замены файлов документации!");
+				}
 			}
 		}
 	}
@@ -820,9 +825,11 @@ DocFlowOutDialog_View.prototype.updateFolderVisibility = function(){
 }
 
 DocFlowOutDialog_View.prototype.secSetValue = function(v){
-	var sections = DOMHelper.getElementsByAttr("sections", this.getElement("allow_edit_sections").getNode(), "class");
-	for(var i=0;i<sections.length;i++){
-		sections[i].checked = v;
+	if(this.m_permissionsVisible){
+		var sections = DOMHelper.getElementsByAttr("sections", this.getElement("allow_edit_sections").getNode(), "class");
+		for(var i=0;i<sections.length;i++){
+			sections[i].checked = v;
+		}
 	}
 }
 
@@ -836,52 +843,58 @@ DocFlowOutDialog_View.prototype.secSubSetValue = function(mainSecNode){
 
 DocFlowOutDialog_View.prototype.setSectionControls = function(){
 	//set main sec control
-	var sections = DOMHelper.getElementsByAttr("sections-with_items",this.getElement("allow_edit_sections").getNode(),"class");
-	var self = this;
-	for(var i=0;i<sections.length;i++){
-		EventHelper.add(sections[i],"change",(function(){
-			return function(e){
-				e = EventHelper.fixMouseEvent(e);
-				self.secSubSetValue(e.target);
-			}
-		})());
+	if(!this.m_permissionsVisible){
+		return;
 	}
-	
-	//buttons
-	(new ButtonCtrl(this.getId()+":allow_edit_sections:secSetAll",{
-		"glyph":"glyphicon-check",
-		"title":"Отметить все разделы",
-		"onClick":function(){
-			self.secSetValue(true);
+	var allow_edit_sections_ctrl = this.getElement("allow_edit_sections");
+	if(allow_edit_sections_ctrl){
+		var sections = DOMHelper.getElementsByAttr("sections-with_items",allow_edit_sections_ctrl.getNode(),"class");
+		var self = this;
+		for(var i=0;i<sections.length;i++){
+			EventHelper.add(sections[i],"change",(function(){
+				return function(e){
+					e = EventHelper.fixMouseEvent(e);
+					self.secSubSetValue(e.target);
+				}
+			})());
 		}
-	})).toDOM();
-	(new ButtonCtrl(this.getId()+":allow_edit_sections:secUnsetAll",{
-		"glyph":"glyphicon-unchecked",
-		"title":"Снять отметку со всех разделов",
-		"onClick":function(){
-			self.secSetValue(false);
-		}
-	})).toDOM();
 	
-	/**
-	 * Разрешено редактировать:
-	 *	- админу - всегда
-	 *	- главному эксперту и автору письма - только не зарегитрированное
-	 *	- остальным - запрет
-	 */	
-	var role = window.getApp().getServVar("role_id");		
-	if(role!="admin"){
-		var contr_empl = this.getModel().getFieldValue("to_contract_main_experts_ref");		
-		var auth_empl = this.getElement("employees_ref").getValue();
-		var cur_empl_key = CommonHelper.unserialize(window.getApp().getServVar("employees_ref")).getKey();		
-		var en = (
-			this.getModel().getFieldValue("state")!="registered"
-			&&( (contr_empl&&contr_empl.getKey()==cur_empl_key)
-				||(auth_empl&&auth_empl.getKey()==cur_empl_key)
-			)
-		);
+		//buttons
+		(new ButtonCtrl(this.getId()+":allow_edit_sections:secSetAll",{
+			"glyph":"glyphicon-check",
+			"title":"Отметить все разделы",
+			"onClick":function(){
+				self.secSetValue(true);
+			}
+		})).toDOM();
+		(new ButtonCtrl(this.getId()+":allow_edit_sections:secUnsetAll",{
+			"glyph":"glyphicon-unchecked",
+			"title":"Снять отметку со всех разделов",
+			"onClick":function(){
+				self.secSetValue(false);
+			}
+		})).toDOM();
+	
+		/**
+		 * Разрешено редактировать:
+		 *	- админу - всегда
+		 *	- главному эксперту и автору письма - только не зарегитрированное
+		 *	- остальным - запрет
+		 */	
+		var role = window.getApp().getServVar("role_id");		
+		if(role!="admin"){
+			var contr_empl = this.getModel().getFieldValue("to_contract_main_experts_ref");		
+			var auth_empl = this.getElement("employees_ref").getValue();
+			var cur_empl_key = CommonHelper.unserialize(window.getApp().getServVar("employees_ref")).getKey();		
+			var en = (
+				this.getModel().getFieldValue("state")!="registered"
+				&&( (contr_empl&&contr_empl.getKey()==cur_empl_key)
+					||(auth_empl&&auth_empl.getKey()==cur_empl_key)
+				)
+			);
 		
-		this.getElement("allow_edit_sections").setEnabled(en);
+			allow_edit_sections_ctrl.setEnabled(en);
+		}
 	}
 }
 

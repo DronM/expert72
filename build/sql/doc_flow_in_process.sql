@@ -28,6 +28,13 @@ BEGIN
 			DELETE FROM doc_flow_out WHERE doc_flow_in_id = OLD.id;
 			DELETE FROM doc_flow_attachments WHERE doc_type='doc_flow_in' AND doc_id = OLD.id;
 		END IF;
+
+		IF (const_client_lk_val() OR const_debug_val()) THEN
+			UPDATE doc_flow_out_client
+			SET sent = FALSE
+			WHERE id = OLD.from_doc_flow_out_client_id;
+
+		END IF;
 		
 		RETURN OLD;
 	END IF;

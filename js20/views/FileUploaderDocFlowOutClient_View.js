@@ -86,7 +86,7 @@ FileUploaderDocFlowOutClient_View.prototype.deleteFileFromServerContinue = funct
 	 * если не все загружены - предупреждение
 	 * если все загружены: 1) запрос на удаление 2) перечитать файлы (возможно какие-то были восстановлены)
 	 */	
-	var reread_tabs = (file_ctrl.m_originalFile || (h_ref && DOMHelper.hasClass(h_ref,"uploadedByThis")) );
+	var reread_tabs = (file_ctrl.m_originalFile || x(h_ref && DOMHelper.hasClass(h_ref,"uploadedByThis")) );
 	if(reread_tabs && this.getForUploadFileCount()){
 		throw new Error('Загрузить все незагруженные файлы!');
 	}
@@ -194,14 +194,14 @@ FileUploaderDocFlowOutClient_View.prototype.setFileOptions = function(fileOpts,f
 			fileOpts.refClass = this.CLASS_NOT_UPLOADED;	
 		}
 		else if (file.doc_flow_out.id==this.m_mainView.getModel().getFieldValue("id")){
-			fileOpts.refTitle = "Загружен этим документом";	
-			fileOpts.refClass = "uploadedByThis";	
+			fileOpts.refTitle = "Загружен этим письмом"+((file.is_switched=="t")? " взамен другого файла":"");	
+			fileOpts.refClass = "uploadedByThis" + ((file.is_switched=="t")? " uploadedByThisSwitched":" uploadedByThisAdded");	
 		}
 		else{
 			fileOpts.refTitle = 
 				(file.doc_flow_out.reg_number&&file.doc_flow_out.reg_number!="null")?
-					("Загружен документом №"+file.doc_flow_out.reg_number+" от "+DateHelper.format(DateHelper.strtotime(file.doc_flow_out.date_time),"d/m/y"))
-					: ("Загружен неотправленным документом от "+DateHelper.format(DateHelper.strtotime(file.doc_flow_out.date_time),"d/m/y"))
+					("Загружен письмом №"+file.doc_flow_out.reg_number+" от "+DateHelper.format(DateHelper.strtotime(file.doc_flow_out.date_time),"d/m/y"))
+					: ("Загружен неотправленным письмом от "+DateHelper.format(DateHelper.strtotime(file.doc_flow_out.date_time),"d/m/y"))
 					;	
 			fileOpts.refClass = "uploadedAfterPost";	
 		}
@@ -225,15 +225,16 @@ FileUploaderDocFlowOutClient_View.prototype.removeUnregisteredFile = function(fi
 }
 
 FileUploaderDocFlowOutClient_View.prototype.setFileUploaded = function(file){
-console.log("FileUploaderDocFlowOutClient_View.prototype.setFileUploaded")
+//console.log("FileUploaderDocFlowOutClient_View.prototype.setFileUploaded")
+//console.dir(file);
 	FileUploaderDocFlowOutClient_View.superclass.setFileUploaded.call(this,file);
 	
 	if (!file)return;
 	
 	var href = document.getElementById(this.getId()+":file_"+file.file_id+"_href");
 	if (href){
-		DOMHelper.setAttr(href,"title","Загружен этим документом");
-		DOMHelper.setAttr(href,"class","uploadedByThis");
+		DOMHelper.setAttr(href,"title","Загружен этим письмом");
+		DOMHelper.setAttr(href,"class","uploadedByThisSwitched uploadedByThisSwitchedAdded");
 	}
 	var file_cont = this.getElement("file-list_"+file.doc_id);
 	DOMHelper.hide(file_cont.getElement("file_"+file.file_id+"_switch").getNode());

@@ -61,14 +61,14 @@ function ContractDialog_View(id,options){
 		||employee_dep_boss
 	);
 	options.templateOptions.notSetAccess = !options.templateOptions.setAccess;
+	var is_admin = (role=="admin");
+	options.templateOptions.isAdmin = is_admin;
 
 	options.addElement = function(){
 		var bs = window.getBsCol();
 		var editContClassName = "input-group "+bs+"9";
 		var labelClassName = "control-label "+bs+"3";
 		
-		var is_admin = (role=="admin");
-
 		this.addElement(new HiddenKey(id+":id"));
 
 		this.addElement(new EditDate(id+":date_time",{//DateTime
@@ -481,6 +481,15 @@ function ContractDialog_View(id,options){
 			"enabled":options.templateOptions.notExpert
 		}));	
 		
+		//Волшебная педалька, чтобы клиент мог всегда добавлять файлы в исх.письма
+		if(is_admin){
+			this.addElement(new EditCheckBox(id+":allow_new_file_add",{
+				"labelCaption":"Разрешить добавление новых файлов в ответы на замечания:",
+				"editContClassName":"input-group "+bs+"8",
+				"labelClassName":"control-label "+bs+"4"
+			}));	
+		}
+		
 		//Вкладки с документацией
 		this.addDocumentTabs(options.model,null,true);
 
@@ -732,6 +741,10 @@ function ContractDialog_View(id,options){
 		read_b.push(new DataBinding({"control":this.getElement("modif_primary_contracts_ref")}));
 	}
 	
+	if(is_admin){
+		read_b.push(new DataBinding({"control":this.getElement("allow_new_file_add")}));
+	}
+	
 	this.setDataBindings(read_b);
 	
 	var write_b;
@@ -794,6 +807,10 @@ function ContractDialog_View(id,options){
 		write_b.push(new CommandBinding({"control":this.getElement("for_all_employees"),"fieldId":"for_all_employees"}));
 		write_b.push(new CommandBinding({"control":this.getElement("experts_for_notification"),"fieldId":"experts_for_notification"}));
 	}
+	if(is_admin){
+		write_b.push(new CommandBinding({"control":this.getElement("allow_new_file_add")}));
+	}
+	
 	this.setWriteBindings(write_b);
 	
 	this.m_grids = {};

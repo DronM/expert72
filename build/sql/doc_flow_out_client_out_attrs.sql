@@ -45,13 +45,20 @@ $$
 				ORDER BY pr.date_time DESC
 				LIMIT 1
 			)='registered'
+			--!!!Только замечания экспертизы!!!
+			AND df_out.doc_flow_type_id = (pdfn_doc_flow_types_contr()->'keys'->>'id')::int
 		ORDER BY df_out.date_time DESC
 		LIMIT 1
 	)
 	SELECT
 		jsonb_build_object(
-			'allow_new_file_add',(SELECT last_doc.allow_new_file_add FROM last_doc),
-			'allow_edit_sections',(SELECT last_doc.allow_edit_sections FROM last_doc)						
+			'allow_new_file_add',
+				CASE
+				WHEN (SELECT ct.allow_new_file_add FROM contracts ct WHERE ct.application_id=in_application_id LIMIT 1) THEN TRUE
+				ELSE (SELECT last_doc.allow_new_file_add FROM last_doc)
+				END,
+			'allow_edit_sections',
+				(SELECT last_doc.allow_edit_sections FROM last_doc)						
 		)
 	;
 $$

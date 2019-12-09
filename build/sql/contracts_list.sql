@@ -56,7 +56,9 @@ CREATE OR REPLACE VIEW contracts_list AS
 		
 		applications.exp_cost_eval_validity,
 		
-		t.permission_ar AS condition_ar
+		t.permission_ar AS condition_ar,
+		
+		t.allow_new_file_add
 		
 	FROM contracts AS t
 	LEFT JOIN applications ON applications.id=t.application_id

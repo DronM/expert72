@@ -12,6 +12,7 @@ BEGIN
 		OR (TG_OP='UPDATE' AND NEW.permissions<>OLD.permissions))
 		AND (NOT const_client_lk_val() OR const_debug_val())
 		THEN
+			/*
 			-- Проверка на пустых!!!
 			IF NEW.permissions IS NOT NULL THEN
 				SELECT
@@ -25,7 +26,7 @@ BEGIN
 					RAISE EXCEPTION 'В списке прав доступа есть пустой сотрудник!';
 				END IF;
 			END IF;
-			
+			*/
 			SELECT
 				array_agg( ((sub.obj->'fields'->>'obj')::json->>'dataType')||((sub.obj->'fields'->>'obj')::json->'keys'->>'id') )
 			INTO NEW.permission_ar

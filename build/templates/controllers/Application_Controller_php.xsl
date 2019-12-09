@@ -268,11 +268,15 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 						$file_o->signatures	= $file['signatures'];
 						$file_o->information_list= $file['information_list'];
 						
+						if(isset($file['is_switched'])){
+							$file_o->is_switched	= $file['is_switched'];
+						}
+						
 						if ($file['doc_flow_out_client_id']){
 							$file_o->doc_flow_out	= new stdClass();
 							$file_o->doc_flow_out->id = $file['doc_flow_out_client_id'];
 							$file_o->doc_flow_out->date_time = $file['doc_flow_out_date_time'];
-							$file_o->doc_flow_out->reg_number = $file['doc_flow_out_reg_number'];
+							$file_o->doc_flow_out->reg_number = $file['doc_flow_out_reg_number'];							
 						}
 						array_push($files,$file_o);
 					}
@@ -426,6 +430,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			"SELECT
 				adf.*,
 				mdf.doc_flow_out_client_id,
+				(clorg_f.new_file_id IS NOT NULL) AS is_switched,
 				m.date_time AS doc_flow_out_date_time,
 				reg.reg_number AS doc_flow_out_reg_number,				
 				(WITH sign AS (
@@ -469,6 +474,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			LEFT JOIN (SELECT DISTINCT ON (cf.file_id) cf.file_id,cf.doc_flow_out_client_id FROM doc_flow_out_client_document_files cf) AS mdf ON mdf.file_id=adf.file_id
 			LEFT JOIN doc_flow_out_client AS m ON m.id=mdf.doc_flow_out_client_id
 			LEFT JOIN doc_flow_out_client_reg_numbers AS reg ON reg.doc_flow_out_client_id=m.id
+			LEFT JOIN doc_flow_out_client_original_files AS clorg_f ON clorg_f.doc_flow_out_client_id=m.id AND clorg_f.new_file_id=mdf.file_id
 			WHERE adf.application_id=%d %s
 			ORDER BY adf.document_type,adf.document_id,adf.information_list,adf.file_name,adf.deleted_dt ASC NULLS LAST",
 		$tb_postf,$tb_postf,$tb_postf,

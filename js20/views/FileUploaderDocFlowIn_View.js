@@ -17,6 +17,8 @@ function FileUploaderDocFlowIn_View(id,options){
 	options.customFolder = false;
 	options.includeFilePath = true;
 	
+	options.setFileOptions = this.setFileOptions;
+	
 	FileUploaderDocFlowIn_View.superclass.constructor.call(this, id,options);
 }
 extend(FileUploaderDocFlowIn_View,FileUploaderDocFlowOut_View);
@@ -41,3 +43,9 @@ FileUploaderDocFlowIn_View.prototype.getQuerySruc = function(file){
 	return res;
 }
 
+FileUploaderDocFlowIn_View.prototype.setFileOptions = function(fileOpts,file){
+//	if(file.is_switched===true){
+		fileOpts.refTitle = "Загружен этим письмом"+((file.is_switched===true)? " взамен другого файла":"");	
+		fileOpts.refClass = "uploadedByThis" + ((file.is_switched===true)? " uploadedByThisSwitched":" uploadedByThisAdded");	
+//	}
+}

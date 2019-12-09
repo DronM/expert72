@@ -17,6 +17,8 @@ function FileUploaderContract_View(id,options){
 	options.allowFileDeletion = false;
 	options.allowFileDownload = true;
 	
+	options.setFileOptions = this.setFileOptions;
+	
 	FileUploaderContract_View.superclass.constructor.call(this,id,options);
 }
 extend(FileUploaderContract_View, FileUploaderApplication_View);
@@ -37,4 +39,14 @@ FileUploaderContract_View.prototype.deleteFileFromServer = function(fileId,itemI
 }
 
 FileUploaderContract_View.prototype.getQuerySruc = function(file){
+}
+
+FileUploaderContract_View.prototype.setFileOptions = function(fileOpts,file){
+	FileUploaderContract_View.superclass.setFileOptions.call(this,fileOpts,file);
+	
+	if(file.doc_flow_out && !file.deleted){
+		fileOpts.refTitle = fileOpts.refTitle +( (file.is_switched=="t")? " (добавлен взамен другого файла)":" (добавлен без замены)" );
+		fileOpts.refClass = fileOpts.refClass +( (file.is_switched=="t")? " uploadedByThisSwitched":" uploadedByThisAdded" );
+	}
+	
 }

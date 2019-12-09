@@ -3,6 +3,7 @@ require_once('Config.php');
 
 //	require_once('common/BikInfo.php');
 //	BikInfo::genFile(OUTPUT_PATH);
+/*
 $fl_s = '820.17_Книга01_ИИ_изм.01 - ул.pdf';
 echo mb_strtoupper($fl_s, 'UTF-8').'</BR>';
 echo preg_match('/^.+ *- *УЛ *\.{1}.+$/',$fl_s);
@@ -10,6 +11,7 @@ exit;
 
 	echo time();
 	exit;
+*/	
 //	echo 11%2;
 //	exit;
 /*
@@ -48,8 +50,8 @@ return;
 	);
 	*/
 	$verif_res = $pki_man->verifySig(
-		'/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/Expired/299-Д Контракт УКС.pdf.sig',
-		'/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/Expired/299-Д Контракт УКС.pdf',
+		'/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/111/132  Договор АО Аэропорт Рощино.pdf.sig',
+		'/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/111/132  Договор АО Аэропорт Рощино.pdf',
 		array(
 			'noChainVerification' => TRUE,
 			'onlineRevocCheck' => TRUE,

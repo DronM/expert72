@@ -1,195 +1,219 @@
-30/11/2018 10:28 Called verifySig
-30/11/2018 10:28 parseSigFile
-30/11/2018 10:28 Called run_shell_cmd2 /usr/local/bin/openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/output/5c00ca8ed2842.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END CERT/ { print > "/home/andrey/www/htdocs/expert72/output/5c00ca8ed88e6."i }'
-30/11/2018 10:28 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5c00ca8ed88e6.1" -noout
-30/11/2018 10:28 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5c00ca8ed88e6.2" -noout
-30/11/2018 10:28 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5c00ca8ed88e6.3" -noout
-30/11/2018 10:28 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5c00ca8ed88e6.4" -noout
-30/11/2018 10:28 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5c00ca8ed88e6.5" -noout
-30/11/2018 10:28 Found signer certificates:2
-30/11/2018 10:28 Called run_shell_cmd /usr/local/bin/openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/output/5c00ca8ed2842.der" -noout -cmsout -print
-30/11/2018 10:28 Parsing certificate file /home/andrey/www/htdocs/expert72/output/5c00ca8ed88e6.1
-30/11/2018 10:28 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/output/5c00ca8ed88e6.1" -noout
-30/11/2018 10:28 Called run_shell_cmd /usr/local/bin/openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/output/5c00ca8ed88e6.1" -noout -nameopt multiline
-30/11/2018 10:28 Need certificate for hash:768bb33c
-30/11/2018 10:28 OCSP checking http://tax4.tensor.ru/ocsp-tensorca-2017_cp/ocsp.srf
-30/11/2018 10:28 Called run_shell_cmd /usr/local/bin/openssl ocsp -issuer "/home/andrey/www/htdocs/expert72/pki/768bb33c.0" -CApath "/home/andrey/www/htdocs/expert72/pki/" -cert "/home/andrey/www/htdocs/expert72/output/5c00ca8ed88e6.1" -url http://tax4.tensor.ru/ocsp-tensorca-2017_cp/ocsp.srf
-30/11/2018 10:28 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/768bb33c.0" -noout
-30/11/2018 10:28 Called run_shell_cmd /usr/local/bin/openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/768bb33c.0" -noout -nameopt multiline
-30/11/2018 10:28 Need certificate for hash:34fa2b3d
-30/11/2018 10:28 Looking for CRL file /home/andrey/www/htdocs/expert72/pki/34fa2b3d.r0
-30/11/2018 10:28 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/34fa2b3d.0" -noout
-30/11/2018 10:28 Called run_shell_cmd /usr/local/bin/openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/34fa2b3d.0" -noout -nameopt multiline
-30/11/2018 10:28 Parsing certificate file /home/andrey/www/htdocs/expert72/output/5c00ca8ed88e6.5
-30/11/2018 10:28 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/output/5c00ca8ed88e6.5" -noout
-30/11/2018 10:28 Called run_shell_cmd /usr/local/bin/openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/output/5c00ca8ed88e6.5" -noout -nameopt multiline
-30/11/2018 10:28 Need certificate for hash:9e757460
-30/11/2018 10:28 OCSP checking http://ocsp.72to.ru/ocsp/ocsp.srf
-30/11/2018 10:28 Called run_shell_cmd /usr/local/bin/openssl ocsp -issuer "/home/andrey/www/htdocs/expert72/pki/9e757460.0" -CApath "/home/andrey/www/htdocs/expert72/pki/" -cert "/home/andrey/www/htdocs/expert72/output/5c00ca8ed88e6.5" -url http://ocsp.72to.ru/ocsp/ocsp.srf
-30/11/2018 10:28 Response Verify Failure
-3072759552:error:27069070:OCSP routines:OCSP_basic_verify:root ca not trusted:crypto/ocsp/ocsp_vfy.c:121:
-3072759552:error:27069070:OCSP routines:OCSP_basic_verify:root ca not trusted:crypto/ocsp/ocsp_vfy.c:121:
+13/11/2019 12:55 Called verifySig
+13/11/2019 12:55 parseSigFile
+13/11/2019 12:55 Called run_shell_cmd2 /usr/local/bin/openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/111/132  Договор АО Аэропорт Рощино.pdf.sig" -out "/home/andrey/www/htdocs/expert72/output/5dcbb6de7012a.der"
+13/11/2019 12:55 Called run_shell_cmd2 /usr/local/bin/openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/output/5dcbb6de7012a.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END CERT/ { print > "/home/andrey/www/htdocs/expert72/output/5dcbb6de76197."i }'
+13/11/2019 12:55 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5dcbb6de76197.1" -noout
+13/11/2019 12:55 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5dcbb6de76197.2" -noout
+13/11/2019 12:55 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5dcbb6de76197.3" -noout
+13/11/2019 12:55 Found signer certificates:1
+13/11/2019 12:55 Called run_shell_cmd /usr/local/bin/openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/output/5dcbb6de7012a.der" -noout -cmsout -print
+13/11/2019 12:55 Parsing certificate file /home/andrey/www/htdocs/expert72/output/5dcbb6de76197.3
+13/11/2019 12:55 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/output/5dcbb6de76197.3" -noout
+13/11/2019 12:55 Called run_shell_cmd /usr/local/bin/openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/output/5dcbb6de76197.3" -noout -nameopt multiline
+13/11/2019 12:55 Called run_shell_cmd /usr/local/bin/openssl smime -verify -content "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/111/132  Договор АО Аэропорт Рощино.pdf" -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/output/5dcbb6de7012a.der" -noverify
+13/11/2019 12:55 Verification failure
+3073009408:error:0306E06C:bignum routines:BN_mod_inverse:no inverse:crypto/bn/bn_gcd.c:131:
+3073009408:error:8006E044:lib(128):gost_ec_verify:internal error:/home/andrey/gost2012/engine/gost_ec_sign.c:377:
+3073009408:error:21071069:PKCS7 routines:PKCS7_signatureVerify:signature failure:crypto/pkcs7/pk7_doit.c:1037:
+3073009408:error:21075069:PKCS7 routines:PKCS7_verify:signature failure:crypto/pkcs7/pk7_smime.c:353:
 
-30/11/2018 10:28 Called run_shell_cmd /usr/local/bin/openssl ocsp -issuer "/home/andrey/www/htdocs/expert72/pki/9e757460.1" -CApath "/home/andrey/www/htdocs/expert72/pki/" -cert "/home/andrey/www/htdocs/expert72/output/5c00ca8ed88e6.5" -url http://ocsp.72to.ru/ocsp/ocsp.srf
-30/11/2018 10:28 OCSP not passed: владелец:Кучерявый Алексей Александрович issuer:UC-CITTO
-30/11/2018 10:29 Called verifySig
-30/11/2018 10:29 parseSigFile
-30/11/2018 10:29 Called run_shell_cmd2 /usr/local/bin/openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/09-01-01 Утилизация ТБО 40(48).xlsx.sig" -out "/home/andrey/www/htdocs/expert72/output/5c00cad24ea61.der"
-30/11/2018 10:29 Called run_shell_cmd2 /usr/local/bin/openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/output/5c00cad24ea61.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END CERT/ { print > "/home/andrey/www/htdocs/expert72/output/5c00cad251b2a."i }'
-30/11/2018 10:29 Found signer certificates:1
-30/11/2018 10:29 Called run_shell_cmd /usr/local/bin/openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/output/5c00cad24ea61.der" -noout -cmsout -print
-30/11/2018 10:29 Parsing certificate file /home/andrey/www/htdocs/expert72/output/5c00cad251b2a.1
-30/11/2018 10:29 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/output/5c00cad251b2a.1" -noout
-30/11/2018 10:29 Called run_shell_cmd /usr/local/bin/openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/output/5c00cad251b2a.1" -noout -nameopt multiline
-30/11/2018 10:29 Need certificate for hash:7fd73385
-30/11/2018 10:29 OCSP checking http://pki.skbkontur.ru/ocspq2/ocsp.srf
-30/11/2018 10:29 Called run_shell_cmd /usr/local/bin/openssl ocsp -issuer "/home/andrey/www/htdocs/expert72/pki/7fd73385.0" -CApath "/home/andrey/www/htdocs/expert72/pki/" -cert "/home/andrey/www/htdocs/expert72/output/5c00cad251b2a.1" -url http://pki.skbkontur.ru/ocspq2/ocsp.srf
-30/11/2018 10:29 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/7fd73385.0" -noout
-30/11/2018 10:29 Called run_shell_cmd /usr/local/bin/openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/7fd73385.0" -noout -nameopt multiline
-30/11/2018 10:29 Need certificate for hash:34fa2b3d
-30/11/2018 10:29 Looking for CRL file /home/andrey/www/htdocs/expert72/pki/34fa2b3d.r0
-30/11/2018 10:29 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/34fa2b3d.0" -noout
-30/11/2018 10:29 Called run_shell_cmd /usr/local/bin/openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/34fa2b3d.0" -noout -nameopt multiline
-30/11/2018 10:29 Called run_shell_cmd /usr/local/bin/openssl smime -verify -content "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/09-01-01 Утилизация ТБО 40(48).xlsx" -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/output/5c00cad24ea61.der" -CApath "/home/andrey/www/htdocs/expert72/pki/"
-30/11/2018 10:36 Called verifySig
-30/11/2018 10:36 parseSigFile
-30/11/2018 10:36 Called run_shell_cmd2 /usr/local/bin/openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/09-01-01 Утилизация ТБО 40(48).xlsx.sig" -out "/home/andrey/www/htdocs/expert72/output/5c00cc664c857.der"
-30/11/2018 10:36 Called run_shell_cmd2 /usr/local/bin/openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/output/5c00cc664c857.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END CERT/ { print > "/home/andrey/www/htdocs/expert72/output/5c00cc6651c2d."i }'
-30/11/2018 10:36 Found signer certificates:1
-30/11/2018 10:36 Called run_shell_cmd /usr/local/bin/openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/output/5c00cc664c857.der" -noout -cmsout -print
-30/11/2018 10:36 Parsing certificate file /home/andrey/www/htdocs/expert72/output/5c00cc6651c2d.1
-30/11/2018 10:36 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/output/5c00cc6651c2d.1" -noout
-30/11/2018 10:36 Called run_shell_cmd /usr/local/bin/openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/output/5c00cc6651c2d.1" -noout -nameopt multiline
-30/11/2018 10:36 Need certificate for hash:7fd73385
-30/11/2018 10:36 OCSP checking http://pki.skbkontur.ru/ocspq2/ocsp.srf
-30/11/2018 10:36 Called run_shell_cmd /usr/local/bin/openssl ocsp -issuer "/home/andrey/www/htdocs/expert72/pki/7fd73385.0" -CApath "/home/andrey/www/htdocs/expert72/pki/" -cert "/home/andrey/www/htdocs/expert72/output/5c00cc6651c2d.1" -url http://pki.skbkontur.ru/ocspq2/ocsp.srf
-30/11/2018 10:36 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/7fd73385.0" -noout
-30/11/2018 10:36 Called run_shell_cmd /usr/local/bin/openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/7fd73385.0" -noout -nameopt multiline
-30/11/2018 10:36 Need certificate for hash:34fa2b3d
-30/11/2018 10:36 Looking for CRL file /home/andrey/www/htdocs/expert72/pki/34fa2b3d.r0
-30/11/2018 10:36 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/34fa2b3d.0" -noout
-30/11/2018 10:36 Called run_shell_cmd /usr/local/bin/openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/34fa2b3d.0" -noout -nameopt multiline
-30/11/2018 10:36 Called run_shell_cmd /usr/local/bin/openssl smime -verify -content "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/09-01-01 Утилизация ТБО 40(48).xlsx" -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/output/5c00cc664c857.der" -CApath "/home/andrey/www/htdocs/expert72/pki/"
-30/11/2018 10:36 Called verifySig
-30/11/2018 10:36 parseSigFile
-30/11/2018 10:36 Called run_shell_cmd2 /usr/local/bin/openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/09-01-01 Утилизация ТБО 40(48).xlsx.sig" -out "/home/andrey/www/htdocs/expert72/output/5c00cc7647cab.der"
-30/11/2018 10:36 Called run_shell_cmd2 /usr/local/bin/openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/output/5c00cc7647cab.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END CERT/ { print > "/home/andrey/www/htdocs/expert72/output/5c00cc764acf5."i }'
-30/11/2018 10:36 Found signer certificates:1
-30/11/2018 10:36 Called run_shell_cmd /usr/local/bin/openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/output/5c00cc7647cab.der" -noout -cmsout -print
-30/11/2018 10:42 Called verifySig
-30/11/2018 10:42 parseSigFile
-30/11/2018 10:42 Called run_shell_cmd2 /usr/local/bin/openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/09-01-01 Утилизация ТБО 40(48).xlsx.sig" -out "/home/andrey/www/htdocs/expert72/output/5c00cdd8f199c.der"
-30/11/2018 10:42 Called run_shell_cmd2 /usr/local/bin/openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/output/5c00cdd8f199c.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END CERT/ { print > "/home/andrey/www/htdocs/expert72/output/5c00cdd900ea7."i }'
-30/11/2018 10:42 Found signer certificates:1
-30/11/2018 10:42 Called run_shell_cmd /usr/local/bin/openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/output/5c00cdd8f199c.der" -noout -cmsout -print
-30/11/2018 10:42 Called verifySig
-30/11/2018 10:42 parseSigFile
-30/11/2018 10:42 Called run_shell_cmd2 /usr/local/bin/openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/09-01-01 Утилизация ТБО 40(48).xlsx.sig" -out "/home/andrey/www/htdocs/expert72/output/5c00cde23a3a0.der"
-30/11/2018 10:42 Called run_shell_cmd2 /usr/local/bin/openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/output/5c00cde23a3a0.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END CERT/ { print > "/home/andrey/www/htdocs/expert72/output/5c00cde23db7e."i }'
-30/11/2018 10:42 Found signer certificates:1
-30/11/2018 10:42 Called run_shell_cmd /usr/local/bin/openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/output/5c00cde23a3a0.der" -noout -cmsout -print
-30/11/2018 10:43 Called verifySig
-30/11/2018 10:43 parseSigFile
-30/11/2018 10:43 Called run_shell_cmd2 /usr/local/bin/openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/09-01-01 Утилизация ТБО 40(48).xlsx.sig" -out "/home/andrey/www/htdocs/expert72/output/5c00cdf05d1da.der"
-30/11/2018 10:43 Called run_shell_cmd2 /usr/local/bin/openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/output/5c00cdf05d1da.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END CERT/ { print > "/home/andrey/www/htdocs/expert72/output/5c00cdf060ba5."i }'
-30/11/2018 10:43 Found signer certificates:1
-30/11/2018 10:43 Called run_shell_cmd /usr/local/bin/openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/output/5c00cdf05d1da.der" -noout -cmsout -print
-30/11/2018 10:44 Called verifySig
-30/11/2018 10:44 parseSigFile
-30/11/2018 10:44 Called run_shell_cmd2 /usr/local/bin/openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/09-01-01 Утилизация ТБО 40(48).xlsx.sig" -out "/home/andrey/www/htdocs/expert72/output/5c00ce2ca0049.der"
-30/11/2018 10:44 Called run_shell_cmd2 /usr/local/bin/openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/output/5c00ce2ca0049.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END CERT/ { print > "/home/andrey/www/htdocs/expert72/output/5c00ce2ca34a5."i }'
-30/11/2018 10:44 Found signer certificates:1
-30/11/2018 10:44 Called run_shell_cmd /usr/local/bin/openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/output/5c00ce2ca0049.der" -noout -cmsout -print
-30/11/2018 10:47 Called verifySig
-30/11/2018 10:47 parseSigFile
-30/11/2018 10:47 Called run_shell_cmd2 /usr/local/bin/openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/09-01-01 Утилизация ТБО 40(48).xlsx.sig" -out "/home/andrey/www/htdocs/expert72/output/5c00cee6bf253.der"
-30/11/2018 10:47 Called run_shell_cmd2 /usr/local/bin/openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/output/5c00cee6bf253.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END CERT/ { print > "/home/andrey/www/htdocs/expert72/output/5c00cee6c2071."i }'
-30/11/2018 10:47 Found signer certificates:1
-30/11/2018 10:47 Called run_shell_cmd /usr/local/bin/openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/output/5c00cee6bf253.der" -noout -cmsout -print
-30/11/2018 10:47 Called verifySig
-30/11/2018 10:47 parseSigFile
-30/11/2018 10:47 Called run_shell_cmd2 /usr/local/bin/openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/09-01-01 Утилизация ТБО 40(48).xlsx.sig" -out "/home/andrey/www/htdocs/expert72/output/5c00cefba7a81.der"
-30/11/2018 10:47 Called run_shell_cmd2 /usr/local/bin/openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/output/5c00cefba7a81.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END CERT/ { print > "/home/andrey/www/htdocs/expert72/output/5c00cefbab72f."i }'
-30/11/2018 10:47 Found signer certificates:1
-30/11/2018 10:47 Called run_shell_cmd /usr/local/bin/openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/output/5c00cefba7a81.der" -noout -cmsout -print
-30/11/2018 10:47 Parsing certificate file /home/andrey/www/htdocs/expert72/output/5c00cefbab72f.1
-30/11/2018 10:47 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/output/5c00cefbab72f.1" -noout
-30/11/2018 10:47 Called run_shell_cmd /usr/local/bin/openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/output/5c00cefbab72f.1" -noout -nameopt multiline
-30/11/2018 10:47 Need certificate for hash:7fd73385
-30/11/2018 10:47 OCSP checking http://pki.skbkontur.ru/ocspq2/ocsp.srf
-30/11/2018 10:47 Called run_shell_cmd /usr/local/bin/openssl ocsp -issuer "/home/andrey/www/htdocs/expert72/pki/7fd73385.0" -CApath "/home/andrey/www/htdocs/expert72/pki/" -cert "/home/andrey/www/htdocs/expert72/output/5c00cefbab72f.1" -url http://pki.skbkontur.ru/ocspq2/ocsp.srf
-30/11/2018 10:47 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/7fd73385.0" -noout
-30/11/2018 10:47 Called run_shell_cmd /usr/local/bin/openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/7fd73385.0" -noout -nameopt multiline
-30/11/2018 10:47 Need certificate for hash:34fa2b3d
-30/11/2018 10:47 Looking for CRL file /home/andrey/www/htdocs/expert72/pki/34fa2b3d.r0
-30/11/2018 10:47 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/34fa2b3d.0" -noout
-30/11/2018 10:47 Called run_shell_cmd /usr/local/bin/openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/34fa2b3d.0" -noout -nameopt multiline
-30/11/2018 10:47 Called run_shell_cmd /usr/local/bin/openssl smime -verify -content "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/09-01-01 Утилизация ТБО 40(48).xlsx" -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/output/5c00cefba7a81.der" -CApath "/home/andrey/www/htdocs/expert72/pki/"
-11/12/2018 14:47 Called verifySig
-11/12/2018 14:47 parseSigFile
-11/12/2018 14:47 Called run_shell_cmd2 /usr/local/bin/openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/output/5c0f87c0b854a.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END CERT/ { print > "/home/andrey/www/htdocs/expert72/output/5c0f87c0cc6ac."i }'
-11/12/2018 14:47 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5c0f87c0cc6ac.1" -noout
-11/12/2018 14:47 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5c0f87c0cc6ac.2" -noout
-11/12/2018 14:47 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5c0f87c0cc6ac.3" -noout
-11/12/2018 14:47 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5c0f87c0cc6ac.4" -noout
-11/12/2018 14:47 Found signer certificates:1
-11/12/2018 14:47 Called run_shell_cmd /usr/local/bin/openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/output/5c0f87c0b854a.der" -noout -cmsout -print
-11/12/2018 14:47 Parsing certificate file /home/andrey/www/htdocs/expert72/output/5c0f87c0cc6ac.4
-11/12/2018 14:47 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/output/5c0f87c0cc6ac.4" -noout
-11/12/2018 14:47 Called run_shell_cmd /usr/local/bin/openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/output/5c0f87c0cc6ac.4" -noout -nameopt multiline
-11/12/2018 14:47 Need certificate for hash:9e757460
-11/12/2018 14:47 OCSP checking http://ocsp.72to.ru/ocsp/ocsp.srf
-11/12/2018 14:47 Called run_shell_cmd /usr/local/bin/openssl ocsp -issuer "/home/andrey/www/htdocs/expert72/pki/9e757460.0" -CApath "/home/andrey/www/htdocs/expert72/pki/" -cert "/home/andrey/www/htdocs/expert72/output/5c0f87c0cc6ac.4" -url http://ocsp.72to.ru/ocsp/ocsp.srf
-11/12/2018 14:47 Response Verify Failure
-3072902912:error:27069070:OCSP routines:OCSP_basic_verify:root ca not trusted:crypto/ocsp/ocsp_vfy.c:121:
-3072902912:error:27069070:OCSP routines:OCSP_basic_verify:root ca not trusted:crypto/ocsp/ocsp_vfy.c:121:
+13/11/2019 12:55 Verification error:Verification failure 3073009408:error:0306E06C:bignum routines:BN_mod_inverse:no inverse:crypto/bn/bn_gcd.c:131: 3073009408:error:8006E044:lib(128):gost_ec_verify:internal error:/home/andrey/gost2012/engine/gost_ec_sign.c:377: 3073009408:error:21071069:PKCS7 routines:PKCS7_signatureVerify:signature failure:crypto/pkcs7/pk7_doit.c:1037: 3073009408:error:21075069:PKCS7 routines:PKCS7_verify:signature failure:crypto/pkcs7/pk7_smime.c:353: 
+CMD=/usr/local/bin/openssl smime -verify -content "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/111/132  Договор АО Аэропорт Рощино.pdf" -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/output/5dcbb6de7012a.der" -noverify
+13/11/2019 13:29 Called verifySig
+13/11/2019 13:29 parseSigFile
+13/11/2019 13:29 Called run_shell_cmd2 /usr/local/bin/openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/111/132  Договор АО Аэропорт Рощино.pdf.sig" -out "/home/andrey/www/htdocs/expert72/output/5dcbbf0336a69.der"
+13/11/2019 13:29 Called run_shell_cmd2 /usr/local/bin/openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/output/5dcbbf0336a69.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END CERT/ { print > "/home/andrey/www/htdocs/expert72/output/5dcbbf0338d33."i }'
+13/11/2019 13:29 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5dcbbf0338d33.1" -noout
+13/11/2019 13:29 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5dcbbf0338d33.2" -noout
+13/11/2019 13:29 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5dcbbf0338d33.3" -noout
+13/11/2019 13:29 Found signer certificates:1
+13/11/2019 13:29 Called run_shell_cmd /usr/local/bin/openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/output/5dcbbf0336a69.der" -noout -cmsout -print
+13/11/2019 13:29 Parsing certificate file /home/andrey/www/htdocs/expert72/output/5dcbbf0338d33.3
+13/11/2019 13:29 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/output/5dcbbf0338d33.3" -noout
+13/11/2019 13:29 Called run_shell_cmd /usr/local/bin/openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/output/5dcbbf0338d33.3" -noout -nameopt multiline
+13/11/2019 13:29 Called run_shell_cmd /usr/local/bin/openssl smime -verify -content "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/111/132  Договор АО Аэропорт Рощино.pdf" -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/output/5dcbbf0336a69.der" -noverify
+13/11/2019 13:29 Verification failure
+3072648960:error:0306E06C:bignum routines:BN_mod_inverse:no inverse:crypto/bn/bn_gcd.c:131:
+3072648960:error:8006E044:lib(128):gost_ec_verify:internal error:/home/andrey/gost2012/engine/gost_ec_sign.c:377:
+3072648960:error:21071069:PKCS7 routines:PKCS7_signatureVerify:signature failure:crypto/pkcs7/pk7_doit.c:1037:
+3072648960:error:21075069:PKCS7 routines:PKCS7_verify:signature failure:crypto/pkcs7/pk7_smime.c:353:
 
-11/12/2018 14:47 Called run_shell_cmd /usr/local/bin/openssl ocsp -issuer "/home/andrey/www/htdocs/expert72/pki/9e757460.1" -CApath "/home/andrey/www/htdocs/expert72/pki/" -cert "/home/andrey/www/htdocs/expert72/output/5c0f87c0cc6ac.4" -url http://ocsp.72to.ru/ocsp/ocsp.srf
-11/12/2018 14:47 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/9e757460.0" -noout
-11/12/2018 14:47 Called run_shell_cmd /usr/local/bin/openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/9e757460.0" -noout -nameopt multiline
-11/12/2018 14:47 Need certificate for hash:4db0c08c
-11/12/2018 14:47 Looking for CRL file /home/andrey/www/htdocs/expert72/pki/4db0c08c.r0
-11/12/2018 14:47 Trying to download new CRL file
-11/12/2018 14:47 Called run_shell_cmd2 wget -O "/home/andrey/www/htdocs/expert72/pki/4db0c08c.r0.der" http://rostelecom.ru/cdp/vguc1_3.crl
-11/12/2018 14:47 Called run_shell_cmd2 /usr/local/bin/openssl crl -in "/home/andrey/www/htdocs/expert72/pki/4db0c08c.r0.der" -inform DER -out "/home/andrey/www/htdocs/expert72/pki/4db0c08c.r0"
-11/12/2018 14:47 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/4db0c08c.0" -noout
-11/12/2018 14:47 Called run_shell_cmd /usr/local/bin/openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/4db0c08c.0" -noout -nameopt multiline
-11/12/2018 14:47 Need certificate for hash:34fa2b3d
-11/12/2018 14:47 Looking for CRL file /home/andrey/www/htdocs/expert72/pki/34fa2b3d.r0
-11/12/2018 14:47 Trying to download new CRL file
-11/12/2018 14:47 Called run_shell_cmd2 wget -O "/home/andrey/www/htdocs/expert72/pki/34fa2b3d.r0.der" http://rostelecom.ru/cdp/guc.crl
-11/12/2018 14:47 Called run_shell_cmd2 /usr/local/bin/openssl crl -in "/home/andrey/www/htdocs/expert72/pki/34fa2b3d.r0.der" -inform DER -out "/home/andrey/www/htdocs/expert72/pki/34fa2b3d.r0"
-11/12/2018 14:47 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/pki/34fa2b3d.0" -noout
-11/12/2018 14:47 Called run_shell_cmd /usr/local/bin/openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/pki/34fa2b3d.0" -noout -nameopt multiline
-11/12/2018 14:47 Called run_shell_cmd /usr/local/bin/openssl smime -verify -content "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/Expired/299-Д Контракт УКС.pdf" -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/output/5c0f87c0b854a.der" -CApath "/home/andrey/www/htdocs/expert72/pki/"
-11/12/2018 14:47 Verification failure
-3072075520:error:21075075:PKCS7 routines:PKCS7_verify:certificate verify error:crypto/pkcs7/pk7_smime.c:285:Verify error:certificate has expired
+13/11/2019 13:29 Verification error:Verification failure 3072648960:error:0306E06C:bignum routines:BN_mod_inverse:no inverse:crypto/bn/bn_gcd.c:131: 3072648960:error:8006E044:lib(128):gost_ec_verify:internal error:/home/andrey/gost2012/engine/gost_ec_sign.c:377: 3072648960:error:21071069:PKCS7 routines:PKCS7_signatureVerify:signature failure:crypto/pkcs7/pk7_doit.c:1037: 3072648960:error:21075069:PKCS7 routines:PKCS7_verify:signature failure:crypto/pkcs7/pk7_smime.c:353: 
+CMD=/usr/local/bin/openssl smime -verify -content "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/111/132  Договор АО Аэропорт Рощино.pdf" -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/output/5dcbbf0336a69.der" -noverify
+13/11/2019 13:30 Called verifySig
+13/11/2019 13:30 parseSigFile
+13/11/2019 13:30 Called run_shell_cmd2 /usr/local/bin/openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/111/132  Договор АО Аэропорт Рощино.pdf.sig" -out "/home/andrey/www/htdocs/expert72/output/5dcbbf119a9f1.der"
+13/11/2019 13:30 Called run_shell_cmd2 /usr/local/bin/openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/output/5dcbbf119a9f1.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END CERT/ { print > "/home/andrey/www/htdocs/expert72/output/5dcbbf119e2ea."i }'
+13/11/2019 13:30 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5dcbbf119e2ea.1" -noout
+13/11/2019 13:30 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5dcbbf119e2ea.2" -noout
+13/11/2019 13:30 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5dcbbf119e2ea.3" -noout
+13/11/2019 13:30 Found signer certificates:1
+13/11/2019 13:30 Called run_shell_cmd /usr/local/bin/openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/output/5dcbbf119a9f1.der" -noout -cmsout -print
+13/11/2019 13:30 Parsing certificate file /home/andrey/www/htdocs/expert72/output/5dcbbf119e2ea.3
+13/11/2019 13:30 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/output/5dcbbf119e2ea.3" -noout
+13/11/2019 13:30 Called run_shell_cmd /usr/local/bin/openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/output/5dcbbf119e2ea.3" -noout -nameopt multiline
+13/11/2019 13:30 Called run_shell_cmd /usr/local/bin/openssl smime -verify -content "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/111/132  Договор АО Аэропорт Рощино.pdf" -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/output/5dcbbf119a9f1.der" -noverify
+13/11/2019 13:30 Verification failure
+3072247552:error:0306E06C:bignum routines:BN_mod_inverse:no inverse:crypto/bn/bn_gcd.c:131:
+3072247552:error:8006E044:lib(128):gost_ec_verify:internal error:/home/andrey/gost2012/engine/gost_ec_sign.c:377:
+3072247552:error:21071069:PKCS7 routines:PKCS7_signatureVerify:signature failure:crypto/pkcs7/pk7_doit.c:1037:
+3072247552:error:21075069:PKCS7 routines:PKCS7_verify:signature failure:crypto/pkcs7/pk7_smime.c:353:
 
-11/12/2018 14:47 Verification error:Verification failure 3072075520:error:21075075:PKCS7 routines:PKCS7_verify:certificate verify error:crypto/pkcs7/pk7_smime.c:285:Verify error:certificate has expired 
-CMD=/usr/local/bin/openssl smime -verify -content "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/Expired/299-Д Контракт УКС.pdf" -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/output/5c0f87c0b854a.der" -CApath "/home/andrey/www/htdocs/expert72/pki/"
-11/12/2018 14:48 Called verifySig
-11/12/2018 14:48 parseSigFile
-11/12/2018 14:48 Called run_shell_cmd2 /usr/local/bin/openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/output/5c0f87d156341.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END CERT/ { print > "/home/andrey/www/htdocs/expert72/output/5c0f87d156454."i }'
-11/12/2018 14:48 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5c0f87d156454.1" -noout
-11/12/2018 14:48 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5c0f87d156454.2" -noout
-11/12/2018 14:48 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5c0f87d156454.3" -noout
-11/12/2018 14:48 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5c0f87d156454.4" -noout
-11/12/2018 14:48 Found signer certificates:1
-11/12/2018 14:48 Called run_shell_cmd /usr/local/bin/openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/output/5c0f87d156341.der" -noout -cmsout -print
-11/12/2018 14:48 Parsing certificate file /home/andrey/www/htdocs/expert72/output/5c0f87d156454.4
-11/12/2018 14:48 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/output/5c0f87d156454.4" -noout
-11/12/2018 14:48 Called run_shell_cmd /usr/local/bin/openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/output/5c0f87d156454.4" -noout -nameopt multiline
-11/12/2018 14:48 Called run_shell_cmd /usr/local/bin/openssl smime -verify -content "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/Expired/299-Д Контракт УКС.pdf" -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/output/5c0f87d156341.der" -noverify
-08/02/2019 10:13 Called verifySig
-08/02/2019 10:13 parseSigFile
-08/02/2019 10:13 Called run_shell_cmd2 /usr/local/bin/openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/output/5c5d0fdc5e217.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END CERT/ { print > "/home/andrey/www/htdocs/expert72/output/5c5d0fdc76a70."i }'
-08/02/2019 10:13 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5c5d0fdc76a70.1" -noout
-08/02/2019 10:13 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5c5d0fdc76a70.2" -noout
-08/02/2019 10:13 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5c5d0fdc76a70.3" -noout
-08/02/2019 10:13 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5c5d0fdc76a70.4" -noout
-08/02/2019 10:13 Found signer certificates:1
-08/02/2019 10:13 Called run_shell_cmd /usr/local/bin/openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/output/5c5d0fdc5e217.der" -noout -cmsout -print
-08/02/2019 10:13 Parsing certificate file /home/andrey/www/htdocs/expert72/output/5c5d0fdc76a70.4
-08/02/2019 10:13 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/output/5c5d0fdc76a70.4" -noout
-08/02/2019 10:13 Called run_shell_cmd /usr/local/bin/openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/output/5c5d0fdc76a70.4" -noout -nameopt multiline
-08/02/2019 10:13 Called run_shell_cmd /usr/local/bin/openssl smime -verify -content "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/Expired/299-Д Контракт УКС.pdf" -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/output/5c5d0fdc5e217.der" -noverify
+13/11/2019 13:30 Verification error:Verification failure 3072247552:error:0306E06C:bignum routines:BN_mod_inverse:no inverse:crypto/bn/bn_gcd.c:131: 3072247552:error:8006E044:lib(128):gost_ec_verify:internal error:/home/andrey/gost2012/engine/gost_ec_sign.c:377: 3072247552:error:21071069:PKCS7 routines:PKCS7_signatureVerify:signature failure:crypto/pkcs7/pk7_doit.c:1037: 3072247552:error:21075069:PKCS7 routines:PKCS7_verify:signature failure:crypto/pkcs7/pk7_smime.c:353: 
+CMD=/usr/local/bin/openssl smime -verify -content "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/111/132  Договор АО Аэропорт Рощино.pdf" -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/output/5dcbbf119a9f1.der" -noverify
+13/11/2019 13:30 Called verifySig
+13/11/2019 13:30 parseSigFile
+13/11/2019 13:30 Called run_shell_cmd2 /usr/local/bin/openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/111/132  Договор АО Аэропорт Рощино.pdf.sig" -out "/home/andrey/www/htdocs/expert72/output/5dcbbf356e1fb.der"
+13/11/2019 13:30 Called run_shell_cmd2 /usr/local/bin/openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/output/5dcbbf356e1fb.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END CERT/ { print > "/home/andrey/www/htdocs/expert72/output/5dcbbf35702c5."i }'
+13/11/2019 13:30 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5dcbbf35702c5.1" -noout
+13/11/2019 13:30 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5dcbbf35702c5.2" -noout
+13/11/2019 13:30 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5dcbbf35702c5.3" -noout
+13/11/2019 13:30 Found signer certificates:1
+13/11/2019 13:30 Called run_shell_cmd /usr/local/bin/openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/output/5dcbbf356e1fb.der" -noout -cmsout -print
+13/11/2019 13:30 Parsing certificate file /home/andrey/www/htdocs/expert72/output/5dcbbf35702c5.3
+13/11/2019 13:30 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/output/5dcbbf35702c5.3" -noout
+13/11/2019 13:30 Called run_shell_cmd /usr/local/bin/openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/output/5dcbbf35702c5.3" -noout -nameopt multiline
+13/11/2019 13:30 Called run_shell_cmd /usr/local/bin/openssl smime -verify -content "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/111/132  Договор АО Аэропорт Рощино.pdf" -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/output/5dcbbf356e1fb.der" -noverify
+13/11/2019 13:30 Verification failure
+3072567040:error:0306E06C:bignum routines:BN_mod_inverse:no inverse:crypto/bn/bn_gcd.c:131:
+3072567040:error:8006E044:lib(128):gost_ec_verify:internal error:/home/andrey/gost2012/engine/gost_ec_sign.c:377:
+3072567040:error:21071069:PKCS7 routines:PKCS7_signatureVerify:signature failure:crypto/pkcs7/pk7_doit.c:1037:
+3072567040:error:21075069:PKCS7 routines:PKCS7_verify:signature failure:crypto/pkcs7/pk7_smime.c:353:
+
+13/11/2019 13:30 Verification error:Verification failure 3072567040:error:0306E06C:bignum routines:BN_mod_inverse:no inverse:crypto/bn/bn_gcd.c:131: 3072567040:error:8006E044:lib(128):gost_ec_verify:internal error:/home/andrey/gost2012/engine/gost_ec_sign.c:377: 3072567040:error:21071069:PKCS7 routines:PKCS7_signatureVerify:signature failure:crypto/pkcs7/pk7_doit.c:1037: 3072567040:error:21075069:PKCS7 routines:PKCS7_verify:signature failure:crypto/pkcs7/pk7_smime.c:353: 
+CMD=/usr/local/bin/openssl smime -verify -content "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/111/132  Договор АО Аэропорт Рощино.pdf" -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/output/5dcbbf356e1fb.der" -noverify
+13/11/2019 13:30 Called verifySig
+13/11/2019 13:30 parseSigFile
+13/11/2019 13:30 Called run_shell_cmd2 /usr/local/bin/openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/111/132  Договор АО Аэропорт Рощино.pdf.sig" -out "/home/andrey/www/htdocs/expert72/output/5dcbbf3ddc364.der"
+13/11/2019 13:30 Called run_shell_cmd2 /usr/local/bin/openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/output/5dcbbf3ddc364.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END CERT/ { print > "/home/andrey/www/htdocs/expert72/output/5dcbbf3ddf4d1."i }'
+13/11/2019 13:30 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5dcbbf3ddf4d1.1" -noout
+13/11/2019 13:30 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5dcbbf3ddf4d1.2" -noout
+13/11/2019 13:30 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5dcbbf3ddf4d1.3" -noout
+13/11/2019 13:30 Found signer certificates:1
+13/11/2019 13:30 Called run_shell_cmd /usr/local/bin/openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/output/5dcbbf3ddc364.der" -noout -cmsout -print
+13/11/2019 13:30 Parsing certificate file /home/andrey/www/htdocs/expert72/output/5dcbbf3ddf4d1.3
+13/11/2019 13:30 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/output/5dcbbf3ddf4d1.3" -noout
+13/11/2019 13:30 Called run_shell_cmd /usr/local/bin/openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/output/5dcbbf3ddf4d1.3" -noout -nameopt multiline
+13/11/2019 13:30 Called run_shell_cmd /usr/local/bin/openssl smime -verify -content "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/111/132  Договор АО Аэропорт Рощино.pdf" -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/output/5dcbbf3ddc364.der" -noverify
+13/11/2019 13:30 Verification failure
+3072714496:error:0306E06C:bignum routines:BN_mod_inverse:no inverse:crypto/bn/bn_gcd.c:131:
+3072714496:error:8006E044:lib(128):gost_ec_verify:internal error:/home/andrey/gost2012/engine/gost_ec_sign.c:377:
+3072714496:error:21071069:PKCS7 routines:PKCS7_signatureVerify:signature failure:crypto/pkcs7/pk7_doit.c:1037:
+3072714496:error:21075069:PKCS7 routines:PKCS7_verify:signature failure:crypto/pkcs7/pk7_smime.c:353:
+
+13/11/2019 13:30 Verification error:Verification failure 3072714496:error:0306E06C:bignum routines:BN_mod_inverse:no inverse:crypto/bn/bn_gcd.c:131: 3072714496:error:8006E044:lib(128):gost_ec_verify:internal error:/home/andrey/gost2012/engine/gost_ec_sign.c:377: 3072714496:error:21071069:PKCS7 routines:PKCS7_signatureVerify:signature failure:crypto/pkcs7/pk7_doit.c:1037: 3072714496:error:21075069:PKCS7 routines:PKCS7_verify:signature failure:crypto/pkcs7/pk7_smime.c:353: 
+CMD=/usr/local/bin/openssl smime -verify -content "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/111/132  Договор АО Аэропорт Рощино.pdf" -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/output/5dcbbf3ddc364.der" -noverify
+13/11/2019 13:31 Called verifySig
+13/11/2019 13:31 parseSigFile
+13/11/2019 13:31 Called run_shell_cmd2 /usr/local/bin/openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/111/132  Договор АО Аэропорт Рощино.pdf.sig" -out "/home/andrey/www/htdocs/expert72/output/5dcbbf5e7644f.der"
+13/11/2019 13:31 Called run_shell_cmd2 /usr/local/bin/openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/output/5dcbbf5e7644f.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END CERT/ { print > "/home/andrey/www/htdocs/expert72/output/5dcbbf5e79968."i }'
+13/11/2019 13:31 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5dcbbf5e79968.1" -noout
+13/11/2019 13:31 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5dcbbf5e79968.2" -noout
+13/11/2019 13:31 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5dcbbf5e79968.3" -noout
+13/11/2019 13:31 Found signer certificates:1
+13/11/2019 13:31 Called run_shell_cmd /usr/local/bin/openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/output/5dcbbf5e7644f.der" -noout -cmsout -print
+13/11/2019 13:31 Parsing certificate file /home/andrey/www/htdocs/expert72/output/5dcbbf5e79968.3
+13/11/2019 13:31 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/output/5dcbbf5e79968.3" -noout
+13/11/2019 13:31 Called run_shell_cmd /usr/local/bin/openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/output/5dcbbf5e79968.3" -noout -nameopt multiline
+13/11/2019 13:31 Called run_shell_cmd /usr/local/bin/openssl smime -verify -content "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/111/132  Договор АО Аэропорт Рощино.pdf" -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/output/5dcbbf5e7644f.der" -noverify
+13/11/2019 13:31 Verification failure
+3072050944:error:0306E06C:bignum routines:BN_mod_inverse:no inverse:crypto/bn/bn_gcd.c:131:
+3072050944:error:8006E044:lib(128):gost_ec_verify:internal error:/home/andrey/gost2012/engine/gost_ec_sign.c:377:
+3072050944:error:21071069:PKCS7 routines:PKCS7_signatureVerify:signature failure:crypto/pkcs7/pk7_doit.c:1037:
+3072050944:error:21075069:PKCS7 routines:PKCS7_verify:signature failure:crypto/pkcs7/pk7_smime.c:353:
+
+13/11/2019 13:31 Verification error:Verification failure 3072050944:error:0306E06C:bignum routines:BN_mod_inverse:no inverse:crypto/bn/bn_gcd.c:131: 3072050944:error:8006E044:lib(128):gost_ec_verify:internal error:/home/andrey/gost2012/engine/gost_ec_sign.c:377: 3072050944:error:21071069:PKCS7 routines:PKCS7_signatureVerify:signature failure:crypto/pkcs7/pk7_doit.c:1037: 3072050944:error:21075069:PKCS7 routines:PKCS7_verify:signature failure:crypto/pkcs7/pk7_smime.c:353: 
+CMD=/usr/local/bin/openssl smime -verify -content "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/111/132  Договор АО Аэропорт Рощино.pdf" -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/output/5dcbbf5e7644f.der" -noverify
+13/11/2019 13:32 Called verifySig
+13/11/2019 13:32 parseSigFile
+13/11/2019 13:32 Called run_shell_cmd2 /usr/local/bin/openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/111/132  Договор АО Аэропорт Рощино.pdf.sig" -out "/home/andrey/www/htdocs/expert72/output/5dcbbf82bd879.der"
+13/11/2019 13:32 Called run_shell_cmd2 /usr/local/bin/openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/output/5dcbbf82bd879.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END CERT/ { print > "/home/andrey/www/htdocs/expert72/output/5dcbbf82bfa82."i }'
+13/11/2019 13:32 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5dcbbf82bfa82.1" -noout
+13/11/2019 13:32 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5dcbbf82bfa82.2" -noout
+13/11/2019 13:32 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5dcbbf82bfa82.3" -noout
+13/11/2019 13:32 Found signer certificates:1
+13/11/2019 13:32 Called run_shell_cmd /usr/local/bin/openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/output/5dcbbf82bd879.der" -noout -cmsout -print
+13/11/2019 13:32 Parsing certificate file /home/andrey/www/htdocs/expert72/output/5dcbbf82bfa82.3
+13/11/2019 13:32 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/output/5dcbbf82bfa82.3" -noout
+13/11/2019 13:32 Called run_shell_cmd /usr/local/bin/openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/output/5dcbbf82bfa82.3" -noout -nameopt multiline
+13/11/2019 13:32 Called run_shell_cmd /usr/local/bin/openssl smime -verify -content "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/111/132  Договор АО Аэропорт Рощино.pdf" -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/output/5dcbbf82bd879.der" -noverify
+13/11/2019 13:32 Verification failure
+3072685824:error:0306E06C:bignum routines:BN_mod_inverse:no inverse:crypto/bn/bn_gcd.c:131:
+3072685824:error:8006E044:lib(128):gost_ec_verify:internal error:/home/andrey/gost2012/engine/gost_ec_sign.c:377:
+3072685824:error:21071069:PKCS7 routines:PKCS7_signatureVerify:signature failure:crypto/pkcs7/pk7_doit.c:1037:
+3072685824:error:21075069:PKCS7 routines:PKCS7_verify:signature failure:crypto/pkcs7/pk7_smime.c:353:
+
+13/11/2019 13:32 Verification error:Verification failure 3072685824:error:0306E06C:bignum routines:BN_mod_inverse:no inverse:crypto/bn/bn_gcd.c:131: 3072685824:error:8006E044:lib(128):gost_ec_verify:internal error:/home/andrey/gost2012/engine/gost_ec_sign.c:377: 3072685824:error:21071069:PKCS7 routines:PKCS7_signatureVerify:signature failure:crypto/pkcs7/pk7_doit.c:1037: 3072685824:error:21075069:PKCS7 routines:PKCS7_verify:signature failure:crypto/pkcs7/pk7_smime.c:353: 
+CMD=/usr/local/bin/openssl smime -verify -content "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/111/132  Договор АО Аэропорт Рощино.pdf" -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/output/5dcbbf82bd879.der" -noverify
+13/11/2019 13:41 Called verifySig
+13/11/2019 13:41 parseSigFile
+13/11/2019 13:41 Called run_shell_cmd2 /usr/local/bin/openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/111/132  Договор АО Аэропорт Рощино.pdf.sig" -out "/home/andrey/www/htdocs/expert72/output/5dcbc1b165ca2.der"
+13/11/2019 13:41 Called run_shell_cmd2 /usr/local/bin/openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/output/5dcbc1b165ca2.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END CERT/ { print > "/home/andrey/www/htdocs/expert72/output/5dcbc1b169586."i }'
+13/11/2019 13:41 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5dcbc1b169586.1" -noout
+13/11/2019 13:41 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5dcbc1b169586.2" -noout
+13/11/2019 13:41 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5dcbc1b169586.3" -noout
+13/11/2019 13:41 Found signer certificates:1
+13/11/2019 13:41 Called run_shell_cmd /usr/local/bin/openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/output/5dcbc1b165ca2.der" -noout -cmsout -print
+13/11/2019 13:41 Parsing certificate file /home/andrey/www/htdocs/expert72/output/5dcbc1b169586.3
+13/11/2019 13:41 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/output/5dcbc1b169586.3" -noout
+13/11/2019 13:41 Called run_shell_cmd /usr/local/bin/openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/output/5dcbc1b169586.3" -noout -nameopt multiline
+13/11/2019 13:41 Called run_shell_cmd /usr/local/bin/openssl smime -verify -content "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/111/132  Договор АО Аэропорт Рощино.pdf" -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/output/5dcbc1b165ca2.der" -noverify
+13/11/2019 13:41 Verification failure
+3072767744:error:0306E06C:bignum routines:BN_mod_inverse:no inverse:crypto/bn/bn_gcd.c:131:
+3072767744:error:8006E044:lib(128):gost_ec_verify:internal error:/home/andrey/gost2012/engine/gost_ec_sign.c:377:
+3072767744:error:21071069:PKCS7 routines:PKCS7_signatureVerify:signature failure:crypto/pkcs7/pk7_doit.c:1037:
+3072767744:error:21075069:PKCS7 routines:PKCS7_verify:signature failure:crypto/pkcs7/pk7_smime.c:353:
+
+13/11/2019 13:41 Verification error:Verification failure 3072767744:error:0306E06C:bignum routines:BN_mod_inverse:no inverse:crypto/bn/bn_gcd.c:131: 3072767744:error:8006E044:lib(128):gost_ec_verify:internal error:/home/andrey/gost2012/engine/gost_ec_sign.c:377: 3072767744:error:21071069:PKCS7 routines:PKCS7_signatureVerify:signature failure:crypto/pkcs7/pk7_doit.c:1037: 3072767744:error:21075069:PKCS7 routines:PKCS7_verify:signature failure:crypto/pkcs7/pk7_smime.c:353: 
+CMD=/usr/local/bin/openssl smime -verify -content "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/111/132  Договор АО Аэропорт Рощино.pdf" -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/output/5dcbc1b165ca2.der" -noverify
+13/11/2019 13:46 Called verifySig
+13/11/2019 13:46 parseSigFile
+13/11/2019 13:46 Called run_shell_cmd2 /usr/local/bin/openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/111/132  Договор АО Аэропорт Рощино.pdf.sig" -out "/home/andrey/www/htdocs/expert72/output/5dcbc2dd44873.der"
+13/11/2019 13:46 Called run_shell_cmd2 /usr/local/bin/openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/output/5dcbc2dd44873.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END CERT/ { print > "/home/andrey/www/htdocs/expert72/output/5dcbc2dd49076."i }'
+13/11/2019 13:46 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5dcbc2dd49076.1" -noout
+13/11/2019 13:46 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5dcbc2dd49076.2" -noout
+13/11/2019 13:46 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5dcbc2dd49076.3" -noout
+13/11/2019 13:46 Found signer certificates:1
+13/11/2019 13:46 Called run_shell_cmd /usr/local/bin/openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/output/5dcbc2dd44873.der" -noout -cmsout -print
+13/11/2019 13:46 Called verifySig
+13/11/2019 13:46 parseSigFile
+13/11/2019 13:46 Called run_shell_cmd2 /usr/local/bin/openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/111/132  Договор АО Аэропорт Рощино.pdf.sig" -out "/home/andrey/www/htdocs/expert72/output/5dcbc2fdcef74.der"
+13/11/2019 13:46 Called run_shell_cmd2 /usr/local/bin/openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/output/5dcbc2fdcef74.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END CERT/ { print > "/home/andrey/www/htdocs/expert72/output/5dcbc2fdd223c."i }'
+13/11/2019 13:46 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5dcbc2fdd223c.1" -noout
+13/11/2019 13:46 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5dcbc2fdd223c.2" -noout
+13/11/2019 13:46 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5dcbc2fdd223c.3" -noout
+13/11/2019 13:46 Found signer certificates:1
+13/11/2019 13:46 Called run_shell_cmd /usr/local/bin/openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/output/5dcbc2fdcef74.der" -noout -cmsout -print
+13/11/2019 13:46 Parsing certificate file /home/andrey/www/htdocs/expert72/output/5dcbc2fdd223c.3
+13/11/2019 13:46 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/output/5dcbc2fdd223c.3" -noout
+13/11/2019 13:46 Called run_shell_cmd /usr/local/bin/openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/output/5dcbc2fdd223c.3" -noout -nameopt multiline
+13/11/2019 13:46 Called run_shell_cmd /usr/local/bin/openssl smime -verify -content "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/111/132  Договор АО Аэропорт Рощино.pdf" -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/output/5dcbc2fdcef74.der" -noverify
+13/11/2019 13:46 Verification failure
+3072767744:error:0306E06C:bignum routines:BN_mod_inverse:no inverse:crypto/bn/bn_gcd.c:131:
+3072767744:error:8006E044:lib(128):gost_ec_verify:internal error:/home/andrey/gost2012/engine/gost_ec_sign.c:377:
+3072767744:error:21071069:PKCS7 routines:PKCS7_signatureVerify:signature failure:crypto/pkcs7/pk7_doit.c:1037:
+3072767744:error:21075069:PKCS7 routines:PKCS7_verify:signature failure:crypto/pkcs7/pk7_smime.c:353:
+
+13/11/2019 13:46 Verification error:Verification failure 3072767744:error:0306E06C:bignum routines:BN_mod_inverse:no inverse:crypto/bn/bn_gcd.c:131: 3072767744:error:8006E044:lib(128):gost_ec_verify:internal error:/home/andrey/gost2012/engine/gost_ec_sign.c:377: 3072767744:error:21071069:PKCS7 routines:PKCS7_signatureVerify:signature failure:crypto/pkcs7/pk7_doit.c:1037: 3072767744:error:21075069:PKCS7 routines:PKCS7_verify:signature failure:crypto/pkcs7/pk7_smime.c:353: 
+CMD=/usr/local/bin/openssl smime -verify -content "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/111/132  Договор АО Аэропорт Рощино.pdf" -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/output/5dcbc2fdcef74.der" -noverify
+13/11/2019 13:47 Called verifySig
+13/11/2019 13:47 parseSigFile
+13/11/2019 13:47 Called run_shell_cmd2 /usr/local/bin/openssl enc -d -base64 -in "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/111/132  Договор АО Аэропорт Рощино.pdf.sig" -out "/home/andrey/www/htdocs/expert72/output/5dcbc33d9b04c.der"
+13/11/2019 13:47 Called run_shell_cmd2 /usr/local/bin/openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/output/5dcbc33d9b04c.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END CERT/ { print > "/home/andrey/www/htdocs/expert72/output/5dcbc33d9ddb5."i }'
+13/11/2019 13:47 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5dcbc33d9ddb5.1" -noout
+13/11/2019 13:47 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5dcbc33d9ddb5.2" -noout
+13/11/2019 13:47 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5dcbc33d9ddb5.3" -noout
+13/11/2019 13:47 Found signer certificates:1
+13/11/2019 13:47 Called run_shell_cmd /usr/local/bin/openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/output/5dcbc33d9b04c.der" -noout -cmsout -print
+13/11/2019 13:47 Parsing certificate file /home/andrey/www/htdocs/expert72/output/5dcbc33d9ddb5.3
+13/11/2019 13:47 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/output/5dcbc33d9ddb5.3" -noout
+13/11/2019 13:47 Called run_shell_cmd /usr/local/bin/openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/output/5dcbc33d9ddb5.3" -noout -nameopt multiline
+13/11/2019 13:47 Called run_shell_cmd /usr/local/bin/openssl smime -verify -content "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/111/132  Договор АО Аэропорт Рощино.pdf" -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/output/5dcbc33d9b04c.der" -noverify
+13/11/2019 13:47 Verification failure
+3072882432:error:0306E06C:bignum routines:BN_mod_inverse:no inverse:crypto/bn/bn_gcd.c:131:
+3072882432:error:8006E044:lib(128):gost_ec_verify:internal error:/home/andrey/gost2012/engine/gost_ec_sign.c:377:
+3072882432:error:21071069:PKCS7 routines:PKCS7_signatureVerify:signature failure:crypto/pkcs7/pk7_doit.c:1037:
+3072882432:error:21075069:PKCS7 routines:PKCS7_verify:signature failure:crypto/pkcs7/pk7_smime.c:353:
+
+13/11/2019 13:47 Verification error:Verification failure 3072882432:error:0306E06C:bignum routines:BN_mod_inverse:no inverse:crypto/bn/bn_gcd.c:131: 3072882432:error:8006E044:lib(128):gost_ec_verify:internal error:/home/andrey/gost2012/engine/gost_ec_sign.c:377: 3072882432:error:21071069:PKCS7 routines:PKCS7_signatureVerify:signature failure:crypto/pkcs7/pk7_doit.c:1037: 3072882432:error:21075069:PKCS7 routines:PKCS7_verify:signature failure:crypto/pkcs7/pk7_smime.c:353: 
+CMD=/usr/local/bin/openssl smime -verify -content "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/111/132  Договор АО Аэропорт Рощино.pdf" -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/output/5dcbc33d9b04c.der" -noverify

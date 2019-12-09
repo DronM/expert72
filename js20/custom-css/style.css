@@ -334,9 +334,13 @@ h2 div.btn{
 .uploadedAfterPost{
 	background:yellow;
 }
-.uploadedByThis{
+.uploadedByThisSwitched{
 	background:#8ff442;
 }
+.uploadedByThisAdded{
+	background:#ffbaff;
+}
+
 .notUploaded{
 	background:#ffdd89;
 }

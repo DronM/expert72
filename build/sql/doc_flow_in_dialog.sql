@@ -27,7 +27,8 @@ CREATE OR REPLACE VIEW doc_flow_in_dialog AS
 									'file_size',app_f.file_size,
 									'file_signed',app_f.file_signed,
 									'file_uploaded','true',
-									'file_path',app_f.file_path
+									'file_path',app_f.file_path,
+									'is_switched',(clorg_f.new_file_id IS NOT NULL)
 									,'signatures',
 									(SELECT
 										json_agg(sub.signatures) AS signatures
@@ -53,6 +54,7 @@ CREATE OR REPLACE VIEW doc_flow_in_dialog AS
 							FROM doc_flow_out_client_document_files AS t
 							LEFT JOIN application_document_files AS app_f ON app_f.file_id = t.file_id
 							LEFT JOIN file_verifications AS f_ver ON f_ver.file_id=t.file_id
+							LEFT JOIN doc_flow_out_client_original_files AS clorg_f ON clorg_f.doc_flow_out_client_id=t.doc_flow_out_client_id AND clorg_f.new_file_id=t.file_id
 							WHERE
 								coalesce(app_f.deleted,FALSE)=FALSE
 								AND t.doc_flow_out_client_id=doc_flow_in.from_doc_flow_out_client_id

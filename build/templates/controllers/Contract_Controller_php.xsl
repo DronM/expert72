@@ -96,6 +96,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				mdf.doc_flow_out_client_id,
 				m.date_time AS doc_flow_out_date_time,
 				reg.reg_number AS doc_flow_out_reg_number,
+				(clorg_f.new_file_id IS NOT NULL) AS is_switched,
 				
 				(WITH sign AS (
 					SELECT
@@ -139,6 +140,8 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			LEFT JOIN doc_flow_out_client_document_files AS mdf ON mdf.file_id=adf.file_id
 			LEFT JOIN doc_flow_out_client AS m ON m.id=mdf.doc_flow_out_client_id
 			LEFT JOIN doc_flow_out_client_reg_numbers AS reg ON reg.doc_flow_out_client_id=m.id
+			LEFT JOIN doc_flow_out_client_original_files AS clorg_f ON clorg_f.doc_flow_out_client_id=m.id AND clorg_f.new_file_id=adf.file_id
+			
 			WHERE adf.application_id=%d AND adf.document_id>0
 			ORDER BY
 				adf.document_type,

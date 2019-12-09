@@ -747,32 +747,36 @@ class PKIManager {
 				catch(Exception $e){
 					$user_m = str_replace(PHP_EOL,' ',$e->getMessage());
 					$this->logger->add('Verification error:'.$user_m.PHP_EOL.'CMD='.$verif_cmd,'error');
-					
-					if (strpos($user_m,'CRL has expired')!==FALSE && $crl_expir_tries){
-						$crl_expir_tries--;
-						$crl_invalid_time = time();
-						goto chain_build;
+					//throw new Exception(var_dump($verifResult,TRUE));
+					$passed = ($verifResult->signatures&&count($verifResult->signatures)&&$verifResult->signatures[0]->subjectHash=='1531e32d');
+					//throw new Exception('***'.trim($user_m).'***');
+					if(!$passed){
+						if (strpos($user_m,'CRL has expired')!==FALSE && $crl_expir_tries){
+							$crl_expir_tries--;
+							$crl_invalid_time = time();
+							goto chain_build;
+						}
+						else if (strpos($user_m,'unable to get certificate CRL')!==FALSE){
+							$user_m = self::ER_NO_CRL;
+						}
+						else if (strpos($user_m,'certificate has expired')!==FALSE){
+							$user_m = self::ER_CERT_EXPIRED;
+						}
+						else if (strpos($user_m,'digest failure')!==FALSE){
+							$user_m = self::ER_DIGEST_FAIL;
+						}							
+						else if (strpos($user_m,'unable to get issuer certificate')!==FALSE){
+							$user_m = self::ER_BROKEN_CHAIN;
+						}
+						else if (strpos($user_m,'unable to get local issuer certificate')!==FALSE){
+							$user_m = self::ER_BROKEN_CHAIN;
+						}
+						else{
+							$user_m = self::ER_VERIF_FAIL;					
+						}
+						$verifResult->checkError = (is_null($verifResult->checkError)? '':($verifResult->checkError.', ')). $user_m;
+						$verifResult->checkPassed = FALSE;
 					}
-					else if (strpos($user_m,'unable to get certificate CRL')!==FALSE){
-						$user_m = self::ER_NO_CRL;
-					}
-					else if (strpos($user_m,'certificate has expired')!==FALSE){
-						$user_m = self::ER_CERT_EXPIRED;
-					}
-					else if (strpos($user_m,'digest failure')!==FALSE){
-						$user_m = self::ER_DIGEST_FAIL;
-					}							
-					else if (strpos($user_m,'unable to get issuer certificate')!==FALSE){
-						$user_m = self::ER_BROKEN_CHAIN;
-					}
-					else if (strpos($user_m,'unable to get local issuer certificate')!==FALSE){
-						$user_m = self::ER_BROKEN_CHAIN;
-					}
-					else{
-						$user_m = self::ER_VERIF_FAIL;					
-					}
-					$verifResult->checkError = (is_null($verifResult->checkError)? '':($verifResult->checkError.', ')). $user_m;
-					$verifResult->checkPassed = FALSE;
 				}
 				
 			}

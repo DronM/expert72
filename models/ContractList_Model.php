@@ -535,6 +535,15 @@ class ContractList_Model extends ModelSQL{
 		$this->addField($f_fund_source_id);
 		//********************
 		
+		//*** Field allow_new_file_add ***
+		$f_opts = array();
+		$f_opts['defaultValue']='FALSE';
+		$f_opts['id']="allow_new_file_add";
+						
+		$f_allow_new_file_add=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"allow_new_file_add",$f_opts);
+		$this->addField($f_allow_new_file_add);
+		//********************
+		
 		//*** Field applications_ref ***
 		$f_opts = array();
 		$f_opts['id']="applications_ref";

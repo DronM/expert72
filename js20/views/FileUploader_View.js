@@ -327,7 +327,7 @@ FileUploader_View.prototype.addFileToContainer = function(container,itemFile,ite
 	
 	var templateOptions = {};
 	if (this.m_fileTemplateOptions)CommonHelper.merge(templateOptions,this.m_fileTemplateOptions);
-	
+
 	templateOptions.file_id			= itemFile.file_id;
 	templateOptions.file_uploaded		= itemFile.file_uploaded;	
 	templateOptions.file_not_uploaded	= (itemFile.file_uploaded!=undefined)? !itemFile.file_uploaded:true;

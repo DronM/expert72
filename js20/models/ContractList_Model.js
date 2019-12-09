@@ -530,6 +530,15 @@ function ContractList_Model(options){
 	filed_options.autoInc = false;	
 	
 	options.fields.fund_source_id = new FieldInt("fund_source_id",filed_options);
+		
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	filed_options.defValue = true;
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.allow_new_file_add = new FieldBool("allow_new_file_add",filed_options);
 	
 			
 				
@@ -648,6 +657,7 @@ function ContractList_Model(options){
 	
 	options.fields.exp_cost_eval_validity = new FieldBool("exp_cost_eval_validity",filed_options);
 	
+			
 		ContractList_Model.superclass.constructor.call(this,id,options);
 }
 extend(ContractList_Model,ModelXML);

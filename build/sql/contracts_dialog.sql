@@ -188,7 +188,9 @@ CREATE OR REPLACE VIEW contracts_dialog AS
 		
 		t.main_department_id,
 		t.main_expert_id,
-		t.permission_ar AS condition_ar
+		t.permission_ar AS condition_ar,
+		
+		t.allow_new_file_add
 		
 	FROM contracts t
 	LEFT JOIN applications AS app ON app.id=t.application_id

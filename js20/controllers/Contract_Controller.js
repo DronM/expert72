@@ -430,6 +430,12 @@ extend(Contract_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	
+	var field = new FieldBool("allow_new_file_add",options);
+	
+	pm.addField(field);
+	
 	pm.addField(new FieldInt("ret_id",{}));
 	
 	
@@ -818,6 +824,12 @@ extend(Contract_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	
+	var field = new FieldBool("allow_new_file_add",options);
+	
+	pm.addField(field);
+	
 	
 }
 
@@ -1044,6 +1056,9 @@ extend(Contract_Controller,ControllerObjServer);
 	var f_opts = {};
 	
 	pm.addField(new FieldInt("fund_source_id",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldBool("allow_new_file_add",f_opts));
 	pm.getField(this.PARAM_ORD_FIELDS).setValue("date_time");
 	
 }

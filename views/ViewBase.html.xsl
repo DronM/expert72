@@ -560,7 +560,7 @@ throw Error(CommonHelper.longString(function () {/*
 						</li>					        
 						
 						<li class="divider"></li>
-						<li><a href="index.php?c=User_Controller&amp;f=logout_html{$TOKEN}" onclick="window.getApp().quit()"><i class="icon-switch2"></i> Выход</a></li>
+						<li><a href="index.php?c=User_Controller&amp;f=logout_html{$TOKEN}" onclick="return window.getApp().quit()"><i class="icon-switch2"></i> Выход</a></li>
 					</ul>
 				</li>				
 			</ul>

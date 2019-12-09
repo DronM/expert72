@@ -186,8 +186,8 @@ FileUploaderApplication_View.prototype.setFileOptions = function(fileOpts,file){
 		//id,date_time,reg_number
 		fileOpts.refTitle = 
 			(file.doc_flow_out.reg_number&&file.doc_flow_out.reg_number!="null")?
-				("Загружен документом №"+file.doc_flow_out.reg_number+" от "+DateHelper.format(DateHelper.strtotime(file.doc_flow_out.date_time),"d/m/y"))
-				: ("Загружен неотправленным документом от "+DateHelper.format(DateHelper.strtotime(file.doc_flow_out.date_time),"d/m/y"))
+				("Загружен письмом №"+file.doc_flow_out.reg_number+" от "+DateHelper.format(DateHelper.strtotime(file.doc_flow_out.date_time),"d/m/y"))
+				: ("Загружен неотправленным письмом от "+DateHelper.format(DateHelper.strtotime(file.doc_flow_out.date_time),"d/m/y"))
 				;	
 		
 		fileOpts.refClass = "uploadedAfterPost";	

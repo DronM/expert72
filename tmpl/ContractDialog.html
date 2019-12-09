@@ -252,6 +252,10 @@
 		<div class="tab-pane fade" id="access">
 			<div id="{{id}}:main_departments_ref"/>
 			<div id="{{id}}:main_experts_ref"/>
+
+			{{#isAdmin}}
+			<div id="{{id}}:allow_new_file_add"/>
+			{{/isAdmin}}
 			
 			<h4>Доступность контракта для сотрудников</h4>
 			<div id="{{id}}:for_all_employees"/>
@@ -262,6 +266,8 @@
 			
 		</div>
 		{{/setAccess}}
+		
+				
 		<div class="tab-pane fade" id="documents">
 			<div class="tabbable">
 				<ul class="nav nav-tabs nav-tabs-highlight">				
