@@ -160,7 +160,7 @@ DocumentDialog_View.prototype.toggleDocTypeVis = function(){
 	this.toggleDocTab("eng_survey",(exp_type=="eng_survey" || exp_type=="pd_eng_survey" || exp_type=="cost_eval_validity_eng_survey" || exp_type=="cost_eval_validity_pd_eng_survey"));
 	this.toggleDocTab("cost_eval_validity",
 		(
-		(service_ctrl&&service_ctrl.getElement("cost_eval_validity").getValue())
+		(service_ctrl&&service_ctrl.getElement("cost_eval_validity")&&service_ctrl.getElement("cost_eval_validity").getValue())
 		||(exp_type=="cost_eval_validity" || exp_type=="cost_eval_validity_pd" || exp_type=="cost_eval_validity_eng_survey" || exp_type=="cost_eval_validity_pd_eng_survey")
 		)
 	);
