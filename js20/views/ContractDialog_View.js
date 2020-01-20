@@ -134,8 +134,8 @@ function ContractDialog_View(id,options){
 			if (options.templateOptions.pd){
 				this.addElement(new Enum_expertise_types(id+":expertise_type",{
 					"labelCaption":"Вид гос.экспертизы:",
-					"editContClassName":editContClassName,
-					"labelClassName":labelClassName,			
+					"labelClassName":"control-label "+window.getBsCol(2),
+					"editContClassName":"input-group "+window.getBsCol(10),
 					"enabled":false
 				}));	
 			}

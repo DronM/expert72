@@ -624,8 +624,8 @@ FileUploader_View.prototype.clearContainer = function(docId){
 
 FileUploader_View.prototype.addFileControls = function(items){
 	if (!items)return;
-	
 	var self = this;
+	
 	for(var i=0;i<items.length;i++){	
 		var file_cont;
 		if (items[i].fields){
@@ -1320,7 +1320,7 @@ FileUploader_View.prototype.decTotalFileCount = function(){
 
 FileUploader_View.prototype.toDOM = function(parent){
 	FileUploader_View.superclass.toDOM.call(this,parent);
-	
+
 	this.addFileControls(this.m_items);	
 
 	this.setUploadOnAdd(this.m_uploadOnAdd);

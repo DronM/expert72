@@ -29,7 +29,7 @@ function ApplicationDialog_View(id,options){
 	
 	options.templateOptions = options.templateOptions || {};
 
-	this.m_order010119 = true;
+	this.m_order010119 = false;//true!!!
 
 	//все прочие папки		
 	var doc_folders;

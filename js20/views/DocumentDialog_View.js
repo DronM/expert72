@@ -159,15 +159,18 @@ DocumentDialog_View.prototype.toggleDocTypeVis = function(){
 	this.toggleDocTab("pd",(exp_type=="pd" || exp_type=="pd_eng_survey" || exp_type=="cost_eval_validity_pd" || exp_type=="cost_eval_validity_pd_eng_survey"));
 	this.toggleDocTab("eng_survey",(exp_type=="eng_survey" || exp_type=="pd_eng_survey" || exp_type=="cost_eval_validity_eng_survey" || exp_type=="cost_eval_validity_pd_eng_survey"));
 	this.toggleDocTab("cost_eval_validity",
-		(exp_type=="cost_eval_validity" || exp_type=="cost_eval_validity_pd" || exp_type=="cost_eval_validity_eng_survey" || exp_type=="cost_eval_validity_pd_eng_survey")
+		(
+		service_ctrl.getElement("cost_eval_validity").getValue()
+		||(exp_type=="cost_eval_validity" || exp_type=="cost_eval_validity_pd" || exp_type=="cost_eval_validity_eng_survey" || exp_type=="cost_eval_validity_pd_eng_survey")
+		)
 	);
 	
 	if(this.m_order010119!=undefined&&!this.m_order010119){
-		this.toggleDocTab("cost_eval_validity",service_ctrl.getElement("cost_eval_validity").getValue());
+		//this.toggleDocTab("cost_eval_validity",service_ctrl.getElement("cost_eval_validity").getValue());
 		this.toggleDocTab("modification",service_ctrl.getElement("modification").getValue());
 	}
 	else{
-		//new order 01/01/19
+		//new order 01/01/20
 		//this.toggleDocTab("cost_eval_validity",service_ctrl.getElement("exp_cost_eval_validity").getValue());
 		this.toggleDocTab("modification",false);
 	}

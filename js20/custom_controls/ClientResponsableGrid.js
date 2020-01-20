@@ -108,7 +108,9 @@ function ClientResponsableGrid(id,options){
 							m.setFieldValue("tel",p["tel"]);
 							m.setFieldValue("email",p["email"]);
 							m.recInsert();
-							self.onRefresh();
+							self.onRefresh(function(){
+								self.m_mainView.calcFillPercent();
+							});
 						}				
 					})
 				);

@@ -546,7 +546,7 @@ applications_split Перепровел?
 
 
 
-1.0.117
+1.0.117 20/01/20
 1) Новый порядок подачи заявлний: Достоверность включена в Гос экспертизу:
 	applications_list
 	application_processes_process()
@@ -557,10 +557,17 @@ ApplicationServiceCont.js
 DocumentDialog_View.js
 Application_Controller.php
 Шаблоны печ.форм
-
-
 Заявление Достоверность без ПД 36
 select * from applications_dialog where application_state='filling' and cost_eval_validity AND expertise_type is null order by create_dt desc limit 50
+
+
+1.0.118
+1) ContractDialog_View расширил вид экспертизы, поправил шаблон ContractDialog.html
+2) Не открывает список банков: поле наименование слишком длинное
+3) После нажатия кнопки Копировать руководителя в отв.лица не пересчитывается процент ClientResponsableGrid.js
+4) не показывает файлы в старых заявлениях по достоверности  DocumentDialog_View.prototype.toggleDocTypeVis два раза устанавливает видимость вкладки
+	cost_eval_validity
+
 
 Надо:
 !!! regl_application_deletion сделать отметку об удалении!!! поставить дату когда и больше не трогать!!!
@@ -575,7 +582,6 @@ select doc_flow_out_client_out_attrs(3029)
 
 
 -Заявление: ответственные лица, отдел не должен влиять на процент!
-!!! Контракт Услуга!!!
 !! Отчетность!!!
 
 

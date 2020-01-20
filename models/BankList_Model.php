@@ -9,6 +9,7 @@
 require_once(FRAME_WORK_PATH.'basic_classes/ModelSQL.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLInt.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLString.php');
+require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLText.php');
 require_once(FRAME_WORK_PATH.'basic_classes/ModelOrderSQL.php');
  
 class BankList_Model extends ModelSQL{
@@ -57,10 +58,9 @@ class BankList_Model extends ModelSQL{
 		$f_opts = array();
 		
 		$f_opts['alias']='Наименование';
-		$f_opts['length']=50;
 		$f_opts['id']="name";
 						
-		$f_name=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"name",$f_opts);
+		$f_name=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"name",$f_opts);
 		$this->addField($f_name);
 		//********************
 		
@@ -79,10 +79,9 @@ class BankList_Model extends ModelSQL{
 		$f_opts = array();
 		
 		$f_opts['alias']='Адрес';
-		$f_opts['length']=70;
 		$f_opts['id']="adres";
 						
-		$f_adres=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"adres",$f_opts);
+		$f_adres=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"adres",$f_opts);
 		$this->addField($f_adres);
 		//********************
 		
@@ -90,10 +89,9 @@ class BankList_Model extends ModelSQL{
 		$f_opts = array();
 		
 		$f_opts['alias']='Город';
-		$f_opts['length']=31;
 		$f_opts['id']="gor";
 						
-		$f_gor=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"gor",$f_opts);
+		$f_gor=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"gor",$f_opts);
 		$this->addField($f_gor);
 		//********************
 		
