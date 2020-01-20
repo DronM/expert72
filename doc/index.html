@@ -18,7 +18,9 @@
 <li><a href="#ApplicationClient_Controller">ApplicationClient_Controller</a></li>
 <li><a href="#ApplicationContractor_Controller">ApplicationContractor_Controller</a></li>
 <li><a href="#ApplicationDocFolder_Controller">ApplicationDocFolder_Controller</a></li>
+<li><a href="#ApplicationDocumentFile_Controller">ApplicationDocumentFile_Controller</a></li>
 <li><a href="#ApplicationProcess_Controller">ApplicationProcess_Controller</a></li>
+<li><a href="#ApplicationReturnedFilesRemoved_Controller">ApplicationReturnedFilesRemoved_Controller</a></li>
 <li><a href="#ApplicationTemplateContent_Controller">ApplicationTemplateContent_Controller</a></li>
 <li><a href="#Bank_Controller">Bank_Controller</a></li>
 <li><a href="#BuildType_Controller">BuildType_Controller</a></li>
@@ -153,6 +155,7 @@
 <li><a href="#ApplicationProcessList_Model">ApplicationProcessList_Model</a></li>
 <li><a href="#ApplicationCorrection_Model">ApplicationCorrection_Model</a></li>
 <li><a href="#ApplicationDocumentFile_Model">ApplicationDocumentFile_Model</a></li>
+<li><a href="#ApplicationDocumentFileList_Model">ApplicationDocumentFileList_Model</a></li>
 <li><a href="#ApplicationDocFolder_Model">ApplicationDocFolder_Model</a></li>
 <li><a href="#Contact_Model">Contact_Model</a></li>
 <li><a href="#ApplicationClient_Model">ApplicationClient_Model</a></li>
@@ -265,6 +268,8 @@
 <li><a href="#ManualContent_Model">ManualContent_Model</a></li>
 <li><a href="#Signature_Model">Signature_Model</a></li>
 <li><a href="#DocFlowOutClientOriginalFile_Model">DocFlowOutClientOriginalFile_Model</a></li>
+<li><a href="#ApplicationReturnedFilesRemoved_Model">ApplicationReturnedFilesRemoved_Model</a></li>
+<li><a href="#ApplicationReturnedFilesRemovedList_Model">ApplicationReturnedFilesRemovedList_Model</a></li>
 </ul>
 <div class="section-title">Enumerations</div>
 <ul>
@@ -776,6 +781,18 @@
 <a href="#ApplicationDocFolder_Model">Model: ApplicationDocFolder_Model</a>
 </div>
 </div>
+<div id="ApplicationDocumentFile_Controller" class="content_box">
+<h1>ApplicationDocumentFile_Controller</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Методы:</p>
+<h2>update</h2>
+<a href="#ApplicationDocumentFileList_Model">Model: ApplicationDocumentFileList_Model</a><h2>delete</h2>
+<a href="#ApplicationDocumentFile_Model">Model: ApplicationDocumentFile_Model</a><h2>get_object</h2>
+<a href="#ApplicationDocumentFileList_Model">Model: ApplicationDocumentFileList_Model</a><h2>get_list</h2>
+<a href="#ApplicationDocumentFileList_Model">Model: ApplicationDocumentFileList_Model</a>
+</div>
+</div>
 <div id="ApplicationProcess_Controller" class="content_box">
 <h1>ApplicationProcess_Controller</h1>
 <div class="content_item">
@@ -787,6 +804,16 @@
 <a href="#ApplicationProcess_Model">Model: ApplicationProcess_Model</a><h2>get_object</h2>
 <a href="#ApplicationProcessList_Model">Model: ApplicationProcessList_Model</a><h2>get_list</h2>
 <a href="#ApplicationProcessList_Model">Model: ApplicationProcessList_Model</a>
+</div>
+</div>
+<div id="ApplicationReturnedFilesRemoved_Controller" class="content_box">
+<h1>ApplicationReturnedFilesRemoved_Controller</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Методы:</p>
+<h2>get_object</h2>
+<a href="#ApplicationReturnedFilesRemovedList_Model">Model: ApplicationReturnedFilesRemovedList_Model</a><h2>get_list</h2>
+<a href="#ApplicationReturnedFilesRemovedList_Model">Model: ApplicationReturnedFilesRemovedList_Model</a>
 </div>
 </div>
 <div id="ApplicationTemplateContent_Controller" class="content_box">
@@ -4329,6 +4356,96 @@
 <div>Precision:</div>
 </div>
 </div>
+<div id="ApplicationDocumentFileList_Model" class="content_box">
+<h1>ApplicationDocumentFileList_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>file_id</h2>
+<div>Type:String</div>
+<div>Primary key:TRUE</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>application_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>applications_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>document_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>document_type</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>date_time</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>file_name</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>file_path</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>file_signed</h2>
+<div>Type:Bool</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>file_size</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>deleted</h2>
+<div>Type:Bool</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>deleted_dt</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>file_signed_by_client</h2>
+<div>Type:Bool</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>information_list</h2>
+<div>Type:Bool</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
 <div id="ApplicationList_Model" class="content_box">
 <h1>ApplicationList_Model</h1>
 <div class="content_item">
@@ -4563,6 +4680,48 @@
 <div>Precision:</div>
 <h2>doc_flow_examination_id</h2>
 <div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="ApplicationReturnedFilesRemoved_Model" class="content_box">
+<h1>ApplicationReturnedFilesRemoved_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>application_id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>date_time</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="ApplicationReturnedFilesRemovedList_Model" class="content_box">
+<h1>ApplicationReturnedFilesRemovedList_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>application_id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>applications_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>date_time</h2>
+<div>Type:DateTimeTZ</div>
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>

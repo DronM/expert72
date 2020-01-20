@@ -1006,6 +1006,18 @@ $permissions = array();
 				
 					$permissions['ExpertiseProlongation_Controller_calc_work_end_date']=TRUE;
 				
+					$permissions['ApplicationReturnedFilesRemoved_Controller_get_object']=TRUE;
+				
+					$permissions['ApplicationReturnedFilesRemoved_Controller_get_list']=TRUE;
+				
+					$permissions['ApplicationDocumentFile_Controller_update']=TRUE;
+				
+					$permissions['ApplicationDocumentFile_Controller_delete']=TRUE;
+				
+					$permissions['ApplicationDocumentFile_Controller_get_object']=TRUE;
+				
+					$permissions['ApplicationDocumentFile_Controller_get_list']=TRUE;
+				
 return array_key_exists($contrId.'_'.$methId,$permissions);
 }
 ?>

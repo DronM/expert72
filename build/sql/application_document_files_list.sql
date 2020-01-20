@@ -24,4 +24,4 @@ CREATE OR REPLACE VIEW application_document_files_list AS
 	ORDER BY t.application_id DESC,t.document_type,t.file_name
 	;
 	
-ALTER VIEW application_document_files_list OWNER TO expert72;
+ALTER VIEW application_document_files_list OWNER TO ;

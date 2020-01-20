@@ -38,7 +38,8 @@ function ApplicationDialog_View(id,options){
 		options.templateOptions.is_admin = (role_id=="admin");
 		options.readOnly = (options.model.getField("application_state").isSet() && options.model.getFieldValue("application_state")!="filling" && options.model.getFieldValue("application_state")!="correcting");
 		//var exp_tp = options.model.getField("expertise_type");
-		if (options.model.getFieldValue("update_dt").getTime()<DateHelper.strtotime("2020-01-17").getTime() && options.readOnly){
+		var edit_d = options.model.getFieldValue("update_dt");
+		if (edit_d && edit_d.getTime()<DateHelper.strtotime("2020-01-17").getTime() && options.readOnly){
 			this.m_order010119 = false;
 		}
 		

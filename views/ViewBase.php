@@ -1350,6 +1350,8 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/UserEmailConfirmation_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ManualForUser_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ExpertiseProlongationList_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ApplicationReturnedFilesRemovedList_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ApplicationDocumentFileList_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'tmpl/App.templates.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/App.enums.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/App.predefinedItems.js'));
@@ -1758,6 +1760,12 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/Signature_Model.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocumentTemplateForContractList_Model.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowOutClientOriginalFile_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ApplicationReturnedFilesRemoved_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/ApplicationReturnedFilesRemoved_Controller.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ApplicationReturnedFilesRemovedList_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/ApplicationDocumentFileList_Controller.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ApplicationDocumentFileList_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/ApplicationDocumentFile_Controller.js'));
 	
 			if (isset($_SESSION['scriptId'])){
 				$script_id = $_SESSION['scriptId'];

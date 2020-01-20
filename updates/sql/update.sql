@@ -5359,3 +5359,93 @@ CREATE OR REPLACE VIEW applications_dialog AS
 	;
 	
 ALTER VIEW applications_dialog OWNER TO expert72;
+
+
+
+-- ******************* update 20/01/2020 13:24:53 ******************
+
+		CREATE TABLE applications_returned_files_removed
+		(application_id int NOT NULL REFERENCES applications(id),date_time timestampTZ
+			DEFAULT CURRENT_TIMESTAMP NOT NULL,CONSTRAINT applications_returned_files_removed_pkey PRIMARY KEY (application_id)
+		);
+		ALTER TABLE applications_returned_files_removed OWNER TO expert72;
+		
+
+-- ******************* update 20/01/2020 13:37:23 ******************
+delete FROM views where id='20015';
+		INSERT INTO views
+		(id,c,f,t,section,descr,limited)
+		VALUES (
+		'20015',
+		'ApplicationReturnedFilesRemoved_Controller',
+		'get_list',
+		'ApplicationReturnedFilesRemovedList',
+		'Документы',
+		'Заявления с удаленной документацией',
+		FALSE
+		);
+	
+
+
+-- ******************* update 20/01/2020 13:47:18 ******************
+-- VIEW: applications_returned_files_removed_list
+
+--DROP VIEW applications_returned_files_removed_list;
+
+CREATE OR REPLACE VIEW applications_returned_files_removed_list AS
+	SELECT
+		t.application_id,
+		t.date_time,
+		applications_ref(app) AS applications_ref
+		
+	FROM applications_returned_files_removed AS t
+	LEFT JOIN applications AS app ON app.id=t.application_id
+	ORDER BY date_time DESC
+	;
+	
+ALTER VIEW applications_returned_files_removed_list OWNER TO expert72;
+
+
+-- ******************* update 20/01/2020 13:55:56 ******************
+-- VIEW: application_document_files_list
+
+--DROP VIEW application_document_files_list;
+
+CREATE OR REPLACE VIEW application_document_files_list AS
+	SELECT
+		t.file_id,
+		t.application_id,
+		applications_ref(app) AS applications_ref,
+		t.document_id,
+		t.document_type,
+		t.date_time,
+		t.file_name,
+		t.file_path,
+		t.file_signed,
+		t.file_size,
+		t.deleted,
+		t.deleted_dt,
+		t.file_signed_by_client,
+		t.information_list
+		
+	FROM application_document_files AS t
+	LEFT JOIN applications AS app ON app.id=t.application_id
+	ORDER BY t.application_id DESC,t.document_type,t.file_name
+	;
+	
+ALTER VIEW application_document_files_list OWNER TO expert72;
+
+
+-- ******************* update 20/01/2020 14:08:02 ******************
+
+		INSERT INTO views
+		(id,c,f,t,section,descr,limited)
+		VALUES (
+		'20016',
+		'ApplicationDocumentFile_Controller',
+		'get_list',
+		'ApplicationDocumentFileList',
+		'Документы',
+		'Файлы заявлений',
+		FALSE
+		);

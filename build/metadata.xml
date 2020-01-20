@@ -2,7 +2,7 @@
 <metadata owner="expert72">
 	<versions>
 		<version dateOpen="2017-09-27 12:09:48" dateClose="2017-12-08 10:12:08">1.001 
-		<lastBuild>2020-01-20 13:07:33</lastBuild></version>
+		<lastBuild>2020-01-20 17:51:12</lastBuild></version>
 		<version dateOpen="2017-12-08 11:12:01" dateClose="2017-12-08 11:12:04">1.002</version>
 		<version dateOpen="2017-12-08 11:12:20" dateClose="2017-12-08 11:12:20">1.0.3</version>
 		<version dateOpen="2017-12-12 11:12:07" dateClose="2017-12-12 11:12:07">1.0.4</version>
@@ -125,6 +125,7 @@
 		<version dateOpen="2020-01-20 12:01:59" dateClose="2020-01-20 13:01:00">1.0.122</version>
 		<version dateOpen="2020-01-20 13:01:02" dateClose="2020-01-20 13:01:03">1.0.123</version>
 		<version dateOpen="2020-01-20 13:01:04" dateClose="2020-01-20 13:01:07">1.0.124</version>
+		<version dateOpen="2020-01-20 13:01:23" dateClose="2020-01-20 17:01:51">1.0.125</version>
 	</versions>
 	<globalFilters>
 		<field id="user_id"/>
@@ -1228,6 +1229,22 @@
 			<index id="application_document_files_application_idx">
 				<field id="application_id"/>
 			</index>
+		</model>
+		<model id="ApplicationDocumentFileList" parent="ModelSQL" dataTable="application_document_files_list" virtual="TRUE">
+			<field id="file_id" dataType="String" primaryKey="TRUE"/>
+			<field id="application_id" dataType="Int"/>
+			<field id="applications_ref" dataType="JSON"/>
+			<field id="document_id" dataType="Int"/>
+			<field id="document_type" dataType="String"/>
+			<field id="date_time" dataType="DateTimeTZ"/>
+			<field id="file_name" dataType="Text"/>
+			<field id="file_path" dataType="Text"/>
+			<field id="file_signed" dataType="Bool"/>
+			<field id="file_size" dataType="Int"/>
+			<field id="deleted" dataType="Bool"/>
+			<field id="deleted_dt" dataType="DateTimeTZ"/>
+			<field id="file_signed_by_client" dataType="Bool"/>
+			<field id="information_list" dataType="Bool"/>
 		</model>
 		<model id="ApplicationDocFolder" parent="ModelSQL" dataTable="application_doc_folders" virtual="FALSE">
 			<defaultOrder>
@@ -2980,6 +2997,15 @@
 			<field id="original_file_id" dataType="String" length="36" required="TRUE" primaryKey="TRUE"/>
 			<field id="new_file_id" dataType="String" length="36" required="TRUE"/>
 		</model>
+		<model id="ApplicationReturnedFilesRemoved" parent="ModelSQL" dataTable="applications_returned_files_removed" virtual="FALSE">
+			<field id="application_id" dataType="Int" refTable="applications" refField="id" required="TRUE" primaryKey="TRUE"/>
+			<field id="date_time" dataType="DateTimeTZ" dbRequired="TRUE" defaultValue="CURRENT_TIMESTAMP"/>
+		</model>
+		<model id="ApplicationReturnedFilesRemovedList" parent="ModelSQL" dataTable="applications_returned_files_removed_list" virtual="TRUE" baseModelId="ApplicationReturnedFilesRemoved">
+			<field id="application_id" dataType="Int" primaryKey="TRUE"/>
+			<field id="applications_ref" dataType="JSON"/>
+			<field id="date_time" dataType="DateTimeTZ"/>
+		</model>
 	</models>
 	<constants>
 		<constant id="doc_per_page_count" name="&#x41A;&#x43E;&#x43B;&#x438;&#x447;&#x435;&#x441;&#x442;&#x432;&#x43E; &#x434;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x43E;&#x432; &#x43D;&#x430; &#x441;&#x442;&#x440;&#x430;&#x43D;&#x438;&#x446;&#x435;" descr="&#x41A;&#x43E;&#x43B;&#x438;&#x447;&#x435;&#x441;&#x442;&#x432;&#x43E; &#x434;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x43E;&#x432; &#x43D;&#x430; &#x441;&#x442;&#x440;&#x430;&#x43D;&#x438;&#x446;&#x435; &#x432; &#x436;&#x443;&#x440;&#x43D;&#x430;&#x43B;&#x435; &#x434;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x43E;&#x432;" dataType="Int" defaultValue="60" autoload="TRUE"/>
@@ -4139,6 +4165,16 @@
 				<field id="day_count" dataType="Int" required="TRUE"/>
 			</publicMethod>
 		</controller>
+		<controller id="ApplicationReturnedFilesRemoved" parentId="ControllerSQL">
+			<publicMethod id="get_object" modelId="ApplicationReturnedFilesRemovedList"/>
+			<publicMethod id="get_list" modelId="ApplicationReturnedFilesRemovedList"/>
+		</controller>
+		<controller id="ApplicationDocumentFile" parentId="ControllerSQL">
+			<publicMethod id="update" modelId="ApplicationDocumentFileList"/>
+			<publicMethod id="delete" modelId="ApplicationDocumentFile"/>
+			<publicMethod id="get_object" modelId="ApplicationDocumentFileList"/>
+			<publicMethod id="get_list" modelId="ApplicationDocumentFileList"/>
+		</controller>
 	</controllers>
 	<permissions>
 		<permission type="allow" controllerId="all" methodId="all" roleId="admin"/>
@@ -4271,7 +4307,8 @@
 		<view id="20012" c="Contract_Controller" t="ContractModificationList" f="get_modification_list" section="&#x414;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;" descr="&#x41A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x44B; &#x41C;&#x43E;&#x434;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x446;&#x438;&#x44F;"/>
 		<view id="20013" c="Contract_Controller" t="ContractAuditList" f="get_audit_list" section="&#x414;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;" descr="&#x41A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x44B; &#x410;&#x443;&#x434;&#x438;&#x442;"/>
 		<view id="20014" c="DocFlowInside_Controller" t="DocFlowInsideList" f="get_list" section="&#x414;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;" descr="&#x412;&#x43D;&#x443;&#x442;&#x440;&#x435;&#x43D;&#x43D;&#x438;&#x435; &#x434;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;"/>
-		<view id="20015" c="Contract_Controller" t="ContractPdCostValidEvalList" f="get_pd_cost_valid_eval_list" section="&#x414;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;" descr="&#x41A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x44B; &#x41F;&#x414; &#x438; &#x434;&#x43E;&#x441;&#x442;&#x43E;&#x432;&#x435;&#x440;&#x43D;&#x43E;&#x441;&#x442;&#x44C; (&#x441; 17/01/20)"/>
+		<view id="20015" c="ApplicationReturnedFilesRemoved_Controller" t="ApplicationReturnedFilesRemovedList" f="get_list" section="&#x414;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;" descr="&#x417;&#x430;&#x44F;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x44F; &#x441; &#x443;&#x434;&#x430;&#x43B;&#x435;&#x43D;&#x43D;&#x43E;&#x439; &#x434;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x430;&#x446;&#x438;&#x435;&#x439;"/>
+		<view id="20016" c="ApplicationDocumentFile_Controller" t="ApplicationDocumentFileList" f="get_list" section="&#x414;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;" descr="&#x424;&#x430;&#x439;&#x43B;&#x44B; &#x437;&#x430;&#x44F;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x439;"/>
 		<view id="30000" c="Contract_Controller" t="RepReestrExpertise" section="&#x41E;&#x442;&#x447;&#x435;&#x442;&#x44B;" descr="&#x420;&#x435;&#x435;&#x441;&#x442;&#x440; &#x437;&#x430;&#x43A;&#x43B;&#x44E;&#x447;&#x435;&#x43D;&#x438;&#x439; &#x43F;&#x43E; &#x433;&#x43E;&#x441;.&#x44D;&#x43A;&#x441;&#x43F;&#x435;&#x440;&#x442;&#x438;&#x437;&#x435;"/>
 		<view id="30001" c="Contract_Controller" t="RepReestrCostEval" section="&#x41E;&#x442;&#x447;&#x435;&#x442;&#x44B;" descr="&#x420;&#x435;&#x435;&#x441;&#x442;&#x440; &#x437;&#x430;&#x43A;&#x43B;&#x44E;&#x447;&#x435;&#x43D;&#x438;&#x439; &#x43F;&#x43E; &#x434;&#x43E;&#x441;&#x442;&#x43E;&#x432;&#x435;&#x440;&#x43D;&#x43E;&#x441;&#x442;&#x438;"/>
 		<view id="30002" c="Contract_Controller" t="RepReestrPay" section="&#x41E;&#x442;&#x447;&#x435;&#x442;&#x44B;" descr="&#x420;&#x435;&#x435;&#x441;&#x442;&#x440; &#x43E;&#x43F;&#x43B;&#x430;&#x442;"/>
@@ -4349,6 +4386,8 @@
 		<serverTemplate id="RepQuarter"/>
 		<serverTemplate id="ManualList"/>
 		<serverTemplate id="ExpertiseProlongationList"/>
+		<serverTemplate id="ApplicationReturnedFilesRemovedList"/>
+		<serverTemplate id="ApplicationDocumentFileList"/>
 	</serverTemplates>
 	<jsTemplates>
 		<jsTemplate id="FatalException" file="tmpl/FatalException.html"/>
@@ -4944,6 +4983,8 @@
 		<jsScript file="views/UserEmailConfirmation_View.js"/>
 		<jsScript file="views/ManualForUser_View.js"/>
 		<jsScript file="views/ExpertiseProlongationList_View.js"/>
+		<jsScript file="views/ApplicationReturnedFilesRemovedList_View.js"/>
+		<jsScript file="views/ApplicationDocumentFileList_View.js"/>
 		<jsScript file="tmpl/App.templates.js" compressed="FALSE" standalone="FALSE"/>
 		<jsScript file="custom_controls/App.enums.js"/>
 		<jsScript file="custom_controls/App.predefinedItems.js"/>
@@ -5352,6 +5393,12 @@
 		<jsScript file="models/Signature_Model.js"/>
 		<jsScript file="models/DocumentTemplateForContractList_Model.js"/>
 		<jsScript file="models/DocFlowOutClientOriginalFile_Model.js"/>
+		<jsScript file="models/ApplicationReturnedFilesRemoved_Model.js"/>
+		<jsScript file="controllers/ApplicationReturnedFilesRemoved_Controller.js"/>
+		<jsScript file="models/ApplicationReturnedFilesRemovedList_Model.js"/>
+		<jsScript file="controllers/ApplicationDocumentFileList_Controller.js"/>
+		<jsScript file="models/ApplicationDocumentFileList_Model.js"/>
+		<jsScript file="controllers/ApplicationDocumentFile_Controller.js"/>
 	</jsScripts>
 	<cssScripts>
 		<cssScript file="assets/css/icons/icomoon/styles.css" compressed="TRUE" standalone="TRUE"/>
