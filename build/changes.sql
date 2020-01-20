@@ -1,58 +1,27 @@
-изменить структуру file_verification,add user_certificates,
-application_document_files_process,file_verifications_trigger,file_verifications_processes
 
-doc_flow_out_dialog
-doc_flow_attachments_process()
-doc_flow_attachments_after_trigger
-contracts_list
-doc_flow_in_dialog
-contracts_process()
-contracts_dialog
-doc_flow_out_client_process
-INSERT INTO views (id,c,f,t,section,descr,limited)
-VALUES ('30002','Contract_Controller',NULL,'RepReestrPay','Отчеты','Реестр оплат',FALSE);
-applications_customer_list
-INSERT INTO views
-(id,c,f,t,section,descr,limited)
-VALUES ('30003','Contract_Controller',NULL,'RepReestrContract','Отчеты','Реестр контрактов (выборка)',FALSE);
-applications_contractors_list
-
-UPDATE public.application_doc_folders SET name='Договорные документы/Контракт',require_client_sig=TRUE WHERE id='1';
-
-INSERT INTO public.application_doc_folders(id, name,require_client_sig) VALUES (100, 'Договорные документы/Акт выполненных работ',TRUE);
-INSERT INTO public.application_doc_folders(id, name,require_client_sig) VALUES (101, 'Договорные документы/Счет',FALSE);
-
-
-  
-
-applications_dialog
-contracts_dialog
-doc_flow_out_dialog
-application_folders перенумеровать 1,2,3 100 - акт
-
-
-
-doc_flow_contract_ret_date(in_doc_flow_out_client_id int)
-
-
---*******************************************
-
-
---*******************************************
-
-DROP INDEX user_certificates_fingerprint_user_idx;
-CREATE UNIQUE INDEX user_certificates_fingerprint_user_idx
-  ON public.user_certificates
-  USING btree
-  (fingerprint,date_time_from);
-  
-  
-  
-
-
-select file_name,substring(file_name from 1 for position('.sig' in file_name)-1) from application_document_files where position('.sig' in file_name)>0 AND date_time::date=now()::date
-/*
-update application_document_files
-set file_name=substring(file_name from 1 for position('.sig' in file_name)-1)
-where position('.sig' in file_name)>0 AND date_time::date=now()::date
-*/
+					ALTER TYPE expertise_types ADD VALUE 'cost_eval_validity';
+					ALTER TYPE expertise_types ADD VALUE 'cost_eval_validity_pd';
+					ALTER TYPE expertise_types ADD VALUE 'cost_eval_validity_eng_survey';
+					ALTER TYPE expertise_types ADD VALUE 'cost_eval_validity_pd_eng_survey';
+	/* function */
+	CREATE OR REPLACE FUNCTION enum_expertise_types_val(expertise_types,locales)
+	RETURNS text AS $$
+		SELECT
+		CASE
+		WHEN $1='pd'::expertise_types AND $2='ru'::locales THEN 'Государственная экспертиза проектной документации'
+		WHEN $1='eng_survey'::expertise_types AND $2='ru'::locales THEN 'Государственная экспертиза результатов инженерных изысканий'
+		WHEN $1='pd_eng_survey'::expertise_types AND $2='ru'::locales THEN 'Государственная экспертиза проектной документации и Государственная экспертиза результатов инженерных изысканий'
+		WHEN $1='cost_eval_validity'::expertise_types AND $2='ru'::locales THEN 'Государственная экспертиза достоверности сметной стоимости'
+		WHEN $1='cost_eval_validity_pd'::expertise_types AND $2='ru'::locales THEN 'Государственная экспертиза проектной документации и Государственная экспертиза достоверности сметной стоимости'
+		WHEN $1='cost_eval_validity_eng_survey'::expertise_types AND $2='ru'::locales THEN 'Государственная экспертиза результатов инженерных изысканий и Государственная экспертиза достоверности сметной стоимости'
+		WHEN $1='cost_eval_validity_pd_eng_survey'::expertise_types AND $2='ru'::locales THEN 'Государственная экспертиза проектной документации, Государственная экспертиза результатов инженерных изысканий, Государственная экспертиза достоверности сметной стоимости'
+		ELSE ''
+		END;		
+	$$ LANGUAGE sql;	
+	ALTER FUNCTION enum_expertise_types_val(expertise_types,locales) OWNER TO expert72;		
+		
+		
+		
+--applications_list
+--application_processes_process()
+--applications_dialog		

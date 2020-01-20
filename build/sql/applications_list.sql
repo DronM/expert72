@@ -1,6 +1,6 @@
 -- VIEW: applications_list
 
-DROP VIEW applications_list;
+--DROP VIEW applications_list;
 
 CREATE OR REPLACE VIEW applications_list AS
 	SELECT
@@ -34,7 +34,11 @@ CREATE OR REPLACE VIEW applications_list AS
 			CASE WHEN l.expertise_type IS NOT NULL THEN
 				CASE WHEN l.expertise_type='pd' THEN 'ПД'
 				WHEN l.expertise_type='eng_survey' THEN 'РИИ'
-				ELSE 'ПД и РИИ'
+				WHEN l.expertise_type='pd_eng_survey' THEN 'ПД и РИИ'
+				WHEN l.expertise_type='cost_eval_validity' THEN 'Достоверность'
+				WHEN l.expertise_type='cost_eval_validity_pd' THEN 'ПД и Достоверность'
+				WHEN l.expertise_type='cost_eval_validity_eng_survey' THEN 'РИИ и Достоверность'
+				ELSE 'ПД, РИИ, Достоверность'
 				END||
 				CASE WHEN l.exp_cost_eval_validity THEN ', Достоверность' ELSE '' END
 			ELSE ''

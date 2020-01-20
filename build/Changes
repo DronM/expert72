@@ -541,13 +541,45 @@ doc_flow_out_client_out_attrs
 В ГУИ у админа отметить контракты с разрешениями
 
 2) Отметка новых загруженных файлов в исх.письмо клиента, в нашем входящем письме doc_flow_in_dialog, в контракте на вкладке документация
+3) При отправке документации ПД+РИИ+Достоверность, при отщиплении делает новое завление с expertise_type=pd_eng_survey, а надо NULL
+applications_split Перепровел?
 
+
+
+1.0.117
+1) Новый порядок подачи заявлний: Достоверность включена в Гос экспертизу:
+	applications_list
+	application_processes_process()
+	applications_dialog		
+	applications_dialog_lk
+ApplicationDialog_View.js
+ApplicationServiceCont.js
+DocumentDialog_View.js
+Application_Controller.php
+Шаблоны печ.форм
+
+
+Заявление Достоверность без ПД 36
+select * from applications_dialog where application_state='filling' and cost_eval_validity AND expertise_type is null order by create_dt desc limit 50
 
 Надо:
 !!! regl_application_deletion сделать отметку об удалении!!! поставить дату когда и больше не трогать!!!
 Добавить таблицу хранения удаленных
-!!!При отправке заказчиком ответов в воскресенье или субботу ставит ответы на вторнок?!	
+!!!При отправке заказчиком ответов в воскресенье или субботу ставит ответы на вторник?!	
 select doc_flow_out_client_out_attrs(3029)	
+
+!!!doc_flow_out_client_document_files удалять файл, когда удалили НАШЕ входящее письмо, а исход.клиента стало неотправленным!!!
+
+-Вывести таблицу application_document_files для администратора
+-При удалении регистрации, письмо клиента (входящее удаляется, а файлы application_document_files нет)
+
+
+-Заявление: ответственные лица, отдел не должен влиять на процент!
+!!! Контракт Услуга!!!
+!! Отчетность!!!
+
+
+
 
 - Выбрали недействительный серт, он отметился красным, потом сменили на нормальный - все равно остался красным
 

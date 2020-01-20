@@ -87,3 +87,5 @@ ManualList_View.prototype.HEAD_TITLE = "Список справок для ро�
 Manual_View.prototype.HEAD_TITLE = "Редактирование справки";
 
 ExpertiseProlongationList_View.prototype.HEAD_TITLE = "Продление сроков экспертизы";
+
+

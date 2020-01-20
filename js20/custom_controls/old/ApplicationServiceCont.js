@@ -63,18 +63,14 @@ function ApplicationServiceCont(id,options){
 					
 					var ctrl = self.getElement("expertise_type");
 					ctrl.setEnabled(cur_val);
-					/*
 					if(self.m_mainView.m_order010119){
 						self.getElement("exp_cost_eval_validity").setEnabled(cur_val);
 					}
-					*/
 					if (!cur_val){
 						ctrl.setValue(null);
-						/*
 						if(self.m_mainView.m_order010119){
 							self.getElement("exp_cost_eval_validity").setValue(false);
 						}
-						*/
 						self.onChangeExpertiseType();
 					}
 					else if (!ctrl.getValue()){
@@ -95,137 +91,59 @@ function ApplicationServiceCont(id,options){
 		})
 		);
 		
-		var expertise_types = [
-			new EditRadio(id+":grp:pd",{
-				"name":"expertise_type",
-				"value":"pd",
-				"title":"Государственная экспертиза проектной документации",
-				"labelCaption":"ПД",
-				"labelAlign":"right",
-				"labelClassName":"",
-				"contClassName":"row",
-				"editContClassName":"custom-edit-cont",
-				"className":"styled",
-				"enabled":false,
-				"events":{
-					"change":function(){
-						self.onChangeExpertiseType();
-					}
-				}					
-			}),
-			new EditRadio(id+":grp:eng_survey",{
-				"name":"expertise_type",
-				"value":"eng_survey",
-				"title":"Государственная экспертиза результатов инженерных изысканий",
-				"labelCaption":"РИИ",
-				"labelAlign":"right",
-				"labelClassName":"",
-				"contClassName":"row",
-				"editContClassName":"",
-				"className":"",
-				"events":{
-					"change":function(){
-						self.onChangeExpertiseType();
-					}
-				}
-			}),
-			new EditRadio(id+":grp:pd_eng_survey",{
-				"name":"expertise_type",
-				"value":"pd_eng_survey",
-				"labelCaption":"ПД и РИИ",
-				"title":"Государственная экспертиза проектной документации и результатов инженерных изысканий",
-				"labelAlign":"right",
-				"labelClassName":"",
-				"contClassName":"row",
-				"editContClassName":"",
-				"className":"",
-				"events":{
-					"change":function(){
-						self.onChangeExpertiseType();
-					}
-				}
-			})				
-		];
-		if(self.m_mainView.m_order010119){
-			expertise_types.push(
-				new EditRadio(id+":grp:cost_eval_validity",{
-					"name":"expertise_type",
-					"value":"cost_eval_validity",
-					"labelCaption":"Достоверность",
-					"title":"Государственная экспертиза достоверности сметной стоимости",
-					"labelAlign":"right",
-					"labelClassName":"",
-					"contClassName":"row",
-					"editContClassName":"",
-					"className":"",
-					"events":{
-						"change":function(){
-							self.onChangeExpertiseType();
-						}
-					}
-				})				
-			);
-			expertise_types.push(
-				new EditRadio(id+":grp:cost_eval_validity_pd",{
-					"name":"expertise_type",
-					"value":"cost_eval_validity_pd",
-					"labelCaption":"ПД и Достоверность",
-					"title":"Государственная экспертиза проектной документации и достоверности сметной стоимости",
-					"labelAlign":"right",
-					"labelClassName":"",
-					"contClassName":"row",
-					"editContClassName":"",
-					"className":"",
-					"events":{
-						"change":function(){
-							self.onChangeExpertiseType();
-						}
-					}
-				})			
-			);
-				/*				
-				,new EditRadio(id+":grp:cost_eval_validity_eng_survey",{
-					"name":"expertise_type",
-					"value":"cost_eval_validity_eng_survey",
-					"labelCaption":"РИИ и Достоверность",
-					"title":"Государственная экспертиза результатов инженерных изысканий и достоверности сметной стоимости",
-					"labelAlign":"right",
-					"labelClassName":"",
-					"contClassName":"row",
-					"editContClassName":"",
-					"className":"",
-					"events":{
-						"change":function(){
-							self.onChangeExpertiseType();
-						}
-					}
-				})
-				*/				
-			
-			expertise_types.push(
-				new EditRadio(id+":grp:cost_eval_validity_pd_eng_survey",{
-					"name":"expertise_type",
-					"value":"cost_eval_validity_pd_eng_survey",
-					"labelCaption":"ПД, РИИ и Достоверность",
-					"title":"Государственная экспертиза проектной документации, результатов инженерных изысканий, достоверности сметной стоимости",
-					"labelAlign":"right",
-					"labelClassName":"",
-					"contClassName":"row",
-					"editContClassName":"",
-					"className":"",
-					"events":{
-						"change":function(){
-							self.onChangeExpertiseType();
-						}
-					}
-				})				
-			);
-		}
 		this.addElement(new EditRadioGroup(id+":expertise_type",{
 			"inline":true,
 			"contClassName":"",
 			"enabled":false,
-			"elements":expertise_types
+			"elements":[
+				new EditRadio(id+":grp:pd",{
+					"name":"expertise_type",
+					"value":"pd",
+					"labelCaption":"ПД",
+					"labelAlign":"right",
+					"labelClassName":"",
+					"contClassName":"row",
+					"editContClassName":"custom-edit-cont",
+					"className":"styled",
+					"enabled":false,
+					"events":{
+						"change":function(){
+							self.onChangeExpertiseType();
+						}
+					}					
+				}),
+				new EditRadio(id+":grp:eng_survey",{
+					"name":"expertise_type",
+					"value":"eng_survey",
+					"labelCaption":"РИИ",
+					"labelAlign":"right",
+					"labelClassName":"",
+					"contClassName":"row",
+					"editContClassName":"",
+					"className":"",
+					"events":{
+						"change":function(){
+							self.onChangeExpertiseType();
+						}
+					}
+				}),
+				new EditRadio(id+":grp:pd_eng_survey",{
+					"name":"expertise_type",
+					"value":"pd_eng_survey",
+					"labelCaption":"ПД и РИИ",
+					"labelAlign":"right",
+					"labelClassName":"",
+					"contClassName":"row",
+					"editContClassName":"",
+					"className":"",
+					"events":{
+						"change":function(){
+							self.onChangeExpertiseType();
+						}
+					}
+				})				
+				
+			]
 		})
 		);
 		
@@ -347,7 +265,6 @@ function ApplicationServiceCont(id,options){
 			}));
 		}
 		else{
-			/*
 			this.addElement(new ServiceCheckBox(id+":exp_cost_eval_validity",{
 				"inline":true,
 				"enabled":false,
@@ -381,7 +298,7 @@ function ApplicationServiceCont(id,options){
 					}				
 				}
 			}));
-			*/
+		
 		}		
 		this.addElement(new ServiceCheckBox(id+":audit",{
 			"inline":true,
@@ -503,36 +420,22 @@ ApplicationServiceCont.prototype.onChangeExpertiseType = function(){
 	var cur_val = this.getElement("expertise_type").getValue();
 	var doc_types_for_remove = [];
 	//pd
-	if (
-	(this.m_mainView.m_prevExpertiseType=="pd" || this.m_mainView.m_prevExpertiseType=="pd_eng_survey" || this.m_mainView.m_prevExpertiseType=="cost_eval_validity_pd" || this.m_mainView.m_prevExpertiseType=="cost_eval_validity_pd_eng_survey")
-	&& (cur_val=="eng_survey"||cur_val=="cost_eval_validity_eng_survey"||cur_val=="cost_eval_validity")
+	if ((this.m_mainView.m_prevExpertiseType=="pd" || this.m_mainView.m_prevExpertiseType=="pd_eng_survey") && cur_val=="eng_survey"
 	&& this.m_mainView.m_documentTabs["pd"].control && this.m_mainView.m_documentTabs["pd"].control.getTotalFileCount()
 	){
 		doc_types_for_remove.push("pd");
 	}
 	//eng_survey
-	else if (
-	(this.m_mainView.m_prevExpertiseType=="eng_survey" || this.m_mainView.m_prevExpertiseType=="pd_eng_survey" || this.m_mainView.m_prevExpertiseType=="cost_eval_validity_eng_survey" || this.m_mainView.m_prevExpertiseType=="cost_eval_validity_pd_eng_survey")
-	&& (cur_val=="pd"||cur_val=="cost_eval_validity"||cur_val=="cost_eval_validity_pd")
+	else if ((this.m_mainView.m_prevExpertiseType=="eng_survey" || this.m_mainView.m_prevExpertiseType=="pd_eng_survey") && cur_val=="pd"
 	&& this.m_mainView.m_documentTabs["eng_survey"].control && this.m_mainView.m_documentTabs["eng_survey"].control.getTotalFileCount()
 	){
 		doc_types_for_remove.push("eng_survey");
-	}
-
-	//cost_eval_validity
-	else if (
-	this.m_mainView.m_order010119
-	&&(this.m_mainView.m_prevExpertiseType=="cost_eval_validity" || this.m_mainView.m_prevExpertiseType=="cost_eval_validity_pd"||this.m_mainView.m_prevExpertiseType=="cost_eval_validity_eng_survey" || this.m_mainView.m_prevExpertiseType=="cost_eval_validity_pd_eng_survey")
-	&& (cur_val=="pd"||cur_val=="pd_eng_survey"||cur_val=="eng_survey")
-	&& this.m_mainView.m_documentTabs["cost_eval_validity"].control && this.m_mainView.m_documentTabs["cost_eval_validity"].control.getTotalFileCount()
-	){
-		doc_types_for_remove.push("cost_eval_validity");
 	}
 	
 	var self = this;
 	this.m_mainView.removeDocumentTypeWithWarn(doc_types_for_remove,
 		function(){
-			var pd_usage_info_vis = (cur_val=="pd"||cur_val=="pd_eng_survey"||cur_val=="cost_eval_validity_pd"||cur_val=="cost_eval_validity_pd_eng_survey");
+			var pd_usage_info_vis = (cur_val=="pd"||cur_val=="pd_eng_survey");
 			self.m_mainView.getElement("pd_usage_info").setVisible(pd_usage_info_vis);
 			self.m_mainView.getElement("pd_usage_info").setAttr("percentcalc",pd_usage_info_vis);
 			self.m_mainView.toggleDocTypeVis();

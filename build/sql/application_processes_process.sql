@@ -86,6 +86,13 @@ BEGIN
 						WHEN app.expertise_type='eng_survey'::expertise_types THEN 'РИИ'
 						WHEN app.expertise_type='pd_eng_survey'::expertise_types AND app.exp_cost_eval_validity THEN 'ПД и РИИ, Достоверность'
 						WHEN app.expertise_type='pd_eng_survey'::expertise_types THEN 'ПД и РИИ'
+						
+						--17/01/2020
+						WHEN app.expertise_type='cost_eval_validity'::expertise_types THEN 'Достоверность'
+						WHEN app.expertise_type='cost_eval_validity_pd'::expertise_types THEN 'ПД, Достоверность'
+						WHEN app.expertise_type='cost_eval_validity_eng_survey'::expertise_types THEN 'РИИ, Достоверность'
+						WHEN app.expertise_type='cost_eval_validity_pd_eng_survey'::expertise_types THEN 'ПД, РИИ, Достоверность'
+						
 						WHEN app.cost_eval_validity THEN 'Достоверность'
 						WHEN app.modification THEN 'Модификация'
 						WHEN app.audit THEN 'Аудит'
@@ -124,6 +131,13 @@ BEGIN
 					WHEN app.expertise_type='eng_survey'::expertise_types THEN 'РИИ'
 					WHEN app.expertise_type='pd_eng_survey'::expertise_types AND app.exp_cost_eval_validity  THEN 'ПД и РИИ, Достоверность'
 					WHEN app.expertise_type='pd_eng_survey'::expertise_types THEN 'ПД и РИИ'
+
+					--17/01/2020
+					WHEN app.expertise_type='cost_eval_validity'::expertise_types THEN 'Достоверность'
+					WHEN app.expertise_type='cost_eval_validity_pd'::expertise_types THEN 'ПД, Достоверность'
+					WHEN app.expertise_type='cost_eval_validity_eng_survey'::expertise_types THEN 'РИИ, Достоверность'
+					WHEN app.expertise_type='cost_eval_validity_pd_eng_survey'::expertise_types THEN 'ПД, РИИ, Достоверность'
+					
 					WHEN app.cost_eval_validity THEN 'Достоверность'
 					WHEN app.modification THEN 'Модификация'
 					WHEN app.audit THEN 'Аудит'
@@ -137,6 +151,13 @@ BEGIN
 					WHEN app.expertise_type='eng_survey'::expertise_types THEN 'экспертизу результатов инженерных изысканий'
 					WHEN app.expertise_type='pd_eng_survey'::expertise_types THEN 'экспертизу проектной документации и экспертизу результатов инженерных изысканий'
 					WHEN app.expertise_type='pd_eng_survey'::expertise_types AND app.exp_cost_eval_validity THEN 'экспертизу проектной документации, экспертизу результатов инженерных изысканий, проверку достоверности определения сметной стоимости'
+					
+					--17/01/2020
+					WHEN app.expertise_type='cost_eval_validity'::expertise_types THEN 'экспертизу проверки достоверености сметной стоимости'
+					WHEN app.expertise_type='cost_eval_validity_pd'::expertise_types THEN 'экспертизу проектной документации и проверки достоверености сметной стоимости'
+					WHEN app.expertise_type='cost_eval_validity_eng_survey'::expertise_types THEN 'экспертизу результатов инженерных изысканий и проверки достоверености сметной стоимости'
+					WHEN app.expertise_type='cost_eval_validity_pd_eng_survey'::expertise_types THEN 'экспертизу проектной документации, результатов инженерных изысканий и проверки достоверености сметной стоимости'
+					
 					WHEN app.cost_eval_validity THEN 'проверку достоверности определения сметной стоимости'
 					WHEN app.modification THEN 'модификацию.'
 					WHEN app.audit THEN 'аудит'

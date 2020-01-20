@@ -202,12 +202,12 @@ tr.grid_foot{
 }
 
 .service-type-out{	
-	min-height: 255px;
+	min-height: 370px;//255
 }
 .service-type{
 	border:1px solid black;
 	margin:6px 3px;
-	min-height: 255px;
+	min-height: 370px;//255
 	font-size:70%;
 }
 .service-type-en{

@@ -1318,6 +1318,7 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/DocFlowTaskShortList_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ContractList_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ContractPdList_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ContractPdCostValidEvalList_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ContractCostEvalValidityList_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ContractModificationList_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ContractAuditList_View.js'));

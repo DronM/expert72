@@ -296,12 +296,12 @@ xmlns:w="http://schemas.microsoft.com/office/word/2003/wordml">
 
 <xsl:template name="doc_head">
 	<xsl:choose>
-	<xsl:when test="row/expertise_type='pd' and not(row/exp_cost_eval_validity='t')"><xsl:text>Просим Вас провести государственную экспертизу проектной документации</xsl:text></xsl:when>
-	<xsl:when test="row/expertise_type='pd' and row/exp_cost_eval_validity='t'"><xsl:text>Просим Вас провести государственную экспертизу проектной документации и проверку достоверености сметной стоимости</xsl:text></xsl:when>
-	<xsl:when test="row/expertise_type='pd_eng_survey' and not(row/exp_cost_eval_validity='t')"><xsl:text>Просим Вас провести государственную экспертизу проектной документации и результатов инженерных изысканий</xsl:text></xsl:when>
-	<xsl:when test="row/expertise_type='pd_eng_survey' and row/exp_cost_eval_validity='t'"><xsl:text>Просим Вас провести государственную экспертизу проектной документации, результатов инженерных изысканий, проверку достоверености сметной стоимости</xsl:text></xsl:when>
-	<xsl:when test="row/expertise_type='eng_survey' and not(row/exp_cost_eval_validity='t')"><xsl:text>Просим Вас провести государственную экспертизу результатов инженерных изысканий</xsl:text></xsl:when>
-	<xsl:when test="row/expertise_type='eng_survey' and row/exp_cost_eval_validity='t'"><xsl:text>Просим Вас провести государственную экспертизу результатов инженерных изысканий и проверку достоверености сметной стоимости</xsl:text></xsl:when>
+	<xsl:when test="row/expertise_type='pd'"><xsl:text>Просим Вас провести государственную экспертизу проектной документации гарантируется.</xsl:text></xsl:when>
+	<xsl:when test="row/expertise_type='eng_survey'"><xsl:text>Просим Вас провести государственную экспертизу результатов инженерных изысканий.</xsl:text></xsl:when>
+	<xsl:when test="row/expertise_type='cost_eval_validity'"><xsl:text>Просим Вас провести государственную экспертизу проверки достоверености сметной стоимости.</xsl:text></xsl:when>
+	<xsl:when test="row/expertise_type='cost_eval_validity_pd'"><xsl:text>Просим Вас провести государственную экспертизу проектной документации и экспертизу проверки достоверености сметной стоимости.</xsl:text></xsl:when>
+	<xsl:when test="row/expertise_type='cost_eval_validity_eng_survey'"><xsl:text>Просим Вас провести государственную экспертизы результатов инженерных изысканий и экспертизу проверки достоверености сметной стоимости.</xsl:text></xsl:when>
+	<xsl:when test="row/expertise_type='cost_eval_validity_pd_eng_survey'"><xsl:text>Просим Вас провести государственную экспертизы проектной документации, экспертизу результатов инженерных изысканий и экспертизу проверки достоверености сметной стоимости.</xsl:text></xsl:when>
 	<xsl:otherwise></xsl:otherwise>
 	</xsl:choose>
 </xsl:template>

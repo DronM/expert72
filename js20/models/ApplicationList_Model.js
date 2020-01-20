@@ -54,7 +54,7 @@ function ApplicationList_Model(options){
 	filed_options.autoInc = false;	
 	
 	options.fields.expertise_type = new FieldEnum("expertise_type",filed_options);
-	filed_options.enumValues = 'pd,eng_survey,pd_eng_survey';
+	filed_options.enumValues = 'pd,eng_survey,pd_eng_survey,cost_eval_validity,cost_eval_validity_pd,cost_eval_validity_eng_survey,cost_eval_validity_pd_eng_survey';
 		
 	
 	var filed_options = {};

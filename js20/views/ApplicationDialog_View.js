@@ -29,7 +29,7 @@ function ApplicationDialog_View(id,options){
 	
 	options.templateOptions = options.templateOptions || {};
 
-	this.m_order010119 = false;//always!!! 17/01/19
+	this.m_order010119 = true;
 
 	//все прочие папки		
 	var doc_folders;
@@ -37,6 +37,11 @@ function ApplicationDialog_View(id,options){
 	if (options.model && (options.model.getRowIndex()>=0 || options.model.getNextRow()) ){			
 		options.templateOptions.is_admin = (role_id=="admin");
 		options.readOnly = (options.model.getField("application_state").isSet() && options.model.getFieldValue("application_state")!="filling" && options.model.getFieldValue("application_state")!="correcting");
+		
+		if (options.model.getFieldValue("create_dt").getTime()<DateHelper.strtotime("2020-01-17").getTime() && options.readOnly){
+			this.m_order010119 = false;
+		}
+		
 		/*
 		if (!options.model.getFieldValue("exp_cost_eval_validity")&&options.readOnly&&options.model.getFieldValue("create_dt")<(new Date(2019,0,1))){
 			this.m_order010119 = false;
@@ -277,7 +282,7 @@ function ApplicationDialog_View(id,options){
 		this.addElement(new EditFile(id+":app_print_expertise",{
 			"attrs":{"percentCalc":"true"},
 			"labelClassName": "control-label percentcalc "+bs_print,
-			"labelCaption":"Заявление на проведение государственной экспертизы (ПД,РИИ)",
+			"labelCaption":"Заявление на проведение государственной экспертизы (ПД,РИИ,Достоверность)",
 			"template":window.getApp().getTemplate("EditFileApp"),
 			"addControls":function(){
 				this.addElement(new ButtonCtrl(this.getId()+":printAppWord",{
@@ -668,7 +673,7 @@ function ApplicationDialog_View(id,options){
 		r_binds.push(new DataBinding({"control":this.getElement("app_print_modification")}));
 	}
 	else{
-		r_binds.push(new DataBinding({"control":this.getElement("service_cont").getElement("exp_cost_eval_validity"),"fieldId":"exp_cost_eval_validity"}));
+		//r_binds.push(new DataBinding({"control":this.getElement("service_cont").getElement("exp_cost_eval_validity"),"fieldId":"exp_cost_eval_validity"}));
 	}
 	if (options.templateOptions.is_admin){
 		r_binds.push(new DataBinding({"control":this.getElement("users_ref")}));
@@ -715,7 +720,7 @@ function ApplicationDialog_View(id,options){
 		w_binds.push(new CommandBinding({"control":this.getElement("service_cont").getElement("primary_application").getElement("primary_reg_number"),"fieldId":"modif_primary_application_reg_number"}));
 	}
 	else{
-		w_binds.push(new CommandBinding({"control":this.getElement("service_cont").getElement("exp_cost_eval_validity"),"fieldId":"exp_cost_eval_validity"}));
+		//w_binds.push(new CommandBinding({"control":this.getElement("service_cont").getElement("exp_cost_eval_validity"),"fieldId":"exp_cost_eval_validity"}));
 	}
 	this.setWriteBindings(w_binds);
 	
@@ -870,7 +875,12 @@ ApplicationDialog_View.prototype.onGetData = function(resp,cmd){
 		this.getElement("app_print_audit").reset();
 	}
 	
-	var do_expertise = (m.getFieldValue("expertise_type")=="pd" || m.getFieldValue("expertise_type")=="eng_survey" || m.getFieldValue("expertise_type")=="pd_eng_survey");
+	var do_expertise = (m.getFieldValue("expertise_type")=="pd" || m.getFieldValue("expertise_type")=="eng_survey" || m.getFieldValue("expertise_type")=="pd_eng_survey"
+		 || m.getFieldValue("expertise_type")=="cost_eval_validity"
+		 || m.getFieldValue("expertise_type")=="cost_eval_validity_pd"
+		 || m.getFieldValue("expertise_type")=="cost_eval_validity_pd_eng_survey"
+		 || m.getFieldValue("expertise_type")=="cost_eval_validity_eng_survey"
+		 );
 	this.getElement("service_cont").getElement("expertise").setValue(do_expertise);
 	
 	this.calcFillPercent();
@@ -1020,6 +1030,24 @@ ApplicationDialog_View.prototype.removeDocumentTypeWithWarn = function(docTypesF
 							//prints
 							for (var i=0;i<docTypesForRemove.length;i++){
 								var print_id;
+								if(
+								docTypesForRemove[i]=="pd"
+								||docTypesForRemove[i]=="eng_survey"
+								||(self.m_order010119&&docTypesForRemove[i]=="cost_eval_validity")
+								){
+									print_id = "app_print_expertise";
+								}
+								else if(!self.m_order010119&&docTypesForRemove[i]=="cost_eval_validity"){
+									print_id = "app_print_cost_eval";
+								}
+								else if(docTypesForRemove[i]=="modification"){
+									print_id = "app_print_modification";
+								}
+								else if(docTypesForRemove[i]=="audit"){
+									print_id = "app_print_audit";
+								}
+								
+								/*
 								switch(docTypesForRemove[i]) {
 									case "pd":
 									case "eng_survey":
@@ -1038,7 +1066,8 @@ ApplicationDialog_View.prototype.removeDocumentTypeWithWarn = function(docTypesF
 										print_id = "";
 										break;
 								}
-								if(print_id)self.getElement(print_id).reset();
+								*/
+								if(print_id&&self.getElement(print_id))self.getElement(print_id).reset();
 							}
 							onYes();
 						},
@@ -1444,3 +1473,17 @@ ApplicationDialog_View.prototype.getUploaderOptions = function(){
 	return {"allowNewFileAdd":true};
 }
 
+/*
+ApplicationDialog_View.prototype.getNewOrder = function(){
+	var res = true;
+	var m = this.getModel();
+	if(m){
+		var dt = m.getFieldValue("create_dt");
+		if(dt){
+			if (dt.getTime()<DateHelper.strtotime("2020-01-17").getTime() && this.m_readOnly){
+				res = false;
+			}
+		}
+	}
+}
+*/

@@ -55,7 +55,7 @@ class Contract_Controller extends ControllerSQL{
 				,array());
 		$pm->addParam($param);
 		
-				$param = new FieldExtEnum('expertise_type',',','pd,eng_survey,pd_eng_survey'
+				$param = new FieldExtEnum('expertise_type',',','pd,eng_survey,pd_eng_survey,cost_eval_validity,cost_eval_validity_pd,cost_eval_validity_eng_survey,cost_eval_validity_pd_eng_survey'
 				,array());
 		$pm->addParam($param);
 		
@@ -266,7 +266,7 @@ class Contract_Controller extends ControllerSQL{
 			));
 			$pm->addParam($param);
 		
-				$param = new FieldExtEnum('expertise_type',',','pd,eng_survey,pd_eng_survey'
+				$param = new FieldExtEnum('expertise_type',',','pd,eng_survey,pd_eng_survey,cost_eval_validity,cost_eval_validity_pd,cost_eval_validity_eng_survey,cost_eval_validity_pd_eng_survey'
 				,array(
 			));
 			$pm->addParam($param);
@@ -563,6 +563,21 @@ class Contract_Controller extends ControllerSQL{
 
 			
 		$pm = new PublicMethod('get_pd_list');
+		
+		$pm->addParam(new FieldExtInt('count'));
+		$pm->addParam(new FieldExtInt('from'));
+		$pm->addParam(new FieldExtString('cond_fields'));
+		$pm->addParam(new FieldExtString('cond_sgns'));
+		$pm->addParam(new FieldExtString('cond_vals'));
+		$pm->addParam(new FieldExtString('cond_ic'));
+		$pm->addParam(new FieldExtString('ord_fields'));
+		$pm->addParam(new FieldExtString('ord_directs'));
+		$pm->addParam(new FieldExtString('field_sep'));
+
+		$this->addPublicMethod($pm);
+
+			
+		$pm = new PublicMethod('get_pd_cost_valid_eval_list');
 		
 		$pm->addParam(new FieldExtInt('count'));
 		$pm->addParam(new FieldExtInt('from'));
@@ -1186,6 +1201,27 @@ class Contract_Controller extends ControllerSQL{
 	
 	public function get_pd_list($pm){
 		$this->get_list_on_type($pm,'pd');
+	}
+
+	public function get_pd_cost_valid_eval_list($pm){
+		$cond_fields = $pm->getParamValue('cond_fields');
+		$cond_sgns = $pm->getParamValue('cond_sgns');
+		$cond_vals = $pm->getParamValue('cond_vals');
+		$cond_ic = $pm->getParamValue('cond_ic');
+		$field_sep = $pm->getParamValue('field_sep');
+		$field_sep = !is_null($field_sep)? $field_sep:',';
+		
+		$cond_fields = $cond_fields? $cond_fields.$field_sep : '';
+		$cond_sgns = $cond_sgns? $cond_sgns.$field_sep : '';
+		$cond_vals = $cond_vals? $cond_vals.$field_sep : '';
+		$cond_ic = $cond_ic? $cond_ic.$field_sep : '';
+		
+		$pm->setParamValue('cond_fields',$cond_fields.'document_type'.$field_sep.'exp_cost_eval_validity');
+		$pm->setParamValue('cond_sgns',$cond_sgns.'e'.$field_sep.'e');
+		$pm->setParamValue('cond_vals',$cond_vals.'pd'.$field_sep.'1');
+		$pm->setParamValue('cond_ic',$cond_ic.'0'.$field_sep.'0');
+		
+		$this->get_list($pm);
 	}
 
 	public function get_eng_survey_list($pm){

@@ -31,6 +31,7 @@ function Contract_Controller(options){
 	this.addGetList();
 	this.addComplete();
 	this.add_get_pd_list();
+	this.add_get_pd_cost_valid_eval_list();
 	this.add_get_eng_survey_list();
 	this.add_get_cost_eval_validity_list();
 	this.add_get_modification_list();
@@ -97,7 +98,7 @@ extend(Contract_Controller,ControllerObjServer);
 	
 	var options = {};
 		
-	options.enumValues = 'pd,eng_survey,pd_eng_survey';
+	options.enumValues = 'pd,eng_survey,pd_eng_survey,cost_eval_validity,cost_eval_validity_pd,cost_eval_validity_eng_survey,cost_eval_validity_pd_eng_survey';
 	var field = new FieldEnum("expertise_type",options);
 	
 	pm.addField(field);
@@ -486,7 +487,7 @@ extend(Contract_Controller,ControllerObjServer);
 	
 	var options = {};
 		
-	options.enumValues = 'pd,eng_survey,pd_eng_survey';
+	options.enumValues = 'pd,eng_survey,pd_eng_survey,cost_eval_validity,cost_eval_validity_pd,cost_eval_validity_eng_survey,cost_eval_validity_pd_eng_survey';
 	
 	var field = new FieldEnum("expertise_type",options);
 	
@@ -1076,6 +1077,23 @@ extend(Contract_Controller,ControllerObjServer);
 			Contract_Controller.prototype.add_get_pd_list = function(){
 	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('get_pd_list',opts);
+	
+	pm.addField(new FieldInt(this.PARAM_COUNT));
+	pm.addField(new FieldInt(this.PARAM_FROM));
+	pm.addField(new FieldString(this.PARAM_COND_FIELDS));
+	pm.addField(new FieldString(this.PARAM_COND_SGNS));
+	pm.addField(new FieldString(this.PARAM_COND_VALS));
+	pm.addField(new FieldString(this.PARAM_COND_ICASE));
+	pm.addField(new FieldString(this.PARAM_ORD_FIELDS));
+	pm.addField(new FieldString(this.PARAM_ORD_DIRECTS));
+	pm.addField(new FieldString(this.PARAM_FIELD_SEP));
+
+	this.addPublicMethod(pm);
+}
+
+			Contract_Controller.prototype.add_get_pd_cost_valid_eval_list = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('get_pd_cost_valid_eval_list',opts);
 	
 	pm.addField(new FieldInt(this.PARAM_COUNT));
 	pm.addField(new FieldInt(this.PARAM_FROM));

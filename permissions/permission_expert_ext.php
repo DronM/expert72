@@ -86,6 +86,8 @@ $permissions = array();
 		
 			$permissions['Contract_Controller_get_pd_list']=TRUE;
 		
+			$permissions['Contract_Controller_get_pd_cost_valid_eval_list']=TRUE;
+		
 			$permissions['Contract_Controller_get_eng_survey_list']=TRUE;
 		
 			$permissions['Contract_Controller_get_cost_eval_validity_list']=TRUE;

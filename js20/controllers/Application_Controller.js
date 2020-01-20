@@ -97,7 +97,7 @@ extend(Application_Controller,ControllerObjServer);
 	
 	var options = {};
 		
-	options.enumValues = 'pd,eng_survey,pd_eng_survey';
+	options.enumValues = 'pd,eng_survey,pd_eng_survey,cost_eval_validity,cost_eval_validity_pd,cost_eval_validity_eng_survey,cost_eval_validity_pd_eng_survey';
 	var field = new FieldEnum("expertise_type",options);
 	
 	pm.addField(field);
@@ -378,7 +378,7 @@ extend(Application_Controller,ControllerObjServer);
 	
 	var options = {};
 		
-	options.enumValues = 'pd,eng_survey,pd_eng_survey';
+	options.enumValues = 'pd,eng_survey,pd_eng_survey,cost_eval_validity,cost_eval_validity_pd,cost_eval_validity_eng_survey,cost_eval_validity_pd_eng_survey';
 	
 	var field = new FieldEnum("expertise_type",options);
 	

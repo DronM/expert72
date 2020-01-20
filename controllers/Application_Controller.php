@@ -83,7 +83,7 @@ class Application_Controller extends ControllerSQL{
 				,array());
 		$pm->addParam($param);
 		
-				$param = new FieldExtEnum('expertise_type',',','pd,eng_survey,pd_eng_survey'
+				$param = new FieldExtEnum('expertise_type',',','pd,eng_survey,pd_eng_survey,cost_eval_validity,cost_eval_validity_pd,cost_eval_validity_eng_survey,cost_eval_validity_pd_eng_survey'
 				,array());
 		$pm->addParam($param);
 		$param = new FieldExtBool('cost_eval_validity'
@@ -251,7 +251,7 @@ class Application_Controller extends ControllerSQL{
 			));
 			$pm->addParam($param);
 		
-				$param = new FieldExtEnum('expertise_type',',','pd,eng_survey,pd_eng_survey'
+				$param = new FieldExtEnum('expertise_type',',','pd,eng_survey,pd_eng_survey,cost_eval_validity,cost_eval_validity_pd,cost_eval_validity_eng_survey,cost_eval_validity_pd_eng_survey'
 				,array(
 			));
 			$pm->addParam($param);
@@ -1973,12 +1973,17 @@ class Application_Controller extends ControllerSQL{
 					throw new Exception('Отправка заявлений только по достоверности запрещена!');
 				}				
 				
-				// 27/12 - ЗАПРЕТ!!! - УБАРЛ 17/01/19
+				// 27/12/19 - ЗАПРЕТ!!! - УБАРЛ 17/01/19
 				/*
 				if ($ar['cost_eval_validity']=='t' &&$old_state!='correcting'){
 					throw new Exception('Отправка заявлений по достоверности запрещена!');
 				}				
 				*/
+
+				// 13/01/20 - ЗАПРЕТ отправки достоверности!!!
+				if ($ar['cost_eval_validity']=='t' && $old_state!='correcting'){
+					throw new Exception('Постановлением правительства РФ от 31.12.2019г. №1948 внесены изменения в Порядок проведения государственной экспертизы проектной документации и (или)  результатов инженерных изысканий, утвержденный Постановлением Правительства РФ 145 от 05.03.2007г. Просим Вас ознакомиться с указанными изменениями и учитывать их при подаче заявлений на получение государственных услуг.');
+				}				
 				
 				if (
 				($ar['expertise_type'] && $ar['app_print_expertise_set']!='t')
@@ -3021,7 +3026,7 @@ class Application_Controller extends ControllerSQL{
 				f.file_path,
 				f.document_type
 			FROM application_document_files AS f
-			WHERE f.application_id=%d AND coalesce(f.deleted,FALSE)=FALSE AND (f.document_type='pd' OR f.document_type='eng_survey') %s
+			WHERE f.application_id=%d AND coalesce(f.deleted,FALSE)=FALSE AND (f.document_type='pd' OR f.document_type='eng_survey' OR f.document_type='cost_eval_validity') %s
 			ORDER BY f.document_type,f.document_id,f.file_name",
 		$this->getExtDbVal($pm,'id'),
 		($_SESSION['role_id']=='client')? (' AND (SELECT t.user_id FROM applications t WHERE t.id=f.application_id)='.$_SESSION['user_id']):''
@@ -3269,9 +3274,10 @@ class Application_Controller extends ControllerSQL{
 			WHERE
 				t.construction_type_id=(SELECT contr_data.construction_type_id FROM contr_data)
 				AND (
-					(t.document_type='pd' AND (SELECT contr_data.expertise_type FROM contr_data) IN ('pd','pd_eng_survey') )
-					OR (t.document_type='eng_survey' AND (SELECT contr_data.expertise_type FROM contr_data) IN ('eng_survey','pd_eng_survey') )
+					(t.document_type='pd' AND (SELECT contr_data.expertise_type FROM contr_data) IN ('pd','pd_eng_survey','cost_eval_validity_pd') )
+					OR (t.document_type='eng_survey' AND (SELECT contr_data.expertise_type FROM contr_data) IN ('eng_survey','pd_eng_survey','cost_eval_validity_eng_survey','cost_eval_validity_pd_eng_survey') )
 					OR (t.document_type='cost_eval_validity' AND (SELECT contr_data.cost_eval_validity FROM contr_data) )
+					OR (t.document_type='cost_eval_validity' AND (SELECT contr_data.expertise_type FROM contr_data) IN ('cost_eval_validity','cost_eval_validity_pd','cost_eval_validity_eng_survey','cost_eval_validity_pd_eng_survey') )
 					OR (t.document_type='modification' AND (SELECT contr_data.modification FROM contr_data) )
 					OR (t.document_type='audit' AND (SELECT contr_data.audit FROM contr_data) )
 				)",

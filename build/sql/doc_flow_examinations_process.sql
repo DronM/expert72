@@ -223,7 +223,7 @@ BEGIN
 					--applicant -->> client
 					UPDATE clients
 					SET
-						name		= v_app_applicant->>'name',
+						name		= substr(v_app_applicant->>'name',1,100),
 						name_full	= v_app_applicant->>'name_full',
 						ogrn		= v_app_applicant->>'ogrn',
 						inn		= v_app_applicant->>'inn',

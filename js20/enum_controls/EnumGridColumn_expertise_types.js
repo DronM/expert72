@@ -24,6 +24,14 @@ function EnumGridColumn_expertise_types(options){
 
 	options.multyLangValues["ru"]["pd_eng_survey"] = "Государственная экспертиза проектной документации и Государственная экспертиза результатов инженерных изысканий";
 
+	options.multyLangValues["ru"]["cost_eval_validity"] = "Государственная экспертиза достоверности сметной стоимости";
+
+	options.multyLangValues["ru"]["cost_eval_validity_pd"] = "Государственная экспертиза проектной документации и Государственная экспертиза достоверности сметной стоимости";
+
+	options.multyLangValues["ru"]["cost_eval_validity_eng_survey"] = "Государственная экспертиза результатов инженерных изысканий и Государственная экспертиза достоверности сметной стоимости";
+
+	options.multyLangValues["ru"]["cost_eval_validity_pd_eng_survey"] = "Государственная экспертиза проектной документации, Государственная экспертиза результатов инженерных изысканий, Государственная экспертиза достоверности сметной стоимости";
+
 	
 	options.ctrlClass = options.ctrlClass || Enum_expertise_types;
 	options.searchOptions = options.searchOptions || {};

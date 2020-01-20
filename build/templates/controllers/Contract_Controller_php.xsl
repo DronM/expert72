@@ -281,6 +281,27 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		$this->get_list_on_type($pm,'pd');
 	}
 
+	public function get_pd_cost_valid_eval_list($pm){
+		$cond_fields = $pm->getParamValue('cond_fields');
+		$cond_sgns = $pm->getParamValue('cond_sgns');
+		$cond_vals = $pm->getParamValue('cond_vals');
+		$cond_ic = $pm->getParamValue('cond_ic');
+		$field_sep = $pm->getParamValue('field_sep');
+		$field_sep = !is_null($field_sep)? $field_sep:',';
+		
+		$cond_fields = $cond_fields? $cond_fields.$field_sep : '';
+		$cond_sgns = $cond_sgns? $cond_sgns.$field_sep : '';
+		$cond_vals = $cond_vals? $cond_vals.$field_sep : '';
+		$cond_ic = $cond_ic? $cond_ic.$field_sep : '';
+		
+		$pm->setParamValue('cond_fields',$cond_fields.'document_type'.$field_sep.'exp_cost_eval_validity');
+		$pm->setParamValue('cond_sgns',$cond_sgns.'e'.$field_sep.'e');
+		$pm->setParamValue('cond_vals',$cond_vals.'pd'.$field_sep.'1');
+		$pm->setParamValue('cond_ic',$cond_ic.'0'.$field_sep.'0');
+		
+		$this->get_list($pm);
+	}
+
 	public function get_eng_survey_list($pm){
 		$this->get_list_on_type($pm,'eng_survey');
 	}
