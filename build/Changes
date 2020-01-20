@@ -568,6 +568,8 @@ select * from applications_dialog where application_state='filling' and cost_eva
 4) не показывает файлы в старых заявлениях по достоверности  DocumentDialog_View.prototype.toggleDocTypeVis два раза устанавливает видимость вкладки
 	cost_eval_validity
 
+1.0.119
+1) Оставил отладочный косяк!!!
 
 Надо:
 !!! regl_application_deletion сделать отметку об удалении!!! поставить дату когда и больше не трогать!!!
