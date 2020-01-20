@@ -2,7 +2,7 @@
 <metadata owner="expert72">
 	<versions>
 		<version dateOpen="2017-09-27 12:09:48" dateClose="2017-12-08 10:12:08">1.001 
-		<lastBuild>2020-01-20 13:02:51</lastBuild></version>
+		<lastBuild>2020-01-20 13:07:33</lastBuild></version>
 		<version dateOpen="2017-12-08 11:12:01" dateClose="2017-12-08 11:12:04">1.002</version>
 		<version dateOpen="2017-12-08 11:12:20" dateClose="2017-12-08 11:12:20">1.0.3</version>
 		<version dateOpen="2017-12-12 11:12:07" dateClose="2017-12-12 11:12:07">1.0.4</version>
@@ -124,6 +124,7 @@
 		<version dateOpen="2020-01-20 12:01:44" dateClose="2020-01-20 12:01:45">1.0.121</version>
 		<version dateOpen="2020-01-20 12:01:59" dateClose="2020-01-20 13:01:00">1.0.122</version>
 		<version dateOpen="2020-01-20 13:01:02" dateClose="2020-01-20 13:01:03">1.0.123</version>
+		<version dateOpen="2020-01-20 13:01:04" dateClose="2020-01-20 13:01:07">1.0.124</version>
 	</versions>
 	<globalFilters>
 		<field id="user_id"/>
@@ -1126,6 +1127,7 @@
 			<field id="expertise_result_date" dataType="Date"/>
 			<field id="filled_percent" dataType="Int"/>
 			<field id="exp_cost_eval_validity" dataType="Bool"/>
+			<field id="update_dt" dataType="DateTimeTZ"/>
 			<globalFilter id="user_id"/>
 		</model>
 		<model id="ApplicationList" parent="ModelSQL" dataTable="applications_list" virtual="TRUE" baseModelId="Application">

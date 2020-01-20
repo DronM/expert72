@@ -561,6 +561,7 @@ function ApplicationDialog_Model(options){
 			
 			
 			
+			
 		ApplicationDialog_Model.superclass.constructor.call(this,id,options);
 }
 extend(ApplicationDialog_Model,ModelXML);

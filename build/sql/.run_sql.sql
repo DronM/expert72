@@ -1,9 +1,9 @@
--- VIEW: applications_dialog_lk
+-- VIEW: applications_dialog
 
---DROP VIEW contracts_dialog_lk;
---DROP VIEW applications_dialog_lk;
+--DROP VIEW contracts_dialog;
+--DROP VIEW applications_dialog;
 
-CREATE OR REPLACE VIEW applications_dialog_lk AS
+CREATE OR REPLACE VIEW applications_dialog AS
 	SELECT
 		d.id,
 		d.create_dt,
@@ -59,9 +59,9 @@ CREATE OR REPLACE VIEW applications_dialog_lk AS
 		ELSE NULL
 		END AS modif_primary_application,
 		
-		greatest(st.state,st_lk.state) AS application_state,
-		greatest(st.date_time,st_lk.date_time) AS application_state_dt,
-		greatest(st.end_date_time,st_lk.end_date_time) AS application_state_end_date,
+		st.state AS application_state,
+		st.date_time AS application_state_dt,
+		st.end_date_time AS application_state_end_date,
 		
 		array_to_json((
 			SELECT array_agg(l.documents) FROM document_templates_all_list_for_date(d.create_dt::date) l
@@ -111,7 +111,12 @@ CREATE OR REPLACE VIEW applications_dialog_lk AS
 		contr.expertise_result_number,
 		contr.expertise_result_date,
 		
-		d.filled_percent
+		d.filled_percent,
+		d.exp_cost_eval_validity,
+		
+		d.fund_percent,
+		
+		d.update_dt
 		
 	FROM applications AS d
 	LEFT JOIN offices ON offices.id=d.office_id
@@ -131,19 +136,6 @@ CREATE OR REPLACE VIEW applications_dialog_lk AS
 	) AS h_max ON h_max.application_id=d.id
 	LEFT JOIN application_processes st
 		ON st.application_id=h_max.application_id AND st.date_time = h_max.date_time
-		
-	--*****
-	LEFT JOIN (
-		SELECT
-			t.application_id,
-			max(t.date_time) AS date_time
-		FROM application_processes_lk t
-		GROUP BY t.application_id
-	) AS h_max_lk ON h_max_lk.application_id=d.id
-	LEFT JOIN application_processes_lk st_lk
-		ON st_lk.application_id=h_max_lk.application_id AND st_lk.date_time = h_max_lk.date_time	
-	--*****
-		
 	LEFT JOIN
 		(
 		SELECT
@@ -156,12 +148,15 @@ CREATE OR REPLACE VIEW applications_dialog_lk AS
 				)
 			) AS files
 		FROM
-		
 		(SELECT
-			adf.application_id,
-			adf.file_path AS folder_descr,
+			adf_files.application_id,
+			adf_files.file_path AS folder_descr,
 			app_fd.id AS folder_id,
-			json_agg(
+			json_agg(adf_files.files) AS files
+		FROM
+			(SELECT
+				adf.application_id,
+				adf.file_path,
 				json_build_object(
 					'file_id',adf.file_id,
 					'file_name',adf.file_name,
@@ -170,57 +165,62 @@ CREATE OR REPLACE VIEW applications_dialog_lk AS
 					'file_uploaded','true',
 					'file_path',adf.file_path,
 					'date_time',adf.date_time,
-					'signatures',--sign.signatures
-					CASE
-						WHEN sign.signatures IS NULL AND f_ver.file_id IS NOT NULL THEN
-							json_build_array(
-								json_build_object(
-									'sign_date_time',f_ver.date_time,
-									'check_result',f_ver.check_result,
-									'error_str',f_ver.error_str
+					'signatures',
+				
+					(WITH
+					sign AS (SELECT
+						json_agg(files_t.signatures) AS signatures
+					FROM
+						(SELECT
+							f_sig.file_id,
+							json_build_object(
+								'owner',u_certs.subject_cert,
+								'cert_from',u_certs.date_time_from,
+								'cert_to',u_certs.date_time_to,
+								'sign_date_time',f_sig.sign_date_time,
+								'check_result',ver.check_result,
+								'check_time',ver.check_time,
+								'error_str',ver.error_str
+							) AS signatures
+						FROM file_signatures AS f_sig
+						LEFT JOIN file_verifications AS ver ON ver.file_id=f_sig.file_id
+						LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id
+						WHERE f_sig.file_id=adf.file_id
+						ORDER BY f_sig.sign_date_time
+						) AS files_t
+					)
+					SELECT
+						CASE
+							WHEN (SELECT sign.signatures FROM sign) IS NULL AND f_ver.file_id IS NOT NULL THEN
+								json_build_array(
+									json_build_object(
+										'sign_date_time',f_ver.date_time,
+										'check_result',f_ver.check_result,
+										'error_str',f_ver.error_str
+									)
 								)
-							)
-						ELSE sign.signatures
-					END,
-					'file_signed_by_client',adf.file_signed_by_client,
-					'require_client_sig',app_fd.require_client_sig
-				)
-			) AS files
-		FROM application_document_files adf
-		LEFT JOIN application_doc_folders AS app_fd ON app_fd.name=adf.file_path
-		LEFT JOIN doc_flow_out AS adf_out ON adf_out.to_application_id=adf.application_id AND adf_out.doc_flow_type_id=(pdfn_doc_flow_types_app_resp()->'keys'->>'id')::int
-		--LEFT JOIN doc_flow_attachments AS adf_att ON adf_att.doc_type='doc_flow_out' AND adf_att.doc_id=adf_out.id AND adf_att.file_name=adf.file_name
-		LEFT JOIN file_verifications_lk AS f_ver ON f_ver.file_id=adf.file_id
-		LEFT JOIN (
-			SELECT
-				files_t.file_id,
-				json_agg(files_t.signatures) AS signatures
-			FROM
-			(SELECT
-				f_sig.file_id,
-				json_build_object(
-					'owner',u_certs.subject_cert,
-					'cert_from',u_certs.date_time_from,
-					'cert_to',u_certs.date_time_to,
-					'sign_date_time',f_sig.sign_date_time,
-					'check_result',ver.check_result,
-					'check_time',ver.check_time,
-					'error_str',ver.error_str
-				) AS signatures
-			FROM file_signatures_lk AS f_sig
-			LEFT JOIN file_verifications_lk AS ver ON ver.file_id=f_sig.file_id
-			LEFT JOIN user_certificates_lk AS u_certs ON u_certs.id=f_sig.user_certificate_id
-			ORDER BY f_sig.sign_date_time
-			) AS files_t
-			GROUP BY files_t.file_id
-		) AS sign ON sign.file_id=f_ver.file_id
-		WHERE adf.document_type='documents'
-		GROUP BY adf.application_id,adf.file_path,app_fd.id
-		ORDER BY app_fd.id)  AS doc_att	
+							ELSE (SELECT sign.signatures FROM sign)
+						END
+					),
+					'file_signed_by_client',adf.file_signed_by_client
+					--'require_client_sig',app_fd.require_client_sig
+				) AS files
+			FROM application_document_files adf			
+			--LEFT JOIN doc_flow_out AS adf_out ON adf_out.to_application_id=adf.application_id AND adf_out.doc_flow_type_id=(pdfn_doc_flow_types_app_resp()->'keys'->>'id')::int
+			--LEFT JOIN doc_flow_attachments AS adf_att ON adf_att.doc_type='doc_flow_out' AND adf_att.doc_id=adf_out.id AND adf_att.file_name=adf.file_name
+			LEFT JOIN file_verifications AS f_ver ON f_ver.file_id=adf.file_id
 		
+			WHERE adf.document_type='documents'			
+			ORDER BY adf.application_id,adf.file_path,adf.date_time
+			)  AS adf_files
+		LEFT JOIN application_doc_folders AS app_fd ON app_fd.name=adf_files.file_path
+		GROUP BY adf_files.application_id,adf_files.file_path,app_fd.id
+		ORDER BY adf_files.application_id,adf_files.file_path
+		)  AS doc_att
 		GROUP BY doc_att.application_id
 	) AS folders ON folders.application_id=d.id
+	--ORDER BY d.id
 	;
 	
-ALTER VIEW applications_dialog_lk OWNER TO expert72;
+ALTER VIEW applications_dialog OWNER TO expert72;
 

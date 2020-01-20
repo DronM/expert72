@@ -114,7 +114,9 @@ CREATE OR REPLACE VIEW applications_dialog AS
 		d.filled_percent,
 		d.exp_cost_eval_validity,
 		
-		d.fund_percent
+		d.fund_percent,
+		
+		d.update_dt
 		
 	FROM applications AS d
 	LEFT JOIN offices ON offices.id=d.office_id
