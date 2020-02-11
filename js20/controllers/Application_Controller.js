@@ -56,6 +56,9 @@ function Application_Controller(options){
 	this.add_download_auth_letter_file();
 	this.add_download_auth_letter_file_sig();
 	this.add_delete_auth_letter_file();
+	this.add_download_customer_auth_letter_file();
+	this.add_download_customer_auth_letter_file_sig();
+	this.add_delete_customer_auth_letter_file();
 	this.add_all_sig_report();
 	this.add_get_constr_name();
 	this.add_get_sig_details();
@@ -318,6 +321,18 @@ extend(Application_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	
+	var field = new FieldText("customer_auth_letter",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldJSONB("customer_auth_letter_file",options);
+	
+	pm.addField(field);
+	
 	pm.addField(new FieldInt("ret_id",{}));
 	
 		var options = {};
@@ -343,6 +358,10 @@ extend(Application_Controller,ControllerObjServer);
 		var options = {};
 				
 		pm.addField(new FieldText("auth_letter_files",options));
+	
+		var options = {};
+				
+		pm.addField(new FieldText("customer_auth_letter_files",options));
 	
 	
 }
@@ -600,6 +619,18 @@ extend(Application_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	
+	var field = new FieldText("customer_auth_letter",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldJSONB("customer_auth_letter_file",options);
+	
+	pm.addField(field);
+	
 		var options = {};
 				
 		pm.addField(new FieldBool("set_sent",options));
@@ -623,6 +654,10 @@ extend(Application_Controller,ControllerObjServer);
 		var options = {};
 				
 		pm.addField(new FieldText("auth_letter_files",options));
+	
+		var options = {};
+				
+		pm.addField(new FieldText("customer_auth_letter_files",options));
 	
 	
 }
@@ -827,6 +862,12 @@ extend(Application_Controller,ControllerObjServer);
 	var f_opts = {};
 	
 	pm.addField(new FieldInt("cost_eval_validity_app_id",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldText("customer_auth_letter",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldJSONB("customer_auth_letter_file",f_opts));
 	pm.getField(this.PARAM_ORD_FIELDS).setValue("create_dt");
 	
 }
@@ -1273,6 +1314,62 @@ extend(Application_Controller,ControllerObjServer);
 			Application_Controller.prototype.add_delete_auth_letter_file = function(){
 	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('delete_auth_letter_file',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("id",options));
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("fill_percent",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			Application_Controller.prototype.add_download_customer_auth_letter_file = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('download_customer_auth_letter_file',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("id",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			Application_Controller.prototype.add_download_customer_auth_letter_file_sig = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('download_customer_auth_letter_file_sig',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("id",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			Application_Controller.prototype.add_delete_customer_auth_letter_file = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('delete_customer_auth_letter_file',opts);
 	
 				
 	

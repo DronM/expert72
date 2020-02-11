@@ -62,9 +62,9 @@
 		{{#notExpert}}
 		<div class="tab-pane fade in active" id="common">
 			<div id="{{id}}:applications_ref"/>
-			<div id="{{id}}:applicant_descr"/>
-			<div id="{{id}}:customer_descr"/>
+			<div id="{{id}}:applicant_descr"/>			
 			<div id="{{id}}:developer_descr"/>
+			<div id="{{id}}:customer_descr"/>
 			<div class="panel">
 				<h4>Исполнители</h4>			
 				<div id="{{id}}:contractors_list"/>
@@ -249,6 +249,10 @@
 
 			{{#isAdmin}}
 			<div id="{{id}}:allow_new_file_add"/>
+			{{/isAdmin}}
+
+			{{#isAdmin}}
+			<div id="{{id}}:allow_client_out_documents"/>
 			{{/isAdmin}}
 			
 			<h4>Доступность контракта для сотрудников</h4>

@@ -365,6 +365,22 @@ class ApplicationList_Model extends ModelSQL{
 		$this->addField($f_cost_eval_validity_app_id);
 		//********************
 		
+		//*** Field customer_auth_letter ***
+		$f_opts = array();
+		$f_opts['id']="customer_auth_letter";
+						
+		$f_customer_auth_letter=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"customer_auth_letter",$f_opts);
+		$this->addField($f_customer_auth_letter);
+		//********************
+		
+		//*** Field customer_auth_letter_file ***
+		$f_opts = array();
+		$f_opts['id']="customer_auth_letter_file";
+						
+		$f_customer_auth_letter_file=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"customer_auth_letter_file",$f_opts);
+		$this->addField($f_customer_auth_letter_file);
+		//********************
+		
 		//*** Field users_ref ***
 		$f_opts = array();
 		$f_opts['id']="users_ref";

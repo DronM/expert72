@@ -134,7 +134,7 @@ function DocFlowOutClientDialog_View(id,options){
 					var app = self.getElement("applications_ref").getValue();
 					var this_ctrl = this;
 					if (app&&!app.isNull()&&app.getKey()&&app.getKey()!="null"){
-						//unsent doc check
+						//unsent doc check + banned
 						var pm = new DocFlowOutClient_Controller().getPublicMethod("check_type");
 						pm.setFieldValue("application_id",app.getKey());
 						pm.setFieldValue("doc_flow_out_client_type",v);
@@ -370,7 +370,20 @@ DocFlowOutClientDialog_View.prototype.onGetData = function(resp,cmd){
 		this.getElement("attachments_only_sigs").initDownload();
 		
 		var type_ctrl = this.getElement("doc_flow_out_client_type");
-		type_ctrl.setEnabled(!this.getElement("id").getValue() || type_ctrl.getValue()!="contr_resp");
+		var type_ctrl_v = type_ctrl.getValue();
+		type_ctrl.setEnabled(!this.getElement("id").getValue() || type_ctrl_v!="contr_resp");
+		if(type_ctrl_v=="contr_resp"){
+			//проверка!!!
+			var app = this.getElement("applications_ref").getValue();
+			if (app&&!app.isNull()&&app.getKey()&&app.getKey()!="null"){
+				//unsent doc check + banned
+				var pm = new DocFlowOutClient_Controller().getPublicMethod("check_type");
+				pm.setFieldValue("application_id",app.getKey());
+				pm.setFieldValue("doc_flow_out_client_type",type_ctrl_v);
+				pm.run();
+			}
+			
+		}
 	}
 	
 	this.setType(this.getElement("doc_flow_out_client_type").getValue());

@@ -36,6 +36,7 @@ define('ER_FILE_EXISTS_IN_FOLDER', 'Файл с таким именем уже �
 define('ER_SIGNED','Документ уже подписан!');
 define('ER_SNILS_EXISTS','Документ уже подписан физическим лицом %s');
 define('ER_NEW_FILES_NOT_ALLOWED','Добавление новых файлов запрещено!');
+define('ER_MERGER','Ошибка добавления подписи в контейнер!');
 
 define('DIR_MAX_LENGTH',500);
 define('CLIENT_OUT_FOLDER','Исходящие заявителя');
@@ -51,12 +52,14 @@ function mkdir_or_error($dir){
 			throw_common_error('file_uploader Path lenght exceeds maximum value!');
 		}
 		if(@mkdir($dir,0775,TRUE)!==TRUE){
-			if (is_dir($dir)) {
+			/*
+			if (file_exists($dir) && is_dir($dir)) {
 				// The directory was created by a concurrent process, so do nothing, keep calm and carry on
 			} else {
 				$error = error_get_last();
 				throw_common_error('file_uploader mkdir_or_error '.$dir.' error:'.$error['message']);
-			}		
+			}
+			*/		
 		}
 	}
 }
@@ -136,7 +139,7 @@ function merge_sig($relDir,$contentFile,$origFile,$newName,$fileId,$dbFileId,&$d
 		throw new Exception(sprintf(ER_VERIF_SIG,$verif_res->checkError));
 	}
 	//pki_throw_error($verif_res);
-	
+
 	//2) SNILS verification
 	$q_id = $dbLink->query(sprintf(
 	"SELECT
@@ -189,7 +192,7 @@ function merge_sig($relDir,$contentFile,$origFile,$newName,$fileId,$dbFileId,&$d
 	$der_file = NULL;
 	
 	//new merged .sig on local server
-	$merged_sig = ( (strlen($relDir))? (FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$relDir) : DOC_FLOW_FILE_STORAGE_DIR) .$fileId.'.mrg';
+	$merged_sig = ( (strlen($relDir))? (FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$relDir) : DOC_FLOW_FILE_STORAGE_DIR.DIRECTORY_SEPARATOR) .$fileId.'.mrg';
 	
 	if ($need_decode){
 		$der_file = OUTPUT_PATH.$fileId.'.der';							
@@ -206,6 +209,10 @@ function merge_sig($relDir,$contentFile,$origFile,$newName,$fileId,$dbFileId,&$d
 	
 	try{
 		$pki_man->mergeSigs($newName,$der_file,$merged_sig);
+		//31/01/20 А если нет общего файла?
+		if(!file_exists($merged_sig)){
+			throw new Exception(ER_MERGER);
+		}
 		rename_or_error($newName,$old_sig_new_name);//rename old signature to index
 		try{			
 			rename_or_error($merged_sig,$newName);//merged signature to actual sig		
@@ -458,8 +465,7 @@ try{
 						/**
 						 * Добавление подписи клиента в НАШ документ, подписание в браузере или через файл
 						 * Добавляем только 100% проверенные ЭЦП, а не косяки
-						 */
-					
+						 */												
 						check_signature($dbLink,$file_doc,$file_doc_sig,$db_file_id);
 						
 						$ar = $dbLink->query_first(sprintf(		
@@ -472,7 +478,7 @@ try{
 						}
 									
 						//
-						//При любых ошибках все отменяем				
+						//При любых ошибках все отменяем	
 						merge_sig($rel_dir,$file_doc,$orig_file,$file_doc_sig,$par_file_id,$db_file_id,$dbLink);
 						
 						try{
@@ -572,7 +578,6 @@ try{
 							
 							if (isset($_REQUEST['original_file_id'])&&isset($_REQUEST['doc_flow_out_client_id'])){
 								//Загружен новый файл с подписью - удаление оригинального файлы, который заменили
-								
 								$db_original_file_id = NULL;
 								FieldSQLString::formatForDb($dbLink,$_REQUEST['original_file_id'],$db_original_file_id);
 								if ($db_original_file_id!='null'){

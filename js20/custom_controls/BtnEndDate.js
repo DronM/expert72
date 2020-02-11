@@ -50,6 +50,11 @@ BtnEndDate.prototype.calcDate = function(){
 	if (er){
 		throw Error("Неверные значения");
 	}
+	
+	if(this.m_view.getElement("work_start_date").isNull()){
+		throw Error("не задана дата начала работ!");
+	}
+	
 	var pm = this.m_view.getController().getPublicMethod("get_work_end_date");
 	pm.setFieldValue("contract_id", this.m_view.getElement("id").getValue());
 	pm.setFieldValue("date_type", this.m_view.getElement("date_type").getValue());

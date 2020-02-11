@@ -12,7 +12,13 @@
  * @param {string} options.className
  */
  
-function ServiceCheckBox(id,options){	
+function ServiceCheckBox(id,options){
+	options.attrs = options.attrs || {};
+	options.attrs["class"] = "checkBoxCtrl";
+	options.inline = true;
+	options.labelAlign = "right";
+	options.labelClassName = "";	
+	
 	ServiceCheckBox.superclass.constructor.call(this,id,options);
 }
 extend(ServiceCheckBox,EditCheckBox); 
@@ -38,10 +44,7 @@ function ApplicationServiceCont(id,options){
 	options.addElement = function(){
 		
 		this.addElement(new ServiceCheckBox(id+":expertise",{
-			"inline":true,
 			"labelCaption":"Государственная экспертиза",
-			"labelAlign":"right",
-			"labelClassName":"",			
 			"events":{
 				"click":function(e){
 					this.switchValue();
@@ -231,10 +234,7 @@ function ApplicationServiceCont(id,options){
 		
 		if(!this.m_mainView.m_order010119){
 			this.addElement(new ServiceCheckBox(id+":cost_eval_validity",{
-				"inline":true,
 				"labelCaption":"Достоверность",
-				"labelAlign":"right",
-				"labelClassName":"",			
 				"events":{
 					"change":function(){
 						var cur_val = this.getValue();
@@ -291,10 +291,7 @@ function ApplicationServiceCont(id,options){
 			}));	
 
 			this.addElement(new ServiceCheckBox(id+":modification",{
-				"inline":true,
 				"labelCaption":"Модификация",
-				"labelAlign":"right",
-				"labelClassName":"",
 				"events":{
 					"change":function(){
 						var cur_val = this.getValue();
@@ -349,11 +346,8 @@ function ApplicationServiceCont(id,options){
 		else{
 			/*
 			this.addElement(new ServiceCheckBox(id+":exp_cost_eval_validity",{
-				"inline":true,
 				"enabled":false,
 				"labelCaption":"Достоверность",
-				"labelAlign":"right",
-				"labelClassName":"",			
 				"events":{
 					"change":function(){
 						var cur_val = this.getValue();
@@ -384,10 +378,7 @@ function ApplicationServiceCont(id,options){
 			*/
 		}		
 		this.addElement(new ServiceCheckBox(id+":audit",{
-			"inline":true,
 			"labelCaption":"Аудит",
-			"labelAlign":"right",
-			"labelClassName":"",
 			//"enabled":false,
 			"events":{
 				"change":function(){

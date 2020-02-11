@@ -489,6 +489,15 @@ function ContractDialog_View(id,options){
 				"labelClassName":"control-label "+bs+"4"
 			}));	
 		}
+
+		//Волшебная педалька, чтобы клиент мог отправить исх.письма с ответами даже за 3 дня до окончания срока экспертизы
+		if(is_admin){
+			this.addElement(new EditCheckBox(id+":allow_client_out_documents",{
+				"labelCaption":"Разрешить отправку  ответов на замечания за 3 дня до окончания срока:",
+				"editContClassName":"input-group "+bs+"8",
+				"labelClassName":"control-label "+bs+"4"
+			}));	
+		}
 		
 		//Вкладки с документацией
 		this.addDocumentTabs(options.model,null,true);
@@ -681,7 +690,6 @@ function ContractDialog_View(id,options){
 		,new DataBinding({"control":this.getElement("contract_number")})
 		,new DataBinding({"control":this.getElement("contract_date")})
 		,new DataBinding({"control":this.getElement("fund_sources_ref"),"field":this.m_model.getField("fund_source_id")})
-		
 	];
 	
 	if (options.templateOptions.costEvalValidity && options.templateOptions.notExpert){
@@ -743,6 +751,7 @@ function ContractDialog_View(id,options){
 	
 	if(is_admin){
 		read_b.push(new DataBinding({"control":this.getElement("allow_new_file_add")}));
+		read_b.push(new DataBinding({"control":this.getElement("allow_client_out_documents")}));
 	}
 	
 	this.setDataBindings(read_b);
@@ -809,6 +818,7 @@ function ContractDialog_View(id,options){
 	}
 	if(is_admin){
 		write_b.push(new CommandBinding({"control":this.getElement("allow_new_file_add")}));
+		write_b.push(new CommandBinding({"control":this.getElement("allow_client_out_documents")}));		
 	}
 	
 	this.setWriteBindings(write_b);

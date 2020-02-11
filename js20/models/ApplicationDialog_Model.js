@@ -354,6 +354,22 @@ function ApplicationDialog_Model(options){
 	filed_options.autoInc = false;	
 	
 	options.fields.cost_eval_validity_app_id = new FieldInt("cost_eval_validity_app_id",filed_options);
+		
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.customer_auth_letter = new FieldText("customer_auth_letter",filed_options);
+		
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.customer_auth_letter_file = new FieldJSONB("customer_auth_letter_file",filed_options);
 	
 			
 			

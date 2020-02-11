@@ -161,8 +161,8 @@ class ApplicationProcess_Controller extends ControllerSQL{
 	}
 
 	public function delete($pm){
-		if ($_SESSION['role_id']!='admin'){
-			throw new Exception('Статусы удалять может только администратор!');
+		if ($_SESSION['role_id']!='admin' && $_SESSION['role_id']!='lawyer'){
+			throw new Exception('Статусы удалять может только администратор или отдел приемки документации!');
 		}
 		
 		$q = sprintf("DELETE FROM application_processes%s

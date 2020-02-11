@@ -31,6 +31,7 @@ function Contract_Controller(options){
 	this.addGetList();
 	this.addComplete();
 	this.add_get_pd_list();
+	this.add_get_expertise_list();
 	this.add_get_pd_cost_valid_eval_list();
 	this.add_get_eng_survey_list();
 	this.add_get_cost_eval_validity_list();
@@ -437,6 +438,12 @@ extend(Contract_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	
+	var field = new FieldBool("allow_client_out_documents",options);
+	
+	pm.addField(field);
+	
 	pm.addField(new FieldInt("ret_id",{}));
 	
 	
@@ -831,6 +838,12 @@ extend(Contract_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	
+	var field = new FieldBool("allow_client_out_documents",options);
+	
+	pm.addField(field);
+	
 	
 }
 
@@ -1060,6 +1073,9 @@ extend(Contract_Controller,ControllerObjServer);
 	var f_opts = {};
 	
 	pm.addField(new FieldBool("allow_new_file_add",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldBool("allow_client_out_documents",f_opts));
 	pm.getField(this.PARAM_ORD_FIELDS).setValue("date_time");
 	
 }
@@ -1077,6 +1093,23 @@ extend(Contract_Controller,ControllerObjServer);
 			Contract_Controller.prototype.add_get_pd_list = function(){
 	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('get_pd_list',opts);
+	
+	pm.addField(new FieldInt(this.PARAM_COUNT));
+	pm.addField(new FieldInt(this.PARAM_FROM));
+	pm.addField(new FieldString(this.PARAM_COND_FIELDS));
+	pm.addField(new FieldString(this.PARAM_COND_SGNS));
+	pm.addField(new FieldString(this.PARAM_COND_VALS));
+	pm.addField(new FieldString(this.PARAM_COND_ICASE));
+	pm.addField(new FieldString(this.PARAM_ORD_FIELDS));
+	pm.addField(new FieldString(this.PARAM_ORD_DIRECTS));
+	pm.addField(new FieldString(this.PARAM_FIELD_SEP));
+
+	this.addPublicMethod(pm);
+}
+
+			Contract_Controller.prototype.add_get_expertise_list = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('get_expertise_list',opts);
 	
 	pm.addField(new FieldInt(this.PARAM_COUNT));
 	pm.addField(new FieldInt(this.PARAM_FROM));

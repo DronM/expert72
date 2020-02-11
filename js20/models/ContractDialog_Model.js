@@ -539,6 +539,15 @@ function ContractDialog_Model(options){
 	filed_options.autoInc = false;	
 	
 	options.fields.allow_new_file_add = new FieldBool("allow_new_file_add",filed_options);
+		
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	filed_options.defValue = true;
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.allow_client_out_documents = new FieldBool("allow_client_out_documents",filed_options);
 	
 			
 			
@@ -803,6 +812,15 @@ function ContractDialog_Model(options){
 	
 	options.fields.auth_letter = new FieldText("auth_letter",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.customer_auth_letter = new FieldText("customer_auth_letter",filed_options);
+	
 			
 				
 	
@@ -838,6 +856,7 @@ function ContractDialog_Model(options){
 	
 	options.fields.contract_document_visib = new FieldBool("contract_document_visib",filed_options);
 	
+			
 			
 		ContractDialog_Model.superclass.constructor.call(this,id,options);
 }

@@ -2,7 +2,7 @@
 <metadata owner="expert72">
 	<versions>
 		<version dateOpen="2017-09-27 12:09:48" dateClose="2017-12-08 10:12:08">1.001 
-		<lastBuild>2020-01-20 17:51:12</lastBuild></version>
+		<lastBuild>2020-02-11 07:47:38</lastBuild></version>
 		<version dateOpen="2017-12-08 11:12:01" dateClose="2017-12-08 11:12:04">1.002</version>
 		<version dateOpen="2017-12-08 11:12:20" dateClose="2017-12-08 11:12:20">1.0.3</version>
 		<version dateOpen="2017-12-12 11:12:07" dateClose="2017-12-12 11:12:07">1.0.4</version>
@@ -126,6 +126,7 @@
 		<version dateOpen="2020-01-20 13:01:02" dateClose="2020-01-20 13:01:03">1.0.123</version>
 		<version dateOpen="2020-01-20 13:01:04" dateClose="2020-01-20 13:01:07">1.0.124</version>
 		<version dateOpen="2020-01-20 13:01:23" dateClose="2020-01-20 17:01:51">1.0.125</version>
+		<version dateOpen="2020-01-27 09:01:49" dateClose="2020-02-11 07:02:48">1.0.126</version>
 	</versions>
 	<globalFilters>
 		<field id="user_id"/>
@@ -1065,6 +1066,9 @@
 			<field id="update_dt" dataType="DateTimeTZ"/>
 			<field id="exp_cost_eval_validity" dataType="Bool" defaultValue="FALSE"/>
 			<field id="cost_eval_validity_app_id" dataType="Int"/>
+			<field id="customer_auth_letter" dataType="Text"/>
+			<field id="customer_auth_letter_file" dataType="JSONB"/>
+			<!--<field id="customer_is_developer" dataType="Bool" defaultValue="FALSE" />-->
 			<index id="applicatios_user_idx">
 				<field id="user_id"/>
 			</index>
@@ -2542,6 +2546,7 @@
 			<field id="contract_return_date_on_sig" dataType="Bool" defaultValue="FALSE"/>
 			<field id="fund_source_id" dataType="Int" refTable="fund_sources" refField="id"/>
 			<field id="allow_new_file_add" dataType="Bool" defaultValue="FALSE"/>
+			<field id="allow_client_out_documents" dataType="Bool" defaultValue="FALSE"/>
 			<index id="contracts_reg_number_idx" unique="TRUE">
 				<field id="reg_number"/>
 			</index>
@@ -2680,6 +2685,7 @@
 			<field id="argument_document" dataType="Text"/>
 			<field id="order_document" dataType="Text"/>
 			<field id="auth_letter" dataType="Text"/>
+			<field id="customer_auth_letter" dataType="Text"/>
 			<field id="expert_work_day_count" dataType="Int"/>
 			<field id="doc_folders" dataType="JSON"/>
 			<field id="for_all_employees" dataType="Bool"/>
@@ -2692,6 +2698,7 @@
 			<field id="exp_cost_eval_validity" dataType="Bool"/>
 			<field id="contract_document_visib" dataType="Bool"/>
 			<field id="allow_new_file_add" dataType="Bool"/>
+			<field id="allow_client_out_documents" dataType="Bool"/>
 		</model>
 		<model id="ExpertWork" parent="ModelSQL" dataTable="expert_works" virtual="FALSE">
 			<field id="id" dataType="Int" primaryKey="TRUE" required="FALSE" autoInc="TRUE"/>
@@ -3027,6 +3034,7 @@
 		<constant id="cades_signature_type" name="&#x41A;&#x440;&#x438;&#x43F;&#x442;&#x43E;&#x41F;&#x440;&#x43E; &#x43F;&#x43B;&#x430;&#x433;&#x438;&#x43D;: &#x422;&#x438;&#x43F; &#x443;&#x441;&#x43E;&#x432;&#x435;&#x440;&#x448;&#x435;&#x43D;&#x441;&#x442;&#x432;&#x43E;&#x432;&#x430;&#x43D;&#x43D;&#x43E;&#x439; &#x43F;&#x43E;&#x434;&#x43F;&#x438;&#x441;&#x438;" descr="1- &#x422;&#x438;&#x43F; &#x43F;&#x43E;&#x434;&#x43F;&#x438;&#x441;&#x438; CAdES BES, 0- &#x422;&#x438;&#x43F; &#x43F;&#x43E;&#x434;&#x43F;&#x438;&#x441;&#x438; &#x43F;&#x43E; &#x443;&#x43C;&#x43E;&#x43B;&#x447;&#x430;&#x43D;&#x438;&#x44E; (CAdES-X Long Type 1), 5- &#x422;&#x438;&#x43F; &#x43F;&#x43E;&#x434;&#x43F;&#x438;&#x441;&#x438; CAdES T, 93- &#x422;&#x438;&#x43F; &#x43F;&#x43E;&#x434;&#x43F;&#x438;&#x441;&#x438; CAdES-X Long Type 1" dataType="Int" defaultValue="1" autoload="TRUE"/>
 		<constant id="cades_hash_algorithm" name="&#x41A;&#x440;&#x438;&#x43F;&#x442;&#x43E;&#x41F;&#x440;&#x43E; &#x43F;&#x43B;&#x430;&#x433;&#x438;&#x43D;: &#x410;&#x43B;&#x433;&#x43E;&#x440;&#x438;&#x442;&#x43C; &#x445;&#x44D;&#x448;&#x438;&#x440;&#x43E;&#x432;&#x430;&#x43D;&#x438;&#x44F;" descr="100 - &#x410;&#x43B;&#x433;&#x43E;&#x440;&#x438;&#x442;&#x43C; &#x413;&#x41E;&#x421;&#x422; &#x420; 34.11-94, 101 - &#x410;&#x43B;&#x433;&#x43E;&#x440;&#x438;&#x442;&#x43C; &#x413;&#x41E;&#x421;&#x422; &#x420; 34.10-2012 256 &#x431;&#x438;&#x442;, 102 - &#x410;&#x43B;&#x433;&#x43E;&#x440;&#x438;&#x442;&#x43C; &#x413;&#x41E;&#x421;&#x422; &#x420; 34.10-2012 512 &#x431;&#x438;&#x442;" dataType="Int" defaultValue="100" autoload="TRUE"/>
 		<constant id="contract_document_visib_expert_list" name="&#x421;&#x43F;&#x438;&#x441;&#x43E;&#x43A; &#x44D;&#x43A;&#x441;&#x43F;&#x435;&#x440;&#x442;&#x43E;&#x432;, &#x443; &#x43A;&#x43E;&#x442;&#x43E;&#x440;&#x44B;&#x445; &#x434;&#x43E;&#x441;&#x442;&#x443;&#x43F;&#x43D;&#x430; &#x437;&#x430;&#x43A;&#x43B;&#x430;&#x434;&#x43A;&#x430; '&#x414;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;' &#x432; &#x43A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x435;" descr="&#x417;&#x430;&#x43A;&#x43B;&#x430;&#x434;&#x43A;&#x430; '&#x414;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;' &#x432; &#x43A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x435; &#x43D;&#x435; &#x434;&#x43E;&#x441;&#x442;&#x443;&#x43F;&#x43D;&#x430; &#x434;&#x43B;&#x44F; &#x440;&#x43E;&#x43B;&#x438; '&#x44D;&#x43A;&#x441;&#x43F;&#x435;&#x440;&#x442;'. &#x41E;&#x434;&#x43D;&#x430;&#x43A;&#x43E; &#x43C;&#x43E;&#x436;&#x43D;&#x43E; &#x437;&#x430;&#x434;&#x430;&#x442;&#x44C; &#x441;&#x43F;&#x438;&#x441;&#x43E;&#x43A; &#x44D;&#x43A;&#x441;&#x43F;&#x435;&#x440;&#x442;&#x43E;&#x432;, &#x434;&#x43B;&#x44F; &#x43A;&#x43E;&#x442;&#x43E;&#x440;&#x44B;&#x445; &#x437;&#x430;&#x43A;&#x43B;&#x430;&#x434;&#x43A;&#x430; &#x431;&#x443;&#x434;&#x435;&#x442; &#x432;&#x438;&#x434;&#x438;&#x43C;&#x430;." dataType="JSON"/>
+		<constant id="ban_client_responses_day_cnt" name="&#x417;&#x430; &#x441;&#x43A;&#x43E;&#x43B;&#x44C;&#x43A;&#x43E; &#x440;&#x430;&#x431;&#x43E;&#x447;&#x438;&#x445; &#x434;&#x43D;&#x435;&#x439; &#x437;&#x430;&#x43F;&#x440;&#x435;&#x449;&#x430;&#x442;&#x44C; &#x43E;&#x442;&#x43F;&#x440;&#x430;&#x432;&#x43A;&#x443; &#x43E;&#x442;&#x432;&#x435;&#x442;&#x43E;&#x432; &#x43D;&#x430; &#x437;&#x430;&#x43C;&#x435;&#x447;&#x430;&#x43D;&#x438;&#x44F;" descr="&#x417;&#x430; &#x434;&#x430;&#x43D;&#x43D;&#x43E;&#x435; &#x43A;&#x43E;&#x43B;&#x438;&#x447;&#x435;&#x441;&#x442;&#x432;&#x43E; &#x440;&#x430;&#x431;&#x43E;&#x447;&#x438;&#x445; &#x434;&#x43D;&#x435;&#x439; &#x434;&#x43E; &#x43E;&#x43A;&#x43E;&#x43D;&#x447;&#x430;&#x43D;&#x438;&#x44F; &#x441;&#x440;&#x43E;&#x43A;&#x430; &#x44D;&#x43A;&#x441;&#x43F;&#x435;&#x440;&#x442;&#x438;&#x437;&#x44B; &#x43A;&#x43B;&#x438;&#x435;&#x43D;&#x442;&#x430;&#x43C; &#x431;&#x443;&#x434;&#x435;&#x442; &#x437;&#x430;&#x43F;&#x440;&#x435;&#x449;&#x435;&#x43D;&#x430; &#x43E;&#x442;&#x43F;&#x440;&#x430;&#x432;&#x43A;&#x430; &#x43F;&#x438;&#x441;&#x435;&#x43C; &#x441; &#x432;&#x438;&#x434;&#x43E;&#x43C; &#x43E;&#x442;&#x432;&#x435;&#x442;&#x44B; &#x43D;&#x430; &#x437;&#x430;&#x43C;&#x435;&#x447;&#x430;&#x43D;&#x438;&#x44F;" dataType="Int"/>
 	</constants>
 	<controllers>
 		<controller id="Constant" parentId="ControllerSQL">
@@ -3331,6 +3339,7 @@
 				<field id="app_print_modification_files" dataType="Text"/>
 				<field id="app_print_audit_files" dataType="Text"/>
 				<field id="auth_letter_files" dataType="Text"/>
+				<field id="customer_auth_letter_files" dataType="Text"/>
 			</publicMethod>
 			<publicMethod id="update" modelId="Application" encType="multipart" requestType="post">
 				<field id="set_sent" dataType="Bool"/>
@@ -3339,6 +3348,7 @@
 				<field id="app_print_modification_files" dataType="Text"/>
 				<field id="app_print_audit_files" dataType="Text"/>
 				<field id="auth_letter_files" dataType="Text"/>
+				<field id="customer_auth_letter_files" dataType="Text"/>
 			</publicMethod>
 			<publicMethod id="delete" modelId="Application"/>
 			<publicMethod id="get_object" modelId="ApplicationDialog"/>
@@ -3427,6 +3437,16 @@
 				<field id="id" dataType="Int" required="TRUE"/>
 			</publicMethod>
 			<publicMethod id="delete_auth_letter_file">
+				<field id="id" dataType="Int" required="TRUE"/>
+				<field id="fill_percent" dataType="Int" required="TRUE"/>
+			</publicMethod>
+			<publicMethod id="download_customer_auth_letter_file">
+				<field id="id" dataType="Int" required="TRUE"/>
+			</publicMethod>
+			<publicMethod id="download_customer_auth_letter_file_sig">
+				<field id="id" dataType="Int" required="TRUE"/>
+			</publicMethod>
+			<publicMethod id="delete_customer_auth_letter_file">
 				<field id="id" dataType="Int" required="TRUE"/>
 				<field id="fill_percent" dataType="Int" required="TRUE"/>
 			</publicMethod>
@@ -3895,6 +3915,7 @@
 			<publicMethod id="get_list" modelId="ContractList"/>
 			<publicMethod id="complete" patternFieldId="expertise_result_number" modelId="ContractList"/>
 			<publicMethod id="get_pd_list" modelId="ContractList" condFields="TRUE"/>
+			<publicMethod id="get_expertise_list" modelId="ContractList" condFields="TRUE"/>
 			<publicMethod id="get_pd_cost_valid_eval_list" modelId="ContractList" condFields="TRUE"/>
 			<publicMethod id="get_eng_survey_list" modelId="ContractList" condFields="TRUE"/>
 			<publicMethod id="get_cost_eval_validity_list" modelId="ContractList" condFields="TRUE"/>
@@ -4199,6 +4220,7 @@
 		<permission type="allow" controllerId="VariantStorage" methodId="all" roleId="expert_ext"/>
 		<permission type="allow" controllerId="Contract" methodId="get_object" roleId="expert_ext"/>
 		<permission type="allow" controllerId="Contract" methodId="get_pd_list" roleId="expert_ext"/>
+		<permission type="allow" controllerId="Contract" methodId="get_expertise_list" roleId="expert_ext"/>
 		<permission type="allow" controllerId="Contract" methodId="get_pd_cost_valid_eval_list" roleId="expert_ext"/>
 		<permission type="allow" controllerId="Contract" methodId="get_eng_survey_list" roleId="expert_ext"/>
 		<permission type="allow" controllerId="Contract" methodId="get_cost_eval_validity_list" roleId="expert_ext"/>
@@ -4309,6 +4331,7 @@
 		<view id="20014" c="DocFlowInside_Controller" t="DocFlowInsideList" f="get_list" section="&#x414;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;" descr="&#x412;&#x43D;&#x443;&#x442;&#x440;&#x435;&#x43D;&#x43D;&#x438;&#x435; &#x434;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;"/>
 		<view id="20015" c="ApplicationReturnedFilesRemoved_Controller" t="ApplicationReturnedFilesRemovedList" f="get_list" section="&#x414;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;" descr="&#x417;&#x430;&#x44F;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x44F; &#x441; &#x443;&#x434;&#x430;&#x43B;&#x435;&#x43D;&#x43D;&#x43E;&#x439; &#x434;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x430;&#x446;&#x438;&#x435;&#x439;"/>
 		<view id="20016" c="ApplicationDocumentFile_Controller" t="ApplicationDocumentFileList" f="get_list" section="&#x414;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;" descr="&#x424;&#x430;&#x439;&#x43B;&#x44B; &#x437;&#x430;&#x44F;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x439;"/>
+		<view id="20017" c="Contract_Controller" t="ContractExpertiseList" f="get_expertise_list" section="&#x414;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;" descr="&#x41A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x44B; &#x43F;&#x43E; &#x433;&#x43E;&#x441;.&#x44D;&#x43A;&#x441;&#x43F;&#x435;&#x440;&#x442;&#x438;&#x437;&#x435;"/>
 		<view id="30000" c="Contract_Controller" t="RepReestrExpertise" section="&#x41E;&#x442;&#x447;&#x435;&#x442;&#x44B;" descr="&#x420;&#x435;&#x435;&#x441;&#x442;&#x440; &#x437;&#x430;&#x43A;&#x43B;&#x44E;&#x447;&#x435;&#x43D;&#x438;&#x439; &#x43F;&#x43E; &#x433;&#x43E;&#x441;.&#x44D;&#x43A;&#x441;&#x43F;&#x435;&#x440;&#x442;&#x438;&#x437;&#x435;"/>
 		<view id="30001" c="Contract_Controller" t="RepReestrCostEval" section="&#x41E;&#x442;&#x447;&#x435;&#x442;&#x44B;" descr="&#x420;&#x435;&#x435;&#x441;&#x442;&#x440; &#x437;&#x430;&#x43A;&#x43B;&#x44E;&#x447;&#x435;&#x43D;&#x438;&#x439; &#x43F;&#x43E; &#x434;&#x43E;&#x441;&#x442;&#x43E;&#x432;&#x435;&#x440;&#x43D;&#x43E;&#x441;&#x442;&#x438;"/>
 		<view id="30002" c="Contract_Controller" t="RepReestrPay" section="&#x41E;&#x442;&#x447;&#x435;&#x442;&#x44B;" descr="&#x420;&#x435;&#x435;&#x441;&#x442;&#x440; &#x43E;&#x43F;&#x43B;&#x430;&#x442;"/>
@@ -4365,6 +4388,7 @@
 		<serverTemplate id="ReminderList"/>
 		<serverTemplate id="ContractList"/>
 		<serverTemplate id="ContractPdList"/>
+		<serverTemplate id="ContractExpertiseList"/>
 		<serverTemplate id="ContractPdCostValidEvalList"/>
 		<serverTemplate id="ContractEngSurveyList"/>
 		<serverTemplate id="ContractCostEvalValidityList"/>
@@ -4951,6 +4975,7 @@
 		<jsScript file="views/DocFlowTaskShortList_View.js"/>
 		<jsScript file="views/ContractList_View.js"/>
 		<jsScript file="views/ContractPdList_View.js"/>
+		<jsScript file="views/ContractExpertiseList_View.js"/>
 		<jsScript file="views/ContractPdCostValidEvalList_View.js"/>
 		<jsScript file="views/ContractCostEvalValidityList_View.js"/>
 		<jsScript file="views/ContractModificationList_View.js"/>

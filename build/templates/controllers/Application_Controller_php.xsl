@@ -81,7 +81,8 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			'app_print_cost_eval'=>' достоверности',
 			'app_print_modification'=>' модификации',
 			'app_print_modification'=>' аудиту',
-			'auth_letter_file'=>' доверенности'
+			'auth_letter_file'=>' доверенности',
+			'customer_auth_letter_file'=>' доверенности технического заказчика'
 			];
 	
 	
@@ -235,6 +236,10 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		}
 		if (isset($_FILES['auth_letter_files'])){
 			$this->copy_print_file($appId,'auth_letter_file',$fileParams,$_FILES['auth_letter_files']);
+			$res = TRUE;
+		}
+		if (isset($_FILES['customer_auth_letter_files'])){
+			$this->copy_print_file($appId,'customer_auth_letter_file',$fileParams,$_FILES['customer_auth_letter_files']);
 			$res = TRUE;
 		}
 		
@@ -414,6 +419,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 	public function delete_app_print_cost_eval($pm){
 		return $this->delete_print($this->getExtDbVal($pm,'id'),'app_print_cost_eval',$this->getExtDbVal($pm,'fill_percent'));
 	}
+	//auth letter
 	public function download_auth_letter_file($pm){
 		return $this->download_print($this->getExtDbVal($pm,'id'),'auth_letter_file',FALSE);
 	}
@@ -423,7 +429,17 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 	public function delete_auth_letter_file($pm){
 		return $this->delete_print($this->getExtDbVal($pm,'id'),'auth_letter_file',$this->getExtDbVal($pm,'fill_percent'));
 	}
-
+	//customer auth letter
+	public function download_customer_auth_letter_file($pm){
+		return $this->download_print($this->getExtDbVal($pm,'id'),'customer_auth_letter_file',FALSE);
+	}
+	public function download_customer_auth_letter_file_sig($pm){
+		return $this->download_print($this->getExtDbVal($pm,'id'),'customer_auth_letter_file',TRUE);
+	}
+	public function delete_customer_auth_letter_file($pm){
+		return $this->delete_print($this->getExtDbVal($pm,'id'),'customer_auth_letter_file',$this->getExtDbVal($pm,'fill_percent'));
+	}
+	
 	public static function attachmentsQuery($dbLink,$appId,$deletedCond){
 		$tb_postf = self::LKPostfix();
 		return $dbLink->query(sprintf(
@@ -531,6 +547,8 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				$ar_obj['derived_applications_ref'] = NULL;
 				$ar_obj['auth_letter'] = NULL;
 				$ar_obj['auth_letter_file'] = NULL;
+				$ar_obj['customer_auth_letter'] = NULL;
+				$ar_obj['customer_auth_letter_file'] = NULL;
 				$ar_obj['application_state'] = NULL;
 				$ar_obj['contract_date'] = NULL;
 				$ar_obj['contract_number'] = NULL;
@@ -543,6 +561,15 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 					$ar_obj['exp_cost_eval_validity'] = 't';
 					$ar_obj['cost_eval_validity'] = NULL;
 					$ar_obj['expertise_type'] = 'pd';
+				}
+				
+				//04/02/20
+				if(isset($ar_obj['developer']) &amp;&amp; isset($ar_obj['customer'])){
+					$dev = json_decode($ar_obj['developer']);
+					$cust = json_decode($ar_obj['customer']);
+					if(isset($dev->inn) &amp;&amp;isset($cust->inn) &amp;&amp;$dev->inn==$cust->inn){
+						$ar_obj['customer'] = NULL;
+					}
 				}
 			}
 		}
@@ -589,6 +616,8 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				NULL as users_ref,
 				NULL as auth_letter,
 				NULL as auth_letter_file,
+				NULL as customer_auth_letter,
+				NULL as customer_auth_letter_file,
 				NULL as pd_usage_info,
 				NULL AS doc_folders,
 				NULL AS work_start_date,
@@ -673,6 +702,9 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		}
 		else if ($docType=='auth_letter_file'){
 			$res = 'Доверенность';
+		}				
+		else if ($docType=='customer_auth_letter_file'){
+			$res = 'ДоверенностьТехничЗаказчика';
 		}				
 		else if ($docType=='documents'){
 			$res = '';
@@ -1353,7 +1385,8 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 					app.modification,
 					app.app_print_audit,
 					app.audit,
-					app.auth_letter_file
+					app.auth_letter_file,
+					app.customer_auth_letter_file
 				FROM applications app			
 				WHERE app.id=%s",
 				$this->getExtDbVal($pm,'application_id')
@@ -1448,6 +1481,10 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				if ($ar_app['auth_letter_file']){
 					self::add_print_to_zip('auth_letter_file',$ar_app['auth_letter_file'],$rel_dir_zip,$zip,$cnt);
 				}
+				//Доверенность техн.заказчика
+				if ($ar_app['customer_auth_letter_file']){
+					self::add_print_to_zip('customer_auth_letter_file',$ar_app['customer_auth_letter_file'],$rel_dir_zip,$zip,$cnt);
+				}
 			
 				if (!$cnt){
 					$er_h_stat = 400;
@@ -1505,11 +1542,22 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			self::APP_DIR_PREF.$ar['old_app_id'].DIRECTORY_SEPARATOR.
 			$doc_type_auth_dir)
 		){
-			$dest = $storage.DIRECTORY_SEPARATOR.
-				self::APP_DIR_PREF.$ar['new_app_id'];
+			$dest = $storage.DIRECTORY_SEPARATOR.self::APP_DIR_PREF.$ar['new_app_id'];
 			mkdir($dest,0777,TRUE);									
 			rcopy($source,$dest);
 		}
+		
+		//Доверенность технического заказчика?
+		$doc_type_auth_dir = self::dirNameOnDocType('customer_auth_letter_file');
+		if (file_exists($source = $storage.DIRECTORY_SEPARATOR.
+			self::APP_DIR_PREF.$ar['old_app_id'].DIRECTORY_SEPARATOR.
+			$doc_type_auth_dir)
+		){
+			$dest = $storage.DIRECTORY_SEPARATOR.self::APP_DIR_PREF.$ar['new_app_id'];
+			mkdir($dest,0777,TRUE);									
+			rcopy($source,$dest);
+		}
+		
 	}
 	
 	/**
@@ -1801,7 +1849,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			sprintf('&lt;org_name_rod&gt;%s&lt;/org_name_rod&gt;',$applicant_org_name_rod).
 			sprintf('&lt;ogrn&gt;%s&lt;/ogrn&gt;',$applicant_m['ogrn']).
 			sprintf('&lt;field id="Контакты"&gt;%s&lt;/field&gt;',$applicant_contacts).
-			(($ar['auth_letter'])? sprintf('&lt;field id="Доверенность"&gt;%s&lt;/field&gt;',$ar['auth_letter']) : '')
+			(($ar['auth_letter'])? sprintf('&lt;field id="Доверенность"&gt;%s&lt;/field&gt;',$ar['auth_letter']) : '')			
 		;
 		/*
 		if ($applicant_m['client_type']=='pboul'){
@@ -1867,8 +1915,10 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			sprintf('&lt;field id="Должность руководителя"&gt;%s&lt;/field&gt;',$person_head_post).
 			sprintf('&lt;field id="Действует на основании"&gt;%s&lt;/field&gt;',$base_document_for_contract).
 			sprintf('&lt;person_head_name_rod&gt;%s&lt;/person_head_name_rod&gt;',$person_head_name_rod).
-			sprintf('&lt;person_head_post_rod&gt;%s&lt;/person_head_post_rod&gt;',$person_head_post_rod)			
+			sprintf('&lt;person_head_post_rod&gt;%s&lt;/person_head_post_rod&gt;',$person_head_post_rod).
+			(($ar['customer_auth_letter'])? sprintf('&lt;field id="ДоверенностьТехничЗаказчика"&gt;%s&lt;/field&gt;',$ar['customer_auth_letter']) : '')
 		;
+		$ar['customer_is_developer'] = $customer_m['customer_is_developer'];
 		
 		//developer
 		$developer_m = json_decode($ar['developer'],TRUE);
@@ -2139,7 +2189,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				exec($cmd);
 			}
 			finally{
-				if (file_exists($xml_file)){
+				if (file_exists($xml_file) &amp;&amp; (file_exists($out_file_tmp)||!DEBUG ) ){
 					unlink($xml_file);
 				}			
 			}
@@ -2208,8 +2258,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				$m = 'Ошибка формирования файла! CMD='.$cmd;
 			}
 			else{
-				$m = 'Ошибка формирования файла!';
-				unlink($xml_file);
+				$m = 'Ошибка формирования файла!';				
 			}
 			throw new Exception($m);
 		}
@@ -2333,7 +2382,8 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 					"UPDATE applications
 					SET
 						%s = NULL,
-						auth_letter_file = NULL
+						auth_letter_file = NULL,
+						customer_auth_letter_file = NULL
 					WHERE id=%d",				
 				$print_type,
 				$this->getExtDbVal($pm,'application_id')
@@ -2344,7 +2394,8 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				$this->getDbLinkMaster()->query_first(sprintf(
 					"UPDATE applications
 					SET
-						auth_letter_file = NULL
+						auth_letter_file = NULL,
+						customer_auth_letter_file = NULL
 					WHERE id=%d",				
 				$this->getExtDbVal($pm,'application_id')
 				));
@@ -2353,6 +2404,14 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			if (file_exists($dir = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
 					self::APP_DIR_PREF.$app_id. DIRECTORY_SEPARATOR.
 					self::dirNameOnDocType('auth_letter_file')
+				)
+			){
+				rrmdir($dir);
+			}
+			//Доверенность технического заказчика
+			if (file_exists($dir = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
+					self::APP_DIR_PREF.$app_id. DIRECTORY_SEPARATOR.
+					self::dirNameOnDocType('customer_auth_letter_file')
 				)
 			){
 				rrmdir($dir);
@@ -2407,7 +2466,8 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				app.modification,
 				app.app_print_audit,
 				app.audit,
-				app.auth_letter_file
+				app.auth_letter_file,
+				app.customer_auth_letter_file
 			FROM applications app			
 			WHERE app.id=%s",
 			$db_app_id
@@ -2479,6 +2539,16 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 						) AS app_f
 						LEFT JOIN file_verifications AS v ON app_f.fl->>'id'=v.file_id
 						WHERE v.file_id IS NULL)															
+			UNION ALL
+			(SELECT 
+							app_f.fl->>'id',
+							'ДоверенностьТехничЗаказчика/'||(app_f.fl->>'id')::text
+						FROM (
+						SELECT jsonb_array_elements(customer_auth_letter_file) AS fl FROM applications WHERE id=%d AND customer_auth_letter_file IS NOT NULL
+						) AS app_f
+						LEFT JOIN file_verifications AS v ON app_f.fl->>'id'=v.file_id
+						WHERE v.file_id IS NULL)															
+						
 			",
 			$db_app_id,
 			$db_app_id,
@@ -2675,6 +2745,34 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			LEFT JOIN file_verifications".$tb_postf." AS v ON app_f.fl->>'id'=v.file_id
 			LEFT JOIN file_signatures".$tb_postf." AS f_sig ON f_sig.file_id=v.file_id
 			LEFT JOIN user_certificates".$tb_postf." AS u_certs ON u_certs.id=f_sig.user_certificate_id)			
+			
+			UNION ALL
+
+			(SELECT
+				v.date_time,
+				to_char(u_certs.date_time_from,'DD/MM/YY') AS date_from,
+				to_char(u_certs.date_time_to,'DD/MM/YY') AS date_to,
+				round(v.check_time,1) AS check_time,
+				v.check_result,
+				v.error_str,
+				(SELECT string_agg('&lt;field alias=\"'||f.key||'\"&gt;'||f.value||'&lt;/field&gt;','')
+				FROM 
+				(select (jsonb_each_text(u_certs.subject_cert)).* ) f
+				) AS subject_cert,
+				(SELECT string_agg('&lt;field alias=\"'||f.key||'\"&gt;'||f.value||'&lt;/field&gt;','')
+				FROM 
+				(select (jsonb_each_text(u_certs.issuer_cert)).* ) f
+				) AS issuer_cert,
+				to_char(f_sig.sign_date_time,'DD/MM/YY') AS sign_date_time,
+				'ДоверенностьТехничЗаказчика / '||(app_f.fl->>'name')::text AS file_name
+
+			FROM (
+			SELECT jsonb_array_elements(customer_auth_letter_file) AS fl FROM applications WHERE id=%d AND customer_auth_letter_file IS NOT NULL
+			) AS app_f
+			LEFT JOIN file_verifications".$tb_postf." AS v ON app_f.fl->>'id'=v.file_id
+			LEFT JOIN file_signatures".$tb_postf." AS f_sig ON f_sig.file_id=v.file_id
+			LEFT JOIN user_certificates".$tb_postf." AS u_certs ON u_certs.id=f_sig.user_certificate_id)			
+			
 			",
 			$db_app_id,
 			$db_app_id,

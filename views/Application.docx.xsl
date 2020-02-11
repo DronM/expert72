@@ -412,28 +412,6 @@
 	<!--*********************  Заявитель ************************* -->
 	
 
-
-	<!--*********************  Сведения о техническом заказчике ************************* -->
-	<xsl:call-template name="param_header">
-		<xsl:with-param name="n" select="'Сведения о техническом заказчике'"/>
-	</xsl:call-template>
-	<w:tbl>
-		<w:tblPr>
-			<w:tblStyle w:val="PlainTable4" />
-			<w:tblW w:w="0" w:type="auto" />
-			<w:tblInd w:w="0" w:type="dxa" />
-			<w:tblLayout w:type="fixed" />
-			<w:tblLook w:val="06A0" w:firstRow="1" w:lastRow="0" w:firstColumn="1" w:lastColumn="0" w:noHBand="1" w:noVBand="1" />
-		</w:tblPr>
-		<w:tblGrid>
-			<w:gridCol w:w="4513" />
-			<w:gridCol w:w="4513" />
-		</w:tblGrid>	
-		<xsl:apply-templates select="row/customer"/>
-	</w:tbl>
-	<!--*********************  Сведения о техническом заказчике ************************* -->
-
-
 	<!--*********************  Сведения об исполнителях работ ************************* -->
 	<xsl:call-template name="param_header">
 		<xsl:with-param name="n" select="'Сведения об исполнителях работ'"/>
@@ -463,7 +441,89 @@
 	</w:tbl>	
 	<!--*********************  Сведения о застройщике ************************* -->
 	
+	<!--*********************  Сведения о техническом заказчике ************************* -->
+	<xsl:call-template name="param_header">
+		<xsl:with-param name="n" select="'Сведения о техническом заказчике'"/>
+	</xsl:call-template>
+	<xsl:choose>
+	<xsl:when test="row/customer_is_developer='1'">
+		<w:p w:rsidR="1F9D1B28" w:rsidP="1F9D1B28" w:rsidRDefault="1F9D1B28" w14:paraId="4BCC0CBF" w14:textId="6EA77420">
+			<w:pPr>
+				<w:pStyle w:val="Normal" />
+				<w:ind w:left="0" w:firstLine="708" />
+				<w:jc w:val="left" />
+				<w:rPr>
+					<w:rFonts w:ascii="sans-serif" w:hAnsi="sans-serif" w:eastAsia="sans-serif" w:cs="sans-serif" />
+					<w:b w:val="1" />
+					<w:bCs w:val="1" />
+					<w:noProof w:val="0" />
+					<w:sz w:val="32" />
+					<w:szCs w:val="32" />
+					<w:lang w:val="ru-RU" />
+				</w:rPr>
+			</w:pPr>
+			<w:r w:rsidRPr="1F9D1B28" w:rsidR="1F9D1B28">
+				<w:rPr>
+					<w:rFonts w:ascii="sans-serif" w:hAnsi="sans-serif" w:eastAsia="sans-serif" w:cs="sans-serif" />
+					<w:b w:val="0" />
+					<w:bCs w:val="0" />
+					<w:noProof w:val="0" />
+					<w:sz w:val="24" />
+					<w:szCs w:val="24" />
+					<w:lang w:val="ru-RU" />
+				</w:rPr>
+			</w:r>
+		</w:p>
 	
+		<w:p w:rsidR="1F9D1B28" w:rsidP="1F9D1B28" w:rsidRDefault="1F9D1B28" w14:paraId="4BCC0CBF" w14:textId="6EA77420">
+			<w:pPr>
+				<w:pStyle w:val="Normal" />
+				<w:ind w:left="0" w:firstLine="708" />
+				<w:jc w:val="left" />
+				<w:rPr>
+					<w:rFonts w:ascii="sans-serif" w:hAnsi="sans-serif" w:eastAsia="sans-serif" w:cs="sans-serif" />
+					<w:b w:val="1" />
+					<w:bCs w:val="1" />
+					<w:noProof w:val="0" />
+					<w:sz w:val="32" />
+					<w:szCs w:val="32" />
+					<w:lang w:val="ru-RU" />
+				</w:rPr>
+			</w:pPr>
+			<w:r w:rsidRPr="1F9D1B28" w:rsidR="1F9D1B28">
+				<w:rPr>
+					<w:rFonts w:ascii="sans-serif" w:hAnsi="sans-serif" w:eastAsia="sans-serif" w:cs="sans-serif" />
+					<w:b w:val="0" />
+					<w:bCs w:val="0" />
+					<w:noProof w:val="0" />
+					<w:sz w:val="24" />
+					<w:szCs w:val="24" />
+					<w:lang w:val="ru-RU" />
+				</w:rPr>
+				<w:t xml:space="preserve">Технический заказчик является застройщиком.</w:t>
+			</w:r>
+		</w:p>
+	</xsl:when>
+	<xsl:otherwise>
+	<w:tbl>
+		<w:tblPr>
+			<w:tblStyle w:val="PlainTable4" />
+			<w:tblW w:w="0" w:type="auto" />
+			<w:tblInd w:w="0" w:type="dxa" />
+			<w:tblLayout w:type="fixed" />
+			<w:tblLook w:val="06A0" w:firstRow="1" w:lastRow="0" w:firstColumn="1" w:lastColumn="0" w:noHBand="1" w:noVBand="1" />
+		</w:tblPr>
+		<w:tblGrid>
+			<w:gridCol w:w="4513" />
+			<w:gridCol w:w="4513" />
+		</w:tblGrid>	
+		<xsl:apply-templates select="row/customer"/>
+	</w:tbl>
+	</xsl:otherwise>
+	</xsl:choose>
+	<!--*********************  Сведения о техническом заказчике ************************* -->
+
+
 	<!--*********************  Приложения ************************* -->
 	<xsl:call-template name="param_header">
 		<xsl:with-param name="n" select="'Приложения'"/>

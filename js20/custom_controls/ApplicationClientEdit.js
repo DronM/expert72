@@ -97,7 +97,6 @@ function ApplicationClientEdit(id,options){
 			"view":this,
 			"events":{
 				"blur":function(){
-					if (self.m_isApplicant||self.m_isDeveloper||self.m_isCustomer)self.setAuthLetterRequired();
 					self.m_mainView.calcFillPercent();
 				}
 			}			
@@ -108,6 +107,7 @@ function ApplicationClientEdit(id,options){
 			"labelClassName":"control-label percentcalc "+bs,
 			"events":{
 				"blur":function(){
+					if (self.m_isApplicant||self.m_isDeveloper||self.m_isCustomer)self.setAuthLetterRequired();
 					self.m_mainView.calcFillPercent();
 				}
 			}			
@@ -269,6 +269,94 @@ function ApplicationClientEdit(id,options){
 				}											
 			}));			
 		}
+
+		if (this.m_isCustomer){
+			this.addElement(new EditCheckBox(id+":customer_is_developer",{
+				"labelCaption":"Функции технического заказчика выполняет застройщик",
+				"labelAlign":"right",
+				"inline":true,
+				"labelClassName":"",
+				"contClassName":"",
+				"editClassName":"",
+				"value":true,
+				"attrs":{"class":"checkBoxCtrl"},
+				//"labelClassName": !options.minInf? ("control-label percentcalc "+bs) : undefined,
+				"events":{
+					"change":function(){
+						var cur_val = this.getValue();
+						self.setCustomerDataVisible(!cur_val);	
+						
+						if(cur_val &&
+						(self.getElement("name").getValue()&&self.getElement("name").getValue().length
+							||self.getElement("name_full").getValue()&&self.getElement("name_full").getValue().length
+							||self.getElement("inn").getValue()&&self.getElement("inn").getValue().length
+						)
+						){
+							var this_cont = this;
+							WindowQuestion.show({
+								"cancel":false,
+								"text":"Заполненные данные по техническому заказчику будут удалены, продолжить?",
+								"callBack":function(res){
+									if(res==WindowQuestion.RES_YES){										
+										self.resetValues();									}
+									else{
+										this_cont.setValue(false);
+									}
+								}
+							});
+						}
+					}
+				}									
+			}));	
+		
+			this.addElement(new EditString(id+":customer_auth_letter",{
+				"maxLength":200,
+				"attrs":{"percentcalc":"false","notForValue":"true"},
+				"contClassName":"form-group "+window.getBsCol(6),
+				"placeholder":"Номер и дата доверенности",
+				"editContClassName":"input-group "+window.getBsCol(12),
+				"view":this,
+				"events":{
+					"blur":function(){
+						self.m_mainView.calcFillPercent();
+					}
+				}			
+			}));	
+			this.addElement(new EditFile(id+":customer_auth_letter_file",{
+				"attrs":{"percentcalc":"false","notForValue":"true"},
+				"labelClassName": "control-label "+window.getBsCol(2),//percentcalc
+				"contClassName":"form-group "+window.getBsCol(6),
+				"labelCaption":"Файлы (бланк и ЭЦП)",
+				"editContClassName":"input-group "+window.getBsCol(12),
+				"template":window.getApp().getTemplate("EditFileApp"),
+				"templateOptions":{"bsColClass":window.getBsCol(12)},
+				"addControls":null,
+				"mainView":this,
+				"separateSignature":true,
+				"allowOnlySignedFiles":true,
+				"onDeleteFile":function(fileId,callBack){
+					self.m_mainView.deletePrint("delete_customer_auth_letter_file",fileId,callBack);
+				},
+				"onFileDeleted":function(){
+					self.m_mainView.calcFillPercent();
+				},
+				"onFileAdded":function(){
+					self.m_mainView.calcFillPercent();
+				},
+				"onFileSigAdded":function(){
+					self.m_mainView.calcFillPercent();
+				},
+				"onDownload":function(){
+					self.m_mainView.downloadPrint("download_customer_auth_letter_file");
+				},
+				"onSignClick":function(){
+					self.m_mainView.downloadPrintSig("download_customer_auth_letter_file");
+				},
+				"onSignFile":function(fileId){
+					self.m_mainView.signPrint(self.getElement("customer_auth_letter_file"),fileId);
+				}											
+			}));			
+		}
 				
 		if (options.cmdClose){
 			this.addElement(new Control(id+":cmdClose","A",{
@@ -297,7 +385,15 @@ function ApplicationClientEdit(id,options){
 	};
 	*/
 	var f_getFillPercent= function(){
-		return (this.getAttr("percentcalc")=="true"&&this.isNull())? 0:100;
+		//return (this.getAttr("percentcalc")=="true"&&this.isNull())? 0:100;
+		var r;
+		if(self.m_isCustomer&&self.getElement("customer_is_developer").getValue()){
+			r = 100;
+		}
+		else{
+			r = (this.getAttr("percentcalc")=="true"&&this.isNull())? 0:100;
+		}
+		return r;
 	};
 
 	this.getElement("name").getFillPercent = f_getFillPercent;
@@ -328,6 +424,10 @@ function ApplicationClientEdit(id,options){
 	if (this.m_isApplicant){
 		this.getElement("auth_letter").getFillPercent =  f_getFillPercent;
 	}
+	if (this.m_isCustomer){
+		this.getElement("customer_auth_letter").getFillPercent =  f_getFillPercent;
+	}
+	
 }
 extend(ApplicationClientEdit,EditJSON);
 
@@ -419,19 +519,25 @@ ApplicationClientEdit.prototype.getValueJSON = function(){
 }
 
 ApplicationClientEdit.prototype.setAuthLetterRequired = function(init){
-	if (this.m_mainView.m_readOnly|| (!this.m_isApplicant&&!this.m_isDeveloper&&!this.m_isCustomer))return;
-	var DIF_FIELD = "name_full";
+	var auth_req = false;
+	var cust_v,dev_v;
+	
 	var appl = this.m_mainView.getElement("applicant");
-	var appl_v = appl.getElement(DIF_FIELD).getValue();
-	var appl_f = appl_v? appl_v.toLowerCase():"";
-	var old_auth_req = appl.getElement("auth_letter").getEnabled();
-	var cust_v = this.m_mainView.getElement("customer").getElement(DIF_FIELD).getValue();
-	var dev_v = this.m_mainView.getElement("developer").getElement(DIF_FIELD).getValue();
-	var auth_req = (
-		appl_f.length
-		&& appl_f!=(cust_v? cust_v.toLowerCase():"")
-		&& appl_f!=(dev_v? dev_v.toLowerCase() : "")
-	);
+	var old_auth_req = appl.getElement("auth_letter").getEnabled();	
+	
+	if (!this.m_mainView.m_readOnly && (this.m_isApplicant|| this.m_isDeveloper || this.m_isCustomer) ){
+		var DIF_FIELD = "name_full";		
+		var appl_v = appl.getElement(DIF_FIELD).getValue();
+		var appl_f = appl_v? appl_v.toLowerCase():"";	
+		cust_v = this.m_mainView.getElement("customer").getElement(DIF_FIELD).getValue();
+		dev_v = this.m_mainView.getElement("developer").getElement(DIF_FIELD).getValue();
+		auth_req = (
+			appl_f.length
+			&& appl_f!=(cust_v? cust_v.toLowerCase():"")
+			&& appl_f!=(dev_v? dev_v.toLowerCase() : "")
+		);
+	}
+		
 	appl.getElement("auth_letter").setEnabled(auth_req);
 	appl.getElement("auth_letter").setAttr("percentcalc", (auth_req && cust_v!=undefined && dev_v!=undefined) );
 	appl.getElement("auth_letter_file").setEnabled(auth_req);
@@ -440,7 +546,7 @@ ApplicationClientEdit.prototype.setAuthLetterRequired = function(init){
 	appl.getElement("auth_letter_file").setAttr("percentcalc", (auth_req && cust_v!=undefined && dev_v!=undefined) );
 	
 	if (!init && !old_auth_req && auth_req && cust_v!=undefined && dev_v!=undefined){
-		window.showWarn("Заявитель не является ни заказчиком ни застройщиком. Необходимо прикрепить доверенность.");
+		window.showWarn("Заявитель не является ни заказчиком ни застройщиком. Необходимо прикрепить доверенность на закладке заявителя.");
 	}
 	else if (!init && old_auth_req && !auth_req){
 		appl.getElement("auth_letter").reset();
@@ -449,9 +555,11 @@ ApplicationClientEdit.prototype.setAuthLetterRequired = function(init){
 			if (app_id){
 				var pm = this.m_mainView.getController().getPublicMethod("delete_auth_letter_file");
 				pm.setFieldValue("id",app_id);
+				pm.setFieldValue("fill_percent",this.m_mainView.getElement("fill_percent").getValue());
 				pm.run({
 					"ok":function(){
 						appl.getElement("auth_letter_file").reset();
+						window.showWarn("Заявитель является заказчиком или застройщиком. Файл доверенности на закладке заявителя удален.");
 					}
 				});
 			}
@@ -459,3 +567,37 @@ ApplicationClientEdit.prototype.setAuthLetterRequired = function(init){
 		
 	}
 }
+
+ApplicationClientEdit.prototype.setCustomerDataVisible = function(v){
+	var n = document.getElementById(this.getId()+":client_data_cont");
+	var n2 = document.getElementById(this.getId()+":btn_fill_on_data");
+	if(n && n2){
+		if(v){
+			DOMHelper.show(n);
+			DOMHelper.show(n2);
+		}
+		else{
+			DOMHelper.hide(n);
+			DOMHelper.hide(n2);
+		}
+	}
+	
+	this.getElement("customer_auth_letter").setAttr("percentcalc",v? "true":"false");
+	this.getElement("customer_auth_letter_file").setAttr("percentcalc",v? "true":"false");  
+	
+	this.m_mainView.calcFillPercent();
+}
+
+
+ApplicationClientEdit.prototype.resetValues = function(){
+	for (var elem_id in this.m_elements){
+		//input elements		
+		if (this.m_elements[elem_id] && !this.m_elements[elem_id].getAttr("notForValue") && this.m_elements[elem_id].reset
+		&& elem_id!="customer_is_developer"){
+			this.m_elements[elem_id].reset();
+		}
+	}
+	this.getElement("customer_auth_letter").reset();
+	this.getElement("customer_auth_letter_file").reset();
+}
+

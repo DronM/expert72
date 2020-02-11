@@ -83,6 +83,7 @@ class PKIManager {
 	const ER_REVOKED = 'Сертификат владелец:%s, издатель:%s отозван!';
 	const ER_INNER = 'Внутренняя ошибка!';
 	const ER_UNQUALIFIED_CERT = 'Сертификат неквалифицированный';
+	const ER_MERGE_NOT_FOUND = 'Утилита объединения подписей не найдена!';
 
 	const CA_LIST_URL = 'https://e-trust.gosuslugi.ru/CA/DownloadTSL?schemaVersion=0';		
 	const DEF_CRL_VALIDITY = 86400;//24*60*60
@@ -127,6 +128,10 @@ class PKIManager {
 			self::getCAList($caListFile);
 			return TRUE;
 		}
+	}
+	
+	public function getBinDir(){
+		return $this->pkiPath.DIRECTORY_SEPARATOR.'bin';
 	}
 	
 	public static function getCAList($caListFile){
@@ -918,7 +923,12 @@ class PKIManager {
 	 */	
 	public function mergeSigs($sSigFile,$dSigFile,$oSigFile){
 		try{
-			$this->run_shell_cmd2(sprintf($this->pkiPath.'cmsmerge -s "%s" -d "%s" -o "%s"',$sSigFile,$dSigFile,$oSigFile));
+			$bin_path = $this->getBinDir().DIRECTORY_SEPARATOR;
+			if(!file_exists($bin_path.'cmsmerge')){
+				$this->logger->add('mergeSigs '.self::ER_MERGE_NOT_FOUND.' path:'.$bin_path,'error');
+				throw new Exception(self::ER_MERGE_NOT_FOUND);
+			}
+			$this->run_shell_cmd2(sprintf($bin_path.'cmsmerge -s "%s" -d "%s" -o "%s"',$sSigFile,$dSigFile,$oSigFile));
 		}
 		finally{
 			$this->logger->dump();
@@ -931,7 +941,7 @@ class PKIManager {
 		try{
 			$handle = @fopen($sigFile, "r");
 			if ($handle===FALSE){
-				throw new Exception('isBase64Encoded:unable to open sig file!');
+				throw new Exception('isBase64Encoded:unable to open sig file! '.$sigFile);
 			}	
 			$start_s = @fread($handle,strlen(self::SIG_HEADER));
 			$is_base64 = ($start_s==self::SIG_HEADER || substr($start_s,0,2)=='MI');

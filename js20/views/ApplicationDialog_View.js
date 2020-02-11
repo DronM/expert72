@@ -664,6 +664,9 @@ function ApplicationDialog_View(id,options){
 		,new DataBinding({"control":this.getElement("app_print_audit")})
 		,new DataBinding({"control":this.getElement("applicant").getElement("auth_letter")})
 		,new DataBinding({"control":this.getElement("applicant").getElement("auth_letter_file")})
+		,new DataBinding({"control":this.getElement("customer").getElement("customer_auth_letter")})
+		,new DataBinding({"control":this.getElement("customer").getElement("customer_auth_letter_file")})
+		//,new DataBinding({"control":this.getElement("customer").getElement("customer_is_developer")})
 	];
 	if(!this.m_order010119){
 		r_binds.push(new DataBinding({"control":this.getElement("service_cont").getElement("modification"),"fieldId":"modification"}));
@@ -710,6 +713,10 @@ function ApplicationDialog_View(id,options){
 		,new CommandBinding({"control":this.getElement("app_print_audit"),"fieldId":"app_print_audit_files"})	
 		,new CommandBinding({"control":this.getElement("applicant").getElement("auth_letter")})
 		,new CommandBinding({"control":this.getElement("applicant").getElement("auth_letter_file"),"fieldId":"auth_letter_files"})
+		,new CommandBinding({"control":this.getElement("customer").getElement("customer_auth_letter")})
+		,new CommandBinding({"control":this.getElement("customer").getElement("customer_auth_letter_file"),"fieldId":"customer_auth_letter_files"})
+		//,new CommandBinding({"control":this.getElement("customer").getElement("customer_is_developer")})
+		
 	];
 	if(!this.m_order010119){
 		w_binds.push(new CommandBinding({"control":this.getElement("service_cont").getElement("cost_eval_validity"),"fieldId":"cost_eval_validity"}));
@@ -770,6 +777,7 @@ function ApplicationDialog_View(id,options){
 	this.getElement("app_print_audit").setActive = f_setAppPrintActive;
 	this.getElement("app_print_audit").getFillPercent = this.m_getAppPrintFillPercent;
 	this.getElement("applicant").getElement("auth_letter_file").getFillPercent = this.m_getAppPrintFillPercent;
+	this.getElement("customer").getElement("customer_auth_letter_file").getFillPercent = this.m_getAppPrintFillPercent;
 	
 	//********** cades plugin ******************************
 	this.m_cadesView.afterViewConstructed();
@@ -884,7 +892,8 @@ ApplicationDialog_View.prototype.onGetData = function(resp,cmd){
 		 );
 	this.getElement("service_cont").getElement("expertise").setValue(do_expertise);
 	
-	this.calcFillPercent();
+	//this.calcFillPercent();
+	this.getElement("customer").setCustomerDataVisible(!this.getElement("customer").getElement("customer_is_developer").getValue());
 	
 	var st = m.getFieldValue("application_state");
 	
@@ -1235,6 +1244,7 @@ ApplicationDialog_View.prototype.disableAll = function(){
 	this.getElement("doc_flow_in").setEnabled(true);
 
 	this.getElement("applicant").getElement("auth_letter_file").setEnabled(false);
+	this.getElement("customer").getElement("customer_auth_letter_file").setEnabled(false);
 	this.getElement("doc_folders").setEnabled(true);
 	
 	var serv_cont = this.getElement("service_cont");
@@ -1332,7 +1342,7 @@ ApplicationDialog_View.prototype.checkPrintFiles = function(){
 ApplicationDialog_View.prototype.deletePrint = function(printMeth,fileId,callBack){
 	var self = this;
 	WindowQuestion.show({
-		"text":"Удалить файл "+((printMeth=="delete_auth_letter_file")? "доверенности":"заявления")+"?",
+		"text":"Удалить файл "+((printMeth=="delete_auth_letter_file"||printMeth=="delete_customer_auth_letter_file")? "доверенности":"заявления")+"?",
 		"cancel":false,
 		"callBack":function(res){			
 			if (res==WindowQuestion.RES_YES){

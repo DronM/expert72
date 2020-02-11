@@ -108,6 +108,22 @@ ContractList_View.prototype.addGrid = function(options){
 					"field":new FieldString("document_type")
 				})
 		};
+		filters.expertise_type = {
+				"binding":new CommandBinding({
+					"control":new Enum_expertise_types(id+":filter-ctrl-expertise_type",{"labelCaption":"Вид гос.экспертизы:","contClassName":"form-group-filter"}),
+					"field":new FieldString("expertise_type")
+				})
+		};
+		
+	}
+	else if (this.EXPERTISE_TYPE){
+		filters.expertise_type = {
+				"binding":new CommandBinding({
+					"control":new Enum_expertise_types(id+":filter-ctrl-expertise_type",{"labelCaption":"Вид гос.экспертизы:","contClassName":"form-group-filter"}),
+					"field":new FieldString("expertise_type")
+				})
+		};
+	
 	}
 	
 	var fields = [];
@@ -127,8 +143,96 @@ ContractList_View.prototype.addGrid = function(options){
 					})
 				]
 			})
+		);
+		fields.push(
+			new GridCellHead(id+":grid:head:expertise_type",{
+				"value":"Вид гос.экспертизы",
+				"columns":[
+					//EnumGridColumn_expertise_types
+					new GridColumn({
+						"field":model.getField("expertise_type"),
+						"ctrlClass":Enum_expertise_types,
+						"searchOptions":{
+							"searchType":"on_match",
+							"typeChange":false
+						},
+						"formatFunction":function(fields){
+							var exp_tp = fields.expertise_type.getValue();
+							var res = "";
+							if(exp_tp=="pd"){
+								res = "ПД";
+							}
+							else if(exp_tp=="pd_eng_survey"){
+								res = "ПД и РИИ";
+							}
+							else if(exp_tp=="eng_survey"){
+								res = "РИИ";
+							}
+							else if(exp_tp=="cost_eval_validity"){
+								res = "Достоверность";
+							}
+							else if(exp_tp=="cost_eval_validity_pd"){
+								res = "ПД и Достоверность";
+							}
+							else if(exp_tp=="cost_eval_validity_eng_survey"){
+								res = "РИИ и Достоверность";
+							}
+							else if(exp_tp=="cost_eval_validity_pd_eng_survey"){
+								res = "ПД, РИИ, Достоверность";
+							}
+							
+							return res;
+						}
+					})
+				]
+			})
+		);				
+	}
+	else if (this.EXPERTISE_TYPE){
+		fields.push(
+			new GridCellHead(id+":grid:head:expertise_type",{
+				"value":"Вид гос.экспертизы",
+				"columns":[
+					new GridColumn({
+						"field":model.getField("expertise_type"),
+						"ctrlClass":Enum_expertise_types,
+						"searchOptions":{
+							"searchType":"on_match",
+							"typeChange":false
+						},
+						"formatFunction":function(fields){
+							var exp_tp = fields.expertise_type.getValue();
+							var res = "";
+							if(exp_tp=="pd"){
+								res = "ПД";
+							}
+							else if(exp_tp=="pd_eng_survey"){
+								res = "ПД и РИИ";
+							}
+							else if(exp_tp=="eng_survey"){
+								res = "РИИ";
+							}
+							else if(exp_tp=="cost_eval_validity"){
+								res = "Достоверность";
+							}
+							else if(exp_tp=="cost_eval_validity_pd"){
+								res = "ПД и Достоверность";
+							}
+							else if(exp_tp=="cost_eval_validity_eng_survey"){
+								res = "РИИ и Достоверность";
+							}
+							else if(exp_tp=="cost_eval_validity_pd_eng_survey"){
+								res = "ПД, РИИ, Достоверность";
+							}
+							
+							return res;
+						}
+					})
+				]
+			})
 		);	
 	}
+	
 	fields.push(
 		new GridCellHead(id+":grid:head:expertise_result_number",{
 			"value":"№ эксп.закл.",

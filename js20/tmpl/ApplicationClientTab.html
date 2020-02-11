@@ -6,7 +6,7 @@
 		{{#isDeveloper}}Сведения о застройщике{{/isDeveloper}}  
 		</h3>
 		{{#isClient}}
-		<button class="btn bg-{{colorClass}} dropdown-toggle fillClientData pull-right" type="button" data-toggle="dropdown">Заполнить
+		<button id="{{id}}:btn_fill_on_data" class="btn bg-{{colorClass}} dropdown-toggle fillClientData pull-right{{#isCustomer}} hidden{{/isCustomer}}" type="button" data-toggle="dropdown">Заполнить
 			<span class="caret"></span>
 		</button>
 		<ul class="dropdown-menu dropdown-menu-right" title="Зполнить по другим данным">
@@ -29,76 +29,114 @@
 		</ul>
 		{{/isClient}}
 	</div> 	
-	<div id="{{id}}:client_type">
-	</div>
-	<div id="{{id}}:name">
-	</div>
-	<div id="{{id}}:name_full">
-	</div>
 	
-	<div id="{{id}}:inn">
-	</div>
-	<div id="{{id}}:kpp">
-	</div>
-	
-	<div id="{{id}}:ogrn">
-	</div>
-	
-	<div id="{{id}}:person_id_paper">
-	</div>
-
-	<div id="{{id}}:snils">
-	</div>
-
-	<div id="{{id}}:person_registr_paper">
-	</div>
-
-	<div id="{{id}}:legal_address">
-	</div>
-
-	<div id="{{id}}:post_address">
-	</div>
-
-	<div id="{{id}}:corp_email">
-	</div>
-
-	<div id="{{id}}:responsable_person_head">
-	</div>
-
-	<div id="{{id}}:base_document_for_contract">
-	</div>
-
-	<div id="{{id}}:bank">
-	</div>
-
-	<div class="panel panel-flat">
-		<div class="panel-heading">
-			<h5 class="panel-title">
-			{{#isApplicant}}<span style="font-size:120%;color:red;">*</span>{{/isApplicant}}Контакты
-			</h5>
-		</div>
-		<div class="panel-body">
-			<div id="{{id}}:responsable_persons">
+	{{#isCustomer}}
+	<div class="alert alert-warning alert-styled-left alert-bordered">
+		<p style="text-indent: 40px">Технический заказчик - юридическое лицо, которое уполномочено застройщиком и от имени застройщика заключает договоры о выполнении инженерных изысканий, о подготовке проектной документации, о строительстве, реконструкции, капитальном ремонте, сносе объектов капитального строительства, подготавливает задания на выполнение указанных видов работ, предоставляет лицам, выполняющим инженерные изыскания и (или) осуществляющим подготовку проектной документации, строительство, реконструкцию, капитальный ремонт, снос объектов капитального строительства, материалы и документы, необходимые для выполнения указанных видов работ, утверждает проектную документацию, подписывает документы, необходимые для получения разрешения на ввод объекта капитального строительства в эксплуатацию, осуществляет иные функции, предусмотренные законодательством о градостроительной деятельности (далее также - функции технического заказчика). Функции технического заказчика могут выполняться только членом соответственно саморегулируемой организации в области инженерных изысканий, архитектурно-строительного проектирования, строительства, реконструкции, капитального ремонта, сноса объектов капитального строительства, за исключением случаев, предусмотренных частью 2.1 статьи 47, частью 4.1 статьи 48, частями 2.1 и 2.2 статьи 52, частями 5 и 6 статьи 55.31 Градостроительного кодекса РФ.
+		</p>
+		<h4>
+			<div id="{{id}}:customer_is_developer">
 			</div>
-		</div>	
+		</h4>
 	</div>
+	{{/isCustomer}}
+
+	{{#isDeveloper}}
+	<div class="alert alert-warning alert-styled-left alert-bordered">
+		<p style="text-indent: 40px">Застройщик - физическое или юридическое лицо, обеспечивающее на принадлежащем ему земельном участке или на земельном участке иного правообладателя (которому при осуществлении бюджетных инвестиций в объекты капитального строительства государственной (муниципальной) собственности органы государственной власти (государственные органы), органы управления государственными внебюджетными фондами или органы местного самоуправления передали в случаях, установленных бюджетным законодательством Российской Федерации, на основании соглашений свои полномочия государственного (муниципального) заказчика) строительство, реконструкцию, капитальный ремонт, снос объектов капитального строительства, а также выполнение инженерных изысканий, подготовку проектной документации для их строительства, реконструкции, капитального ремонта. Застройщик вправе передать свои функции, предусмотренные законодательством о градостроительной деятельности, техническому заказчику.
+		</p>
+	</div>	
+	{{/isDeveloper}}
 	
-	{{#isApplicant}}
-	<div class="panel panel-flat">
-		<div class="panel-heading">
-			<h5 class="panel-title">Доверенность</h5>
-			<p class="panel-title">Заполняется в том случае, если заявитель не является ни заказчиком ни застройщиком</p>
+	<div id="{{id}}:client_data_cont" {{#isCustomer}}class="hidden"{{/isCustomer}} >
+		<div id="{{id}}:client_type">
 		</div>
-		<div class="panel-body">
-			<div class="row">
-				<div id="{{id}}:auth_letter">
+		<div id="{{id}}:name">
+		</div>
+		<div id="{{id}}:name_full">
+		</div>
+	
+		<div id="{{id}}:inn">
+		</div>
+		<div id="{{id}}:kpp">
+		</div>
+	
+		<div id="{{id}}:ogrn">
+		</div>
+	
+		<div id="{{id}}:person_id_paper">
+		</div>
+
+		<div id="{{id}}:snils">
+		</div>
+
+		<div id="{{id}}:person_registr_paper">
+		</div>
+
+		<div id="{{id}}:legal_address">
+		</div>
+
+		<div id="{{id}}:post_address">
+		</div>
+
+		<div id="{{id}}:corp_email">
+		</div>
+
+		<div id="{{id}}:responsable_person_head">
+		</div>
+
+		<div id="{{id}}:base_document_for_contract">
+		</div>
+
+		<div id="{{id}}:bank">
+		</div>
+
+		<div class="panel panel-flat">
+			<div class="panel-heading">
+				<h5 class="panel-title{{#isApplicant}} contentRequired{{/isApplicant}}">Контакты
+				</h5>
+			</div>
+			<div class="panel-body">
+				<div id="{{id}}:responsable_persons">
 				</div>
 			</div>	
-			<div class="row">
-				<div id="{{id}}:auth_letter_file">
-				</div>
+		</div>
+	
+		{{#isApplicant}}
+		<div class="panel panel-flat">
+			<div class="panel-heading">
+				<h5 class="panel-title">Доверенность</h5>
+				<p class="panel-title">Заполняется в том случае, если заявитель не является ни заказчиком ни застройщиком</p>
+			</div>
+			<div class="panel-body">
+				<div class="row">
+					<div id="{{id}}:auth_letter">
+					</div>
+				</div>	
+				<div class="row">
+					<div id="{{id}}:auth_letter_file">
+					</div>
+				</div>	
 			</div>	
-		</div>	
+		</div>
+		{{/isApplicant}}
+	
+		{{#isCustomer}}
+		<div class="panel panel-flat">
+			<div class="panel-heading">
+				<h5 class="panel-title contentRequired">Доверенность</h5>
+			</div>
+			<div class="panel-body">
+				<div class="row">
+					<div id="{{id}}:customer_auth_letter">
+					</div>
+				</div>	
+				<div class="row">
+					<div id="{{id}}:customer_auth_letter_file">
+					</div>
+				</div>	
+			</div>	
+		</div>
+		{{/isCustomer}}
 	</div>
-	{{/isApplicant}}
 </div>

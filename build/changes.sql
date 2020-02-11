@@ -1,27 +1,130 @@
 
-					ALTER TYPE expertise_types ADD VALUE 'cost_eval_validity';
-					ALTER TYPE expertise_types ADD VALUE 'cost_eval_validity_pd';
-					ALTER TYPE expertise_types ADD VALUE 'cost_eval_validity_eng_survey';
-					ALTER TYPE expertise_types ADD VALUE 'cost_eval_validity_pd_eng_survey';
-	/* function */
-	CREATE OR REPLACE FUNCTION enum_expertise_types_val(expertise_types,locales)
-	RETURNS text AS $$
+		ALTER TABLE contracts ADD COLUMN allow_client_out_documents bool
+			DEFAULT FALSE;
+
+
+--contracts_dialog
+--applications_dialog
+--doc_flow_in_dialog
+
+
+
+		--constant value table
+		CREATE TABLE IF NOT EXISTS const_ban_client_responses_day_cnt
+		(name text, descr text, val int,
+			val_type text,ctrl_class text,ctrl_options json, view_class text,view_options json);
+		ALTER TABLE const_ban_client_responses_day_cnt OWNER TO expert72;
+		INSERT INTO const_ban_client_responses_day_cnt (name,descr,val,val_type,ctrl_class,ctrl_options,view_class,view_options) VALUES (
+			'За сколько рабочих дней запрещать отправку ответов на замечания'
+			,'За данное количество рабочих дней до окончания срока экспертизы клиентам будет запрещена отправка писем с видом ответы на замечания'
+			,NULL
+			,'Int'
+			,NULL
+			,NULL
+			,NULL
+			,NULL
+		);
+		--constant get value
+		CREATE OR REPLACE FUNCTION const_ban_client_responses_day_cnt_val()
+		RETURNS int AS
+		$BODY$
+			SELECT val::int AS val FROM const_ban_client_responses_day_cnt LIMIT 1;
+		$BODY$
+		LANGUAGE sql STABLE COST 100;
+		ALTER FUNCTION const_ban_client_responses_day_cnt_val() OWNER TO expert72;
+		--constant set value
+		CREATE OR REPLACE FUNCTION const_ban_client_responses_day_cnt_set_val(Int)
+		RETURNS void AS
+		$BODY$
+			UPDATE const_ban_client_responses_day_cnt SET val=$1;
+		$BODY$
+		LANGUAGE sql VOLATILE COST 100;
+		ALTER FUNCTION const_ban_client_responses_day_cnt_set_val(Int) OWNER TO expert72;
+		--edit view: all keys and descr
+		CREATE OR REPLACE VIEW const_ban_client_responses_day_cnt_view AS
 		SELECT
-		CASE
-		WHEN $1='pd'::expertise_types AND $2='ru'::locales THEN 'Государственная экспертиза проектной документации'
-		WHEN $1='eng_survey'::expertise_types AND $2='ru'::locales THEN 'Государственная экспертиза результатов инженерных изысканий'
-		WHEN $1='pd_eng_survey'::expertise_types AND $2='ru'::locales THEN 'Государственная экспертиза проектной документации и Государственная экспертиза результатов инженерных изысканий'
-		WHEN $1='cost_eval_validity'::expertise_types AND $2='ru'::locales THEN 'Государственная экспертиза достоверности сметной стоимости'
-		WHEN $1='cost_eval_validity_pd'::expertise_types AND $2='ru'::locales THEN 'Государственная экспертиза проектной документации и Государственная экспертиза достоверности сметной стоимости'
-		WHEN $1='cost_eval_validity_eng_survey'::expertise_types AND $2='ru'::locales THEN 'Государственная экспертиза результатов инженерных изысканий и Государственная экспертиза достоверности сметной стоимости'
-		WHEN $1='cost_eval_validity_pd_eng_survey'::expertise_types AND $2='ru'::locales THEN 'Государственная экспертиза проектной документации, Государственная экспертиза результатов инженерных изысканий, Государственная экспертиза достоверности сметной стоимости'
-		ELSE ''
-		END;		
-	$$ LANGUAGE sql;	
-	ALTER FUNCTION enum_expertise_types_val(expertise_types,locales) OWNER TO expert72;		
-		
-		
-		
---applications_list
---application_processes_process()
---applications_dialog		
+			'ban_client_responses_day_cnt'::text AS id
+			,t.name
+			,t.descr
+		,
+		t.val::text AS val
+		,t.val_type::text AS val_type
+		,t.ctrl_class::text
+		,t.ctrl_options::json
+		,t.view_class::text
+		,t.view_options::json
+		FROM const_ban_client_responses_day_cnt AS t
+		;
+		ALTER VIEW const_ban_client_responses_day_cnt_view OWNER TO expert72;
+		CREATE OR REPLACE VIEW constants_list_view AS
+		SELECT *
+		FROM const_doc_per_page_count_view
+		UNION ALL
+		SELECT *
+		FROM const_grid_refresh_interval_view
+		UNION ALL
+		SELECT *
+		FROM const_session_live_time_view
+		UNION ALL
+		SELECT *
+		FROM const_client_download_file_types_view
+		UNION ALL
+		SELECT *
+		FROM const_client_download_file_max_size_view
+		UNION ALL
+		SELECT *
+		FROM const_employee_download_file_types_view
+		UNION ALL
+		SELECT *
+		FROM const_employee_download_file_max_size_view
+		UNION ALL
+		SELECT *
+		FROM const_application_check_days_view
+		UNION ALL
+		SELECT *
+		FROM const_app_recipient_department_view
+		UNION ALL
+		SELECT *
+		FROM const_client_lk_view
+		UNION ALL
+		SELECT *
+		FROM const_debug_view
+		UNION ALL
+		SELECT *
+		FROM const_reminder_refresh_interval_view
+		UNION ALL
+		SELECT *
+		FROM const_outmail_data_view
+		UNION ALL
+		SELECT *
+		FROM const_reminder_show_days_view
+		UNION ALL
+		SELECT *
+		FROM const_cades_verify_after_signing_view
+		UNION ALL
+		SELECT *
+		FROM const_cades_include_certificate_view
+		UNION ALL
+		SELECT *
+		FROM const_cades_signature_type_view
+		UNION ALL
+		SELECT *
+		FROM const_cades_hash_algorithm_view
+		UNION ALL
+		SELECT *
+		FROM const_contract_document_visib_expert_list_view
+		UNION ALL
+		SELECT *
+		FROM const_ban_client_responses_day_cnt_view;
+		ALTER VIEW constants_list_view OWNER TO ;
+	
+	
+	
+--client_payments_process
+--doc_flow_out_client_process()	
+
+
+ALTER TABLE applications ADD COLUMN customer_auth_letter text,ADD COLUMN customer_auth_letter_file jsonb;
+
+
+

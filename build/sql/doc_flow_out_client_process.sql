@@ -31,6 +31,8 @@ DECLARE
 	v_corrected_files_t text;
 	v_doc_flow_in doc_flow_in;
 	v_server_for_href text;
+	v_is_expertise_cost_budget bool;
+	v_set_budget_contrcat_date bool;
 BEGIN
 	IF TG_WHEN='BEFORE' AND ( TG_OP='INSERT' OR TG_OP='UPDATE') THEN		
 		IF (const_client_lk_val() OR const_debug_val())
@@ -68,7 +70,8 @@ BEGIN
 				st.state,
 				st.date_time,
 				contracts.contract_number,
-				contracts.employee_id
+				contracts.employee_id,
+				(coalesce(contracts.expertise_cost_budget,0)>0)
 			INTO
 				v_applicant,
 				v_constr_name,
@@ -80,7 +83,8 @@ BEGIN
 				v_application_state,
 				v_application_state_dt,
 				v_contract_number,
-				v_contract_employee_id
+				v_contract_employee_id,
+				v_is_expertise_cost_budget
 			FROM applications AS app
 			LEFT JOIN contracts ON contracts.application_id=app.id
 				AND (
@@ -175,7 +179,7 @@ BEGIN
 					) AS section_o
 					FROM doc_flow_out_client_document_files AS doc_f
 					LEFT JOIN application_document_files AS app_f ON app_f.file_id=doc_f.file_id
-					WHERE doc_f.doc_flow_out_client_id=NEW.id AND app_f.document_id<>0
+					WHERE doc_f.doc_flow_out_client_id=NEW.id AND app_f.document_id<>0 AND app_f.file_id IS NOT NULL
 					GROUP BY app_f.file_path
 					ORDER BY app_f.file_path
 				) AS paths;
@@ -391,20 +395,72 @@ BEGIN
 					FROM employees
 					LEFT JOIN users ON users.id=employees.user_id
 					WHERE employees.id=v_contract_employee_id AND users.email IS NOT NULL
-					);				
+					);								
 				END IF;
 				
 				--Отметка даты возврата контракта && смена статуса
 				SELECT doc_flow_contract_ret_date(NEW.id) INTO v_contract_return_date;
-				
+
+				-- С 2020 если вернули подписанный контракт
+				-- и при этом у нас бюджтное финансирование
+				--  то статус сразу же поставим - экспертиза проекта!
+				v_set_budget_contrcat_date = (
+					v_application_state='waiting_for_contract'
+					AND v_contract_return_date IS NOT NULL
+					AND v_is_expertise_cost_budget
+				);
+/*				
+RAISE EXCEPTION 'contracts_work_end_date=%',(SELECT contracts_work_end_date(
+								v_office_id,
+								date_type,
+								v_contract_return_date,
+								expert_work_day_count
+							)
+						FROM contracts
+						WHERE contracts.id=v_contract_id
+					);
+*/					
 				UPDATE contracts
 				SET
-					contract_return_date = coalesce(v_contract_return_date,NEW.date_time::date),
-					contract_date = coalesce(v_contract_return_date,NEW.date_time),
-					contract_return_date_on_sig = (v_contract_return_date IS NOT NULL)
-				WHERE id=v_contract_id AND contract_return_date IS NULL;
+					contract_return_date =
+						CASE WHEN contract_return_date IS NULL THEN coalesce(v_contract_return_date,NEW.date_time::date)
+						ELSE contract_return_date
+						END,
+					contract_date =
+						CASE WHEN contract_date IS NULL THEN coalesce(v_contract_return_date,NEW.date_time)
+						ELSE contract_date
+						END,
+					contract_return_date_on_sig =
+						CASE WHEN contract_return_date IS NULL THEN (v_contract_return_date IS NOT NULL)
+						ELSE contract_return_date_on_sig
+						END,
+					work_start_date =
+						CASE WHEN v_set_budget_contrcat_date THEN v_contract_return_date
+						ELSE work_start_date
+						END,
+					work_end_date =
+						CASE WHEN v_set_budget_contrcat_date THEN
+							contracts_work_end_date(
+								v_office_id,
+								date_type,
+								v_contract_return_date,
+								expertise_day_count
+							)
+						ELSE work_end_date
+						END,
+					expert_work_end_date =
+						CASE WHEN v_set_budget_contrcat_date THEN
+							contracts_work_end_date(
+								v_office_id,
+								date_type,
+								v_contract_return_date,
+								expert_work_day_count
+							)
+						ELSE expert_work_end_date
+					END
+				WHERE id=v_contract_id AND (v_set_budget_contrcat_date OR contract_return_date IS NULL);
 				--coalesce(contract_return_date_on_sig,FALSE)=FALSE;
-				--RAISE EXCEPTION 'v_application_state=%',v_application_state;
+				--RAISE EXCEPTION 'v_application_state=%, v_is_expertise_cost_budget=%, v_contract_return_date=%',v_application_state,v_is_expertise_cost_budget, v_contract_return_date;
 				
 				IF v_application_state='waiting_for_contract'
 				OR v_application_state='closed' THEN
@@ -419,12 +475,14 @@ BEGIN
 						NEW.application_id,
 						greatest(NEW.date_time,v_application_state_dt+'1 second'::interval),
 						CASE
+							WHEN v_set_budget_contrcat_date THEN 'expertise'::application_states
 							WHEN v_application_state='waiting_for_contract' THEN 'waiting_for_pay'::application_states
 							ELSE 'archive'::application_states
 						END,
 						NEW.user_id,
 						NULL
-					);			
+					);
+			
 				END IF;
 				
 			END IF;

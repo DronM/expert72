@@ -110,6 +110,12 @@ $permissions = array();
 			
 				$permissions['Application_Controller_delete_auth_letter_file']=TRUE;
 			
+				$permissions['Application_Controller_download_customer_auth_letter_file']=TRUE;
+			
+				$permissions['Application_Controller_download_customer_auth_letter_file_sig']=TRUE;
+			
+				$permissions['Application_Controller_delete_customer_auth_letter_file']=TRUE;
+			
 				$permissions['Application_Controller_all_sig_report']=TRUE;
 			
 				$permissions['Application_Controller_get_constr_name']=TRUE;

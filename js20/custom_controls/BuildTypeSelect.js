@@ -12,7 +12,7 @@ function BuildTypeSelect(id,options){
 	options.model = new BuildType_Model();
 	
 	if (options.labelCaption!=""){
-		options.labelCaption = options.labelCaption || "Вид строительства:";
+		options.labelCaption = options.labelCaption || "Вид работ:";
 	}
 	
 	options.keyIds = options.keyIds || ["build_type_id"];

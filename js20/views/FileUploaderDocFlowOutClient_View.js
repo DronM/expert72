@@ -86,7 +86,7 @@ FileUploaderDocFlowOutClient_View.prototype.deleteFileFromServerContinue = funct
 	 * если не все загружены - предупреждение
 	 * если все загружены: 1) запрос на удаление 2) перечитать файлы (возможно какие-то были восстановлены)
 	 */	
-	var reread_tabs = (file_ctrl.m_originalFile || x(h_ref && DOMHelper.hasClass(h_ref,"uploadedByThis")) );
+	var reread_tabs = (file_ctrl.m_originalFile || (h_ref && DOMHelper.hasClass(h_ref,"uploadedByThis")) );
 	if(reread_tabs && this.getForUploadFileCount()){
 		throw new Error('Загрузить все незагруженные файлы!');
 	}

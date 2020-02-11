@@ -116,7 +116,11 @@ CREATE OR REPLACE VIEW applications_dialog AS
 		
 		d.fund_percent,
 		
-		d.update_dt
+		d.update_dt,
+		
+		d.customer_auth_letter,
+		d.customer_auth_letter_file
+		
 		
 	FROM applications AS d
 	LEFT JOIN offices ON offices.id=d.office_id

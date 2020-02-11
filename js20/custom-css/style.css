@@ -233,6 +233,14 @@ label.percentcalc:before {
 	font-size:120%;
 	color:red;
 }
+.contentRequired:before {
+	content: "*";
+	/*font-weight:bolder;
+	*/
+	font-size:120%;
+	color:red;
+}
+
 .demo-color:hover{
 	cursor:pointer;
 	border:2px solid black;
@@ -447,4 +455,6 @@ table,tr,td.noBorder{
 	text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
 	background-color:#ddd4d4;
 }
-
+input.checkBoxCtrl{
+	margin-right:5px;
+}

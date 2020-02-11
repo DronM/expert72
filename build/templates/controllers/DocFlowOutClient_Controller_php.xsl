@@ -33,6 +33,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 	const ER_NO_DOC_FILE = 'Файл с данными не найден!';
 	const ER_VERIF_SIG = 'Ошибка проверки подписи:%s';
 	const ER_UNSENT_DOC_EXISTS = 'По данному заявлению уже есть неотправленный документ с таким видом письма от %s';
+	const ER_CLIENT_OUT_DOC_BANNED = 'С %s по данному контракту запрещена отправка ответов на замечания!';
 	const ER_COULD_NOT_REMOVE_SIG = 'Ошибка при удалении подписи заказчика!';
 	const ER_NO_SIG_ATTACHMENTS = 'Нет подписанных Вами документов!';
 	const ER_DEL_NOT_ALLOWED = 'Удаление файлов запрещено!@1010';
@@ -74,7 +75,9 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		$app_id = $this->getExtDbVal($pm,'application_id');
 		
 		//Проверка на существование других неотправленных писем в таким же типом
-		$this->check_unsent_doc($this->getExtDbVal($pm,'application_id'),$this->getExtDbVal($pm,'doc_flow_out_client_type'));
+		$this->check_unsent_doc($app_id, $this->getExtDbVal($pm,'doc_flow_out_client_type'));
+		
+		$this->check_resp_doc($app_id, $this->getExtVal($pm,'doc_flow_out_client_type'));
 					
 		$ar = $this->getDbLink()->query_first(sprintf("SELECT
 			application_processes_last(%d) AS state,
@@ -113,13 +116,22 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			$pm->setParamValue("user_id",$_SESSION['user_id']);
 		}
 		
+		$doc_flow_out_client_type = $pm->getParamValue('doc_flow_out_client_type')? $this->getExtVal($pm,'doc_flow_out_client_type'):NULL;
+		
 		$app_id = NULL;
 		if ($pm->getParamValue('application_id')){
 			$app_id = $this->getExtDbVal('application_id');
 			$ar = $this->getDbLink()->query_first(sprintf(
-			"SELECT
+			"WITH
+			doc AS
+				(SELECT
+					t.user_id,
+					t.doc_flow_out_client_type
+				FROM doc_flow_out_client t WHERE t.id=%d)
+			SELECT
 				user_id,
-				(SELECT t.user_id FROM doc_flow_out_client t WHERE t.id=%d) AS doc_user_id
+				(SELECT doc.user_id FROM doc) AS doc_user_id,
+				(SELECT doc.doc_flow_out_client_type FROM doc) AS doc_flow_out_client_type
 			FROM applications
 			WHERE id=%d",
 			$this->getExtDbVal($pm,'old_id'),
@@ -134,7 +146,8 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			$ar = $this->getDbLink()->query_first(sprintf(
 			"SELECT
 				d.application_id,
-				d.user_id
+				d.user_id,
+				d.doc_flow_out_client_type
 			FROM doc_flow_out_client AS d
 			WHERE d.id=%d",
 			$this->getExtDbVal($pm,'old_id')
@@ -145,7 +158,14 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			$app_id = $ar['application_id'];
 		}
 		
+		if(is_null($doc_flow_out_client_type)){
+			$doc_flow_out_client_type = $ar['doc_flow_out_client_type'];
+		}
+		
 		if ($this->getExtVal($pm,'sent')=='true'){
+		
+			$this->check_resp_doc($app_id, $doc_flow_out_client_type);
+		
 			$old_id = $this->getExtDbVal($pm,'old_id');
 			$ar_cnt = $this->getDbLink()->query_first(sprintf(
 				"SELECT
@@ -818,9 +838,41 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			throw new Exception(sprintf(self::ER_UNSENT_DOC_EXISTS,$ar['date_time']));
 		}
 	}
+
+	private function check_resp_doc($appId,$clientType){
+		//Проверка на возможность отправки писем с ответами за Х дней до окончания срока
+		if($clientType=="contr_resp"){
+			$ar = $this->getDbLink()->query_first(sprintf(
+				"WITH
+				contr AS (SELECT
+						coalesce(allow_client_out_documents,FALSE) AS allow_client_out_documents,
+						work_end_date,
+						bank_day_next(
+							work_end_date,-const_ban_client_responses_day_cnt_val()
+						) AS ban_from
+					FROM contracts
+					WHERE application_id=%d
+				)
+				SELECT
+				to_char((SELECT ban_from FROM contr),'dd/mm/yy') AS ban_from,					
+				coalesce(
+					(
+						(SELECT allow_client_out_documents FROM contr)=FALSE
+						AND now()::date>=(SELECT ban_from FROM contr)
+					)
+				,FALSE) AS banned",
+			$appId
+			));
+			if (is_array($ar) &amp;&amp; count($ar) &amp;&amp; $ar['banned']!='f'){
+				throw new Exception(sprintf(self::ER_CLIENT_OUT_DOC_BANNED,$ar['ban_from']));
+			}
+		}
+	}
 	
 	public function check_type($pm){
-		$this->check_unsent_doc($this->getExtDbVal($pm,'application_id'),$this->getExtDbVal($pm,'doc_flow_out_client_type'));
+		$app = $this->getExtDbVal($pm,'application_id');
+		$this->check_unsent_doc($app, $this->getExtDbVal($pm,'doc_flow_out_client_type'));
+		$this->check_resp_doc($app,$this->getExtVal($pm,'doc_flow_out_client_type'));
 	}
 	
 	public function get_correction_list($pm){

@@ -37,8 +37,8 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 	}
 
 	public function delete($pm){
-		if ($_SESSION['role_id']!='admin'){
-			throw new Exception('Статусы удалять может только администратор!');
+		if ($_SESSION['role_id']!='admin' &amp;&amp; $_SESSION['role_id']!='lawyer'){
+			throw new Exception('Статусы удалять может только администратор или отдел приемки документации!');
 		}
 		
 		$q = sprintf("DELETE FROM application_processes%s

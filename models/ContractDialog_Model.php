@@ -543,6 +543,15 @@ class ContractDialog_Model extends ModelSQL{
 		$this->addField($f_allow_new_file_add);
 		//********************
 		
+		//*** Field allow_client_out_documents ***
+		$f_opts = array();
+		$f_opts['defaultValue']='FALSE';
+		$f_opts['id']="allow_client_out_documents";
+						
+		$f_allow_client_out_documents=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"allow_client_out_documents",$f_opts);
+		$this->addField($f_allow_client_out_documents);
+		//********************
+		
 		//*** Field applications_ref ***
 		$f_opts = array();
 		$f_opts['id']="applications_ref";
@@ -741,6 +750,14 @@ class ContractDialog_Model extends ModelSQL{
 						
 		$f_auth_letter=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"auth_letter",$f_opts);
 		$this->addField($f_auth_letter);
+		//********************
+		
+		//*** Field customer_auth_letter ***
+		$f_opts = array();
+		$f_opts['id']="customer_auth_letter";
+						
+		$f_customer_auth_letter=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"customer_auth_letter",$f_opts);
+		$this->addField($f_customer_auth_letter);
 		//********************
 		
 		//*** Field doc_folders ***

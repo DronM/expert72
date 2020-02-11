@@ -661,6 +661,46 @@
 								Да</p>
 </div>
 </div>
+<h2>download_customer_auth_letter_file</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Да</p>
+</div>
+</div>
+<h2>download_customer_auth_letter_file_sig</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Да</p>
+</div>
+</div>
+<h2>delete_customer_auth_letter_file</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Да</p>
+</div>
+<h3>fill_percent</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Да</p>
+</div>
+</div>
 <h2>all_sig_report</h2>
 <p>Arguments:</p>
 <div class="content_item content_item2">
@@ -1053,6 +1093,7 @@
 <a href="#ContractDialog_Model">Model: ContractDialog_Model</a><h2>get_list</h2>
 <a href="#ContractList_Model">Model: ContractList_Model</a><h2>complete</h2>
 <a href="#ContractList_Model">Model: ContractList_Model</a><h2>get_pd_list</h2>
+<a href="#ContractList_Model">Model: ContractList_Model</a><h2>get_expertise_list</h2>
 <a href="#ContractList_Model">Model: ContractList_Model</a><h2>get_pd_cost_valid_eval_list</h2>
 <a href="#ContractList_Model">Model: ContractList_Model</a><h2>get_eng_survey_list</h2>
 <a href="#ContractList_Model">Model: ContractList_Model</a><h2>get_cost_eval_validity_list</h2>
@@ -3748,6 +3789,18 @@
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
+<h2>customer_auth_letter</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>customer_auth_letter_file</h2>
+<div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
 </div>
 </div>
 <div id="ApplicationClient_Model" class="content_box">
@@ -5830,6 +5883,12 @@
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
+<h2>allow_client_out_documents</h2>
+<div>Type:Bool</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
 </div>
 </div>
 <div id="ContractDialog_Model" class="content_box">
@@ -6214,6 +6273,12 @@
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
+<h2>customer_auth_letter</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
 <h2>expert_work_day_count</h2>
 <div>Type:Int</div>
 <div>Primary key:</div>
@@ -6281,6 +6346,12 @@
 <div>Length:</div>
 <div>Precision:</div>
 <h2>allow_new_file_add</h2>
+<div>Type:Bool</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>allow_client_out_documents</h2>
 <div>Type:Bool</div>
 <div>Primary key:</div>
 <div>Required:</div>

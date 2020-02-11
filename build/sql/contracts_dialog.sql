@@ -15,7 +15,11 @@ CREATE OR REPLACE VIEW contracts_dialog AS
 		--applications
 		applications_ref(app) AS applications_ref,
 		applications_client_descr(app.applicant) AS applicant_descr,
-		applications_client_descr(app.customer) AS customer_descr,
+		
+		CASE WHEN (app.customer->>'customer_is_developer')::bool THEN applications_client_descr(app.developer)
+		ELSE applications_client_descr(app.customer)
+		END AS customer_descr,
+		
 		applications_client_descr(app.developer) AS developer_descr,
 		
 		(SELECT
@@ -68,9 +72,9 @@ CREATE OR REPLACE VIEW contracts_dialog AS
 				AND
 				(l.construction_type_id=app.construction_type_id AND
 				l.document_type IN (
-					CASE WHEN app.expertise_type='pd' OR app.expertise_type='pd_eng_survey' THEN 'pd'::document_types ELSE NULL END,
-					CASE WHEN app.expertise_type='eng_survey' OR app.expertise_type='pd_eng_survey' THEN 'eng_survey'::document_types ELSE NULL END,
-					CASE WHEN app.cost_eval_validity OR app.exp_cost_eval_validity THEN 'cost_eval_validity'::document_types ELSE NULL END,
+					CASE WHEN app.expertise_type='pd' OR app.expertise_type='pd_eng_survey' OR app.expertise_type='cost_eval_validity_pd' OR app.expertise_type='cost_eval_validity_pd_eng_survey' THEN 'pd'::document_types ELSE NULL END,
+					CASE WHEN app.expertise_type='eng_survey' OR app.expertise_type='pd_eng_survey' OR app.expertise_type='cost_eval_validity_eng_survey' OR app.expertise_type='cost_eval_validity_pd_eng_survey' THEN 'eng_survey'::document_types ELSE NULL END,
+					CASE WHEN app.cost_eval_validity OR app.exp_cost_eval_validity OR app.expertise_type='cost_eval_validity' OR app.expertise_type='cost_eval_validity_pd' OR app.expertise_type='cost_eval_validity_eng_survey' OR app.expertise_type='cost_eval_validity_pd_eng_survey' THEN 'cost_eval_validity'::document_types ELSE NULL END,
 					CASE WHEN app.modification THEN 'modification'::document_types ELSE NULL END,
 					CASE WHEN app.audit THEN 'audit'::document_types ELSE NULL END			
 					)
@@ -190,7 +194,10 @@ CREATE OR REPLACE VIEW contracts_dialog AS
 		t.main_expert_id,
 		t.permission_ar AS condition_ar,
 		
-		t.allow_new_file_add
+		t.allow_new_file_add,
+		t.allow_client_out_documents,
+		
+		app.customer_auth_letter
 		
 	FROM contracts t
 	LEFT JOIN applications AS app ON app.id=t.application_id

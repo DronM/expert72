@@ -577,7 +577,56 @@ select * from applications_dialog where application_state='filling' and cost_eva
 regl_docum_deletion.php
 Таблица добавлено в ГУИ
 
+2) Доступность доверенности ApplicationClientEdit.setAuthLetterRequired переделано. Также предупреждения при смене данных
 
+3) Пункт 4 задания от 13/01/20
+contracts allow_client_out_documents
+Константа const_ban_client_responses_day_cnt_val() = 
+DocFlowOutClient_Controller->check_resp_doc
+
+4) Пункт 9 задания
+При поступлении входящего письма с типом "Возврат контракта", если при этом сумма финансирования бюджет
+contracts.expertise_cost_budget>0 тогда надо менять статус, все как при поступлении оплаты
+Изменена функция sql client_payments_process() чтобы учесть возможную пост оплату
+Внесены изменения в sql функцию doc_flow_out_client_process() для установки статуса "экспертиза", а не ожидание оплаты как раньше
+
+
+5) ext/CadesAPI.js при успешной загрузке плагина не note а tempNote
+
+6) Добавлены поля:applications.customer_auth_letter,customer_auth_letter_file
+Внесены изменения в
+ApplicationDialog_View.js
+Application_Controller.php
+ApplicationClientEdit.js
+Шаблоны:
+Application.xsl.docx
+Application.pdf.xsl
+ContractDialog.html Техн.заказчик после застройщика
+contracts_dialog.sql
+
+
+7) Появились письма отклиента, где указано, что изменены определенные разделы, а по факту таких файлов нет, есть в другом письме
+т.е. есть данные в doc_flow_out_client_document_files а в application_document_files таких файлов нет!!! в итоге отображаются пустые строки во
+входящем нашем письме, и в измененных разделах тоже. Изменил
+doc_flow_in_dialog.sql
+doc_flow_out_client_process.sql
+добавил условие app_f.file_id IS NOT NULL
+
+
+8) Заявление/Контракт , в документации Контракта иногда есть пустые файлы(?)
+Contract_Controller.php поменял на вызов Application_Controller::attachmentsQuery, был свой вызов, хотя потом обработка такой же функцией
+Application_Controller::addDocumentFiles
+
+9) При копировании старого: определить что Техн.Заказчик=застройщикщик и поставить галочку!!!
+
+10) cmsmerge теперь берется из PKI_DIR + bin !!! УЧЕСТЬ ПРИ УСТАНОВКЕ!!!
+PKIManager.php
+
+11) При исключении во время вкладывания (merge) подписи ГУИ не возвращает обратно ключик для повторного подписания
+FileUploader_View.prototype.uploadSigFile
+исправлено
+
+12) Ошибка во время подписи
 
 Надо:
 !!!При отправке заказчиком ответов в воскресенье или субботу ставит ответы на вторник?!	
@@ -585,7 +634,6 @@ select doc_flow_out_client_out_attrs(3029)
 
 !!!doc_flow_out_client_document_files удалять файл, когда удалили НАШЕ входящее письмо, а исход.клиента стало неотправленным!!!
 
--Вывести таблицу application_document_files для администратора
 -При удалении регистрации, письмо клиента (входящее удаляется, а файлы application_document_files нет)
 
 

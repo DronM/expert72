@@ -18,8 +18,10 @@ try{
 	$dbLinkSess->reportError = DEBUG;	
 	$dbLinkSess->productionConnectError = ERR_SQL_SERVER_CON;
 	$dbLinkSess->productionSQLError = ERR_SQL_QUERY;	
+	//$dbLinkSess->detailedError = defined('DETAILED_ERROR')? DETAILED_ERROR:DEBUG;
 	if (defined('QUERY_SHOW'))$dbLinkSess->showqueries = QUERY_SHOW;
-	if (defined('QUERY_LOG_FILE'))$dbLinkSess->logfile = QUERY_LOG_FILE;
+	if (defined('QUERY_LOG'))$dbLinkSess->logQueries = QUERY_LOG;	
+	if (defined('QUERY_LOG_FILE'))$dbLinkSess->logFile = QUERY_LOG_FILE;
 	if (defined('QUERY_EXPLAIN'))$dbLinkSess->explain = QUERY_EXPLAIN;
 	$dbLinkSess->database = LK? DB_NAME_LK:DB_NAME;
 	$sess_db_server = LK? DB_SERVER_LK:DB_SERVER_OFFICE;

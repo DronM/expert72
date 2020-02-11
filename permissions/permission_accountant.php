@@ -320,6 +320,12 @@ $permissions = array();
 				
 					$permissions['Application_Controller_delete_auth_letter_file']=TRUE;
 				
+					$permissions['Application_Controller_download_customer_auth_letter_file']=TRUE;
+				
+					$permissions['Application_Controller_download_customer_auth_letter_file_sig']=TRUE;
+				
+					$permissions['Application_Controller_delete_customer_auth_letter_file']=TRUE;
+				
 					$permissions['Application_Controller_all_sig_report']=TRUE;
 				
 					$permissions['Application_Controller_get_constr_name']=TRUE;
@@ -727,6 +733,8 @@ $permissions = array();
 					$permissions['Contract_Controller_complete']=TRUE;
 				
 					$permissions['Contract_Controller_get_pd_list']=TRUE;
+				
+					$permissions['Contract_Controller_get_expertise_list']=TRUE;
 				
 					$permissions['Contract_Controller_get_pd_cost_valid_eval_list']=TRUE;
 				

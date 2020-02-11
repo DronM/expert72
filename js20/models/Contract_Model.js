@@ -605,6 +605,16 @@ function Contract_Model(options){
 	
 	options.fields.allow_new_file_add = new FieldBool("allow_new_file_add",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	filed_options.defValue = true;
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.allow_client_out_documents = new FieldBool("allow_client_out_documents",filed_options);
+	
 			
 			
 			

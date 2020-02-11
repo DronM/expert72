@@ -544,6 +544,15 @@ class ContractList_Model extends ModelSQL{
 		$this->addField($f_allow_new_file_add);
 		//********************
 		
+		//*** Field allow_client_out_documents ***
+		$f_opts = array();
+		$f_opts['defaultValue']='FALSE';
+		$f_opts['id']="allow_client_out_documents";
+						
+		$f_allow_client_out_documents=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"allow_client_out_documents",$f_opts);
+		$this->addField($f_allow_client_out_documents);
+		//********************
+		
 		//*** Field applications_ref ***
 		$f_opts = array();
 		$f_opts['id']="applications_ref";

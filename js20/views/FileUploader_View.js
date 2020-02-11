@@ -1396,7 +1396,7 @@ FileUploader_View.prototype.makeSigFile = function(cades,verRes,signature,fileTo
 /**
  * @param {object} fileToSign uploader object of file,file_path,fileName
  */
-FileUploader_View.prototype.doFileSigning = function(cades,fileToSign,fileId,itemId,certStruc,sigContControl,progressFunc,callBack){	
+FileUploader_View.prototype.doFileSigning = function(cades,fileToSign,fileId,itemId,certStruc,sigContControl,progressFunc,callBack,callBackOnError){	
 	var self = this;
 	sigContControl.setWait(true);
 	this.progressInit();
@@ -1416,6 +1416,9 @@ FileUploader_View.prototype.doFileSigning = function(cades,fileToSign,fileId,ite
 		},
 		function(er){
 			sigContControl.setWait(false);
+			if(callBackOnError){
+				callBackOnError.call(self);
+			}
 			window.showError(er);
 		},
 		progressFunc
@@ -1451,6 +1454,25 @@ FileUploader_View.prototype.setSignUploadEnabled = function(v){
 	if(ctrl)ctrl.setEnabled(v);
 }
 
+FileUploader_View.prototype.signFileContinueRun = function(fileId,itemId,delBtn){
+	var self = this;
+	this.signFileContinue(
+		fileId,
+		itemId,
+		function(percentLoaded){
+			self.setProgressPercent(percentLoaded,"подписание ");
+		},
+		function(){
+			self.setSignUploadEnabled(true);
+			if(delBtn)delBtn.setEnabled(true);
+		},
+		function(){
+			self.setSignUploadEnabled(true);
+			if(delBtn)delBtn.setEnabled(true);
+		}
+	);
+}
+
 FileUploader_View.prototype.signFile = function(fileId,itemId){
 	if(!window.getApp().getCloudKeyExists()){
 		//cades signing
@@ -1473,6 +1495,8 @@ FileUploader_View.prototype.signFile = function(fileId,itemId){
 	if (this.m_mainView&&!this.m_mainView.getElement("id").getValue()){
 		//not inserted yet		
 		this.insertObject(function(){
+			self.signFileContinueRun(fileId,itemId,del_btn);
+			/*
 			self.signFileContinue(
 				fileId,
 				itemId,
@@ -1482,11 +1506,18 @@ FileUploader_View.prototype.signFile = function(fileId,itemId){
 				function(){
 					self.setSignUploadEnabled(true);
 					if(del_btn)del_btn.setEnabled(true);
+				},
+				function(){
+					self.setSignUploadEnabled(true);
+					if(del_btn)del_btn.setEnabled(true);
 				}
 			);
+			*/
 		});
 	}
 	else{
+		this.signFileContinueRun(fileId,itemId,del_btn);
+		/*
 		this.signFileContinue(
 			fileId,
 			itemId,
@@ -1498,6 +1529,7 @@ FileUploader_View.prototype.signFile = function(fileId,itemId){
 				if(del_btn)del_btn.setEnabled(true);
 			}			
 		);
+		*/
 	}	
 }
 
@@ -1651,7 +1683,14 @@ FileUploader_View.prototype.uploadSigFile = function(sigFile,fileId,itemId){
 	upl.on("fileSuccess", function(file, message){
 		var file_cont = self.getElement("file-list_"+itemId);
 		var file_ctrl = file_cont.getElement("file_"+fileId);
+		
+		file_ctrl.sigCont.setWait(false);
+		file_ctrl.sigCont.setVisible(true);
+		var del_btn = file_cont? file_cont.getElement("file_"+fileId+"_del") : null;
+		if (del_btn)del_btn.setEnabled(true);		
+		
 		if (message.trim().length){		
+			file_ctrl.sigCont.setAddSigEnabled(true);			
 			self.fireFileError(file,message,true);
 		}
 		else{
@@ -1659,14 +1698,9 @@ FileUploader_View.prototype.uploadSigFile = function(sigFile,fileId,itemId){
 				self.setFileSignedByClient(file.file_id,true);
 			}
 			self.setFileSigned(fileId,itemId);
-			file_ctrl.sigCont.addSignature(sigFile.signature);
-			file_ctrl.sigCont.sigsToDOM();
-		
-		}
-		file_ctrl.sigCont.setWait(false);
-		file_ctrl.sigCont.setVisible(true);
-		var del_btn = file_cont? file_cont.getElement("file_"+fileId+"_del") : null;
-		if (del_btn)del_btn.setEnabled(true);		
+			file_ctrl.sigCont.addSignature(sigFile.signature);			
+			file_ctrl.sigCont.sigsToDOM();	
+		}		
 	});
 
 	if (self.m_mainView&&!self.m_mainView.getElement("id").getValue()){
@@ -1737,7 +1771,7 @@ FileUploader_View.prototype.signInCloud = function(file){
 
 }
 
-FileUploader_View.prototype.signFileContinue = function(fileId,itemId,progressFunc,callBack){
+FileUploader_View.prototype.signFileContinue = function(fileId,itemId,progressFunc,callBack,callBackOnError){
 	var cloud_key_exists = window.getApp().getCloudKeyExists();
 	
 	var cades,cert_lits_ctrl,cert_struc,snils;
@@ -1767,7 +1801,7 @@ FileUploader_View.prototype.signFileContinue = function(fileId,itemId,progressFu
 		}
 		
 		if(cloud_key_exists){
-			//просто побписываем на сервере и ставим замок с данными по подписи
+			//просто подписываем на сервере и ставим замок с данными по подписи
 			self.signInCloud({
 				"file_id":fileId,
 				"doc_id":itemId
@@ -1834,9 +1868,18 @@ FileUploader_View.prototype.signFileContinue = function(fileId,itemId,progressFu
 						progressFunc,
 						function(sigFile){
 							self.uploadSigFile(sigFile,fileId,itemId);
+						},
+						function(){
+							if (callBackOnError){
+								callBackOnError.call(self);
+							}
 						}
 					);
 				
+				},
+				"fail":function(resp,errCode,errStr){
+					file_ctrl.sigCont.setWait(false);
+					throw Error(errStr);
 				}
 			});
 		}
@@ -1863,6 +1906,11 @@ FileUploader_View.prototype.signFileContinue = function(fileId,itemId,progressFu
 							self.m_uploader.addFile(sigFile);
 							if (callBack){
 								callBack.call(self);
+							}
+						},
+						function(){
+							if (callBackOnError){
+								callBackOnError.call(self);
 							}
 						}
 					);

@@ -227,6 +227,9 @@ class Contract_Controller extends ControllerSQL{
 		$param = new FieldExtBool('allow_new_file_add'
 				,array());
 		$pm->addParam($param);
+		$param = new FieldExtBool('allow_client_out_documents'
+				,array());
+		$pm->addParam($param);
 		
 		$pm->addParam(new FieldExtInt('ret_id'));
 		
@@ -494,6 +497,10 @@ class Contract_Controller extends ControllerSQL{
 				,array(
 			));
 			$pm->addParam($param);
+		$param = new FieldExtBool('allow_client_out_documents'
+				,array(
+			));
+			$pm->addParam($param);
 		
 			$param = new FieldExtInt('id',array(
 			));
@@ -563,6 +570,21 @@ class Contract_Controller extends ControllerSQL{
 
 			
 		$pm = new PublicMethod('get_pd_list');
+		
+		$pm->addParam(new FieldExtInt('count'));
+		$pm->addParam(new FieldExtInt('from'));
+		$pm->addParam(new FieldExtString('cond_fields'));
+		$pm->addParam(new FieldExtString('cond_sgns'));
+		$pm->addParam(new FieldExtString('cond_vals'));
+		$pm->addParam(new FieldExtString('cond_ic'));
+		$pm->addParam(new FieldExtString('ord_fields'));
+		$pm->addParam(new FieldExtString('ord_directs'));
+		$pm->addParam(new FieldExtString('field_sep'));
+
+		$this->addPublicMethod($pm);
+
+			
+		$pm = new PublicMethod('get_expertise_list');
 		
 		$pm->addParam(new FieldExtInt('count'));
 		$pm->addParam(new FieldExtInt('from'));
@@ -1000,8 +1022,13 @@ class Contract_Controller extends ControllerSQL{
 		
 		}
 		
-		//$deleted_cond = ($_SESSION['role_id']=='client')? "AND deleted=FALSE":"";
+		$files_q_id = Application_Controller::attachmentsQuery(
+			$this->getDbLink(),
+			$ar_obj['application_id'],
+			''
+		);
 		
+		/*
 		$files_q_id = $this->getDbLink()->query(sprintf(
 			"SELECT
 				adf.file_id,
@@ -1072,6 +1099,7 @@ class Contract_Controller extends ControllerSQL{
 				adf.deleted_dt ASC NULLS LAST",
 		$ar_obj['application_id']
 		));
+		*/
 		
 		$documents = NULL;
 		if ($ar_obj['documents']){
@@ -1201,6 +1229,31 @@ class Contract_Controller extends ControllerSQL{
 	
 	public function get_pd_list($pm){
 		$this->get_list_on_type($pm,'pd');
+	}
+
+	/*
+	 * Все по гос.экспертизе:
+	 *  ПД,РИИ,Достоверность,ПД+РИИ,ПД+РИИ+Достоверность,ПД+Достоверность
+	 **/	
+	public function get_expertise_list($pm){
+		$cond_fields = $pm->getParamValue('cond_fields');
+		$cond_sgns = $pm->getParamValue('cond_sgns');
+		$cond_vals = $pm->getParamValue('cond_vals');
+		$cond_ic = $pm->getParamValue('cond_ic');
+		$field_sep = $pm->getParamValue('field_sep');
+		$field_sep = !is_null($field_sep)? $field_sep:',';
+		
+		$cond_fields = $cond_fields? $cond_fields.$field_sep : '';
+		$cond_sgns = $cond_sgns? $cond_sgns.$field_sep : '';
+		$cond_vals = $cond_vals? $cond_vals.$field_sep : '';
+		$cond_ic = $cond_ic? $cond_ic.$field_sep : '';
+		
+		$pm->setParamValue('cond_fields',$cond_fields.'expertise_type');//is not null
+		$pm->setParamValue('cond_sgns',$cond_sgns.'in');
+		$pm->setParamValue('cond_vals',$cond_vals.'');
+		$pm->setParamValue('cond_ic',$cond_ic.'0');
+		
+		$this->get_list($pm);
 	}
 
 	public function get_pd_cost_valid_eval_list($pm){

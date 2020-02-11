@@ -56,8 +56,10 @@ CREATE OR REPLACE VIEW doc_flow_in_dialog AS
 							LEFT JOIN file_verifications AS f_ver ON f_ver.file_id=t.file_id
 							LEFT JOIN doc_flow_out_client_original_files AS clorg_f ON clorg_f.doc_flow_out_client_id=t.doc_flow_out_client_id AND clorg_f.new_file_id=t.file_id
 							WHERE
-								coalesce(app_f.deleted,FALSE)=FALSE
-								AND t.doc_flow_out_client_id=doc_flow_in.from_doc_flow_out_client_id
+								--coalesce(app_f.deleted,FALSE)=FALSE
+								--AND
+								t.doc_flow_out_client_id=doc_flow_in.from_doc_flow_out_client_id
+								AND app_f.file_id IS NOT NULL
 							ORDER BY app_f.file_path,app_f.file_name
 							) AS files_t
 						)

@@ -207,17 +207,17 @@ Edit template instead.
 								</a>
 							</li>
 							<li>
-								<a href="#customer-tab" data-toggle="tab" class="legitRipple">
-									<span id="{{{{id}}}}:customer-tab-fill_percent" class="badge badge-danger pull-right" title="Процент заполнения">0%</span>
-									Технический заказчик
-								</a>
-							</li>
-							<li>
 								<a href="#developer-tab" data-toggle="tab" class="legitRipple">
 									<span id="{{{{id}}}}:developer-tab-fill_percent" class="badge badge-danger pull-right" title="Процент заполнения">0%</span>
 									Застройщик
 								</a>
 							</li>
+							<li>
+								<a href="#customer-tab" data-toggle="tab" class="legitRipple">
+									<span id="{{{{id}}}}:customer-tab-fill_percent" class="badge badge-danger pull-right" title="Процент заполнения">0%</span>
+									Технический заказчик
+								</a>
+							</li>							
 							<li>
 								<a href="#application_prints-tab" data-toggle="tab" class="legitRipple">
 									<span id="{{{{id}}}}:application_prints-tab-fill_percent" class="badge badge-danger pull-right" title="Процент заполнения">0%</span>
