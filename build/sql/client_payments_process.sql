@@ -104,7 +104,7 @@ BEGIN
 						DELETE FROM application_processes
 						WHERE date_time>NEW.pay_date AND application_id=v_application_id AND state='waiting_for_pay';
 					END IF;	
-				END IF:	
+				END IF;	
 			END IF;
 		END IF;
 		RETURN NEW;

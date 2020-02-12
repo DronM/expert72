@@ -278,7 +278,7 @@ function ApplicationClientEdit(id,options){
 				"labelClassName":"",
 				"contClassName":"",
 				"editClassName":"",
-				"value":true,
+				"value":false,
 				"attrs":{"class":"checkBoxCtrl"},
 				//"labelClassName": !options.minInf? ("control-label percentcalc "+bs) : undefined,
 				"events":{
@@ -313,7 +313,7 @@ function ApplicationClientEdit(id,options){
 				"maxLength":200,
 				"attrs":{"percentcalc":"false","notForValue":"true"},
 				"contClassName":"form-group "+window.getBsCol(6),
-				"placeholder":"Номер и дата доверенности",
+				"placeholder":"Номер и дата документа",
 				"editContClassName":"input-group "+window.getBsCol(12),
 				"view":this,
 				"events":{
