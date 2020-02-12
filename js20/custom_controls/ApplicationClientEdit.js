@@ -30,6 +30,8 @@ function ApplicationClientEdit(id,options){
 	this.m_minInf = options.minInf;
 	this.m_mainView = options.mainView;
 	
+	this.m_custIsDevText = options.custIsDevText;//2020-02-11
+	
 	options.attrs = options.attrs || {};
 	options.attrs.percentcalc = "true";
 	
@@ -582,8 +584,8 @@ ApplicationClientEdit.prototype.setCustomerDataVisible = function(v){
 		}
 	}
 	
-	this.getElement("customer_auth_letter").setAttr("percentcalc",v? "true":"false");
-	this.getElement("customer_auth_letter_file").setAttr("percentcalc",v? "true":"false");  
+	this.getElement("customer_auth_letter").setAttr("percentcalc",(v&&this.m_custIsDevText)? "true":"false");
+	this.getElement("customer_auth_letter_file").setAttr("percentcalc",(v&&this.m_custIsDevText)? "true":"false");  
 	
 	this.m_mainView.calcFillPercent();
 }

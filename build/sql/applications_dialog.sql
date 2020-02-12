@@ -119,7 +119,14 @@ CREATE OR REPLACE VIEW applications_dialog AS
 		d.update_dt,
 		
 		d.customer_auth_letter,
-		d.customer_auth_letter_file
+		d.customer_auth_letter_file,
+		
+		(SELECT pr.date_time
+		FROM application_processes pr
+		WHERE pr.application_id=d.id AND pr.state='sent'
+		ORDER BY pr.date_time DESC
+		LIMIT 1
+		) AS sent_dt
 		
 		
 	FROM applications AS d

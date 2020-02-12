@@ -42,7 +42,7 @@ function ApplicationDialog_View(id,options){
 		if (edit_d && edit_d.getTime()<DateHelper.strtotime("2020-01-17").getTime() && options.readOnly){
 			this.m_order010119 = false;
 		}
-		
+
 		/*
 		if (!options.model.getFieldValue("exp_cost_eval_validity")&&options.readOnly&&options.model.getFieldValue("create_dt")<(new Date(2019,0,1))){
 			this.m_order010119 = false;
@@ -519,7 +519,8 @@ function ApplicationDialog_View(id,options){
 		
 		this.addElement(new ApplicationClientEdit(id+":customer",{
 			"mainView":this,
-			"minInf":true			
+			"minInf":true,
+			"custIsDevText":true
 		}));
 		this.addElement(new ApplicationClientEdit(id+":developer",{			
 			"mainView":this,
@@ -892,7 +893,11 @@ ApplicationDialog_View.prototype.onGetData = function(resp,cmd){
 		 );
 	this.getElement("service_cont").getElement("expertise").setValue(do_expertise);
 	
-	//this.calcFillPercent();
+	//this.calcFillPercent();	
+	var sent_dt = m.getFieldValue("sent_dt");
+	if (sent_dt && sent_dt.getTime()<DateHelper.strtotime("2020-02-11").getTime()){
+		this.getElement("customer").m_custIsDevText = false;
+	}
 	this.getElement("customer").setCustomerDataVisible(!this.getElement("customer").getElement("customer_is_developer").getValue());
 	
 	var st = m.getFieldValue("application_state");

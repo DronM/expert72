@@ -643,7 +643,10 @@ select doc_flow_out_client_out_attrs(3029)
 1) Переименована доверенность технического исполнителя
 2) Функция исполнителя - по умолчанию не стоит
 
-!!! Процент пересчета до 11/02/20 убрать доверенность техн.заказчика!!!
+1.0.128 12/02/2020
+1) ApplicationDialog поле sent_dt для правильного пересчета от 11/02/20
+ApplicationClientEdit.m_custIsDevText
+ApplicationDialog_View.onGetData
 
 
 

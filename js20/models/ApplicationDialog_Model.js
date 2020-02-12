@@ -577,6 +577,15 @@ function ApplicationDialog_Model(options){
 			
 			
 			
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.sent_dt = new FieldDateTimeTZ("sent_dt",filed_options);
+	
 			
 		ApplicationDialog_Model.superclass.constructor.call(this,id,options);
 }

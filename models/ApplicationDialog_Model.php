@@ -539,6 +539,14 @@ class ApplicationDialog_Model extends ModelSQL{
 		$f_expertise_result_date=new FieldSQLDate($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expertise_result_date",$f_opts);
 		$this->addField($f_expertise_result_date);
 		//********************
+		
+		//*** Field sent_dt ***
+		$f_opts = array();
+		$f_opts['id']="sent_dt";
+						
+		$f_sent_dt=new FieldSQLDateTimeTZ($this->getDbLink(),$this->getDbName(),$this->getTableName(),"sent_dt",$f_opts);
+		$this->addField($f_sent_dt);
+		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}
 
