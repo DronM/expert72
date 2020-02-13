@@ -38,8 +38,8 @@ function ApplicationDialog_View(id,options){
 		options.templateOptions.is_admin = (role_id=="admin");
 		options.readOnly = (options.model.getField("application_state").isSet() && options.model.getFieldValue("application_state")!="filling" && options.model.getFieldValue("application_state")!="correcting");
 		//var exp_tp = options.model.getField("expertise_type");
-		var edit_d = options.model.getFieldValue("update_dt");
-		if (edit_d && edit_d.getTime()<DateHelper.strtotime("2020-01-17").getTime() && options.readOnly){
+		var sent_d = options.model.getFieldValue("sent_dt");
+		if (sent_d && sent_d.getTime()<DateHelper.strtotime("2020-01-17").getTime()){// && options.readOnly
 			this.m_order010119 = false;
 		}
 
@@ -895,7 +895,7 @@ ApplicationDialog_View.prototype.onGetData = function(resp,cmd){
 	
 	//this.calcFillPercent();	
 	var sent_dt = m.getFieldValue("sent_dt");
-	if (sent_dt && sent_dt.getTime()<DateHelper.strtotime("2020-02-11").getTime()){
+	if (sent_dt && sent_dt.getTime()<DateHelper.strtotime("2020-02-11").getTime()){	
 		this.getElement("customer").m_custIsDevText = false;
 	}
 	this.getElement("customer").setCustomerDataVisible(!this.getElement("customer").getElement("customer_is_developer").getValue());

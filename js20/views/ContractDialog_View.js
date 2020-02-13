@@ -41,8 +41,15 @@ function ContractDialog_View(id,options){
 	options.templateOptions.primaryContractExists = true;//(!options.model.getField("primary_contracts_ref").isNull()||options.model.getField("primary_contract_reg_number").isSet());
 	options.templateOptions.modifPrimaryContractExists = (!options.model.getField("modif_primary_contracts_ref").isNull()||options.model.getField("modif_primary_contract_reg_number").isSet());
 	
+	var expertise_type = options.model.getFieldValue("expertise_type");
 	options.templateOptions.expCostEvalValidity = options.model.getFieldValue("exp_cost_eval_validity");
-	options.templateOptions.costEvalValidity = options.model.getFieldValue("cost_eval_validity") || options.templateOptions.expCostEvalValidity;
+	options.templateOptions.costEvalValidity = options.model.getFieldValue("cost_eval_validity")
+						|| options.templateOptions.expCostEvalValidity
+						|| expertise_type=="cost_eval_validity"
+						|| expertise_type=="cost_eval_validity_pd"
+						|| expertise_type=="cost_eval_validity_eng_survey"
+						|| expertise_type=="cost_eval_validity_pd_eng_survey"
+						;
 	options.templateOptions.pd = (options.model.getFieldValue("document_type")=="pd");	
 	
 	options.templateOptions.notExpert = (role!="expert" && role!="expert_ext");

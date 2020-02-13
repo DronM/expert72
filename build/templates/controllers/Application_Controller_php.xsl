@@ -2779,6 +2779,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			$db_app_id,
 			$db_app_id,
 			$db_app_id,
+			$db_app_id,
 			$db_app_id
 		));
 		

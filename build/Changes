@@ -648,8 +648,10 @@ select doc_flow_out_client_out_attrs(3029)
 ApplicationClientEdit.m_custIsDevText
 ApplicationDialog_View.onGetData
 
-
-
+1.0.129 13/02/2020 поставил клиенту
+1) Форма диалога контракта: не показывались доп.поля по достоверности в новых контрактах (после 17/01/20) ContractDialog_View
+2) Application_Controller->all_sig_report ошибка нет добавочного параметра $db_app_id в строке запроса- в рез-те запрос пустой!
+3) ApplicationDialog_View поменял вариант показа нового порядка от даты подачи а не даты редактирования
 
 !! Отчетность!!!
 
