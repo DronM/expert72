@@ -133,6 +133,22 @@ class ApplicationDocumentFile_Model extends ModelSQL{
 		$f_information_list=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"information_list",$f_opts);
 		$this->addField($f_information_list);
 		//********************
+		
+		//*** Field file_check_sum ***
+		$f_opts = array();
+		$f_opts['id']="file_check_sum";
+						
+		$f_file_check_sum=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"file_check_sum",$f_opts);
+		$this->addField($f_file_check_sum);
+		//********************
+		
+		//*** Field sig_check_sum ***
+		$f_opts = array();
+		$f_opts['id']="sig_check_sum";
+						
+		$f_sig_check_sum=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"sig_check_sum",$f_opts);
+		$this->addField($f_sig_check_sum);
+		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}
 

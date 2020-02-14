@@ -360,6 +360,7 @@ FileUploader_View.prototype.addFileToContainer = function(container,itemFile,ite
 		templateOptions.file_path = (itemFile.file_path? itemFile.file_path : this.m_defaultFilePath)+"/ ";
 	}
 	
+	
 	if (this.m_setFileOptions){
 		this.m_setFileOptions(templateOptions,itemFile);
 	}
@@ -559,6 +560,7 @@ FileUploader_View.prototype.addFileToContainer = function(container,itemFile,ite
 		}));
 		*/
 	}
+	
 	container.addElement(file_ctrl);
 	
 	//ToDo Extra conditions for file deleting
@@ -585,6 +587,17 @@ FileUploader_View.prototype.addFileToContainer = function(container,itemFile,ite
 		}));
 		
 	}
+	
+	//md5
+	if(templateOptions.calc_md5){
+		container.addElement(new Button(this.getId()+":file_"+itemFile.file_id+"_calc_md5",{
+			"attrs":{"file_id":itemFile.file_id,"item_id":itemId},
+			"onClick":function(){
+				alert("Calc md5")
+			}
+		}));		
+	}
+	
 	
 	/*
 	container.addElement(new Control(this.getId()+":file_"+itemFile.file_id+"_href","A",{

@@ -151,6 +151,24 @@ function ApplicationDocumentFile_Model(options){
 	
 	options.fields.information_list = new FieldBool("information_list",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.file_check_sum = new FieldText("file_check_sum",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.sig_check_sum = new FieldText("sig_check_sum",filed_options);
+	
 			
 		ApplicationDocumentFile_Model.superclass.constructor.call(this,id,options);
 }

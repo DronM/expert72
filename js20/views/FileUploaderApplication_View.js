@@ -206,6 +206,13 @@ FileUploaderApplication_View.prototype.setFileOptions = function(fileOpts,file){
 			fileOpts.refClass = "notSignedNotUploaded";			
 		}
 	}
+	
+	//md5
+	var role_id = window.getApp().getServVar("role_id");
+	if(role_id=="admin"||role_id=="lawyer"){
+		//fileOpts.calc_md5 = true;
+	}
+	
 		
 	fileOpts.file_date_time_formatted = DateHelper.format(DateHelper.strtotime(file.date_time),"d/m/y");	
 }
