@@ -33,7 +33,7 @@ class Service_Model extends ModelSQL{
 		
 		//*** Field name ***
 		$f_opts = array();
-		$f_opts['length']=50;
+		$f_opts['length']=250;
 		$f_opts['id']="name";
 						
 		$f_name=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"name",$f_opts);
@@ -72,11 +72,31 @@ class Service_Model extends ModelSQL{
 		$f_contract_postf=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"contract_postf",$f_opts);
 		$this->addField($f_contract_postf);
 		//********************
+		
+		//*** Field service_type ***
+		$f_opts = array();
+		
+		$f_opts['alias']='Вид услуги';
+		$f_opts['id']="service_type";
+						
+		$f_service_type=new FieldSQLEnum($this->getDbLink(),$this->getDbName(),$this->getTableName(),"service_type",$f_opts);
+		$this->addField($f_service_type);
+		//********************
+		
+		//*** Field expertise_type ***
+		$f_opts = array();
+		
+		$f_opts['alias']='Вид гос.экспертизы';
+		$f_opts['id']="expertise_type";
+						
+		$f_expertise_type=new FieldSQLEnum($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expertise_type",$f_opts);
+		$this->addField($f_expertise_type);
+		//********************
 	
 		$order = new ModelOrderSQL();		
 		$this->setDefaultModelOrder($order);		
 		$direct = 'ASC';
-		$order->addField($f_id,$direct);
+		$order->addField($f_service_type,$direct);
 $this->setLimitConstant('doc_per_page_count');
 	}
 

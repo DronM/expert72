@@ -124,7 +124,8 @@ Edit template instead.
 				<li id="{{{{id}}}}:tab-audit" class=""><a href="#documents_audit" data-toggle="tab" aria-expanded="false">Аудит</a></li>
 				<li id="{{{{id}}}}:tab-doc_folders" class="hidden"><a href="#doc_folders" data-toggle="tab" aria-expanded="false">Документы</a></li>
 				<li id="{{{{id}}}}:tab-doc_flow_in" class="hidden"><a href="#doc_flow_in" data-toggle="tab" aria-expanded="false">Входящие письма</a></li>
-				<li id="{{{{id}}}}:tab-doc_flow_out" class="hidden"><a href="#doc_flow_out" data-toggle="tab" aria-expanded="false">Исходящие письма</a></li>				
+				<li id="{{{{id}}}}:tab-doc_flow_out" class="hidden"><a href="#doc_flow_out" data-toggle="tab" aria-expanded="false">Исходящие письма</a></li>
+				<li id="{{{{id}}}}:tab-modified_documents" class="hidden"><a href="#modified_documents" data-toggle="tab" aria-expanded="false">Измененная документация</a></li>								
 			</ul>
 			
 			<div class="tab-content">
@@ -180,39 +181,56 @@ Edit template instead.
 					<h2>Заявление № <u id="{{{{id}}}}:id"/> от <u id="{{{{id}}}}:create_dt"/> </h2>
 					{{/contractNotExists}}
 					
+					{{#modified_documents}}
+					<div>
+						<div>Документация: <a id="{{{{id}}}}:expert_maintenance_base_applications_ref" href="#">{{expert_maintenance_base_applications_ref_descr}}</a>
+						</div>
+					</div>
+					<div>
+						<div>Экспертное сопровождение: <a id="{{{{id}}}}:base_applications_ref" href="#">{{base_applications_ref_descr}}</a>
+						</div>
+					</div>
+					<!--
+					<div id="{{{{id}}}}:service_cont:expert_maintenance_base_applications_ref">
+					</div>
+					<div id="{{{{id}}}}:service_cont:base_applications_ref">
+					</div>
+					-->
+					{{/modified_documents}}
+					
 					<div class="tabbable nav-tabs-vertical nav-tabs-left">
-						<ul class="nav nav-tabs nav-tabs-highlight">
+						<ul id="{{{{id}}}}:sheet_cont" class="nav nav-tabs nav-tabs-highlight">
 							<li class="active">
 								<a href="#common_inf-tab" data-toggle="tab" class="legitRipple">
 									<span id="{{{{id}}}}:common_inf-tab-fill_percent" class="badge badge-danger pull-right" title="Процент заполнения">0%</span>
 									Общая информация
 								</a>
 							</li>
-							<li>
+							<li class="notForModifiedDocuments">
 								<a href="#construction-tab" data-toggle="tab" class="legitRipple">
 									<span id="{{{{id}}}}:construction-tab-fill_percent" class="badge badge-danger pull-right" title="Процент заполнения">0%</span>
 									Объект строительства
 								</a>
 							</li>							
-							<li>
+							<li class="notForModifiedDocuments">
 								<a href="#applicant-tab" data-toggle="tab" class="legitRipple">
 									<span id="{{{{id}}}}:applicant-tab-fill_percent" class="badge badge-danger pull-right" title="Процент заполнения">0%</span>
 									Заявитель
 								</a>
 							</li>
-							<li>
+							<li class="notForModifiedDocuments">
 								<a href="#contractors-tab" data-toggle="tab" class="legitRipple">
 									<span id="{{{{id}}}}:contractors-tab-fill_percent" class="badge badge-danger pull-right" title="Процент заполнения">0%</span>
 									Исполнители работ
 								</a>
 							</li>
-							<li>
+							<li class="notForModifiedDocuments">
 								<a href="#developer-tab" data-toggle="tab" class="legitRipple">
 									<span id="{{{{id}}}}:developer-tab-fill_percent" class="badge badge-danger pull-right" title="Процент заполнения">0%</span>
 									Застройщик
 								</a>
 							</li>
-							<li>
+							<li class="notForModifiedDocuments">
 								<a href="#customer-tab" data-toggle="tab" class="legitRipple">
 									<span id="{{{{id}}}}:customer-tab-fill_percent" class="badge badge-danger pull-right" title="Процент заполнения">0%</span>
 									Технический заказчик
@@ -233,6 +251,9 @@ Edit template instead.
 								<h3>Общая информация о проекте</h3>
 								<div id="{{{{id}}}}:offices_ref"/>
 								<div id="{{{{id}}}}:service_cont"/>
+								{{#modified_documents}}
+								<div id="{{{{id}}}}:base_applications_ref"/>
+								{{/modified_documents}}
 								<div id="{{{{id}}}}:primary_application"/>
 								<div id="{{{{id}}}}:fund_sources_ref"/>
 								<div id="{{{{id}}}}:fund_percent"/>
@@ -287,14 +308,11 @@ Edit template instead.
 							</div>
 
 							<div class="tab-pane has-padding" id="application_prints-tab">
-								<h3>Файлы заявлений</h3>	
+								<h3>Файл заявления</h3>	
 								<div class="alert alert-info alert-styled-left alert-bordered">									
 									<p>Рапечатайте заполненный бланк заявления, подпишите ЭЦП, загрузите бланк заявления (pdf) и подписанный бланк (sig)</p>
 								</div>
-								<div id="{{{{id}}}}:app_print_expertise"/>
-								<div id="{{{{id}}}}:app_print_cost_eval"/>
-								<div id="{{{{id}}}}:app_print_modification"/>
-								<div id="{{{{id}}}}:app_print_audit"/>
+								<div id="{{{{id}}}}:app_print"/>
 							</div>
 
 						</div>
@@ -325,6 +343,9 @@ Edit template instead.
 				</div>
 				<div class="tab-pane fade" id="doc_flow_out">
 					<div id="{{{{id}}}}:doc_flow_out"/>
+				</div>
+				<div class="tab-pane fade" id="modified_documents">
+					<div id="{{{{id}}}}:modified_documents"/>
 				</div>
 				
 			</div>

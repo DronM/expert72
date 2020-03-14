@@ -380,6 +380,7 @@ DocFlowOutClientDialog_View.prototype.onGetData = function(resp,cmd){
 				var pm = new DocFlowOutClient_Controller().getPublicMethod("check_type");
 				pm.setFieldValue("application_id",app.getKey());
 				pm.setFieldValue("doc_flow_out_client_type",type_ctrl_v);
+				pm.setFieldValue("doc_flow_out_client_id",this.getModel().getFieldValue("id"));
 				pm.run();
 			}
 			

@@ -548,6 +548,15 @@ function ContractList_Model(options){
 	filed_options.autoInc = false;	
 	
 	options.fields.allow_client_out_documents = new FieldBool("allow_client_out_documents",filed_options);
+		
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.service_type = new FieldEnum("service_type",filed_options);
+	filed_options.enumValues = 'expertise,cost_eval_validity,audit,modification,modified_documents,expert_maintenance';
 	
 			
 				
@@ -667,6 +676,25 @@ function ContractList_Model(options){
 	options.fields.exp_cost_eval_validity = new FieldBool("exp_cost_eval_validity",filed_options);
 	
 			
+			
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.expert_maintenance_contract_id = new FieldInt("expert_maintenance_contract_id",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	filed_options.alias = 'Идентификатор связанного контракта по экспертному сопровождению. Только у измененной документации.';
+	filed_options.autoInc = false;	
+	
+	options.fields.expert_maintenance_contracts_ref = new FieldJSON("expert_maintenance_contracts_ref",filed_options);
+	
 		ContractList_Model.superclass.constructor.call(this,id,options);
 }
 extend(ContractList_Model,ModelXML);

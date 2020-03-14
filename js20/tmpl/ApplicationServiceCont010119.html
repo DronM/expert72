@@ -1,4 +1,19 @@
 <div id="{{id}}">
+	{{#modified_documents}}
+	<div class="row">
+		<div class="col-lg-6 service-type-out">
+			<div id="{{id}}:modified_documents-panel" class="panel service-type service-type-en bg-grey-300">
+				<div class="panel-heading">
+					<h4 class="panel-title" title="Измененная документация">
+						<div id="{{id}}:modified_documents"/>
+					</h4>
+				</div>
+			</div>	
+		</div>	
+	</div>		
+	{{/modified_documents}}
+	
+	{{#not_modified_documents}}
 	<div class="row">
 		<div class="col-lg-6 service-type-out">
 			<div id="{{id}}:expertise-panel" class="panel service-type service-type-en bg-grey-300">
@@ -27,4 +42,25 @@
 		</div>	
 		
 	</div>	
+	
+	<div class="row">
+		<div class="col-lg-6 service-type-out">
+			<div id="{{id}}:expert_maintenance-panel" class="panel service-type service-type-en bg-grey-300">
+				<div class="panel-heading">
+					<h4 class="panel-title" title="Экспертное сопровождение">
+						<div id="{{id}}:expert_maintenance"/>
+					</h4>
+				</div>
+				<div class="panel-body">
+					<div id="{{id}}:expert_maintenance_base_applications_ref">
+					</div>
+					<div id="{{id}}:expert_maintenance_contract_data">
+					</div>					
+					<div id="{{id}}:expert_maintenance_base_applications_inf">
+					</div>									
+				</div>	
+			</div>	
+		</div>	
+	</div>	
+	{{/not_modified_documents}}
 </div>

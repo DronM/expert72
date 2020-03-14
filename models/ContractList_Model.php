@@ -553,6 +553,14 @@ class ContractList_Model extends ModelSQL{
 		$this->addField($f_allow_client_out_documents);
 		//********************
 		
+		//*** Field service_type ***
+		$f_opts = array();
+		$f_opts['id']="service_type";
+						
+		$f_service_type=new FieldSQLEnum($this->getDbLink(),$this->getDbName(),$this->getTableName(),"service_type",$f_opts);
+		$this->addField($f_service_type);
+		//********************
+		
 		//*** Field applications_ref ***
 		$f_opts = array();
 		$f_opts['id']="applications_ref";
@@ -631,6 +639,25 @@ class ContractList_Model extends ModelSQL{
 						
 		$f_exp_cost_eval_validity=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"exp_cost_eval_validity",$f_opts);
 		$this->addField($f_exp_cost_eval_validity);
+		//********************
+		
+		//*** Field expert_maintenance_contract_id ***
+		$f_opts = array();
+		$f_opts['sysCol']=TRUE;
+		$f_opts['id']="expert_maintenance_contract_id";
+						
+		$f_expert_maintenance_contract_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expert_maintenance_contract_id",$f_opts);
+		$this->addField($f_expert_maintenance_contract_id);
+		//********************
+		
+		//*** Field expert_maintenance_contracts_ref ***
+		$f_opts = array();
+		
+		$f_opts['alias']='Идентификатор связанного контракта по экспертному сопровождению. Только у измененной документации.';
+		$f_opts['id']="expert_maintenance_contracts_ref";
+						
+		$f_expert_maintenance_contracts_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expert_maintenance_contracts_ref",$f_opts);
+		$this->addField($f_expert_maintenance_contracts_ref);
 		//********************
 	
 		$order = new ModelOrderSQL();		

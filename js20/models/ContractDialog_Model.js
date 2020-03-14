@@ -548,6 +548,15 @@ function ContractDialog_Model(options){
 	filed_options.autoInc = false;	
 	
 	options.fields.allow_client_out_documents = new FieldBool("allow_client_out_documents",filed_options);
+		
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.service_type = new FieldEnum("service_type",filed_options);
+	filed_options.enumValues = 'expertise,cost_eval_validity,audit,modification,modified_documents,expert_maintenance';
 	
 			
 			
@@ -858,6 +867,34 @@ function ContractDialog_Model(options){
 	
 			
 			
+			
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.modified_documents_service_type = new FieldString("modified_documents_service_type",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.modified_documents_expertise_type = new FieldString("modified_documents_expertise_type",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.expert_maintenance_base_contracts_ref = new FieldJSON("expert_maintenance_base_contracts_ref",filed_options);
+	
 		ContractDialog_Model.superclass.constructor.call(this,id,options);
 }
 extend(ContractDialog_Model,ModelXML);

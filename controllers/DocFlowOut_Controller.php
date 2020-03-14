@@ -646,17 +646,9 @@ class DocFlowOut_Controller extends DocFlow_Controller{
 		$model->query(
 			sprintf(
 			"SELECT
-				contracts_next_number(
-					CASE
-					WHEN applications.expertise_type IS NOT NULL THEN 'pd'::document_types
-					WHEN applications.cost_eval_validity THEN 'cost_eval_validity'::document_types
-					WHEN applications.modification THEN 'modification'::document_types
-					WHEN applications.audit THEN 'audit'::document_types						
-					END,
-					now()::date
-				) AS num
-			FROM applications
-			WHERE id=%d",
+				contracts_next_number(app.service_type,now()::date) AS num
+			FROM applications AS app
+			WHERE app.id=%d",
 			$this->getExtDbVal($pm,'application_id')
 			)		
 		,TRUE);

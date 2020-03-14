@@ -211,6 +211,15 @@ function DocFlowExaminationDialog_Model(options){
 	
 	options.fields.applications_ref = new FieldJSON("applications_ref",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.application_service_type = new FieldString("application_service_type",filed_options);
+	
 		DocFlowExaminationDialog_Model.superclass.constructor.call(this,id,options);
 }
 extend(DocFlowExaminationDialog_Model,ModelXML);

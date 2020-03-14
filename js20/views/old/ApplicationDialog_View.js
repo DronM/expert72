@@ -29,7 +29,7 @@ function ApplicationDialog_View(id,options){
 	
 	options.templateOptions = options.templateOptions || {};
 
-	this.m_order010119 = true;
+	this.m_order010119 = true;//true!!!
 
 	//все прочие папки		
 	var doc_folders;
@@ -37,11 +37,12 @@ function ApplicationDialog_View(id,options){
 	if (options.model && (options.model.getRowIndex()>=0 || options.model.getNextRow()) ){			
 		options.templateOptions.is_admin = (role_id=="admin");
 		options.readOnly = (options.model.getField("application_state").isSet() && options.model.getFieldValue("application_state")!="filling" && options.model.getFieldValue("application_state")!="correcting");
-		
-		if (options.model.getFieldValue("create_dt").getTime()<DateHelper.strtotime("2020-01-17").getTime() && options.readOnly){
+		//var exp_tp = options.model.getField("expertise_type");
+		var sent_d = options.model.getFieldValue("sent_dt");
+		if (sent_d && sent_d.getTime()<DateHelper.strtotime("2020-01-17").getTime()){// && options.readOnly
 			this.m_order010119 = false;
 		}
-		
+
 		/*
 		if (!options.model.getFieldValue("exp_cost_eval_validity")&&options.readOnly&&options.model.getFieldValue("create_dt")<(new Date(2019,0,1))){
 			this.m_order010119 = false;
@@ -282,7 +283,7 @@ function ApplicationDialog_View(id,options){
 		this.addElement(new EditFile(id+":app_print_expertise",{
 			"attrs":{"percentCalc":"true"},
 			"labelClassName": "control-label percentcalc "+bs_print,
-			"labelCaption":"Заявление на проведение государственной экспертизы (ПД,РИИ)",
+			"labelCaption":"Заявление на проведение государственной экспертизы (ПД,РИИ,Достоверность)",
 			"template":window.getApp().getTemplate("EditFileApp"),
 			"addControls":function(){
 				this.addElement(new ButtonCtrl(this.getId()+":printAppWord",{
@@ -518,7 +519,8 @@ function ApplicationDialog_View(id,options){
 		
 		this.addElement(new ApplicationClientEdit(id+":customer",{
 			"mainView":this,
-			"minInf":true			
+			"minInf":true,
+			"custIsDevText":true
 		}));
 		this.addElement(new ApplicationClientEdit(id+":developer",{			
 			"mainView":this,
@@ -663,6 +665,9 @@ function ApplicationDialog_View(id,options){
 		,new DataBinding({"control":this.getElement("app_print_audit")})
 		,new DataBinding({"control":this.getElement("applicant").getElement("auth_letter")})
 		,new DataBinding({"control":this.getElement("applicant").getElement("auth_letter_file")})
+		,new DataBinding({"control":this.getElement("customer").getElement("customer_auth_letter")})
+		,new DataBinding({"control":this.getElement("customer").getElement("customer_auth_letter_file")})
+		//,new DataBinding({"control":this.getElement("customer").getElement("customer_is_developer")})
 	];
 	if(!this.m_order010119){
 		r_binds.push(new DataBinding({"control":this.getElement("service_cont").getElement("modification"),"fieldId":"modification"}));
@@ -673,7 +678,7 @@ function ApplicationDialog_View(id,options){
 		r_binds.push(new DataBinding({"control":this.getElement("app_print_modification")}));
 	}
 	else{
-		r_binds.push(new DataBinding({"control":this.getElement("service_cont").getElement("exp_cost_eval_validity"),"fieldId":"exp_cost_eval_validity"}));
+		//r_binds.push(new DataBinding({"control":this.getElement("service_cont").getElement("exp_cost_eval_validity"),"fieldId":"exp_cost_eval_validity"}));
 	}
 	if (options.templateOptions.is_admin){
 		r_binds.push(new DataBinding({"control":this.getElement("users_ref")}));
@@ -709,6 +714,10 @@ function ApplicationDialog_View(id,options){
 		,new CommandBinding({"control":this.getElement("app_print_audit"),"fieldId":"app_print_audit_files"})	
 		,new CommandBinding({"control":this.getElement("applicant").getElement("auth_letter")})
 		,new CommandBinding({"control":this.getElement("applicant").getElement("auth_letter_file"),"fieldId":"auth_letter_files"})
+		,new CommandBinding({"control":this.getElement("customer").getElement("customer_auth_letter")})
+		,new CommandBinding({"control":this.getElement("customer").getElement("customer_auth_letter_file"),"fieldId":"customer_auth_letter_files"})
+		//,new CommandBinding({"control":this.getElement("customer").getElement("customer_is_developer")})
+		
 	];
 	if(!this.m_order010119){
 		w_binds.push(new CommandBinding({"control":this.getElement("service_cont").getElement("cost_eval_validity"),"fieldId":"cost_eval_validity"}));
@@ -720,7 +729,7 @@ function ApplicationDialog_View(id,options){
 		w_binds.push(new CommandBinding({"control":this.getElement("service_cont").getElement("primary_application").getElement("primary_reg_number"),"fieldId":"modif_primary_application_reg_number"}));
 	}
 	else{
-		w_binds.push(new CommandBinding({"control":this.getElement("service_cont").getElement("exp_cost_eval_validity"),"fieldId":"exp_cost_eval_validity"}));
+		//w_binds.push(new CommandBinding({"control":this.getElement("service_cont").getElement("exp_cost_eval_validity"),"fieldId":"exp_cost_eval_validity"}));
 	}
 	this.setWriteBindings(w_binds);
 	
@@ -769,6 +778,7 @@ function ApplicationDialog_View(id,options){
 	this.getElement("app_print_audit").setActive = f_setAppPrintActive;
 	this.getElement("app_print_audit").getFillPercent = this.m_getAppPrintFillPercent;
 	this.getElement("applicant").getElement("auth_letter_file").getFillPercent = this.m_getAppPrintFillPercent;
+	this.getElement("customer").getElement("customer_auth_letter_file").getFillPercent = this.m_getAppPrintFillPercent;
 	
 	//********** cades plugin ******************************
 	this.m_cadesView.afterViewConstructed();
@@ -875,10 +885,20 @@ ApplicationDialog_View.prototype.onGetData = function(resp,cmd){
 		this.getElement("app_print_audit").reset();
 	}
 	
-	var do_expertise = (m.getFieldValue("expertise_type")=="pd" || m.getFieldValue("expertise_type")=="eng_survey" || m.getFieldValue("expertise_type")=="pd_eng_survey");
+	var do_expertise = (m.getFieldValue("expertise_type")=="pd" || m.getFieldValue("expertise_type")=="eng_survey" || m.getFieldValue("expertise_type")=="pd_eng_survey"
+		 || m.getFieldValue("expertise_type")=="cost_eval_validity"
+		 || m.getFieldValue("expertise_type")=="cost_eval_validity_pd"
+		 || m.getFieldValue("expertise_type")=="cost_eval_validity_pd_eng_survey"
+		 || m.getFieldValue("expertise_type")=="cost_eval_validity_eng_survey"
+		 );
 	this.getElement("service_cont").getElement("expertise").setValue(do_expertise);
 	
-	this.calcFillPercent();
+	//this.calcFillPercent();	
+	var sent_dt = m.getFieldValue("sent_dt");
+	if (sent_dt && sent_dt.getTime()<DateHelper.strtotime("2020-02-11").getTime()){	
+		this.getElement("customer").m_custIsDevText = false;
+	}
+	this.getElement("customer").setCustomerDataVisible(!this.getElement("customer").getElement("customer_is_developer").getValue());
 	
 	var st = m.getFieldValue("application_state");
 	
@@ -1025,6 +1045,24 @@ ApplicationDialog_View.prototype.removeDocumentTypeWithWarn = function(docTypesF
 							//prints
 							for (var i=0;i<docTypesForRemove.length;i++){
 								var print_id;
+								if(
+								docTypesForRemove[i]=="pd"
+								||docTypesForRemove[i]=="eng_survey"
+								||(self.m_order010119&&docTypesForRemove[i]=="cost_eval_validity")
+								){
+									print_id = "app_print_expertise";
+								}
+								else if(!self.m_order010119&&docTypesForRemove[i]=="cost_eval_validity"){
+									print_id = "app_print_cost_eval";
+								}
+								else if(docTypesForRemove[i]=="modification"){
+									print_id = "app_print_modification";
+								}
+								else if(docTypesForRemove[i]=="audit"){
+									print_id = "app_print_audit";
+								}
+								
+								/*
 								switch(docTypesForRemove[i]) {
 									case "pd":
 									case "eng_survey":
@@ -1043,7 +1081,8 @@ ApplicationDialog_View.prototype.removeDocumentTypeWithWarn = function(docTypesF
 										print_id = "";
 										break;
 								}
-								if(print_id)self.getElement(print_id).reset();
+								*/
+								if(print_id&&self.getElement(print_id))self.getElement(print_id).reset();
 							}
 							onYes();
 						},
@@ -1210,6 +1249,7 @@ ApplicationDialog_View.prototype.disableAll = function(){
 	this.getElement("doc_flow_in").setEnabled(true);
 
 	this.getElement("applicant").getElement("auth_letter_file").setEnabled(false);
+	this.getElement("customer").getElement("customer_auth_letter_file").setEnabled(false);
 	this.getElement("doc_folders").setEnabled(true);
 	
 	var serv_cont = this.getElement("service_cont");
@@ -1307,7 +1347,7 @@ ApplicationDialog_View.prototype.checkPrintFiles = function(){
 ApplicationDialog_View.prototype.deletePrint = function(printMeth,fileId,callBack){
 	var self = this;
 	WindowQuestion.show({
-		"text":"Удалить файл "+((printMeth=="delete_auth_letter_file")? "доверенности":"заявления")+"?",
+		"text":"Удалить файл "+((printMeth=="delete_auth_letter_file"||printMeth=="delete_customer_auth_letter_file")? "доверенности":"заявления")+"?",
 		"cancel":false,
 		"callBack":function(res){			
 			if (res==WindowQuestion.RES_YES){

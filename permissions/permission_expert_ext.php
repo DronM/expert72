@@ -86,6 +86,10 @@ $permissions = array();
 		
 			$permissions['Contract_Controller_get_pd_list']=TRUE;
 		
+			$permissions['Contract_Controller_get_expert_maintenance_list']=TRUE;
+		
+			$permissions['Contract_Controller_get_modified_documents_list']=TRUE;
+		
 			$permissions['Contract_Controller_get_expertise_list']=TRUE;
 		
 			$permissions['Contract_Controller_get_pd_cost_valid_eval_list']=TRUE;

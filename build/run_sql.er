@@ -1,0 +1,4 @@
+psql:.run_sql.sql:23: ОШИБКА:  отношение "form_product_types" не существует
+СТРОКА 12:  FROM form_product_types
+                 ^
+psql:.run_sql.sql:24: ОШИБКА:  функция form_product_types_positions(integer) не существует

@@ -34,6 +34,8 @@ DECLARE
 	v_expert_work_day_count int;
 	v_office_id int;
 	v_new_contract_id int;
+	v_service_type service_types;
+	v_expertise_type expertise_types;
 BEGIN
 	IF (TG_WHEN='AFTER' AND TG_OP='INSERT') THEN
 		IF NOT const_client_lk_val() OR const_debug_val() THEN
@@ -175,7 +177,10 @@ BEGIN
 				WHERE doc_flow_in.id=(NEW.subject_doc->'keys'->>'id')::int;
 			
 				--НОВЫЙ КОНТРАКТ
-				IF NEW.application_resolution_state='waiting_for_contract' THEN
+				IF NEW.application_resolution_state='waiting_for_contract'
+					--это для измененной документации
+					OR NEW.application_resolution_state='expertise'
+				THEN
 					SELECT
 						app.expertise_type,
 						app.cost_eval_validity,
@@ -196,7 +201,9 @@ BEGIN
 							WHEN app.modification THEN 'modification'::document_types
 							WHEN app.audit THEN 'audit'::document_types						
 						END,
-						app.office_id
+						app.office_id,
+						app.service_type,
+						app.expertise_type						
 					
 					INTO
 						v_app_expertise_type,
@@ -213,7 +220,9 @@ BEGIN
 						v_constr_address,
 						v_constr_technical_features,
 						v_document_type,
-						v_office_id
+						v_office_id,
+						v_service_type,
+						v_expertise_type
 					
 					FROM applications AS app
 					LEFT JOIN contracts AS p_contr ON p_contr.application_id=app.primary_application_id
@@ -330,16 +339,13 @@ BEGIN
 						v_work_day_count,
 						v_expert_work_day_count
 					FROM services
-					WHERE services.id=
-					((
-						CASE
-							WHEN v_document_type='pd' THEN pdfn_services_expertise()
-							WHEN v_document_type='cost_eval_validity' THEN pdfn_services_cost_eval_validity()
-							WHEN v_document_type='modification' THEN pdfn_services_modification()
-							WHEN v_document_type='audit' THEN pdfn_services_audit()
-							ELSE NULL
-						END
-					)->'keys'->>'id')::int;
+					WHERE services.service_type=v_service_type
+						AND
+						(v_expertise_type IS NULL
+						OR services.expertise_type=v_expertise_type
+						)
+					LIMIT 1
+					;
 								
 					--RAISE EXCEPTION 'v_linked_contracts=%',v_linked_contracts;
 					--Контракт
@@ -364,7 +370,8 @@ BEGIN
 						work_end_date,
 						expert_work_end_date,
 						permissions,
-						user_id)
+						user_id,
+						service_type)
 					VALUES (
 						now(),
 						v_application_id,
@@ -412,7 +419,8 @@ BEGIN
 					
 						'{"id":"AccessPermission_Model","rows":[]}'::jsonb,
 					
-						v_app_user_id
+						v_app_user_id,
+						v_service_type
 					)
 					RETURNING id INTO v_new_contract_id;
 				

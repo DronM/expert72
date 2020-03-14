@@ -408,6 +408,13 @@ DocFlowOutDialog_View.prototype.getParamsOnDocFlowType = function(){
 			res.doc_type = "app_resp";
 			res.new_contr_num_vis = true;
 		}
+		//modified_documents
+		else if (v_key==window.getApp().getPredefinedItem("doc_flow_types","app_expertise").getKey()){
+			res.app_vis = true;
+			res.doc_type = "app_expertise";
+			res.new_contr_num_vis = true;
+		}
+		
 		else if (v_key==window.getApp().getPredefinedItem("doc_flow_types","app_resp_return").getKey()){
 			res.app_vis = true;
 			res.doc_type = "app_resp_return";

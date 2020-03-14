@@ -192,6 +192,14 @@ class DocFlowExaminationDialog_Model extends ModelSQL{
 		$f_applications_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"applications_ref",$f_opts);
 		$this->addField($f_applications_ref);
 		//********************
+		
+		//*** Field application_service_type ***
+		$f_opts = array();
+		$f_opts['id']="application_service_type";
+						
+		$f_application_service_type=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"application_service_type",$f_opts);
+		$this->addField($f_application_service_type);
+		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}
 

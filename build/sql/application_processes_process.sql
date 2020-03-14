@@ -80,6 +80,9 @@ BEGIN
 					ex.recipient,
 					'Исправление по заявлению '||
 					CASE
+						WHEN app.service_type='expert_maintenance' THEN 'Экспертное сопровождение'
+						WHEN app.service_type='modified_documents' THEN 'Измененная документация'
+						
 						WHEN app.expertise_type='pd'::expertise_types AND app.exp_cost_eval_validity THEN 'ПД, Достоверность'
 						WHEN app.expertise_type='pd'::expertise_types THEN 'ПД'
 						WHEN app.expertise_type='eng_survey'::expertise_types AND app.exp_cost_eval_validity THEN 'РИИ, Достоверность'
@@ -125,6 +128,9 @@ BEGIN
 				NEW.application_id,
 				'Новое заявление: '||
 				CASE
+					WHEN app.service_type='expert_maintenance' THEN 'Экспертное сопровождение'
+					WHEN app.service_type='modified_documents' THEN 'Измененная документация'
+				
 					WHEN app.expertise_type='pd'::expertise_types AND app.exp_cost_eval_validity THEN 'ПД, Достоверность'
 					WHEN app.expertise_type='pd'::expertise_types THEN 'ПД'
 					WHEN app.expertise_type='eng_survey'::expertise_types AND app.exp_cost_eval_validity THEN 'РИИ, Достоверность'
@@ -145,6 +151,9 @@ BEGIN
 				,
 				app.applicant->>'name'||' просит провести '||
 				CASE
+					WHEN app.service_type='expert_maintenance' THEN 'Экспертное сопровождение'
+					WHEN app.service_type='modified_documents' THEN 'проверку измененной документации'
+				
 					WHEN app.expertise_type='pd'::expertise_types AND app.exp_cost_eval_validity THEN 'экспертизу проектной документации и проверку достоверности определения сметной стоимости'
 					WHEN app.expertise_type='pd'::expertise_types THEN 'экспертизу проектной документации'
 					WHEN app.expertise_type='eng_survey'::expertise_types AND app.exp_cost_eval_validity  THEN 'экспертизу результатов инженерных изысканий и проверку достоверности определения сметной стоимости'

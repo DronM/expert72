@@ -523,20 +523,22 @@
 	</xsl:choose>
 	<!--*********************  Сведения о техническом заказчике ************************* -->
 
-
-	<!--*********************  Приложения ************************* -->
-	<xsl:call-template name="param_header">
-		<xsl:with-param name="n" select="'Приложения'"/>
-	</xsl:call-template>
-	<xsl:apply-templates select="row/documents_pd_eng_survey"/>	
-	<!--*********************  Приложения ************************* -->
+	
+	<xsl:if test="not(row/service_type='expert_maintenance')">
+		<!--*********************  Приложения ************************* -->
+		<xsl:call-template name="param_header">
+			<xsl:with-param name="n" select="'Приложения'"/>
+		</xsl:call-template>
+		<xsl:apply-templates select="row/documents_pd_eng_survey"/>	
+		<!--*********************  Приложения ************************* -->
 	
 
-	<!-- CostEvalValidity Files -->
-	<xsl:if test="$cost_eval">	
-		<xsl:apply-templates select="row/documents_cost_eval_validity"/>
-	</xsl:if>
-	
+		<!-- CostEvalValidity Files -->
+		<xsl:if test="$cost_eval">	
+			<xsl:apply-templates select="row/documents_cost_eval_validity"/>
+		</xsl:if>
+	</xsl:if>	
+		
 	<xsl:call-template name="doc_foot"/>
 	
 	<w:sectPr>
@@ -550,21 +552,16 @@
 
 <xsl:template name="doc_head">
 	<xsl:choose>
-	<xsl:when test="row/expertise_type='pd'"><xsl:text>Просим Вас провести государственную экспертизу проектной документации гарантируется.</xsl:text></xsl:when>
+	<xsl:when test="row/expertise_type='pd'"><xsl:text>Просим Вас провести государственную экспертизу проектной документации.</xsl:text></xsl:when>
 	<xsl:when test="row/expertise_type='eng_survey'"><xsl:text>Просим Вас провести государственную экспертизу результатов инженерных изысканий.</xsl:text></xsl:when>
 	<xsl:when test="row/expertise_type='cost_eval_validity'"><xsl:text>Просим Вас провести государственную экспертизу проверки достоверености сметной стоимости.</xsl:text></xsl:when>
 	<xsl:when test="row/expertise_type='cost_eval_validity_pd'"><xsl:text>Просим Вас провести государственную экспертизу проектной документации и экспертизу проверки достоверености сметной стоимости.</xsl:text></xsl:when>
 	<xsl:when test="row/expertise_type='cost_eval_validity_eng_survey'"><xsl:text>Просим Вас провести государственную экспертизы результатов инженерных изысканий и экспертизу проверки достоверености сметной стоимости.</xsl:text></xsl:when>
 	<xsl:when test="row/expertise_type='cost_eval_validity_pd_eng_survey'"><xsl:text>Просим Вас провести государственную экспертизы проектной документации, экспертизу результатов инженерных изысканий и экспертизу проверки достоверености сметной стоимости.</xsl:text></xsl:when>
+
+	<xsl:when test="row/service_type='expert_maintenance'"><xsl:text>Просим Вас провести экспертное сопровождение экспертизы проектной документации.</xsl:text></xsl:when>
+	<xsl:when test="row/service_type='modified_documents'"><xsl:text>Просим Вас рассмотреть измененную документацию.</xsl:text></xsl:when>
 	
-	<!--
-	<xsl:when test="row/expertise_type='pd' and not(row/exp_cost_eval_validity='t')"><xsl:text>Просим Вас провести государственную экспертизу проектной документации</xsl:text></xsl:when>
-	<xsl:when test="row/expertise_type='pd' and row/exp_cost_eval_validity='t'"><xsl:text>Просим Вас провести государственную экспертизу проектной документации и проверку достоверености сметной стоимости</xsl:text></xsl:when>
-	<xsl:when test="row/expertise_type='pd_eng_survey' and not(row/exp_cost_eval_validity='t')"><xsl:text>Просим Вас провести государственную экспертизу проектной документации и результатов инженерных изысканий</xsl:text></xsl:when>
-	<xsl:when test="row/expertise_type='pd_eng_survey' and row/exp_cost_eval_validity='t'"><xsl:text>Просим Вас провести государственную экспертизу проектной документации, результатов инженерных изысканий, проверку достоверености сметной стоимости</xsl:text></xsl:when>
-	<xsl:when test="row/expertise_type='eng_survey' and not(row/exp_cost_eval_validity='t')"><xsl:text>Просим Вас провести государственную экспертизу результатов инженерных изысканий</xsl:text></xsl:when>
-	<xsl:when test="row/expertise_type='eng_survey' and row/exp_cost_eval_validity='t'"><xsl:text>Просим Вас провести государственную экспертизу результатов инженерных изысканий и проверку достоверености сметной стоимости</xsl:text></xsl:when>
-	-->
 	<xsl:otherwise></xsl:otherwise>
 	</xsl:choose>
 </xsl:template>
@@ -579,14 +576,9 @@
 		<xsl:when test="row/expertise_type='cost_eval_validity_eng_survey'"><xsl:text>Оплата проведения государственной экспертизы результатов инженерных изысканий и экспертизы проверки достоверености сметной стоимости гарантируется.</xsl:text></xsl:when>
 		<xsl:when test="row/expertise_type='cost_eval_validity_pd_eng_survey'"><xsl:text>Оплата проведения государственной экспертизы проектной документации, экспертизы результатов инженерных изысканий и экспертизы проверки достоверености сметной стоимости гарантируется.</xsl:text></xsl:when>
 		
-		<!--
-		<xsl:when test="row/expertise_type='pd' and not(row/exp_cost_eval_validity='t')"><xsl:text>Оплата проведения государственной экспертизы проектной документации гарантируется.</xsl:text></xsl:when>
-		<xsl:when test="row/expertise_type='pd' and row/exp_cost_eval_validity='t'"><xsl:text>Оплата проведения государственной экспертизы проектной документации и проверки достоверености сметной стоимости гарантируется.</xsl:text></xsl:when>
-		<xsl:when test="row/expertise_type='pd_eng_survey' and not(row/exp_cost_eval_validity='t')"><xsl:text>Оплата проведения государственной экспертизы проектной документации и результатов инженерных изысканий гарантируется.</xsl:text></xsl:when>
-		<xsl:when test="row/expertise_type='pd_eng_survey' and row/exp_cost_eval_validity='t'"><xsl:text>Оплата проведения государственной экспертизы проектной документации, результатов инженерных изысканий, проверки достоверености сметной стоимости гарантируется.</xsl:text></xsl:when>
-		<xsl:when test="row/expertise_type='eng_survey' and not(row/exp_cost_eval_validity='t')"><xsl:text>Оплата проведения государственной экспертизы результатов инженерных изысканий гарантируется.</xsl:text></xsl:when>
-		<xsl:when test="row/expertise_type='eng_survey' and row/exp_cost_eval_validity='t'"><xsl:text>Оплата проведения государственной экспертизы результатов инженерных изысканий и проверки достоверености сметной стоимости гарантируется.</xsl:text></xsl:when>
-		-->
+		<xsl:when test="row/service_type='expert_maintenance'"><xsl:text>Оплата проведения экспертного сопровождения экспертизы проектной документации гарантируется.</xsl:text></xsl:when>
+		<xsl:when test="row/service_type='modified_documents'"><xsl:text>Оплата рассмотрения измененной документации гарантируется.</xsl:text></xsl:when>
+		
 		<xsl:otherwise></xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>

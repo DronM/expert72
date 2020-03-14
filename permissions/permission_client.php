@@ -60,6 +60,12 @@ $permissions = array();
 			
 				$permissions['Application_Controller_complete']=TRUE;
 			
+				$permissions['Application_Controller_complete_for_expert_maintenance']=TRUE;
+			
+				$permissions['Application_Controller_get_for_expert_maintenance_list']=TRUE;
+			
+				$permissions['Application_Controller_get_modified_documents_list']=TRUE;
+			
 				$permissions['Application_Controller_get_client_list']=TRUE;
 			
 				$permissions['Application_Controller_remove_file']=TRUE;
@@ -78,29 +84,11 @@ $permissions = array();
 			
 				$permissions['Application_Controller_remove_document_types']=TRUE;
 			
-				$permissions['Application_Controller_download_app_print_expertise']=TRUE;
+				$permissions['Application_Controller_download_app_print']=TRUE;
 			
-				$permissions['Application_Controller_download_app_print_expertise_sig']=TRUE;
+				$permissions['Application_Controller_download_app_print_sig']=TRUE;
 			
-				$permissions['Application_Controller_delete_app_print_expertise']=TRUE;
-			
-				$permissions['Application_Controller_download_app_print_modification']=TRUE;
-			
-				$permissions['Application_Controller_download_app_print_modification_sig']=TRUE;
-			
-				$permissions['Application_Controller_delete_app_print_modification']=TRUE;
-			
-				$permissions['Application_Controller_download_app_print_audit']=TRUE;
-			
-				$permissions['Application_Controller_download_app_print_audit_sig']=TRUE;
-			
-				$permissions['Application_Controller_delete_app_print_audit']=TRUE;
-			
-				$permissions['Application_Controller_download_app_print_cost_eval']=TRUE;
-			
-				$permissions['Application_Controller_download_app_print_cost_eval_sig']=TRUE;
-			
-				$permissions['Application_Controller_delete_app_print_cost_eval']=TRUE;
+				$permissions['Application_Controller_delete_app_print']=TRUE;
 			
 				$permissions['Application_Controller_set_user']=TRUE;
 			
@@ -233,6 +221,8 @@ $permissions = array();
 				$permissions['DocFlowOutClient_Controller_get_correction_list']=TRUE;
 			
 				$permissions['DocFlowOutClient_Controller_get_doc_flow_out_attrs']=TRUE;
+			
+				$permissions['DocFlowOutClient_Controller_admin_enable_edit']=TRUE;
 			
 				$permissions['DocFlowInClient_Controller_update']=TRUE;
 			

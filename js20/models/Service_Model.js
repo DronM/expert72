@@ -42,7 +42,7 @@ function Service_Model(options){
 	filed_options.autoInc = false;	
 	
 	options.fields.name = new FieldString("name",filed_options);
-	options.fields.name.getValidator().setMaxLength('50');
+	options.fields.name.getValidator().setMaxLength('250');
 	
 				
 	
@@ -82,6 +82,28 @@ function Service_Model(options){
 	options.fields.contract_postf = new FieldString("contract_postf",filed_options);
 	options.fields.contract_postf.getValidator().setMaxLength('5');
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	filed_options.alias = 'Вид услуги';
+	filed_options.autoInc = false;	
+	
+	options.fields.service_type = new FieldEnum("service_type",filed_options);
+	filed_options.enumValues = 'expertise,cost_eval_validity,audit,modification,modified_documents,expert_maintenance';
+	options.fields.service_type.getValidator().setRequired(true);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	filed_options.alias = 'Вид гос.экспертизы';
+	filed_options.autoInc = false;	
+	
+	options.fields.expertise_type = new FieldEnum("expertise_type",filed_options);
+	filed_options.enumValues = 'pd,eng_survey,pd_eng_survey,cost_eval_validity,cost_eval_validity_pd,cost_eval_validity_eng_survey,cost_eval_validity_pd_eng_survey';
+	
+			
 			
 		Service_Model.superclass.constructor.call(this,id,options);
 }

@@ -38,6 +38,7 @@ function DocFlowOutClient_Controller(options){
 	this.add_check_type();
 	this.add_get_correction_list();
 	this.add_get_doc_flow_out_attrs();
+	this.add_admin_enable_edit();
 		
 }
 extend(DocFlowOutClient_Controller,ControllerObjServer);
@@ -105,6 +106,12 @@ extend(DocFlowOutClient_Controller,ControllerObjServer);
 		
 	options.enumValues = 'app,contr_resp,contr_return,contr_other,date_prolongate,app_contr_revoke';
 	var field = new FieldEnum("doc_flow_out_client_type",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldBool("admin_correction",options);
 	
 	pm.addField(field);
 	
@@ -182,6 +189,12 @@ extend(DocFlowOutClient_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	
+	var field = new FieldBool("admin_correction",options);
+	
+	pm.addField(field);
+	
 	
 }
 
@@ -251,6 +264,9 @@ extend(DocFlowOutClient_Controller,ControllerObjServer);
 	var f_opts = {};
 	
 	pm.addField(new FieldEnum("doc_flow_out_client_type",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldBool("admin_correction",f_opts));
 }
 
 			DocFlowOutClient_Controller.prototype.add_get_application_dialog = function(){
@@ -405,6 +421,12 @@ extend(DocFlowOutClient_Controller,ControllerObjServer);
 	
 		pm.addField(new FieldString("doc_flow_out_client_type",options));
 	
+				
+	
+	var options = {};
+	
+		pm.addField(new FieldInt("doc_flow_out_client_id",options));
+	
 			
 	this.addPublicMethod(pm);
 }
@@ -436,6 +458,22 @@ extend(DocFlowOutClient_Controller,ControllerObjServer);
 		options.required = true;
 	
 		pm.addField(new FieldInt("application_id",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			DocFlowOutClient_Controller.prototype.add_admin_enable_edit = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('admin_enable_edit',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("id",options));
 	
 			
 	this.addPublicMethod(pm);

@@ -131,7 +131,14 @@ DocumentDialog_View.prototype.addDocTab = function(tabName,items,toDOM){
 DocumentDialog_View.prototype.toggleDocTypeVisOnModel = function(model){
 	if (!this.m_started)return;
 	
-	var exp_type = model? model.getFieldValue("expertise_type") : null;
+	var exp_type;
+	if(model && model.getFieldValue("service_type")=="modified_documents"){
+		exp_type = model? model.getFieldValue("modified_documents_expertise_type"): null;
+	}
+	else{
+		exp_type = model? model.getFieldValue("expertise_type") : null;
+	}
+	
 	this.toggleDocTab("pd",(exp_type=="pd" || exp_type=="pd_eng_survey" || exp_type=="cost_eval_validity_pd" || exp_type=="cost_eval_validity_pd_eng_survey"));
 	this.toggleDocTab("eng_survey",(exp_type=="eng_survey" || exp_type=="pd_eng_survey" || exp_type=="cost_eval_validity_eng_survey" || exp_type=="cost_eval_validity_pd_eng_survey"));
 	this.toggleDocTab("cost_eval_validity",
@@ -142,20 +149,29 @@ DocumentDialog_View.prototype.toggleDocTypeVisOnModel = function(model){
 	);
 	this.toggleDocTab("modification", model? model.getFieldValue("modification") : false);
 	this.toggleDocTab("audit", model? model.getFieldValue("audit") : false);
-	
+		
 	for(var tab_name in this.m_documentTabs){
 		if (this.m_documentTabs[tab_name] && this.m_documentTabs[tab_name].control){
 			$('.nav-tabs a[href="#'+this.m_documentTabs[tab_name].control.getAttr("name")+'"]').tab("show");
 			break;
 		}
 	}
+		
 }
 
 DocumentDialog_View.prototype.toggleDocTypeVis = function(){
 	if (!this.m_started)return;
 	
 	var service_ctrl = this.getElement("service_cont");
-	var exp_type = service_ctrl.getElement("expertise_type").getValue();
+	var service_type = service_ctrl.getElement("service_type").getValue();
+	var exp_type;
+	if(service_type=="modified_documents"){
+		exp_type = this.getModel().getFieldValue("modified_documents_expertise_type");
+	}
+	else{
+		exp_type = service_ctrl.getElement("expertise_type")? service_ctrl.getElement("expertise_type").getValue():null;	
+	}
+	
 	this.toggleDocTab("pd",(exp_type=="pd" || exp_type=="pd_eng_survey" || exp_type=="cost_eval_validity_pd" || exp_type=="cost_eval_validity_pd_eng_survey"));
 	this.toggleDocTab("eng_survey",(exp_type=="eng_survey" || exp_type=="pd_eng_survey" || exp_type=="cost_eval_validity_eng_survey" || exp_type=="cost_eval_validity_pd_eng_survey"));
 	this.toggleDocTab("cost_eval_validity",
@@ -167,14 +183,15 @@ DocumentDialog_View.prototype.toggleDocTypeVis = function(){
 	
 	if(this.m_order010119!=undefined&&!this.m_order010119){
 		//this.toggleDocTab("cost_eval_validity",service_ctrl.getElement("cost_eval_validity").getValue());
-		this.toggleDocTab("modification",service_ctrl.getElement("modification").getValue());
+		this.toggleDocTab("modification",(service_type=="modification"));
 	}
 	else{
 		//new order 01/01/20
 		//this.toggleDocTab("cost_eval_validity",service_ctrl.getElement("exp_cost_eval_validity").getValue());
 		this.toggleDocTab("modification",false);
 	}
-	this.toggleDocTab("audit",service_ctrl.getElement("audit").getValue());
+	this.toggleDocTab("audit",(service_type=="audit"));
+	
 }
 
 DocumentDialog_View.prototype.addDocTabTemplate = function(tabName){
@@ -228,7 +245,7 @@ DocumentDialog_View.prototype.toggleDocTab = function(tabName,vis){
 		}				
 	}
 	else if (!vis){
-		if (this.m_documentTabs[tabName].control){
+		if (this.m_documentTabs[tabName]&&this.m_documentTabs[tabName].control){
 			this.delElement("documents_"+tabName);
 			this.m_documentTabs[tabName].control = null;		
 		}

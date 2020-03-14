@@ -19,14 +19,30 @@
 # define FORMAT_ASN1     4                      /* ASN.1/DER */
 # define FORMAT_PEM (5 | B_FORMAT_TEXT)
 
+//# define DEBUG 1
+
 int main(int argc, char **argv){
 	BIO *source = NULL, *dest = NULL, *out = NULL;
 	PKCS7 *p7_s = NULL, *p7_d = NULL;
 
 	STACK_OF(PKCS7_SIGNER_INFO) *signers_s = NULL;
 	STACK_OF(X509_INFO) *certs_s = NULL;
+	STACK_OF(X509_INFO) *certs_d = NULL;
 	
-	int i;
+	const EVP_MD		*digest = NULL;//Алгоритм рля расчета хэша сертификатов
+	unsigned char		md[EVP_MAX_MD_SIZE];//хэш текущего сертификата для сравнения
+	unsigned int		md_n;//длина структуры текущего
+	typedef struct md_stack{
+		unsigned char md[EVP_MAX_MD_SIZE];
+		unsigned int md_len;
+		struct md_stack *next;
+	} md_stack_t;
+	md_stack_t 		*md_stack_head = NULL;
+	md_stack_t		*md_stack_cur;
+	unsigned int md_diff,md_exists;
+	
+	
+	int i,k;
 
 	int informat = FORMAT_ASN1, outformat = FORMAT_ASN1;//FORMAT_PEM	
 	
@@ -34,9 +50,8 @@ int main(int argc, char **argv){
 	
 	int ret = 1;
 	
-	int c;
-	while ((c = getopt (argc, argv, "s:d:o:")) != -1)		
-		switch (c){
+	while ((i = getopt (argc, argv, "s:d:o:")) != -1)		
+		switch (i){
 			case 's':
 				infile_s = optarg;
 				break;
@@ -47,8 +62,8 @@ int main(int argc, char **argv){
 				outfile = optarg;
 				break;
 			case '?':
-				if (isprint (c))
-					printf("Unknown option `-%c'.\n", c);
+				if (isprint (i))
+					printf("Unknown option `-%c'.\n", i);
 				break;
 			default:
 				abort ();
@@ -74,7 +89,9 @@ int main(int argc, char **argv){
 	OpenSSL_add_all_algorithms();
 	ERR_load_BIO_strings();
 	ERR_load_crypto_strings();
-  
+  	OpenSSL_add_all_digests();
+	digest = EVP_get_digestbyname("sha1");
+
 	if ((source = BIO_new_file(infile_s, "rb"))==NULL){
 		fprintf(stderr, ER_CREATE_FILE,"source");
 		goto err;
@@ -121,7 +138,55 @@ int main(int argc, char **argv){
 		PKCS7_add_signer(p7_d, si);
 	}
 
-	//mergin certificates
+	//mergin certificates	
+	//dest to stack
+	certs_d = p7_d->d.sign->cert;
+	i = OBJ_obj2nid(p7_d->type);
+	if(i == NID_pkcs7_signed) {
+		certs_d = p7_d->d.sign->cert;
+	} else if(i == NID_pkcs7_signedAndEnveloped) {
+		certs_d = p7_d->d.signed_and_enveloped->cert;
+	}	
+	for (i = 0; certs_d && i < sk_X509_num(certs_d); i++) {
+		X509 *x = sk_X509_value(certs_d,i);
+		X509_digest(x, digest, md, &md_n);
+		
+		#ifdef DEBUG
+		printf("Adding dest certs to stack %d, digest=", i);		
+		for(k = 0; k < md_n; k++){
+			printf("%d",md[k]);
+		}
+		printf("\n");
+		#endif
+		
+		//add to stack
+		if(md_stack_head==NULL){
+			//first
+			
+			#ifdef DEBUG
+			printf("Allocating mem for first cert\n");
+			#endif
+			
+			md_stack_head = (md_stack_t *) malloc(sizeof(md_stack_t));
+			md_stack_cur = md_stack_head;
+		}
+		else{
+			//get last
+			#ifdef DEBUG
+			printf("Allocating mem for next item.\n");
+			#endif
+			
+			md_stack_cur->next = (md_stack_t *) malloc(sizeof(md_stack_t));
+			md_stack_cur = md_stack_cur->next;
+		}
+		md_stack_cur->md_len = md_n;
+		md_stack_cur->next = NULL;
+		for(k = 0; k < md_n; k++){
+			md_stack_cur->md[k] = md[k];
+		}
+	}
+	
+	
 	certs_s = p7_s->d.sign->cert;
 	i = OBJ_obj2nid(p7_s->type);
 	if(i == NID_pkcs7_signed) {
@@ -132,7 +197,93 @@ int main(int argc, char **argv){
 	
 	for (i = 0; certs_s && i < sk_X509_num(certs_s); i++) {
 		X509 *x = sk_X509_value(certs_s,i);
-		PKCS7_add_certificate(p7_d, x);
+		
+		//хэш текущего серта
+		X509_digest(x, digest, md, &md_n);
+		
+		#ifdef DEBUG
+		printf("Checking cert %d, digest=", i);
+		for(k = 0; k < md_n; k++){
+			printf("%d",md[k]);
+		}
+		printf("\n");
+		#endif
+		
+		//перебор всех		
+		md_exists = 0;		
+		md_stack_cur = md_stack_head;
+		while (md_stack_cur != NULL) {
+		
+			#ifdef DEBUG
+			printf("Comparing with digest=");
+			for(k = 0; k < md_stack_cur->md_len; k++){
+				printf("%d",md_stack_cur->md[k]);
+			}
+			printf("\n");
+			#endif
+			
+			md_diff = 0;
+			for(k = 0; k < md_n; k++){
+				if( (md_n!=md_stack_cur->md_len) || (md[k] != md_stack_cur->md[k]) ){
+					#ifdef DEBUG
+					printf("Different val\n");
+					#endif
+					
+					md_diff = 1;
+					break;
+				}
+			}
+			if(md_diff==0){
+				#ifdef DEBUG
+				printf("Got same value\n");
+				#endif
+				
+				md_exists = 1;	
+				break;
+			}
+			md_stack_cur = md_stack_cur->next;
+		}
+		
+		#ifdef DEBUG
+		printf("Cert already exists=%d\n",md_exists);		
+		#endif
+		
+		if(md_exists==0){
+			//add to stack
+			if(md_stack_head==NULL){
+				//first
+				#ifdef DEBUG
+				printf("Allocating mem for first cert\n");
+				#endif
+				
+				md_stack_head = (md_stack_t *) malloc(sizeof(md_stack_t));
+				md_stack_cur = md_stack_head;
+			}
+			else{
+				//get last
+				md_stack_cur = md_stack_head;
+				while (md_stack_cur->next != NULL) {
+					md_stack_cur = md_stack_cur->next;
+				}
+				#ifdef DEBUG
+				printf("Allocating mem for next item.\n");
+				#endif
+				md_stack_cur->next = (md_stack_t *) malloc(sizeof(md_stack_t));
+				md_stack_cur = md_stack_cur->next;
+			}
+			md_stack_cur->md_len = md_n;
+			md_stack_cur->next = NULL;
+			
+			#ifdef DEBUG
+			printf("Copying digest inf %d\n",md_n);						
+			for(k = 0; k < md_n; k++){
+				md_stack_cur->md[k] = md[k];
+			}									
+			printf("Adding cert\n");
+			#endif
+						
+			PKCS7_add_certificate(p7_d, x);
+		}
 	}	
 
 	out = BIO_new_file(outfile, "wb");
@@ -153,17 +304,32 @@ int main(int argc, char **argv){
 	}
 	ret = 0;
  err:	
+ 	if(md_stack_head!=NULL){
+		md_stack_cur = md_stack_head;
+		while (md_stack_cur != NULL) {
+			md_stack_head = md_stack_cur->next;
+			free(md_stack_cur);
+			md_stack_cur = md_stack_head;
+		}
+	}
+ 
  	if(p7_s){
 		PKCS7_free(p7_s);
 	}
+/*	
 	if(p7_d){
 		PKCS7_free(p7_d);
 	}
+*/	
+	
 	if(certs_s){
 		X509_free(certs_s);
 	}
+	if(certs_d){
+		X509_free(certs_d);
+	}
 	
-	if(certs_s){
+	if(source){
 		BIO_free(source);	
 	}
 	if(dest){

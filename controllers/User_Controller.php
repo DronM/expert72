@@ -621,6 +621,13 @@ class User_Controller extends ControllerSQL{
 			$filter->addField($field,'=');
 			GlobalFilter::set('ApplicationList_Model',$filter);
 						
+			$model = new ApplicationForExpertMaintenanceList_Model($this->getDbLink());
+			$filter = new ModelWhereSQL();
+			$field = clone $model->getFieldById('user_id');
+			$field->setValue($ar['id']);
+			$filter->addField($field,'=');
+			GlobalFilter::set('ApplicationForExpertMaintenanceList_Model',$filter);
+						
 			$model = new DocFlowOutClient_Model($this->getDbLink());
 			$filter = new ModelWhereSQL();
 			$field = clone $model->getFieldById('user_id');

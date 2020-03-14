@@ -109,6 +109,15 @@ class DocFlowOutClientList_Model extends ModelSQL{
 		$this->addField($f_doc_flow_out_client_type);
 		//********************
 		
+		//*** Field admin_correction ***
+		$f_opts = array();
+		$f_opts['defaultValue']='FALSE';
+		$f_opts['id']="admin_correction";
+						
+		$f_admin_correction=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"admin_correction",$f_opts);
+		$this->addField($f_admin_correction);
+		//********************
+		
 		//*** Field applications_ref ***
 		$f_opts = array();
 		$f_opts['id']="applications_ref";

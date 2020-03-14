@@ -264,6 +264,8 @@ class Application_Model extends ModelSQL{
 		
 		//*** Field app_print_expertise ***
 		$f_opts = array();
+		
+		$f_opts['alias']='Устарело используется поле app_print';
 		$f_opts['id']="app_print_expertise";
 						
 		$f_app_print_expertise=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"app_print_expertise",$f_opts);
@@ -272,6 +274,8 @@ class Application_Model extends ModelSQL{
 		
 		//*** Field app_print_cost_eval ***
 		$f_opts = array();
+		
+		$f_opts['alias']='Устарело используется поле app_print';
 		$f_opts['id']="app_print_cost_eval";
 						
 		$f_app_print_cost_eval=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"app_print_cost_eval",$f_opts);
@@ -280,6 +284,8 @@ class Application_Model extends ModelSQL{
 		
 		//*** Field app_print_modification ***
 		$f_opts = array();
+		
+		$f_opts['alias']='Устарело используется поле app_print';
 		$f_opts['id']="app_print_modification";
 						
 		$f_app_print_modification=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"app_print_modification",$f_opts);
@@ -288,6 +294,8 @@ class Application_Model extends ModelSQL{
 		
 		//*** Field app_print_audit ***
 		$f_opts = array();
+		
+		$f_opts['alias']='Устарело используется поле app_print';
 		$f_opts['id']="app_print_audit";
 						
 		$f_app_print_audit=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"app_print_audit",$f_opts);
@@ -373,6 +381,42 @@ class Application_Model extends ModelSQL{
 						
 		$f_customer_auth_letter_file=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"customer_auth_letter_file",$f_opts);
 		$this->addField($f_customer_auth_letter_file);
+		//********************
+		
+		//*** Field service_type ***
+		$f_opts = array();
+		
+		$f_opts['alias']='Вид услуги';
+		$f_opts['id']="service_type";
+						
+		$f_service_type=new FieldSQLEnum($this->getDbLink(),$this->getDbName(),$this->getTableName(),"service_type",$f_opts);
+		$this->addField($f_service_type);
+		//********************
+		
+		//*** Field app_print ***
+		$f_opts = array();
+		
+		$f_opts['alias']='Бланк заявления';
+		$f_opts['id']="app_print";
+						
+		$f_app_print=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"app_print",$f_opts);
+		$this->addField($f_app_print);
+		//********************
+		
+		//*** Field expert_maintenance_base_application_id ***
+		$f_opts = array();
+		$f_opts['id']="expert_maintenance_base_application_id";
+						
+		$f_expert_maintenance_base_application_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expert_maintenance_base_application_id",$f_opts);
+		$this->addField($f_expert_maintenance_base_application_id);
+		//********************
+		
+		//*** Field expert_maintenance_contract_data ***
+		$f_opts = array();
+		$f_opts['id']="expert_maintenance_contract_data";
+						
+		$f_expert_maintenance_contract_data=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expert_maintenance_contract_data",$f_opts);
+		$this->addField($f_expert_maintenance_contract_data);
 		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}

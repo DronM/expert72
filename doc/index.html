@@ -146,6 +146,7 @@
 <li><a href="#Application_Model">Application_Model</a></li>
 <li><a href="#ApplicationDialog_Model">ApplicationDialog_Model</a></li>
 <li><a href="#ApplicationList_Model">ApplicationList_Model</a></li>
+<li><a href="#ApplicationForExpertMaintenanceList_Model">ApplicationForExpertMaintenanceList_Model</a></li>
 <li><a href="#ApplicationClientList_Model">ApplicationClientList_Model</a></li>
 <li><a href="#ApplicationCustomerList_Model">ApplicationCustomerList_Model</a></li>
 <li><a href="#ApplicationContractorList_Model">ApplicationContractorList_Model</a></li>
@@ -293,6 +294,7 @@
 <li><a href="#cost_eval_validity_pd_orders">cost_eval_validity_pd_orders</a></li>
 <li><a href="#date_types">date_types</a></li>
 <li><a href="#doc_flow_out_client_types">doc_flow_out_client_types</a></li>
+<li><a href="#service_types">service_types</a></li>
 </ul>
 </div>
 <div class="content">
@@ -363,6 +365,9 @@
 </div>
 <h2>get_list</h2>
 <a href="#ApplicationList_Model">Model: ApplicationList_Model</a><h2>complete</h2>
+<a href="#ApplicationList_Model">Model: ApplicationList_Model</a><h2>complete_for_expert_maintenance</h2>
+<a href="#ApplicationList_Model">Model: ApplicationList_Model</a><h2>get_for_expert_maintenance_list</h2>
+<a href="#ApplicationForExpertMaintenanceList_Model">Model: ApplicationForExpertMaintenanceList_Model</a><h2>get_modified_documents_list</h2>
 <a href="#ApplicationList_Model">Model: ApplicationList_Model</a><h2>get_client_list</h2>
 <a href="#ApplicationClientList_Model">Model: ApplicationClientList_Model</a><h2>remove_file</h2>
 <p>Arguments:</p>
@@ -443,7 +448,7 @@
 								Да</p>
 </div>
 </div>
-<h2>download_app_print_expertise</h2>
+<h2>download_app_print</h2>
 <p>Arguments:</p>
 <div class="content_item content_item2">
 <h3>id</h3>
@@ -454,7 +459,7 @@
 								Да</p>
 </div>
 </div>
-<h2>download_app_print_expertise_sig</h2>
+<h2>download_app_print_sig</h2>
 <p>Arguments:</p>
 <div class="content_item content_item2">
 <h3>id</h3>
@@ -465,127 +470,7 @@
 								Да</p>
 </div>
 </div>
-<h2>delete_app_print_expertise</h2>
-<p>Arguments:</p>
-<div class="content_item content_item2">
-<h3>id</h3>
-<p></p>
-<div class="content_item content_item3">
-<p>Type:Int</p>
-<p>Required:
-								Да</p>
-</div>
-<h3>fill_percent</h3>
-<p></p>
-<div class="content_item content_item3">
-<p>Type:Int</p>
-<p>Required:
-								Да</p>
-</div>
-</div>
-<h2>download_app_print_modification</h2>
-<p>Arguments:</p>
-<div class="content_item content_item2">
-<h3>id</h3>
-<p></p>
-<div class="content_item content_item3">
-<p>Type:Int</p>
-<p>Required:
-								Да</p>
-</div>
-</div>
-<h2>download_app_print_modification_sig</h2>
-<p>Arguments:</p>
-<div class="content_item content_item2">
-<h3>id</h3>
-<p></p>
-<div class="content_item content_item3">
-<p>Type:Int</p>
-<p>Required:
-								Да</p>
-</div>
-</div>
-<h2>delete_app_print_modification</h2>
-<p>Arguments:</p>
-<div class="content_item content_item2">
-<h3>id</h3>
-<p></p>
-<div class="content_item content_item3">
-<p>Type:Int</p>
-<p>Required:
-								Да</p>
-</div>
-<h3>fill_percent</h3>
-<p></p>
-<div class="content_item content_item3">
-<p>Type:Int</p>
-<p>Required:
-								Да</p>
-</div>
-</div>
-<h2>download_app_print_audit</h2>
-<p>Arguments:</p>
-<div class="content_item content_item2">
-<h3>id</h3>
-<p></p>
-<div class="content_item content_item3">
-<p>Type:Int</p>
-<p>Required:
-								Да</p>
-</div>
-</div>
-<h2>download_app_print_audit_sig</h2>
-<p>Arguments:</p>
-<div class="content_item content_item2">
-<h3>id</h3>
-<p></p>
-<div class="content_item content_item3">
-<p>Type:Int</p>
-<p>Required:
-								Да</p>
-</div>
-</div>
-<h2>delete_app_print_audit</h2>
-<p>Arguments:</p>
-<div class="content_item content_item2">
-<h3>id</h3>
-<p></p>
-<div class="content_item content_item3">
-<p>Type:Int</p>
-<p>Required:
-								Да</p>
-</div>
-<h3>fill_percent</h3>
-<p></p>
-<div class="content_item content_item3">
-<p>Type:Int</p>
-<p>Required:
-								Да</p>
-</div>
-</div>
-<h2>download_app_print_cost_eval</h2>
-<p>Arguments:</p>
-<div class="content_item content_item2">
-<h3>id</h3>
-<p></p>
-<div class="content_item content_item3">
-<p>Type:Int</p>
-<p>Required:
-								Да</p>
-</div>
-</div>
-<h2>download_app_print_cost_eval_sig</h2>
-<p>Arguments:</p>
-<div class="content_item content_item2">
-<h3>id</h3>
-<p></p>
-<div class="content_item content_item3">
-<p>Type:Int</p>
-<p>Required:
-								Да</p>
-</div>
-</div>
-<h2>delete_app_print_cost_eval</h2>
+<h2>delete_app_print</h2>
 <p>Arguments:</p>
 <div class="content_item content_item2">
 <h3>id</h3>
@@ -1093,6 +978,8 @@
 <a href="#ContractDialog_Model">Model: ContractDialog_Model</a><h2>get_list</h2>
 <a href="#ContractList_Model">Model: ContractList_Model</a><h2>complete</h2>
 <a href="#ContractList_Model">Model: ContractList_Model</a><h2>get_pd_list</h2>
+<a href="#ContractList_Model">Model: ContractList_Model</a><h2>get_expert_maintenance_list</h2>
+<a href="#ContractList_Model">Model: ContractList_Model</a><h2>get_modified_documents_list</h2>
 <a href="#ContractList_Model">Model: ContractList_Model</a><h2>get_expertise_list</h2>
 <a href="#ContractList_Model">Model: ContractList_Model</a><h2>get_pd_cost_valid_eval_list</h2>
 <a href="#ContractList_Model">Model: ContractList_Model</a><h2>get_eng_survey_list</h2>
@@ -2196,6 +2083,13 @@
 <p>Required:
 								Да</p>
 </div>
+<h3>doc_flow_out_client_id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Нет</p>
+</div>
 </div>
 <h2>get_correction_list</h2>
 <p>Arguments:</p>
@@ -2212,6 +2106,17 @@
 <p>Arguments:</p>
 <div class="content_item content_item2">
 <h3>application_id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Да</p>
+</div>
+</div>
+<h2>admin_enable_edit</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>id</h3>
 <p></p>
 <div class="content_item content_item3">
 <p>Type:Int</p>
@@ -3801,6 +3706,30 @@
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
+<h2>service_type</h2>
+<div>Type:Enum</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>app_print</h2>
+<div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>expert_maintenance_base_application_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>expert_maintenance_contract_data</h2>
+<div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
 </div>
 </div>
 <div id="ApplicationClient_Model" class="content_box">
@@ -4025,7 +3954,7 @@
 <p>Поля:</p>
 <h2>id</h2>
 <div>Type:Int</div>
-<div>Primary key:</div>
+<div>Primary key:TRUE</div>
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
@@ -4203,25 +4132,13 @@
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
-<h2>app_print_expertise</h2>
+<h2>app_print</h2>
 <div>Type:JSONB</div>
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
 <h2>app_print_cost_eval</h2>
-<div>Type:JSONB</div>
-<div>Primary key:</div>
-<div>Required:</div>
-<div>Length:</div>
-<div>Precision:</div>
-<h2>app_print_modification</h2>
-<div>Type:JSONB</div>
-<div>Primary key:</div>
-<div>Required:</div>
-<div>Length:</div>
-<div>Precision:</div>
-<h2>app_print_audit</h2>
 <div>Type:JSONB</div>
 <div>Primary key:</div>
 <div>Required:</div>
@@ -4301,6 +4218,48 @@
 <div>Precision:</div>
 <h2>sent_dt</h2>
 <div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>service_type</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>expert_maintenance_base_applications_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>expert_maintenance_contract_data</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>modified_documents_service_type</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>modified_documents_expertise_type</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>expert_maintenance_service_type</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>expert_maintenance_expertise_type</h2>
+<div>Type:String</div>
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>
@@ -4517,6 +4476,78 @@
 <div>Precision:</div>
 </div>
 </div>
+<div id="ApplicationForExpertMaintenanceList_Model" class="content_box">
+<h1>ApplicationForExpertMaintenanceList_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>create_dt</h2>
+<div>Type:DateTime</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>select_descr</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>applicant_name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>customer_name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>service_list</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>user_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>contract_number</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>contract_date</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>expertise_result_number</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>expertise_result_date</h2>
+<div>Type:Date</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
 <div id="ApplicationList_Model" class="content_box">
 <h1>ApplicationList_Model</h1>
 <div class="content_item">
@@ -4637,6 +4668,12 @@
 <div>Precision:</div>
 <h2>expertise_result_date</h2>
 <div>Type:Date</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>base_application_id</h2>
+<div>Type:Int</div>
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>
@@ -5907,6 +5944,12 @@
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
+<h2>service_type</h2>
+<div>Type:Enum</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
 </div>
 </div>
 <div id="ContractDialog_Model" class="content_box">
@@ -6375,6 +6418,30 @@
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
+<h2>service_type</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>modified_documents_service_type</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>modified_documents_expertise_type</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>expert_maintenance_base_contracts_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
 </div>
 </div>
 <div id="ContractList_Model" class="content_box">
@@ -6575,6 +6642,24 @@
 <div>Precision:</div>
 <h2>allow_new_file_add</h2>
 <div>Type:Bool</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>service_type</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>expert_maintenance_contract_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>expert_maintenance_contracts_ref</h2>
+<div>Type:JSON</div>
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>
@@ -7571,6 +7656,12 @@
 <div>Precision:</div>
 <h2>applications_ref</h2>
 <div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>application_service_type</h2>
+<div>Type:String</div>
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>
@@ -8957,6 +9048,12 @@
 <div>Precision:</div>
 <h2>doc_flow_out_client_type</h2>
 <div>Type:Enum</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>admin_correction</h2>
+<div>Type:Bool</div>
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>
@@ -12433,7 +12530,7 @@
 <div>Type:String</div>
 <div>Primary key:</div>
 <div>Required:</div>
-<div>Length:50</div>
+<div>Length:250</div>
 <div>Precision:</div>
 <h2>date_type</h2>
 <div>Type:Enum</div>
@@ -12458,6 +12555,18 @@
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:5</div>
+<div>Precision:</div>
+<h2>service_type</h2>
+<div>Type:Enum</div>
+<div>Primary key:</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>expertise_type</h2>
+<div>Type:Enum</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
 <div>Precision:</div>
 </div>
 </div>
@@ -13824,6 +13933,25 @@
 <h2>accountant</h2>
 <div>Description:</div>
 <h2>expert_ext</h2>
+<div>Description:</div>
+</div>
+</div>
+<div id="service_types" class="content_box">
+<h1>service_types</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Values:</p>
+<h2>expertise</h2>
+<div>Description:</div>
+<h2>cost_eval_validity</h2>
+<div>Description:</div>
+<h2>audit</h2>
+<div>Description:</div>
+<h2>modification</h2>
+<div>Description:</div>
+<h2>modified_documents</h2>
+<div>Description:</div>
+<h2>expert_maintenance</h2>
 <div>Description:</div>
 </div>
 </div>

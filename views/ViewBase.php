@@ -1152,6 +1152,7 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/DocumentTemplateDialog_Form.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/ApplicationDialog_Form.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/ApplicationList_Form.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/ApplicationForExpertMaintenanceList_Form.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/ApplicationClientList_Form.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/ApplicationCustomerList_Form.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/ApplicationContractorList_Form.js'));
@@ -1253,6 +1254,7 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/DocFlowBaseDialog_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ApplicationList_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/rs/ApplicationList_View.rs_ru.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ApplicationForExpertMaintenanceList_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ConstrTechnicalFeature_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ApplicationDialog_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/rs/ApplicationDialog_View.rs_ru.js'));
@@ -1272,6 +1274,7 @@ class ViewBase extends ViewHTMLXSLT {
 
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ApplicationClientList_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/rs/ApplicationClientList_View.rs_ru.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ApplicationModifiedDocumentsClientList_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ConstructionTypeList_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ConstructionTypeDialog_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/HolidayList_View.js'));
@@ -1318,6 +1321,8 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/DocFlowTaskShortList_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ContractList_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ContractPdList_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ContractExpertMaintenanceList_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ContractModifiedDocumentsList_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ContractExpertiseList_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ContractPdCostValidEvalList_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ContractCostEvalValidityList_View.js'));
@@ -1406,6 +1411,7 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ClientAttrs.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ClientAddress.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ApplicationPrimaryCont.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ApplicationServiceType.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ApplicationServiceCont.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ApplicationRegNumber.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ReportTemplateFileApplyCmd.js'));
@@ -1451,6 +1457,8 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/OfficeBankAccSelect.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/FileSigContainer.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/AllowSectionEdit.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ExpertMaintenanceContractDataEdit.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ExpertMaintenanceContractData.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/Enum_role_types.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/rs_ru.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/rs_common_ru.js'));
@@ -1767,6 +1775,9 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/ApplicationDocumentFileList_Controller.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ApplicationDocumentFileList_Model.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/ApplicationDocumentFile_Controller.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/Enum_service_types.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/EnumGridColumn_service_types.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ApplicationForExpertMaintenanceList_Model.js'));
 	
 			if (isset($_SESSION['scriptId'])){
 				$script_id = $_SESSION['scriptId'];

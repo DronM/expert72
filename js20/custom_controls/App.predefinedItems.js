@@ -24,6 +24,7 @@ App.prototype.m_predefinedItems = {
 ,"signed_documents":new RefType({"dataType":"doc_flow_types","descr":"Договорные документы","keys":{"id":15}})
 ,"date_prolongate":new RefType({"dataType":"doc_flow_types","descr":"Продление срока","keys":{"id":16}})
 ,"app_contr_revoke":new RefType({"dataType":"doc_flow_types","descr":"Отзыв заявления/контракта","keys":{"id":17}})
+,"app_expertise":new RefType({"dataType":"doc_flow_types","descr":"Экспертиза измененной документации","keys":{"id":18}})
 }
 ,"doc_flow_importance_types":{"common":new RefType({"dataType":"doc_flow_importance_types","descr":"Обычная","keys":{"id":1}})
 }

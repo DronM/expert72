@@ -26,11 +26,14 @@ function DocFlowExamination_View(id,options){
 	
 	this.m_dataType = "doc_flow_examinations";
 	
+	var application_service_type;
 	if (options.model && (options.model.getRowIndex()>=0 || options.model.getNextRow()) ){			
 		if (!options.model.getField("doc_flow_out_ref").isNull()){
 			options.templateOptions.docFlowOut = options.model.getFieldValue("doc_flow_out_ref").getDescr();
 			options.templateOptions.docFlowOutExists = true;
 		}
+		
+		application_service_type = options.model.getFieldValue("application_service_type");
 	}
 	
 	options.cmdSave = false;
@@ -130,8 +133,14 @@ function DocFlowExamination_View(id,options){
 			"labelClassName":labelClassName,			
 			"labelCaption":"Новый статус заявления:",		
 			"addNotSelected":false,
-			"options":[
-				{"value":"waiting_for_contract","descr":app.getPredefinedItem("doc_flow_types","app_resp").getDescr(),"checked":true}				
+			"options":[				
+				//при типе заявления измененная документация - сразу экспертиза!!!
+				(
+				(application_service_type=="modified_documents")?
+					{"value":"expertise","descr":app.getPredefinedItem("doc_flow_types","app_expertise").getDescr(),"checked":true}
+					:
+					{"value":"waiting_for_contract","descr":app.getPredefinedItem("doc_flow_types","app_resp").getDescr(),"checked":true}
+				)
 				//,{"value":"filling","descr":app.getPredefinedItem("doc_flow_types","app_resp_correct").getDescr()}
 				,{"value":"returned","descr":app.getPredefinedItem("doc_flow_types","app_resp_return").getDescr()}
 			]
@@ -383,6 +392,9 @@ DocFlowExamination_View.prototype.openDocFlowOut = function(model){
 		var doc_type;
 		if (app_st=="waiting_for_contract"){
 			doc_type = "app_resp";
+		}
+		else if (app_st=="expertise"){
+			doc_type = "app_expertise";
 		}
 		else if (app_st=="returned"){
 			doc_type = "app_resp_return";

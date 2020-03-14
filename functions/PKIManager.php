@@ -87,6 +87,7 @@ class PKIManager {
 
 	const CA_LIST_URL = 'https://e-trust.gosuslugi.ru/CA/DownloadTSL?schemaVersion=0';		
 	const DEF_CRL_VALIDITY = 86400;//24*60*60
+	const DEF_CA_LIST_VALIDITY = 86400;//24*60*60
 	const DEF_LOG_LEVEL = 'error';
 	const LOG_FILE_NAME = 'pki.log';
 	const DEF_PKI_PATH = 'pki/';
@@ -99,6 +100,8 @@ class PKIManager {
 	const SUBJ_FLD_GIVEN_NAME = '2.5.4.65';
 	const SUBJ_FLD_POST_ADDR = '2.5.4.16';
 	const SIG_HEADER = '----';
+	
+	const CA_LIST_FILE = 'ca_list.xml'; 
 	
 	//directory for storing cach files: certificates,crls
 	public $pkiPath;
@@ -113,6 +116,7 @@ class PKIManager {
 	
 	//CRL validity in seconds
 	private $crlValidity;
+	private $caListValidity;
 		
 	/*
 	 * @param {string} caListFile
@@ -121,9 +125,11 @@ class PKIManager {
 	private function get_ca_list_file(&$caListFile){
 		$this->logger->add('Called get_ca_list_file','note');
 		
-		$caListFile = $this->pkiPath.'ca_list.xml';
+		$caListFile = $this->pkiPath.self::CA_LIST_FILE;
 		
-		if (!file_exists($caListFile)){
+		if (!file_exists($caListFile)
+		||filemtime($caListFile)<time()-$this->caListValidity
+		){
 			$this->logger->add('Downloading CA list','note');			
 			self::getCAList($caListFile);
 			return TRUE;
@@ -176,6 +182,7 @@ class PKIManager {
 			'pkiPath' => self::DEF_PKI_PATH,
 			'logFile' => self::DEF_PKI_PATH.self::LOG_FILE_NAME,
 			'crlValidity' => self::DEF_CRL_VALIDITY,
+			'caListValidity' => self::DEF_CA_LIST_VALIDITY,
 			'logLevel' => self::DEF_LOG_LEVEL,
 			'tmpPath' => self::DEF_TMP_PATH,
 			'opensslPath' => ''
@@ -196,6 +203,7 @@ class PKIManager {
 		$this->check_pred_dir($this->tmpPath,'tmpPath');
 		
 		$this->crlValidity = $option_values['crlValidity'];
+		$this->caListValidity = $option_values['caListValidity'];
 		$this->logger = new Logger($option_values['logFile'],array('logLevel'=>$option_values['logLevel']));
 		
 		//sert traslation
@@ -518,8 +526,50 @@ class PKIManager {
 			
 	}
 	
-	private function build_chain($certFile,$onlineRevocCheck,&$certData,&$includedHashes){
+	private function certFromCaList($caListFile,$needHsh){
+		$ca_data = @simplexml_load_file($caListFile);
+		if($ca_data===FALSE){
+			throw new Exception("Ошибка парсинга XML документа со списком сертификатов.");
+		}
+		$cur = new DateTime();
+		$cert_ind = 0;
+		$ca_list = $ca_data->children()->УдостоверяющийЦентр;
+		foreach($ca_list as $ca){
+			if ($ca->СтатусАккредитации->Статус=='Действует'){
+				$prog_list = $ca->ПрограммноАппаратныеКомплексы->ПрограммноАппаратныйКомплекс;
+				foreach($prog_list as $prog){
+					foreach($prog->КлючиУполномоченныхЛиц->Ключ as $key){
+						foreach($key->Сертификаты->ДанныеСертификата as $sert){
+							$fingerprint = trim($sert->Отпечаток);					
+							//$to = $this->date_from_ISO((string)$sert->ПериодДействияДо);
+							//$from = $this->date_from_ISO((string)$sert->ПериодДействияС);
+							//if ($cur<$to && $cur>$from){
+							
+							$cert_hash = trim($this->run_shell_cmd(sprintf(
+								"echo '%s' | %sopenssl base64 -d -A | %sopenssl x509 -hash -inform der -noout",
+								$sert->Данные,
+								$this->opensslPath,
+								$this->opensslPath
+							)));
+							if($needHsh==$cert_hash){
+								$this->run_shell_cmd2(sprintf(
+									"echo '%s' | %sopenssl base64 -d -A | %sopenssl x509 -inform der -outform pem -out '%s'",
+									$sert->Данные,
+									$this->opensslPath,
+									$this->opensslPath,
+									$this->pkiPath.$needHsh.'.'.$cert_ind
+								));
+								$cert_ind++;
+							}
+						}
+					}
+				}				
+			}
+		}
 	
+	}
+	
+	private function build_chain($certFile,$onlineRevocCheck,&$certData,&$includedHashes){
 		if (array_key_exists($certData->issuerHash,$includedHashes)){
 			//already included
 			return;
@@ -534,11 +584,16 @@ class PKIManager {
 			$this->logger->add('Trying to download certificate file','debug');
 			$issuer_der = $this->pkiPath.$certData->issuerHash.'.der';
 			try{
-				$cert_postf = '.crt';
+				$cert_postf0 = '.crt';
+				$cert_postf1 = '.cer';
 				foreach($certData->certURI as $url){
 					try{	
-						$this->logger->add('Got URI from certificate '.$url,'debug');						
-						if (substr(strtolower($url),strlen($url)-strlen($cert_postf))==$cert_postf){
+						$this->logger->add('Got URI from certificate '.$url,'debug');
+						if (
+						substr(strtolower($url),strlen($url)-strlen($cert_postf0))==$cert_postf0
+						||
+						substr(strtolower($url),strlen($url)-strlen($cert_postf1))==$cert_postf1
+						){
 							$this->logger->add('URL recognized as certificate file','debug');
 							$this->run_shell_cmd2(sprintf('wget -O "%s" %s',$issuer_der,$url));
 							
@@ -558,7 +613,15 @@ class PKIManager {
 				if (file_exists($issuer_der))unlink($issuer_der);
 			}
 			if (!file_exists($issuer_pem)){
-				throw new Exception( sprintf(self::ER_UNABLE_LOAD_CA_CERT,isset($certData->issuer['Наименование'])? $certData->issuer['Наименование']:'НЕ ОПРЕДЕЛЕН') );
+				//from ca_list.xml?
+				$this->logger->add('Looking for certificate in ca list file','debug');
+				//iterate through all certificates find on hash and save
+				$ca_list = '';
+				$this->get_ca_list_file($ca_list);
+				$this->certFromCaList($ca_list,$certData->issuerHash);
+				if (!file_exists($issuer_pem)){
+					throw new Exception( sprintf(self::ER_UNABLE_LOAD_CA_CERT,isset($certData->issuer['Наименование'])? $certData->issuer['Наименование']:'НЕ ОПРЕДЕЛЕН') );
+				}
 			}										
 		}
 		else if (!file_exists($issuer_pem)){
@@ -1030,62 +1093,104 @@ class PKIManager {
 		}
 	}
 	
+	public static function deleteDir($dir) {
+		if (is_dir($dir)) { 
+			$objects = scandir($dir); 
+			foreach ($objects as $object) { 
+				if ($object != "." && $object != "..") { 
+					if (is_dir($dir."/".$object))
+						rrmdir($dir."/".$object);
+					else
+						unlink($dir."/".$object); 
+				} 
+			}
+			rmdir($dir); 
+		} 
+	}
+	
 	/*
 	 * Installs all CA certificates to this->pkiPath
 	 */
 	public function makeCACertificates(){	
-		if(file_exists($this->pkiPath.'ca_list.xml')){
-			unlink($this->pkiPath.'ca_list.xml');
-		}
-		$ca_list_file = '';
-		$this->get_ca_list_file($ca_list_file);
-		$ca_data = @simplexml_load_file($ca_list_file);
-		if($ca_data===FALSE){
-			throw new Exception("Ошибка парсинга XML документа ".$ca_list_file);
-		}
-		$cur = new DateTime();
+		//временная папка для формирования спика сертификтов
+		try{
+			if(!file_exists($tmp_dir = $this->pkiPath.DIRECTORY_SEPARATOR.'upd_tmp')){
+				mkdir($tmp_dir,0775,TRUE);
+			}
+			$tmp_path = $tmp_dir.DIRECTORY_SEPARATOR;
+			
+			if(file_exists($this->pkiPath.self::CA_LIST_FILE)){
+				unlink($this->pkiPath.self::CA_LIST_FILE);
+			}
+			$ca_list_file = '';
+			$this->get_ca_list_file($ca_list_file);
+			$ca_data = @simplexml_load_file($ca_list_file);
+			if($ca_data===FALSE){
+				throw new Exception("Ошибка парсинга XML документа ".$ca_list_file);
+			}
+			$cur = new DateTime();
 		
-		$ca_list = $ca_data->children()->УдостоверяющийЦентр;
-		foreach($ca_list as $ca){
-			if ($ca->СтатусАккредитации->Статус=='Действует'){
-				$prog_list = $ca->ПрограммноАппаратныеКомплексы->ПрограммноАппаратныйКомплекс;
-				foreach($prog_list as $prog){
-					foreach($prog->КлючиУполномоченныхЛиц->Ключ as $key){
-						foreach($key->Сертификаты->ДанныеСертификата as $sert){
-							$fingerprint = trim($sert->Отпечаток);
+			$ca_list = $ca_data->children()->УдостоверяющийЦентр;
+			foreach($ca_list as $ca){
+				if ($ca->СтатусАккредитации->Статус=='Действует'){
+					$prog_list = $ca->ПрограммноАппаратныеКомплексы->ПрограммноАппаратныйКомплекс;
+					foreach($prog_list as $prog){
+						foreach($prog->КлючиУполномоченныхЛиц->Ключ as $key){
+							foreach($key->Сертификаты->ДанныеСертификата as $sert){
+								$fingerprint = trim($sert->Отпечаток);
 							
-							$to = $this->date_from_ISO((string)$sert->ПериодДействияДо);
-							$from = $this->date_from_ISO((string)$sert->ПериодДействияС);
+								$to = $this->date_from_ISO((string)$sert->ПериодДействияДо);
+								$from = $this->date_from_ISO((string)$sert->ПериодДействияС);
 							
-							if ($cur<$to && $cur>$from){
+								if ($cur<$to && $cur>$from){
 								
-								$b64 = $this->pkiPath.$fingerprint.'.b64';
-								$der = $this->pkiPath.$fingerprint.'.der';								
+									$b64 = $tmp_path.$fingerprint.'.b64';
+									$der = $tmp_path.$fingerprint.'.der';								
 								
-								try{
-									//pem
-									file_put_contents($b64, $sert->Данные);
-									$this->run_shell_cmd2(sprintf($this->opensslPath.'openssl base64 -d -A -in "%s" -out "%s"',$b64,$der));
+									try{
+										//pem
+										file_put_contents($b64, $sert->Данные);
+										$this->run_shell_cmd2(sprintf($this->opensslPath.'openssl base64 -d -A -in "%s" -out "%s"',$b64,$der));
 								
-									$hash = trim($this->run_shell_cmd(sprintf($this->opensslPath.'openssl x509 -hash -inform der -in "%s" -noout',$der)));
+										$hash = trim($this->run_shell_cmd(sprintf($this->opensslPath.'openssl x509 -hash -inform der -in "%s" -noout',$der)));
 									
-									$ind = 0;
-									while(file_exists($pem = $this->pkiPath.$hash.'.'.$ind)){
-										$ind++;	
-									}
-									$this->run_shell_cmd2(sprintf($this->opensslPath.'openssl x509 -in "%s" -inform der -outform pem -out "%s"',$der,$pem));
-								}	
-								finally{
-									if (file_exists($b64))unlink($b64);
-									if (file_exists($der))unlink($der);
-								}								
+										$ind = 0;
+										while(file_exists($pem = $tmp_path.$hash.'.'.$ind)){
+											$ind++;	
+										}
+										$this->run_shell_cmd2(sprintf($this->opensslPath.'openssl x509 -in "%s" -inform der -outform pem -out "%s"',$der,$pem));
+									}	
+									finally{
+										if (file_exists($b64))unlink($b64);
+										if (file_exists($der))unlink($der);
+									}								
+								}
 							}
 						}
-					}
-				}				
+					}				
+				}
 			}
-		}		
-	
+			
+			//Очистить оригинальный список, переписать все из темп
+			$objects = scandir(substr($this->pkiPath,0,strlen($this->pkiPath)-1)); 
+			foreach ($objects as $object) { 
+				if ($object != "." && $object != ".." && !is_dir($this->pkiPath."/".$object) &&$object!=self::CA_LIST_FILE) { 
+					unlink($this->pkiPath."/".$object); 
+				} 
+			}
+			
+			$dir_handle = opendir($tmp_dir);
+			while($file=readdir($dir_handle)){
+				if($file!="." && $file!=".." &&!is_dir($tmp_path.$file) ){
+					rename($tmp_path.$file, $this->pkiPath.$file);
+				}
+			}
+			closedir($dir_handle);
+					
+		}
+		finally{
+			self::deleteDir($tmp_dir);	
+		}	
 	}
 }
 

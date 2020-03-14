@@ -77,6 +77,9 @@ class DocFlowOutClient_Controller extends ControllerSQL{
 				$param = new FieldExtEnum('doc_flow_out_client_type',',','app,contr_resp,contr_return,contr_other,date_prolongate,app_contr_revoke'
 				,array());
 		$pm->addParam($param);
+		$param = new FieldExtBool('admin_correction'
+				,array());
+		$pm->addParam($param);
 		
 		$pm->addParam(new FieldExtInt('ret_id'));
 		
@@ -129,6 +132,10 @@ class DocFlowOutClient_Controller extends ControllerSQL{
 			$pm->addParam($param);
 		
 				$param = new FieldExtEnum('doc_flow_out_client_type',',','app,contr_resp,contr_return,contr_other,date_prolongate,app_contr_revoke'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtBool('admin_correction'
 				,array(
 			));
 			$pm->addParam($param);
@@ -296,6 +303,11 @@ class DocFlowOutClient_Controller extends ControllerSQL{
 		$opts['required']=TRUE;				
 		$pm->addParam(new FieldExtString('doc_flow_out_client_type',$opts));
 	
+				
+	$opts=array();
+					
+		$pm->addParam(new FieldExtInt('doc_flow_out_client_id',$opts));
+	
 			
 		$this->addPublicMethod($pm);
 
@@ -319,6 +331,18 @@ class DocFlowOutClient_Controller extends ControllerSQL{
 	
 		$opts['required']=TRUE;				
 		$pm->addParam(new FieldExtInt('application_id',$opts));
+	
+			
+		$this->addPublicMethod($pm);
+
+			
+		$pm = new PublicMethod('admin_enable_edit');
+		
+				
+	$opts=array();
+	
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtInt('id',$opts));
 	
 			
 		$this->addPublicMethod($pm);
@@ -529,14 +553,24 @@ class DocFlowOutClient_Controller extends ControllerSQL{
 			
 			$ar_obj = $this->getDbLink()->query_first(sprintf(
 			"SELECT
-				app.id,
-				app.expertise_type,
+				app.id,				
 				app.cost_eval_validity,
 				app.modification,
 				app.audit,
 				app.construction_types_ref,
 				app.documents,
-				app.document_exists
+				app.document_exists,
+				
+				CASE WHEN app.service_type='modified_documents'
+					THEN app.modified_documents_expertise_type
+					ELSE app.expertise_type
+				END AS expertise_type,
+
+				CASE WHEN app.service_type='modified_documents'
+					THEN app.modified_documents_service_type
+					ELSE app.service_type
+				END AS service_type
+			
 			FROM applications_dialog AS app
 			WHERE app.id=%d".$client_q_t,
 			$applicationId
@@ -548,22 +582,6 @@ class DocFlowOutClient_Controller extends ControllerSQL{
 			}
 			
 			if (!is_null($docId)){
-				/*
-				$files_q_id = $this->getDbLink()->query(sprintf(
-					"SELECT
-						fl.*,
-						mdf.doc_flow_out_client_id,
-						m.date_time AS doc_flow_out_date_time,
-						reg.reg_number AS doc_flow_out_reg_number
-					FROM application_document_files AS fl
-					LEFT JOIN doc_flow_out_client_document_files AS mdf ON mdf.file_id=fl.file_id
-					LEFT JOIN doc_flow_out_client AS m ON m.id=mdf.doc_flow_out_client_id
-					LEFT JOIN doc_flow_out_client_reg_numbers AS reg ON reg.doc_flow_out_client_id=m.id
-					WHERE fl.application_id=%d AND NOT fl.deleted
-					ORDER BY document_type,document_id,file_name,deleted_dt ASC NULLS LAST",
-				$applicationId
-				));
-				*/
 				$files_q_id = Application_Controller::attachmentsQuery(
 					$this->getDbLink(),
 					$applicationId,
@@ -601,6 +619,7 @@ class DocFlowOutClient_Controller extends ControllerSQL{
 					'values'=>array(
 						new Field('id',DT_INT,array('value'=>$ar_obj['id']))
 						,new Field('expertise_type',DT_STRING,array('value'=>$ar_obj['expertise_type']))
+						,new Field('service_type',DT_STRING,array('value'=>$ar_obj['service_type']))
 						,new Field('cost_eval_validity',DT_STRING,array('value'=>$ar_obj['cost_eval_validity']))
 						,new Field('modification',DT_STRING,array('value'=>$ar_obj['modification']))
 						,new Field('audit',DT_STRING,array('value'=>$ar_obj['audit']))
@@ -624,7 +643,9 @@ class DocFlowOutClient_Controller extends ControllerSQL{
 		
 		if (!is_null($pm->getParamValue('id'))){		
 			$ar = $this->getDbLink()->query_first(sprintf(
-				"SELECT t.application_id FROM doc_flow_out_client AS t WHERE t.id=%d",
+				"SELECT t.application_id
+				FROM doc_flow_out_client AS t
+				WHERE t.id=%d",
 			$this->getExtDbVal($pm,'id')
 			));
 			$application_id = $ar['application_id'];
@@ -973,8 +994,10 @@ class DocFlowOutClient_Controller extends ControllerSQL{
 						(SELECT t.application_id FROM doc_flow_out_client AS t WHERE t.id=%d)
 					) AS attrs,
 					(SELECT t.doc_flow_out_client_id=%d
-					FROM doc_flow_out_client_document_files t
+					FROM doc_flow_out_client_document_files t					
 					WHERE t.file_id=%s
+					ORDER BY doc_flow_out_client_id DESC
+					LIMIT 1
 					) AS added_by_this_doc
 				",
 				$doc_flow_out_client_id_for_db,
@@ -1102,14 +1125,16 @@ class DocFlowOutClient_Controller extends ControllerSQL{
 		}
 	}
 	
-	private function check_unsent_doc($appId,$docFlowOutClientTypeForDb){
+	private function check_unsent_doc($appId,$docFlowOutClientTypeForDb,$docFlowOutClientId=NULL){
 		//Проверка на существование других неотправленных писем в таким же типом
+		$doc_id_cond = ($docFlowOutClientId && $docFlowOutClientId!=''&&strlen($docFlowOutClientId))?
+			 sprintf(' AND NOT id=%d',$docFlowOutClientId) : '';
 		$ar = $this->getDbLink()->query_first(sprintf(
 			"SELECT
 				id,
 				to_char(date_time,'DD/MM/YY') date_time
 			FROM doc_flow_out_client
-			WHERE application_id=%d AND doc_flow_out_client_type=%s AND coalesce(sent,FALSE)=FALSE",
+			WHERE application_id=%d AND doc_flow_out_client_type=%s AND coalesce(sent,FALSE)=FALSE".$doc_id_cond,
 		$appId,
 		$docFlowOutClientTypeForDb
 		));
@@ -1150,7 +1175,7 @@ class DocFlowOutClient_Controller extends ControllerSQL{
 	
 	public function check_type($pm){
 		$app = $this->getExtDbVal($pm,'application_id');
-		$this->check_unsent_doc($app, $this->getExtDbVal($pm,'doc_flow_out_client_type'));
+		$this->check_unsent_doc($app, $this->getExtDbVal($pm,'doc_flow_out_client_type'),$this->getExtDbVal($pm,'doc_flow_out_client_id'));
 		$this->check_resp_doc($app,$this->getExtVal($pm,'doc_flow_out_client_type'));
 	}
 	
@@ -1221,6 +1246,21 @@ class DocFlowOutClient_Controller extends ControllerSQL{
 			$docFlowOutClientIdForDb,$origFileIdForDb,$newFileId
 			));
 		}
+	}
+	
+	public function admin_enable_edit($pm){
+		if($_SESSION[role_id]!="admin"){
+			throw new Exception(self::ER_DOC_SENT);
+		}
+		
+		$this->getDbLinkMaster()->query(sprintf(
+			"UPDATE doc_flow_out_client
+			SET
+				admin_correction = TRUE,
+				sent = FALSE
+			WHERE id=%d",
+			$this->getExtDbVal($pm,'id')
+		));
 	}
 	
 

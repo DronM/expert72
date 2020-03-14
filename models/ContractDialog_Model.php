@@ -552,6 +552,14 @@ class ContractDialog_Model extends ModelSQL{
 		$this->addField($f_allow_client_out_documents);
 		//********************
 		
+		//*** Field service_type ***
+		$f_opts = array();
+		$f_opts['id']="service_type";
+						
+		$f_service_type=new FieldSQLEnum($this->getDbLink(),$this->getDbName(),$this->getTableName(),"service_type",$f_opts);
+		$this->addField($f_service_type);
+		//********************
+		
 		//*** Field applications_ref ***
 		$f_opts = array();
 		$f_opts['id']="applications_ref";
@@ -782,6 +790,30 @@ class ContractDialog_Model extends ModelSQL{
 						
 		$f_contract_document_visib=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"contract_document_visib",$f_opts);
 		$this->addField($f_contract_document_visib);
+		//********************
+		
+		//*** Field modified_documents_service_type ***
+		$f_opts = array();
+		$f_opts['id']="modified_documents_service_type";
+						
+		$f_modified_documents_service_type=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"modified_documents_service_type",$f_opts);
+		$this->addField($f_modified_documents_service_type);
+		//********************
+		
+		//*** Field modified_documents_expertise_type ***
+		$f_opts = array();
+		$f_opts['id']="modified_documents_expertise_type";
+						
+		$f_modified_documents_expertise_type=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"modified_documents_expertise_type",$f_opts);
+		$this->addField($f_modified_documents_expertise_type);
+		//********************
+		
+		//*** Field expert_maintenance_base_contracts_ref ***
+		$f_opts = array();
+		$f_opts['id']="expert_maintenance_base_contracts_ref";
+						
+		$f_expert_maintenance_base_contracts_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expert_maintenance_base_contracts_ref",$f_opts);
+		$this->addField($f_expert_maintenance_base_contracts_ref);
 		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}

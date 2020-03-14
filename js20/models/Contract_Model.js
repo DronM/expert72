@@ -615,6 +615,17 @@ function Contract_Model(options){
 	
 	options.fields.allow_client_out_documents = new FieldBool("allow_client_out_documents",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.service_type = new FieldEnum("service_type",filed_options);
+	filed_options.enumValues = 'expertise,cost_eval_validity,audit,modification,modified_documents,expert_maintenance';
+	
+			
 			
 			
 			

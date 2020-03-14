@@ -30,19 +30,28 @@
 			<li id="{{id}}:tab-access" class=""><a href="#access" data-toggle="tab" aria-expanded="false">Права доступа</a></li>
 			{{/setAccess}}
 			
+			{{#notExpertMaintenance}}
 			<li id="{{id}}:tab-documents"><a href="#documents" data-toggle="tab" aria-expanded="false">Документация</a></li>
+			{{/notExpertMaintenance}}
 
 			{{#documVisib}}
 			<li id="{{id}}:tab-doc_folders"><a href="#doc_folders" data-toggle="tab" aria-expanded="false">Документы</a></li>
 			{{/documVisib}}
 			
+			{{#expertMaintenance}}
+			<li id="{{id}}:tab-modified_documents"><a href="#modified_documents" data-toggle="tab" aria-expanded="false">Измененная документация</a></li>
+			{{/expertMaintenance}}
+			
+			{{#notExpertMaintenance}}
 			{{#notExpert}}
 			<li id="{{id}}:tab-expertise"><a href="#expertise" data-toggle="tab" aria-expanded="false">Экспертиза</a></li>
-			{{/notExpert}}
+			{{/notExpert}}			
 			
 			{{#expert}}
 			<li class="active" id="{{id}}:tab-expertise"><a href="#expertise" data-toggle="tab" aria-expanded="true">Экспертиза</a></li>
 			{{/expert}}
+			
+			{{/notExpertMaintenance}}
 			
 			<li id="{{id}}:tab-doc_flow_in" class=""><a href="#doc_flow_in" data-toggle="tab" aria-expanded="false">Входящие</a></li>
 			
@@ -71,7 +80,7 @@
 			</div>
 			<div class="row">
 				<div class="{{bsCol}}3">			
-					<div id="{{id}}:document_type"/>
+					<div id="{{id}}:service_type"/>
 				</div>	
 				{{#pd}}
 				<div class="{{bsCol}}9">			
@@ -96,6 +105,10 @@
 			{{#modifPrimaryContractExists}}
 			<div id="{{id}}:modif_primary_contracts_ref"/>
 			{{/modifPrimaryContractExists}}
+			
+			{{#expertMaintenance}}
+			<div id="{{id}}:expert_maintenance_base_contracts_ref"/>
+			{{/expertMaintenance}}
 			
 			<div class="panel">
 				<h4>Связанные контракты</h4>
@@ -265,7 +278,7 @@
 		</div>
 		{{/setAccess}}
 		
-				
+		{{#notExpertMaintenance}}		
 		<div class="tab-pane fade" id="documents">
 			<div class="tabbable">
 				<ul class="nav nav-tabs nav-tabs-highlight">				
@@ -294,6 +307,7 @@
 				</div>
 			</div>
 		</div>
+		{{/notExpertMaintenance}}
 
 		{{#documVisib}}
 		<div class="tab-pane fade" id="doc_folders">
@@ -301,6 +315,13 @@
 		</div>
 		{{/documVisib}}
 
+		{{#expertMaintenance}}
+		<div class="tab-pane fade" id="modified_documents">
+			<div id="{{id}}:modified_documents_list"/>
+		</div>
+		{{/expertMaintenance}}
+
+		{{#notExpertMaintenance}}
 		<div class="tab-pane fade{{#expert}} active in{{/expert}}" id="expertise">
 			{{#expert}}
 			<div id="{{id}}:applicant_descr"/>
@@ -367,6 +388,7 @@
 				</ul>
 			</div>	
 		</div>
+		{{/notExpertMaintenance}}
 		
 		<div class="tab-pane fade" id="doc_flow_in">
 			<div id="{{id}}:doc_flow_in_list"/>

@@ -16,7 +16,7 @@ function ApplicationList_View(id,options){
 	
 	ApplicationList_View.superclass.constructor.call(this,id,options);
 	
-	var model = options.models.ApplicationList_Model;
+	var model = (options.models&&options.models.ApplicationList_Model)? options.models.ApplicationList_Model: new ApplicationList_Model();
 	var contr = new Application_Controller();
 	
 	var constants = {"doc_per_page_count":null,"grid_refresh_interval":null};
@@ -32,7 +32,7 @@ function ApplicationList_View(id,options){
 		"field":new FieldDateTime("create_dt")
 	});
 	
-	var filters = {
+	var filters = options.fromApp? null:{
 		"period":{
 			"binding":new CommandBinding({
 				"control":period_ctrl,
@@ -97,7 +97,7 @@ function ApplicationList_View(id,options){
 			"sortable":true,
 			"sort":"desc"
 		}),
-		new GridCellHead(id+":grid:head:service_list",{
+		options.fromApp? null:new GridCellHead(id+":grid:head:service_list",{
 			"value":"Услуги",
 			"columns":[
 				new GridColumn({
@@ -106,7 +106,7 @@ function ApplicationList_View(id,options){
 			]
 		}),
 		
-		new GridCellHead(id+":grid:head:constr_name",{
+		options.fromApp? null:new GridCellHead(id+":grid:head:constr_name",{
 			"value":this.COL_CAP_constr_name,
 			"columns":[
 				new GridColumn({
@@ -154,7 +154,7 @@ function ApplicationList_View(id,options){
 				})
 			]
 		}),										
-		new GridCellHead(id+":grid:head:applicant_name",{
+		options.fromApp? null:new GridCellHead(id+":grid:head:applicant_name",{
 				"value":"Заявитель",
 				"columns":[
 					new GridColumn({
@@ -245,11 +245,12 @@ function ApplicationList_View(id,options){
 		"model":model,
 		"keyIds":["id"],
 		"controller":contr,
+		"readPublicMethod":contr.getPublicMethod( (options.fromApp? "get_modified_documents_list": "get_list") ),
 		"editInline":false,
 		"editWinClass":ApplicationDialog_Form,//ApplicationForEmploye_Form,
 		"popUpMenu":popup_menu,
 		"commands":new GridCmdContainerAjx(id+":grid:cmd",{
-			"cmdFilter":true,
+			"cmdFilter":options.fromApp? false:true,
 			"filters":filters,
 			"variantStorage":options.variantStorage
 		}),

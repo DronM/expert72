@@ -16,7 +16,7 @@ function ServiceList_View(id,options){
 	
 	ServiceList_View.superclass.constructor.call(this,id,options);
 	
-	var model = options.models.ServiceList_Model;
+	var model = options.models.Service_Model;
 	var contr = new Service_Controller();
 	
 	var constants = {"doc_per_page_count":null};
@@ -39,18 +39,37 @@ function ServiceList_View(id,options){
 				new GridRow(id+":grid:head:row0",{
 					"elements":[
 						new GridCellHead(id+":grid:head:name",{
-							"value":"Наименование",
+							"value":"Пользовательское представление",
 							"columns":[
 								new GridColumn({
 									"field":model.getField("name"),
 									"ctrlClass":EditString,
 									"ctrlOptions":{
-										"maxLength":50
+										"maxLength":250
 									}
 									
 								})
 							]
+						})
+						,new GridCellHead(id+":grid:head:service_type",{
+							"value":"Услуга",
+							"columns":[
+								new EnumGridColumn_service_types({
+									"field":model.getField("service_type"),
+									"ctrlClass":Enum_service_types
+								})
+							]
 						})										
+						,new GridCellHead(id+":grid:head:expertise_type",{
+							"value":"Вид гос.экспертизы",
+							"columns":[
+								new EnumGridColumn_expertise_types({
+									"field":model.getField("expertise_type"),
+									"ctrlClass":Enum_expertise_types
+								})
+							]
+						})										
+																
 						,new GridCellHead(id+":grid:head:contract_postf",{
 							"value":"Префикс контракта",
 							"columns":[
@@ -66,17 +85,26 @@ function ServiceList_View(id,options){
 						,new GridCellHead(id+":grid:head:date_type",{
 							"value":"Тип дней",
 							"columns":[
-								new EnumGridColumn_day_types({
+								new EnumGridColumn_date_types({
 									"field":model.getField("date_type"),
 									"ctrlClass":Enum_date_types
 								})
 							]
 						})										
 						,new GridCellHead(id+":grid:head:work_day_count",{
-							"value":"Тип дней",
+							"value":"Дней работ",
 							"columns":[
 								new GridColumn({
 									"field":model.getField("work_day_count"),
+									"ctrlClass":EditInt
+								})
+							]
+						})										
+						,new GridCellHead(id+":grid:head:expertise_day_count",{
+							"value":"Дней экспертизы",
+							"columns":[
+								new GridColumn({
+									"field":model.getField("expertise_day_count"),
 									"ctrlClass":EditInt
 								})
 							]

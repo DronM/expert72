@@ -35,6 +35,7 @@ define('ER_BAD_EXT', 'Неверное расширение файла!');
 define('ER_FILE_EXISTS_IN_FOLDER', 'Файл с таким именем уже присутствует в разделе %s данного заявления!');
 define('ER_SIGNED','Документ уже подписан!');
 define('ER_SNILS_EXISTS','Документ уже подписан физическим лицом %s');
+define('ER_CERT_FINGERPRINT_EXISTS','Документ уже подписан физическим лицом с данным сертификатом!');
 define('ER_NEW_FILES_NOT_ALLOWED','Добавление новых файлов запрещено!');
 define('ER_MERGER','Ошибка добавления подписи в контейнер!');
 
@@ -143,7 +144,8 @@ function merge_sig($relDir,$contentFile,$origFile,$newName,$fileId,$dbFileId,&$d
 	//2) SNILS verification
 	$q_id = $dbLink->query(sprintf(
 	"SELECT
-		certs.subject_cert->>'СНИЛС' AS snils
+		coalesce(certs.subject_cert->>'СНИЛС',certs.subject_cert->>'SNILS') AS snils,
+		certs.fingerprint
 	FROM file_signatures%s AS sig
 	LEFT JOIN user_certificates AS certs ON certs.id=sig.user_certificate_id
 	WHERE sig.file_id=%s  AND certs.subject_cert IS NOT NULL",
@@ -151,22 +153,33 @@ function merge_sig($relDir,$contentFile,$origFile,$newName,$fileId,$dbFileId,&$d
 	$dbFileId
 	));
 	$used_snils = [];
-	$cnt = 0;		
+	$used_fingerprints = [];
+	$cnt = 0;
 	while($ar = $dbLink->fetch_array($q_id)){
 		if (isset($ar['snils']) && strlen($ar['snils'])){
 			$used_snils[$ar['snils']] = TRUE;
 			$cnt++;
 		}
+		if (isset($ar['fingerprint']) && strlen($ar['fingerprint'])){
+			$used_fingerprints[$ar['fingerprint']] = TRUE;
+			$cnt++;
+		}
+		
 	}
 	if ($cnt){
 		foreach($verif_res->signatures as $sig){
-			if (isset($sig->subject)
+			$snils_id = '';
+			if(
+			(array_key_exists($sig->fingerprint,$used_fingerprints))
+			||
+			(isset($sig->subject)
 				&& is_array($sig->subject)
 				&& (
 					array_key_exists(($snils_id='СНИЛС'),$sig->subject)
 					||array_key_exists(($snils_id='SNILS'),$sig->subject)
 				)
 				&& array_key_exists($sig->subject[$snils_id],$used_snils)
+			)
 			){
 				$arg = '';
 				if (array_key_exists('Фамилия',$sig->subject)){
@@ -175,13 +188,18 @@ function merge_sig($relDir,$contentFile,$origFile,$newName,$fileId,$dbFileId,&$d
 						$arg.= ' '.$sig->subject['Имя'];
 					}
 				}
-				$arg.= ($arg=='')? '':', ';
-				$arg.= 'СНИЛС:'.$sig->subject[$snils_id];
+				if($snils_id!=''
+				||array_key_exists(($snils_id='СНИЛС'),$sig->subject)
+				||array_key_exists(($snils_id='SNILS'),$sig->subject)
+				){
+					$arg.= ($arg=='')? '':', ';
+					$arg.= 'СНИЛС:'.$sig->subject[$snils_id];
+				}
 				throw new Exception(sprintf(ER_SNILS_EXISTS,$arg));
 			}
 		}
 	}
-	
+
 	//3) merge contents with existing file
 	if ($pki_man->isBase64Encoded($newName)){
 		$new_name_der = $newName.'.der';
@@ -506,6 +524,7 @@ try{
 						}
 					}
 					else{
+					
 						//Все в базу данных
 						try{
 							$par_file_name = $_REQUEST['resumableFilename'];

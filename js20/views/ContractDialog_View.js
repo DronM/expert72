@@ -56,6 +56,12 @@ function ContractDialog_View(id,options){
 	options.templateOptions.notExpertExt = (role!="expert_ext");
 	options.templateOptions.expert = !options.templateOptions.notExpert;
 	
+	options.templateOptions.expertMaintenance = (options.model.getFieldValue("service_type")=="expert_maintenance");	
+	options.templateOptions.notExpertMaintenance = !options.templateOptions.expertMaintenance;
+	console.log(options.model.getFieldValue("service_type"))
+	console.log(options.templateOptions.expertMaintenance)
+	console.log(options.templateOptions.notExpertMaintenance)
+	
 	var employee_main_expert = (options.model.getFieldValue("main_experts_ref").getKey("id")==CommonHelper.unserialize(window.getApp().getServVar("employees_ref")).getKey("id"));
 	var employee_dep_boss = (options.model.getFieldValue("main_departments_ref").getKey("id")==CommonHelper.unserialize(window.getApp().getServVar("departments_ref")).getKey("id")
 			&& window.getApp().getServVar("department_boss")=="1"
@@ -147,7 +153,7 @@ function ContractDialog_View(id,options){
 				}));	
 			}
 		
-			this.addElement(new Enum_document_types(id+":document_type",{			
+			this.addElement(new Enum_service_types(id+":service_type",{//document_type
 				"labelCaption":"Услуга:",
 				"editContClassName":editContClassName,
 				"labelClassName":labelClassName,
@@ -668,6 +674,27 @@ function ContractDialog_View(id,options){
 			}
 		}));
 		*/
+		
+		//*** modified_documents ***
+		if(options.templateOptions.expertMaintenance){
+			this.addElement(new ContractEditRef(id+":expert_maintenance_base_contracts_ref",{
+				"labelCaption":"Контракт с положительным заключением:"
+				,"enabled":false
+				,"editContClassName":editContClassName
+				,"labelClassName":labelClassName				
+			}));
+		
+		
+			this.addElement(new ContractModifiedDocumentsList_View(id+":modified_documents_list",{
+				"fromApp":true,
+				"autoRefresh":true,
+				"filters":[{
+					"field":"expert_maintenance_contract_id",
+					"sign":"e",
+					"val":options.model.getFieldValue("id")
+				}]
+			}));
+		}		
 	};
 		
 	ContractDialog_View.superclass.constructor.call(this,id,options);
@@ -707,7 +734,7 @@ function ContractDialog_View(id,options){
 	}
 	
 	if (options.templateOptions.notExpert){
-		read_b.push(new DataBinding({"control":this.getElement("document_type")}));
+		read_b.push(new DataBinding({"control":this.getElement("service_type")}));
 		read_b.push(new DataBinding({"control":this.getElement("kadastr_number")}));
 		read_b.push(new DataBinding({"control":this.getElement("grad_plan_number")}));
 		read_b.push(new DataBinding({"control":this.getElement("area_document")}));
@@ -759,6 +786,10 @@ function ContractDialog_View(id,options){
 	if(is_admin){
 		read_b.push(new DataBinding({"control":this.getElement("allow_new_file_add")}));
 		read_b.push(new DataBinding({"control":this.getElement("allow_client_out_documents")}));
+	}
+	
+	if(options.templateOptions.expertMaintenance){
+		read_b.push(new DataBinding({"control":this.getElement("expert_maintenance_base_contracts_ref")}));
 	}
 	
 	this.setDataBindings(read_b);

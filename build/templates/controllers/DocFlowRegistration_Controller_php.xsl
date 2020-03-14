@@ -129,6 +129,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				"SELECT
 					CASE
 						WHEN doc_flow_type_id=(pdfn_doc_flow_types_app_resp()->'keys'->>'id')::int THEN 'waiting_for_contract'::application_states
+						WHEN doc_flow_type_id=(pdfn_doc_flow_types_app_expertise()->'keys'->>'id')::int THEN 'expertise'::application_states
 						WHEN doc_flow_type_id=(pdfn_doc_flow_types_app_resp_return()->'keys'->>'id')::int THEN 'returned'::application_states
 						WHEN doc_flow_type_id=(pdfn_doc_flow_types_app_resp_correct()->'keys'->>'id')::int THEN 'filling'::application_states
 						WHEN doc_flow_type_id=(pdfn_doc_flow_types_contr_wait_pay()->'keys'->>'id')::int THEN 'waiting_for_pay'::application_states

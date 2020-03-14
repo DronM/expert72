@@ -106,6 +106,15 @@ function DocFlowOutClientDialog_Model(options){
 	
 	options.fields.doc_flow_out_client_type = new FieldEnum("doc_flow_out_client_type",filed_options);
 	filed_options.enumValues = 'app,contr_resp,contr_return,contr_other,date_prolongate,app_contr_revoke';
+		
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	filed_options.defValue = true;
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.admin_correction = new FieldBool("admin_correction",filed_options);
 	
 			
 			

@@ -1,6 +1,8 @@
 /** Copyright (c) 2017 
  *  Andrey Mikhalevich, Katren ltd.
  */
+ 
+//options.application_states 
 function ApplicationEditRef(id,options){
 	options = options || {};	
 	if (options.labelCaption!=""){
@@ -11,15 +13,17 @@ function ApplicationEditRef(id,options){
 	options.keyIds = options.keyIds || ["id"];
 	
 	//форма выбора из списка
-	options.selectWinClass = ApplicationList_Form;
+	options.selectWinClass = options.selectWinClass || ApplicationList_Form;
 	options.selectDescrIds = options.selectDescrIds || ["select_descr"];
+	//options.selectWinParams = selectWinParams
 	
 	//форма редактирования элемента
 	options.editWinClass = ApplicationDialog_Form;
 	
 	options.acMinLengthForQuery = 1;
-	options.acController = new Application_Controller();
-	options.acModel = new ApplicationList_Model();
+	options.acController = options.acController || new Application_Controller();
+	options.acModel = options.acModel || new ApplicationList_Model();
+	
 	options.acPatternFieldId = options.acPatternFieldId || "id";
 	options.acKeyFields = options.acKeyFields || [options.acModel.getField("id")];
 	options.acDescrFields = options.acDescrFields || [options.acModel.getField("select_descr")];

@@ -61,6 +61,7 @@ class Application_Controller extends ControllerSQL{
 	const ER_MAKE_ZIP = 'Ошибка при создании архива!';
 	const ER_NO_BOSS = 'Не определен руководитель НАШЕГО офиса!';
 	const ER_OTHER_USER_APP = 'Forbidden!';
+	const ER_APP_EXPERT_MAINT_NOT_FOUND = 'Документ экспертное сопровождение не отправлен на проверку!';
 	const ER_APP_SENT = 'Невозможно удалять отправленное заявление!';
 	const ER_NO_SIG = 'Для файла нет ЭЦП!';
 	const ER_DOC_SENT = 'Документ отправлен на проверку. Операция невозможна.';
@@ -159,16 +160,24 @@ class Application_Controller extends ControllerSQL{
 				,array());
 		$pm->addParam($param);
 		$param = new FieldExtJSONB('app_print_expertise'
-				,array());
+				,array(
+				'alias'=>'Устарело используется поле app_print'
+			));
 		$pm->addParam($param);
 		$param = new FieldExtJSONB('app_print_cost_eval'
-				,array());
+				,array(
+				'alias'=>'Устарело используется поле app_print'
+			));
 		$pm->addParam($param);
 		$param = new FieldExtJSONB('app_print_modification'
-				,array());
+				,array(
+				'alias'=>'Устарело используется поле app_print'
+			));
 		$pm->addParam($param);
 		$param = new FieldExtJSONB('app_print_audit'
-				,array());
+				,array(
+				'alias'=>'Устарело используется поле app_print'
+			));
 		$pm->addParam($param);
 		$param = new FieldExtInt('base_application_id'
 				,array());
@@ -201,6 +210,23 @@ class Application_Controller extends ControllerSQL{
 				,array());
 		$pm->addParam($param);
 		
+				$param = new FieldExtEnum('service_type',',','expertise,cost_eval_validity,audit,modification,modified_documents,expert_maintenance'
+				,array(
+				'alias'=>'Вид услуги'
+			));
+		$pm->addParam($param);
+		$param = new FieldExtJSONB('app_print'
+				,array(
+				'alias'=>'Бланк заявления'
+			));
+		$pm->addParam($param);
+		$param = new FieldExtInt('expert_maintenance_base_application_id'
+				,array());
+		$pm->addParam($param);
+		$param = new FieldExtJSONB('expert_maintenance_contract_data'
+				,array());
+		$pm->addParam($param);
+		
 		$pm->addParam(new FieldExtInt('ret_id'));
 		
 			$f_params = array();
@@ -209,22 +235,7 @@ class Application_Controller extends ControllerSQL{
 		$pm->addParam($param);		
 		
 			$f_params = array();
-			$param = new FieldExtText('app_print_expertise_files'
-			,$f_params);
-		$pm->addParam($param);		
-		
-			$f_params = array();
-			$param = new FieldExtText('app_print_cost_eval_files'
-			,$f_params);
-		$pm->addParam($param);		
-		
-			$f_params = array();
-			$param = new FieldExtText('app_print_modification_files'
-			,$f_params);
-		$pm->addParam($param);		
-		
-			$f_params = array();
-			$param = new FieldExtText('app_print_audit_files'
+			$param = new FieldExtText('app_print_files'
 			,$f_params);
 		$pm->addParam($param);		
 		
@@ -364,18 +375,26 @@ class Application_Controller extends ControllerSQL{
 			$pm->addParam($param);
 		$param = new FieldExtJSONB('app_print_expertise'
 				,array(
+			
+				'alias'=>'Устарело используется поле app_print'
 			));
 			$pm->addParam($param);
 		$param = new FieldExtJSONB('app_print_cost_eval'
 				,array(
+			
+				'alias'=>'Устарело используется поле app_print'
 			));
 			$pm->addParam($param);
 		$param = new FieldExtJSONB('app_print_modification'
 				,array(
+			
+				'alias'=>'Устарело используется поле app_print'
 			));
 			$pm->addParam($param);
 		$param = new FieldExtJSONB('app_print_audit'
 				,array(
+			
+				'alias'=>'Устарело используется поле app_print'
 			));
 			$pm->addParam($param);
 		$param = new FieldExtInt('base_application_id'
@@ -419,6 +438,27 @@ class Application_Controller extends ControllerSQL{
 			));
 			$pm->addParam($param);
 		
+				$param = new FieldExtEnum('service_type',',','expertise,cost_eval_validity,audit,modification,modified_documents,expert_maintenance'
+				,array(
+			
+				'alias'=>'Вид услуги'
+			));
+			$pm->addParam($param);
+		$param = new FieldExtJSONB('app_print'
+				,array(
+			
+				'alias'=>'Бланк заявления'
+			));
+			$pm->addParam($param);
+		$param = new FieldExtInt('expert_maintenance_base_application_id'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtJSONB('expert_maintenance_contract_data'
+				,array(
+			));
+			$pm->addParam($param);
+		
 			$param = new FieldExtInt('id',array(
 			));
 			$pm->addParam($param);
@@ -429,22 +469,7 @@ class Application_Controller extends ControllerSQL{
 		$pm->addParam($param);		
 		
 			$f_params = array();
-			$param = new FieldExtText('app_print_expertise_files'
-			,$f_params);
-		$pm->addParam($param);		
-		
-			$f_params = array();
-			$param = new FieldExtText('app_print_cost_eval_files'
-			,$f_params);
-		$pm->addParam($param);		
-		
-			$f_params = array();
-			$param = new FieldExtText('app_print_modification_files'
-			,$f_params);
-		$pm->addParam($param);		
-		
-			$f_params = array();
-			$param = new FieldExtText('app_print_audit_files'
+			$param = new FieldExtText('app_print_files'
 			,$f_params);
 		$pm->addParam($param);		
 		
@@ -481,6 +506,11 @@ class Application_Controller extends ControllerSQL{
 		
 		$pm->addParam(new FieldExtInt('id'
 		));
+		
+			$f_params = array();
+			$param = new FieldExtInt('for_exp_maint'
+			,$f_params);		
+		$pm->addParam($param);		
 		
 		
 		$this->addPublicMethod($pm);
@@ -546,6 +576,59 @@ class Application_Controller extends ControllerSQL{
 		$pm->addParam(new FieldExtString('id'));		
 		$this->addPublicMethod($pm);					
 		$this->setCompleteModelId('ApplicationList_Model');
+
+			
+		$pm = new PublicMethod('complete_for_expert_maintenance');
+		
+				
+	$opts=array();
+	
+		$opts['length']=100;
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtString('search',$opts));
+	
+				
+	$opts=array();
+					
+		$pm->addParam(new FieldExtInt('ic',$opts));
+	
+				
+	$opts=array();
+					
+		$pm->addParam(new FieldExtInt('mid',$opts));
+	
+			
+		$this->addPublicMethod($pm);
+
+			
+		$pm = new PublicMethod('get_for_expert_maintenance_list');
+		
+		$pm->addParam(new FieldExtInt('count'));
+		$pm->addParam(new FieldExtInt('from'));
+		$pm->addParam(new FieldExtString('cond_fields'));
+		$pm->addParam(new FieldExtString('cond_sgns'));
+		$pm->addParam(new FieldExtString('cond_vals'));
+		$pm->addParam(new FieldExtString('cond_ic'));
+		$pm->addParam(new FieldExtString('ord_fields'));
+		$pm->addParam(new FieldExtString('ord_directs'));
+		$pm->addParam(new FieldExtString('field_sep'));
+
+		$this->addPublicMethod($pm);
+
+			
+		$pm = new PublicMethod('get_modified_documents_list');
+		
+		$pm->addParam(new FieldExtInt('count'));
+		$pm->addParam(new FieldExtInt('from'));
+		$pm->addParam(new FieldExtString('cond_fields'));
+		$pm->addParam(new FieldExtString('cond_sgns'));
+		$pm->addParam(new FieldExtString('cond_vals'));
+		$pm->addParam(new FieldExtString('cond_ic'));
+		$pm->addParam(new FieldExtString('ord_fields'));
+		$pm->addParam(new FieldExtString('ord_directs'));
+		$pm->addParam(new FieldExtString('field_sep'));
+
+		$this->addPublicMethod($pm);
 
 			
 		$pm = new PublicMethod('get_client_list');
@@ -658,7 +741,7 @@ class Application_Controller extends ControllerSQL{
 		$this->addPublicMethod($pm);
 
 			
-		$pm = new PublicMethod('download_app_print_expertise');
+		$pm = new PublicMethod('download_app_print');
 		
 				
 	$opts=array();
@@ -670,7 +753,7 @@ class Application_Controller extends ControllerSQL{
 		$this->addPublicMethod($pm);
 
 			
-		$pm = new PublicMethod('download_app_print_expertise_sig');
+		$pm = new PublicMethod('download_app_print_sig');
 		
 				
 	$opts=array();
@@ -682,133 +765,7 @@ class Application_Controller extends ControllerSQL{
 		$this->addPublicMethod($pm);
 
 			
-		$pm = new PublicMethod('delete_app_print_expertise');
-		
-				
-	$opts=array();
-	
-		$opts['required']=TRUE;				
-		$pm->addParam(new FieldExtInt('id',$opts));
-	
-				
-	$opts=array();
-	
-		$opts['required']=TRUE;				
-		$pm->addParam(new FieldExtInt('fill_percent',$opts));
-	
-			
-		$this->addPublicMethod($pm);
-
-			
-		$pm = new PublicMethod('download_app_print_modification');
-		
-				
-	$opts=array();
-	
-		$opts['required']=TRUE;				
-		$pm->addParam(new FieldExtInt('id',$opts));
-	
-			
-		$this->addPublicMethod($pm);
-
-			
-		$pm = new PublicMethod('download_app_print_modification_sig');
-		
-				
-	$opts=array();
-	
-		$opts['required']=TRUE;				
-		$pm->addParam(new FieldExtInt('id',$opts));
-	
-			
-		$this->addPublicMethod($pm);
-
-			
-		$pm = new PublicMethod('delete_app_print_modification');
-		
-				
-	$opts=array();
-	
-		$opts['required']=TRUE;				
-		$pm->addParam(new FieldExtInt('id',$opts));
-	
-				
-	$opts=array();
-	
-		$opts['required']=TRUE;				
-		$pm->addParam(new FieldExtInt('fill_percent',$opts));
-	
-			
-		$this->addPublicMethod($pm);
-
-			
-		$pm = new PublicMethod('download_app_print_audit');
-		
-				
-	$opts=array();
-	
-		$opts['required']=TRUE;				
-		$pm->addParam(new FieldExtInt('id',$opts));
-	
-			
-		$this->addPublicMethod($pm);
-
-			
-		$pm = new PublicMethod('download_app_print_audit_sig');
-		
-				
-	$opts=array();
-	
-		$opts['required']=TRUE;				
-		$pm->addParam(new FieldExtInt('id',$opts));
-	
-			
-		$this->addPublicMethod($pm);
-
-			
-		$pm = new PublicMethod('delete_app_print_audit');
-		
-				
-	$opts=array();
-	
-		$opts['required']=TRUE;				
-		$pm->addParam(new FieldExtInt('id',$opts));
-	
-				
-	$opts=array();
-	
-		$opts['required']=TRUE;				
-		$pm->addParam(new FieldExtInt('fill_percent',$opts));
-	
-			
-		$this->addPublicMethod($pm);
-
-			
-		$pm = new PublicMethod('download_app_print_cost_eval');
-		
-				
-	$opts=array();
-	
-		$opts['required']=TRUE;				
-		$pm->addParam(new FieldExtInt('id',$opts));
-	
-			
-		$this->addPublicMethod($pm);
-
-			
-		$pm = new PublicMethod('download_app_print_cost_eval_sig');
-		
-				
-	$opts=array();
-	
-		$opts['required']=TRUE;				
-		$pm->addParam(new FieldExtInt('id',$opts));
-	
-			
-		$this->addPublicMethod($pm);
-
-			
-		$pm = new PublicMethod('delete_app_print_cost_eval');
+		$pm = new PublicMethod('delete_app_print');
 		
 				
 	$opts=array();
@@ -1159,23 +1116,27 @@ class Application_Controller extends ControllerSQL{
 	}	
 	
 
-	private function copy_print_file($appId,$id,&$fileParams,&$files){
+	private function copy_print_file($appId,$serviceType,$docType,$printFieldId,&$fileParams,&$files){
+		//Ошибки по видам услуг
 		$ER_PRINT_FILE_CNT_END = [
-			'app_print_expertise'=>' экспертизе',
-			'app_print_cost_eval'=>' достоверности',
-			'app_print_modification'=>' модификации',
-			'app_print_modification'=>' аудиту',
+			'expertise'=>' экспертизе',
+			'cost_eval_validity'=>' достоверности',
+			'modification'=>' модификации',
+			'audit'=>' аудиту',
+			'expert_maintenance'=>' экспертному сопровождению',
+			'modified_documents'=>' модифицированной документации',
 			'auth_letter_file'=>' доверенности',
 			'customer_auth_letter_file'=>' доверенности технического заказчика'
 			];
 	
 	
 		if (count($files['name'])!=2){
-			throw new Exception(self::ER_PRINT_FILE_CNT.$ER_PRINT_FILE_CNT_END[$id].'.');
+			throw new Exception(self::ER_PRINT_FILE_CNT.$ER_PRINT_FILE_CNT_END[$serviceType].'.');
 		}
 		$dir = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.
 			self::APP_DIR_PREF.$appId.DIRECTORY_SEPARATOR.
-			self::dirNameOnDocType($id);
+			self::dirNameOnDocType($docType);
+			
 		@mkdir($dir,0777,TRUE);
 		if (!file_exists($dir)){
 			throw new Exception('Ошибка при создании каталога файлов!');
@@ -1191,19 +1152,19 @@ class Application_Controller extends ControllerSQL{
 		if (is_null($sig_ind)){
 			$sig_ind = (strtolower($files['name'][1])=='blob' || strtolower(substr($files['name'][1],strlen($files['name'][1])-4,4))=='.sig')? 1 : NULL;
 			if (is_null($sig_ind)){
-				throw new Exception(self::ER_PRINT_FILE_CNT.$ER_PRINT_FILE_CNT_END[$id].'.');
+				throw new Exception(self::ER_PRINT_FILE_CNT.$ER_PRINT_FILE_CNT_END[$serviceType].'.');
 			}
 		}
 		$data_ind = ($sig_ind==1)? 0:1;
 		
 		//data
 		if (!move_uploaded_file($files['tmp_name'][$data_ind],$dir.DIRECTORY_SEPARATOR.$file_id)){
-			throw new Exception('Ошибка загрузки заявления по '.$ER_PRINT_FILE_CNT_END[$id].'.');
+			throw new Exception('Ошибка загрузки заявления по '.$ER_PRINT_FILE_CNT_END[$serviceType].'.');
 		}
 		
 		//sig
 		if (!move_uploaded_file($files['tmp_name'][$sig_ind],$dir.DIRECTORY_SEPARATOR.$file_id.'.sig')){
-			throw new Exception('Ошибка загрузки подписи заявления по '.$ER_PRINT_FILE_CNT_END[$id].'.');
+			throw new Exception('Ошибка загрузки подписи заявления по '.$ER_PRINT_FILE_CNT_END[$serviceType].'.');
 		}
 	
 		//проверка ЭЦП
@@ -1219,11 +1180,11 @@ class Application_Controller extends ControllerSQL{
 			$db_link
 		);
 		if (pki_fatal_error($verif_res)){
-			throw new Exception('Ошибка проверки подписи заявления по '.$ER_PRINT_FILE_CNT_END[$id].': '.$verif_res->checkError);
+			throw new Exception('Ошибка проверки подписи заявления по '.$ER_PRINT_FILE_CNT_END[$serviceType].': '.$verif_res->checkError);
 		}		
 		else if (!count($verif_res->signatures)){
 			//Такие в любом случае не берем!
-			throw new Exception('Ошибка проверки подписи заявления по '.$ER_PRINT_FILE_CNT_END[$id].': '.$pki_man::ER_NO_CERT_FOUND);
+			throw new Exception('Ошибка проверки подписи заявления по '.$ER_PRINT_FILE_CNT_END[$serviceType].': '.$pki_man::ER_NO_CERT_FOUND);
 		}
 		$tb_postf = self::LKPostfix();
 		$sig_ar = $this->getDbLinkMaster()->query_first(sprintf(
@@ -1248,41 +1209,8 @@ class Application_Controller extends ControllerSQL{
 		$tb_postf,$tb_postf,$tb_postf,
 		$db_file_id
 		));
-		/*
-			if (!count($sig_ar) || !isset($sig_ar['signatures'])){
-				$sig_ar['signatures'] = sprintf('[{
-					"sign_date_time":"%s",
-					"cert_from",null,
-					"cert_to",null,
-					"owner":null,
-					"check_result":"%s",
-					"check_time":"%s",
-					"error_str":"%s"
-				}]',
-				date('Y-m-d H:i:s'),
-				$verif_res->check_result,
-				$verif_res->check_time,
-				$verif_res->error_str
-				);
-			}
-		}
-		catch(Exception $e){
-			$sig_ar['signatures'] = sprintf('[{
-				"sign_date_time":"%s",
-				"owner":null,
-				"cert_from",null,
-				"cert_to",null,
-				"check_result":false,
-				"check_time":null,
-				"error_str":"%s"
-			}]',
-			date('Y-m-d H:i:s'),
-			$e->getMessage()
-			);
-			
-		}
-		*/
-		$fileParams[$id] = sprintf(
+		
+		$fileParams[$printFieldId] = sprintf(
 			'[{
 				"name":"%s",
 				"id":"%s",
@@ -1298,32 +1226,32 @@ class Application_Controller extends ControllerSQL{
 		
 	}
 
-	private function upload_prints($appId,&$fileParams){
+	/**
+	 * Загрузка печатных форм заявления
+	 * с февраля 2020 все в идином поле app_print
+	 * добавлен параметр $serviceType перечисление service_types
+	 */
+	private function upload_prints($appId,$serviceType,&$fileParams){
 		$res = FALSE;
-		//throw new Exception(var_dump($_FILES['app_print_expertise'],TRUE));
 		
-		if (isset($_FILES['app_print_expertise_files'])){
-			$this->copy_print_file($appId,'app_print_expertise',$fileParams,$_FILES['app_print_expertise_files']);
+		if (isset($_FILES['app_print_files']) && $serviceType){
+			//Печатная форма заявления может быть ТОЛЬКО с видом услуги...
+			$doc_type = self::printDocTypeOnService('app_print',$serviceType,FALSE);
+			$this->copy_print_file($appId,$serviceType,$doc_type,'app_print',$fileParams,$_FILES['app_print_files']);
 			$res = TRUE;
 		}
-		if (isset($_FILES['app_print_cost_eval_files'])){
-			$this->copy_print_file($appId,'app_print_cost_eval',$fileParams,$_FILES['app_print_cost_eval_files']);
-			$res = TRUE;
-		}
-		if (isset($_FILES['app_print_modification_files'])){
-			$this->copy_print_file($appId,'app_print_modification',$fileParams,$_FILES['app_print_modification_files']);
-			$res = TRUE;
-		}
-		if (isset($_FILES['app_print_audit_files'])){
-			$this->copy_print_file($appId,'app_print_audit',$fileParams,$_FILES['app_print_audit_files']);
-			$res = TRUE;
-		}
+
 		if (isset($_FILES['auth_letter_files'])){
-			$this->copy_print_file($appId,'auth_letter_file',$fileParams,$_FILES['auth_letter_files']);
+			//Вида услуги может и не быть...
+			$doc_type = self::printDocTypeOnService('auth_letter_file','',FALSE);
+			$this->copy_print_file($appId,'auth_letter_file',$doc_type,'auth_letter_file',$fileParams,$_FILES['auth_letter_files']);
 			$res = TRUE;
 		}
+
 		if (isset($_FILES['customer_auth_letter_files'])){
-			$this->copy_print_file($appId,'customer_auth_letter_file',$fileParams,$_FILES['customer_auth_letter_files']);
+			//Вида услуги может и не быть...
+			$doc_type = self::printDocTypeOnService('customer_auth_letter_file','',FALSE);
+			$this->copy_print_file($appId,'customer_auth_letter_file',$doc_type,'customer_auth_letter_file',$fileParams,$_FILES['customer_auth_letter_files']);
 			$res = TRUE;
 		}
 		
@@ -1383,7 +1311,10 @@ class Application_Controller extends ControllerSQL{
 		}	
 	}
 
-	public function get_print_file($appId,$docType,$isSig,&$fullPath,&$fileName){
+	/**
+	 * С февраля 2020 все потипам услуг!!!
+	 */
+	public function get_print_file($appId,$printFieldId,$isSig,&$fullPath,&$fileName){
 		//Клиент видит только СВОЕ!!!
 		$client_q_t = '';
 		if ($_SESSION['role_id']=='client'){
@@ -1391,19 +1322,26 @@ class Application_Controller extends ControllerSQL{
 		}
 	
 		$ar = $this->getDbLink()->query_first(sprintf(
-			"SELECT %s AS file_info FROM applications WHERE id=%d".$client_q_t,
-			$docType,
+			"SELECT
+				%s AS file_info,
+				service_type,
+				coalesce(cost_eval_validity,FALSE) AS cost_eval_validity
+			FROM applications WHERE id=%d".$client_q_t,
+			$printFieldId,
 			$appId
 		));
 		if (!is_array($ar) || !count($ar)){
 			throw new Exception(self::ER_APP_NOT_FOUND);
 		}
-		//throw new Exception($ar['file_info']);
+		
 		$f = json_decode($ar['file_info']);
 		if (count($f) && $f[0]->id){
 			$fileName = $f[0]->name. ($isSig? '.sig':'');
+			
+			$doc_type = self::printDocTypeOnService($printFieldId,$ar['service_type'],$ar['cost_eval_validity']=='t');
+			
 			$rel_fl = self::APP_DIR_PREF.$appId.DIRECTORY_SEPARATOR.
-				self::dirNameOnDocType($docType).DIRECTORY_SEPARATOR.
+				self::dirNameOnDocType($doc_type).DIRECTORY_SEPARATOR.
 				$f[0]->id. ($isSig? '.sig':'');
 			return (
 				file_exists($fullPath=FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$rel_fl)
@@ -1412,17 +1350,21 @@ class Application_Controller extends ControllerSQL{
 		}		
 	}
 
-	public function delete_print($appId,$docType,$fillPercent){
+	/**
+	 * С февраля 2020 все потипам услуг!!!
+	 */
+	public function delete_print($appId,$printFieldId,$fillPercent){
+	
 		$state = self::checkSentState($this->getDbLink(),$appId,TRUE);
 		if ($_SESSION['role_id']!='admin' && $state!='filling' && $state!='correcting'){
-			throw new Exception(ER_DOC_SENT);
+			throw new Exception(self::ER_DOC_SENT);
 		}
 		$fullPath = '';
 		$fileName = '';
 		if ($fillPercent>=100){
 			$fillPercent = 99;
 		}
-		if ($this->get_print_file($appId,$docType,FALSE,$fullPath,$fileName)){
+		if ($this->get_print_file($appId,$printFieldId,FALSE,$fullPath,$fileName)){
 			try{
 				$this->getDbLinkMaster()->query("BEGIN");
 				$this->getDbLinkMaster()->query(sprintf(
@@ -1431,18 +1373,15 @@ class Application_Controller extends ControllerSQL{
 						%s=NULL,
 						filled_percent=%d
 					WHERE id=%d",
-					$docType,$fillPercent,$appId));
+					$printFieldId,
+					$fillPercent,$appId
+				));
 				
 				unlink($fullPath);
 				if(file_exists($fullPath.'.sig')){
 					unlink($fullPath.'.sig');
 				}
 				
-				/*	
-				if ($this->get_print_file($appId,$docType,TRUE,$fullPath,$fileName)){
-					unlink($fullPath);	
-				}
-				*/
 				self::removeAllZipFile($appId);
 				
 				$this->getDbLinkMaster()->query("COMMIT");
@@ -1453,10 +1392,10 @@ class Application_Controller extends ControllerSQL{
 			}
 		}
 	}
-	public function download_print($appId,$docType,$isSig){
+	public function download_print($appId,$printFieldId,$isSig){
 		$fullPath = '';
 		$fileName = '';
-		if ($this->get_print_file($appId,$docType,$isSig,$fullPath,$fileName)){
+		if ($this->get_print_file($appId,$printFieldId,$isSig,$fullPath,$fileName)){
 			$mime = getMimeTypeOnExt($fileName);
 			ob_clean();
 			downloadFile($fullPath, $mime,'attachment;',$fileName);
@@ -1464,45 +1403,19 @@ class Application_Controller extends ControllerSQL{
 		}
 	}
 
-	public function download_app_print_expertise($pm){
-		return $this->download_print($this->getExtDbVal($pm,'id'),'app_print_expertise',FALSE);
+	/*
+	 * С февраля 2020 только одно поле app_print!!!
+	 */
+	public function download_app_print($pm){
+		return $this->download_print($this->getExtDbVal($pm,'id'),'app_print',FALSE);
 	}
-	public function download_app_print_expertise_sig($pm){
-		return $this->download_print($this->getExtDbVal($pm,'id'),'app_print_expertise',TRUE);
+	public function download_app_print_sig($pm){
+		return $this->download_print($this->getExtDbVal($pm,'id'),'app_print',TRUE);
 	}	
-	public function delete_app_print_expertise($pm){
-		return $this->delete_print($this->getExtDbVal($pm,'id'),'app_print_expertise',$this->getExtDbVal($pm,'fill_percent'));
+	public function delete_app_print($pm){
+		return $this->delete_print($this->getExtDbVal($pm,'id'),'app_print',$this->getExtDbVal($pm,'fill_percent'));
 	}
-	
-	public function download_app_print_modification($pm){
-		return $this->download_print($this->getExtDbVal($pm,'id'),'app_print_modification',FALSE);
-	}
-	public function download_app_print_modification_sig($pm){
-		return $this->download_print($this->getExtDbVal($pm,'id'),'app_print_modification',TRUE);
-	}
-	public function delete_app_print_modification($pm){
-		return $this->delete_print($this->getExtDbVal($pm,'id'),'app_print_modification',$this->getExtDbVal($pm,'fill_percent'));
-	}
-	
-	public function download_app_print_audit($pm){
-		return $this->download_print($this->getExtDbVal($pm,'id'),'app_print_audit',FALSE);
-	}
-	public function download_app_print_audit_sig($pm){
-		return $this->download_print($this->getExtDbVal($pm,'id'),'app_print_audit',TRUE);
-	}
-	public function delete_app_print_audit($pm){
-		return $this->delete_print($this->getExtDbVal($pm,'id'),'app_print_audit',$this->getExtDbVal($pm,'fill_percent'));
-	}
-	
-	public function download_app_print_cost_eval($pm){
-		return $this->download_print($this->getExtDbVal($pm,'id'),'app_print_cost_eval',FALSE);
-	}
-	public function download_app_print_cost_eval_sig($pm){
-		return $this->download_print($this->getExtDbVal($pm,'id'),'app_print_cost_eval',TRUE);
-	}
-	public function delete_app_print_cost_eval($pm){
-		return $this->delete_print($this->getExtDbVal($pm,'id'),'app_print_cost_eval',$this->getExtDbVal($pm,'fill_percent'));
-	}
+		
 	//auth letter
 	public function download_auth_letter_file($pm){
 		return $this->download_print($this->getExtDbVal($pm,'id'),'auth_letter_file',FALSE);
@@ -1608,10 +1521,7 @@ class Application_Controller extends ControllerSQL{
 			//Если вернули - никаких заявлений
 			/*
 			if ($ar_obj['application_state']=='returned'){
-				$ar_obj['app_print_expertise'] = NULL;
-				$ar_obj['app_print_cost_eval'] = NULL;
-				$ar_obj['app_print_modification'] = NULL;
-				$ar_obj['app_print_audit'] = NULL;
+				$ar_obj['app_print'] = NULL;
 			}
 			*/
 			
@@ -1625,19 +1535,25 @@ class Application_Controller extends ControllerSQL{
 			}
 			else{
 				//Copy mode!!!
+				if(!isset($_REQUEST['for_exp_maint']) || $_REQUEST['for_exp_maint']!='1'){
+					$ar_obj['contract_date'] = NULL;
+					$ar_obj['contract_number'] = NULL;
+					$ar_obj['expertise_result_number'] = NULL;
+					$ar_obj['expertise_result_date'] = NULL;				
+					
+					$ar_obj['auth_letter'] = NULL;
+					$ar_obj['auth_letter_file'] = NULL;
+					$ar_obj['customer_auth_letter'] = NULL;
+					$ar_obj['customer_auth_letter_file'] = NULL;
+					
+				}
+				
+				$ar_obj['office_id'] = NULL;
 				$ar_obj['document_exists'] = 'f';
 				$ar_obj['documents'] = NULL;
 				$ar_obj['base_applications_ref'] = NULL;
 				$ar_obj['derived_applications_ref'] = NULL;
-				$ar_obj['auth_letter'] = NULL;
-				$ar_obj['auth_letter_file'] = NULL;
-				$ar_obj['customer_auth_letter'] = NULL;
-				$ar_obj['customer_auth_letter_file'] = NULL;
 				$ar_obj['application_state'] = NULL;
-				$ar_obj['contract_date'] = NULL;
-				$ar_obj['contract_number'] = NULL;
-				$ar_obj['expertise_result_number'] = NULL;
-				$ar_obj['expertise_result_date'] = NULL;
 				$ar_obj['application_state'] = 'filling';
 				
 				//new order from 01/01/2019
@@ -1652,7 +1568,7 @@ class Application_Controller extends ControllerSQL{
 					$dev = json_decode($ar_obj['developer']);
 					$cust = json_decode($ar_obj['customer']);
 					if(isset($dev->inn) &&isset($cust->inn) &&$dev->inn==$cust->inn){
-						$ar_obj['customer'] = NULL;
+						$ar_obj['customer'] = '{"customer_is_developer":true}';
 					}
 				}
 			}
@@ -1691,10 +1607,7 @@ class Application_Controller extends ControllerSQL{
 				NULL AS documents,
 				NULL AS primary_application,
 				NULL AS select_descr,
-				NULL AS app_print_expertise,
-				NULL AS app_print_cost_eval,
-				NULL AS app_print_modification,
-				NULL AS app_print_audit,
+				NULL AS app_print,
 				NULL AS base_applications_ref,
 				NULL AS derived_applications_ref,
 				NULL as users_ref,
@@ -1710,7 +1623,10 @@ class Application_Controller extends ControllerSQL{
 				NULL AS expertise_result_number,
 				NULL AS expertise_result_date,
 				0 AS filled_percent,
-				NULL AS exp_cost_eval_validity
+				NULL AS exp_cost_eval_validity,
+				NULL AS service_type,
+				NULL AS expert_maintenance_base_applications_ref,
+				NULL AS expert_maintenance_contract_data
 				"
 			);
 		}
@@ -1756,6 +1672,29 @@ class Application_Controller extends ControllerSQL{
 		}
 	}
 	
+	public static function printDocTypeOnService($printFieldId,$serviceType,$costEvalValidity){
+		$res = '';
+		if($printFieldId=='auth_letter_file'){
+			$res = 'auth_letter_file';
+		}
+		else if($printFieldId=='customer_auth_letter_file'){
+			$res = 'customer_auth_letter_file';
+		}
+		else{
+			//app_print
+			if($costEvalValidity){
+				$service = 'cost_eval';
+			}
+			else{
+				$service = $serviceType;
+			}
+			$res = 'app_print_'.$service;
+		}
+		
+		return $res;
+		
+	}
+	
 	public static function dirNameOnDocType($docType){
 		if ($docType=='pd'){
 			$res = 'ПД';
@@ -1772,6 +1711,12 @@ class Application_Controller extends ControllerSQL{
 		else if ($docType=='audit'){
 			$res = 'Аудит';
 		}				
+		else if ($docType=='expert_maintenance'){
+			$res = 'ЭкспертноеСопровождение';
+		}				
+		else if ($docType=='modified_documents'){
+			$res = 'МодифицированнаяДокументация';
+		}				
 		else if ($docType=='app_print_expertise'){
 			$res = self::APP_PRINT_PREF.DIRECTORY_SEPARATOR. 'Экспертиза';
 		}				
@@ -1784,6 +1729,13 @@ class Application_Controller extends ControllerSQL{
 		else if ($docType=='app_print_audit'){
 			$res = self::APP_PRINT_PREF.DIRECTORY_SEPARATOR.'Аудит';
 		}
+		else if ($docType=='app_print_modified_documents'){
+			$res = self::APP_PRINT_PREF.DIRECTORY_SEPARATOR.'МодифицированнаяДокументация';
+		}
+		else if ($docType=='app_print_expert_maintenance'){
+			$res = self::APP_PRINT_PREF.DIRECTORY_SEPARATOR.'ЭкспертноеСопровождение';
+		}
+		
 		else if ($docType=='auth_letter_file'){
 			$res = 'Доверенность';
 		}				
@@ -1865,11 +1817,51 @@ class Application_Controller extends ControllerSQL{
 		self::removeSigCheckReport($applicationId);
 	}
 
+	private function checkModDocumentBeforeSending($baseApplicationId){
+		$ar = $this->getDbLink()->query_first(sprintf(
+		"SELECT
+			NOT (st.state='filling' OR st.state='correcting') AS sent
+		FROM applications AS app
+		LEFT JOIN (
+			SELECT
+				t.application_id,
+				max(t.date_time) AS date_time
+			FROM application_processes t
+			GROUP BY t.application_id
+		) AS h_max ON h_max.application_id=app.id
+		LEFT JOIN application_processes st
+			ON st.application_id=h_max.application_id AND st.date_time = h_max.date_time
+		WHERE app.id=%d",
+		$baseApplicationId
+		));
+		if(!count($ar) || $ar['sent']!='t'){
+			throw new Exception(self::ER_APP_EXPERT_MAINT_NOT_FOUND);
+		}	
+	}
+
 	public function insert($pm){		
 		$set_sent_v = $pm->getParamValue('set_sent');
 		$set_sent = (isset($set_sent_v) && $set_sent_v=='1');
-		if ($set_sent){
-			throw new Exception(self::ER_NO_ATT);
+		
+		if ($set_sent){			
+			$stp = $pm->getParamValue("service_type")? $this->getExtVal("service_type"):null;
+			if(!$stp){
+				error_log('Отправка нового заявелния без указания типы услуги юзер='.$_SESSION['user_id']);
+				throw new Exception(self::ER_OTHER_USER_APP);
+			}
+			else if($stp!="expert_maintenance"){
+				//Все кроме сопровождения
+				throw new Exception(self::ER_NO_ATT);
+			}
+			
+			//проверка отправки modified_documents без expert_maintenance
+			if($stp=="modified_documents"){
+				if(!$this->getParamValue("base_application_id")){
+					error_log('Отправка нового заявелния modified_documents без указания базового сопровождения юзер='.$_SESSION['user_id']);
+					throw new Exception(self::ER_APP_EXPERT_MAINT_NOT_FOUND);
+				}
+				$this->checkModDocumentBeforeSending($pm->getExtDbVal("base_application_id"));
+			}
 		}		
 	
 		$pm->setParamValue("user_id",$_SESSION['user_id']);
@@ -1879,7 +1871,7 @@ class Application_Controller extends ControllerSQL{
 			$model_name = $this->getInsertModelId();
 			$model = new $model_name($this->getDbLinkMaster());
 			$this->methodParamsToModel($pm,$model);
-			$q = $model->getInsertQuery(TRUE).',expertise_type,cost_eval_validity,modification,audit,exp_cost_eval_validity';
+			$q = $model->getInsertQuery(TRUE).',expertise_type,cost_eval_validity,modification,audit,exp_cost_eval_validity,service_type';
 			$inserted_id_ar = $this->getDbLinkMaster()->query_first($q);
 			
 			$state = NULL;
@@ -1891,7 +1883,7 @@ class Application_Controller extends ControllerSQL{
 			}			
 			
 			$file_params = [];
-			if ($this->upload_prints($inserted_id_ar['id'],$file_params)){
+			if ($this->upload_prints($inserted_id_ar['id'],$inserted_id_ar['service_type'],$file_params)){
 				//need updating
 				$cols = '';
 				foreach($file_params as $k=>$v){
@@ -2003,8 +1995,19 @@ class Application_Controller extends ControllerSQL{
 			$pm->setParamValue('user_id', $_SESSION['user_id']);
 		}
 
+		/**
+		 * если есть печ.форма бланка и нет переданного вида услуги, надо 
+		 * перед update'ом получить вид услуги, для обработки печ.формы, так как там все по разным папкам!!!
+		 */
+		$serice_type = ($pm->getParamValue('service_type'))? $pm->getParamValue('service_type'):NULL;		 
+		if(isset($_FILES['app_print_files']) && !$serice_type){
+			$ar = $this->getDbLinkMaster()->query_first(sprintf("SELECT service_type FROM applications WHERE id=%d",$this->getExtDbVal($pm,'old_id')));
+			if(count($ar)){
+				$serice_type = $ar['service_type'];
+			}
+		}
 		$file_params = [];
-		if ($this->upload_prints($this->getExtDbVal($pm,'old_id'),$file_params)){
+		if ($this->upload_prints($this->getExtDbVal($pm,'old_id'),$serice_type,$file_params)){
 			foreach($file_params as $k=>$v){
 				$pm->setParamValue($k,$v);
 			}			
@@ -2016,7 +2019,6 @@ class Application_Controller extends ControllerSQL{
 
 		$this->getDbLinkMaster()->query("BEGIN");
 		try{			
-			//parent::update($pm);
 			$model_name = $this->getUpdateModelId();
 			$model = new $model_name($this->getDbLinkMaster());
 			$this->methodParamsToModel($pm,$model);
@@ -2026,35 +2028,63 @@ class Application_Controller extends ControllerSQL{
 			$ar = NULL;
 			$q = $model->getUpdateQuery();
 			if (strlen($q) && $set_sent){
-				$q.=' RETURNING
+				$q.=" RETURNING
 					id,
-					expertise_type,
 					cost_eval_validity,
-					exp_cost_eval_validity,
-					modification,
-					audit,
-					app_print_expertise IS NOT NULL AS app_print_expertise_set,
-					app_print_cost_eval IS NOT NULL AS app_print_cost_eval_set,
-					app_print_modification IS NOT NULL AS app_print_modificationl_set,
-					app_print_audit IS NOT NULL AS app_print_audit_set,
-					(SELECT COUNT(*) FROM application_document_files af WHERE af.application_id=id) AS file_count';
+					expertise_type,
+					service_type,
+					app_print IS NOT NULL AS app_print_set,
+					(SELECT COUNT(*) FROM application_document_files af WHERE af.application_id=id) AS file_count,
+					(SELECT COUNT(*) FROM application_document_files af WHERE af.application_id=id) AS file_count,
+					CASE
+						WHEN service_type='modified_documents' THEN
+							(SELECT
+								NOT (st.state='filling' OR st.state='correcting')
+							FROM applications AS b_app
+							LEFT JOIN (
+								SELECT
+									t.application_id,
+									max(t.date_time) AS date_time
+								FROM application_processes t
+								GROUP BY t.application_id
+							) AS h_max ON h_max.application_id=b_app.id
+							LEFT JOIN application_processes st
+								ON st.application_id=h_max.application_id AND st.date_time = h_max.date_time
+							WHERE b_app.id=applications.base_application_id
+							)
+						ELSE NULL
+					END AS modified_documents_before_exp_maint_sent";
 				$ar = $this->getDbLinkMaster()->query_first($q);
 			}
 			else if ($set_sent){
 				$q = sprintf(
-				'SELECT
-					id,
-					expertise_type,
-					cost_eval_validity,
-					exp_cost_eval_validity,
-					modification,
-					audit,
-					app_print_expertise IS NOT NULL AS app_print_expertise_set,
-					app_print_cost_eval IS NOT NULL AS app_print_cost_eval_set,
-					app_print_modification IS NOT NULL AS app_print_modificationl_set,
-					app_print_audit IS NOT NULL AS app_print_audit_set,
-					(SELECT COUNT(*) FROM application_document_files af WHERE af.application_id=id) AS file_count						
-				FROM applications WHERE id=%d',
+				"SELECT
+					app.id,
+					app.cost_eval_validity,
+					app.expertise_type,
+					app.service_type,
+					app.app_print IS NOT NULL AS app_print_set,
+					(SELECT COUNT(*) FROM application_document_files af WHERE af.application_id=app.id) AS file_count,
+					CASE
+						WHEN app.service_type='modified_documents' THEN
+							(SELECT
+								NOT (st.state='filling' OR st.state='correcting')
+							FROM applications AS b_app
+							LEFT JOIN (
+								SELECT
+									t.application_id,
+									max(t.date_time) AS date_time
+								FROM application_processes t
+								GROUP BY t.application_id
+							) AS h_max ON h_max.application_id=b_app.id
+							LEFT JOIN application_processes st
+								ON st.application_id=h_max.application_id AND st.date_time = h_max.date_time
+							WHERE b_app.id=app.base_application_id
+							)
+						ELSE NULL
+					END AS modified_documents_before_exp_maint_sent
+				FROM applications AS app
+				WHERE app.id=%d",
 				$this->getExtDbVal($pm,'old_id')
 				);				
 			}			
@@ -2066,35 +2096,24 @@ class Application_Controller extends ControllerSQL{
 			if ($set_sent){
 				//Серверные проверки перед отправкой
 				
-				//Есть новая достоверность, но нет ПД
-				if ($ar['exp_cost_eval_validity']=='t' && !$ar['expertise_type'] ){
-					throw new Exception('Отправка заявлений только по достоверности запрещена!');
-				}				
-				
-				// 27/12/19 - ЗАПРЕТ!!! - УБАРЛ 17/01/19
-				/*
-				if ($ar['cost_eval_validity']=='t' &&$old_state!='correcting'){
-					throw new Exception('Отправка заявлений по достоверности запрещена!');
-				}				
-				*/
-
 				// 13/01/20 - ЗАПРЕТ отправки достоверности!!!
 				if ($ar['cost_eval_validity']=='t' && $old_state!='correcting'){
 					throw new Exception('Постановлением правительства РФ от 31.12.2019г. №1948 внесены изменения в Порядок проведения государственной экспертизы проектной документации и (или)  результатов инженерных изысканий, утвержденный Постановлением Правительства РФ 145 от 05.03.2007г. Просим Вас ознакомиться с указанными изменениями и учитывать их при подаче заявлений на получение государственных услуг.');
 				}				
 				
-				if (
-				($ar['expertise_type'] && $ar['app_print_expertise_set']!='t')
-				||($ar['cost_eval_validity']=='t' && $ar['app_print_cost_eval_set']!='t')
-				||($ar['modification']=='t' && $ar['app_print_modification_set']!='t')
-				||($ar['audit']=='t' && $ar['app_print_audit_set']!='t')
-				){
+				if ($ar['app_print_set']!='t'){
 					throw new Exception('Нет файла с заявлением по выбранной услуге!');
 				}
 				
-				if ($ar['file_count']==0){
+				if ($ar['file_count']==0 && $ar['service_type']!='expert_maintenance'){
 					throw new Exception(self::ER_NO_ATT);
 				}				
+				
+				//
+				if($ar['service_type']=='modified_documents' && $ar['modified_documents_before_exp_maint_sent']=='f'){
+					//checkModDocumentBeforeSending
+					throw new Exception(self::ER_APP_EXPERT_MAINT_NOT_FOUND);
+				}
 				
 				$l = $this->getDbLinkMaster();
 				self::checkIULs($l,$this->getExtDbVal($pm,'old_id'));
@@ -2461,13 +2480,10 @@ class Application_Controller extends ControllerSQL{
 			$ar_app = $this->getDbLink()->query_first(sprintf(
 				"SELECT				
 					app.user_id,
-					app.app_print_expertise,
+					app.app_print,
 					app.expertise_type,
-					app.app_print_cost_eval,
 					app.cost_eval_validity,
-					app.app_print_modification,
 					app.modification,
-					app.app_print_audit,
 					app.audit,
 					app.auth_letter_file,
 					app.customer_auth_letter_file
@@ -2550,16 +2566,16 @@ class Application_Controller extends ControllerSQL{
 			
 				//Заявления
 				if ($ar_app['expertise_type']){
-					self::add_print_to_zip('app_print_expertise',$ar_app['app_print_expertise'],$rel_dir_zip,$zip,$cnt);
+					self::add_print_to_zip('app_print_expertise',$ar_app['app_print'],$rel_dir_zip,$zip,$cnt);
 				}
 				if ($ar_app['cost_eval_validity']=='t'){
-					self::add_print_to_zip('app_print_cost_eval_validity',$ar_app['app_print_cost_eval'],$rel_dir_zip,$zip,$cnt);
+					self::add_print_to_zip('app_print_cost_eval_validity',$ar_app['app_print'],$rel_dir_zip,$zip,$cnt);
 				}
 				if ($ar_app['modification']=='t'){
-					self::add_print_to_zip('app_print_modification',$ar_app['app_print_modification'],$rel_dir_zip,$zip,$cnt);
+					self::add_print_to_zip('app_print_modification',$ar_app['app_print'],$rel_dir_zip,$zip,$cnt);
 				}
 				if ($ar_app['audit']=='t'){
-					self::add_print_to_zip('app_print_audit',$ar_app['app_print_audit'],$rel_dir_zip,$zip,$cnt);
+					self::add_print_to_zip('app_print_audit',$ar_app['app_print'],$rel_dir_zip,$zip,$cnt);
 				}
 				//Доверенность
 				if ($ar_app['auth_letter_file']){
@@ -2655,12 +2671,12 @@ class Application_Controller extends ControllerSQL{
 			if (!is_null($ar['expertise_type']) && $ar['cost_eval_validity']=='t'){
 				//убрать Достоверность в другую заявку
 				$resAr['doc_type'] = 'cost_eval_validity';
-				$resAr['doc_type_print'] = 'app_print_cost_eval';
+				$resAr['doc_type_print'] = 'app_print';
 			}
 			else if($ar['cost_eval_validity']=='t' && $ar['modification']=='t'){
 				//убрать Модификацию в другую заявку
 				$resAr['doc_type'] = 'modification';
-				$resAr['doc_type_print'] = 'app_print_modification';
+				$resAr['doc_type_print'] = 'app_print';
 			}
 			if (isset($resAr['doc_type'])){
 				$new_id_ar = $this->getDbLinkMaster()->query_first(sprintf(
@@ -3542,13 +3558,10 @@ class Application_Controller extends ControllerSQL{
 			"SELECT	
 				to_char(app.create_dt,'DD/MM/YY') AS date_time_descr,			
 				app.user_id,
-				app.app_print_expertise,
+				app.app_print,
 				app.expertise_type,
-				app.app_print_cost_eval,
 				app.cost_eval_validity,
-				app.app_print_modification,
 				app.modification,
-				app.app_print_audit,
 				app.audit,
 				app.auth_letter_file,
 				app.customer_auth_letter_file
@@ -3583,37 +3596,10 @@ class Application_Controller extends ControllerSQL{
 							app_f.fl->>'id',
 							'Заявления/Экспертиза/'||(app_f.fl->>'id')::text
 						FROM (
-						SELECT jsonb_array_elements(app_print_expertise) AS fl FROM applications WHERE id=%d AND app_print_expertise IS NOT NULL
+						SELECT jsonb_array_elements(app_print) AS fl FROM applications WHERE id=%d AND app_print IS NOT NULL
 						) AS app_f
 						LEFT JOIN file_verifications AS v ON app_f.fl->>'id'=v.file_id
 						WHERE v.file_id IS NULL)
-			UNION ALL
-			(SELECT 
-							app_f.fl->>'id',
-							'Заявления/Достоверность/'||(app_f.fl->>'id')::text
-						FROM (
-						SELECT jsonb_array_elements(app_print_cost_eval) AS fl FROM applications WHERE id=%d AND app_print_cost_eval IS NOT NULL
-						) AS app_f
-						LEFT JOIN file_verifications AS v ON app_f.fl->>'id'=v.file_id
-						WHERE v.file_id IS NULL)			
-			UNION ALL
-			(SELECT 
-							app_f.fl->>'id',
-							'Заявления/Модификация/'||(app_f.fl->>'id')::text
-						FROM (
-						SELECT jsonb_array_elements(app_print_modification) AS fl FROM applications WHERE id=%d AND app_print_modification IS NOT NULL
-						) AS app_f
-						LEFT JOIN file_verifications AS v ON app_f.fl->>'id'=v.file_id
-						WHERE v.file_id IS NULL)						
-			UNION ALL
-			(SELECT 
-							app_f.fl->>'id',
-							'Заявления/Аудит/'||(app_f.fl->>'id')::text
-						FROM (
-						SELECT jsonb_array_elements(app_print_audit) AS fl FROM applications WHERE id=%d AND app_print_audit IS NOT NULL
-						) AS app_f
-						LEFT JOIN file_verifications AS v ON app_f.fl->>'id'=v.file_id
-						WHERE v.file_id IS NULL)									
 			UNION ALL
 			(SELECT 
 							app_f.fl->>'id',
@@ -3716,88 +3702,7 @@ class Application_Controller extends ControllerSQL{
 				'Заявление ПД / '||(app_f.fl->>'name')::text AS file_name
 
 			FROM (
-			SELECT jsonb_array_elements(app_print_expertise) AS fl FROM applications WHERE id=%d AND app_print_expertise IS NOT NULL
-			) AS app_f
-			LEFT JOIN file_verifications".$tb_postf." AS v ON app_f.fl->>'id'=v.file_id
-			LEFT JOIN file_signatures".$tb_postf." AS f_sig ON f_sig.file_id=v.file_id
-			LEFT JOIN user_certificates".$tb_postf." AS u_certs ON u_certs.id=f_sig.user_certificate_id)			
-
-			UNION ALL
-
-			(SELECT
-				v.date_time,
-				to_char(u_certs.date_time_from,'DD/MM/YY') AS date_from,
-				to_char(u_certs.date_time_to,'DD/MM/YY') AS date_to,
-				round(v.check_time,1) AS check_time,
-				v.check_result,
-				v.error_str,
-				(SELECT string_agg('<field alias=\"'||f.key||'\">'||f.value||'</field>','')
-				FROM 
-				(select (jsonb_each_text(u_certs.subject_cert)).* ) f
-				) AS subject_cert,
-				(SELECT string_agg('<field alias=\"'||f.key||'\">'||f.value||'</field>','')
-				FROM 
-				(select (jsonb_each_text(u_certs.issuer_cert)).* ) f
-				) AS issuer_cert,
-				to_char(f_sig.sign_date_time,'DD/MM/YY') AS sign_date_time,
-				'Заявление Достоверность / '||(app_f.fl->>'name')::text AS file_name
-
-			FROM (
-			SELECT jsonb_array_elements(app_print_cost_eval) AS fl FROM applications WHERE id=%d AND app_print_cost_eval IS NOT NULL
-			) AS app_f
-			LEFT JOIN file_verifications".$tb_postf." AS v ON app_f.fl->>'id'=v.file_id
-			LEFT JOIN file_signatures".$tb_postf." AS f_sig ON f_sig.file_id=v.file_id
-			LEFT JOIN user_certificates".$tb_postf." AS u_certs ON u_certs.id=f_sig.user_certificate_id)			
-
-			UNION ALL
-
-			(SELECT
-				v.date_time,
-				to_char(u_certs.date_time_from,'DD/MM/YY') AS date_from,
-				to_char(u_certs.date_time_to,'DD/MM/YY') AS date_to,
-				round(v.check_time,1) AS check_time,
-				v.check_result,
-				v.error_str,
-				(SELECT string_agg('<field alias=\"'||f.key||'\">'||f.value||'</field>','')
-				FROM 
-				(select (jsonb_each_text(u_certs.subject_cert)).* ) f
-				) AS subject_cert,
-				(SELECT string_agg('<field alias=\"'||f.key||'\">'||f.value||'</field>','')
-				FROM 
-				(select (jsonb_each_text(u_certs.issuer_cert)).* ) f
-				) AS issuer_cert,
-				to_char(f_sig.sign_date_time,'DD/MM/YY') AS sign_date_time,
-				'Заявление Модификация / '||(app_f.fl->>'name')::text AS file_name
-
-			FROM (
-			SELECT jsonb_array_elements(app_print_modification) AS fl FROM applications WHERE id=%d AND app_print_modification IS NOT NULL
-			) AS app_f
-			LEFT JOIN file_verifications".$tb_postf." AS v ON app_f.fl->>'id'=v.file_id
-			LEFT JOIN file_signatures".$tb_postf." AS f_sig ON f_sig.file_id=v.file_id
-			LEFT JOIN user_certificates".$tb_postf." AS u_certs ON u_certs.id=f_sig.user_certificate_id)			
-
-			UNION ALL
-
-			(SELECT
-				v.date_time,
-				to_char(u_certs.date_time_from,'DD/MM/YY') AS date_from,
-				to_char(u_certs.date_time_to,'DD/MM/YY') AS date_to,
-				round(v.check_time,1) AS check_time,
-				v.check_result,
-				v.error_str,
-				(SELECT string_agg('<field alias=\"'||f.key||'\">'||f.value||'</field>','')
-				FROM 
-				(select (jsonb_each_text(u_certs.subject_cert)).* ) f
-				) AS subject_cert,
-				(SELECT string_agg('<field alias=\"'||f.key||'\">'||f.value||'</field>','')
-				FROM 
-				(select (jsonb_each_text(u_certs.issuer_cert)).* ) f
-				) AS issuer_cert,
-				to_char(f_sig.sign_date_time,'DD/MM/YY') AS sign_date_time,
-				'Заявление Аудит / '||(app_f.fl->>'name')::text AS file_name
-
-			FROM (
-			SELECT jsonb_array_elements(app_print_audit) AS fl FROM applications WHERE id=%d AND app_print_audit IS NOT NULL
+			SELECT jsonb_array_elements(app_print) AS fl FROM applications WHERE id=%d AND app_print IS NOT NULL
 			) AS app_f
 			LEFT JOIN file_verifications".$tb_postf." AS v ON app_f.fl->>'id'=v.file_id
 			LEFT JOIN file_signatures".$tb_postf." AS f_sig ON f_sig.file_id=v.file_id
@@ -3936,6 +3841,38 @@ class Application_Controller extends ControllerSQL{
 			self::getSigDetailsQuery($this->getExtDbVal($pm,'id')),
 			'FileSignatures_Model'
 		);	
+	}
+		
+	/**
+	 * Возвращает ApplicationList_Model с фильтром по статусу=архив
+	 * ищет по номеру заявления (id),номер контракта contract_number,expertise_result_number
+	 */
+	public function complete_for_expert_maintenance($pm){
+		$cond = '';
+		if($_SESSION['role_id']!='admin'){
+			$cond = sprintf(' AND t.user_id=%d',$_SESSION['user_id']);
+		}
+		
+		$search = $this->getExtDbVal($pm,'search');
+		$ln = strlen($search) - 2;
+		$q = sprintf(
+		"SELECT
+			t.*
+		FROM applications_for_expert_maintenance_list t
+		WHERE	(
+			(%s LIKE substr(t.id::text,1,%d)||'%%')
+			OR (%s LIKE substr(t.contract_number::text,1,%d)||'%%')
+			OR (%s LIKE substr(t.expertise_result_number::text,1,%d)||'%%')
+			)
+		%s
+		LIMIT 5",
+		$search,$ln,
+		$search,$ln,
+		$search,$ln,
+		$cond
+		);
+		
+		$this->addNewModel($q,'ApplicationForExpertMaintenanceList_Model');			
 	}
 	
 	public function get_customer_list($pm){
@@ -4131,7 +4068,7 @@ class Application_Controller extends ControllerSQL{
 				AND app_f.document_id=(SELECT of.document_id FROM orig_file AS of)
 				AND app_f.document_type=(SELECT of.document_type FROM orig_file AS of)
 				--AND app_f.information_list
-				AND lower(app_f.file_name) ~ ('^'||(SELECT f_name FROM file_name_explode((SELECT of.l_file_name FROM orig_file AS of)) AS (f_name text,f_ext text))||' *- *ул *\.'||(SELECT f_ext FROM file_name_explode((SELECT of.l_file_name FROM orig_file AS of)) AS (f_name text,f_ext text))||'$')
+				AND lower(app_f.file_name) ~ ('^'||(SELECT f_regexp_escape(f_name) FROM file_name_explode((SELECT of.l_file_name FROM orig_file AS of)) AS (f_name text,f_ext text))||' *- *ул *\.'||(SELECT f_ext FROM file_name_explode((SELECT of.l_file_name FROM orig_file AS of)) AS (f_name text,f_ext text))||'$')
 			",
 			$fileIdForDb,$appId)
 		);
@@ -4140,6 +4077,20 @@ class Application_Controller extends ControllerSQL{
 		}
 	}
 	
+	public function get_for_expert_maintenance_list($pm){
+		$this->setListModelId('ApplicationForExpertMaintenanceList_Model');
+		parent::get_list($pm);
+	}
+	
+	/**
+	 * вызывается из списка измененной документации у заявления с типом ЭкспертноеСопровождение
+	 * в отличии от обычного списка здесь нет фильтра по типу услуги
+	 */
+	public function get_modified_documents_list($pm){
+		$m = new ApplicationList_Model($this->getDbLink());
+		$m->setTableName('application_modified_documents_list');
+		$this->modelGetList($m,$pm);
+	}
 	
 
 }

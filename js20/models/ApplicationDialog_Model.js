@@ -261,7 +261,7 @@ function ApplicationDialog_Model(options){
 	
 	var filed_options = {};
 	filed_options.primaryKey = false;	
-	
+	filed_options.alias = 'Устарело используется поле app_print';
 	filed_options.autoInc = false;	
 	
 	options.fields.app_print_expertise = new FieldJSONB("app_print_expertise",filed_options);
@@ -269,7 +269,7 @@ function ApplicationDialog_Model(options){
 	
 	var filed_options = {};
 	filed_options.primaryKey = false;	
-	
+	filed_options.alias = 'Устарело используется поле app_print';
 	filed_options.autoInc = false;	
 	
 	options.fields.app_print_cost_eval = new FieldJSONB("app_print_cost_eval",filed_options);
@@ -277,7 +277,7 @@ function ApplicationDialog_Model(options){
 	
 	var filed_options = {};
 	filed_options.primaryKey = false;	
-	
+	filed_options.alias = 'Устарело используется поле app_print';
 	filed_options.autoInc = false;	
 	
 	options.fields.app_print_modification = new FieldJSONB("app_print_modification",filed_options);
@@ -285,7 +285,7 @@ function ApplicationDialog_Model(options){
 	
 	var filed_options = {};
 	filed_options.primaryKey = false;	
-	
+	filed_options.alias = 'Устарело используется поле app_print';
 	filed_options.autoInc = false;	
 	
 	options.fields.app_print_audit = new FieldJSONB("app_print_audit",filed_options);
@@ -370,6 +370,39 @@ function ApplicationDialog_Model(options){
 	filed_options.autoInc = false;	
 	
 	options.fields.customer_auth_letter_file = new FieldJSONB("customer_auth_letter_file",filed_options);
+		
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	filed_options.alias = 'Вид услуги';
+	filed_options.autoInc = false;	
+	
+	options.fields.service_type = new FieldEnum("service_type",filed_options);
+	filed_options.enumValues = 'expertise,cost_eval_validity,audit,modification,modified_documents,expert_maintenance';
+		
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	filed_options.alias = 'Бланк заявления';
+	filed_options.autoInc = false;	
+	
+	options.fields.app_print = new FieldJSONB("app_print",filed_options);
+		
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.expert_maintenance_base_application_id = new FieldInt("expert_maintenance_base_application_id",filed_options);
+		
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.expert_maintenance_contract_data = new FieldJSONB("expert_maintenance_contract_data",filed_options);
 	
 			
 			
@@ -491,8 +524,6 @@ function ApplicationDialog_Model(options){
 	
 			
 			
-			
-			
 				
 	
 	var filed_options = {};
@@ -585,6 +616,53 @@ function ApplicationDialog_Model(options){
 	filed_options.autoInc = false;	
 	
 	options.fields.sent_dt = new FieldDateTimeTZ("sent_dt",filed_options);
+	
+			
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.expert_maintenance_base_applications_ref = new FieldJSON("expert_maintenance_base_applications_ref",filed_options);
+	
+			
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.modified_documents_service_type = new FieldString("modified_documents_service_type",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.modified_documents_expertise_type = new FieldString("modified_documents_expertise_type",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.expert_maintenance_service_type = new FieldString("expert_maintenance_service_type",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.expert_maintenance_expertise_type = new FieldString("expert_maintenance_expertise_type",filed_options);
 	
 			
 		ApplicationDialog_Model.superclass.constructor.call(this,id,options);

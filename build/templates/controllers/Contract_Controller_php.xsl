@@ -282,15 +282,43 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		
 		$this->get_list($pm);
 	}
+
+	private function get_list_on_service_type($pm,$serviceType){
+		$cond_fields = $pm->getParamValue('cond_fields');
+		$cond_sgns = $pm->getParamValue('cond_sgns');
+		$cond_vals = $pm->getParamValue('cond_vals');
+		$cond_ic = $pm->getParamValue('cond_ic');
+		$field_sep = $pm->getParamValue('field_sep');
+		$field_sep = !is_null($field_sep)? $field_sep:',';
+		
+		$cond_fields = $cond_fields? $cond_fields.$field_sep : '';
+		$cond_sgns = $cond_sgns? $cond_sgns.$field_sep : '';
+		$cond_vals = $cond_vals? $cond_vals.$field_sep : '';
+		$cond_ic = $cond_ic? $cond_ic.$field_sep : '';
+		
+		$pm->setParamValue('cond_fields',$cond_fields.'service_type');
+		$pm->setParamValue('cond_sgns',$cond_sgns.'e');
+		$pm->setParamValue('cond_vals',$cond_vals.$serviceType);
+		$pm->setParamValue('cond_ic',$cond_ic.'0');
+		
+		$this->get_list($pm);
+	}
 	
 	public function get_pd_list($pm){
 		$this->get_list_on_type($pm,'pd');
 	}
 
-	/*
+	public function get_expert_maintenance_list($pm){
+		$this->get_list_on_service_type($pm,'expert_maintenance');
+	}
+	public function get_modified_documents_list($pm){
+		$this->get_list_on_service_type($pm,'modified_documents');
+	}
+
+	/**
 	 * Все по гос.экспертизе:
 	 *  ПД,РИИ,Достоверность,ПД+РИИ,ПД+РИИ+Достоверность,ПД+Достоверность
-	 **/	
+	 */	
 	public function get_expertise_list($pm){
 		$cond_fields = $pm->getParamValue('cond_fields');
 		$cond_sgns = $pm->getParamValue('cond_sgns');

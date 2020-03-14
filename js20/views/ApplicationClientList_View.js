@@ -15,7 +15,7 @@ function ApplicationClientList_View(id,options){
 	
 	ApplicationClientList_View.superclass.constructor.call(this,id,options);
 	
-	var model = options.models.ApplicationClientList_Model;
+	var model = (options.models&&options.models.ApplicationClientList_Model)? options.models.ApplicationClientList_Model:new ApplicationClientList_Model();
 	var contr = new Application_Controller();
 	
 	var constants = {"doc_per_page_count":null};

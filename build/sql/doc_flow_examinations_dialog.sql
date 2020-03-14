@@ -40,7 +40,9 @@ CREATE OR REPLACE VIEW doc_flow_examinations_dialog AS
 		
 		doc_flow_out_ref(doc_flow_out) AS doc_flow_out_ref,
 		
-		applications_ref(applications) AS applications_ref
+		applications_ref(applications) AS applications_ref,
+		
+		applications.service_type AS application_service_type
 		
 		
 	FROM doc_flow_examinations AS t

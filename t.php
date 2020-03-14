@@ -1,6 +1,7 @@
 <?php
 require_once('Config.php');
 
+
 	require_once('functions/PKIManager.php');
 	$pki_man = new PKIManager(array(
 			'pkiPath' => PKI_PATH,
@@ -10,12 +11,15 @@ require_once('Config.php');
 			'tmpPath' => OUTPUT_PATH,
 			'opensslPath' => PKI_OPENSSL_PATH
 	));	
-
+/*
 $newName = '/home/andrey/www/htdocs/expert72/client_files/Заявление№3047/Договорные документы/Акт выполненных работ/aac59e1e-d0bd-4bfc-9adb-7a293c11036d.sig';
 $der_file = '/home/andrey/www/htdocs/expert72/output/aac59e1e-d0bd-4bfc-9adb-7a293c11036d.der';
 $merged_sig = '/home/andrey/www/htdocs/expert72/client_files/Заявление№3047/Договорные документы/Акт выполненных работ/aac59e1e-d0bd-4bfc-9adb-7a293c11036d.mrg';
 $pki_man->mergeSigs($newName,$der_file,$merged_sig);
 return;
+*/
+
+
 //	require_once('common/BikInfo.php');
 //	BikInfo::genFile(OUTPUT_PATH);
 /*
@@ -56,8 +60,8 @@ return;
 	);
 	*/
 	$verif_res = $pki_man->verifySig(
-		'/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/111/132  Договор АО Аэропорт Рощино.pdf.sig',
-		'/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Ошибки/111/132  Договор АО Аэропорт Рощино.pdf',
+		'/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Соглашение о расторж. 117 РН-Уватнефтегаз с возвратом ДС.PDF.sig',
+		'/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Соглашение о расторж. 117 РН-Уватнефтегаз с возвратом ДС.PDF',
 		array(
 			'noChainVerification' => TRUE,
 			'onlineRevocCheck' => TRUE,

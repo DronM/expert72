@@ -58,13 +58,23 @@ CREATE OR REPLACE VIEW contracts_list AS
 		
 		t.permission_ar AS condition_ar,
 		
-		t.allow_new_file_add
+		t.allow_new_file_add,
+		
+		t.service_type,
+		
+		CASE WHEN t.service_type = 'modified_documents' THEN contracts_ref(exp_maint_ct)			
+		ELSE NULL
+		END AS expert_maintenance_contracts_ref,
+		CASE WHEN t.service_type = 'modified_documents' THEN exp_maint_ct.id
+		ELSE NULL
+		END AS expert_maintenance_contract_id
 		
 	FROM contracts AS t
 	LEFT JOIN applications ON applications.id=t.application_id
 	LEFT JOIN employees ON employees.id=t.employee_id
 	LEFT JOIN employees AS m_exp ON m_exp.id=t.main_expert_id
 	LEFT JOIN clients ON clients.id=t.client_id
+	LEFT JOIN contracts AS exp_maint_ct ON exp_maint_ct.application_id=applications.base_application_id
 	LEFT JOIN (
 		SELECT
 			t.application_id,

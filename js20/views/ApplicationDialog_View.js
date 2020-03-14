@@ -34,7 +34,9 @@ function ApplicationDialog_View(id,options){
 	//все прочие папки		
 	var doc_folders;
 	var role_id = window.getApp().getServVar("role_id");
-	if (options.model && (options.model.getRowIndex()>=0 || options.model.getNextRow()) ){			
+	var modified_documents;
+	
+	if (options.model && (options.model.getRowIndex()>=0 || options.model.getNextRow()) ){	
 		options.templateOptions.is_admin = (role_id=="admin");
 		options.readOnly = (options.model.getField("application_state").isSet() && options.model.getFieldValue("application_state")!="filling" && options.model.getFieldValue("application_state")!="correcting");
 		//var exp_tp = options.model.getField("expertise_type");
@@ -42,7 +44,7 @@ function ApplicationDialog_View(id,options){
 		if (sent_d && sent_d.getTime()<DateHelper.strtotime("2020-01-17").getTime()){// && options.readOnly
 			this.m_order010119 = false;
 		}
-
+		
 		/*
 		if (!options.model.getFieldValue("exp_cost_eval_validity")&&options.readOnly&&options.model.getFieldValue("create_dt")<(new Date(2019,0,1))){
 			this.m_order010119 = false;
@@ -61,13 +63,21 @@ function ApplicationDialog_View(id,options){
 		
 		doc_folders = options.model.getFieldValue("doc_folders");
 		
-		if (!options.model.getField("base_applications_ref").isNull()){
+		modified_documents = (options.model.getFieldValue("service_type")=="modified_documents");
+		options.templateOptions.modified_documents = modified_documents;
+		
+		if (!options.model.getField("base_applications_ref").isNull() && !modified_documents){
 			options.templateOptions.linkedApp = options.model.getFieldValue("base_applications_ref").getDescr();
 			options.templateOptions.linkedAppExists = true;
 		}
 		else if (!options.model.getField("derived_applications_ref").isNull()){
 			options.templateOptions.linkedApp = options.model.getFieldValue("derived_applications_ref").getDescr();
 			options.templateOptions.linkedAppExists = true;
+		}
+		
+		if(modified_documents){
+			options.templateOptions.expert_maintenance_base_applications_ref_descr = options.model.getFieldValue("base_applications_ref").getDescr();
+			options.templateOptions.base_applications_ref_descr = options.model.getFieldValue("base_applications_ref").getDescr();
 		}
 	}
 	options.templateOptions.contractNotExists = !options.templateOptions.contractExists;
@@ -98,7 +108,7 @@ function ApplicationDialog_View(id,options){
 		
 		var bs = window.getBsCol(4);
 		this.addElement(new OfficeSelect(id+":offices_ref",{
-			"attrs":{"percentCalc":"true"},
+			"attrs":{"percentCalc":"true","forModifiedDocuments":"true"},
 			"labelClassName": "control-label percentcalc "+bs,
 			"labelCaption":this.FIELD_CAP_office
 			,"events":{
@@ -109,7 +119,7 @@ function ApplicationDialog_View(id,options){
 			,"addNotSelected":false
 			//"value":new RefType({"keys":{"office_id":1}})
 		}));	
-
+		
 		this.addElement(new ApplicationPrimaryCont(id+":primary_application",{
 			"attrs":{"percentcalc":"false"},
 			"isModification":false,
@@ -120,7 +130,10 @@ function ApplicationDialog_View(id,options){
 			"mainView":this
 		}));
 		
-		this.addElement(new ApplicationServiceCont(id+":service_cont",{"mainView":this}));
+		this.addElement(new ApplicationServiceCont(id+":service_cont",{
+			"mainView":this,
+			"modified_documents":modified_documents
+		}));
 		
 		this.addElement(new FundSourceSelect(id+":fund_sources_ref",{
 			"attrs":{"percentCalc":"true"},
@@ -256,8 +269,9 @@ function ApplicationDialog_View(id,options){
 			}			
 		}));	
 
+		//С какого то момента стало обязательным? неизветно с когда...
 		this.addElement(new EditMoney(id+":limit_cost_eval",{
-			"attrs":{"percentCalc":"true"},
+			"attrs":{"percentCalc":( (options.model.getFieldValue("service_type")=="expert_maintenance")? "false":"true") },
 			"labelClassName": "control-label percentcalc "+bs,
 			"labelCaption":this.FIELD_CAP_limit_cost_eval,
 			"placeholder":"тыс.руб., только для достоверности",
@@ -280,10 +294,10 @@ function ApplicationDialog_View(id,options){
 		}));	
 		
 		var bs_print = window.getBsCol(6);
-		this.addElement(new EditFile(id+":app_print_expertise",{
-			"attrs":{"percentCalc":"true"},
+		this.addElement(new EditFile(id+":app_print",{
+			"attrs":{"percentCalc":"true","forModifiedDocuments":"true"},
 			"labelClassName": "control-label percentcalc "+bs_print,
-			"labelCaption":"Заявление на проведение государственной экспертизы (ПД,РИИ,Достоверность)",
+			"labelCaption":"Бланк заявления",
 			"template":window.getApp().getTemplate("EditFileApp"),
 			"addControls":function(){
 				this.addElement(new ButtonCtrl(this.getId()+":printAppWord",{
@@ -308,12 +322,12 @@ function ApplicationDialog_View(id,options){
 					}
 				}));
 			},
-			"printTitle":"Распечатать заявление на проведение гос. экспертизы",
+			"printTitle":"Распечатать бланк заявления",
 			"mainView":this,
 			"separateSignature":true,
 			"allowOnlySignedFiles":true,
 			"onDeleteFile":function(fileId,callBack){
-				self.deletePrint("delete_app_print_expertise",fileId,callBack);
+				self.deletePrint("delete_app_print",fileId,callBack);
 			},
 			"onFileDeleted":function(){
 				self.afterPrintDeleted();
@@ -325,180 +339,14 @@ function ApplicationDialog_View(id,options){
 				self.calcFillPercent();
 			},
 			"onDownload":function(){
-				self.downloadPrint("download_app_print_expertise");
+				self.downloadPrint("download_app_print");
 			},
 			"onSignClick":function(){
-				self.downloadPrintSig("download_app_print_expertise");
+				self.downloadPrintSig("download_app_print");
 			},
 			"onSignFile":function(fileId){
-				self.signPrint(self.getElement("app_print_expertise"),fileId);
+				self.signPrint(self.getElement("app_print"),fileId);
 			}
-		}));	
-
-		if(!this.m_order010119){
-			this.addElement(new EditFile(id+":app_print_cost_eval",{
-				"attrs":{"percentCalc":"true"},
-				"labelClassName": "control-label percentcalc "+bs_print,
-				"labelCaption":"Заявление на проведение проверки достоверности сметной стоимости",
-				"template":window.getApp().getTemplate("EditFileApp"),
-				"addControls":function(){
-					this.addElement(new ButtonCtrl(this.getId()+":printCostEvalWord",{
-						"imageFontName":"fa",
-						"imageClass":"fa-file-word-o",
-						"title":"Печать заявления в виде документа Word, с возможностью редактирования",
-						"onClick":function(){
-							self.checkSaveExecute(function(){
-								self.printAppOnTempl("ApplicationCostEvalValidity",0,"docx");
-							},true,false);
-						}
-					}));
-			
-					this.addElement(new ButtonCtrl(this.getId()+":printCostEvalPDF",{
-						"imageFontName":"fa",
-						"imageClass":"fa-file-pdf-o",
-						"title":"Печать заявления в виде документа PDF, без возможности редактирования",
-						"onClick":function(){
-							self.checkSaveExecute(function(){
-								self.printAppOnTempl("ApplicationCostEvalValidity",0,"pdf");
-							},true,false);
-						}
-					}));					
-				},
-				"printTitle":"Распечатать заявление на проверки достоверности сметной стоимости",
-				"mainView":this,
-				"separateSignature":true,
-				"allowOnlySignedFiles":true,
-				"onDeleteFile":function(fileId,callBack){
-					self.deletePrint("delete_app_print_cost_eval",fileId,callBack);
-				},
-				"onFileDeleted":function(){
-					self.calcFillPercent();
-				},
-				"onFileAdded":function(){
-					self.calcFillPercent();
-				},
-				"onFileSigAdded":function(){
-					self.calcFillPercent();
-				},
-				"onDownload":function(){
-					self.downloadPrint("download_app_print_cost_eval");
-				},
-				"onSignClick":function(){
-					self.downloadPrintSig("download_app_print_cost_eval");
-				},
-				"onSignFile":function(fileId){
-					self.signPrint(self.getElement("app_print_cost_eval"),fileId);
-				}
-			}));	
-
-			this.addElement(new EditFile(id+":app_print_modification",{
-				"attrs":{"percentCalc":"true"},
-				"labelClassName": "control-label percentcalc "+bs_print,
-				"labelCaption":"Заявление на модификацию",
-				"template":window.getApp().getTemplate("EditFileApp"),
-				"addControls":function(){
-					this.addElement(new ButtonCtrl(this.getId()+":printModWord",{
-						"imageFontName":"fa",
-						"imageClass":"fa-file-word-o",
-						"title":"Печать заявления в виде документа Word, с возможностью редактирования",
-						"onClick":function(){
-							self.checkSaveExecute(function(){
-								self.printAppOnTempl("ApplicationModification",0,"docx");
-							},true,false);
-						}
-					}));
-			
-					this.addElement(new ButtonCtrl(this.getId()+":printModPDF",{
-						"imageFontName":"fa",
-						"imageClass":"fa-file-pdf-o",
-						"title":"Печать заявления в виде документа PDF, без возможности редактирования",
-						"onClick":function(){
-							self.checkSaveExecute(function(){
-								self.printAppOnTempl("ApplicationModification",0,"pdf");
-							},true,false);
-						}
-					}));					
-				},
-				"printTitle":"Распечатать заявление на модификацию",
-				"mainView":this,
-				"separateSignature":true,
-				"allowOnlySignedFiles":true,
-				"onDeleteFile":function(fileId,callBack){
-					self.deletePrint("delete_app_print_modification",fileId,callBack);
-				},
-				"onFileDeleted":function(){
-					self.calcFillPercent();
-				},
-				"onFileAdded":function(){
-					self.calcFillPercent();
-				},
-				"onFileSigAdded":function(){
-					self.calcFillPercent();
-				},
-				"onDownload":function(){
-					self.downloadPrint("download_app_print_modification");
-				},
-				"onSignClick":function(){
-					self.downloadPrintSig("download_app_print_modification");
-				},
-				"onSignFile":function(fileId){
-					self.signPrint(self.getElement("app_print_modification"),fileId);
-				}
-			}));	
-		}
-		this.addElement(new EditFile(id+":app_print_audit",{
-			"attrs":{"percentCalc":"true"},
-			"labelClassName": "control-label percentcalc "+bs_print,
-			"labelCaption":"Заявление на аудит цен",
-			"template":window.getApp().getTemplate("EditFileApp"),
-			"addControls":function(){
-				this.addElement(new ButtonCtrl(this.getId()+":printAuditWord",{
-					"imageFontName":"fa",
-					"imageClass":"fa-file-word-o",
-					"title":"Печать заявления в виде документа Word, с возможностью редактирования",
-					"onClick":function(){
-						self.checkSaveExecute(function(){
-							self.printAppOnTempl("ApplicationAudit",0,"doc");
-						},true,false);
-					}
-				}));
-		
-				this.addElement(new ButtonCtrl(this.getId()+":printAuditPDF",{
-					"imageFontName":"fa",
-					"imageClass":"fa-file-pdf-o",
-					"title":"Печать заявления в виде документа PDF, без возможности редактирования",
-					"onClick":function(){
-						self.checkSaveExecute(function(){
-							self.printAppOnTempl("ApplicationAudit",0,"pdf");
-						},true,false);
-					}
-				}));				
-			},
-			"printTitle":"Распечатать заявление на проведение аудита цен",
-			"mainView":this,
-			"separateSignature":true,
-			"allowOnlySignedFiles":true,
-			"onDeleteFile":function(fileId,callBack){
-				self.deletePrint("delete_app_print_audit",fileId,callBack);
-			},
-			"onFileDeleted":function(){
-				self.calcFillPercent();
-			},
-			"onFileAdded":function(){
-				self.calcFillPercent();
-			},
-			"onFileSigAdded":function(){
-				self.calcFillPercent();
-			},
-			"onDownload":function(){
-				self.downloadPrint("download_app_print_audit");
-			},
-			"onSignClick":function(){
-				self.downloadPrintSig("download_app_print_audit");
-			},
-			"onSignFile":function(fileId){
-				self.signPrint(self.getElement("app_print_audit"),fileId);
-			}			
 		}));	
 		
 		this.addElement(new ApplicationClientEdit(id+":applicant",{
@@ -569,7 +417,6 @@ function ApplicationDialog_View(id,options){
 				self.checkRequiredFiles();
 				self.checkPrintFiles();
 				self.checkForUploadFileCount();				
-				//throw new Error("TotalFileCount="+self.getFileCount(true));
 				WindowQuestion.show({
 					"text":"Отправить заявление на проверку?",
 					"cancel":false,
@@ -587,8 +434,17 @@ function ApplicationDialog_View(id,options){
 							}
 							self.onSave(
 								function(){
+									//Отправка других заявлений по модифицированной документации
+									var call_b = function(){
 										self.close({"updated":true});
-									},
+									}
+									if (self.getElement("service_cont").getElement("service_type").getValue()=="expert_maintenance"){
+										self.sendAllModifiedDocuments(call_b);
+									}
+									else{
+										call_b();	
+									}
+								},
 								function(resp,errCode,errStr){
 									pm.setFieldValue("set_sent",false);
 									self.setError(window.getApp().formatError(errCode,errStr));
@@ -608,7 +464,6 @@ function ApplicationDialog_View(id,options){
 				self.checkSaveExecute(function(){
 					var contr = new Application_Controller();
 					contr.getPublicMethod("zip_all").setFieldValue("application_id",self.getElement("id").getValue());
-					//self.getElement("cmdZipAll").setEnabled(false);
 					contr.download("zip_all",null,null,function(n,descr){
 						self.getElement("cmdZipAll").setEnabled(true);
 						if (n){
@@ -640,15 +495,14 @@ function ApplicationDialog_View(id,options){
 	//read
 	var r_binds = [
 		new DataBinding({"control":this.getElement("id")})
-		,new DataBinding({"control":this.getElement("filled_percent")})
 		,new DataBinding({"control":this.getElement("create_dt")})
 		,new DataBinding({"control":this.getElement("offices_ref")})
-		,new DataBinding({"control":this.getElement("service_cont").getElement("expertise_type"),"fieldId":"expertise_type"})
-		,new DataBinding({"control":this.getElement("service_cont").getElement("audit"),"fieldId":"audit"})				
+		,new DataBinding({"control":this.getElement("service_cont").getElement("service_type"),"fieldId":"service_type"})
+		,new DataBinding({"control":this.getElement("filled_percent")})
 		,new DataBinding({"control":this.getElement("fund_sources_ref")})
 		,new DataBinding({"control":this.getElement("fund_percent")})
 		,new DataBinding({"control":this.getElement("build_types_ref")})
-		,new DataBinding({"control":this.getElement("construction_types_ref")})				
+		,new DataBinding({"control":this.getElement("construction_types_ref")})	
 		,new DataBinding({"control":this.getElement("applicant")})
 		,new DataBinding({"control":this.getElement("customer")})
 		,new DataBinding({"control":this.getElement("developer")})
@@ -660,26 +514,27 @@ function ApplicationDialog_View(id,options){
 		,new DataBinding({"control":this.getElement("total_cost_eval")})
 		,new DataBinding({"control":this.getElement("limit_cost_eval")})
 		,new DataBinding({"control":this.getElement("pd_usage_info")})
-		,new DataBinding({"control":this.getElement("primary_application")})
-		,new DataBinding({"control":this.getElement("app_print_expertise")})		
-		,new DataBinding({"control":this.getElement("app_print_audit")})
 		,new DataBinding({"control":this.getElement("applicant").getElement("auth_letter")})
 		,new DataBinding({"control":this.getElement("applicant").getElement("auth_letter_file")})
 		,new DataBinding({"control":this.getElement("customer").getElement("customer_auth_letter")})
-		,new DataBinding({"control":this.getElement("customer").getElement("customer_auth_letter_file")})
-		//,new DataBinding({"control":this.getElement("customer").getElement("customer_is_developer")})
+		,new DataBinding({"control":this.getElement("customer").getElement("customer_auth_letter_file")})		
+		,new DataBinding({"control":this.getElement("primary_application")})
+		,new DataBinding({"control":this.getElement("app_print")})
 	];
+	
+	if(!modified_documents){
+		r_binds.push(new DataBinding({"control":this.getElement("service_cont").getElement("expertise_type"),"fieldId":"expertise_type"}));		
+	}
+	
 	if(!this.m_order010119){
-		r_binds.push(new DataBinding({"control":this.getElement("service_cont").getElement("modification"),"fieldId":"modification"}));
 		r_binds.push(new DataBinding({"control":this.getElement("service_cont").getElement("primary_application"),"fieldId":"modif_primary_application"}));
-		r_binds.push(new DataBinding({"control":this.getElement("service_cont").getElement("cost_eval_validity"),"fieldId":"cost_eval_validity"}));
 		r_binds.push(new DataBinding({"control":this.getElement("service_cont").getElement("cost_eval_validity_simult"),"fieldId":"cost_eval_validity_simult"}));
-		r_binds.push(new DataBinding({"control":this.getElement("app_print_cost_eval")}));
-		r_binds.push(new DataBinding({"control":this.getElement("app_print_modification")}));
 	}
 	else{
-		//r_binds.push(new DataBinding({"control":this.getElement("service_cont").getElement("exp_cost_eval_validity"),"fieldId":"exp_cost_eval_validity"}));
+		r_binds.push(new DataBinding({"control":this.getElement("service_cont").getElement("expert_maintenance_base_applications_ref")}));
+		r_binds.push(new DataBinding({"control":this.getElement("service_cont").getElement("expert_maintenance_contract_data")}));
 	}
+	
 	if (options.templateOptions.is_admin){
 		r_binds.push(new DataBinding({"control":this.getElement("users_ref")}));
 	}
@@ -687,12 +542,9 @@ function ApplicationDialog_View(id,options){
 		
 	//write
 	w_binds = [
-		new CommandBinding({"control":this.getElement("offices_ref")})
-		,new CommandBinding({"control":this.getElement("filled_percent")})
-		,new CommandBinding({"control":this.getElement("service_cont").getElement("expertise_type"),"fieldId":"expertise_type"})
-		
-		,new CommandBinding({"control":this.getElement("service_cont").getElement("audit"),"fieldId":"audit"})
-		
+		new CommandBinding({"control":this.getElement("filled_percent")})
+		,new CommandBinding({"control":this.getElement("offices_ref")})
+		,new CommandBinding({"control":this.getElement("service_cont").getElement("service_type"),"fieldId":"service_type"})
 		,new CommandBinding({"control":this.getElement("fund_sources_ref")})
 		,new CommandBinding({"control":this.getElement("fund_percent")})
 		,new CommandBinding({"control":this.getElement("build_types_ref")})
@@ -710,49 +562,54 @@ function ApplicationDialog_View(id,options){
 		,new CommandBinding({"control":this.getElement("pd_usage_info")})
 		,new CommandBinding({"control":this.getElement("primary_application").getElement("primary_ref"),"fieldId":"primary_application_id"})
 		,new CommandBinding({"control":this.getElement("primary_application").getElement("primary_reg_number"),"fieldId":"primary_application_reg_number"})
-		,new CommandBinding({"control":this.getElement("app_print_expertise"),"fieldId":"app_print_expertise_files"})				
-		,new CommandBinding({"control":this.getElement("app_print_audit"),"fieldId":"app_print_audit_files"})	
+		,new CommandBinding({"control":this.getElement("app_print"),"fieldId":"app_print_files"})
 		,new CommandBinding({"control":this.getElement("applicant").getElement("auth_letter")})
 		,new CommandBinding({"control":this.getElement("applicant").getElement("auth_letter_file"),"fieldId":"auth_letter_files"})
 		,new CommandBinding({"control":this.getElement("customer").getElement("customer_auth_letter")})
 		,new CommandBinding({"control":this.getElement("customer").getElement("customer_auth_letter_file"),"fieldId":"customer_auth_letter_files"})
-		//,new CommandBinding({"control":this.getElement("customer").getElement("customer_is_developer")})
 		
 	];
-	if(!this.m_order010119){
+	
+	if(!modified_documents){
+		w_binds.push(new CommandBinding({"control":this.getElement("service_cont").getElement("expertise_type"),"fieldId":"expertise_type"}));
+		w_binds.push(new CommandBinding({"control":this.getElement("service_cont").getElement("audit"),"fieldId":"audit"}));
+	}
+	else{
+		//При modified_documents base_applications_ref будет ТОЛЬКО при инсерте из модели формы
+		w_binds.push(new CommandBinding({
+			"func":function(pm){
+				if(pm.getId()=="insert" && self.getElement("service_cont").getElement("service_type").getValue()=="modified_documents"){
+					pm.setFieldValue("base_application_id",self.getModel().getFieldValue("base_applications_ref").getKey());
+				}
+			}
+		}));
+	}
+	
+	if(!this.m_order010119 && !modified_documents){
 		w_binds.push(new CommandBinding({"control":this.getElement("service_cont").getElement("cost_eval_validity"),"fieldId":"cost_eval_validity"}));
 		w_binds.push(new CommandBinding({"control":this.getElement("service_cont").getElement("cost_eval_validity_simult"),"fieldId":"cost_eval_validity_simult"}));
-		w_binds.push(new CommandBinding({"control":this.getElement("app_print_cost_eval"),"fieldId":"app_print_cost_eval_files"}));
-		w_binds.push(new CommandBinding({"control":this.getElement("app_print_modification"),"fieldId":"app_print_modification_files"}));
 		w_binds.push(new CommandBinding({"control":this.getElement("service_cont").getElement("modification"),"fieldId":"modification"}));
 		w_binds.push(new CommandBinding({"control":this.getElement("service_cont").getElement("primary_application").getElement("primary_ref"),"fieldId":"modif_primary_application_id"}));
 		w_binds.push(new CommandBinding({"control":this.getElement("service_cont").getElement("primary_application").getElement("primary_reg_number"),"fieldId":"modif_primary_application_reg_number"}));
 	}
-	else{
+	else if(!modified_documents){
 		//w_binds.push(new CommandBinding({"control":this.getElement("service_cont").getElement("exp_cost_eval_validity"),"fieldId":"exp_cost_eval_validity"}));
+		w_binds.push(new CommandBinding({"control":this.getElement("service_cont").getElement("expert_maintenance_base_applications_ref"),"fieldId":"expert_maintenance_base_application_id"}));
+		w_binds.push(new CommandBinding({"control":this.getElement("service_cont").getElement("expert_maintenance_contract_data")}));
 	}
 	this.setWriteBindings(w_binds);
-	
+
+	//*************************
 	var f_getFillPercent = function(){
 		return (this.getAttr("percentcalc")=="true"&&this.isNull())? 0:100;
 	};
-	this.getElement("offices_ref").getFillPercent = f_getFillPercent;
-	//this.getElement("service_cont").getFillPercent = f_getFillPercent;
-	this.getElement("fund_sources_ref").getFillPercent = f_getFillPercent;
-	this.getElement("build_types_ref").getFillPercent = f_getFillPercent;
-	this.getElement("constr_name").getFillPercent = f_getFillPercent;
-	this.getElement("constr_address").getFillPercent = f_getFillPercent;
-	this.getElement("construction_types_ref").getFillPercent = f_getFillPercent;
-	this.getElement("total_cost_eval").getFillPercent = f_getFillPercent;
-	this.getElement("limit_cost_eval").getFillPercent = f_getFillPercent;
-	this.getElement("primary_application").getFillPercent = f_getFillPercent;
-	this.getElement("pd_usage_info").getFillPercent = f_getFillPercent;
-	
 	var f_setAppPrintActive = function(v){
 		this.setVisible(v);
 		this.setAttr("percentcalc",v);
-		//this.getFillPercent = v? self.m_getAppPrintFillPercent : null; 
 	}
+
+	
+	this.getElement("offices_ref").getFillPercent = f_getFillPercent;
 	
 	//ИСПОЛЬЗУЕТСЯ В f_setAppPrintActive
 	this.m_getAppPrintFillPercent = function(){
@@ -766,24 +623,28 @@ function ApplicationDialog_View(id,options){
 		}
 		return perc;
 	}
+
+	this.getElement("app_print").setActive = f_setAppPrintActive;
+	this.getElement("app_print").getFillPercent = this.m_getAppPrintFillPercent;
 	
-	this.getElement("app_print_expertise").setActive = f_setAppPrintActive;
-	this.getElement("app_print_expertise").getFillPercent = this.m_getAppPrintFillPercent;
-	if(!this.m_order010119){
-		this.getElement("app_print_cost_eval").setActive = f_setAppPrintActive;
-		this.getElement("app_print_cost_eval").getFillPercent = this.m_getAppPrintFillPercent;
-		this.getElement("app_print_modification").setActive = f_setAppPrintActive;
-		this.getElement("app_print_modification").getFillPercent = this.m_getAppPrintFillPercent;
-	}
-	this.getElement("app_print_audit").setActive = f_setAppPrintActive;
-	this.getElement("app_print_audit").getFillPercent = this.m_getAppPrintFillPercent;
-	this.getElement("applicant").getElement("auth_letter_file").getFillPercent = this.m_getAppPrintFillPercent;
-	this.getElement("customer").getElement("customer_auth_letter_file").getFillPercent = this.m_getAppPrintFillPercent;
+	if(!modified_documents){			
+		//this.getElement("service_cont").getFillPercent = f_getFillPercent;
+		this.getElement("fund_sources_ref").getFillPercent = f_getFillPercent;
+		this.getElement("build_types_ref").getFillPercent = f_getFillPercent;
+		this.getElement("constr_name").getFillPercent = f_getFillPercent;
+		this.getElement("constr_address").getFillPercent = f_getFillPercent;
+		this.getElement("construction_types_ref").getFillPercent = f_getFillPercent;
+		this.getElement("total_cost_eval").getFillPercent = f_getFillPercent;
+		this.getElement("limit_cost_eval").getFillPercent = f_getFillPercent;
+		this.getElement("primary_application").getFillPercent = f_getFillPercent;
+		this.getElement("pd_usage_info").getFillPercent = f_getFillPercent;
 	
+		this.getElement("applicant").getElement("auth_letter_file").getFillPercent = this.m_getAppPrintFillPercent;
+		this.getElement("customer").getElement("customer_auth_letter_file").getFillPercent = this.m_getAppPrintFillPercent;
+	}	
 	//********** cades plugin ******************************
 	this.m_cadesView.afterViewConstructed();
 	//********** cades plugin ******************************
-	
 }
 extend(ApplicationDialog_View, DocumentDialog_View);//ViewObjectAjx
 
@@ -817,15 +678,20 @@ ApplicationDialog_View.prototype.getPercentClass = function(percent){
 ApplicationDialog_View.prototype.calcFillPercent = function(){
 	var tot_cnt = 0;
 	var tot_percent = 0;
+	
+	var tab_values;
 	var tab_values = {
 		"common_inf-tab":{"percent":0,"cnt":0,"alias":"Общая информация"},
-		"applicant-tab":{"percent":0,"cnt":0,"alias":"Заявитель"},
-		"contractors-tab":{"percent":0,"cnt":0,"alias":"Исполнители работ"},
-		"construction-tab":{"percent":0,"cnt":0,"alias":"Объект строительства"},
-		"customer-tab":{"percent":0,"cnt":0,"alias":"Технический заказчик"},
-		"developer-tab":{"percent":0,"cnt":0,"alias":"Застройщик"},
-		"application_prints-tab":{"percent":0,"cnt":0,"alias":"Заявления"}
+	};
+	if(this.getElement("service_cont").getElement("service_type").getValue()!="modified_documents"){
+		tab_values["applicant-tab"] = {"percent":0,"cnt":0,"alias":"Заявитель"};
+		tab_values["contractors-tab"] = {"percent":0,"cnt":0,"alias":"Исполнители работ"};
+		tab_values["construction-tab"] = {"percent":0,"cnt":0,"alias":"Объект строительства"};
+		tab_values["customer-tab"] = {"percent":0,"cnt":0,"alias":"Технический заказчик"};
+		tab_values["developer-tab"] = {"percent":0,"cnt":0,"alias":"Застройщик"};	
 	}
+	tab_values["application_prints-tab"] = {"percent":0,"cnt":0,"alias":"Заявления"};
+	
 	for (var id in this.m_elements){
 		if (this.m_elements[id] && this.m_elements[id].getFillPercent && this.m_elements[id].getAttr("percentcalc")=="true"){
 			var ctrl_perc = this.m_elements[id].getFillPercent();
@@ -867,7 +733,53 @@ ApplicationDialog_View.prototype.calcFillPercent = function(){
 	return tab_values;
 }
 
+ApplicationDialog_View.prototype.updateExpertMaintenanceInf = function(v){
+	var m = this.getModel();
+	var s = m.getFieldValue("expert_maintenance_service_type");
+	var t = "";
+	if(s=="audit"){
+		t = "Аудит";
+	}
+	else if(s=="modification"){
+		t = "Модификация";
+	}
+	else if(s=="expertise"){
+		t = "Государственная экспертиза: ";
+		var e_t = m.getFieldValue("expert_maintenance_expertise_type");			
+		if(e_t=="pd"){
+			t+="проектная документация";
+		}
+		else if(e_t=="pd_eng_survey"){
+			t+="проектная документация, результаты инженерных изысканий";
+		}
+		else if(e_t=="cost_eval_validity"){
+			t+="достоверность";
+		}
+		else if(e_t=="cost_eval_validity_pd"){
+			t+="проектная документация, достоверность";
+		}
+		else if(e_t=="cost_eval_validity_eng_survey"){
+			t+="результаты инженерных изысканий, достоверность";
+		}
+		else if(e_t=="cost_eval_validity_pd_eng_survey"){
+			t+="проектная документация, результаты инженерных изысканий, достоверность";
+		}
+		
+	}		
+	this.getElement("service_cont").getElement("expert_maintenance_base_applications_inf").setValue(t);
+}
+ApplicationDialog_View.prototype.setExpertMaintenanceTabVisible = function(v){
+	if(v){
+		DOMHelper.delClass(document.getElementById(this.getId()+":tab-modified_documents"),"hidden");
+		this.updateExpertMaintenanceInf();
+	}
+	else{
+		DOMHelper.addClass(document.getElementById(this.getId()+":tab-modified_documents"),"hidden");
+	}
+}
+
 ApplicationDialog_View.prototype.onGetData = function(resp,cmd){
+
 	ApplicationDialog_View.superclass.onGetData.call(this,resp,cmd);
 	
 	//this.m_started = true;
@@ -877,14 +789,10 @@ ApplicationDialog_View.prototype.onGetData = function(resp,cmd){
 	if (cmd=="copy"){
 		m.setFieldValue("application_state","filling");
 		this.getElement("create_dt").setValue(DateHelper.time());
-		this.getElement("app_print_expertise").reset();
-		if(!this.m_order010119){
-			this.getElement("app_print_cost_eval").reset();
-			this.getElement("app_print_modification").reset();
-		}
-		this.getElement("app_print_audit").reset();
+		this.getElement("app_print").reset();
 	}
-	
+
+	/*
 	var do_expertise = (m.getFieldValue("expertise_type")=="pd" || m.getFieldValue("expertise_type")=="eng_survey" || m.getFieldValue("expertise_type")=="pd_eng_survey"
 		 || m.getFieldValue("expertise_type")=="cost_eval_validity"
 		 || m.getFieldValue("expertise_type")=="cost_eval_validity_pd"
@@ -892,8 +800,8 @@ ApplicationDialog_View.prototype.onGetData = function(resp,cmd){
 		 || m.getFieldValue("expertise_type")=="cost_eval_validity_eng_survey"
 		 );
 	this.getElement("service_cont").getElement("expertise").setValue(do_expertise);
+	*/
 	
-	//this.calcFillPercent();	
 	var sent_dt = m.getFieldValue("sent_dt");
 	if (sent_dt && sent_dt.getTime()<DateHelper.strtotime("2020-02-11").getTime()){	
 		this.getElement("customer").m_custIsDevText = false;
@@ -908,6 +816,8 @@ ApplicationDialog_View.prototype.onGetData = function(resp,cmd){
 	if (cmd!="insert"){
 		//add doc flow elements
 		var app_ref = new RefType({"keys":{"id":m.getFieldValue("id")},"descr":m.getFieldValue("select_descr")});
+		
+		//Исходящие
 		var tab_out = new DocFlowOutClientList_View(this.getId()+":doc_flow_out",{
 			"application":app_ref,
 			"readOnly":(st=="archive"),
@@ -938,20 +848,111 @@ ApplicationDialog_View.prototype.onGetData = function(resp,cmd){
 		tab_out.toDOM();
 		this.addElement(tab_out);
 		
+		//Входящие
 		var tab_in = new DocFlowInClientList_View(this.getId()+":doc_flow_in",{
 			"application":app_ref,
 			"models":{"DocFlowInClientList_Model":this.m_DocFlowInClientList_Model}
 		});
 		tab_in.toDOM();
 		this.addElement(tab_in);
+		
+		//Измененная документация
+		var tab_mod = new ApplicationModifiedDocumentsClientList_View(this.getId()+":modified_documents",{
+			"application":app_ref,
+			"readOnly":(st=="archive"),
+			"fromApp":true,
+			"models":{"ApplicationClientList_Model":this.m_ApplicationClientList_Model}			
+		});
+		
+		var mod_grid = tab_mod.getElement("grid");
+		this.m_modGridEdit = mod_grid.edit;
+		mod_grid.edit = function(cmd,editOptions){
+			if(cmd=="insert"){
+				self.checkBeforePrint();
+				var grid_cont = this;
+				self.checkSaveExecute(function(){
+					//update key
+					grid_cont.setFilter({
+						"field":"base_application_id",
+						"sign":"e",
+						"val":self.getModel().getFieldValue("id")
+					});
+					
+					self.m_modGridEdit.call(grid_cont,cmd,editOptions);
+				},true,true);				
+			}
+			else{
+				self.m_modGridEdit.call(this,cmd,editOptions);
+			}
+		}
+		
+		mod_grid.setInsertViewOptions(function(){
+			var m = self.getModel();
+			var app_ref = new RefType({"keys":{"id":m.getFieldValue("id")},"descr":m.getFieldValue("select_descr"),"dataType":"application"});
+		
+			var opts = {
+				"models":{
+					"ApplicationDialog_Model": new ApplicationDialog_Model()
+				}
+			}
+			//copy all fields, modify some
+			/*var s_fields = m.getFields();			
+			for(var f_id in s_fields){				
+				opts.models.ApplicationDialog_Model.setFieldValue(f_id,s_fields[f_id].getValue());
+			}
+			*/
+			opts.models.ApplicationDialog_Model.setFieldValue("construction_types_ref",m.getFieldValue("construction_types_ref"));
+			opts.models.ApplicationDialog_Model.setFieldValue("fund_sources_ref",m.getFieldValue("fund_sources_ref"));
+			opts.models.ApplicationDialog_Model.setFieldValue("fund_percent",m.getFieldValue("fund_percent"));
+			opts.models.ApplicationDialog_Model.setFieldValue("cost_eval_validity",m.getFieldValue("cost_eval_validity"));
+			opts.models.ApplicationDialog_Model.setFieldValue("applicant",m.getFieldValue("applicant"));
+			opts.models.ApplicationDialog_Model.setFieldValue("customer",m.getFieldValue("customer"));
+			opts.models.ApplicationDialog_Model.setFieldValue("contractors",m.getFieldValue("contractors"));
+			opts.models.ApplicationDialog_Model.setFieldValue("developer",m.getFieldValue("developer"));
+			opts.models.ApplicationDialog_Model.setFieldValue("constr_name",m.getFieldValue("constr_name"));
+			opts.models.ApplicationDialog_Model.setFieldValue("constr_address",m.getFieldValue("constr_address"));
+			opts.models.ApplicationDialog_Model.setFieldValue("constr_technical_features",m.getFieldValue("constr_technical_features"));
+			opts.models.ApplicationDialog_Model.setFieldValue("constr_technical_features_in_compound_obj",m.getFieldValue("constr_technical_features_in_compound_obj"));
+			opts.models.ApplicationDialog_Model.setFieldValue("total_cost_eval",m.getFieldValue("total_cost_eval"));
+			opts.models.ApplicationDialog_Model.setFieldValue("limit_cost_eval",m.getFieldValue("limit_cost_eval"));
+			opts.models.ApplicationDialog_Model.setFieldValue("build_types_ref",m.getFieldValue("build_types_ref"));
+			//opts.models.ApplicationDialog_Model.setFieldValue("select_descr",m.getFieldValue("select_descr"));
+			
+			opts.models.ApplicationDialog_Model.setFieldValue("create_dt",DateHelper.time());			
+			opts.models.ApplicationDialog_Model.setFieldValue("base_applications_ref",app_ref);			
+			opts.models.ApplicationDialog_Model.setFieldValue("service_type","modified_documents");
+			opts.models.ApplicationDialog_Model.setFieldValue("application_state","filling");
+			
+			opts.models.ApplicationDialog_Model.setFieldValue("modified_documents_service_type",m.getFieldValue("expert_maintenance_service_type"));
+			opts.models.ApplicationDialog_Model.setFieldValue("modified_documents_expertise_type",m.getFieldValue("expert_maintenance_expertise_type"));
+			
+			opts.models.ApplicationDialog_Model.recInsert();
+		
+			return opts;
+		});
+		
+		tab_mod.toDOM();
+		this.addElement(tab_mod);
+		mod_grid.setFilter({
+			"field":"base_application_id",
+			"sign":"e",
+			"val":m.getFieldValue("id")
+		});
+		mod_grid.onRefresh();
 	}
 	
 	if (!cmd || cmd=="edit"){
 		DOMHelper.delClass(document.getElementById(this.getId()+":tab-doc_flow_in"),"hidden");
 		DOMHelper.delClass(document.getElementById(this.getId()+":tab-doc_flow_out"),"hidden");
+		
+		if(this.getModel().getField("service_type").getValue()=="expert_maintenance"){
+			this.setExpertMaintenanceTabVisible(true);			
+		}
+		
 		if (this.getModel().getField("doc_folders").isSet()){
 			DOMHelper.delClass(document.getElementById(this.getId()+":tab-doc_folders"),"hidden");
 		}
+		
 	}
 	
 	if ((st=="filling"||st=="correcting" ) && cmd!="copy"){
@@ -974,6 +975,7 @@ ApplicationDialog_View.prototype.onGetData = function(resp,cmd){
 	}
 	
 	//base derived app
+	/*
 	if (!m.getField("derived_applications_ref").isNull()||!m.getField("base_applications_ref").isNull()){
 		var self = this;
 		EventHelper.add(document.getElementById(this.getId()+":linkedApp"), "click", function(){
@@ -992,6 +994,26 @@ ApplicationDialog_View.prototype.onGetData = function(resp,cmd){
 			
 		});
 	}
+	*/
+	if (!m.getField("derived_applications_ref").isNull()){
+		EventHelper.add(document.getElementById(this.getId()+":linkedApp"), "click", function(){
+			self.openAppRef("derived_applications_ref");
+		});	
+	}
+	else if (!m.getField("base_applications_ref").isNull() && !modified_documents){
+		EventHelper.add(document.getElementById(this.getId()+":linkedApp"), "click", function(){
+			self.openAppRef("base_applications_ref");
+		});	
+	}	
+	else if(!m.getField("base_applications_ref").isNull() && modified_documents){
+		EventHelper.add(document.getElementById(this.getId()+":base_applications_ref"), "click", function(){
+			self.openAppRef("base_applications_ref");
+		});	
+		EventHelper.add(document.getElementById(this.getId()+":expert_maintenance_base_applications_ref"), "click", function(){
+			self.openAppRef("expert_maintenance_base_applications_ref");
+		});	
+	
+	}
 	
 	DOMHelper.delClass(document.getElementById(this.getId()+":"+mes_id),"hidden");
 	
@@ -1009,7 +1031,8 @@ ApplicationDialog_View.prototype.setCmdEnabled = function(){
 	var tot = this.getTotalFileCount();
 	var unloaded_tot = (tot==0)? 0:this.getFileCount(false);
 	var st = this.getModel().getFieldValue("application_state");
-	this.getElement("cmdSend").setEnabled( (this.getElement("filled_percent").getValue()==100 && !unloaded_tot && tot>0 && (st=="filling"||st=="correcting") ) );
+	var srv_exp_m = (this.getElement("service_cont").getElement("service_type").getValue()=="expert_maintenance");
+	this.getElement("cmdSend").setEnabled( (this.getElement("filled_percent").getValue()==100 && !unloaded_tot && (srv_exp_m? true:(tot>0)) && (st=="filling"||st=="correcting") ) );
 	this.getElement("cmdZipAll").setEnabled( (tot>0 && !unloaded_tot) );				
 	
 }
@@ -1043,47 +1066,7 @@ ApplicationDialog_View.prototype.removeDocumentTypeWithWarn = function(docTypesF
 					pm.run({
 						"ok":function(){
 							//prints
-							for (var i=0;i<docTypesForRemove.length;i++){
-								var print_id;
-								if(
-								docTypesForRemove[i]=="pd"
-								||docTypesForRemove[i]=="eng_survey"
-								||(self.m_order010119&&docTypesForRemove[i]=="cost_eval_validity")
-								){
-									print_id = "app_print_expertise";
-								}
-								else if(!self.m_order010119&&docTypesForRemove[i]=="cost_eval_validity"){
-									print_id = "app_print_cost_eval";
-								}
-								else if(docTypesForRemove[i]=="modification"){
-									print_id = "app_print_modification";
-								}
-								else if(docTypesForRemove[i]=="audit"){
-									print_id = "app_print_audit";
-								}
-								
-								/*
-								switch(docTypesForRemove[i]) {
-									case "pd":
-									case "eng_survey":
-										print_id = "app_print_expertise";
-										break;
-									case "cost_eval_validity":
-										print_id = "app_print_cost_eval";
-										break;
-									case "modification":
-										print_id = "app_print_modification";
-										break;
-									case "audit":
-										print_id = "app_print_audit";
-										break;
-									default:
-										print_id = "";
-										break;
-								}
-								*/
-								if(print_id&&self.getElement(print_id))self.getElement(print_id).reset();
-							}
+							self.getElement("app_print").reset();
 							onYes();
 						},
 						"fail":function(resp,eN,eS){
@@ -1109,9 +1092,11 @@ ApplicationDialog_View.prototype.removeDocumentTypeWithWarn = function(docTypesF
 ApplicationDialog_View.prototype.toggleDocTypeVis = function(){
 	ApplicationDialog_View.superclass.toggleDocTypeVis.call(this);
 	
+	var expertise_type = this.getElement("service_cont").getElement("expertise_type")? this.getElement("service_cont").getElement("expertise_type").getValue():null;
+
 	this.setCmdEnabled();
 	this.m_prevConstructionTypeId = (!this.getElement("construction_types_ref").isNull())? this.getElement("construction_types_ref").getValue().getKey():null;
-	this.m_prevExpertiseType = this.getElement("service_cont").getElement("expertise_type").getValue();
+	this.m_prevExpertiseType = expertise_type;
 	this.calcFillPercent();						
 }
 
@@ -1187,15 +1172,17 @@ ApplicationDialog_View.prototype.checkBeforePrint = function(){
 			throw new Error("Закладка "+tab_values[id].alias+" не заполнена на 100%!");
 		}		
 	}
-	var no_files = true;
-	for (var tab_name in this.m_documentTabs){
-		if (this.m_documentTabs[tab_name].control && this.m_documentTabs[tab_name].control.getTotalFileCount()){
-			no_files = false;
-			break;
+	if(this.getElement("service_cont").getElement("service_type").getValue()!="expert_maintenance"){
+		var no_files = true;
+		for (var tab_name in this.m_documentTabs){
+			if (this.m_documentTabs[tab_name].control && this.m_documentTabs[tab_name].control.getTotalFileCount()){
+				no_files = false;
+				break;
+			}
 		}
-	}
-	if (no_files){
-		throw new Error('Нет ни одного вложенного файла с документацией!');
+		if (no_files){
+			throw new Error('Нет ни одного вложенного файла с документацией!');
+		}
 	}
 }
 
@@ -1245,15 +1232,16 @@ ApplicationDialog_View.prototype.disableAll = function(){
 	this.setEnabled(false);
 	document.getElementById(this.getId()+":cmdOk").setAttribute("disabled","disabled");
 	
-	this.getElement("doc_flow_out").setEnabled(true);
-	this.getElement("doc_flow_in").setEnabled(true);
+	if(this.getElement("doc_flow_out"))this.getElement("doc_flow_out").setEnabled(true);
+	if(this.getElement("doc_flow_in"))this.getElement("doc_flow_in").setEnabled(true);
+	if(this.getElement("modified_documents"))this.getElement("modified_documents").setEnabled(true);
 
-	this.getElement("applicant").getElement("auth_letter_file").setEnabled(false);
-	this.getElement("customer").getElement("customer_auth_letter_file").setEnabled(false);
-	this.getElement("doc_folders").setEnabled(true);
+	if(this.getElement("applicant"))this.getElement("applicant").getElement("auth_letter_file").setEnabled(false);
+	if(this.getElement("customer"))this.getElement("customer").getElement("customer_auth_letter_file").setEnabled(false);
+	if(this.getElement("doc_folders"))this.getElement("doc_folders").setEnabled(true);
 	
 	var serv_cont = this.getElement("service_cont");
-	if (serv_cont.getElement("expertise").getValue()){
+	if (serv_cont.getElement("expertise")&&serv_cont.getElement("expertise").getValue()){
 		DOMHelper.swapClasses(
 			document.getElementById("ApplicationDialog:service_cont:expertise-panel"),
 			"service-type-en","service-type-dis"
@@ -1273,7 +1261,7 @@ ApplicationDialog_View.prototype.disableAll = function(){
 			);	
 		}
 	}
-	if (serv_cont.getElement("audit").getValue()){
+	if (serv_cont.getElement("audit")&&serv_cont.getElement("audit").getValue()){
 		DOMHelper.swapClasses(
 			document.getElementById("ApplicationDialog:service_cont:audit-panel"),
 			"service-type-en","service-type-dis"
@@ -1335,13 +1323,9 @@ ApplicationDialog_View.prototype.checkRequiredFiles = function(){
 }
 
 ApplicationDialog_View.prototype.checkPrintFiles = function(){
-	var m = "Нет файла заявления или подписи по ";
-	if (this.getElement("app_print_expertise").getVisible() && !this.getElement("app_print_expertise").getFileControls().length)throw new Error(m+" гос. экспертизе!");
-	if(!this.m_order010119){
-		if (this.getElement("app_print_cost_eval").getVisible() && !this.getElement("app_print_cost_eval").getFileControls().length)throw new Error(m+" достоверности!");
-		if (this.getElement("app_print_modification").getVisible() && !this.getElement("app_print_modification").getFileControls().length)throw new Error(m+" модификации!");
+	if (this.getElement("app_print").getVisible() && !this.getElement("app_print").getFileControls().length){
+		throw new Error("Нет файла заявления или файла подписи");
 	}
-	if (this.getElement("app_print_audit").getVisible() && !this.getElement("app_print_audit").getFileControls().length)throw new Error(m+" аудиту!");
 }
 
 ApplicationDialog_View.prototype.deletePrint = function(printMeth,fileId,callBack){
@@ -1489,17 +1473,88 @@ ApplicationDialog_View.prototype.getUploaderOptions = function(){
 	return {"allowNewFileAdd":true};
 }
 
-/*
-ApplicationDialog_View.prototype.getNewOrder = function(){
-	var res = true;
-	var m = this.getModel();
-	if(m){
-		var dt = m.getFieldValue("create_dt");
-		if(dt){
-			if (dt.getTime()<DateHelper.strtotime("2020-01-17").getTime() && this.m_readOnly){
-				res = false;
-			}
+ApplicationDialog_View.prototype.setModifiedDocumentsMode = function(){
+	var sheets = DOMHelper.getElementsByAttr("notForModifiedDocuments", document.getElementById(this.getId()+":sheet_cont"), "class");
+	for(var i=0;i<sheets.length;i++){
+		DOMHelper.hide(sheets[i]);
+	}
+	//Общая вкладка
+	this.getElement("primary_application").setVisible(false);
+	this.getElement("fund_percent").setVisible(false);
+	this.getElement("fund_sources_ref").setVisible(false);
+	
+	var el_list = this.getElements();
+	for(var id in el_list){		
+		if(el_list[id] && !el_list[id].getAttr("forModifiedDocuments")){
+			DOMHelper.delAttr(el_list[id].getNode(),"percentcalc");
 		}
 	}
 }
-*/
+
+
+ApplicationDialog_View.prototype.openAppRef = function(fieldId){
+	var m = this.getModel();
+	var ref = m.getFieldValue(fieldId);
+	var cl = window.getApp().getDataType(ref.getDataType()).dialogClass;
+	var keys = ref.getKeys();
+	(new cl({
+		"id":(cl.toString()+CommonHelper.serialize(keys)),
+		"keys":ref.getKeys(),
+		"params":{
+			"cmd":"edit",
+			"editViewOptions":{}
+		}
+	})).open();
+}
+
+ApplicationDialog_View.prototype.sendAllModifiedDocumentsCont = function(model,contr,callBack){
+	var self = this;
+	if(model.getNextRow()){
+		if(model.getFieldValue("filled_percent")==100){
+			var app_id = model.getFieldValue("id");
+			var pm = contr.getPublicMethod("update");
+			pm.setFieldValue("old_id",app_id);
+			pm.setFieldValue("set_sent",1);
+			pm.run({
+				"ok":function(){
+					window.showNote("Отправлено заявление №"+app_id);					
+				},
+				"fail":function(resp,eN,eS){
+					window.showError("Ошибка отправки заявелния №"+app_id+" "+eS);
+				},
+				"all":function(){
+					self.sendAllModifiedDocumentsCont(model,contr,callBack);
+				}
+			});
+		}
+	}
+	else if(callBack){
+		callBack();
+	}
+}
+
+ApplicationDialog_View.prototype.sendAllModifiedDocuments = function(callBack){
+	var pm = this.getController().getPublicMethod("get_modified_documents_list");
+	pm.setFieldValue("cond_fields","base_application_id");
+	pm.setFieldValue("cond_vals",this.getElement("id").getValue());
+	pm.setFieldValue("cond_sgns","e");
+	var self = this;
+	pm.run({
+		"ok":function(resp){
+			var m = resp.getModel("ApplicationList_Model");
+			if(m.getRowCount()){
+				var contr = new Application_Controller();
+		
+				WindowQuestion.show({
+					"text":"Отправить все("+m.getRowCount()+") заявления по модифицированной документации?",
+					"cancel":false,
+					"callBack":function(res){			
+						if (res==WindowQuestion.RES_YES){
+							self.sendAllModifiedDocumentsCont(m,contr,callBack);
+						}
+					}
+				});
+			}
+		}
+	})
+}

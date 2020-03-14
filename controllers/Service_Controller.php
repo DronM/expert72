@@ -46,6 +46,18 @@ class Service_Controller extends ControllerSQL{
 				,array());
 		$pm->addParam($param);
 		
+				$param = new FieldExtEnum('service_type',',','expertise,cost_eval_validity,audit,modification,modified_documents,expert_maintenance'
+				,array('required'=>TRUE,
+				'alias'=>'Вид услуги'
+			));
+		$pm->addParam($param);
+		
+				$param = new FieldExtEnum('expertise_type',',','pd,eng_survey,pd_eng_survey,cost_eval_validity,cost_eval_validity_pd,cost_eval_validity_eng_survey,cost_eval_validity_pd_eng_survey'
+				,array(
+				'alias'=>'Вид гос.экспертизы'
+			));
+		$pm->addParam($param);
+		
 		$pm->addParam(new FieldExtInt('ret_id'));
 		
 		
@@ -82,6 +94,20 @@ class Service_Controller extends ControllerSQL{
 			$pm->addParam($param);
 		$param = new FieldExtString('contract_postf'
 				,array(
+			));
+			$pm->addParam($param);
+		
+				$param = new FieldExtEnum('service_type',',','expertise,cost_eval_validity,audit,modification,modified_documents,expert_maintenance'
+				,array(
+			
+				'alias'=>'Вид услуги'
+			));
+			$pm->addParam($param);
+		
+				$param = new FieldExtEnum('expertise_type',',','pd,eng_survey,pd_eng_survey,cost_eval_validity,cost_eval_validity_pd,cost_eval_validity_eng_survey,cost_eval_validity_pd_eng_survey'
+				,array(
+			
+				'alias'=>'Вид гос.экспертизы'
 			));
 			$pm->addParam($param);
 		

@@ -49,7 +49,9 @@ CREATE OR REPLACE VIEW applications_print AS
 		
 		d.auth_letter,
 		d.exp_cost_eval_validity,
-		d.cost_eval_validity_app_id
+		d.cost_eval_validity_app_id,
+		
+		d.service_type
 		
 		
 	FROM applications AS d

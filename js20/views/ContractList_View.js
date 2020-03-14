@@ -30,7 +30,7 @@ ContractList_View.prototype.GRID_ALL = true;
 
 /* public methods */
 ContractList_View.prototype.addGrid = function(options){
-	var model = options.models.ContractList_Model;
+	var model = (options.models&&options.models.ContractList_Model)? options.models.ContractList_Model:new ContractList_Model();
 	var contr = new Contract_Controller();
 	
 	var constants = {"doc_per_page_count":null,"grid_refresh_interval":null};
@@ -133,9 +133,9 @@ ContractList_View.prototype.addGrid = function(options){
 			new GridCellHead(id+":grid:head:document_type",{
 				"value":"Услуга",
 				"columns":[
-					new EnumGridColumn_document_types({
-						"field":model.getField("document_type"),
-						"ctrlClass":Enum_document_types,
+					new EnumGridColumn_service_types({
+						"field":model.getField("service_type"),
+						"ctrlClass":Enum_service_types,
 						"searchOptions":{
 							"searchType":"on_match",
 							"typeChange":false
@@ -430,6 +430,7 @@ ContractList_View.prototype.addGrid = function(options){
 		"editInline":false,
 		"editWinClass":ContractDialog_Form,
 		"popUpMenu":popup_menu,
+		"filters":options.filters,
 		"onEventAddCell":function(cell){
 			if (cell.getGridColumn().getId()=="expertise_result_number"){
 				var st = this.m_model.getFieldValue("state_for_color");
@@ -467,7 +468,7 @@ ContractList_View.prototype.addGrid = function(options){
 		"pagination":new pagClass(id+"_page",
 			{"countPerPage":constants.doc_per_page_count.getValue()}),		
 		
-		"autoRefresh":false,
+		"autoRefresh":(options.autoRefresh!=undefined)? options.autoRefresh:false,
 		"refreshInterval":constants.grid_refresh_interval.getValue()*1000,
 		"rowSelect":false,
 		"focus":true

@@ -584,8 +584,9 @@ ApplicationClientEdit.prototype.setCustomerDataVisible = function(v){
 		}
 	}
 	
-	this.getElement("customer_auth_letter").setAttr("percentcalc",(v&&this.m_custIsDevText)? "true":"false");
-	this.getElement("customer_auth_letter_file").setAttr("percentcalc",(v&&this.m_custIsDevText)? "true":"false");  
+	var serv_exp_m = (this.m_mainView.getElement("service_cont").getElement("service_type").getValue()=="expert_maintenance");
+	this.getElement("customer_auth_letter").setAttr("percentcalc",(!serv_exp_m&&v&&this.m_custIsDevText)? "true":"false");
+	this.getElement("customer_auth_letter_file").setAttr("percentcalc",(!serv_exp_m&&v&&this.m_custIsDevText)? "true":"false");  
 	
 	this.m_mainView.calcFillPercent();
 }

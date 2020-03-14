@@ -31,6 +31,9 @@ function Application_Controller(options){
 	this.add_get_print();
 	this.addGetList();
 	this.addComplete();
+	this.add_complete_for_expert_maintenance();
+	this.add_get_for_expert_maintenance_list();
+	this.add_get_modified_documents_list();
 	this.add_get_client_list();
 	this.add_remove_file();
 	this.add_get_file();
@@ -40,18 +43,9 @@ function Application_Controller(options){
 	this.add_get_document_templates();
 	this.add_get_document_templates_for_contract();
 	this.add_remove_document_types();
-	this.add_download_app_print_expertise();
-	this.add_download_app_print_expertise_sig();
-	this.add_delete_app_print_expertise();
-	this.add_download_app_print_modification();
-	this.add_download_app_print_modification_sig();
-	this.add_delete_app_print_modification();
-	this.add_download_app_print_audit();
-	this.add_download_app_print_audit_sig();
-	this.add_delete_app_print_audit();
-	this.add_download_app_print_cost_eval();
-	this.add_download_app_print_cost_eval_sig();
-	this.add_delete_app_print_cost_eval();
+	this.add_download_app_print();
+	this.add_download_app_print_sig();
+	this.add_delete_app_print();
 	this.add_set_user();
 	this.add_download_auth_letter_file();
 	this.add_download_auth_letter_file_sig();
@@ -250,25 +244,25 @@ extend(Application_Controller,ControllerObjServer);
 	pm.addField(field);
 	
 	var options = {};
-	
+	options.alias = "Устарело используется поле app_print";
 	var field = new FieldJSONB("app_print_expertise",options);
 	
 	pm.addField(field);
 	
 	var options = {};
-	
+	options.alias = "Устарело используется поле app_print";
 	var field = new FieldJSONB("app_print_cost_eval",options);
 	
 	pm.addField(field);
 	
 	var options = {};
-	
+	options.alias = "Устарело используется поле app_print";
 	var field = new FieldJSONB("app_print_modification",options);
 	
 	pm.addField(field);
 	
 	var options = {};
-	
+	options.alias = "Устарело используется поле app_print";
 	var field = new FieldJSONB("app_print_audit",options);
 	
 	pm.addField(field);
@@ -333,6 +327,31 @@ extend(Application_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	options.alias = "Вид услуги";	
+	options.enumValues = 'expertise,cost_eval_validity,audit,modification,modified_documents,expert_maintenance';
+	var field = new FieldEnum("service_type",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	options.alias = "Бланк заявления";
+	var field = new FieldJSONB("app_print",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldInt("expert_maintenance_base_application_id",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldJSONB("expert_maintenance_contract_data",options);
+	
+	pm.addField(field);
+	
 	pm.addField(new FieldInt("ret_id",{}));
 	
 		var options = {};
@@ -341,19 +360,7 @@ extend(Application_Controller,ControllerObjServer);
 	
 		var options = {};
 				
-		pm.addField(new FieldText("app_print_expertise_files",options));
-	
-		var options = {};
-				
-		pm.addField(new FieldText("app_print_cost_eval_files",options));
-	
-		var options = {};
-				
-		pm.addField(new FieldText("app_print_modification_files",options));
-	
-		var options = {};
-				
-		pm.addField(new FieldText("app_print_audit_files",options));
+		pm.addField(new FieldText("app_print_files",options));
 	
 		var options = {};
 				
@@ -548,25 +555,25 @@ extend(Application_Controller,ControllerObjServer);
 	pm.addField(field);
 	
 	var options = {};
-	
+	options.alias = "Устарело используется поле app_print";
 	var field = new FieldJSONB("app_print_expertise",options);
 	
 	pm.addField(field);
 	
 	var options = {};
-	
+	options.alias = "Устарело используется поле app_print";
 	var field = new FieldJSONB("app_print_cost_eval",options);
 	
 	pm.addField(field);
 	
 	var options = {};
-	
+	options.alias = "Устарело используется поле app_print";
 	var field = new FieldJSONB("app_print_modification",options);
 	
 	pm.addField(field);
 	
 	var options = {};
-	
+	options.alias = "Устарело используется поле app_print";
 	var field = new FieldJSONB("app_print_audit",options);
 	
 	pm.addField(field);
@@ -631,25 +638,39 @@ extend(Application_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	options.alias = "Вид услуги";	
+	options.enumValues = 'expertise,cost_eval_validity,audit,modification,modified_documents,expert_maintenance';
+	
+	var field = new FieldEnum("service_type",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	options.alias = "Бланк заявления";
+	var field = new FieldJSONB("app_print",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldInt("expert_maintenance_base_application_id",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldJSONB("expert_maintenance_contract_data",options);
+	
+	pm.addField(field);
+	
 		var options = {};
 				
 		pm.addField(new FieldBool("set_sent",options));
 	
 		var options = {};
 				
-		pm.addField(new FieldText("app_print_expertise_files",options));
-	
-		var options = {};
-				
-		pm.addField(new FieldText("app_print_cost_eval_files",options));
-	
-		var options = {};
-				
-		pm.addField(new FieldText("app_print_modification_files",options));
-	
-		var options = {};
-				
-		pm.addField(new FieldText("app_print_audit_files",options));
+		pm.addField(new FieldText("app_print_files",options));
 	
 		var options = {};
 				
@@ -677,6 +698,10 @@ extend(Application_Controller,ControllerObjServer);
 	var f_opts = {};
 		
 	pm.addField(new FieldInt("id",f_opts));
+		var options = {};
+						
+		pm.addField(new FieldInt("for_exp_maint",options));
+	
 	
 	pm.addField(new FieldString("mode"));
 }
@@ -827,16 +852,16 @@ extend(Application_Controller,ControllerObjServer);
 	
 	pm.addField(new FieldInt("build_type_id",f_opts));
 	var f_opts = {};
-	
+	f_opts.alias = "Устарело используется поле app_print";
 	pm.addField(new FieldJSONB("app_print_expertise",f_opts));
 	var f_opts = {};
-	
+	f_opts.alias = "Устарело используется поле app_print";
 	pm.addField(new FieldJSONB("app_print_cost_eval",f_opts));
 	var f_opts = {};
-	
+	f_opts.alias = "Устарело используется поле app_print";
 	pm.addField(new FieldJSONB("app_print_modification",f_opts));
 	var f_opts = {};
-	
+	f_opts.alias = "Устарело используется поле app_print";
 	pm.addField(new FieldJSONB("app_print_audit",f_opts));
 	var f_opts = {};
 	
@@ -868,6 +893,18 @@ extend(Application_Controller,ControllerObjServer);
 	var f_opts = {};
 	
 	pm.addField(new FieldJSONB("customer_auth_letter_file",f_opts));
+	var f_opts = {};
+	f_opts.alias = "Вид услуги";
+	pm.addField(new FieldEnum("service_type",f_opts));
+	var f_opts = {};
+	f_opts.alias = "Бланк заявления";
+	pm.addField(new FieldJSONB("app_print",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldInt("expert_maintenance_base_application_id",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldJSONB("expert_maintenance_contract_data",f_opts));
 	pm.getField(this.PARAM_ORD_FIELDS).setValue("create_dt");
 	
 }
@@ -880,6 +917,70 @@ extend(Application_Controller,ControllerObjServer);
 	var pm = this.getComplete();
 	pm.addField(new FieldInt("id",f_opts));
 	pm.getField(this.PARAM_ORD_FIELDS).setValue("id");	
+}
+
+			Application_Controller.prototype.add_complete_for_expert_maintenance = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('complete_for_expert_maintenance',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		options.maxlength = "100";
+	
+		pm.addField(new FieldString("search",options));
+	
+				
+	
+	var options = {};
+	
+		pm.addField(new FieldInt("ic",options));
+	
+				
+	
+	var options = {};
+	
+		pm.addField(new FieldInt("mid",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			Application_Controller.prototype.add_get_for_expert_maintenance_list = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('get_for_expert_maintenance_list',opts);
+	
+	pm.addField(new FieldInt(this.PARAM_COUNT));
+	pm.addField(new FieldInt(this.PARAM_FROM));
+	pm.addField(new FieldString(this.PARAM_COND_FIELDS));
+	pm.addField(new FieldString(this.PARAM_COND_SGNS));
+	pm.addField(new FieldString(this.PARAM_COND_VALS));
+	pm.addField(new FieldString(this.PARAM_COND_ICASE));
+	pm.addField(new FieldString(this.PARAM_ORD_FIELDS));
+	pm.addField(new FieldString(this.PARAM_ORD_DIRECTS));
+	pm.addField(new FieldString(this.PARAM_FIELD_SEP));
+
+	this.addPublicMethod(pm);
+}
+
+			Application_Controller.prototype.add_get_modified_documents_list = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('get_modified_documents_list',opts);
+	
+	pm.addField(new FieldInt(this.PARAM_COUNT));
+	pm.addField(new FieldInt(this.PARAM_FROM));
+	pm.addField(new FieldString(this.PARAM_COND_FIELDS));
+	pm.addField(new FieldString(this.PARAM_COND_SGNS));
+	pm.addField(new FieldString(this.PARAM_COND_VALS));
+	pm.addField(new FieldString(this.PARAM_COND_ICASE));
+	pm.addField(new FieldString(this.PARAM_ORD_FIELDS));
+	pm.addField(new FieldString(this.PARAM_ORD_DIRECTS));
+	pm.addField(new FieldString(this.PARAM_FIELD_SEP));
+
+	this.addPublicMethod(pm);
 }
 
 			Application_Controller.prototype.add_get_client_list = function(){
@@ -1031,9 +1132,9 @@ extend(Application_Controller,ControllerObjServer);
 	this.addPublicMethod(pm);
 }
 
-			Application_Controller.prototype.add_download_app_print_expertise = function(){
+			Application_Controller.prototype.add_download_app_print = function(){
 	var opts = {"controller":this};	
-	var pm = new PublicMethodServer('download_app_print_expertise',opts);
+	var pm = new PublicMethodServer('download_app_print',opts);
 	
 				
 	
@@ -1047,9 +1148,9 @@ extend(Application_Controller,ControllerObjServer);
 	this.addPublicMethod(pm);
 }
 
-			Application_Controller.prototype.add_download_app_print_expertise_sig = function(){
+			Application_Controller.prototype.add_download_app_print_sig = function(){
 	var opts = {"controller":this};	
-	var pm = new PublicMethodServer('download_app_print_expertise_sig',opts);
+	var pm = new PublicMethodServer('download_app_print_sig',opts);
 	
 				
 	
@@ -1063,177 +1164,9 @@ extend(Application_Controller,ControllerObjServer);
 	this.addPublicMethod(pm);
 }
 
-			Application_Controller.prototype.add_delete_app_print_expertise = function(){
+			Application_Controller.prototype.add_delete_app_print = function(){
 	var opts = {"controller":this};	
-	var pm = new PublicMethodServer('delete_app_print_expertise',opts);
-	
-				
-	
-	var options = {};
-	
-		options.required = true;
-	
-		pm.addField(new FieldInt("id",options));
-	
-				
-	
-	var options = {};
-	
-		options.required = true;
-	
-		pm.addField(new FieldInt("fill_percent",options));
-	
-			
-	this.addPublicMethod(pm);
-}
-
-			Application_Controller.prototype.add_download_app_print_modification = function(){
-	var opts = {"controller":this};	
-	var pm = new PublicMethodServer('download_app_print_modification',opts);
-	
-				
-	
-	var options = {};
-	
-		options.required = true;
-	
-		pm.addField(new FieldInt("id",options));
-	
-			
-	this.addPublicMethod(pm);
-}
-
-			Application_Controller.prototype.add_download_app_print_modification_sig = function(){
-	var opts = {"controller":this};	
-	var pm = new PublicMethodServer('download_app_print_modification_sig',opts);
-	
-				
-	
-	var options = {};
-	
-		options.required = true;
-	
-		pm.addField(new FieldInt("id",options));
-	
-			
-	this.addPublicMethod(pm);
-}
-
-			Application_Controller.prototype.add_delete_app_print_modification = function(){
-	var opts = {"controller":this};	
-	var pm = new PublicMethodServer('delete_app_print_modification',opts);
-	
-				
-	
-	var options = {};
-	
-		options.required = true;
-	
-		pm.addField(new FieldInt("id",options));
-	
-				
-	
-	var options = {};
-	
-		options.required = true;
-	
-		pm.addField(new FieldInt("fill_percent",options));
-	
-			
-	this.addPublicMethod(pm);
-}
-
-			Application_Controller.prototype.add_download_app_print_audit = function(){
-	var opts = {"controller":this};	
-	var pm = new PublicMethodServer('download_app_print_audit',opts);
-	
-				
-	
-	var options = {};
-	
-		options.required = true;
-	
-		pm.addField(new FieldInt("id",options));
-	
-			
-	this.addPublicMethod(pm);
-}
-
-			Application_Controller.prototype.add_download_app_print_audit_sig = function(){
-	var opts = {"controller":this};	
-	var pm = new PublicMethodServer('download_app_print_audit_sig',opts);
-	
-				
-	
-	var options = {};
-	
-		options.required = true;
-	
-		pm.addField(new FieldInt("id",options));
-	
-			
-	this.addPublicMethod(pm);
-}
-
-			Application_Controller.prototype.add_delete_app_print_audit = function(){
-	var opts = {"controller":this};	
-	var pm = new PublicMethodServer('delete_app_print_audit',opts);
-	
-				
-	
-	var options = {};
-	
-		options.required = true;
-	
-		pm.addField(new FieldInt("id",options));
-	
-				
-	
-	var options = {};
-	
-		options.required = true;
-	
-		pm.addField(new FieldInt("fill_percent",options));
-	
-			
-	this.addPublicMethod(pm);
-}
-
-			Application_Controller.prototype.add_download_app_print_cost_eval = function(){
-	var opts = {"controller":this};	
-	var pm = new PublicMethodServer('download_app_print_cost_eval',opts);
-	
-				
-	
-	var options = {};
-	
-		options.required = true;
-	
-		pm.addField(new FieldInt("id",options));
-	
-			
-	this.addPublicMethod(pm);
-}
-
-			Application_Controller.prototype.add_download_app_print_cost_eval_sig = function(){
-	var opts = {"controller":this};	
-	var pm = new PublicMethodServer('download_app_print_cost_eval_sig',opts);
-	
-				
-	
-	var options = {};
-	
-		options.required = true;
-	
-		pm.addField(new FieldInt("id",options));
-	
-			
-	this.addPublicMethod(pm);
-}
-
-			Application_Controller.prototype.add_delete_app_print_cost_eval = function(){
-	var opts = {"controller":this};	
-	var pm = new PublicMethodServer('delete_app_print_cost_eval',opts);
+	var pm = new PublicMethodServer('delete_app_print',opts);
 	
 				
 	

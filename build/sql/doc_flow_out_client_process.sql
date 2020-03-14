@@ -33,10 +33,12 @@ DECLARE
 	v_server_for_href text;
 	v_is_expertise_cost_budget bool;
 	v_set_budget_contrcat_date bool;
+	v_application_service_type service_types;
 BEGIN
 	IF TG_WHEN='BEFORE' AND ( TG_OP='INSERT' OR TG_OP='UPDATE') THEN		
 		IF (const_client_lk_val() OR const_debug_val())
 		AND (NEW.sent AND (TG_OP='INSERT' OR coalesce(OLD.sent,FALSE)=FALSE ))
+		AND NEW.admin_correction=FALSE
 		THEN
 			NEW.date_time = now();			
 		END IF;
@@ -53,7 +55,9 @@ BEGIN
 	ELSIF (TG_WHEN='AFTER' AND (TG_OP='INSERT' OR TG_OP='UPDATE')) THEN			
 		IF
 		( (TG_OP='INSERT' AND NEW.sent) OR (TG_OP='UPDATE' AND NEW.sent AND NOT coalesce(OLD.sent,FALSE)) )
-		AND (NOT const_client_lk_val() OR const_debug_val()) THEN
+		AND (NOT const_client_lk_val() OR const_debug_val())
+		AND NEW.admin_correction=FALSE
+		THEN
 		
 			v_server_for_href = 'http://192.168.1.134/expert72/';
 		
@@ -71,7 +75,8 @@ BEGIN
 				st.date_time,
 				contracts.contract_number,
 				contracts.employee_id,
-				(coalesce(contracts.expertise_cost_budget,0)>0)
+				(coalesce(contracts.expertise_cost_budget,0)>0),
+				app.service_type
 			INTO
 				v_applicant,
 				v_constr_name,
@@ -84,11 +89,13 @@ BEGIN
 				v_application_state_dt,
 				v_contract_number,
 				v_contract_employee_id,
-				v_is_expertise_cost_budget
+				v_is_expertise_cost_budget,
+				v_application_service_type
 			FROM applications AS app
 			LEFT JOIN contracts ON contracts.application_id=app.id
 				AND (
-					(contracts.expertise_type IS NOT NULL AND contracts.expertise_type = app.expertise_type)
+					(contracts.service_type = app.service_type)
+					OR (contracts.expertise_type IS NOT NULL AND contracts.expertise_type = app.expertise_type)
 					OR (contracts.document_type='cost_eval_validity'::document_types AND app.cost_eval_validity)
 					OR (contracts.document_type='modification'::document_types AND app.modification)
 					OR (contracts.document_type='audit'::document_types AND app.audit)
@@ -156,7 +163,7 @@ BEGIN
 			ELSE
 				v_recip_department_id = v_main_department_id;
 			END IF;
-			
+		
 			--Расширенная тема с доп.атрибутами
 			IF NEW.doc_flow_out_client_type='contr_return' THEN
 				v_doc_flow_subject = NEW.subject||' №'||v_contract_number||', '||(v_applicant->>'name')::text;
@@ -273,7 +280,7 @@ BEGIN
 			--************** all rows ********************************************
 			SELECT INTO v_doc_flow_in * FROM doc_flow_in WHERE id=v_doc_flow_in_id;
 			--********************************************************************
-			
+
 			IF v_contract_id IS NULL THEN --AND NEW.doc_flow_out_client_type='app'::doc_flow_out_client_types THEN
 				--НЕТ контракта - Передача на рассмотрение в отдел приема
 				INSERT INTO doc_flow_examinations (
@@ -318,6 +325,7 @@ BEGIN
 				
 			ELSIF NEW.doc_flow_out_client_type='contr_resp' THEN
 				--ответы на замечания
+
 				IF v_main_expert_id IS NOT NULL THEN			
 					--напоминание&&email Гл.эксперту 
 					INSERT INTO reminders (register_docs_ref,recipient_employee_id,content,docs_ref)
@@ -475,7 +483,16 @@ RAISE EXCEPTION 'contracts_work_end_date=%',(SELECT contracts_work_end_date(
 						NEW.application_id,
 						greatest(NEW.date_time,v_application_state_dt+'1 second'::interval),
 						CASE
-							WHEN v_set_budget_contrcat_date THEN 'expertise'::application_states
+							WHEN
+								v_set_budget_contrcat_date
+								--Еще есть измененная документация, там тоже сразу экспертиза!
+								--Нет такого никогда, т.к. там сразу при рассмотрении экспертиза!!!
+								OR
+								(v_application_state='waiting_for_contract'
+									AND v_application_service_type='modified_documents'
+								)
+							THEN 'expertise'::application_states
+							
 							WHEN v_application_state='waiting_for_contract' THEN 'waiting_for_pay'::application_states
 							ELSE 'archive'::application_states
 						END,
@@ -554,7 +571,9 @@ RAISE EXCEPTION 'contracts_work_end_date=%',(SELECT contracts_work_end_date(
 		
 		ELSIF
 		(TG_OP='UPDATE' AND NEW.sent=FALSE AND OLD.sent=TRUE)
-		AND (NOT const_client_lk_val() OR const_debug_val()) THEN
+		AND (NOT const_client_lk_val() OR const_debug_val())
+		AND NEW.admin_correction=FALSE
+		THEN
 			--отмена отправки
 			DELETE FROM doc_flow_out_client_reg_numbers WHERE application_id=NEW.application_id AND doc_flow_out_client_id=NEW.id;
 		END IF;

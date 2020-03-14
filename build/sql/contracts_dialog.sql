@@ -72,9 +72,21 @@ CREATE OR REPLACE VIEW contracts_dialog AS
 				AND
 				(l.construction_type_id=app.construction_type_id AND
 				l.document_type IN (
-					CASE WHEN app.expertise_type='pd' OR app.expertise_type='pd_eng_survey' OR app.expertise_type='cost_eval_validity_pd' OR app.expertise_type='cost_eval_validity_pd_eng_survey' THEN 'pd'::document_types ELSE NULL END,
-					CASE WHEN app.expertise_type='eng_survey' OR app.expertise_type='pd_eng_survey' OR app.expertise_type='cost_eval_validity_eng_survey' OR app.expertise_type='cost_eval_validity_pd_eng_survey' THEN 'eng_survey'::document_types ELSE NULL END,
-					CASE WHEN app.cost_eval_validity OR app.exp_cost_eval_validity OR app.expertise_type='cost_eval_validity' OR app.expertise_type='cost_eval_validity_pd' OR app.expertise_type='cost_eval_validity_eng_survey' OR app.expertise_type='cost_eval_validity_pd_eng_survey' THEN 'cost_eval_validity'::document_types ELSE NULL END,
+					CASE WHEN app.expertise_type='pd' OR app.expertise_type='pd_eng_survey' OR app.expertise_type='cost_eval_validity_pd' OR app.expertise_type='cost_eval_validity_pd_eng_survey'
+						OR exp_maint_base.expertise_type='pd' OR exp_maint_base.expertise_type='pd_eng_survey' OR exp_maint_base.expertise_type='cost_eval_validity_pd' OR exp_maint_base.expertise_type='cost_eval_validity_pd_eng_survey'
+						THEN 'pd'::document_types
+						ELSE NULL
+					END,
+					CASE WHEN app.expertise_type='eng_survey' OR app.expertise_type='pd_eng_survey' OR app.expertise_type='cost_eval_validity_eng_survey' OR app.expertise_type='cost_eval_validity_pd_eng_survey'
+						OR exp_maint_base.expertise_type='eng_survey' OR exp_maint_base.expertise_type='pd_eng_survey' OR exp_maint_base.expertise_type='cost_eval_validity_eng_survey' OR exp_maint_base.expertise_type='cost_eval_validity_pd_eng_survey'
+						THEN 'eng_survey'::document_types
+						ELSE NULL
+					END,
+					CASE WHEN app.cost_eval_validity OR app.exp_cost_eval_validity OR app.expertise_type='cost_eval_validity' OR app.expertise_type='cost_eval_validity_pd' OR app.expertise_type='cost_eval_validity_eng_survey' OR app.expertise_type='cost_eval_validity_pd_eng_survey'
+						OR exp_maint_base.expertise_type='cost_eval_validity' OR exp_maint_base.expertise_type='cost_eval_validity_pd' OR exp_maint_base.expertise_type='cost_eval_validity_eng_survey' OR exp_maint_base.expertise_type='cost_eval_validity_pd_eng_survey'
+						THEN 'cost_eval_validity'::document_types
+						ELSE NULL
+					END,
 					CASE WHEN app.modification THEN 'modification'::document_types ELSE NULL END,
 					CASE WHEN app.audit THEN 'audit'::document_types ELSE NULL END			
 					)
@@ -197,10 +209,29 @@ CREATE OR REPLACE VIEW contracts_dialog AS
 		t.allow_new_file_add,
 		t.allow_client_out_documents,
 		
-		app.customer_auth_letter
+		app.customer_auth_letter,
+		
+		t.service_type,
+		
+		CASE WHEN app.service_type='modified_documents' THEN
+			exp_maint_base.service_type
+		ELSE NULL
+		END AS modified_documents_service_type,
+		
+		CASE WHEN app.service_type='modified_documents' THEN
+			exp_maint_base.expertise_type
+		ELSE NULL
+		END AS modified_documents_expertise_type,
+		
+		CASE WHEN t.service_type='expert_maintenance' THEN
+			contracts_ref(exp_main_ct)
+		ELSE NULL
+		END AS expert_maintenance_base_contracts_ref
+		
 		
 	FROM contracts t
 	LEFT JOIN applications AS app ON app.id=t.application_id
+	LEFT JOIN contracts AS exp_main_ct ON exp_main_ct.application_id=app.expert_maintenance_base_application_id
 	LEFT JOIN construction_types ON construction_types.id=app.construction_type_id
 	LEFT JOIN build_types ON build_types.id=app.build_type_id
 	LEFT JOIN fund_sources AS fund_sources ON fund_sources.id = coalesce(t.fund_source_id,app.fund_source_id)
@@ -294,6 +325,10 @@ CREATE OR REPLACE VIEW contracts_dialog AS
 	LEFT JOIN employees AS exp_empl ON exp_empl.id=t.main_expert_id
 	LEFT JOIN contracts AS prim_contr ON prim_contr.id=t.primary_contract_id
 	LEFT JOIN contracts AS modif_prim_contr ON modif_prim_contr.id=t.modif_primary_contract_id
+	
+	LEFT JOIN applications exp_maint ON exp_maint.id=app.base_application_id
+	LEFT JOIN applications exp_maint_base ON exp_maint_base.id=exp_maint.expert_maintenance_base_application_id
+
 	--LEFT JOIN clients ON clients.id=t.client_id
 	;
 	

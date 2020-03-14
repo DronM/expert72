@@ -75,6 +75,20 @@ extend(Service_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	options.alias = "Вид услуги";options.required = true;	
+	options.enumValues = 'expertise,cost_eval_validity,audit,modification,modified_documents,expert_maintenance';
+	var field = new FieldEnum("service_type",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	options.alias = "Вид гос.экспертизы";	
+	options.enumValues = 'pd,eng_survey,pd_eng_survey,cost_eval_validity,cost_eval_validity_pd,cost_eval_validity_eng_survey,cost_eval_validity_pd_eng_survey';
+	var field = new FieldEnum("expertise_type",options);
+	
+	pm.addField(field);
+	
 	pm.addField(new FieldInt("ret_id",{}));
 	
 	
@@ -122,6 +136,24 @@ extend(Service_Controller,ControllerObjServer);
 	var options = {};
 	
 	var field = new FieldString("contract_postf",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	options.alias = "Вид услуги";	
+	options.enumValues = 'expertise,cost_eval_validity,audit,modification,modified_documents,expert_maintenance';
+	options.enumValues+= (options.enumValues=='')? '':',';
+	options.enumValues+= 'null';
+	
+	var field = new FieldEnum("service_type",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	options.alias = "Вид гос.экспертизы";	
+	options.enumValues = 'pd,eng_survey,pd_eng_survey,cost_eval_validity,cost_eval_validity_pd,cost_eval_validity_eng_survey,cost_eval_validity_pd_eng_survey';
+	
+	var field = new FieldEnum("expertise_type",options);
 	
 	pm.addField(field);
 	
@@ -182,7 +214,13 @@ extend(Service_Controller,ControllerObjServer);
 	var f_opts = {};
 	
 	pm.addField(new FieldString("contract_postf",f_opts));
-	pm.getField(this.PARAM_ORD_FIELDS).setValue("id");
+	var f_opts = {};
+	f_opts.alias = "Вид услуги";
+	pm.addField(new FieldEnum("service_type",f_opts));
+	var f_opts = {};
+	f_opts.alias = "Вид гос.экспертизы";
+	pm.addField(new FieldEnum("expertise_type",f_opts));
+	pm.getField(this.PARAM_ORD_FIELDS).setValue("service_type");
 	
 }
 

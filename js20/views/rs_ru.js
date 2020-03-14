@@ -51,6 +51,8 @@ ContractPdList_View.prototype.HEAD_TITLE = "Контракты по проект
 ContractCostEvalValidityList_View.prototype.HEAD_TITLE = "Контракты по достоверности";
 ContractModificationList_View.prototype.HEAD_TITLE = "Контракты по модификации";
 ContractAuditList_View.prototype.HEAD_TITLE = "Контракты по аудиту";
+ContractExpertMaintenanceList_View.prototype.HEAD_TITLE = "Контракты по экспертному сопровождению";
+ContractModifiedDocumentsList_View.prototype.HEAD_TITLE = "Контракты по измененной документации";
 
 DocFlowApprovementList_View.prototype.HEAD_TITLE = "Согласования";
 
@@ -90,3 +92,7 @@ ExpertiseProlongationList_View.prototype.HEAD_TITLE = "Продление сро
 
 
 ApplicationReturnedFilesRemovedList_View.HEAD_TITLE = "Заявления с удаленной документацией";
+
+ApplicationForExpertMaintenanceList_View.HEAD_TITLE = "Положительные заключения";
+
+ServiceList_View.HEAD_TITLE = "Список услуг";
