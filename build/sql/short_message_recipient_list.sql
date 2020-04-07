@@ -14,7 +14,7 @@ CREATE OR REPLACE VIEW short_message_recipient_list AS
 			(SELECT logins.date_time_out IS NULL AND (now()-sessions.set_time)<'1 minute'::interval
 			FROM logins
 			LEFT JOIN sessions ON sessions.id=md5(session_id)
-			WHERE logins.user_id=e.user_id
+			WHERE logins.user_id=e.user_id AND logins.date_time_out IS NULL
 			ORDER BY logins.date_time_in DESC LIMIT 1	
 			),
 		FALSE) AS is_online,

@@ -10,11 +10,11 @@
 		WHERE rm.application_id IS NULL"
 	);
 	while($ar = $dbLink->fetch_array($q_id)){
-		$dir_rel = self::APP_DIR_PREF.$ar['id'];
+		$dir_rel = Application_Controller::APP_DIR_PREF.$ar['id'];
 		if (file_exists($dir=FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$dir_rel)){
 			rrmdir($dir);
 		}
-		if(assigned('FILE_STORAGE_DIR_MAIN') && file_exists($dir=FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$dir_rel)){
+		if(defined('FILE_STORAGE_DIR_MAIN') && file_exists($dir=FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$dir_rel)){
 			rrmdir($dir);
 		}
 		

@@ -95,6 +95,15 @@ function RepQuarter_View(id,options){
 							"value":"cost_eval_validity",
 							"descr":"Достоверность"
 						})
+						,new EditSelectOption(id+":filter-ctrl-service:"+"cost_eval_validity_pd",{
+							"value":"cost_eval_validity_pd",
+							"descr":"Проектная документация и Достоверность"
+						})
+						,new EditSelectOption(id+":filter-ctrl-service:"+"cost_eval_validity_pd_eng_survey",{
+							"value":"cost_eval_validity_pd_eng_survey",
+							"descr":"Проектная документация, РИИ, Достоверность"
+						})
+						
 					]
 				}),
 				"field":new FieldString("expertise_type")

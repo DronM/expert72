@@ -94,6 +94,8 @@
 				<td>РИИ</td>
 				<td>ПД и РИИ</td>
 				<td>Дост-ть</td>
+				<td>ПД и Дост-ть</td>
+				<td>ПД, РИИ, Дост-ть</td>
 			</tr>
 		</thead>
 	
@@ -103,7 +105,7 @@
 		
 		<tfoot>
 			<tr>
-				<td colspan="{number(9+$build_type_count+3)}">Итого</td>
+				<td colspan="{number(9+$build_type_count+6)}">Итого</td>
 				<td align="right">
 					<xsl:call-template name="format_money">
 						<xsl:with-param name="val" select="sum(row/in_estim_cost/node())"/>
@@ -183,7 +185,13 @@
 		<xsl:if test="expertise_type='pd_eng_survey'"><i class="glyphicon glyphicon-ok"/> </xsl:if>
 		</td>
 		<td align="center">
-		<xsl:if test="cost_eval_validity='true'"><i class="glyphicon glyphicon-ok"/> </xsl:if>
+		<xsl:if test="expertise_type='cost_eval_validity'"><i class="glyphicon glyphicon-ok"/> </xsl:if>
+		</td>
+		<td align="center">
+		<xsl:if test="expertise_type='cost_eval_validity_pd'"><i class="glyphicon glyphicon-ok"/> </xsl:if>
+		</td>
+		<td align="center">
+		<xsl:if test="expertise_type='cost_eval_validity_pd_eng_survey'"><i class="glyphicon glyphicon-ok"/> </xsl:if>
 		</td>
 		
 		<td align="right">

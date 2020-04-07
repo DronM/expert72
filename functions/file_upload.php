@@ -53,14 +53,14 @@ function mkdir_or_error($dir){
 			throw_common_error('file_uploader Path lenght exceeds maximum value!');
 		}
 		if(@mkdir($dir,0775,TRUE)!==TRUE){
-			/*
+			
 			if (file_exists($dir) && is_dir($dir)) {
 				// The directory was created by a concurrent process, so do nothing, keep calm and carry on
 			} else {
 				$error = error_get_last();
 				throw_common_error('file_uploader mkdir_or_error '.$dir.' error:'.$error['message']);
 			}
-			*/		
+					
 		}
 	}
 }
@@ -783,6 +783,7 @@ try{
 			try{
 				$orig_file_size = filesize($orig_file);
 				if (!$orig_file_size){
+					error_log('file_uploader, doc_flow_out, №'.$db_id.' file size is 0!');
 					throw new Exception('Ошибка загрузки файла!');
 				}
 			

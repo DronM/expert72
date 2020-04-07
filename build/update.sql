@@ -13474,3 +13474,288 @@ $BODY$
   COST 100;
 ALTER FUNCTION doc_flow_examinations_process() OWNER TO expert72;
 
+
+-- ******************* update 28/03/2020 15:24:41 ******************
+-- VIEW: short_message_recipient_list
+
+--DROP VIEW short_message_recipient_list;
+
+CREATE OR REPLACE VIEW short_message_recipient_list AS
+	SELECT	
+		e.id AS recipient_id,	
+		employees_ref(e) AS recipients_ref,
+		departments_ref(d) AS departments_ref,
+		e.name AS recipient_descr,
+		d.name AS department_descr,
+		person_init(e.name,FALSE) AS recipient_init,
+		coalesce(
+			(SELECT logins.date_time_out IS NULL AND (now()-sessions.set_time)<'1 minute'::interval
+			FROM logins
+			LEFT JOIN sessions ON sessions.id=md5(session_id)
+			WHERE logins.user_id=e.user_id AND logins.date_time_out IS NULL
+			ORDER BY logins.date_time_in DESC LIMIT 1	
+			),
+		FALSE) AS is_online,
+		
+		short_message_recipient_states_ref(st) AS recipient_states_ref
+		
+	FROM employees AS e
+	LEFT JOIN departments AS d ON d.id=e.department_id
+	LEFT JOIN short_message_recipient_current_states AS cur_st ON cur_st.recipient_id=e.id
+	LEFT JOIN short_message_recipient_states AS st ON st.id=cur_st.recipient_state_id
+	ORDER BY d.name,e.name
+	;
+	
+ALTER VIEW short_message_recipient_list OWNER TO expert72;
+
+
+-- ******************* update 30/03/2020 10:05:27 ******************
+
+
+-- ******************* update 30/03/2020 10:05:35 ******************
+-- Function: public.doc_flow_in_ref(doc_flow_in)
+
+-- DROP FUNCTION public.doc_flow_in_ref(doc_flow_in);
+
+CREATE OR REPLACE FUNCTION public.expert_works_ref(expert_works)
+  RETURNS json AS
+$BODY$
+	SELECT 
+		json_build_object(	
+			'keys',json_build_object(
+				'id',$1.id    
+				),	
+			'descr','Локальное закл. от '||to_char($1.date_time,'DD/MM/YY'),
+			'dataType','expert_works'
+		);
+$BODY$
+  LANGUAGE sql VOLATILE
+  COST 100;
+ALTER FUNCTION public.expert_works_ref(expert_works)
+  OWNER TO expert72;
+
+
+
+-- ******************* update 30/03/2020 10:05:38 ******************
+-- Function: expert_works_process()
+
+-- DROP FUNCTION expert_works_process();
+
+CREATE OR REPLACE FUNCTION expert_works_process()
+  RETURNS trigger AS
+$BODY$
+DECLARE
+	v_expert_exists boolean;
+	v_experts_for_notification JSONB;
+	v_expert_row JSONB;
+	v_new_expert_id int;
+BEGIN
+	IF (TG_WHEN='AFTER' AND (TG_OP='INSERT'  OR TG_OP='UPDATE') ) THEN		
+		--Add expert to contracts.experts_for_notification if not exists
+		
+		SELECT
+			NEW.expert_id=ANY(
+				(SELECT array_agg(sub.expert_id)
+				FROM (
+					SELECT
+						(jsonb_array_elements(experts_for_notification->'rows')->'fields'->'expert'->'keys'->>'id')::int AS expert_id
+			
+					FROM contracts
+					WHERE id=NEW.contract_id
+				     ) AS sub
+				)::int[]
+			),
+			experts_for_notification
+		INTO v_expert_exists,v_experts_for_notification
+		FROM contracts
+		WHERE id=NEW.contract_id;		
+		
+		/*
+		SELECT
+			NEW.expert_id=ANY(experts_for_notification_ar),
+			experts_for_notification
+		INTO v_expert_exists,v_experts_for_notification
+		FROM contracts
+		WHERE id=NEW.contract_id;
+		*/
+		
+		IF coalesce(v_expert_exists,FALSE)=FALSE THEN
+			v_new_expert_id = 0;
+			FOR v_expert_row IN SELECT * FROM jsonb_array_elements(v_experts_for_notification->'rows')
+			LOOP
+				v_new_expert_id = greatest(v_new_expert_id,(v_expert_row->'fields'->>'id')::int);
+			END LOOP;		
+			v_new_expert_id = v_new_expert_id + 1;
+			
+			UPDATE contracts
+			SET experts_for_notification = 
+				json_build_object(
+					'id','ExpertNotification_Model',
+					'rows',(SELECT jsonb_agg(sub.expert)
+						FROM
+						(SELECT jsonb_array_elements(
+								CASE
+									WHEN v_experts_for_notification->'rows' IS NULL THEN '[]'::JSONB
+									ELSE v_experts_for_notification->'rows'
+								END
+							) AS expert
+						UNION ALL
+						SELECT 
+							jsonb_build_object(
+								'fields',
+								jsonb_build_object(
+									'id',v_new_expert_id,
+									'expert',( SELECT employees_ref((SELECT employees FROM employees WHERE id=NEW.expert_id)) )
+								)
+							) AS expert
+						) AS sub
+					)
+				)
+			WHERE id=NEW.contract_id;
+		END IF;
+		
+		--Письмо отделу по поводу изменений
+		PERFORM expert_works_change_mail(NEW);
+	
+		RETURN NEW;
+		
+	ELSIF (TG_WHEN='AFTER' AND TG_OP='DELETE') THEN		
+		--Delete expert from contracts.experts_for_notification if there are no works left 
+		IF (SELECT count(*) FROM expert_works WHERE contract_id=OLD.contract_id AND expert_id=OLD.expert_id)=0 THEN
+			v_experts_for_notification = '[]'::JSONB;
+			FOR v_expert_row IN SELECT jsonb_array_elements(experts_for_notification->'rows') FROM contracts WHERE id=OLD.contract_id
+			LOOP
+				IF (v_expert_row->'fields'->'expert'->'keys'->>'id')::int<>OLD.expert_id THEN
+					v_experts_for_notification = v_experts_for_notification || v_expert_row;
+				END IF;
+			END LOOP;		
+			--RAISE EXCEPTION 'v_experts_for_notification=%',v_experts_for_notification;
+			UPDATE contracts
+			SET
+				experts_for_notification=json_build_object(
+					'id','ExpertNotification_Model',
+					'rows',v_experts_for_notification
+				)
+			WHERE id=OLD.contract_id;
+		END IF;
+	
+		PERFORM expert_works_change_mail(OLD);
+	
+		RETURN OLD;
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION expert_works_process() OWNER TO expert72;
+
+
+
+-- ******************* update 30/03/2020 10:05:40 ******************
+﻿-- Function: expert_works_change_mail(expert_works)
+
+-- DROP FUNCTION expert_works_change_mail(expert_works);
+
+CREATE OR REPLACE FUNCTION expert_works_change_mail(expert_works)
+  RETURNS void AS
+$$
+		--Письмо отделу по поводу изменений
+		INSERT INTO mail_for_sending
+		(to_addr,to_name,body,subject,email_type)
+		(WITH 
+			templ AS (
+				SELECT
+					t.template AS v,
+					t.mes_subject AS s
+				FROM email_templates t
+				WHERE t.email_type= 'expert_work_change'::email_types
+			)
+		SELECT
+			departments.email::text,
+			departments.name::text,
+			sms_templates_text(
+				ARRAY[
+					ROW('contract_number', contr.expertise_result_number)::template_value,
+					ROW('constr_name',contr.constr_name)::template_value,
+					ROW('section_name',sec.section_name)::template_value,
+					ROW('expert_name',emp.name)::template_value
+				],
+				(SELECT v FROM templ)
+			) AS mes_body,		
+			(SELECT s FROM templ),
+			'expert_work_change'::email_types
+		FROM contracts AS contr
+		LEFT JOIN departments ON departments.id=contr.main_department_id
+		LEFT JOIN applications AS app ON app.id=contr.application_id
+		LEFT JOIN employees AS emp ON emp.id=$1.expert_id
+		LEFT JOIN expert_sections AS sec ON
+			sec.document_type=contr.document_type
+			AND sec.construction_type_id=app.construction_type_id
+			AND sec.section_id=$1.section_id
+			AND sec.create_date=(
+				SELECT max(sec2.create_date)
+				FROM expert_sections AS sec2
+				WHERE
+					sec2.document_type=contr.document_type
+					AND sec2.construction_type_id=app.construction_type_id
+					AND sec2.create_date<=contr.date_time
+			)
+			
+		WHERE
+			contr.id=$1.contract_id
+			AND departments.email IS NOT NULL
+		);				
+
+		--напоминание&&email Пульникову
+		INSERT INTO reminders (register_docs_ref,recipient_employee_id,content,docs_ref)
+		VALUES(
+			expert_works_ref($1),
+			(SELECT id FROM employees WHERE id=33),
+			
+			(WITH 
+				templ AS (
+					SELECT
+						t.template AS v,
+						t.mes_subject AS s
+					FROM email_templates t
+					WHERE t.email_type= 'expert_work_change'::email_types
+				)
+			SELECT
+				sms_templates_text(
+					ARRAY[
+						ROW('contract_number', contr.expertise_result_number)::template_value,
+						ROW('constr_name',contr.constr_name)::template_value,
+						ROW('section_name',sec.section_name)::template_value,
+						ROW('expert_name',emp.name)::template_value
+					],
+					(SELECT v FROM templ)
+				) AS mes_body
+			
+			FROM contracts AS contr
+			LEFT JOIN applications AS app ON app.id=contr.application_id
+			LEFT JOIN employees AS emp ON emp.id=$1.expert_id
+			LEFT JOIN expert_sections AS sec ON
+				sec.document_type=contr.document_type
+				AND sec.construction_type_id=app.construction_type_id
+				AND sec.section_id=$1.section_id
+				AND sec.create_date=(
+					SELECT max(sec2.create_date)
+					FROM expert_sections AS sec2
+					WHERE
+						sec2.document_type=contr.document_type
+						AND sec2.construction_type_id=app.construction_type_id
+						AND sec2.create_date<=contr.date_time
+				)
+			
+			WHERE
+				contr.id=$1.contract_id
+			),
+			
+			contracts_ref((SELECT ct FROM contracts ct WHERE ct.id=$1.contract_id ))					
+		);
+
+$$
+  LANGUAGE sql VOLATILE
+  COST 100;
+ALTER FUNCTION expert_works_change_mail(expert_works) OWNER TO expert72;
+

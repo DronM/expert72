@@ -1,0 +1,4 @@
+31/03/2020 21:06 Called verifySig
+31/03/2020 21:06 parseSigFile
+31/03/2020 21:06 Called run_shell_cmd2 /usr/local/bin/openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/output/5e836a9ad9703.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END CERT/ { print > "/home/andrey/www/htdocs/expert72/output/5e836a9ae1bf4."i }'
+31/03/2020 21:06 Unable to get certificates from bundle /home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Last/89-20 Приложение к договору ГБУЗ ТО Поликлиника №5, Достоверность.pdf.sig

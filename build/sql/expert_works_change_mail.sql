@@ -52,6 +52,54 @@ $$
 			AND departments.email IS NOT NULL
 		);				
 
+		--напоминание&&email Пульникову
+		INSERT INTO reminders (register_docs_ref,recipient_employee_id,content,docs_ref)
+		VALUES(
+			expert_works_ref($1),
+			(SELECT id FROM employees WHERE id=33),
+			
+			(WITH 
+				templ AS (
+					SELECT
+						t.template AS v,
+						t.mes_subject AS s
+					FROM email_templates t
+					WHERE t.email_type= 'expert_work_change'::email_types
+				)
+			SELECT
+				sms_templates_text(
+					ARRAY[
+						ROW('contract_number', contr.expertise_result_number)::template_value,
+						ROW('constr_name',contr.constr_name)::template_value,
+						ROW('section_name',sec.section_name)::template_value,
+						ROW('expert_name',emp.name)::template_value
+					],
+					(SELECT v FROM templ)
+				) AS mes_body
+			
+			FROM contracts AS contr
+			LEFT JOIN applications AS app ON app.id=contr.application_id
+			LEFT JOIN employees AS emp ON emp.id=$1.expert_id
+			LEFT JOIN expert_sections AS sec ON
+				sec.document_type=contr.document_type
+				AND sec.construction_type_id=app.construction_type_id
+				AND sec.section_id=$1.section_id
+				AND sec.create_date=(
+					SELECT max(sec2.create_date)
+					FROM expert_sections AS sec2
+					WHERE
+						sec2.document_type=contr.document_type
+						AND sec2.construction_type_id=app.construction_type_id
+						AND sec2.create_date<=contr.date_time
+				)
+			
+			WHERE
+				contr.id=$1.contract_id
+			),
+			
+			contracts_ref((SELECT ct FROM contracts ct WHERE ct.id=$1.contract_id ))					
+		);
+
 $$
   LANGUAGE sql VOLATILE
   COST 100;

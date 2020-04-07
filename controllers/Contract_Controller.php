@@ -2253,8 +2253,20 @@ class Contract_Controller extends ControllerSQL{
 			$expertise_type_descr = 'Проектная документация и результаты инженерных изысканий';
 		}
 		else if ($expertise_type_par && $expertise_type_par=='cost_eval_validity'){
-			$extra_cond.= " AND app.cost_eval_validity";
+			$extra_cond.= " AND contracts.expertise_type='cost_eval_validity'";
 			$expertise_type_descr = 'Достоверность';
+		}
+		else if ($expertise_type_par && $expertise_type_par=='cost_eval_validity_pd'){
+			$extra_cond.= " AND contracts.expertise_type='cost_eval_validity_pd'";
+			$expertise_type_descr = 'Проектная документация и Достоверность';
+		}
+		else if ($expertise_type_par && $expertise_type_par=='cost_eval_validity_eng_survey'){
+			$extra_cond.= " AND contracts.expertise_type='cost_eval_validity_eng_survey'";
+			$expertise_type_descr = 'Достоверность и Результаты инженерных изысканий';
+		}
+		else if ($expertise_type_par && $expertise_type_par=='cost_eval_validity_pd_eng_survey'){
+			$extra_cond.= " AND contracts.expertise_type='cost_eval_validity_pd_eng_survey'";
+			$expertise_type_descr = 'Проектная документация, Достоверность, Результаты инженерных изысканий';
 		}
 		
 		$expertise_result = $cond->getVal('expertise_result','e',DT_STRING);		

@@ -174,7 +174,7 @@ class ShortMessage_Controller extends ControllerSQL{
 
 	public function get_recipient_list($pm){
 		$list_model = new ShortMessageRecipientList_Model($this->getDbLink());
-		//$pm->setParamValue('count',500);	
+		$pm->setParamValue('count',500);	
 		/*
 		$val = $pm->getParamValue('cond_fields');
 		if (isset($val) && $val!=''){

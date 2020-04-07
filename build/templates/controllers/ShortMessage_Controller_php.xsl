@@ -36,7 +36,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 
 	public function get_recipient_list($pm){
 		$list_model = new ShortMessageRecipientList_Model($this->getDbLink());
-		//$pm->setParamValue('count',500);	
+		$pm->setParamValue('count',500);	
 		/*
 		$val = $pm->getParamValue('cond_fields');
 		if (isset($val) &amp;&amp; $val!=''){
