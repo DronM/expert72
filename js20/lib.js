@@ -1344,6 +1344,8 @@ ControlContainer.superclass.delDOM.call(this);}
 ControlContainer.prototype.setEnabled=function(v){for(var elem_id in this.m_elements){if(this.m_elements[elem_id])
 this.m_elements[elem_id].setEnabled(v);}
 ControlContainer.superclass.setEnabled.call(this,v);}
+ControlContainer.prototype.setTempDisabled=function(){this.m_tempDisabledList=[];for(var elem_id in this.m_elements){if(this.m_elements[elem_id]&&this.m_elements[elem_id].getEnabled()){this.m_tempDisabledList.push(elem_id);this.m_elements[elem_id].setEnabled(false);}}}
+ControlContainer.prototype.setTempEnabled=function(){for(i=0;i<this.m_tempDisabledList.length;i++){this.m_elements[this.m_tempDisabledList[i]].setEnabled(true);}}
 ControlContainer.prototype.setLocked=function(v){for(var elem_id in this.m_elements){if(this.m_elements[elem_id])this.m_elements[elem_id].setLocked(v);}
 ControlContainer.superclass.setLocked.call(this,v);}
 ControlContainer.prototype.serialize=function(){var o={};o.elements={};for(var elem_id in this.m_elements){if(this.m_elements[elem_id]){o.elements[elem_id]=this.m_elements[elem_id].serialize();}}
@@ -2843,9 +2845,10 @@ Grid.prototype.bindPopUpMenu=function(){if(this.getPopUpMenu()!=undefined){this.
 Grid.prototype.unbindPopUpMenu=function(){if(this.getPopUpMenu()!=undefined){this.getPopUpMenu().unbind();}} 
 Grid.prototype.Q_DELETE="Удалить запись?";Grid.prototype.NT_REC_DELETED="Запись удалена.";Grid.prototype.ER_COL_NOT_BOUND="Колонка % грида % не привязана к полю модели."; 
 function GridSearchInf(id,options){options=options||{};options.hidden=true;this.m_grid=options.grid;GridSearchInf.superclass.constructor.call(this,id,"DIV",options);}
-extend(GridSearchInf,ControlContainer);GridSearchInf.prototype.addSearch=function(filterId,label,val){var self=this;var tl=CommonHelper.format(this.ITEM_TITLE_PATTERN,[label,val]);this.addElement(new ControlContainer(null,"SPAN",{"name":filterId,"elements":[new Control(null,"SPAN",{"value":label+":","title":tl}),new Control(null,"SPAN",{"value":val+" ","title":tl}),new Control(null,"SPAN",{"className":"glyphicon glyphicon-remove-circle","attrs":{"style":"cursor:pointer;"},"title":this.ITEM_REMOVE,"events":{"click":(function(contName){return function(){window.setGlobalWait(true);self.m_grid.unsetFilter(contName);self.m_grid.onRefresh((function(searchCtrl,contName){return function(){searchCtrl.delElement(contName);searchCtrl.toDOM();var el=searchCtrl.getElements();var el_empty=true;for(var id in el){if(el[id]!=undefined){el_empty=false;break;}}
+extend(GridSearchInf,ControlContainer);GridSearchInf.prototype.addSearch=function(filterId,label,val){var ctrl_id=this.getId()+":"+filterId;if(this.elementExists(filterId)){this.delElement(filterId);}
+var self=this;var tl=CommonHelper.format(this.ITEM_TITLE_PATTERN,[label,val]);this.addElement(new ControlContainer(ctrl_id,"SPAN",{"name":filterId,"elements":[new Control(null,"SPAN",{"value":label+":","title":tl}),new Control(null,"SPAN",{"value":val+" ","title":tl}),new Control(null,"SPAN",{"className":"glyphicon glyphicon-remove-circle","attrs":{"style":"cursor:pointer;"},"title":this.ITEM_REMOVE,"events":{"click":(function(contName){return function(){window.setGlobalWait(true);self.m_grid.unsetFilter(contName);self.m_grid.onRefresh((function(searchCtrl,contName){return function(){searchCtrl.delElement(contName);searchCtrl.toDOM();var el=searchCtrl.getElements();var el_empty=true;for(var id in el){if(el[id]!=undefined){el_empty=false;break;}}
 if(el_empty){searchCtrl.hide();if(searchCtrl.m_onFilterClear)searchCtrl.m_onFilterClear();}
-window.setGlobalWait(false);}})(self,contName));}})(filterId)}})]}));this.toDOM();this.show();}
+window.setGlobalWait(false);self.m_grid.focus();}})(self,contName));}})(filterId)}})]}));this.toDOM();this.show();}
 GridSearchInf.prototype.setOnFilterClear=function(v){this.m_onFilterClear=v;}
 GridSearchInf.prototype.clearSearch=function(){this.clear();this.hide();this.toDOM();} 
 GridSearchInf.prototype.ITEM_REMOVE="Удалить фильтр";GridSearchInf.prototype.ITEM_TITLE_PATTERN="Фильтровать по колонке '%', по значению %"; 

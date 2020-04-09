@@ -215,6 +215,12 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 				<Cell ss:StyleID="s21">
 					<Data ss:Type="String">Достоверность</Data>
 				</Cell>
+				<Cell ss:StyleID="s21">
+					<Data ss:Type="String">ПД и Достоверность</Data>
+				</Cell>
+				<Cell ss:StyleID="s21">
+					<Data ss:Type="String">ПД, РИИ, Достоверность</Data>
+				</Cell>
 			
 				<Cell ss:StyleID="s23">
 					<Data ss:Type="Currency">Вход.см.стоимость</Data>
@@ -333,7 +339,17 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 		</Cell>
 		<Cell ss:StyleID="s21">
 			<Data ss:Type="String">
-			<xsl:if test="cost_eval_validity='true'">V</xsl:if>
+			<xsl:if test="expertise_type='cost_eval_validity' or cost_eval_validity='true'">V</xsl:if>
+			</Data>
+		</Cell>
+		<Cell ss:StyleID="s21">
+			<Data ss:Type="String">
+			<xsl:if test="expertise_type='cost_eval_validity_pd'">V</xsl:if>
+			</Data>
+		</Cell>
+		<Cell ss:StyleID="s21">
+			<Data ss:Type="String">
+			<xsl:if test="expertise_type='cost_eval_validity_pd_eng_survey'">V</xsl:if>
 			</Data>
 		</Cell>
 		

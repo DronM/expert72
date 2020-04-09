@@ -2,7 +2,7 @@
 <metadata owner="expert72">
 	<versions>
 		<version dateOpen="2017-09-27 12:09:48" dateClose="2017-12-08 10:12:08">1.001 
-		<lastBuild>2020-04-07 18:55:41</lastBuild></version>
+		<lastBuild>2020-04-09 12:39:20</lastBuild></version>
 		<version dateOpen="2017-12-08 11:12:01" dateClose="2017-12-08 11:12:04">1.002</version>
 		<version dateOpen="2017-12-08 11:12:20" dateClose="2017-12-08 11:12:20">1.0.3</version>
 		<version dateOpen="2017-12-12 11:12:07" dateClose="2017-12-12 11:12:07">1.0.4</version>
@@ -133,6 +133,7 @@
 		<version dateOpen="2020-02-13 11:02:38" dateClose="2020-02-14 07:02:24">1.0.130</version>
 		<version dateOpen="2020-02-14 07:02:34" dateClose="2020-03-14 08:03:14">1.0.131</version>
 		<version dateOpen="2020-03-18 17:03:41" dateClose="2020-04-07 18:04:55">1.0.132</version>
+		<version dateOpen="2020-04-09 11:04:33" dateClose="2020-04-09 12:04:39">1.0.133</version>
 	</versions>
 	<globalFilters>
 		<field id="user_id"/>
@@ -1945,7 +1946,7 @@
 			<field id="close_employee_id" dataType="Int" refTable="employees" refField="id"/>
 			<field id="close_employees_ref" dataType="JSON"/>
 		</model>
-		<model id="DocFlowTaskShortList" parent="ModelSQL" dataTable="doc_flow_tasks_short_list" virtual="TRUE" baseModelId="DocFlowTask">
+		<model id="DocFlowTaskShortList" parent="ModelSQL" dataTable="doc_flow_tasks_short_list" virtual="TRUE" baseModelId="DocFlowTask" limitCount="100">
 			<defaultOrder>
 				<field id="date_time" sortDirect="DESC"/>
 			</defaultOrder>

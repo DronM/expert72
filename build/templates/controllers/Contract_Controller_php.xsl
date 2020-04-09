@@ -1270,7 +1270,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			$expertise_type_descr = 'Проектная документация и результаты инженерных изысканий';
 		}
 		else if ($expertise_type_par &amp;&amp; $expertise_type_par=='cost_eval_validity'){
-			$extra_cond.= " AND contracts.expertise_type='cost_eval_validity'";
+			$extra_cond.= " AND (contracts.expertise_type='cost_eval_validity' OR app.cost_eval_validity)";
 			$expertise_type_descr = 'Достоверность';
 		}
 		else if ($expertise_type_par &amp;&amp; $expertise_type_par=='cost_eval_validity_pd'){

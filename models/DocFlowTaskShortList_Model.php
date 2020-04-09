@@ -152,7 +152,7 @@ class DocFlowTaskShortList_Model extends ModelSQL{
 		$this->setDefaultModelOrder($order);		
 		$direct = 'DESC';
 		$order->addField($f_date_time,$direct);
-$this->setLimitConstant('doc_per_page_count');
+$this->setRowsPerPage(100);
 	}
 
 }

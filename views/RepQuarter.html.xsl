@@ -79,7 +79,7 @@
 				<td rowspan="2">Дата отриц.зак.</td>
 				<td rowspan="2">Дата положит.зак.</td>
 				<td colspan="{$build_type_count}">Вид строительства</td>
-				<td colspan="4">Вид экспертизы</td>
+				<td colspan="6">Вид экспертизы</td>
 				<td rowspan="2">Вход.см.стоимость</td>
 				<td rowspan="2">Вход.реком.см.стоимость</td>
 				<td rowspan="2">Тек.см.стоимость</td>
@@ -185,7 +185,7 @@
 		<xsl:if test="expertise_type='pd_eng_survey'"><i class="glyphicon glyphicon-ok"/> </xsl:if>
 		</td>
 		<td align="center">
-		<xsl:if test="expertise_type='cost_eval_validity'"><i class="glyphicon glyphicon-ok"/> </xsl:if>
+		<xsl:if test="expertise_type='cost_eval_validity' or cost_eval_validity='true'"><i class="glyphicon glyphicon-ok"/> </xsl:if>
 		</td>
 		<td align="center">
 		<xsl:if test="expertise_type='cost_eval_validity_pd'"><i class="glyphicon glyphicon-ok"/> </xsl:if>
