@@ -402,8 +402,13 @@
 			if(v_opts.variantStorage.model)
 				v_opts.variantStorage.model.getRow(0);	
 				
-			var v_<xsl:value-of select="@templateId"/> = new <xsl:value-of select="@templateId"/>_View("<xsl:value-of select="@templateId"/>",v_opts);
-			v_<xsl:value-of select="@templateId"/>.toDOM(document.getElementById("windowData"));
+			window["page_views"] = window["page_views"] || {};
+			if(window["page_views"]["<xsl:value-of select="@templateId"/>"]){
+				window["page_views"]["<xsl:value-of select="@templateId"/>"].delDOM();
+				delete window["page_views"]["<xsl:value-of select="@templateId"/>"];
+			}
+			window["page_views"]["<xsl:value-of select="@templateId"/>"] = new <xsl:value-of select="@templateId"/>_View("<xsl:value-of select="@templateId"/>",v_opts);
+			window["page_views"]["<xsl:value-of select="@templateId"/>"].toDOM(document.getElementById("windowData"));
 		</xsl:for-each>
 	}
 </xsl:template>

@@ -697,11 +697,17 @@ doc_flow_out_client_process()
 1) Квартальный отчет, добавлен фильтр в ГУИ, исправлен шаблон, шаблон excel, Contract_Controller
 
 
-1.0.133
+1.0.133 09/04
 1) Фильтр таблиц: при удалеии остается GridSearchInf.js ид фильтра, при повторной фильтрации по той же колонке - удалять!
 2) Модель DocFlowTaskShortList_Model ограничение 100 строк!
 
 
+1.0.134
+1) Косяк из-за незагрушения основного объекта при открытии какого-то конкретного юрла, а потом хождения по меню, например отерыли
+http://expertiza72.ru/c=DocFlowApprovement_Controller&t=DocFlowApprovementList_View...
+а потом перешли в меню на другой объект, первый остался жить!!!
+	ViewBase.html.xsl function showView() - создание объекта не в переменную а в window['page_views']
+	App.prototype.renderContentXML разрушает window['page_views'] 
 
 - Выбрали недействительный серт, он отметился красным, потом сменили на нормальный - все равно остался красным
 

@@ -443,6 +443,8 @@ if(extra){var par_ar=extra.split("&");for(var i=0;i<par_ar.length;i++){var par_p
 this.m_storedTemplate=this.getTemplate(t)||{"id":t,"template":null,"dataModelId":null,"variantStorage":null};par.t=t;url_str+="&t="+t;url_str+="&v="+par_v;this.historyPush({"c":c,"f":f,"t":t,"extra":extra,"title":title,"url":url_str});this.getServConnector().sendGet(par,false,function(eN,eS,resp){if(eN!=0){window.setGlobalWait(false);window.showError(eS);}
 else{self.renderContentXML(resp);window.setGlobalWait(false);}},"xml");return false;}
 App.prototype.renderContentXML=function(resp){try{var data_n=CommonHelper.nd("windowData");if(!data_n)return;if(this.m_view){this.m_view.delDOM();delete this.m_view;}
+if(window["page_views"]){for(var v_id in window["page_views"]){window["page_views"][v_id].delDOM();delete window["page_views"][v_id];}
+delete window["page_views"];}
 while(data_n.firstChild){data_n.removeChild(data_n.firstChild);}
 var v_opts={"models":{}};var resp_models=resp.getModels();for(var m_id in resp_models){var sys_model=resp_models[m_id].getAttribute("sysModel");if(sys_model=="1"&&resp_models[m_id].getAttribute("templateId")){v_opts.template=resp_models[m_id].innerHTML;}
 else if(sys_model=="1"){}
