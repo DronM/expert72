@@ -1083,6 +1083,35 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 
 		$service = strtolower($cond->getVal('service','e',DT_STRING));
 		$service_descr = 'Все услуги';
+		if ($service &amp;&amp; $service=='pd'){
+			$extra_cond.= " AND contracts.expertise_type='pd'";
+			$service_descr = 'Проектная документация';
+		}
+		else if ($service &amp;&amp; $service=='eng_survey'){
+			$extra_cond.= " AND contracts.expertise_type='eng_survey'";
+			$service_descr = 'Результаты инженерных изысканий';
+		}
+		else if ($service &amp;&amp; $service=='pd_eng_survey'){
+			$extra_cond.= " AND contracts.expertise_type='pd_eng_survey'";
+			$service_descr = 'Проектная документация и результаты инженерных изысканий';
+		}
+		else if ($service &amp;&amp; $service=='cost_eval_validity'){
+			$extra_cond.= " AND (contracts.expertise_type='cost_eval_validity' OR app.cost_eval_validity)";
+			$service_descr = 'Достоверность';
+		}
+		else if ($service &amp;&amp; $service=='cost_eval_validity_pd'){
+			$extra_cond.= " AND contracts.expertise_type='cost_eval_validity_pd'";
+			$service_descr = 'Проектная документация и Достоверность';
+		}
+		else if ($service &amp;&amp; $service=='cost_eval_validity_eng_survey'){
+			$extra_cond.= " AND contracts.expertise_type='cost_eval_validity_eng_survey'";
+			$service_descr = 'Достоверность и Результаты инженерных изысканий';
+		}
+		else if ($service &amp;&amp; $service=='cost_eval_validity_pd_eng_survey'){
+			$extra_cond.= " AND contracts.expertise_type='cost_eval_validity_pd_eng_survey'";
+			$service_descr = 'Проектная документация, Достоверность, Результаты инженерных изысканий';
+		}
+		/*
 		if ($service &amp;&amp; strtolower($service)!='null'){
 			if ($service=='expertise'){
 				$extra_cond.= " AND (app.expertise_type='pd' OR app.expertise_type='eng_survey' OR app.expertise_type='pd_eng_survey')";
@@ -1101,6 +1130,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				$service_descr = 'ПД, РИИ, Достоверность';
 			}			
 		}
+		*/
 		
 		$model = new RepReestrContract_Model($this->getDbLink());
 		$model->query(

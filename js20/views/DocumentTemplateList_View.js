@@ -52,6 +52,13 @@ function DocumentTemplateList_View(id,options){
 								new EnumGridColumn_document_types({"field":model.getField("document_type")})
 							]
 						}),					
+						new GridCellHead(id+":grid:head:service_type",{
+							"value":"Услуга",
+							"columns":[
+								new EnumGridColumn_service_types({"field":model.getField("service_type")})
+							]
+						}),					
+						
 						new GridCellHead(id+":grid:head:construction_types_ref",{
 							"value":"Вид объекта",
 							"columns":[

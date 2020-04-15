@@ -46,6 +46,13 @@ extend(DocumentTemplate_Controller,ControllerObjServer);
 	pm.addField(field);
 	
 	var options = {};
+		
+	options.enumValues = 'expertise,cost_eval_validity,audit,modification,modified_documents,expert_maintenance';
+	var field = new FieldEnum("service_type",options);
+	
+	pm.addField(field);
+	
+	var options = {};
 	options.primaryKey = true;options.required = true;
 	var field = new FieldInt("construction_type_id",options);
 	
@@ -93,6 +100,14 @@ extend(DocumentTemplate_Controller,ControllerObjServer);
 	pm.addField(field);
 	
 	field = new FieldEnum("old_document_type",{});
+	pm.addField(field);
+	
+	var options = {};
+		
+	options.enumValues = 'expertise,cost_eval_validity,audit,modification,modified_documents,expert_maintenance';
+	
+	var field = new FieldEnum("service_type",options);
+	
 	pm.addField(field);
 	
 	var options = {};
@@ -168,6 +183,9 @@ extend(DocumentTemplate_Controller,ControllerObjServer);
 	var f_opts = {};
 	
 	pm.addField(new FieldString("document_type",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldString("service_type",f_opts));
 	var f_opts = {};
 	
 	pm.addField(new FieldDate("create_date",f_opts));

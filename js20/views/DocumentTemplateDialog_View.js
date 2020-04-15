@@ -24,6 +24,10 @@ function DocumentTemplateDialog_View(id,options){
 		"labelCaption":"Вид документации:"
 	}));	
 
+	this.addElement(new Enum_service_types(id+":service_type",{
+		"labelCaption":"Услуга:"
+	}));	
+
 	this.addElement(new EditDate(id+":create_date",{
 		"value":DateHelper.time(),
 		"labelCaption":"Дата шаблона:"
@@ -47,6 +51,7 @@ function DocumentTemplateDialog_View(id,options){
 	this.setDataBindings([
 		new DataBinding({"control":this.getElement("create_date")})
 		,new DataBinding({"control":this.getElement("document_type")})
+		,new DataBinding({"control":this.getElement("service_type")})
 		,new DataBinding({"control":this.getElement("construction_types_ref"),"fieldId":"construction_type_id"})
 		,new DataBinding({"control":this.getElement("comment_text")})
 		,new DataBinding({"control":this.getElement("content"),"fieldId":"content"})
@@ -57,6 +62,7 @@ function DocumentTemplateDialog_View(id,options){
 	this.setWriteBindings([
 			new CommandBinding({"control":this.getElement("create_date")})
 			,new CommandBinding({"control":this.getElement("document_type")})
+			,new CommandBinding({"control":this.getElement("service_type")})
 			,new CommandBinding({"control":this.getElement("construction_types_ref"),"fieldId":"construction_type_id"})
 			,new CommandBinding({"control":this.getElement("content"),"fieldId":"content"})
 			,new CommandBinding({"control":this.getElement("content_for_experts"),"fieldId":"content_for_experts"})

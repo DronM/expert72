@@ -36,6 +36,16 @@ function DocumentTemplate_Model(options){
 				
 	
 	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.service_type = new FieldEnum("service_type",filed_options);
+	filed_options.enumValues = 'expertise,cost_eval_validity,audit,modification,modified_documents,expert_maintenance';
+	
+				
+	
+	var filed_options = {};
 	filed_options.primaryKey = true;	
 	
 	filed_options.autoInc = false;	

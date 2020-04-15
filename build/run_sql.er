@@ -1,0 +1,3 @@
+psql:.run_sql.sql:44: ERROR:  return type mismatch in function declared to return record
+ПОДРОБНОСТИ:  Final statement returns service_types instead of integer at column 2.
+КОНТЕКСТ:  SQL function "document_templates_all_list_for_date"

@@ -13759,3 +13759,94 @@ $$
   COST 100;
 ALTER FUNCTION expert_works_change_mail(expert_works) OWNER TO expert72;
 
+
+-- ******************* update 14/04/2020 14:58:06 ******************
+
+		ALTER TABLE document_templates ADD COLUMN service_type service_types;
+
+
+
+-- ******************* update 14/04/2020 15:07:00 ******************
+-- VIEW: document_templates_list
+
+DROP VIEW document_templates_list;
+
+CREATE OR REPLACE VIEW document_templates_list AS
+	SELECT
+		tmpl.service_type,
+		tmpl.create_date,
+		tmpl.construction_type_id,
+		construction_types_ref(ct) AS construction_types_ref,		
+		tmpl.comment_text		
+	FROM document_templates AS tmpl
+	LEFT JOIN construction_types AS ct ON ct.id=tmpl.construction_type_id
+	ORDER BY
+		tmpl.service_type,
+		ct.id,
+		tmpl.create_date DESC
+	;
+	
+ALTER VIEW document_templates_list OWNER TO expert72;
+
+
+-- ******************* update 14/04/2020 15:08:36 ******************
+-- VIEW: document_templates_list
+
+DROP VIEW document_templates_list;
+
+CREATE OR REPLACE VIEW document_templates_list AS
+	SELECT
+		tmpl.document_type,
+		tmpl.create_date,
+		tmpl.construction_type_id,
+		construction_types_ref(ct) AS construction_types_ref,		
+		tmpl.comment_text		
+	FROM document_templates AS tmpl
+	LEFT JOIN construction_types AS ct ON ct.id=tmpl.construction_type_id
+	ORDER BY
+		tmpl.document_type,
+		ct.id,
+		tmpl.create_date DESC
+	;
+	
+ALTER VIEW document_templates_list OWNER TO expert72;
+
+
+-- ******************* update 14/04/2020 15:09:17 ******************
+-- VIEW: document_templates_list
+
+DROP VIEW document_templates_list;
+
+CREATE OR REPLACE VIEW document_templates_list AS
+	SELECT
+		tmpl.document_type,
+		tmpl.service_type,
+		tmpl.create_date,
+		tmpl.construction_type_id,
+		construction_types_ref(ct) AS construction_types_ref,		
+		tmpl.comment_text		
+	FROM document_templates AS tmpl
+	LEFT JOIN construction_types AS ct ON ct.id=tmpl.construction_type_id
+	ORDER BY
+		tmpl.document_type,
+		tmpl.service_type,
+		ct.id,
+		tmpl.create_date DESC
+	;
+	
+ALTER VIEW document_templates_list OWNER TO expert72;
+
+
+-- ******************* update 14/04/2020 15:34:04 ******************
+-- VIEW: document_templates_all_json_list
+
+--DROP VIEW document_templates_all_json_list;
+
+CREATE OR REPLACE VIEW document_templates_all_json_list AS
+	SELECT
+		array_to_json(array_agg(tb.documents)) AS documents
+	FROM document_templates_all_list tb
+;
+	
+ALTER VIEW document_templates_all_json_list OWNER TO expert72;
+

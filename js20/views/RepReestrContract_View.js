@@ -107,21 +107,29 @@ function RepReestrContract_View(id,options){
 					"contClassName":"form-group-filter",
 					"addNotSelected":false,
 					"elements":[
-						new EditSelectOption(id+":filter-ctrl-service:"+"expertise",{
-							"value":"expertise",
-							"descr":"ПД,РИИ"
+						new EditSelectOption(id+":filter-ctrl-service:"+"pd",{
+							"value":"pd",
+							"descr":"Проектная документация"
+						})
+						,new EditSelectOption(id+":filter-ctrl-service:"+"eng_survey",{
+							"value":"eng_survey",
+							"descr":"Результаты инженерных изысканий"
+						})
+						,new EditSelectOption(id+":filter-ctrl-service:"+"pd_eng_survey",{
+							"value":"pd_eng_survey",
+							"descr":"Проектная документация и Результаты инженерных изысканий"
 						})
 						,new EditSelectOption(id+":filter-ctrl-service:"+"cost_eval_validity",{
 							"value":"cost_eval_validity",
 							"descr":"Достоверность"
 						})
-						,new EditSelectOption(id+":filter-ctrl-service:"+"expertise_cost_eval_validity",{
-							"value":"expertise_cost_eval_validity",
-							"descr":"ПД,РИИ и Достоверность"
+						,new EditSelectOption(id+":filter-ctrl-service:"+"cost_eval_validity_pd",{
+							"value":"cost_eval_validity_pd",
+							"descr":"Проектная документация и Достоверность"
 						})
-						,new EditSelectOption(id+":filter-ctrl-service:"+"audit",{
-							"value":"audit",
-							"descr":"Аудит"
+						,new EditSelectOption(id+":filter-ctrl-service:"+"cost_eval_validity_pd_eng_survey",{
+							"value":"cost_eval_validity_pd_eng_survey",
+							"descr":"Проектная документация, РИИ, Достоверность"
 						})
 						
 					]

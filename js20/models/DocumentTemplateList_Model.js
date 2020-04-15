@@ -34,6 +34,15 @@ function DocumentTemplateList_Model(options){
 				
 	
 	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.service_type = new FieldString("service_type",filed_options);
+	
+				
+	
+	var filed_options = {};
 	filed_options.primaryKey = true;	
 	
 	filed_options.autoInc = false;	
