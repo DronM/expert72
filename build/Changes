@@ -713,6 +713,22 @@ http://expertiza72.ru/c=DocFlowApprovement_Controller&t=DocFlowApprovementList_V
 1.0.135 15/04
 1) Реестр контрактов, нет всего списка услуг
 
+
+1.0.136 18/05
+document_templates_all_list_for_date
+1) При разрешении редактирования заявления не дает исправить файл доверенности
+	Проверил - все разрешает
+Изменить applications_get_documents для учета expertise_type
+Изменить ApplicationDialog_View для определения вкладок
+
+
+2)FileUploaderDocFlowIn_View учет удаленных файлов,
+doc_flow_in_dialog.sql
+
+
+
+
+
 - Выбрали недействительный серт, он отметился красным, потом сменили на нормальный - все равно остался красным
 
 

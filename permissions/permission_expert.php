@@ -76,6 +76,8 @@ $permissions = array();
 				
 					$permissions['About_Controller_get_object']=TRUE;
 				
+					$permissions['LogPKI_Controller_get_list']=TRUE;
+				
 					$permissions['User_Controller_insert']=TRUE;
 				
 					$permissions['User_Controller_update']=TRUE;
@@ -289,6 +291,8 @@ $permissions = array();
 					$permissions['Application_Controller_zip_all']=TRUE;
 				
 					$permissions['Application_Controller_get_document_templates']=TRUE;
+				
+					$permissions['Application_Controller_get_document_templates_on_filter']=TRUE;
 				
 					$permissions['Application_Controller_get_document_templates_for_contract']=TRUE;
 				

@@ -86,7 +86,7 @@ function DocFlowInDialog_View(id,options){
 			}			
 		}));	
 		
-		var ac_m = new ContactList_Model();
+		var ac_m = new Contact_Model();
 		this.addElement(new EditString(id+":from_addr_name",{
 			"editContClassName":editContClassName,
 			"labelClassName":labelClassName,

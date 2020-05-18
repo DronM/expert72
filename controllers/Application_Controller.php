@@ -227,6 +227,17 @@ class Application_Controller extends ControllerSQL{
 				,array());
 		$pm->addParam($param);
 		
+				$param = new FieldExtEnum('expert_maintenance_service_type',',','expertise,cost_eval_validity,audit,modification,modified_documents,expert_maintenance'
+				,array());
+		$pm->addParam($param);
+		
+				$param = new FieldExtEnum('expert_maintenance_expertise_type',',','pd,eng_survey,pd_eng_survey,cost_eval_validity,cost_eval_validity_pd,cost_eval_validity_eng_survey,cost_eval_validity_pd_eng_survey'
+				,array());
+		$pm->addParam($param);
+		$param = new FieldExtJSON('documents'
+				,array());
+		$pm->addParam($param);
+		
 		$pm->addParam(new FieldExtInt('ret_id'));
 		
 			$f_params = array();
@@ -455,6 +466,20 @@ class Application_Controller extends ControllerSQL{
 			));
 			$pm->addParam($param);
 		$param = new FieldExtJSONB('expert_maintenance_contract_data'
+				,array(
+			));
+			$pm->addParam($param);
+		
+				$param = new FieldExtEnum('expert_maintenance_service_type',',','expertise,cost_eval_validity,audit,modification,modified_documents,expert_maintenance'
+				,array(
+			));
+			$pm->addParam($param);
+		
+				$param = new FieldExtEnum('expert_maintenance_expertise_type',',','pd,eng_survey,pd_eng_survey,cost_eval_validity,cost_eval_validity_pd,cost_eval_validity_eng_survey,cost_eval_validity_pd_eng_survey'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtJSON('documents'
 				,array(
 			));
 			$pm->addParam($param);
@@ -702,10 +727,27 @@ class Application_Controller extends ControllerSQL{
 			
 		$pm = new PublicMethod('get_document_templates');
 		
+		$this->addPublicMethod($pm);
+
+			
+		$pm = new PublicMethod('get_document_templates_on_filter');
+		
+				
+	$opts=array();
+	
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtEnum('service_type',$opts));
+	
 				
 	$opts=array();
 					
-		$pm->addParam(new FieldExtDate('on_date',$opts));
+		$pm->addParam(new FieldExtEnum('expertise_type',$opts));
+	
+				
+	$opts=array();
+	
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtInt('construction_type_id',$opts));
 	
 			
 		$this->addPublicMethod($pm);
@@ -1560,7 +1602,7 @@ class Application_Controller extends ControllerSQL{
 				if($ar_obj['cost_eval_validity']=='t'){
 					$ar_obj['exp_cost_eval_validity'] = 't';
 					$ar_obj['cost_eval_validity'] = NULL;
-					$ar_obj['expertise_type'] = 'pd';
+					$ar_obj['expertise_type'] = 'cost_eval_validity';
 				}
 				
 				//04/02/20
@@ -1631,9 +1673,11 @@ class Application_Controller extends ControllerSQL{
 			);
 		}
 		
+		/*  с мая 2020 отправляются только необходимые темплеты при выборе услуги/вида работ!
 		if ( is_null($pm->getParamValue("id")) || $ar_obj['document_exists']!='t' ){
 			$this->addNewModel("SELECT * FROM document_templates_all_json_list",'DocumentTemplateAllList_Model');			
 		}
+		*/
 		
 		$documents = NULL;
 		if ($ar_obj['documents']){
@@ -1844,7 +1888,7 @@ class Application_Controller extends ControllerSQL{
 		$set_sent = (isset($set_sent_v) && $set_sent_v=='1');
 		
 		if ($set_sent){			
-			$stp = $pm->getParamValue("service_type")? $this->getExtVal("service_type"):null;
+			$stp = $pm->getParamValue("service_type")? $this->getExtVal($pm,"service_type"):null;
 			if(!$stp){
 				error_log('Отправка нового заявелния без указания типы услуги юзер='.$_SESSION['user_id']);
 				throw new Exception(self::ER_OTHER_USER_APP);
@@ -3378,6 +3422,22 @@ class Application_Controller extends ControllerSQL{
 			}
 		}	
 		return TRUE;
+	}
+
+	public function get_document_templates_on_filter($pm){
+		$expertise_type = 'NULL';
+		if($pm->getParamValue('expertise_type')){
+			$expertise_type = $this->getExtDbVal($pm,'expertise_type');
+		}
+		
+		$this->addNewModel(sprintf(
+			"SELECT document_templates_on_filter(now()::date,%d,%s,%s) AS documents",
+			$this->getExtDbVal($pm,'construction_type_id'),			
+			$this->getExtDbVal($pm,'service_type'),
+			$expertise_type
+			),
+		'DocumentTemplateAllList_Model'
+		);
 	}
 	
 	public function get_document_templates($pm){

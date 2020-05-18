@@ -47,7 +47,7 @@ function DocumentTemplateList_View(id,options){
 							]
 						}),
 						new GridCellHead(id+":grid:head:document_type",{
-							"value":"Вид документации",
+							"value":"Вид вкладки",
 							"columns":[
 								new EnumGridColumn_document_types({"field":model.getField("document_type")})
 							]
@@ -56,6 +56,12 @@ function DocumentTemplateList_View(id,options){
 							"value":"Услуга",
 							"columns":[
 								new EnumGridColumn_service_types({"field":model.getField("service_type")})
+							]
+						}),					
+						new GridCellHead(id+":grid:head:expertise_type",{
+							"value":"Вид гос.экспертизы",
+							"columns":[
+								new EnumGridColumn_expertise_types({"field":model.getField("expertise_type")})
 							]
 						}),					
 						

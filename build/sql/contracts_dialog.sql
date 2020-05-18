@@ -65,6 +65,8 @@ CREATE OR REPLACE VIEW contracts_dialog AS
 		app.audit,
 		
 		--Documents
+		app.documents AS documents,
+		/*
 		array_to_json((
 			SELECT array_agg(l.documents) FROM document_templates_all_list_for_date(app.create_dt::date) l
 			WHERE
@@ -91,7 +93,8 @@ CREATE OR REPLACE VIEW contracts_dialog AS
 					CASE WHEN app.audit THEN 'audit'::document_types ELSE NULL END			
 					)
 				)
-		)) AS documents,		
+		)) AS documents,
+		*/		
 		--***********************
 		
 		t.contract_number,
@@ -212,16 +215,22 @@ CREATE OR REPLACE VIEW contracts_dialog AS
 		app.customer_auth_letter,
 		
 		t.service_type,
-		
-		CASE WHEN app.service_type='modified_documents' THEN
-			exp_maint_base.service_type
-		ELSE NULL
-		END AS modified_documents_service_type,
-		
-		CASE WHEN app.service_type='modified_documents' THEN
-			exp_maint_base.expertise_type
-		ELSE NULL
-		END AS modified_documents_expertise_type,
+
+		CASE
+			WHEN app.service_type='modified_documents' THEN
+				b_app.expert_maintenance_service_type
+			WHEN  app.service_type='expert_maintenance' THEN
+				app.expert_maintenance_service_type
+			ELSE NULL
+		END AS expert_maintenance_service_type,
+
+		CASE
+			WHEN app.service_type='modified_documents' THEN
+				b_app.expert_maintenance_expertise_type
+			WHEN  app.service_type='expert_maintenance' THEN
+				app.expert_maintenance_expertise_type
+			ELSE NULL
+		END AS expert_maintenance_expertise_type,				
 		
 		CASE WHEN t.service_type='expert_maintenance' THEN
 			contracts_ref(exp_main_ct)
@@ -326,8 +335,8 @@ CREATE OR REPLACE VIEW contracts_dialog AS
 	LEFT JOIN contracts AS prim_contr ON prim_contr.id=t.primary_contract_id
 	LEFT JOIN contracts AS modif_prim_contr ON modif_prim_contr.id=t.modif_primary_contract_id
 	
-	LEFT JOIN applications exp_maint ON exp_maint.id=app.base_application_id
-	LEFT JOIN applications exp_maint_base ON exp_maint_base.id=exp_maint.expert_maintenance_base_application_id
+	LEFT JOIN applications b_app ON b_app.id=app.base_application_id
+	--LEFT JOIN applications exp_maint_base ON exp_maint_base.id=exp_maint.expert_maintenance_base_application_id
 
 	--LEFT JOIN clients ON clients.id=t.client_id
 	;

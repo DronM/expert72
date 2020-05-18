@@ -76,6 +76,24 @@ function DocumentTemplateList_Model(options){
 	
 	options.fields.comment_text = new FieldText("comment_text",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	filed_options.alias = 'Услуга';
+	filed_options.autoInc = false;	
+	
+	options.fields.service_type = new FieldString("service_type",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	filed_options.alias = 'Вид гос.экспертизы';
+	filed_options.autoInc = false;	
+	
+	options.fields.expertise_type = new FieldString("expertise_type",filed_options);
+	
 		DocumentTemplateList_Model.superclass.constructor.call(this,id,options);
 }
 extend(DocumentTemplateList_Model,ModelXML);

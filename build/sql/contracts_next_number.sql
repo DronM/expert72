@@ -8,9 +8,10 @@ $$
 	SELECT
 		coalesce(max(regexp_replace(ct.contract_number,'\D+.*$','')::int),0)+1||
 		(SELECT
-				coalesce(services.contract_postf,'')
-			FROM services
-			WHERE services.service_type=in_service_type
+			coalesce(services.contract_postf,'')
+		FROM services
+		WHERE services.service_type=in_service_type
+		LIMIT 1
 		)
 	FROM contracts AS ct
 	WHERE

@@ -61,6 +61,18 @@ class DocumentTemplate_Controller extends ControllerSQL{
 			));
 		$pm->addParam($param);
 		
+				$param = new FieldExtEnum('service_type',',','expertise,cost_eval_validity,audit,modification,modified_documents,expert_maintenance'
+				,array(
+				'alias'=>'Услуга'
+			));
+		$pm->addParam($param);
+		
+				$param = new FieldExtEnum('expertise_type',',','pd,eng_survey,pd_eng_survey,cost_eval_validity,cost_eval_validity_pd,cost_eval_validity_eng_survey,cost_eval_validity_pd_eng_survey'
+				,array(
+				'alias'=>'Вид гос.экспертизы'
+			));
+		$pm->addParam($param);
+		
 		
 		$this->addPublicMethod($pm);
 		$this->setInsertModelId('DocumentTemplate_Model');
@@ -112,6 +124,20 @@ class DocumentTemplate_Controller extends ControllerSQL{
 				,array(
 			
 				'alias'=>'Комментарий'
+			));
+			$pm->addParam($param);
+		
+				$param = new FieldExtEnum('service_type',',','expertise,cost_eval_validity,audit,modification,modified_documents,expert_maintenance'
+				,array(
+			
+				'alias'=>'Услуга'
+			));
+			$pm->addParam($param);
+		
+				$param = new FieldExtEnum('expertise_type',',','pd,eng_survey,pd_eng_survey,cost_eval_validity,cost_eval_validity_pd,cost_eval_validity_eng_survey,cost_eval_validity_pd_eng_survey'
+				,array(
+			
+				'alias'=>'Вид гос.экспертизы'
 			));
 			$pm->addParam($param);
 		

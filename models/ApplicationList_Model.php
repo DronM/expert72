@@ -425,6 +425,30 @@ class ApplicationList_Model extends ModelSQL{
 		$this->addField($f_expert_maintenance_contract_data);
 		//********************
 		
+		//*** Field expert_maintenance_service_type ***
+		$f_opts = array();
+		$f_opts['id']="expert_maintenance_service_type";
+						
+		$f_expert_maintenance_service_type=new FieldSQLEnum($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expert_maintenance_service_type",$f_opts);
+		$this->addField($f_expert_maintenance_service_type);
+		//********************
+		
+		//*** Field expert_maintenance_expertise_type ***
+		$f_opts = array();
+		$f_opts['id']="expert_maintenance_expertise_type";
+						
+		$f_expert_maintenance_expertise_type=new FieldSQLEnum($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expert_maintenance_expertise_type",$f_opts);
+		$this->addField($f_expert_maintenance_expertise_type);
+		//********************
+		
+		//*** Field documents ***
+		$f_opts = array();
+		$f_opts['id']="documents";
+						
+		$f_documents=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"documents",$f_opts);
+		$this->addField($f_documents);
+		//********************
+		
 		//*** Field users_ref ***
 		$f_opts = array();
 		$f_opts['id']="users_ref";

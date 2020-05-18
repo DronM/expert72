@@ -403,6 +403,32 @@ function ApplicationDialog_Model(options){
 	filed_options.autoInc = false;	
 	
 	options.fields.expert_maintenance_contract_data = new FieldJSONB("expert_maintenance_contract_data",filed_options);
+		
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.expert_maintenance_service_type = new FieldEnum("expert_maintenance_service_type",filed_options);
+	filed_options.enumValues = 'expertise,cost_eval_validity,audit,modification,modified_documents,expert_maintenance';
+		
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.expert_maintenance_expertise_type = new FieldEnum("expert_maintenance_expertise_type",filed_options);
+	filed_options.enumValues = 'pd,eng_survey,pd_eng_survey,cost_eval_validity,cost_eval_validity_pd,cost_eval_validity_eng_survey,cost_eval_validity_pd_eng_survey';
+		
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.documents = new FieldJSON("documents",filed_options);
 	
 			
 			
@@ -468,15 +494,7 @@ function ApplicationDialog_Model(options){
 	
 	options.fields.application_state_end_date = new FieldDate("application_state_end_date",filed_options);
 	
-				
-	
-	var filed_options = {};
-	filed_options.primaryKey = false;	
-	
-	filed_options.autoInc = false;	
-	
-	options.fields.documents = new FieldJSON("documents",filed_options);
-	
+			
 				
 	
 	var filed_options = {};
@@ -628,42 +646,8 @@ function ApplicationDialog_Model(options){
 	options.fields.expert_maintenance_base_applications_ref = new FieldJSON("expert_maintenance_base_applications_ref",filed_options);
 	
 			
-				
-	
-	var filed_options = {};
-	filed_options.primaryKey = false;	
-	
-	filed_options.autoInc = false;	
-	
-	options.fields.modified_documents_service_type = new FieldString("modified_documents_service_type",filed_options);
-	
-				
-	
-	var filed_options = {};
-	filed_options.primaryKey = false;	
-	
-	filed_options.autoInc = false;	
-	
-	options.fields.modified_documents_expertise_type = new FieldString("modified_documents_expertise_type",filed_options);
-	
-				
-	
-	var filed_options = {};
-	filed_options.primaryKey = false;	
-	
-	filed_options.autoInc = false;	
-	
-	options.fields.expert_maintenance_service_type = new FieldString("expert_maintenance_service_type",filed_options);
-	
-				
-	
-	var filed_options = {};
-	filed_options.primaryKey = false;	
-	
-	filed_options.autoInc = false;	
-	
-	options.fields.expert_maintenance_expertise_type = new FieldString("expert_maintenance_expertise_type",filed_options);
-	
+			
+			
 			
 		ApplicationDialog_Model.superclass.constructor.call(this,id,options);
 }

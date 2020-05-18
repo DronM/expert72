@@ -66,6 +66,7 @@
 <li><a href="#Holiday_Controller">Holiday_Controller</a></li>
 <li><a href="#Kladr_Controller">Kladr_Controller</a></li>
 <li><a href="#LinkedContractList_Controller">LinkedContractList_Controller</a></li>
+<li><a href="#LogPKI_Controller">LogPKI_Controller</a></li>
 <li><a href="#MailForSending_Controller">MailForSending_Controller</a></li>
 <li><a href="#MainMenuConstructor_Controller">MainMenuConstructor_Controller</a></li>
 <li><a href="#MainMenuContent_Controller">MainMenuContent_Controller</a></li>
@@ -108,6 +109,7 @@
 <li><a href="#VariantStorage_Model">VariantStorage_Model</a></li>
 <li><a href="#VariantStorageList_Model">VariantStorageList_Model</a></li>
 <li><a href="#About_Model">About_Model</a></li>
+<li><a href="#Log_Model">Log_Model</a></li>
 <li><a href="#TimeZoneLocale_Model">TimeZoneLocale_Model</a></li>
 <li><a href="#PersonIdPaper_Model">PersonIdPaper_Model</a></li>
 <li><a href="#User_Model">User_Model</a></li>
@@ -159,6 +161,7 @@
 <li><a href="#ApplicationDocumentFileList_Model">ApplicationDocumentFileList_Model</a></li>
 <li><a href="#ApplicationDocFolder_Model">ApplicationDocFolder_Model</a></li>
 <li><a href="#Contact_Model">Contact_Model</a></li>
+<li><a href="#ContactList_Model">ContactList_Model</a></li>
 <li><a href="#ApplicationClient_Model">ApplicationClient_Model</a></li>
 <li><a href="#Morpher_Model">Morpher_Model</a></li>
 <li><a href="#Holiday_Model">Holiday_Model</a></li>
@@ -429,6 +432,7 @@
 </div>
 </div>
 <h2>get_document_templates</h2>
+<a href="#DocumentTemplateAllList_Model">Model: DocumentTemplateAllList_Model</a><h2>get_document_templates_on_filter</h2>
 <a href="#DocumentTemplateAllList_Model">Model: DocumentTemplateAllList_Model</a><h2>get_document_templates_for_contract</h2>
 <a href="#DocumentTemplateAllList_Model">Model: DocumentTemplateAllList_Model</a><h2>remove_document_types</h2>
 <p>Arguments:</p>
@@ -2713,6 +2717,15 @@
 <a href="#LinkedContractList_Model">Model: LinkedContractList_Model</a>
 </div>
 </div>
+<div id="LogPKI_Controller" class="content_box">
+<h1>LogPKI_Controller</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Методы:</p>
+<h2>get_list</h2>
+<a href="#Log_Model">Model: Log_Model</a>
+</div>
+</div>
 <div id="MailForSending_Controller" class="content_box">
 <h1>MailForSending_Controller</h1>
 <div class="content_item">
@@ -3730,6 +3743,24 @@
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
+<h2>expert_maintenance_service_type</h2>
+<div>Type:Enum</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>expert_maintenance_expertise_type</h2>
+<div>Type:Enum</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>documents</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
 </div>
 </div>
 <div id="ApplicationClient_Model" class="content_box">
@@ -4236,18 +4267,6 @@
 <div>Precision:</div>
 <h2>expert_maintenance_contract_data</h2>
 <div>Type:JSON</div>
-<div>Primary key:</div>
-<div>Required:</div>
-<div>Length:</div>
-<div>Precision:</div>
-<h2>modified_documents_service_type</h2>
-<div>Type:String</div>
-<div>Primary key:</div>
-<div>Required:</div>
-<div>Length:</div>
-<div>Precision:</div>
-<h2>modified_documents_expertise_type</h2>
-<div>Type:String</div>
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>
@@ -5544,6 +5563,60 @@
 <div>Precision:</div>
 </div>
 </div>
+<div id="ContactList_Model" class="content_box">
+<h1>ContactList_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:200</div>
+<div>Precision:</div>
+<h2>email</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>tel</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:15</div>
+<div>Precision:</div>
+<h2>post</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>firm_name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:250</div>
+<div>Precision:</div>
+<h2>dep</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:250</div>
+<div>Precision:</div>
+<h2>contact</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>contact_descr</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
 <div id="ContactName_Model" class="content_box">
 <h1>ContactName_Model</h1>
 <div class="content_item">
@@ -6419,18 +6492,6 @@
 <div>Length:</div>
 <div>Precision:</div>
 <h2>service_type</h2>
-<div>Type:String</div>
-<div>Primary key:</div>
-<div>Required:</div>
-<div>Length:</div>
-<div>Precision:</div>
-<h2>modified_documents_service_type</h2>
-<div>Type:String</div>
-<div>Primary key:</div>
-<div>Required:</div>
-<div>Length:</div>
-<div>Precision:</div>
-<h2>modified_documents_expertise_type</h2>
 <div>Type:String</div>
 <div>Primary key:</div>
 <div>Required:</div>
@@ -10174,6 +10235,18 @@
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
+<h2>service_type</h2>
+<div>Type:Enum</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>expertise_type</h2>
+<div>Type:Enum</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
 </div>
 </div>
 <div id="DocumentTemplateAllList_Model" class="content_box">
@@ -10242,6 +10315,18 @@
 <div>Precision:</div>
 <h2>comment_text</h2>
 <div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>service_type</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>expertise_type</h2>
+<div>Type:String</div>
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>
@@ -10932,6 +11017,24 @@
 <div>Precision:</div>
 <h2>contracts_ref</h2>
 <div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="Log_Model" class="content_box">
+<h1>Log_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>date_time</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>message_text</h2>
+<div>Type:Text</div>
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>

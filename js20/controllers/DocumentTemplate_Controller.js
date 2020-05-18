@@ -82,6 +82,20 @@ extend(DocumentTemplate_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	options.alias = "Услуга";	
+	options.enumValues = 'expertise,cost_eval_validity,audit,modification,modified_documents,expert_maintenance';
+	var field = new FieldEnum("service_type",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	options.alias = "Вид гос.экспертизы";	
+	options.enumValues = 'pd,eng_survey,pd_eng_survey,cost_eval_validity,cost_eval_validity_pd,cost_eval_validity_eng_survey,cost_eval_validity_pd_eng_survey';
+	var field = new FieldEnum("expertise_type",options);
+	
+	pm.addField(field);
+	
 	
 }
 
@@ -146,6 +160,22 @@ extend(DocumentTemplate_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	options.alias = "Услуга";	
+	options.enumValues = 'expertise,cost_eval_validity,audit,modification,modified_documents,expert_maintenance';
+	
+	var field = new FieldEnum("service_type",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	options.alias = "Вид гос.экспертизы";	
+	options.enumValues = 'pd,eng_survey,pd_eng_survey,cost_eval_validity,cost_eval_validity_pd,cost_eval_validity_eng_survey,cost_eval_validity_pd_eng_survey';
+	
+	var field = new FieldEnum("expertise_type",options);
+	
+	pm.addField(field);
+	
 	
 }
 
@@ -198,6 +228,12 @@ extend(DocumentTemplate_Controller,ControllerObjServer);
 	var f_opts = {};
 	
 	pm.addField(new FieldText("comment_text",f_opts));
+	var f_opts = {};
+	f_opts.alias = "Услуга";
+	pm.addField(new FieldString("service_type",f_opts));
+	var f_opts = {};
+	f_opts.alias = "Вид гос.экспертизы";
+	pm.addField(new FieldString("expertise_type",f_opts));
 }
 
 			DocumentTemplate_Controller.prototype.addGetObject = function(){

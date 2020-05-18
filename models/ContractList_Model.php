@@ -665,6 +665,7 @@ class ContractList_Model extends ModelSQL{
 		$direct = 'DESC';
 		$order->addField($f_date_time,$direct);
 $this->setLimitConstant('doc_per_page_count');
+		$this->setCalcHash(TRUE);
 	}
 
 }

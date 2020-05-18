@@ -14,6 +14,7 @@ require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLFloat.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLEnum.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLBool.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLDateTimeTZ.php');
+require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLJSON.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLJSONB.php');
  
 class Application_Model extends ModelSQL{
@@ -417,6 +418,30 @@ class Application_Model extends ModelSQL{
 						
 		$f_expert_maintenance_contract_data=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expert_maintenance_contract_data",$f_opts);
 		$this->addField($f_expert_maintenance_contract_data);
+		//********************
+		
+		//*** Field expert_maintenance_service_type ***
+		$f_opts = array();
+		$f_opts['id']="expert_maintenance_service_type";
+						
+		$f_expert_maintenance_service_type=new FieldSQLEnum($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expert_maintenance_service_type",$f_opts);
+		$this->addField($f_expert_maintenance_service_type);
+		//********************
+		
+		//*** Field expert_maintenance_expertise_type ***
+		$f_opts = array();
+		$f_opts['id']="expert_maintenance_expertise_type";
+						
+		$f_expert_maintenance_expertise_type=new FieldSQLEnum($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expert_maintenance_expertise_type",$f_opts);
+		$this->addField($f_expert_maintenance_expertise_type);
+		//********************
+		
+		//*** Field documents ***
+		$f_opts = array();
+		$f_opts['id']="documents";
+						
+		$f_documents=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"documents",$f_opts);
+		$this->addField($f_documents);
 		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}

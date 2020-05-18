@@ -41,6 +41,7 @@ function Application_Controller(options){
 	this.add_get_file_out_sig();
 	this.add_zip_all();
 	this.add_get_document_templates();
+	this.add_get_document_templates_on_filter();
 	this.add_get_document_templates_for_contract();
 	this.add_remove_document_types();
 	this.add_download_app_print();
@@ -349,6 +350,26 @@ extend(Application_Controller,ControllerObjServer);
 	var options = {};
 	
 	var field = new FieldJSONB("expert_maintenance_contract_data",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+		
+	options.enumValues = 'expertise,cost_eval_validity,audit,modification,modified_documents,expert_maintenance';
+	var field = new FieldEnum("expert_maintenance_service_type",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+		
+	options.enumValues = 'pd,eng_survey,pd_eng_survey,cost_eval_validity,cost_eval_validity_pd,cost_eval_validity_eng_survey,cost_eval_validity_pd_eng_survey';
+	var field = new FieldEnum("expert_maintenance_expertise_type",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldJSON("documents",options);
 	
 	pm.addField(field);
 	
@@ -664,6 +685,28 @@ extend(Application_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+		
+	options.enumValues = 'expertise,cost_eval_validity,audit,modification,modified_documents,expert_maintenance';
+	
+	var field = new FieldEnum("expert_maintenance_service_type",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+		
+	options.enumValues = 'pd,eng_survey,pd_eng_survey,cost_eval_validity,cost_eval_validity_pd,cost_eval_validity_eng_survey,cost_eval_validity_pd_eng_survey';
+	
+	var field = new FieldEnum("expert_maintenance_expertise_type",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldJSON("documents",options);
+	
+	pm.addField(field);
+	
 		var options = {};
 				
 		pm.addField(new FieldBool("set_sent",options));
@@ -905,6 +948,15 @@ extend(Application_Controller,ControllerObjServer);
 	var f_opts = {};
 	
 	pm.addField(new FieldJSONB("expert_maintenance_contract_data",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldEnum("expert_maintenance_service_type",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldEnum("expert_maintenance_expertise_type",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldJSON("documents",f_opts));
 	pm.getField(this.PARAM_ORD_FIELDS).setValue("create_dt");
 	
 }
@@ -1082,11 +1134,34 @@ extend(Application_Controller,ControllerObjServer);
 	var opts = {"controller":this};	
 	var pm = new PublicMethodServer('get_document_templates',opts);
 	
+	this.addPublicMethod(pm);
+}
+
+			Application_Controller.prototype.add_get_document_templates_on_filter = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('get_document_templates_on_filter',opts);
+	
 				
 	
 	var options = {};
 	
-		pm.addField(new FieldDate("on_date",options));
+		options.required = true;
+	
+		pm.addField(new FieldEnum("service_type",options));
+	
+				
+	
+	var options = {};
+	
+		pm.addField(new FieldEnum("expertise_type",options));
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("construction_type_id",options));
 	
 			
 	this.addPublicMethod(pm);

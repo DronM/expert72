@@ -89,6 +89,26 @@ class DocumentTemplate_Model extends ModelSQL{
 		$f_comment_text=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"comment_text",$f_opts);
 		$this->addField($f_comment_text);
 		//********************
+		
+		//*** Field service_type ***
+		$f_opts = array();
+		
+		$f_opts['alias']='Услуга';
+		$f_opts['id']="service_type";
+						
+		$f_service_type=new FieldSQLEnum($this->getDbLink(),$this->getDbName(),$this->getTableName(),"service_type",$f_opts);
+		$this->addField($f_service_type);
+		//********************
+		
+		//*** Field expertise_type ***
+		$f_opts = array();
+		
+		$f_opts['alias']='Вид гос.экспертизы';
+		$f_opts['id']="expertise_type";
+						
+		$f_expertise_type=new FieldSQLEnum($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expertise_type",$f_opts);
+		$this->addField($f_expertise_type);
+		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}
 

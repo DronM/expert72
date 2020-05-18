@@ -47,6 +47,18 @@ BEGIN
 				
 			END IF;
 		END IF;
+		
+		IF NEW.service_type='expert_maintenance' THEN
+			NEW.documents = NULL;
+		ELSIF TG_OP='INSERT'
+		OR OLD.create_dt<>NEW.create_dt
+		OR OLD.construction_type_id<>NEW.construction_type_id
+		OR OLD.service_type<>NEW.service_type
+		OR OLD.expertise_type<>NEW.expertise_type
+		THEN
+			NEW.documents = applications_get_documents(NEW);
+		END IF;
+		
 		RETURN NEW;
 	END IF;
 END;

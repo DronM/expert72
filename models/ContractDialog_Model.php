@@ -792,22 +792,6 @@ class ContractDialog_Model extends ModelSQL{
 		$this->addField($f_contract_document_visib);
 		//********************
 		
-		//*** Field modified_documents_service_type ***
-		$f_opts = array();
-		$f_opts['id']="modified_documents_service_type";
-						
-		$f_modified_documents_service_type=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"modified_documents_service_type",$f_opts);
-		$this->addField($f_modified_documents_service_type);
-		//********************
-		
-		//*** Field modified_documents_expertise_type ***
-		$f_opts = array();
-		$f_opts['id']="modified_documents_expertise_type";
-						
-		$f_modified_documents_expertise_type=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"modified_documents_expertise_type",$f_opts);
-		$this->addField($f_modified_documents_expertise_type);
-		//********************
-		
 		//*** Field expert_maintenance_base_contracts_ref ***
 		$f_opts = array();
 		$f_opts['id']="expert_maintenance_base_contracts_ref";

@@ -875,24 +875,6 @@ function ContractDialog_Model(options){
 	
 	filed_options.autoInc = false;	
 	
-	options.fields.modified_documents_service_type = new FieldString("modified_documents_service_type",filed_options);
-	
-				
-	
-	var filed_options = {};
-	filed_options.primaryKey = false;	
-	
-	filed_options.autoInc = false;	
-	
-	options.fields.modified_documents_expertise_type = new FieldString("modified_documents_expertise_type",filed_options);
-	
-				
-	
-	var filed_options = {};
-	filed_options.primaryKey = false;	
-	
-	filed_options.autoInc = false;	
-	
 	options.fields.expert_maintenance_base_contracts_ref = new FieldJSON("expert_maintenance_base_contracts_ref",filed_options);
 	
 		ContractDialog_Model.superclass.constructor.call(this,id,options);

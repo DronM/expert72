@@ -1,7 +1,7 @@
 -- VIEW: applications_dialog
 
---DROP VIEW contracts_dialog;
---DROP VIEW applications_dialog;
+DROP VIEW contracts_dialog;
+DROP VIEW applications_dialog;
 
 CREATE OR REPLACE VIEW applications_dialog AS
 	SELECT
@@ -63,6 +63,8 @@ CREATE OR REPLACE VIEW applications_dialog AS
 		st.date_time AS application_state_dt,
 		st.end_date_time AS application_state_end_date,
 		
+		d.documents,
+		/*
 		array_to_json((
 			SELECT array_agg(l.documents) FROM document_templates_all_list_for_date(d.create_dt::date) l
 			WHERE
@@ -72,8 +74,8 @@ CREATE OR REPLACE VIEW applications_dialog AS
 				l.document_type IN (
 					CASE WHEN (d.expertise_type='pd' OR d.expertise_type='pd_eng_survey' OR d.expertise_type='cost_eval_validity_pd' OR d.expertise_type='cost_eval_validity_pd_eng_survey')
 						OR (d.service_type='modified_documents'
-							AND
-						(exp_maint_base.expertise_type='pd' OR exp_maint_base.expertise_type='pd_eng_survey' OR exp_maint_base.expertise_type='cost_eval_validity_pd' OR exp_maint_base.expertise_type='cost_eval_validity_pd_eng_survey')
+							AND							
+						(d.expert_maintenance_expertise_type='pd' OR d.expert_maintenance_expertise_type='pd_eng_survey' OR d.expert_maintenance_expertise_type='cost_eval_validity_pd' OR d.expert_maintenance_expertise_type='cost_eval_validity_pd_eng_survey')
 						)
 						THEN 'pd'::document_types
 						ELSE NULL
@@ -81,7 +83,7 @@ CREATE OR REPLACE VIEW applications_dialog AS
 					CASE WHEN (d.expertise_type='eng_survey' OR d.expertise_type='pd_eng_survey' OR d.expertise_type='cost_eval_validity_eng_survey' OR d.expertise_type='cost_eval_validity_pd_eng_survey')
 						OR (d.service_type='modified_documents'
 							AND
-						(exp_maint_base.expertise_type='eng_survey' OR exp_maint_base.expertise_type='pd_eng_survey' OR exp_maint_base.expertise_type='cost_eval_validity_eng_survey' OR exp_maint_base.expertise_type='cost_eval_validity_pd_eng_survey')
+						(d.expert_maintenance_expertise_type='eng_survey' OR d.expert_maintenance_expertise_type='pd_eng_survey' OR d.expert_maintenance_expertise_type='cost_eval_validity_eng_survey' OR d.expert_maintenance_expertise_type='cost_eval_validity_pd_eng_survey')
 						)
 						THEN 'eng_survey'::document_types
 						ELSE NULL
@@ -89,7 +91,7 @@ CREATE OR REPLACE VIEW applications_dialog AS
 					CASE WHEN (d.expertise_type='cost_eval_validity' OR d.expertise_type='cost_eval_validity_pd' OR d.expertise_type='cost_eval_validity_eng_survey' OR d.expertise_type='cost_eval_validity_pd_eng_survey')
 						OR (d.service_type='modified_documents'
 							AND
-						(exp_maint_base.expertise_type='cost_eval_validity' OR exp_maint_base.expertise_type='cost_eval_validity_pd' OR exp_maint_base.expertise_type='cost_eval_validity_eng_survey' OR exp_maint_base.expertise_type='cost_eval_validity_pd_eng_survey')
+						(d.expert_maintenance_expertise_type='cost_eval_validity' OR d.expert_maintenance_expertise_type='cost_eval_validity_pd' OR d.expert_maintenance_expertise_type='cost_eval_validity_eng_survey' OR d.expert_maintenance_expertise_type='cost_eval_validity_pd_eng_survey')
 						)
 						THEN 'cost_eval_validity'::document_types
 						ELSE NULL
@@ -100,6 +102,7 @@ CREATE OR REPLACE VIEW applications_dialog AS
 					)
 				)
 		)) AS documents,
+		*/
 		
 		applications_ref(d)->>'descr' AS select_descr,
 		
@@ -155,22 +158,21 @@ CREATE OR REPLACE VIEW applications_dialog AS
 		END AS expert_maintenance_base_applications_ref,
 		d.expert_maintenance_contract_data,
 		
-		--Если это модифицированная документация эти поля содержат данные из
-		--базового заявления по экспертному сопровождению по полю expert_maintenance_base_application_id
-		--данные полей service_type и expertise_type
-		CASE WHEN d.service_type='modified_documents' THEN
-			exp_maint_base.service_type
-		ELSE NULL
-		END AS modified_documents_service_type,
-		
-		CASE WHEN d.service_type='modified_documents' THEN
-			exp_maint_base.expertise_type
-		ELSE NULL
-		END AS modified_documents_expertise_type,
-		
-		exp_m_app.service_type AS expert_maintenance_service_type,
-		exp_m_app.expertise_type AS expert_maintenance_expertise_type
-				
+		CASE
+			WHEN d.service_type='modified_documents' THEN
+				b_app.expert_maintenance_service_type
+			WHEN  d.service_type='expert_maintenance' THEN
+				d.expert_maintenance_service_type
+			ELSE NULL
+		END AS expert_maintenance_service_type,
+
+		CASE
+			WHEN d.service_type='modified_documents' THEN
+				b_app.expert_maintenance_expertise_type
+			WHEN  d.service_type='expert_maintenance' THEN
+				d.expert_maintenance_expertise_type
+			ELSE NULL
+		END AS expert_maintenance_expertise_type				
 		
 	FROM applications AS d
 	LEFT JOIN offices ON offices.id=d.office_id

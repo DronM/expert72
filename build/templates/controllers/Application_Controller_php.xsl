@@ -520,7 +520,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				if($ar_obj['cost_eval_validity']=='t'){
 					$ar_obj['exp_cost_eval_validity'] = 't';
 					$ar_obj['cost_eval_validity'] = NULL;
-					$ar_obj['expertise_type'] = 'pd';
+					$ar_obj['expertise_type'] = 'cost_eval_validity';
 				}
 				
 				//04/02/20
@@ -591,9 +591,11 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			);
 		}
 		
+		/*  с мая 2020 отправляются только необходимые темплеты при выборе услуги/вида работ!
 		if ( is_null($pm->getParamValue("id")) || $ar_obj['document_exists']!='t' ){
 			$this->addNewModel("SELECT * FROM document_templates_all_json_list",'DocumentTemplateAllList_Model');			
 		}
+		*/
 		
 		$documents = NULL;
 		if ($ar_obj['documents']){
@@ -804,7 +806,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		$set_sent = (isset($set_sent_v) &amp;&amp; $set_sent_v=='1');
 		
 		if ($set_sent){			
-			$stp = $pm->getParamValue("service_type")? $this->getExtVal("service_type"):null;
+			$stp = $pm->getParamValue("service_type")? $this->getExtVal($pm,"service_type"):null;
 			if(!$stp){
 				error_log('Отправка нового заявелния без указания типы услуги юзер='.$_SESSION['user_id']);
 				throw new Exception(self::ER_OTHER_USER_APP);
@@ -2338,6 +2340,22 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			}
 		}	
 		return TRUE;
+	}
+
+	public function get_document_templates_on_filter($pm){
+		$expertise_type = 'NULL';
+		if($pm->getParamValue('expertise_type')){
+			$expertise_type = $this->getExtDbVal($pm,'expertise_type');
+		}
+		
+		$this->addNewModel(sprintf(
+			"SELECT document_templates_on_filter(now()::date,%d,%s,%s) AS documents",
+			$this->getExtDbVal($pm,'construction_type_id'),			
+			$this->getExtDbVal($pm,'service_type'),
+			$expertise_type
+			),
+		'DocumentTemplateAllList_Model'
+		);
 	}
 	
 	public function get_document_templates($pm){

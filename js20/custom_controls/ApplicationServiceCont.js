@@ -31,6 +31,108 @@ ServiceCheckBox.prototype.setEnabled = function(enable){
 	);	
 	ServiceCheckBox.superclass.setEnabled.call(this,enable);
 }
+
+//***************************
+/*
+ * Контрол объединяет вместе Все услуги/под услуги
+ * т.е. service_types + experise_types
+ */
+function ExpertMaintenanceService(id,self){
+	options = {
+		"inline":true,
+		"attrs":{"class":"input form-control"},
+		"enabled":false,
+		"onSelect":function(){
+			self.m_mainView.calcFillPercent();
+		},
+		"elements":[
+			new EditSelectOption(id+":experise_pd",{
+				"descr":"Гос. экспертиза ПД",
+				"value":"expertise_pd"
+			})
+			,new EditSelectOption(id+":experise_eng_survey",{
+				"descr":"Гос. экспертиза РИИ",
+				"value":"expertise_eng_survey"
+			})
+			,new EditSelectOption(id+":experise_pd_eng_survey",{
+				"descr":"Гос. экспертиза ПД и РИИ",
+				"value":"expertise_pd_eng_survey"
+			})
+			,new EditSelectOption(id+":experise_cost_eval_validity",{
+				"descr":"Гос. достоверности",
+				"value":"expertise_cost_eval_validity"
+			})
+			,new EditSelectOption(id+":experise_cost_eval_validity_pd",{
+				"descr":"Гос. экспертиза ПД и достоверности",
+				"value":"expertise_cost_eval_validity_pd"
+			})
+			,new EditSelectOption(id+":experise_cost_eval_validity_pd_eng_survey",{
+				"descr":"Гос. экспертиза ПД, РИИ и достоверности",
+				"value":"expertise_cost_eval_validity_pd_eng_survey"
+			})
+			,new EditSelectOption(id+":audit",{
+				"descr":"Аудит",
+				"value":"audit"
+			})
+		
+		]
+	};
+	ExpertMaintenanceService.superclass.constructor.call(this,id,options);
+}
+extend(ExpertMaintenanceService,EditSelect); 
+
+ExpertMaintenanceService.prototype.getFillPercent = function(){
+	return (this.getValue()? 100:0);
+}
+
+ExpertMaintenanceService.prototype.setValue = function(serviceType,experiseType){
+	if(serviceType=="audit"){
+		ExpertMaintenanceService.superclass.setValue.call(this,"audit");
+	}
+	else if(serviceType=="expertise"){
+		ExpertMaintenanceService.superclass.setValue.call(this,"expertise_"+experiseType);
+	}
+}
+
+
+ExpertMaintenanceService.prototype.getServiceType = function(){
+	var v = this.getValue();
+	var res;
+	if(v=="audit"){
+		res = "audit";
+	}
+	else if(v){
+		res = "expertise";
+	}
+	return res;
+}
+
+ExpertMaintenanceService.prototype.getExpertiseType = function(){
+	var v = this.getValue();
+	var res;
+	if(v=="audit"){
+		res = "";
+	}
+	else if(v){
+		res = v.substring(("expertise_").length)
+	}
+	return res;
+}
+
+ExpertMaintenanceService.prototype.setInitValue = function(serviceType,experiseType){
+	this.setValue(serviceType,experiseType);
+	this.setAttr("initvalue",this.getValue());
+}
+
+ExpertMaintenanceService.prototype.getInitValue = function(){
+	return this.getAttr("initvalue");
+}
+
+ExpertMaintenanceService.prototype.getModified = function(){
+	var init = this.getInitValue();
+	var val = this.getValue();
+	return (init!=val);
+}
  
 function ApplicationServiceCont(id,options){
 	options = options || {};	
@@ -81,6 +183,12 @@ function ApplicationServiceCont(id,options){
 						else{
 							self.getElement("audit").setEnabled(!cur_val);
 							self.getElement("expert_maintenance").setEnabled(!cur_val);
+							
+							//недоступно только если выключено 29/04/20
+							/*
+							var maint_ctrl = self.getElement("expert_maintenance");
+							maint_ctrl.setEnabled(maint_ctrl.getValue());							
+							*/
 						}
 					
 						var ctrl = self.getElement("expertise_type");
@@ -378,6 +486,11 @@ function ApplicationServiceCont(id,options){
 						}
 						else{
 							self.getElement("expert_maintenance").setEnabled(!cur_val);
+							/*
+							//недоступно только если выключено 29/04/20
+							var maint_ctrl = self.getElement("expert_maintenance");
+							maint_ctrl.setEnabled(maint_ctrl.getValue());
+							*/
 						}
 					
 						self.toggleService("audit",cur_val);
@@ -438,6 +551,7 @@ function ApplicationServiceCont(id,options){
 					
 							self.getElement("expert_maintenance_base_applications_ref").setEnabled(cur_val);
 							self.getElement("expert_maintenance_contract_data").setEnabled(cur_val);
+							self.getElement("expert_maintenance_service").setEnabled(cur_val);
 					
 							if (!cur_val){
 								var this_cont = this;
@@ -457,6 +571,9 @@ function ApplicationServiceCont(id,options){
 										}
 										if(!self.getElement("expert_maintenance_contract_data").isNull()){
 											self.getElement("expert_maintenance_contract_data").reset();
+										}
+										if(!self.getElement("expert_maintenance_service").isNull()){
+											self.getElement("expert_maintenance_service").reset();
 										}
 									
 									},
@@ -478,7 +595,8 @@ function ApplicationServiceCont(id,options){
 				var ac_contr = new Application_Controller();
 				this.addElement(new ApplicationEditRef(id+":expert_maintenance_base_applications_ref",{
 					"labelCaption":"Заявление:",
-					"labelClassName":"control-label percentcalc "+window.getBsCol(4),
+					"labelClassName":"control-label "+window.getBsCol(4),
+					//percentcalc этот класс убрал 29/04/20
 					"enabled":false,
 					"attrs":{
 						"placeholder":"Номер заявления, номер контракта, номер заключения",
@@ -493,8 +611,8 @@ function ApplicationServiceCont(id,options){
 						self.fillOnApplicationForExpertMaintenance(fields.id.getValue());
 					},
 					"onReset":function(){
-						//alert("Reset data!!!")
 						self.getElement("expert_maintenance_contract_data").reset();
+						self.getElement("expert_maintenance_service").reset();
 					}
 				}));
 			
@@ -505,7 +623,10 @@ function ApplicationServiceCont(id,options){
 					"attrs":{"title":"Данные контракта с положительным заключением"},
 					"mainView":options.mainView,
 				}));
-				this.addElement(new Control(id+":expert_maintenance_base_applications_inf","DIV"));
+				//this.addElement(new Control(id+":expert_maintenance_base_applications_inf","DIV"));
+				
+				//29/04/20 При отсутствии заявления заполняется вручную услуга!!
+				this.addElement(new ExpertMaintenanceService(id+":expert_maintenance_service",this));
 				
 			}		
 		}
@@ -521,7 +642,7 @@ function ApplicationServiceCont(id,options){
 			perc = 0;
 		}
 		else if (self.getElement("service_type").getValue()=="expert_maintenance"){
-			perc = ( (self.getElement("expert_maintenance_base_applications_ref").isNull())? 0:50 )+
+			perc = ( (self.getElement("expert_maintenance_service").getFillPercent()==100)? 50:0 )+
 				( (self.getElement("expert_maintenance_contract_data").getFillPercent()==100)? 50:0 )
 				;
 		}
@@ -549,6 +670,40 @@ ApplicationServiceCont.prototype.m_mainView;
 
 /* public methods */
 
+ApplicationServiceCont.prototype.onChangeExpertiseType = function(){
+	var cur_val = this.getElement("expertise_type").getValue();
+	//содержимое всех вкладок МЕНЯЕТСЯ!!!										
+	var doc_types_for_remove = [];
+	for (var tab_name in this.m_mainView.m_documentTabs){
+		if (this.m_mainView.m_documentTabs[tab_name].control && this.m_mainView.m_documentTabs[tab_name].control.getTotalFileCount()){
+			doc_types_for_remove.push(tab_name);
+		}
+	}
+	var self = this;
+	this.m_mainView.removeDocumentTypeWithWarn(doc_types_for_remove,
+		function(){
+			//удалить все вкладки
+			for (var tab_name in self.m_mainView.m_documentTabs){
+				self.m_mainView.delElement("documents_"+tab_name);
+				self.m_mainView.m_documentTabs[tab_name].control = null;		
+			}								
+		
+			var pd_usage_info_vis = (cur_val=="pd"||cur_val=="pd_eng_survey"||cur_val=="cost_eval_validity_pd"||cur_val=="cost_eval_validity_pd_eng_survey");
+			self.m_mainView.getElement("pd_usage_info").setVisible(pd_usage_info_vis);
+			self.m_mainView.getElement("pd_usage_info").setAttr("percentcalc",pd_usage_info_vis);
+			self.m_mainView.toggleDocTypeVis();
+		},
+		function(){
+			//set back old value
+			self.getElement("expertise_type").setValue(self.m_mainView.m_prevExpertiseType);
+		}
+	);
+
+}
+
+/*
+ * Эта функция работала до мая 2020
+ * Теперь могут меняться все вкладки, т.к. возможно задавать шаблоны для услуши и вида экспертизы!!!
 ApplicationServiceCont.prototype.onChangeExpertiseType = function(){
 	//ПД/РИИ могут выключиться после смены
 	var cur_val = this.getElement("expertise_type").getValue();
@@ -594,6 +749,7 @@ ApplicationServiceCont.prototype.onChangeExpertiseType = function(){
 		}
 	);
 }
+*/
 
 ApplicationServiceCont.prototype.isNull = function(){
 	var r = !this.getElement("service_type").getValue();
@@ -646,8 +802,11 @@ ApplicationServiceCont.prototype.fillOnApplicationForExpertMaintenance = functio
 				m.recUpdate();
 				self.m_mainView.onGetData(resp,"copy");
 				self.getElement("expert_maintenance_contract_data").getFillPercent();
+				self.getElement("expert_maintenance_service").setValue(
+					m.getFieldValue("expert_maintenance_service_type"),
+					m.getFieldValue("expert_maintenance_expertise_type")
+				);
 				window.showTempNote("Заполнено по выбранному документу.",null,10000);
-				self.m_mainView.updateExpertMaintenanceInf();
 			}
 		}
 	})	

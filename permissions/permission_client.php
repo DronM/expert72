@@ -80,6 +80,8 @@ $permissions = array();
 			
 				$permissions['Application_Controller_get_document_templates']=TRUE;
 			
+				$permissions['Application_Controller_get_document_templates_on_filter']=TRUE;
+			
 				$permissions['Application_Controller_get_document_templates_for_contract']=TRUE;
 			
 				$permissions['Application_Controller_remove_document_types']=TRUE;

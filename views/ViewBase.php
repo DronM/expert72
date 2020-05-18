@@ -1778,6 +1778,8 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/Enum_service_types.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/EnumGridColumn_service_types.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ApplicationForExpertMaintenanceList_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/LogPKI_Controller.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/Log_Model.js'));
 	
 			if (isset($_SESSION['scriptId'])){
 				$script_id = $_SESSION['scriptId'];

@@ -44,8 +44,12 @@ FileUploaderDocFlowIn_View.prototype.getQuerySruc = function(file){
 }
 
 FileUploaderDocFlowIn_View.prototype.setFileOptions = function(fileOpts,file){
-//	if(file.is_switched===true){
+	if(file.deleted===true){
+		fileOpts.refTitle = "Удален этим письмом";	
+		fileOpts.refClass = "appFileDeleted";	
+	}
+	else{
 		fileOpts.refTitle = "Загружен этим письмом"+((file.is_switched===true)? " взамен другого файла":"");	
 		fileOpts.refClass = "uploadedByThis" + ((file.is_switched===true)? " uploadedByThisSwitched":" uploadedByThisAdded");	
-//	}
+	}
 }

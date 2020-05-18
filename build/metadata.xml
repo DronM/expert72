@@ -2,7 +2,7 @@
 <metadata owner="expert72">
 	<versions>
 		<version dateOpen="2017-09-27 12:09:48" dateClose="2017-12-08 10:12:08">1.001 
-		<lastBuild>2020-04-15 06:24:24</lastBuild></version>
+		<lastBuild>2020-05-18 07:33:47</lastBuild></version>
 		<version dateOpen="2017-12-08 11:12:01" dateClose="2017-12-08 11:12:04">1.002</version>
 		<version dateOpen="2017-12-08 11:12:20" dateClose="2017-12-08 11:12:20">1.0.3</version>
 		<version dateOpen="2017-12-12 11:12:07" dateClose="2017-12-12 11:12:07">1.0.4</version>
@@ -136,6 +136,7 @@
 		<version dateOpen="2020-04-09 11:04:33" dateClose="2020-04-09 12:04:39">1.0.133</version>
 		<version dateOpen="2020-04-10 17:04:02" dateClose="2020-04-10 17:04:08">1.0.134</version>
 		<version dateOpen="2020-04-14 14:04:55" dateClose="2020-04-15 06:04:24">1.0.135</version>
+		<version dateOpen="2020-04-18 11:04:18" dateClose="2020-05-18 07:05:34">1.0.136</version>
 	</versions>
 	<globalFilters>
 		<field id="user_id"/>
@@ -724,6 +725,10 @@
 			<field id="app_version" dataType="String"/>
 			<field id="db_name" dataType="String"/>
 		</model>
+		<model id="Log" parent="ModelSQL" virtual="TRUE">
+			<field id="date_time" dataType="DateTimeTZ"/>
+			<field id="message_text" dataType="Text"/>
+		</model>
 		<model id="TimeZoneLocale" parent="ModelSQL" dataTable="time_zone_locales" virtual="FALSE">
 			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE" required="TRUE" alias="&#x41A;&#x43E;&#x434;"/>
 			<field id="descr" dataType="String" required="TRUE" length="100" alias="&#x41E;&#x43F;&#x438;&#x441;&#x430;&#x43D;&#x438;&#x435;"/>
@@ -983,6 +988,8 @@
 			<field id="content" dataType="JSON" required="TRUE" alias="&#x421;&#x43E;&#x434;&#x435;&#x440;&#x436;&#x438;&#x43C;&#x43E;&#x435; &#x448;&#x430;&#x431;&#x43B;&#x43E;&#x43D;&#x430;"/>
 			<field id="content_for_experts" dataType="JSON" required="TRUE" alias="&#x421;&#x43E;&#x434;&#x435;&#x440;&#x436;&#x438;&#x43C;&#x43E;&#x435; &#x448;&#x430;&#x431;&#x43B;&#x43E;&#x43D;&#x430;"/>
 			<field id="comment_text" dataType="Text" alias="&#x41A;&#x43E;&#x43C;&#x43C;&#x435;&#x43D;&#x442;&#x430;&#x440;&#x438;&#x439;"/>
+			<field id="service_type" dataType="Enum" enumId="service_types" alias="&#x423;&#x441;&#x43B;&#x443;&#x433;&#x430;"/>
+			<field id="expertise_type" dataType="Enum" enumId="expertise_types" alias="&#x412;&#x438;&#x434; &#x433;&#x43E;&#x441;.&#x44D;&#x43A;&#x441;&#x43F;&#x435;&#x440;&#x442;&#x438;&#x437;&#x44B;"/>
 		</model>
 		<model id="DocumentTemplateList" parent="ModelSQL" virtual="TRUE" dataTable="document_templates_list">
 			<field id="document_type" dataType="String" primaryKey="TRUE"/>
@@ -991,6 +998,8 @@
 			<field id="construction_type_id" dataType="Int" primaryKey="TRUE"/>
 			<field id="construction_types_ref" dataType="JSON"/>
 			<field id="comment_text" dataType="Text"/>
+			<field id="service_type" dataType="String" alias="&#x423;&#x441;&#x43B;&#x443;&#x433;&#x430;"/>
+			<field id="expertise_type" dataType="String" alias="&#x412;&#x438;&#x434; &#x433;&#x43E;&#x441;.&#x44D;&#x43A;&#x441;&#x43F;&#x435;&#x440;&#x442;&#x438;&#x437;&#x44B;"/>
 		</model>
 		<model id="DocumentTemplateAllList" parent="ModelSQL" virtual="TRUE" dataTable="document_templates_all_list">
 			<field id="documents" dataType="JSON"/>
@@ -1103,6 +1112,9 @@
 			<field id="app_print" dataType="JSONB" alias="&#x411;&#x43B;&#x430;&#x43D;&#x43A; &#x437;&#x430;&#x44F;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x44F;"/>
 			<field id="expert_maintenance_base_application_id" dataType="Int" refTable="applications" refField="id"/>
 			<field id="expert_maintenance_contract_data" dataType="JSONB"/>
+			<field id="expert_maintenance_service_type" dataType="Enum" enumId="service_types"/>
+			<field id="expert_maintenance_expertise_type" dataType="Enum" enumId="expertise_types"/>
+			<field id="documents" dataType="JSON"/>
 			<!--<field id="customer_is_developer" dataType="Bool" defaultValue="FALSE" />-->
 			<index id="applicatios_user_idx">
 				<field id="user_id"/>
@@ -1173,8 +1185,6 @@
 			<field id="service_type" dataType="String"/>
 			<field id="expert_maintenance_base_applications_ref" dataType="JSON"/>
 			<field id="expert_maintenance_contract_data" dataType="JSON"/>
-			<field id="modified_documents_service_type" dataType="String"/>
-			<field id="modified_documents_expertise_type" dataType="String"/>
 			<field id="expert_maintenance_service_type" dataType="String"/>
 			<field id="expert_maintenance_expertise_type" dataType="String"/>
 			<globalFilter id="user_id"/>
@@ -1357,6 +1367,19 @@
 			<index id="contacts_contact_idx" type="btree" unique="TRUE">
 				<field id="contact"/>
 			</index>
+		</model>
+		<model id="ContactList" parent="ModelSQL" dataTable="contacts_list" virtual="FALSE">
+			<defaultOrder>
+				<field id="contact"/>
+			</defaultOrder>
+			<field id="name" dataType="String" length="200"/>
+			<field id="email" dataType="Text"/>
+			<field id="tel" dataType="String" length="15"/>
+			<field id="post" dataType="Text"/>
+			<field id="firm_name" dataType="String" length="250"/>
+			<field id="dep" dataType="String" length="250"/>
+			<field id="contact" dataType="Text"/>
+			<field id="contact_descr" dataType="Text"/>
 		</model>
 		<model id="ApplicationClient" parentJS="ModelJSON" virtual="TRUE" server="FALSE">
 			<field id="name" dataType="String" length="100"/>
@@ -2657,7 +2680,7 @@
 				<field id="service_type"/>
 			</index>
 		</model>
-		<model id="ContractList" parent="ModelSQL" dataTable="contracts_list" virtual="TRUE" baseModelId="Contract">
+		<model id="ContractList" parent="ModelSQL" dataTable="contracts_list" virtual="TRUE" baseModelId="Contract" calcHash="TRUE">
 			<defaultOrder>
 				<field id="date_time" sortDirect="DESC"/>
 			</defaultOrder>
@@ -2779,8 +2802,6 @@
 			<field id="allow_new_file_add" dataType="Bool"/>
 			<field id="allow_client_out_documents" dataType="Bool"/>
 			<field id="service_type" dataType="String" alias="&#x412;&#x438;&#x434; &#x443;&#x441;&#x43B;&#x443;&#x433;&#x438;"/>
-			<field id="modified_documents_service_type" dataType="String"/>
-			<field id="modified_documents_expertise_type" dataType="String"/>
 			<field id="expert_maintenance_base_contracts_ref" dataType="JSON"/>
 		</model>
 		<model id="ExpertWork" parent="ModelSQL" dataTable="expert_works" virtual="FALSE">
@@ -3228,6 +3249,9 @@
 		<controller id="About" parentId="ControllerSQL">
 			<publicMethod id="get_object" modelId="About"/>
 		</controller>
+		<controller id="LogPKI" parentId="LogController">
+			<publicMethod id="get_list" modelId="Log"/>
+		</controller>
 		<controller id="User" parentId="ControllerSQL" noState="FALSE">
 			<publicMethod id="insert" modelId="User"/>
 			<publicMethod id="update" modelId="User"/>
@@ -3476,8 +3500,11 @@
 			<publicMethod id="zip_all">
 				<field id="application_id" dataType="Int" required="TRUE"/>
 			</publicMethod>
-			<publicMethod id="get_document_templates" modelId="DocumentTemplateAllList">
-				<field id="on_date" dataType="Date"/>
+			<publicMethod id="get_document_templates" modelId="DocumentTemplateAllList"/>
+			<publicMethod id="get_document_templates_on_filter" modelId="DocumentTemplateAllList">
+				<field id="service_type" dataType="Enum" enumId="service_types" required="TRUE"/>
+				<field id="expertise_type" dataType="Enum" enumId="expertise_types"/>
+				<field id="construction_type_id" dataType="Int" required="TRUE"/>
 			</publicMethod>
 			<publicMethod id="get_document_templates_for_contract" modelId="DocumentTemplateAllList">
 				<field id="contract_id" dataType="Int" required="TRUE"/>
@@ -5518,6 +5545,8 @@
 		<jsScript file="enum_controls/Enum_service_types.js"/>
 		<jsScript file="enum_controls/EnumGridColumn_service_types.js"/>
 		<jsScript file="models/ApplicationForExpertMaintenanceList_Model.js"/>
+		<jsScript file="controllers/LogPKI_Controller.js"/>
+		<jsScript file="models/Log_Model.js"/>
 	</jsScripts>
 	<cssScripts>
 		<cssScript file="assets/css/icons/icomoon/styles.css" compressed="TRUE" standalone="TRUE"/>

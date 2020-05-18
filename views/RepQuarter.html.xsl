@@ -51,23 +51,6 @@
 	
 	<table id="{$model_id}" class="tabel table-bordered table-striped">
 		<thead>
-			<field id="ord" dataType="String" alias="" />
-			<field id="expertise_result_number" dataType="String" alias="" />
-			<field id="date" dataType="Date" alias="" />
-			<field id="customer" dataType="String" alias="" />
-			<field id="constr_name" dataType="String" alias="" />
-			<field id="work_start_date" dataType="Date" alias="" />			
-			<field id="primary_expertise_result_number" dataType="String" alias="" />
-			<field id="expertise_result" dataType="String" alias="Результат" />
-			<field id="expertise_result_date" dataType="Date" alias="Дата выдачи результата" />
-			<field id="build_type_id" dataType="Int" alias="Вид строительства код" />
-			<field id="build_type_name" dataType="String" alias="Вид строительства наименование" />
-			<field id="expertise_type" dataType="String" alias="Вид экспертизы" />
-			<field id="in_estim_cost" dataType="Float" alias="Вход.сметная стоим." />
-			<field id="in_estim_cost_recommend" alias="Вход.сметная рекоменд.стоим." />
-			<field id="cur_estim_cost" dataType="Float" alias="Текущая сметн.стоим." />
-			<field id="cur_estim_cost_recommend" dataType="Float" alias="Текущая рекоменд.сметн.стоим." />
-		
 			<tr align="center">
 				<td rowspan="2">№</td>
 				<td rowspan="2">№ эксп.заключ.</td>

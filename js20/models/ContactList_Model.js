@@ -22,6 +22,9 @@ function ContactList_Model(options){
 	
 	options.fields = {};
 	
+			
+				
+			
 				
 	
 	var filed_options = {};
@@ -30,6 +33,7 @@ function ContactList_Model(options){
 	filed_options.autoInc = false;	
 	
 	options.fields.name = new FieldString("name",filed_options);
+	options.fields.name.getValidator().setMaxLength('200');
 	
 				
 	
@@ -38,7 +42,7 @@ function ContactList_Model(options){
 	
 	filed_options.autoInc = false;	
 	
-	options.fields.email = new FieldString("email",filed_options);
+	options.fields.email = new FieldText("email",filed_options);
 	
 				
 	
@@ -48,6 +52,7 @@ function ContactList_Model(options){
 	filed_options.autoInc = false;	
 	
 	options.fields.tel = new FieldString("tel",filed_options);
+	options.fields.tel.getValidator().setMaxLength('15');
 	
 				
 	
@@ -56,7 +61,7 @@ function ContactList_Model(options){
 	
 	filed_options.autoInc = false;	
 	
-	options.fields.post = new FieldString("post",filed_options);
+	options.fields.post = new FieldText("post",filed_options);
 	
 				
 	
@@ -66,6 +71,7 @@ function ContactList_Model(options){
 	filed_options.autoInc = false;	
 	
 	options.fields.firm_name = new FieldString("firm_name",filed_options);
+	options.fields.firm_name.getValidator().setMaxLength('250');
 	
 				
 	
@@ -75,6 +81,7 @@ function ContactList_Model(options){
 	filed_options.autoInc = false;	
 	
 	options.fields.dep = new FieldString("dep",filed_options);
+	options.fields.dep.getValidator().setMaxLength('250');
 	
 				
 	

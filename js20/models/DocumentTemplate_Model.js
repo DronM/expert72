@@ -93,6 +93,26 @@ function DocumentTemplate_Model(options){
 	
 	options.fields.comment_text = new FieldText("comment_text",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	filed_options.alias = 'Услуга';
+	filed_options.autoInc = false;	
+	
+	options.fields.service_type = new FieldEnum("service_type",filed_options);
+	filed_options.enumValues = 'expertise,cost_eval_validity,audit,modification,modified_documents,expert_maintenance';
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	filed_options.alias = 'Вид гос.экспертизы';
+	filed_options.autoInc = false;	
+	
+	options.fields.expertise_type = new FieldEnum("expertise_type",filed_options);
+	filed_options.enumValues = 'pd,eng_survey,pd_eng_survey,cost_eval_validity,cost_eval_validity_pd,cost_eval_validity_eng_survey,cost_eval_validity_pd_eng_survey';
+	
 		DocumentTemplate_Model.superclass.constructor.call(this,id,options);
 }
 extend(DocumentTemplate_Model,ModelXML);

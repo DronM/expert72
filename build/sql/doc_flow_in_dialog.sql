@@ -28,8 +28,9 @@ CREATE OR REPLACE VIEW doc_flow_in_dialog AS
 									'file_signed',app_f.file_signed,
 									'file_uploaded','true',
 									'file_path',app_f.file_path,
-									'is_switched',(clorg_f.new_file_id IS NOT NULL)
-									,'signatures',
+									'is_switched',(clorg_f.new_file_id IS NOT NULL),
+									'deleted',coalesce(app_f.deleted,FALSE),
+									'signatures',
 									(SELECT
 										json_agg(sub.signatures) AS signatures
 									FROM (

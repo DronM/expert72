@@ -695,7 +695,9 @@ function ContractList_Model(options){
 	
 	options.fields.expert_maintenance_contracts_ref = new FieldJSON("expert_maintenance_contracts_ref",filed_options);
 	
-		ContractList_Model.superclass.constructor.call(this,id,options);
+		
+	options.calcHash = true;
+	ContractList_Model.superclass.constructor.call(this,id,options);
 }
 extend(ContractList_Model,ModelXML);
 

@@ -424,6 +424,30 @@ class ApplicationDialog_Model extends ModelSQL{
 		$this->addField($f_expert_maintenance_contract_data);
 		//********************
 		
+		//*** Field expert_maintenance_service_type ***
+		$f_opts = array();
+		$f_opts['id']="expert_maintenance_service_type";
+						
+		$f_expert_maintenance_service_type=new FieldSQLEnum($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expert_maintenance_service_type",$f_opts);
+		$this->addField($f_expert_maintenance_service_type);
+		//********************
+		
+		//*** Field expert_maintenance_expertise_type ***
+		$f_opts = array();
+		$f_opts['id']="expert_maintenance_expertise_type";
+						
+		$f_expert_maintenance_expertise_type=new FieldSQLEnum($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expert_maintenance_expertise_type",$f_opts);
+		$this->addField($f_expert_maintenance_expertise_type);
+		//********************
+		
+		//*** Field documents ***
+		$f_opts = array();
+		$f_opts['id']="documents";
+						
+		$f_documents=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"documents",$f_opts);
+		$this->addField($f_documents);
+		//********************
+		
 		//*** Field construction_types_ref ***
 		$f_opts = array();
 		$f_opts['id']="construction_types_ref";
@@ -462,14 +486,6 @@ class ApplicationDialog_Model extends ModelSQL{
 						
 		$f_application_state_end_date=new FieldSQLDate($this->getDbLink(),$this->getDbName(),$this->getTableName(),"application_state_end_date",$f_opts);
 		$this->addField($f_application_state_end_date);
-		//********************
-		
-		//*** Field documents ***
-		$f_opts = array();
-		$f_opts['id']="documents";
-						
-		$f_documents=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"documents",$f_opts);
-		$this->addField($f_documents);
 		//********************
 		
 		//*** Field offices_ref ***
@@ -598,38 +614,6 @@ class ApplicationDialog_Model extends ModelSQL{
 						
 		$f_expert_maintenance_base_applications_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expert_maintenance_base_applications_ref",$f_opts);
 		$this->addField($f_expert_maintenance_base_applications_ref);
-		//********************
-		
-		//*** Field modified_documents_service_type ***
-		$f_opts = array();
-		$f_opts['id']="modified_documents_service_type";
-						
-		$f_modified_documents_service_type=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"modified_documents_service_type",$f_opts);
-		$this->addField($f_modified_documents_service_type);
-		//********************
-		
-		//*** Field modified_documents_expertise_type ***
-		$f_opts = array();
-		$f_opts['id']="modified_documents_expertise_type";
-						
-		$f_modified_documents_expertise_type=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"modified_documents_expertise_type",$f_opts);
-		$this->addField($f_modified_documents_expertise_type);
-		//********************
-		
-		//*** Field expert_maintenance_service_type ***
-		$f_opts = array();
-		$f_opts['id']="expert_maintenance_service_type";
-						
-		$f_expert_maintenance_service_type=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expert_maintenance_service_type",$f_opts);
-		$this->addField($f_expert_maintenance_service_type);
-		//********************
-		
-		//*** Field expert_maintenance_expertise_type ***
-		$f_opts = array();
-		$f_opts['id']="expert_maintenance_expertise_type";
-						
-		$f_expert_maintenance_expertise_type=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expert_maintenance_expertise_type",$f_opts);
-		$this->addField($f_expert_maintenance_expertise_type);
 		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}

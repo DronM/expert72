@@ -519,7 +519,7 @@ function ApplicationDialog_View(id,options){
 		,new DataBinding({"control":this.getElement("customer").getElement("customer_auth_letter")})
 		,new DataBinding({"control":this.getElement("customer").getElement("customer_auth_letter_file")})		
 		,new DataBinding({"control":this.getElement("primary_application")})
-		,new DataBinding({"control":this.getElement("app_print")})
+		,new DataBinding({"control":this.getElement("app_print")})		
 	];
 	
 	if(!modified_documents){
@@ -567,7 +567,18 @@ function ApplicationDialog_View(id,options){
 		,new CommandBinding({"control":this.getElement("applicant").getElement("auth_letter_file"),"fieldId":"auth_letter_files"})
 		,new CommandBinding({"control":this.getElement("customer").getElement("customer_auth_letter")})
 		,new CommandBinding({"control":this.getElement("customer").getElement("customer_auth_letter_file"),"fieldId":"customer_auth_letter_files"})
-		
+		,new CommandBinding({
+			"control":this.getElement("service_cont").getElement("expert_maintenance_service"),
+			"func":function(pm,ctrl){
+				if(
+				self.getElement("service_cont").getElement("service_type").getValue()=="expert_maintenance"
+				&&ctrl.getModified()
+				){
+					pm.setFieldValue("expert_maintenance_service_type",ctrl.getServiceType());
+					pm.setFieldValue("expert_maintenance_expertise_type",ctrl.getExpertiseType());
+				}
+			}
+		})		
 	];
 	
 	if(!modified_documents){
@@ -733,45 +744,11 @@ ApplicationDialog_View.prototype.calcFillPercent = function(){
 	return tab_values;
 }
 
-ApplicationDialog_View.prototype.updateExpertMaintenanceInf = function(v){
-	var m = this.getModel();
-	var s = m.getFieldValue("expert_maintenance_service_type");
-	var t = "";
-	if(s=="audit"){
-		t = "Аудит";
-	}
-	else if(s=="modification"){
-		t = "Модификация";
-	}
-	else if(s=="expertise"){
-		t = "Государственная экспертиза: ";
-		var e_t = m.getFieldValue("expert_maintenance_expertise_type");			
-		if(e_t=="pd"){
-			t+="проектная документация";
-		}
-		else if(e_t=="pd_eng_survey"){
-			t+="проектная документация, результаты инженерных изысканий";
-		}
-		else if(e_t=="cost_eval_validity"){
-			t+="достоверность";
-		}
-		else if(e_t=="cost_eval_validity_pd"){
-			t+="проектная документация, достоверность";
-		}
-		else if(e_t=="cost_eval_validity_eng_survey"){
-			t+="результаты инженерных изысканий, достоверность";
-		}
-		else if(e_t=="cost_eval_validity_pd_eng_survey"){
-			t+="проектная документация, результаты инженерных изысканий, достоверность";
-		}
-		
-	}		
-	this.getElement("service_cont").getElement("expert_maintenance_base_applications_inf").setValue(t);
-}
 ApplicationDialog_View.prototype.setExpertMaintenanceTabVisible = function(v){
 	if(v){
 		DOMHelper.delClass(document.getElementById(this.getId()+":tab-modified_documents"),"hidden");
-		this.updateExpertMaintenanceInf();
+		//29/02/20
+		//this.updateExpertMaintenanceInf();
 	}
 	else{
 		DOMHelper.addClass(document.getElementById(this.getId()+":tab-modified_documents"),"hidden");
@@ -923,8 +900,8 @@ ApplicationDialog_View.prototype.onGetData = function(resp,cmd){
 			opts.models.ApplicationDialog_Model.setFieldValue("service_type","modified_documents");
 			opts.models.ApplicationDialog_Model.setFieldValue("application_state","filling");
 			
-			opts.models.ApplicationDialog_Model.setFieldValue("modified_documents_service_type",m.getFieldValue("expert_maintenance_service_type"));
-			opts.models.ApplicationDialog_Model.setFieldValue("modified_documents_expertise_type",m.getFieldValue("expert_maintenance_expertise_type"));
+			opts.models.ApplicationDialog_Model.setFieldValue("expert_maintenance_service_type",m.getFieldValue("expert_maintenance_service_type"));
+			opts.models.ApplicationDialog_Model.setFieldValue("expert_maintenance_expertise_type",m.getFieldValue("expert_maintenance_expertise_type"));
 			
 			opts.models.ApplicationDialog_Model.recInsert();
 		
@@ -947,6 +924,12 @@ ApplicationDialog_View.prototype.onGetData = function(resp,cmd){
 		
 		if(this.getModel().getField("service_type").getValue()=="expert_maintenance"){
 			this.setExpertMaintenanceTabVisible(true);			
+			//29/04/20
+			this.getElement("service_cont").getElement("expert_maintenance_service").setInitValue(
+				m.getFieldValue("expert_maintenance_service_type"),
+				m.getFieldValue("expert_maintenance_expertise_type")
+			);
+			this.calcFillPercent();
 		}
 		
 		if (this.getModel().getField("doc_folders").isSet()){
@@ -1362,7 +1345,13 @@ ApplicationDialog_View.prototype.getModified = function(){
 	if (!this.getEnabled()){
 		return false;
 	}
-	return ApplicationDialog_View.superclass.getModified.call(this);
+	var mod = ApplicationDialog_View.superclass.getModified.call(this);
+	if(!mod && this.getElement("service_cont").getElement("service_type").getValue()=="expert_maintenance"
+	&& this.getElement("service_cont").getElement("expert_maintenance_service").getModified()){
+		mod = true;	
+	}
+	
+	return mod;
 }
 
 ApplicationDialog_View.prototype.toDOM = function(parent){
@@ -1554,6 +1543,9 @@ ApplicationDialog_View.prototype.sendAllModifiedDocuments = function(callBack){
 						}
 					}
 				});
+			}
+			else if(callBack){
+				callBack();
 			}
 		}
 	})

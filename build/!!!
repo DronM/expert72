@@ -1,12 +1,205 @@
---select * from application_document_files where file_id='5edf5480-3ce8-465d-97fc-844eeefb4a23'
---update application_document_files set file_signed_by_client=TRUE where file_id='12b92b79-9668-4d1f-a913-a8cd9ae18f4d'
---select * from doc_flow_out_client_document_files where file_id='46e1cf3c-9b93-4d44-9919-14431f5d8ca3'
-insert into doc_flow_out_client_document_files (file_id,doc_flow_out_client_id,signature) values('12b92b79-9668-4d1f-a913-a8cd9ae18f4d',1891,TRUE);
---12b92b79-9668-4d1f-a913-a8cd9ae18f4d
+Когда-нибудь переделать аттач файлов на SQL
+Сделать поле applications.file_data_cached
+при загрузке файлав ставить в FALSE
+При запросе объекта, если FALSE аттачить и записывать, ставить applications.file_data_cached=TRUE,
+если TRUE выдавать как есть с файлами
+
+SELECT 
+json_agg(main.documents) AS documents
+FROM(
+SELECT
+	jsonb_build_object(
+		'document_type',sub2.document_type,
+		'service_type',sub2.service_type,
+		'construction_type_id',sub2.construction_type_id,
+		'expertise_type',sub2.expertise_type,
+		'document',
+	
+	json_agg(
+	CASE WHEN sub2.documents->'items' IS NULL THEN sub2.documents||jsonb_build_object('files',files.files)
+	ELSE (
+		SELECT
+			jsonb_build_object(
+			'items',
+				json_agg(
+					jsonb_build_object(
+						'fields',t_sub.documents->'fields',
+						'files',files.files
+					)
+				)
+			)
+		FROM
+		(SELECT jsonb_array_elements(sub2.documents->'items') AS documents) AS t_sub
+		LEFT JOIN (
+			SELECT
+				app_f.application_id,
+				app_f.document_type,
+				app_f.document_id,
+				json_agg(
+					json_build_object(
+						'date_time',app_f.date_time,
+						'file_name',app_f.file_name,
+						'file_id',app_f.file_id,
+						'file_size',app_f.file_size,
+						'deleted',app_f.deleted,
+						'deleted_dt',app_f.deleted_dt,
+						'file_path',app_f.file_path,
+						'file_signed',app_f.file_signed,
+						'file_uploaded',TRUE,
+						'signatures',NULL,
+						'information_list',app_f.information_list
+					)
+				) AS files
+			FROM application_document_files AS app_f
+			GROUP BY app_f.application_id,
+				app_f.document_type,
+				app_f.document_id
+
+		) AS files ON files.application_id=3040 AND files.document_type=sub2.document_type AND (t_sub.documents->'fields'->>'id')::int=files.document_id
+		
+	)
+	END
+	)
+	) As documents
+	--,files.files
+FROM(
+SELECT
+	(sub.doc->>'document_type')::document_types AS document_type,
+	sub.doc->>'construction_type_id' AS construction_type_id,
+	sub.doc->>'service_type' AS service_type,
+	sub.doc->>'expertise_type' AS expertise_type,
+	jsonb_array_elements(sub.doc->'document') AS documents
+FROM
+(select jsonb_array_elements(documents) AS doc from applications where id=3040) AS sub
+) AS sub2
+LEFT JOIN (
+	SELECT
+		app_f.application_id,
+		app_f.document_type,
+		app_f.document_id,
+		json_agg(
+			json_build_object(
+				'date_time',app_f.date_time,
+				'file_name',app_f.file_name,
+				'file_id',app_f.file_id,
+				'file_size',app_f.file_size,
+				'deleted',app_f.deleted,
+				'deleted_dt',app_f.deleted_dt,
+				'file_path',app_f.file_path,
+				'file_signed',app_f.file_signed,
+				'file_uploaded',TRUE,
+				'signatures',NULL,
+				'information_list',app_f.information_list
+			)
+		) AS files
+	FROM application_document_files AS app_f
+	GROUP BY app_f.application_id,
+		app_f.document_type,
+		app_f.document_id
+
+) AS files ON files.application_id=3040 AND files.document_type=sub2.document_type AND (sub2.documents->'fields'->>'id')::int=files.document_id
+GROUP BY sub2.document_type,sub2.service_type,sub2.construction_type_id,sub2.expertise_type
+) AS main
 
 
+SELECT
+	(SELECT
+		json_agg(main.documents)
+	FROM
+	(SELECT
+		jsonb_build_object(
+			'document_type',sub2.document_type,
+			'service_type',sub2.service_type,
+			'construction_type_id',sub2.construction_type_id,
+			'expertise_type',sub2.expertise_type,
+			'document',
+	
+		json_agg(
+		CASE WHEN sub2.documents->'items' IS NULL THEN sub2.documents||jsonb_build_object('files',files.files)
+		ELSE (
+			SELECT
+				jsonb_build_object(
+				'items',
+					json_agg(
+						jsonb_build_object(
+							'fields',t_sub.documents->'fields',
+							'files',files.files
+						)
+					)
+				)
+			FROM
+			(SELECT jsonb_array_elements(sub2.documents->'items') AS documents) AS t_sub
+			LEFT JOIN (
+				SELECT
+					app_f.application_id,
+					app_f.document_type,
+					app_f.document_id,
+					json_agg(
+						json_build_object(
+							'date_time',app_f.date_time,
+							'file_name',app_f.file_name,
+							'file_id',app_f.file_id,
+							'file_size',app_f.file_size,
+							'deleted',app_f.deleted,
+							'deleted_dt',app_f.deleted_dt,
+							'file_path',app_f.file_path,
+							'file_signed',app_f.file_signed,
+							'file_uploaded',TRUE,
+							'signatures',NULL,
+							'information_list',app_f.information_list
+						)
+					) AS files
+				FROM application_document_files AS app_f
+				GROUP BY app_f.application_id,
+					app_f.document_type,
+					app_f.document_id
+
+			) AS files ON files.application_id=d.id AND files.document_type=sub2.document_type AND (t_sub.documents->'fields'->>'id')::int=files.document_id
+			
+		)
+		END
+		)
+		) AS documents
+	FROM(
+		SELECT
+			sub.doc->>'service_type' AS service_type,
+			sub.doc->>'expertise_type' AS expertise_type,
+			sub.doc->>'construction_type_id' AS construction_type_id,
+			(sub.doc->>'document_type')::document_types AS document_type,
+			jsonb_array_elements(sub.doc->'document') AS documents
+		FROM
+		(SELECT jsonb_array_elements(documents) AS doc) AS sub
+	) AS sub2
+	LEFT JOIN (
+		SELECT
+			app_f.application_id,
+			app_f.document_type,
+			app_f.document_id,
+			json_agg(
+				json_build_object(
+					'date_time',app_f.date_time,
+					'file_name',app_f.file_name,
+					'file_id',app_f.file_id,
+					'file_size',app_f.file_size,
+					'deleted',app_f.deleted,
+					'deleted_dt',app_f.deleted_dt,
+					'file_path',app_f.file_path,
+					'file_signed',app_f.file_signed,
+					'file_uploaded',TRUE,
+					'signatures',NULL,
+					'information_list',app_f.information_list
+				)
+			) AS files
+		FROM application_document_files AS app_f
+		GROUP BY app_f.application_id,
+			app_f.document_type,
+			app_f.document_id
+
+	) AS files ON files.application_id=d.id AND files.document_type=sub2.document_type AND (sub2.documents->'fields'->>'id')::int=files.document_id
+	GROUP BY sub2.document_type,sub2.service_type,sub2.construction_type_id,sub2.expertise_type	
+	) AS main
+	) AS documents
+FROM applications AS d
+WHERE d.id=3040
 
 
-
-select * from application_processes where application_id=4110 order by date_time desc
---update application_processes set date_time='2020-04-07 18:00:00' where application_id=4110 and date_time='2020-03-27 10:33:52.361401+03'

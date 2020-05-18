@@ -83,6 +83,23 @@ DocumentDialog_View.prototype.addDocumentTabs = function(documentModel,allTempla
 	}
 }
 
+DocumentDialog_View.prototype.getDocumentTemplateKey = function(tabName,constructionTypeId,serviceType,expertiseType){
+	return tabName+"_"+constructionTypeId+"_"+serviceType+"_"+expertiseType;
+}
+
+DocumentDialog_View.prototype.getCurrentDocumentTemplateKey = function(tabName){
+	var constr = this.getConstrType();
+	var serv = this.getServiceType();
+	var exp_tp = this.getExpertisType();
+	return this.getDocumentTemplateKey(
+		tabName,
+		(constr? constr.getKey():""),
+		(serv.isNull()? "":serv.getKey()),
+		(exp_tp.isNull()? "":exp_tp.getKey())
+	);
+}
+
+,constr.getKey(),this.getExpertiseType().getKey()
 /**
  * @param {Model} model
  */
@@ -91,14 +108,11 @@ DocumentDialog_View.prototype.fillDocumentTemplates = function(model){
 		throw new Error("Не заполнены шаблоны документации");
 	}			
 	var docs = model.getFieldValue("documents");			
-	if(!docs){
-		throw new Error("DocumentDialog_View.fillDocumentTemplates field 'documents' is Null!");
-	}
-	this.m_documentTemplates = this.m_documentTemplates||{};
-	var key;
+	this.m_documentTemplates = {};
+	var key,doc;
 	for (var i=0;i<docs.length;i++){
-		var doc = docs[i]["document"];
-		key = this.getDocumentTemplateKey(docs[i].document_type,docs[i].construction_type_id,docs[i].service_type,docs[i].expertise_type);
+		doc = docs[i]["document"];
+		key = this.getDocumentTemplateKey(docs[i],docs[i]["construction_type_id"],docs[i]["service_type"],docs[i]["expertise_type"]);
 		this.m_documentTemplates[key] = doc;
 		for (var doc_i=0;doc_i<doc.length;doc_i++){
 			doc[doc_i].files = [];
@@ -138,7 +152,7 @@ DocumentDialog_View.prototype.toggleDocTypeVisOnModel = function(model){
 	
 	var exp_type;
 	if(model && model.getFieldValue("service_type")=="modified_documents"){
-		exp_type = model? model.getFieldValue("expert_maintenance_expertise_type"): null;
+		exp_type = model? model.getFieldValue("modified_documents_expertise_type"): null;
 	}
 	else{
 		exp_type = model? model.getFieldValue("expertise_type") : null;
@@ -171,7 +185,7 @@ DocumentDialog_View.prototype.toggleDocTypeVis = function(){
 	var service_type = service_ctrl.getElement("service_type").getValue();
 	var exp_type;
 	if(service_type=="modified_documents"){
-		exp_type = this.getModel().getFieldValue("expert_maintenance_expertise_type");
+		exp_type = this.getModel().getFieldValue("modified_documents_expertise_type");
 	}
 	else{
 		exp_type = service_ctrl.getElement("expertise_type")? service_ctrl.getElement("expertise_type").getValue():null;	
@@ -200,21 +214,17 @@ DocumentDialog_View.prototype.toggleDocTypeVis = function(){
 }
 
 DocumentDialog_View.prototype.addDocTabTemplate = function(tabName){
-	if (!this.documentTemplateFilterIsNull()){
-		var tmpl_id = this.getCurrentDocumentTemplateKey(tabName);
-		if (!this.m_documentTemplates[tmpl_id]){
-			throw new Error("Не найден шаблон для данного типа объекта! "+tmpl_id);
-		}
-	
-		this.addDocTab(tabName,this.m_documentTemplates[tmpl_id],true);	
+	var tmpl_id = this.getCurrentDocumentTemplateKey(tabName);
+	if (!this.m_documentTemplates[tmpl_id]){
+		throw new Error("Не найден шаблон для данного типа объекта! "+tmpl_id);
 	}
+
+	this.addDocTab(tabName,this.m_documentTemplates[tmpl_id],true);	
 }
 
 DocumentDialog_View.prototype.documentTemplateFilterIsNull = function(){	
-	return (!this.getElement("construction_types_ref")
-		||this.getElement("construction_types_ref").isNull()
-		||!this.getElement("service_cont")
-		||!this.getElement("service_cont").getElement("service_type")
+	return (
+		this.getElement("construction_types_ref").isNull()
 		||this.getElement("service_cont").getElement("service_type").isNull()
 		||(
 			this.getElement("service_cont").getElement("service_type").getValue()=="modified_documents"
@@ -223,30 +233,9 @@ DocumentDialog_View.prototype.documentTemplateFilterIsNull = function(){
 	);
 }
 
-DocumentDialog_View.prototype.getDocumentTemplateKey = function(tabName,constructionTypeId,serviceType,expertiseType){
-	return tabName+"_"+constructionTypeId+"_"+serviceType+"_"+expertiseType;
-}
-
-DocumentDialog_View.prototype.getCurrentDocumentTemplateKey = function(tabName){
-	var constr = this.getConstrType();
-	var serv = this.getServiceType();
-	var exp_tp = this.getExpertiseType();
-	return this.getDocumentTemplateKey(
-		tabName,
-		((constr&&!constr.isNull())? constr.getKey():""),
-		serv,
-		exp_tp
-	);
-}
-
-DocumentDialog_View.prototype.constrTypeIsNull = function(){	
-	return this.getElement("construction_types_ref").isNull();
-}
-
 DocumentDialog_View.prototype.getConstrType = function(){	
 	return this.getElement("construction_types_ref").getValue();
 }
-
 DocumentDialog_View.prototype.getServiceType = function(){	
 	var serv = this.getElement("service_cont").getElement("service_type").getValue();
 	return (serv=="modified_documents")? this.getModel().getFieldValue("expert_maintenance_service_type"):serv;
@@ -260,12 +249,12 @@ DocumentDialog_View.prototype.getExpertiseType = function(){
 DocumentDialog_View.prototype.toggleDocTab = function(tabName,vis){	
 	if (vis && !this.documentTemplateFilterIsNull()){
 		if (!this.m_documentTabs[tabName].control){
-			if (!this.m_documentTemplates || !this.m_documentTemplates[this.getCurrentDocumentTemplateKey(tabName)]){
-			
+			if (!this.m_documentTemplates){
 				//fill documentTemplates
+				
 				var self = this;
-				var pm = (new Application_Controller()).getPublicMethod("get_document_templates_on_filter");
-				pm.setFieldValue("construction_type_id",this.getConstrType().getKey());
+				var pm = (new Application_Controller()).getPublicMethod("get_document_templates");
+				pm.setFieldValue("construction_type_id",this.getConstrType());
 				pm.setFieldValue("service_type",this.getServiceType());
 				pm.setFieldValue("expertise_type",this.getExpertiseType());
 				pm.run({
