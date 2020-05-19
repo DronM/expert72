@@ -24,6 +24,12 @@ $$
 				in_application.construction_type_id,
 				in_application.service_type,
 				in_application.expertise_type
+				/*
+				CASE
+					WHEN in_application.expertise_type IS NULL AND in_application.service_type='cost_eval_validity' THEN 'cost_eval_validity'
+					ELSE in_application.expertise_type
+				END	
+				*/
 			))			
 		END	
 	;

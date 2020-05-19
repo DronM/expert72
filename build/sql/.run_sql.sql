@@ -1,131 +1,93 @@
--- VIEW: doc_flow_in_dialog
+﻿-- Function: document_templates_on_filter(id_date date, in_construction_type_id int, in_service_type service_types, in_expertise_type expertise_types)
 
---DROP VIEW doc_flow_in_dialog;
+-- DROP FUNCTION document_templates_on_filter(id_date date, in_construction_type_id int, in_service_type service_types, in_expertise_type expertise_types);
 
-CREATE OR REPLACE VIEW doc_flow_in_dialog AS
-	SELECT
-		doc_flow_in.*,
-		clients_ref(clients) AS from_clients_ref,
-		users_ref(users) AS from_users_ref,
-		applications_ref(applications) AS from_applications_ref,
-		doc_flow_out_ref(doc_flow_out) AS doc_flow_out_ref,
-		
-		CASE
-			WHEN doc_flow_in.from_doc_flow_out_client_id IS NOT NULL THEN
-				-- от исходящего клиентского
-				json_build_array(
-					json_build_object(
-						'files',
-						(SELECT
-							json_agg(files_t.attachments) AS attachments
-						FROM
-							(SELECT
-								t.doc_flow_out_client_id,
-								json_build_object(
-									'file_id',app_f.file_id,
-									'file_name',app_f.file_name,
-									'file_size',app_f.file_size,
-									'file_signed',app_f.file_signed,
-									'file_uploaded','true',
-									'file_path',app_f.file_path,
-									'is_switched',(clorg_f.new_file_id IS NOT NULL),
-									'deleted',coalesce(app_f.deleted,FALSE),
-									'signatures',
-									(SELECT
-										json_agg(sub.signatures) AS signatures
-									FROM (
-										SELECT 
-											jsonb_build_object(
-												'owner',u_certs.subject_cert,
-												'cert_from',u_certs.date_time_from,
-												'cert_to',u_certs.date_time_to,
-												'sign_date_time',f_sig.sign_date_time,
-												'check_result',ver.check_result,
-												'check_time',ver.check_time,
-												'error_str',ver.error_str
-											) AS signatures
-										FROM file_signatures AS f_sig
-										LEFT JOIN file_verifications AS ver ON ver.file_id=f_sig.file_id
-										LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id
-										WHERE f_sig.file_id=t.file_id
-										ORDER BY f_sig.sign_date_time
-									) AS sub
-									)
-								) AS attachments
-							FROM doc_flow_out_client_document_files AS t
-							LEFT JOIN application_document_files AS app_f ON app_f.file_id = t.file_id
-							LEFT JOIN file_verifications AS f_ver ON f_ver.file_id=t.file_id
-							LEFT JOIN doc_flow_out_client_original_files AS clorg_f ON clorg_f.doc_flow_out_client_id=t.doc_flow_out_client_id AND clorg_f.new_file_id=t.file_id
-							WHERE
-								--coalesce(app_f.deleted,FALSE)=FALSE
-								--AND
-								t.doc_flow_out_client_id=doc_flow_in.from_doc_flow_out_client_id
-								AND app_f.file_id IS NOT NULL
-							ORDER BY app_f.file_path,app_f.file_name
-							) AS files_t
-						)
-					)
-				)
-			ELSE
-				json_build_array(
-					json_build_object(
-						'files',
-						(SELECT
-							json_agg(
-								json_build_object(
-									'file_id',t.file_id,
-									'file_name',t.file_name,
-									'file_size',t.file_size,
-									'file_signed',t.file_signed,
-									'file_uploaded','true'
-								)
-							) AS attachments			
-						FROM doc_flow_attachments AS t
-						WHERE t.doc_type='doc_flow_in'::data_types AND t.doc_id=doc_flow_in.id
-						)		
-						
-					)
-				)
-		END files,
-		
-		
-		st.state AS state,
-		st.date_time AS state_dt,
-		st.end_date_time AS state_end_dt,
-		st.register_doc AS state_register_doc,
-		
-		employees_ref(employees) AS employees_ref,
-		
-		CASE
-			WHEN recipient->>'dataType'='departments' THEN departments_ref(departments)
-			WHEN recipient->>'dataType'='employees' THEN employees_ref(tp_emp)
-			ELSE NULL
-		END AS recipients_ref,
-		
-		doc_flow_types_ref(doc_flow_types) AS doc_flow_types_ref,
-		
-		doc_flow_in_processes_chain(doc_flow_in.id) AS doc_flow_in_processes_chain
-		
-	FROM doc_flow_in
-	LEFT JOIN applications ON applications.id=doc_flow_in.from_application_id
-	LEFT JOIN users ON users.id=doc_flow_in.from_user_id
-	LEFT JOIN clients ON clients.id=doc_flow_in.from_client_id
-	LEFT JOIN doc_flow_out ON doc_flow_out.id=doc_flow_in.doc_flow_out_id
-	LEFT JOIN doc_flow_types ON doc_flow_types.id=doc_flow_in.doc_flow_type_id
-	LEFT JOIN employees ON employees.id=doc_flow_in.employee_id
-	LEFT JOIN departments ON departments.id = (recipient->'keys'->>'id')::int AND recipient->>'dataType'='departments'
-	LEFT JOIN employees AS tp_emp ON tp_emp.id = (recipient->'keys'->>'id')::int AND recipient->>'dataType'='employees'
-	
-	LEFT JOIN (
+CREATE OR REPLACE FUNCTION document_templates_on_filter(id_date date, in_construction_type_id int, in_service_type service_types, in_expertise_type expertise_types)
+  RETURNS JSONB AS
+$$
+	WITH
+	w_list AS (	
 		SELECT
-			t.doc_flow_in_id AS doc_id,
-			max(t.date_time) AS date_time
-		FROM doc_flow_in_processes t
-		GROUP BY t.doc_flow_in_id
-	) AS h_max ON h_max.doc_id=doc_flow_in.id
-	LEFT JOIN doc_flow_in_processes st
-		ON st.doc_flow_in_id=h_max.doc_id AND st.date_time = h_max.date_time
+			tmpl.document_type,
+			tmpl.content::jsonb,
+			CASE WHEN tmpl.service_type IS NULL THEN 0 ELSE 1 END AS w
 	
+		FROM document_templates AS tmpl
+		LEFT JOIN (
+			SELECT
+				max(create_date) AS create_date,
+				document_type,
+				service_type,
+				expertise_type,
+				construction_type_id
+			FROM document_templates		
+			--*** added ***
+			WHERE document_templates.create_date<=id_date
+			GROUP BY document_type,service_type,expertise_type,construction_type_id
+		) AS sub ON
+			sub.create_date=tmpl.create_date
+			AND sub.document_type=tmpl.document_type
+			AND sub.service_type=tmpl.service_type
+			AND sub.expertise_type=tmpl.expertise_type
+			AND sub.construction_type_id=tmpl.construction_type_id		
+		WHERE
+			(in_construction_type_id IS NOT NULL)
+			AND
+			(tmpl.construction_type_id=in_construction_type_id
+			AND tmpl.document_type IN (
+				CASE WHEN (in_expertise_type='pd' OR in_expertise_type='pd_eng_survey' OR in_expertise_type='cost_eval_validity_pd' OR in_expertise_type='cost_eval_validity_pd_eng_survey')
+					THEN 'pd'::document_types
+					ELSE NULL
+				END,
+				CASE WHEN (in_expertise_type='eng_survey' OR in_expertise_type='pd_eng_survey' OR in_expertise_type='cost_eval_validity_eng_survey' OR in_expertise_type='cost_eval_validity_pd_eng_survey')
+					THEN 'eng_survey'::document_types
+					ELSE NULL
+				END,
+				CASE WHEN (in_expertise_type='cost_eval_validity' OR in_expertise_type='cost_eval_validity_pd' OR in_expertise_type='cost_eval_validity_eng_survey' OR in_expertise_type='cost_eval_validity_pd_eng_survey')
+					THEN 'cost_eval_validity'::document_types
+					ELSE NULL
+				END,
+				CASE WHEN in_service_type='cost_eval_validity' THEN 'cost_eval_validity'::document_types ELSE NULL END,
+				CASE WHEN in_service_type='audit' THEN 'audit'::document_types ELSE NULL END,
+				CASE WHEN in_service_type='modification' THEN 'modification'::document_types ELSE NULL END
+				)
+			AND (
+				--Для экспертизы либо все пусто либо все совпадает
+				(in_service_type = 'expertise'
+				AND (
+					(tmpl.service_type IS NULL AND tmpl.expertise_type IS NULL)
+					OR (tmpl.service_type = in_service_type AND tmpl.expertise_type=in_expertise_type)
+				    )
+				)
+				--для остального service_type пусто или совпадает
+				OR (in_service_type <> 'expertise'
+					AND (tmpl.service_type IS NULL OR tmpl.service_type = in_service_type)
+				)	
+			    )
+			)
+	)
+		
+	SELECT
+		to_jsonb(array_agg(sub.documents))
+	FROM	
+	(SELECT DISTINCT ON (w_list.document_type)
+		jsonb_build_object(
+			'document_type',w_list.document_type,
+			'construction_type_id',in_construction_type_id,
+			'service_type',in_service_type,
+			'expertise_type',in_expertise_type,
+			'document',coalesce(
+				(SELECT (t.content->'items')::jsonb FROM w_list AS t WHERE t.w=1 AND t.document_type=w_list.document_type)
+				,(SELECT (t.content->'items')::jsonb FROM w_list AS t WHERE t.w=0 AND t.document_type=w_list.document_type)
+			)
+			
+		) AS documents
+	FROM w_list
+	) AS sub
 	;
-	
-ALTER VIEW doc_flow_in_dialog OWNER TO expert72;
+
+$$
+  LANGUAGE sql VOLATILE CALLED ON NULL INPUT
+  COST 100;
+ALTER FUNCTION document_templates_on_filter(id_date date, in_construction_type_id int, in_service_type service_types, in_expertise_type expertise_types) OWNER TO expert72;
+

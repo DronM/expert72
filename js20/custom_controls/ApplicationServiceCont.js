@@ -673,6 +673,10 @@ ApplicationServiceCont.prototype.m_mainView;
 ApplicationServiceCont.prototype.onChangeExpertiseType = function(){
 	var cur_val = this.getElement("expertise_type").getValue();
 	//содержимое всех вкладок МЕНЯЕТСЯ!!!										
+	//18/05/20 кроме случая старой Достоверности,Модификации,Аудита, они могут остаться
+	if(!this.m_mainView.m_order010119){
+		return;
+	}
 	var doc_types_for_remove = [];
 	for (var tab_name in this.m_mainView.m_documentTabs){
 		if (this.m_mainView.m_documentTabs[tab_name].control && this.m_mainView.m_documentTabs[tab_name].control.getTotalFileCount()){

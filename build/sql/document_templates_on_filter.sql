@@ -47,6 +47,7 @@ $$
 					THEN 'cost_eval_validity'::document_types
 					ELSE NULL
 				END,
+				CASE WHEN in_service_type='cost_eval_validity' THEN 'cost_eval_validity'::document_types ELSE NULL END,
 				CASE WHEN in_service_type='audit' THEN 'audit'::document_types ELSE NULL END,
 				CASE WHEN in_service_type='modification' THEN 'modification'::document_types ELSE NULL END
 				)
@@ -79,6 +80,7 @@ $$
 				(SELECT (t.content->'items')::jsonb FROM w_list AS t WHERE t.w=1 AND t.document_type=w_list.document_type)
 				,(SELECT (t.content->'items')::jsonb FROM w_list AS t WHERE t.w=0 AND t.document_type=w_list.document_type)
 			)
+			
 		) AS documents
 	FROM w_list
 	) AS sub

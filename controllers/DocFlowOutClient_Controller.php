@@ -560,16 +560,10 @@ class DocFlowOutClient_Controller extends ControllerSQL{
 				app.construction_types_ref,
 				app.documents,
 				app.document_exists,
-				
-				CASE WHEN app.service_type='modified_documents'
-					THEN app.modified_documents_expertise_type
-					ELSE app.expertise_type
-				END AS expertise_type,
-
-				CASE WHEN app.service_type='modified_documents'
-					THEN app.modified_documents_service_type
-					ELSE app.service_type
-				END AS service_type
+				app.expert_maintenance_service_type,
+				app.expert_maintenance_expertise_type,
+				app.service_type,
+				app.expertise_type
 			
 			FROM applications_dialog AS app
 			WHERE app.id=%d".$client_q_t,
@@ -620,6 +614,10 @@ class DocFlowOutClient_Controller extends ControllerSQL{
 						new Field('id',DT_INT,array('value'=>$ar_obj['id']))
 						,new Field('expertise_type',DT_STRING,array('value'=>$ar_obj['expertise_type']))
 						,new Field('service_type',DT_STRING,array('value'=>$ar_obj['service_type']))
+						,new Field('expertise_type',DT_STRING,array('value'=>$ar_obj['expertise_type']))
+						,new Field('expert_maintenance_service_type',DT_STRING,array('value'=>$ar_obj['expert_maintenance_service_type']))
+						,new Field('expert_maintenance_expertise_type',DT_STRING,array('value'=>$ar_obj['expert_maintenance_expertise_type']))
+						
 						,new Field('cost_eval_validity',DT_STRING,array('value'=>$ar_obj['cost_eval_validity']))
 						,new Field('modification',DT_STRING,array('value'=>$ar_obj['modification']))
 						,new Field('audit',DT_STRING,array('value'=>$ar_obj['audit']))
