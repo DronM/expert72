@@ -138,7 +138,7 @@ class <xsl:value-of select="@id"/>_Controller extends ControllerSQL{
 		}
 		
 		//global filters				
-		if ($ar['role_id']=='client'){
+		if ($ar['role_id']=='client'){			
 			$_SESSION['global_user_id'] = $ar['id'];
 			<xsl:for-each select="/metadata/models/model/globalFilter[@id='user_id']">
 			<xsl:variable name="model_id" select="concat(../@id,'_Model')"/>

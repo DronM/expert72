@@ -2,3 +2,31 @@
 31/03/2020 21:06 parseSigFile
 31/03/2020 21:06 Called run_shell_cmd2 /usr/local/bin/openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/output/5e836a9ad9703.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END CERT/ { print > "/home/andrey/www/htdocs/expert72/output/5e836a9ae1bf4."i }'
 31/03/2020 21:06 Unable to get certificates from bundle /home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Last/89-20 Приложение к договору ГБУЗ ТО Поликлиника №5, Достоверность.pdf.sig
+27/05/2020 12:29 Called verifySig
+27/05/2020 12:29 parseSigFile
+27/05/2020 12:29 Called run_shell_cmd2 /usr/local/bin/openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/output/5ece16f33b1c7.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END CERT/ { print > "/home/andrey/www/htdocs/expert72/output/5ece16f33d5ce."i }'
+27/05/2020 12:29 Unable to get certificates from bundle /home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Last/89-20 Приложение к договору ГБУЗ ТО Поликлиника №5, Достоверность.pdf.sig
+27/05/2020 12:31 Called verifySig
+27/05/2020 12:31 parseSigFile
+27/05/2020 12:31 Called run_shell_cmd2 /usr/local/bin/openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/output/5ece174db278e.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END CERT/ { print > "/home/andrey/www/htdocs/expert72/output/5ece174db2889."i }'
+27/05/2020 12:31 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5ece174db2889.1" -noout
+27/05/2020 12:31 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5ece174db2889.2" -noout
+27/05/2020 12:31 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5ece174db2889.3" -noout
+27/05/2020 12:31 Found signer certificates:1
+27/05/2020 12:31 Called run_shell_cmd /usr/local/bin/openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/output/5ece174db278e.der" -noout -cmsout -print
+27/05/2020 12:31 Parsing certificate file /home/andrey/www/htdocs/expert72/output/5ece174db2889.3
+27/05/2020 12:31 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/output/5ece174db2889.3" -noout
+27/05/2020 12:31 Called run_shell_cmd /usr/local/bin/openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/output/5ece174db2889.3" -noout -nameopt multiline
+27/05/2020 12:31 Called run_shell_cmd /usr/local/bin/openssl smime -verify -content "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/0_Титул 606202018-КИТСОТБ-П3-СМ.doc" -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/output/5ece174db278e.der" -noverify
+27/05/2020 12:32 Called verifySig
+27/05/2020 12:32 parseSigFile
+27/05/2020 12:32 Called run_shell_cmd2 /usr/local/bin/openssl pkcs7 -in "/home/andrey/www/htdocs/expert72/output/5ece17707e9c8.der" -print_certs -inform DER -outform pem | awk '/BEGIN/ { i++; } /BEGIN/, /END CERT/ { print > "/home/andrey/www/htdocs/expert72/output/5ece17707eae9."i }'
+27/05/2020 12:32 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5ece17707eae9.1" -noout
+27/05/2020 12:32 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5ece17707eae9.2" -noout
+27/05/2020 12:32 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -in "/home/andrey/www/htdocs/expert72/output/5ece17707eae9.3" -noout
+27/05/2020 12:32 Found signer certificates:1
+27/05/2020 12:32 Called run_shell_cmd /usr/local/bin/openssl cms -inform der -in "/home/andrey/www/htdocs/expert72/output/5ece17707e9c8.der" -noout -cmsout -print
+27/05/2020 12:32 Parsing certificate file /home/andrey/www/htdocs/expert72/output/5ece17707eae9.3
+27/05/2020 12:32 Called run_shell_cmd /usr/local/bin/openssl x509 -subject_hash -issuer_hash -dates -fingerprint -serial -ocsp_uri -text -in "/home/andrey/www/htdocs/expert72/output/5ece17707eae9.3" -noout
+27/05/2020 12:32 Called run_shell_cmd /usr/local/bin/openssl x509 -subject -issuer -inform pem -in "/home/andrey/www/htdocs/expert72/output/5ece17707eae9.3" -noout -nameopt multiline
+27/05/2020 12:32 Called run_shell_cmd /usr/local/bin/openssl smime -verify -content "/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/ССР согласован 36км.pdf" -purpose any -out /dev/null -inform der -in "/home/andrey/www/htdocs/expert72/output/5ece17707e9c8.der" -noverify

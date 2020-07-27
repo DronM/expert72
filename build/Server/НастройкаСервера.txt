@@ -271,3 +271,13 @@ CRYPT_PARAMS = id-Gost28147-89-CryptoPro-A-ParamSet
 openssl ciphers|tr ':' '\n'|grep GOST
 
 
+
+ЕСЛИ КОСЯЧИТ sshfd
+fusermount -u -z /mnt/rstorage
+sudo umount /mnt/rstorage
+sudo -u admin sshfs -o allow_other,reconnect,ServerAliveInterval=15,ServerAliveCountMax=17280 admin@expertiza72.ru:/usr/share/client_files /media/rstorage
+
+
+sudo -u admin sshfs -o allow_other,reconnect,ServerAliveInterval=15,ServerAliveCountMax=17280 admin@89.250.149.195:/media/storage /mnt/rstorage
+
+

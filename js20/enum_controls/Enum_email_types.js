@@ -15,7 +15,59 @@
 function Enum_email_types(id,options){
 	options = options || {};
 	options.addNotSelected = (options.addNotSelected!=undefined)? options.addNotSelected:true;
-	var multy_lang_values = {"ru_new_account":"Новый акаунт"
+	options.options = [{"value":"new_account",
+"descr":this.multyLangValues[window.getApp().getLocale()+"_"+"new_account"],
+checked:(options.defaultValue&&options.defaultValue=="new_account")}
+,{"value":"reset_pwd",
+"descr":this.multyLangValues[window.getApp().getLocale()+"_"+"reset_pwd"],
+checked:(options.defaultValue&&options.defaultValue=="reset_pwd")}
+,{"value":"user_email_conf",
+"descr":this.multyLangValues[window.getApp().getLocale()+"_"+"user_email_conf"],
+checked:(options.defaultValue&&options.defaultValue=="user_email_conf")}
+,{"value":"out_mail",
+"descr":this.multyLangValues[window.getApp().getLocale()+"_"+"out_mail"],
+checked:(options.defaultValue&&options.defaultValue=="out_mail")}
+,{"value":"new_app",
+"descr":this.multyLangValues[window.getApp().getLocale()+"_"+"new_app"],
+checked:(options.defaultValue&&options.defaultValue=="new_app")}
+,{"value":"app_change",
+"descr":this.multyLangValues[window.getApp().getLocale()+"_"+"app_change"],
+checked:(options.defaultValue&&options.defaultValue=="app_change")}
+,{"value":"new_remind",
+"descr":this.multyLangValues[window.getApp().getLocale()+"_"+"new_remind"],
+checked:(options.defaultValue&&options.defaultValue=="new_remind")}
+,{"value":"out_mail_to_app",
+"descr":this.multyLangValues[window.getApp().getLocale()+"_"+"out_mail_to_app"],
+checked:(options.defaultValue&&options.defaultValue=="out_mail_to_app")}
+,{"value":"contract_state_change",
+"descr":this.multyLangValues[window.getApp().getLocale()+"_"+"contract_state_change"],
+checked:(options.defaultValue&&options.defaultValue=="contract_state_change")}
+,{"value":"app_to_correction",
+"descr":this.multyLangValues[window.getApp().getLocale()+"_"+"app_to_correction"],
+checked:(options.defaultValue&&options.defaultValue=="app_to_correction")}
+,{"value":"contr_return",
+"descr":this.multyLangValues[window.getApp().getLocale()+"_"+"contr_return"],
+checked:(options.defaultValue&&options.defaultValue=="contr_return")}
+,{"value":"expert_work_change",
+"descr":this.multyLangValues[window.getApp().getLocale()+"_"+"expert_work_change"],
+checked:(options.defaultValue&&options.defaultValue=="expert_work_change")}
+,{"value":"ca_update_error",
+"descr":this.multyLangValues[window.getApp().getLocale()+"_"+"ca_update_error"],
+checked:(options.defaultValue&&options.defaultValue=="ca_update_error")}
+,{"value":"warn_expert_work_end",
+"descr":this.multyLangValues[window.getApp().getLocale()+"_"+"warn_expert_work_end"],
+checked:(options.defaultValue&&options.defaultValue=="warn_expert_work_end")}
+,{"value":"warn_work_end",
+"descr":this.multyLangValues[window.getApp().getLocale()+"_"+"warn_work_end"],
+checked:(options.defaultValue&&options.defaultValue=="warn_work_end")}
+];
+	
+	Enum_email_types.superclass.constructor.call(this,id,options);
+	
+}
+extend(Enum_email_types,EditSelect);
+
+Enum_email_types.prototype.multyLangValues = {"ru_new_account":"Новый акаунт"
 ,"ru_reset_pwd":"Установка пароля"
 ,"ru_user_email_conf":"Подтверждение пароля"
 ,"ru_out_mail":"Исходящее письмо"
@@ -31,55 +83,5 @@ function Enum_email_types(id,options){
 ,"ru_warn_expert_work_end":"Заверешение срока работ"
 ,"ru_warn_work_end":"Заверешение срока выдачи заключения"
 };
-	options.options = [{"value":"new_account",
-"descr":multy_lang_values[window.getApp().getLocale()+"_"+"new_account"],
-checked:(options.defaultValue&&options.defaultValue=="new_account")}
-,{"value":"reset_pwd",
-"descr":multy_lang_values[window.getApp().getLocale()+"_"+"reset_pwd"],
-checked:(options.defaultValue&&options.defaultValue=="reset_pwd")}
-,{"value":"user_email_conf",
-"descr":multy_lang_values[window.getApp().getLocale()+"_"+"user_email_conf"],
-checked:(options.defaultValue&&options.defaultValue=="user_email_conf")}
-,{"value":"out_mail",
-"descr":multy_lang_values[window.getApp().getLocale()+"_"+"out_mail"],
-checked:(options.defaultValue&&options.defaultValue=="out_mail")}
-,{"value":"new_app",
-"descr":multy_lang_values[window.getApp().getLocale()+"_"+"new_app"],
-checked:(options.defaultValue&&options.defaultValue=="new_app")}
-,{"value":"app_change",
-"descr":multy_lang_values[window.getApp().getLocale()+"_"+"app_change"],
-checked:(options.defaultValue&&options.defaultValue=="app_change")}
-,{"value":"new_remind",
-"descr":multy_lang_values[window.getApp().getLocale()+"_"+"new_remind"],
-checked:(options.defaultValue&&options.defaultValue=="new_remind")}
-,{"value":"out_mail_to_app",
-"descr":multy_lang_values[window.getApp().getLocale()+"_"+"out_mail_to_app"],
-checked:(options.defaultValue&&options.defaultValue=="out_mail_to_app")}
-,{"value":"contract_state_change",
-"descr":multy_lang_values[window.getApp().getLocale()+"_"+"contract_state_change"],
-checked:(options.defaultValue&&options.defaultValue=="contract_state_change")}
-,{"value":"app_to_correction",
-"descr":multy_lang_values[window.getApp().getLocale()+"_"+"app_to_correction"],
-checked:(options.defaultValue&&options.defaultValue=="app_to_correction")}
-,{"value":"contr_return",
-"descr":multy_lang_values[window.getApp().getLocale()+"_"+"contr_return"],
-checked:(options.defaultValue&&options.defaultValue=="contr_return")}
-,{"value":"expert_work_change",
-"descr":multy_lang_values[window.getApp().getLocale()+"_"+"expert_work_change"],
-checked:(options.defaultValue&&options.defaultValue=="expert_work_change")}
-,{"value":"ca_update_error",
-"descr":multy_lang_values[window.getApp().getLocale()+"_"+"ca_update_error"],
-checked:(options.defaultValue&&options.defaultValue=="ca_update_error")}
-,{"value":"warn_expert_work_end",
-"descr":multy_lang_values[window.getApp().getLocale()+"_"+"warn_expert_work_end"],
-checked:(options.defaultValue&&options.defaultValue=="warn_expert_work_end")}
-,{"value":"warn_work_end",
-"descr":multy_lang_values[window.getApp().getLocale()+"_"+"warn_work_end"],
-checked:(options.defaultValue&&options.defaultValue=="warn_work_end")}
-];
-	
-	Enum_email_types.superclass.constructor.call(this,id,options);
-	
-}
-extend(Enum_email_types,EditSelect);
+
 

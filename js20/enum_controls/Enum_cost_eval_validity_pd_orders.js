@@ -15,18 +15,14 @@
 function Enum_cost_eval_validity_pd_orders(id,options){
 	options = options || {};
 	options.addNotSelected = (options.addNotSelected!=undefined)? options.addNotSelected:true;
-	var multy_lang_values = {"ru_no_pd":"ПД не подлежит"
-,"ru_simult_with_pd":"Одновременно с ПД"
-,"ru_after_pd":"После ПД"
-};
 	options.options = [{"value":"no_pd",
-"descr":multy_lang_values[window.getApp().getLocale()+"_"+"no_pd"],
+"descr":this.multyLangValues[window.getApp().getLocale()+"_"+"no_pd"],
 checked:(options.defaultValue&&options.defaultValue=="no_pd")}
 ,{"value":"simult_with_pd",
-"descr":multy_lang_values[window.getApp().getLocale()+"_"+"simult_with_pd"],
+"descr":this.multyLangValues[window.getApp().getLocale()+"_"+"simult_with_pd"],
 checked:(options.defaultValue&&options.defaultValue=="simult_with_pd")}
 ,{"value":"after_pd",
-"descr":multy_lang_values[window.getApp().getLocale()+"_"+"after_pd"],
+"descr":this.multyLangValues[window.getApp().getLocale()+"_"+"after_pd"],
 checked:(options.defaultValue&&options.defaultValue=="after_pd")}
 ];
 	
@@ -34,4 +30,10 @@ checked:(options.defaultValue&&options.defaultValue=="after_pd")}
 	
 }
 extend(Enum_cost_eval_validity_pd_orders,EditSelect);
+
+Enum_cost_eval_validity_pd_orders.prototype.multyLangValues = {"ru_no_pd":"ПД не подлежит"
+,"ru_simult_with_pd":"Одновременно с ПД"
+,"ru_after_pd":"После ПД"
+};
+
 

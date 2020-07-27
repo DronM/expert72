@@ -67,7 +67,7 @@
 				<td rowspan="2">Вход.реком.см.стоимость</td>
 				<td rowspan="2">Тек.см.стоимость</td>
 				<td rowspan="2">Тек.реком.см.стоимость</td>
-				
+				<td colspan="2">Стоимость эксп.работ</td>
 			</tr>
 			<tr>
 				<xsl:for-each select="/document/model[@id='BuildType_Model']/row">
@@ -79,6 +79,8 @@
 				<td>Дост-ть</td>
 				<td>ПД и Дост-ть</td>
 				<td>ПД, РИИ, Дост-ть</td>
+				<td>Бюджет</td>
+				<td>Собств.средства</td>
 			</tr>
 		</thead>
 	
@@ -107,6 +109,16 @@
 				<td align="right">
 					<xsl:call-template name="format_money">
 						<xsl:with-param name="val" select="sum(row/cur_estim_cost_recommend/node())"/>
+					</xsl:call-template>																									
+				</td>				
+				<td align="right">
+					<xsl:call-template name="format_money">
+						<xsl:with-param name="val" select="sum(row/expertise_cost_budget/node())"/>
+					</xsl:call-template>																									
+				</td>				
+				<td align="right">
+					<xsl:call-template name="format_money">
+						<xsl:with-param name="val" select="sum(row/expertise_cost_self_fund/node())"/>
 					</xsl:call-template>																									
 				</td>				
 				
@@ -195,6 +207,17 @@
 		<td align="right">
 			<xsl:call-template name="format_money">
 				<xsl:with-param name="val" select="cur_estim_cost_recommend/node()"/>
+			</xsl:call-template>																									
+		</td>				
+
+		<td align="right">
+			<xsl:call-template name="format_money">
+				<xsl:with-param name="val" select="expertise_cost_budget/node()"/>
+			</xsl:call-template>																									
+		</td>				
+		<td align="right">
+			<xsl:call-template name="format_money">
+				<xsl:with-param name="val" select="expertise_cost_self_fund/node()"/>
 			</xsl:call-template>																									
 		</td>				
 		

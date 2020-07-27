@@ -15,18 +15,14 @@
 function Enum_doc_flow_approvement_types(id,options){
 	options = options || {};
 	options.addNotSelected = (options.addNotSelected!=undefined)? options.addNotSelected:true;
-	var multy_lang_values = {"ru_to_all":"Всем сразу"
-,"ru_to_one":"По очереди"
-,"ru_mixed":"Смешанно"
-};
 	options.options = [{"value":"to_all",
-"descr":multy_lang_values[window.getApp().getLocale()+"_"+"to_all"],
+"descr":this.multyLangValues[window.getApp().getLocale()+"_"+"to_all"],
 checked:(options.defaultValue&&options.defaultValue=="to_all")}
 ,{"value":"to_one",
-"descr":multy_lang_values[window.getApp().getLocale()+"_"+"to_one"],
+"descr":this.multyLangValues[window.getApp().getLocale()+"_"+"to_one"],
 checked:(options.defaultValue&&options.defaultValue=="to_one")}
 ,{"value":"mixed",
-"descr":multy_lang_values[window.getApp().getLocale()+"_"+"mixed"],
+"descr":this.multyLangValues[window.getApp().getLocale()+"_"+"mixed"],
 checked:(options.defaultValue&&options.defaultValue=="mixed")}
 ];
 	
@@ -34,4 +30,10 @@ checked:(options.defaultValue&&options.defaultValue=="mixed")}
 	
 }
 extend(Enum_doc_flow_approvement_types,EditSelect);
+
+Enum_doc_flow_approvement_types.prototype.multyLangValues = {"ru_to_all":"Всем сразу"
+,"ru_to_one":"По очереди"
+,"ru_mixed":"Смешанно"
+};
+
 

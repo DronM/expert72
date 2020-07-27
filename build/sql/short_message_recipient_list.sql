@@ -10,6 +10,7 @@ CREATE OR REPLACE VIEW short_message_recipient_list AS
 		e.name AS recipient_descr,
 		d.name AS department_descr,
 		person_init(e.name,FALSE) AS recipient_init,
+		--ПРОБЛЕМА!!!
 		coalesce(
 			(SELECT logins.date_time_out IS NULL AND (now()-sessions.set_time)<'1 minute'::interval
 			FROM logins

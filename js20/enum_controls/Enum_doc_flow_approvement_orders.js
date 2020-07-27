@@ -15,14 +15,11 @@
 function Enum_doc_flow_approvement_orders(id,options){
 	options = options || {};
 	options.addNotSelected = (options.addNotSelected!=undefined)? options.addNotSelected:true;
-	var multy_lang_values = {"ru_after_preceding":"После предыдущего"
-,"ru_with_preceding":"Вместе с предыдущим"
-};
 	options.options = [{"value":"after_preceding",
-"descr":multy_lang_values[window.getApp().getLocale()+"_"+"after_preceding"],
+"descr":this.multyLangValues[window.getApp().getLocale()+"_"+"after_preceding"],
 checked:(options.defaultValue&&options.defaultValue=="after_preceding")}
 ,{"value":"with_preceding",
-"descr":multy_lang_values[window.getApp().getLocale()+"_"+"with_preceding"],
+"descr":this.multyLangValues[window.getApp().getLocale()+"_"+"with_preceding"],
 checked:(options.defaultValue&&options.defaultValue=="with_preceding")}
 ];
 	
@@ -30,4 +27,9 @@ checked:(options.defaultValue&&options.defaultValue=="with_preceding")}
 	
 }
 extend(Enum_doc_flow_approvement_orders,EditSelect);
+
+Enum_doc_flow_approvement_orders.prototype.multyLangValues = {"ru_after_preceding":"После предыдущего"
+,"ru_with_preceding":"Вместе с предыдущим"
+};
+
 

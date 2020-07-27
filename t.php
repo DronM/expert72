@@ -60,8 +60,8 @@ return;
 	);
 	*/
 	$verif_res = $pki_man->verifySig(
-		'/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Last/89-20 Приложение к договору ГБУЗ ТО Поликлиника №5, Достоверность.pdf.sig',
-		'/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/Last/89-20 Приложение к договору ГБУЗ ТО Поликлиника №5, Достоверность.pdf',
+		'/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/ССР согласован 36км.pdf.sig',
+		'/home/andrey/www/htdocs/expert72/build/ФайлыЭЦП/ССР согласован 36км.pdf',
 		array(
 			'noChainVerification' => TRUE,
 			'onlineRevocCheck' => TRUE,

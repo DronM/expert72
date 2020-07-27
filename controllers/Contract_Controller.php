@@ -2033,6 +2033,11 @@ class Contract_Controller extends ControllerSQL{
 			$date_type = 'contracts.akt_date';
 			$date_type_descr = 'По дате акта выполненных работ';
 		}
+		else if ($date_type_par && $date_type_par=='work_start_date'){
+			$date_type = 'contracts.work_start_date';
+			$date_type_descr = 'По дате начала работ';
+		}
+		
 		else{
 			$date_type = 'contracts.date_time';
 			$date_type_descr = 'По дате поступления контракта';
@@ -2332,7 +2337,9 @@ class Contract_Controller extends ControllerSQL{
 				contracts.in_estim_cost_recommend,
 				contracts.cur_estim_cost,
 				contracts.cur_estim_cost_recommend,
-				contracts.id AS contract_id
+				contracts.id AS contract_id,
+				contracts.expertise_cost_budget,
+				contracts.expertise_cost_self_fund
 				
 			FROM contracts	
 			LEFT JOIN applications AS app ON app.id=contracts.application_id

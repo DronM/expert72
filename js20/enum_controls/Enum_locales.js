@@ -15,10 +15,8 @@
 function Enum_locales(id,options){
 	options = options || {};
 	options.addNotSelected = (options.addNotSelected!=undefined)? options.addNotSelected:true;
-	var multy_lang_values = {"ru_ru":"Русский"
-};
 	options.options = [{"value":"ru",
-"descr":multy_lang_values[window.getApp().getLocale()+"_"+"ru"],
+"descr":this.multyLangValues[window.getApp().getLocale()+"_"+"ru"],
 checked:(options.defaultValue&&options.defaultValue=="ru")}
 ];
 	
@@ -26,4 +24,8 @@ checked:(options.defaultValue&&options.defaultValue=="ru")}
 	
 }
 extend(Enum_locales,EditSelect);
+
+Enum_locales.prototype.multyLangValues = {"ru_ru":"Русский"
+};
+
 

@@ -2,7 +2,7 @@
 <metadata owner="expert72">
 	<versions>
 		<version dateOpen="2017-09-27 12:09:48" dateClose="2017-12-08 10:12:08">1.001 
-		<lastBuild>2020-05-19 06:50:26</lastBuild></version>
+		<lastBuild>2020-07-27 15:02:55</lastBuild></version>
 		<version dateOpen="2017-12-08 11:12:01" dateClose="2017-12-08 11:12:04">1.002</version>
 		<version dateOpen="2017-12-08 11:12:20" dateClose="2017-12-08 11:12:20">1.0.3</version>
 		<version dateOpen="2017-12-12 11:12:07" dateClose="2017-12-12 11:12:07">1.0.4</version>
@@ -138,6 +138,7 @@
 		<version dateOpen="2020-04-14 14:04:55" dateClose="2020-04-15 06:04:24">1.0.135</version>
 		<version dateOpen="2020-04-18 11:04:18" dateClose="2020-05-18 07:05:34">1.0.136</version>
 		<version dateOpen="2020-05-18 12:05:31" dateClose="2020-05-19 06:05:50">1.0.137</version>
+		<version dateOpen="2020-07-13 11:07:54" dateClose="2020-07-27 15:07:03">1.0.138</version>
 	</versions>
 	<globalFilters>
 		<field id="user_id"/>
@@ -2984,7 +2985,7 @@
 			<field id="back_to_work_date" dataType="String" alias="&#x414;&#x430;&#x442;&#x430; &#x43D;&#x430; &#x434;&#x43E;&#x440;&#x430;&#x431;&#x43E;&#x442;&#x43A;&#x443;"/>
 			<field id="akt_number_date" dataType="String" alias="&#x410;&#x43A;&#x442;"/>
 			<field id="comment_text" dataType="String" alias="&#x41A;&#x43E;&#x43C;&#x43C;&#x435;&#x43D;&#x442;&#x430;&#x440;&#x438;&#x439;"/>
-			<field id="contract_id" dataType="Int" sysCol="TRUE"/>
+			<field id="contract_id" dataType="Int" sysCol="TRUE" alias="&#x41A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;"/>
 		</model>
 		<model id="RepQuarter" parent="ModelReportSQL" virtual="TRUE" server="TRUE">
 			<field id="ord" dataType="String" alias="&#x2116;"/>

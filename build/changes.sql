@@ -17,7 +17,7 @@ applications_dialog
 
 update applications
 SET documents = applications_get_documents(applications)
-
+where documents is NULL AND service_type<>'expert_maintenance' 
 
 applications_process
 

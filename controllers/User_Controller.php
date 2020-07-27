@@ -590,7 +590,7 @@ class User_Controller extends ControllerSQL{
 		}
 		
 		//global filters				
-		if ($ar['role_id']=='client'){
+		if ($ar['role_id']=='client'){			
 			$_SESSION['global_user_id'] = $ar['id'];
 						
 			$model = new UserProfile_Model($this->getDbLink());

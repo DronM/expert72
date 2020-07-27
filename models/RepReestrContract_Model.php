@@ -193,6 +193,8 @@ class RepReestrContract_Model extends ModelReportSQL{
 		
 		//*** Field contract_id ***
 		$f_opts = array();
+		
+		$f_opts['alias']='Контракт';
 		$f_opts['sysCol']=TRUE;
 		$f_opts['id']="contract_id";
 						

@@ -45,6 +45,11 @@ function RepReestrContract_View(id,options){
 							"value":"akt_date",
 							"descr":"Дата акта выполненных работ"
 						})
+						,new EditSelectOption(id+":filter-ctrl-date_type:"+"work_start_date",{
+							"value":"work_start_date",
+							"descr":"Дата начала работ"
+						})
+						
 					]
 				}),
 				"field":new FieldString("date_type")

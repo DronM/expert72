@@ -15,18 +15,14 @@
 function Enum_responsable_person_types(id,options){
 	options = options || {};
 	options.addNotSelected = (options.addNotSelected!=undefined)? options.addNotSelected:true;
-	var multy_lang_values = {"ru_boss":"Руководитель"
-,"ru_chef_accountant":"Главны бухгалтер"
-,"ru_other":"Прочий"
-};
 	options.options = [{"value":"boss",
-"descr":multy_lang_values[window.getApp().getLocale()+"_"+"boss"],
+"descr":this.multyLangValues[window.getApp().getLocale()+"_"+"boss"],
 checked:(options.defaultValue&&options.defaultValue=="boss")}
 ,{"value":"chef_accountant",
-"descr":multy_lang_values[window.getApp().getLocale()+"_"+"chef_accountant"],
+"descr":this.multyLangValues[window.getApp().getLocale()+"_"+"chef_accountant"],
 checked:(options.defaultValue&&options.defaultValue=="chef_accountant")}
 ,{"value":"other",
-"descr":multy_lang_values[window.getApp().getLocale()+"_"+"other"],
+"descr":this.multyLangValues[window.getApp().getLocale()+"_"+"other"],
 checked:(options.defaultValue&&options.defaultValue=="other")}
 ];
 	
@@ -34,4 +30,10 @@ checked:(options.defaultValue&&options.defaultValue=="other")}
 	
 }
 extend(Enum_responsable_person_types,EditSelect);
+
+Enum_responsable_person_types.prototype.multyLangValues = {"ru_boss":"Руководитель"
+,"ru_chef_accountant":"Главны бухгалтер"
+,"ru_other":"Прочий"
+};
+
 

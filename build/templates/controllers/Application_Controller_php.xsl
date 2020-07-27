@@ -2933,10 +2933,10 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				WHERE
 					t.file_id&lt;&gt;app_f.file_id AND t.application_id=app_f.application_id
 					AND
-					lower(t.file_name) ~ ('^'||(SELECT f_name FROM file_name_explode(lower(app_f.file_name)) AS (f_name text,f_ext text))||' *- *ул *\.'||(SELECT f_ext FROM file_name_explode(lower(app_f.file_name)) AS (f_name text,f_ext text))||'$')
+					lower(t.file_name) ~ ('^'||(SELECT f_regexp_escape(f_name) FROM file_name_explode(lower(app_f.file_name)) AS (f_name text,f_ext text))||' *- *ул *\.'||(SELECT f_ext FROM file_name_explode(lower(app_f.file_name)) AS (f_name text,f_ext text))||'$')
 				LIMIT 1
 				) IS NULL
-				AND app_f.document_type&lt;&gt;'documents'
+				AND app_f.document_type&lt;&gt;'documents' AND NOT app_f.deleted
 				%s				
 			ORDER BY app_f.document_type,app_f.file_path,app_f.file_name",
 		$appId,

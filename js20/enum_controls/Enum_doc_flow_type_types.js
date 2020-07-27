@@ -15,18 +15,14 @@
 function Enum_doc_flow_type_types(id,options){
 	options = options || {};
 	options.addNotSelected = (options.addNotSelected!=undefined)? options.addNotSelected:true;
-	var multy_lang_values = {"ru_in":"Входящие"
-,"ru_out":"Исходящие"
-,"ru_inside":"Внутренние"
-};
 	options.options = [{"value":"in",
-"descr":multy_lang_values[window.getApp().getLocale()+"_"+"in"],
+"descr":this.multyLangValues[window.getApp().getLocale()+"_"+"in"],
 checked:(options.defaultValue&&options.defaultValue=="in")}
 ,{"value":"out",
-"descr":multy_lang_values[window.getApp().getLocale()+"_"+"out"],
+"descr":this.multyLangValues[window.getApp().getLocale()+"_"+"out"],
 checked:(options.defaultValue&&options.defaultValue=="out")}
 ,{"value":"inside",
-"descr":multy_lang_values[window.getApp().getLocale()+"_"+"inside"],
+"descr":this.multyLangValues[window.getApp().getLocale()+"_"+"inside"],
 checked:(options.defaultValue&&options.defaultValue=="inside")}
 ];
 	
@@ -34,4 +30,10 @@ checked:(options.defaultValue&&options.defaultValue=="inside")}
 	
 }
 extend(Enum_doc_flow_type_types,EditSelect);
+
+Enum_doc_flow_type_types.prototype.multyLangValues = {"ru_in":"Входящие"
+,"ru_out":"Исходящие"
+,"ru_inside":"Внутренние"
+};
+
 

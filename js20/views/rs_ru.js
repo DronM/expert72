@@ -10,6 +10,9 @@ UserProfile_View.prototype.HEAD_TITLE = "Профиль пользователя
 TimeZoneLocale_View.prototype.HEAD_TITLE = "Временные зоны";
 PostList_View.prototype.HEAD_TITLE = "Должности";
 
+MailForSendingList_View.prototype.HEAD_TITLE = "Письма электронной почты";
+MailForSending_View.prototype.HEAD_TITLE = "Письмо электронной почты";
+
 Client_View.prototype.HEAD_TITLE = "Данные контрагента";
 ClientList_View.prototype.HEAD_TITLE = "Контрагенты";
 

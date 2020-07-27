@@ -15,18 +15,14 @@
 function Enum_doc_flow_approvement_results(id,options){
 	options = options || {};
 	options.addNotSelected = (options.addNotSelected!=undefined)? options.addNotSelected:true;
-	var multy_lang_values = {"ru_approved":"Согласовано"
-,"ru_not_approved":"Не согласовано"
-,"ru_approved_with_notes":"Согласовано с замечаниями"
-};
 	options.options = [{"value":"approved",
-"descr":multy_lang_values[window.getApp().getLocale()+"_"+"approved"],
+"descr":this.multyLangValues[window.getApp().getLocale()+"_"+"approved"],
 checked:(options.defaultValue&&options.defaultValue=="approved")}
 ,{"value":"not_approved",
-"descr":multy_lang_values[window.getApp().getLocale()+"_"+"not_approved"],
+"descr":this.multyLangValues[window.getApp().getLocale()+"_"+"not_approved"],
 checked:(options.defaultValue&&options.defaultValue=="not_approved")}
 ,{"value":"approved_with_notes",
-"descr":multy_lang_values[window.getApp().getLocale()+"_"+"approved_with_notes"],
+"descr":this.multyLangValues[window.getApp().getLocale()+"_"+"approved_with_notes"],
 checked:(options.defaultValue&&options.defaultValue=="approved_with_notes")}
 ];
 	
@@ -34,4 +30,10 @@ checked:(options.defaultValue&&options.defaultValue=="approved_with_notes")}
 	
 }
 extend(Enum_doc_flow_approvement_results,EditSelect);
+
+Enum_doc_flow_approvement_results.prototype.multyLangValues = {"ru_approved":"Согласовано"
+,"ru_not_approved":"Не согласовано"
+,"ru_approved_with_notes":"Согласовано с замечаниями"
+};
+
 

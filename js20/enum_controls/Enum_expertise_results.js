@@ -15,14 +15,11 @@
 function Enum_expertise_results(id,options){
 	options = options || {};
 	options.addNotSelected = (options.addNotSelected!=undefined)? options.addNotSelected:true;
-	var multy_lang_values = {"ru_positive":"Положительное заключение"
-,"ru_negative":"Отрицательное заключение"
-};
 	options.options = [{"value":"positive",
-"descr":multy_lang_values[window.getApp().getLocale()+"_"+"positive"],
+"descr":this.multyLangValues[window.getApp().getLocale()+"_"+"positive"],
 checked:(options.defaultValue&&options.defaultValue=="positive")}
 ,{"value":"negative",
-"descr":multy_lang_values[window.getApp().getLocale()+"_"+"negative"],
+"descr":this.multyLangValues[window.getApp().getLocale()+"_"+"negative"],
 checked:(options.defaultValue&&options.defaultValue=="negative")}
 ];
 	
@@ -30,4 +27,9 @@ checked:(options.defaultValue&&options.defaultValue=="negative")}
 	
 }
 extend(Enum_expertise_results,EditSelect);
+
+Enum_expertise_results.prototype.multyLangValues = {"ru_positive":"Положительное заключение"
+,"ru_negative":"Отрицательное заключение"
+};
+
 
