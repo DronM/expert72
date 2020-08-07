@@ -20,8 +20,9 @@ $er_f = dirname(__FILE__).'/run_sql.er';
 if(file_exists($er_f)){
 	unlink($er_f);
 }
-$cmd = sprintf('export PGPASSWORD=%s ; psql -h %s -d %s -U %s -f '.$sql_f.' 2>'.$er_f,
-		DB_PASSWORD,
+//sudo export PGPASSWORD=%s ; 
+$cmd = sprintf('psql -h %s -d %s -U %s -f '.$sql_f.' 2>'.$er_f,
+		//DB_PASSWORD,
 		DB_SERVER_MASTER,
 		DB_NAME,
 		DB_USER

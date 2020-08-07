@@ -18413,3 +18413,2765 @@ $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 ALTER FUNCTION applications_process() OWNER TO expert72;
+
+
+
+-- ******************* update 29/07/2020 09:47:46 ******************
+-- Function: sess_enc_read(character varying, text)
+
+-- DROP FUNCTION sess_enc_read(character varying, text);
+
+CREATE OR REPLACE FUNCTION sess_enc_read(in_id character varying,in_key text)
+  RETURNS text AS
+$BODY$
+	SELECT PGP_SYM_DECRYPT(data_enc,in_key) FROM sessions WHERE id = in_id LIMIT 1;
+$BODY$
+  LANGUAGE sql VOLATILE
+  COST 100;
+ALTER FUNCTION sess_enc_read(character varying, text)
+  OWNER TO expert72;
+
+
+
+-- ******************* update 29/07/2020 09:48:31 ******************
+-- Function: sess_enc_write(character varying, text, character varying)
+
+-- DROP FUNCTION sess_enc_write(character varying, text,text, character varying);
+
+CREATE OR REPLACE FUNCTION sess_enc_write(
+    in_id character varying,
+    in_data_enc text,
+    in_key text,
+    in_remote_ip character varying)
+  RETURNS void AS
+$BODY$
+BEGIN
+	UPDATE sessions
+	SET
+		set_time = now(),
+		data_enc = PGP_SYM_ENCRYPT(in_data_enc,in_key)
+	WHERE id = in_id;
+	
+	IF FOUND THEN
+		RETURN;
+	END IF;
+	
+	BEGIN
+		INSERT INTO sessions (id, data_enc, set_time)
+		VALUES(in_id, PGP_SYM_ENCRYPT(in_data_enc,in_key), now());
+		
+		INSERT INTO logins(date_time_in,ip,session_id)
+		VALUES(now(),in_remote_ip,in_id);
+		
+	EXCEPTION WHEN unique_violation THEN
+		UPDATE sessions
+		SET
+			set_time = now(),
+			data_enc = PGP_SYM_ENCRYPT(in_data_enc,in_key)
+		WHERE id = in_id;
+	END;
+	
+	RETURN;
+
+END;	
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION sess_enc_write(character varying, text, text, character varying)
+  OWNER TO expert72;
+
+
+
+-- ******************* update 29/07/2020 17:11:25 ******************
+-- Function: doc_flow_examinations_process()
+
+-- DROP FUNCTION doc_flow_examinations_process();
+
+CREATE OR REPLACE FUNCTION doc_flow_examinations_process()
+  RETURNS trigger AS
+$BODY$
+DECLARE
+	v_ref JSONB;
+	v_application_id int;
+	v_app_expertise_type expertise_types;
+	v_app_cost_eval_validity bool;
+	v_app_modification bool;
+	v_app_audit bool;	
+	v_app_client_id int;
+	v_app_user_id int;
+	v_app_applicant JSONB;
+	v_primary_contracts_ref JSONB;
+	v_modif_primary_contracts_ref JSONB;	
+	v_linked_contracts_ref JSONB;
+	v_app_process_dt timestampTZ;
+	v_linked_app int;
+	v_cost_eval_validity_simult bool;
+	v_constr_name text;
+	v_constr_address jsonb;
+	v_constr_technical_features jsonb;
+	v_linked_contracts JSONB[];
+	v_linked_contracts_n int;
+	v_new_contract_number text;
+	v_document_type document_types;
+	v_expertise_result_number text;
+	v_date_type date_types;
+	v_work_day_count int;
+	v_expert_work_day_count int;
+	v_office_id int;
+	v_new_contract_id int;
+	v_service_type service_types;
+	v_expertise_type expertise_types;
+BEGIN
+	IF (TG_WHEN='AFTER' AND TG_OP='INSERT') THEN
+		IF NOT const_client_lk_val() OR const_debug_val() THEN
+			v_ref = doc_flow_examinations_ref((SELECT doc_flow_examinations FROM doc_flow_examinations WHERE id=NEW.id));
+			--статус
+			INSERT INTO doc_flow_in_processes (
+				doc_flow_in_id, date_time,
+				state,
+				register_doc,
+				doc_flow_importance_type_id,
+				description,
+				end_date_time
+			)
+			VALUES (
+				(NEW.subject_doc->'keys'->>'id')::int,NEW.date_time,
+				CASE WHEN NEW.closed THEN 'examined'::doc_flow_in_states ELSE 'examining'::doc_flow_in_states END,
+				v_ref,
+				NEW.doc_flow_importance_type_id,
+				NEW.subject,
+				NEW.end_date_time
+			);
+			
+			--задачи
+			INSERT INTO doc_flow_tasks (
+				register_doc,
+				date_time,end_date_time,
+				doc_flow_importance_type_id,
+				employee_id,
+				recipient,
+				description,
+				closed,
+				close_doc,
+				close_date_time,
+				close_employee_id
+			)
+			VALUES (
+				v_ref,
+				NEW.date_time,NEW.end_date_time,
+				NEW.doc_flow_importance_type_id,
+				NEW.employee_id,
+				NEW.recipient,
+				NEW.subject,
+				NEW.closed,
+				CASE WHEN NEW.closed THEN v_ref ELSE NULL END,
+				CASE WHEN NEW.closed THEN now() ELSE NULL END,
+				CASE WHEN NEW.closed THEN NEW.close_employee_id ELSE NULL END
+			);
+			
+			--если тип основания - письмо, чье основание - заявление - сменим его статус
+			IF NEW.subject_doc->>'dataType'='doc_flow_in' THEN
+				SELECT from_application_id INTO v_application_id FROM doc_flow_in WHERE id=(NEW.subject_doc->'keys'->>'id')::int;
+				IF (v_application_id IS NOT NULL) THEN
+					IF NEW.closed THEN
+						SELECT
+							greatest(NEW.date_time,date_time+'1 second'::interval)
+						INTO v_app_process_dt
+						FROM application_processes
+						WHERE application_id=v_application_id
+						ORDER BY date_time DESC
+						LIMIT 1;
+					ELSE
+						v_app_process_dt = NEW.date_time;
+					END IF;
+					--статус
+					INSERT INTO application_processes (
+						application_id,
+						date_time,
+						state,
+						user_id,
+						end_date_time
+					)
+					VALUES (
+						v_application_id,
+						v_app_process_dt,
+						CASE WHEN NEW.closed THEN NEW.application_resolution_state ELSE 'checking'::application_states END,
+						(SELECT user_id FROM employees WHERE id=NEW.employee_id),
+						NEW.end_date_time
+					);			
+				END IF;
+			END IF;		
+			
+		END IF;
+					
+		RETURN NEW;
+		
+	ELSIF (TG_WHEN='AFTER' AND TG_OP='UPDATE' ) THEN
+		IF NOT const_client_lk_val() OR const_debug_val() THEN
+			v_ref = doc_flow_examinations_ref((SELECT doc_flow_examinations FROM doc_flow_examinations WHERE id=NEW.id));
+		
+			--state
+			IF NEW.date_time<>OLD.date_time
+				OR NEW.end_date_time<>OLD.end_date_time
+				OR NEW.doc_flow_importance_type_id<>OLD.doc_flow_importance_type_id
+				OR NEW.subject_doc<>OLD.subject_doc
+				OR NEW.subject<>OLD.subject
+				OR NEW.date_time<>OLD.date_time
+				--OR (NEW.employee_id<>OLD.employee_id AND NEW.subject_doc->>'dataType'='doc_flow_in'
+			THEN
+				UPDATE doc_flow_in_processes
+				SET
+					date_time			= NEW.date_time,
+					doc_flow_importance_type_id	= NEW.doc_flow_importance_type_id,
+					doc_flow_in_id			= (NEW.subject_doc->'keys'->>'id')::int,
+					description			= NEW.subject,
+					end_date_time			= NEW.end_date_time
+				WHERE register_doc->>'dataType'='doc_flow_examinations' AND (register_doc->'keys'->>'id')::int=NEW.id;
+			END IF;
+	
+			--сменим статус при закрытии
+			IF NEW.closed<>OLD.closed THEN
+				INSERT INTO doc_flow_in_processes (
+					doc_flow_in_id,
+					date_time,
+					state,
+					register_doc,
+					doc_flow_importance_type_id,
+					end_date_time
+				)
+				VALUES (
+					(NEW.subject_doc->'keys'->>'id')::int,
+					CASE WHEN NEW.closed THEN NEW.close_date_time ELSE now() END,
+					CASE WHEN NEW.closed THEN 'examined'::doc_flow_in_states ELSE 'examining'::doc_flow_in_states END,
+					v_ref,
+					NEW.doc_flow_importance_type_id,
+					NEW.end_date_time
+				);		
+			END IF;
+	
+			--если тип основания - заявление - сменим его статус
+			IF NEW.subject_doc->>'dataType'='doc_flow_in' AND NEW.closed<>OLD.closed AND NEW.closed THEN
+				SELECT
+					from_application_id,
+					doc_flow_out.new_contract_number
+				INTO
+					v_application_id,
+					v_new_contract_number
+				FROM doc_flow_in
+				LEFT JOIN doc_flow_out ON doc_flow_out.doc_flow_in_id=doc_flow_in.id
+				WHERE doc_flow_in.id=(NEW.subject_doc->'keys'->>'id')::int;
+			
+				--НОВЫЙ КОНТРАКТ
+				IF NEW.application_resolution_state='waiting_for_contract'
+					--это для измененной документации
+					OR NEW.application_resolution_state='expertise'
+				THEN
+					SELECT
+						app.expertise_type,
+						app.cost_eval_validity,
+						app.modification,
+						app.audit,
+						app.user_id,
+						app.applicant,
+						(contracts_ref(p_contr))::jsonb,
+						(contracts_ref(mp_contr))::jsonb,
+						coalesce(app.base_application_id,app.derived_application_id),
+						app.cost_eval_validity_simult,
+						app.constr_name,
+						app.constr_address,
+						app.constr_technical_features,
+						CASE
+							WHEN app.expertise_type IS NOT NULL THEN 'pd'::document_types
+							WHEN app.cost_eval_validity THEN 'cost_eval_validity'::document_types
+							WHEN app.modification THEN 'modification'::document_types
+							WHEN app.audit THEN 'audit'::document_types						
+							ELSE  'pd'::document_types
+						END,
+						app.office_id,
+						app.service_type,
+						app.expertise_type						
+					
+					INTO
+						v_app_expertise_type,
+						v_app_cost_eval_validity,
+						v_app_modification,
+						v_app_audit,
+						v_app_user_id,
+						v_app_applicant,
+						v_primary_contracts_ref,
+						v_modif_primary_contracts_ref,
+						v_linked_app,
+						v_cost_eval_validity_simult,
+						v_constr_name,
+						v_constr_address,
+						v_constr_technical_features,
+						v_document_type,
+						v_office_id,
+						v_service_type,
+						v_expertise_type
+					
+					FROM applications AS app
+					LEFT JOIN contracts AS p_contr ON p_contr.application_id=app.primary_application_id
+					LEFT JOIN contracts AS mp_contr ON mp_contr.application_id=app.modif_primary_application_id
+					WHERE app.id=v_application_id;
+				
+					--applicant -->> client
+					UPDATE clients
+					SET
+						name		= substr(v_app_applicant->>'name',1,100),
+						name_full	= v_app_applicant->>'name_full',
+						ogrn		= v_app_applicant->>'ogrn',
+						inn		= v_app_applicant->>'inn',
+						kpp		= v_app_applicant->>'kpp',
+						okpo		= v_app_applicant->>'okpo',
+						okved		= v_app_applicant->>'okved',
+						post_address	= v_app_applicant->'post_address',
+						user_id		= v_app_user_id,
+						legal_address	= v_app_applicant->'legal_address',
+						bank_accounts	= v_app_applicant->'bank_accounts',
+						client_type	= 
+							CASE WHEN v_app_applicant->>'client_type' IS NULL OR v_app_applicant->>'client_type'='on' THEN 'enterprise'
+							ELSE (v_app_applicant->>'client_type')::client_types
+							END,
+						base_document_for_contract = v_app_applicant->>'base_document_for_contract',
+						person_id_paper	= v_app_applicant->'person_id_paper',
+						person_registr_paper = v_app_applicant->'person_registr_paper'
+					WHERE (inn=v_app_applicant->>'inn' AND kpp=v_app_applicant->>'kpp')
+					--name = v_app_applicant->>'name' OR 
+					RETURNING id INTO v_app_client_id;
+				
+					IF NOT FOUND THEN
+						INSERT INTO clients
+						(
+							name,
+							name_full,
+							inn,
+							kpp,
+							ogrn,
+							okpo,
+							okved,
+							post_address,
+							user_id,
+							legal_address,
+							bank_accounts,
+							client_type,
+							base_document_for_contract,
+							person_id_paper,
+							person_registr_paper
+						)
+						VALUES(
+							CASE WHEN v_app_applicant->>'name' IS NULL THEN v_app_applicant->>'name_full'
+							ELSE v_app_applicant->>'name'
+							END,
+							v_app_applicant->>'name_full',
+							v_app_applicant->>'inn',
+							v_app_applicant->>'kpp',
+							v_app_applicant->>'ogrn',
+							v_app_applicant->>'okpo',
+							v_app_applicant->>'okved',
+							v_app_applicant->'post_address',
+							v_app_user_id,
+							v_app_applicant->'legal_address',
+							v_app_applicant->'bank_accounts',
+							CASE WHEN v_app_applicant->>'client_type' IS NULL OR v_app_applicant->>'client_type'='on' THEN 'enterprise'
+							ELSE (v_app_applicant->>'client_type')::client_types
+							END,
+							v_app_applicant->>'base_document_for_contract',
+							v_app_applicant->'person_id_paper',
+							v_app_applicant->'person_registr_paper'
+						)				
+						RETURNING id
+						INTO v_app_client_id
+						;
+					END IF;
+				
+					v_linked_contracts_n = 0;
+					IF (v_primary_contracts_ref->'keys'->>'id' IS NOT NULL) THEN
+						v_linked_contracts_n = v_linked_contracts_n + 1;
+						v_linked_contracts = v_linked_contracts || jsonb_build_object('fields',jsonb_build_object('id',v_linked_contracts_n,'contracts_ref',v_primary_contracts_ref));
+					END IF;
+					IF (v_modif_primary_contracts_ref->'keys'->>'id' IS NOT NULL) THEN
+						v_linked_contracts_n = v_linked_contracts_n + 1;
+						v_linked_contracts = v_linked_contracts || jsonb_build_object('fields',jsonb_build_object('id',v_linked_contracts_n,'contracts_ref',v_modif_primary_contracts_ref));
+					END IF;
+				
+					IF v_linked_app IS NOT NULL THEN
+						--Поиск связного контракта по заявлению
+						SELECT contracts_ref(contracts) INTO v_linked_contracts_ref FROM contracts WHERE application_id=v_linked_app;
+						IF v_linked_contracts_ref IS NOT NULL THEN
+							v_linked_contracts_n = v_linked_contracts_n + 1;
+							v_linked_contracts = v_linked_contracts || jsonb_build_object('fields',jsonb_build_object('id',v_linked_contracts_n,'contracts_ref',v_linked_contracts_ref));
+						END IF;
+					END IF;
+				
+					--Сначала из исх.письма, затем генерим новый
+					IF v_new_contract_number IS NULL THEN
+						v_new_contract_number = contracts_next_number(v_document_type,now()::date);
+					END IF;
+				
+					--Номер экспертного заключения
+					v_expertise_result_number = regexp_replace(v_new_contract_number,'\D+.*$','');
+					v_expertise_result_number = substr('0000',1,4-length(v_expertise_result_number))||
+								v_expertise_result_number||
+								'/'||(extract(year FROM now())-2000)::text;
+				
+					--Дни проверки
+					SELECT
+						services.date_type,
+						services.work_day_count,
+						services.expertise_day_count
+					INTO
+						v_date_type,
+						v_work_day_count,
+						v_expert_work_day_count
+					FROM services
+					WHERE services.service_type=v_service_type
+						AND
+						(v_expertise_type IS NULL
+						OR services.expertise_type=v_expertise_type
+						)
+					LIMIT 1
+					;
+								
+					--RAISE EXCEPTION 'v_linked_contracts=%',v_linked_contracts;
+					--Контракт
+					INSERT INTO contracts (
+						date_time,
+						application_id,
+						client_id,
+						employee_id,
+						document_type,
+						expertise_type,
+						cost_eval_validity_pd_order,
+						constr_name,
+						constr_address,
+						constr_technical_features,
+						contract_number,
+						expertise_result_number,
+						linked_contracts,
+						--contract_date,					
+						date_type,
+						expertise_day_count,
+						expert_work_day_count,
+						work_end_date,
+						expert_work_end_date,
+						permissions,
+						user_id,
+						service_type)
+					VALUES (
+						now(),
+						v_application_id,
+						v_app_client_id,
+						NEW.close_employee_id,
+						v_document_type,
+						v_app_expertise_type,
+						CASE
+							WHEN v_app_cost_eval_validity THEN
+								CASE
+									WHEN v_cost_eval_validity_simult THEN 'simult_with_pd'::cost_eval_validity_pd_orders
+									WHEN v_linked_app IS NOT NULL THEN 'after_pd'::cost_eval_validity_pd_orders
+									ELSE 'no_pd'::cost_eval_validity_pd_orders
+								END
+							ELSE NULL
+						END,
+						v_constr_name,
+						v_constr_address,
+						v_constr_technical_features,
+					
+						v_new_contract_number,
+						v_expertise_result_number,
+					
+						--linked_contracts
+						CASE WHEN v_linked_contracts IS NOT NULL THEN
+							jsonb_build_object(
+								'id','LinkedContractList_Model',
+								'rows',v_linked_contracts
+							)
+						ELSE
+							'{"id":"LinkedContractList_Model","rows":[]}'::jsonb
+						END,
+					
+						--now()::date,--contract_date
+					
+						v_date_type,
+						v_work_day_count,
+						v_expert_work_day_count,
+					
+						--ПРИ ОПЛАТЕ client_payments_process()
+						--ставятся work_start_date&&work_end_date
+						--contracts_work_end_date(v_office_id, v_date_type, now(), v_work_day_count),
+						NULL,
+						NULL,					
+					
+						'{"id":"AccessPermission_Model","rows":[]}'::jsonb,
+					
+						v_app_user_id,
+						v_service_type
+					)
+					RETURNING id INTO v_new_contract_id;
+				
+					--В связные контракты запишем данный по текущему новому
+					IF (v_linked_contracts_ref->'keys'->>'id' IS NOT NULL) THEN
+					--RAISE EXCEPTION 'Updating contracts, id=%',(v_linked_contracts_ref->'keys'->>'id')::int;
+						UPDATE contracts
+						SET
+							linked_contracts = jsonb_build_object(
+								'id','LinkedContractList_Model',
+								'rows',
+								linked_contracts->'rows'||
+									jsonb_build_object(
+									'fields',jsonb_build_object(
+										'id',
+										jsonb_array_length(linked_contracts->'rows')+1,
+										'contracts_ref',contracts_ref((SELECT contracts FROM contracts WHERE id=v_new_contract_id))
+										)
+									)							
+							)
+						WHERE id=(v_linked_contracts_ref->'keys'->>'id')::int;
+					END IF;
+					IF (v_primary_contracts_ref->'keys'->>'id' IS NOT NULL) THEN
+						UPDATE contracts
+						SET
+							linked_contracts = jsonb_build_object(
+								'id','LinkedContractList_Model',
+								'rows',
+								linked_contracts->'rows'||
+									jsonb_build_object(
+									'fields',jsonb_build_object(
+										'id',
+										jsonb_array_length(linked_contracts->'rows')+1,
+										'contracts_ref',contracts_ref((SELECT contracts FROM contracts WHERE id=v_new_contract_id))
+										)
+									)							
+							)
+						WHERE id=(v_primary_contracts_ref->'keys'->>'id')::int;
+					END IF;
+					IF (v_modif_primary_contracts_ref->'keys'->>'id' IS NOT NULL) THEN
+						UPDATE contracts
+						SET
+							linked_contracts = jsonb_build_object(
+								'id','LinkedContractList_Model',
+								'rows',
+								linked_contracts->'rows'||
+									jsonb_build_object(
+									'fields',jsonb_build_object(
+										'id',
+										jsonb_array_length(linked_contracts->'rows')+1,
+										'contracts_ref',contracts_ref((SELECT contracts FROM contracts WHERE id=v_new_contract_id))
+										)
+									)							
+							)
+						WHERE id=(v_modif_primary_contracts_ref->'keys'->>'id')::int;
+					END IF;
+				
+				END IF;
+			END IF;
+						
+			--задачи
+			UPDATE doc_flow_tasks
+			SET 
+				date_time			= NEW.date_time,
+				end_date_time			= NEW.end_date_time,
+				doc_flow_importance_type_id	= NEW.doc_flow_importance_type_id,
+				employee_id			= NEW.employee_id,
+				description			= NEW.subject,
+				closed				= NEW.closed,
+				close_doc			= CASE WHEN NEW.closed THEN v_ref ELSE NULL END,
+				close_date_time			= CASE WHEN NEW.closed THEN now() ELSE NULL END,
+				close_employee_id		= CASE WHEN NEW.closed THEN NEW.close_employee_id ELSE NULL END
+			WHERE register_doc->>'dataType'='doc_flow_examinations' AND (register_doc->'keys'->>'id')::int=NEW.id;
+			
+			--если тип основания - заявление - сменим его статус
+			IF NEW.subject_doc->>'dataType'='doc_flow_in' AND NEW.closed<>OLD.closed AND NEW.closed THEN
+				SELECT
+					from_application_id,
+					doc_flow_out.new_contract_number
+				INTO
+					v_application_id,
+					v_new_contract_number
+				FROM doc_flow_in
+				LEFT JOIN doc_flow_out ON doc_flow_out.doc_flow_in_id=doc_flow_in.id
+				WHERE doc_flow_in.id=(NEW.subject_doc->'keys'->>'id')::int;
+			
+				IF v_application_id IS NOT NULL THEN
+					IF NEW.closed THEN
+						SELECT
+							greatest(NEW.close_date_time,date_time+'1 second'::interval)
+						INTO v_app_process_dt
+						FROM application_processes
+						WHERE application_id=v_application_id
+						ORDER BY date_time DESC
+						LIMIT 1;
+					ELSE
+						v_app_process_dt = NEW.close_date_time;
+					END IF;
+			
+					--статус
+					INSERT INTO application_processes (
+						application_id,
+						date_time,
+						state,
+						user_id,
+						end_date_time
+					)
+					VALUES (
+						v_application_id,
+						v_app_process_dt,
+						CASE WHEN NEW.closed THEN NEW.application_resolution_state ELSE 'checking'::application_states END,
+						(SELECT user_id FROM employees WHERE id=NEW.employee_id),
+						CASE WHEN NEW.closed THEN NULL ELSE NEW.end_date_time END					
+					);			
+				END IF;
+			END IF;					
+			
+		END IF;
+		
+		RETURN NEW;
+		
+	ELSIF (TG_WHEN='BEFORE' AND TG_OP='UPDATE') THEN
+		--статус
+		--DELETE FROM doc_flow_in_processes WHERE (register_doc->>'dataType')::data_types='doc_flow_examinations'::data_types AND (register_doc->'keys'->>'id')::int=NEW.id;
+		--задачи
+		--DELETE FROM doc_flow_tasks WHERE (register_doc->>'dataType')::data_types='doc_flow_examinations'::data_types AND (register_doc->'keys'->>'id')::int=NEW.id;
+	
+		RETURN NEW;
+		
+	ELSIF (TG_WHEN='BEFORE' AND TG_OP='DELETE') THEN
+		IF NOT const_client_lk_val() OR const_debug_val() THEN
+			--статус
+			DELETE FROM doc_flow_in_processes WHERE register_doc->>'dataType'='doc_flow_examinations' AND (register_doc->'keys'->>'id')::int=OLD.id;
+			--задачи
+			DELETE FROM doc_flow_tasks WHERE register_doc->>'dataType'='doc_flow_examinations' AND (register_doc->'keys'->>'id')::int=OLD.id;
+			IF (OLD.subject_doc->>'dataType')::data_types='doc_flow_in'::data_types THEN
+				SELECT from_application_id INTO v_application_id FROM doc_flow_in WHERE id=(OLD.subject_doc->'keys'->>'id')::int;
+				IF v_application_id IS NOT NULL THEN
+					DELETE FROM application_processes WHERE doc_flow_examination_id=OLD.id;
+				END IF;
+			END IF;
+		END IF;
+													
+		RETURN OLD;
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION doc_flow_examinations_process() OWNER TO expert72;
+
+
+-- ******************* update 29/07/2020 18:01:45 ******************
+-- VIEW: contracts_dialog
+
+--DROP VIEW contracts_dialog;
+
+CREATE OR REPLACE VIEW contracts_dialog AS
+	SELECT
+		t.id,
+		t.date_time,		
+		employees_ref(employees) AS employees_ref,
+		t.reg_number,
+		t.expertise_type,
+		t.document_type,
+		t.expertise_result_number,
+		
+		--applications
+		applications_ref(app) AS applications_ref,
+		applications_client_descr(app.applicant) AS applicant_descr,
+		
+		CASE WHEN (app.customer->>'customer_is_developer')::bool THEN applications_client_descr(app.developer)
+		ELSE applications_client_descr(app.customer)
+		END AS customer_descr,
+		
+		applications_client_descr(app.developer) AS developer_descr,
+		
+		(SELECT
+			json_build_object(
+				'id','ContractorList_Model',
+				'rows',json_agg(
+					json_build_object(
+						'fields',
+						json_build_object(
+							'name',
+							sub.contractors->>'name'||
+							coalesce(' '||(sub.contractors->>'inn')::text,'')||
+							coalesce('/'||(sub.contractors->>'kpp')::text,'')
+						)
+					)
+				)
+			)
+		FROM (
+			SELECT
+				jsonb_array_elements(contractors) AS contractors
+			FROM applications app_contr WHERE app_contr.id=app.id
+		) AS sub		
+		)
+		AS contractors_list,
+		
+		construction_types_ref(construction_types) AS construction_types_ref,
+		t.constr_name AS constr_name,
+		--kladr_parse_addr(t.constr_address) AS constr_address,
+		t.constr_address,
+		t.constr_technical_features,
+		t.constr_technical_features_in_compound_obj,
+		app.total_cost_eval,
+		app.limit_cost_eval,
+		build_types_ref(build_types) AS build_types_ref,
+		app.cost_eval_validity_simult,
+		fund_sources_ref(fund_sources) AS fund_sources_ref,
+		coalesce(t.primary_contract_reg_number,app.primary_application_reg_number) AS primary_contract_reg_number,
+		app.modif_primary_application_reg_number AS modif_primary_contract_reg_number,
+		contracts_ref(prim_contr) AS primary_contracts_ref,
+		contracts_ref(modif_prim_contr) AS modif_primary_contracts_ref,
+		app.cost_eval_validity,
+		app.modification,
+		app.audit,
+		
+		--Documents
+		app.documents AS documents,
+		/*
+		array_to_json((
+			SELECT array_agg(l.documents) FROM document_templates_all_list_for_date(app.create_dt::date) l
+			WHERE
+				(app.construction_type_id IS NOT NULL)
+				AND
+				(l.construction_type_id=app.construction_type_id AND
+				l.document_type IN (
+					CASE WHEN app.expertise_type='pd' OR app.expertise_type='pd_eng_survey' OR app.expertise_type='cost_eval_validity_pd' OR app.expertise_type='cost_eval_validity_pd_eng_survey'
+						OR exp_maint_base.expertise_type='pd' OR exp_maint_base.expertise_type='pd_eng_survey' OR exp_maint_base.expertise_type='cost_eval_validity_pd' OR exp_maint_base.expertise_type='cost_eval_validity_pd_eng_survey'
+						THEN 'pd'::document_types
+						ELSE NULL
+					END,
+					CASE WHEN app.expertise_type='eng_survey' OR app.expertise_type='pd_eng_survey' OR app.expertise_type='cost_eval_validity_eng_survey' OR app.expertise_type='cost_eval_validity_pd_eng_survey'
+						OR exp_maint_base.expertise_type='eng_survey' OR exp_maint_base.expertise_type='pd_eng_survey' OR exp_maint_base.expertise_type='cost_eval_validity_eng_survey' OR exp_maint_base.expertise_type='cost_eval_validity_pd_eng_survey'
+						THEN 'eng_survey'::document_types
+						ELSE NULL
+					END,
+					CASE WHEN app.cost_eval_validity OR app.exp_cost_eval_validity OR app.expertise_type='cost_eval_validity' OR app.expertise_type='cost_eval_validity_pd' OR app.expertise_type='cost_eval_validity_eng_survey' OR app.expertise_type='cost_eval_validity_pd_eng_survey'
+						OR exp_maint_base.expertise_type='cost_eval_validity' OR exp_maint_base.expertise_type='cost_eval_validity_pd' OR exp_maint_base.expertise_type='cost_eval_validity_eng_survey' OR exp_maint_base.expertise_type='cost_eval_validity_pd_eng_survey'
+						THEN 'cost_eval_validity'::document_types
+						ELSE NULL
+					END,
+					CASE WHEN app.modification THEN 'modification'::document_types ELSE NULL END,
+					CASE WHEN app.audit THEN 'audit'::document_types ELSE NULL END			
+					)
+				)
+		)) AS documents,
+		*/		
+		--***********************
+		
+		t.contract_number,
+		t.contract_date,		
+		t.expertise_cost_budget,
+		t.expertise_cost_self_fund,
+		
+		t.work_start_date,
+		t.work_end_date,
+		t.akt_number,
+		t.akt_date,
+		coalesce(t.akt_total,0) As akt_total,
+		t.akt_ext_id,
+		t.invoice_date,
+		t.invoice_number,
+		t.invoice_ext_id,
+		t.expertise_day_count,
+		t.kadastr_number,
+		t.grad_plan_number,
+		t.area_document,
+		t.expertise_result,
+		t.expertise_result_date,
+		
+		t.comment_text,
+		
+		expertise_reject_types_ref(rt) AS expertise_reject_types_ref,		
+		
+		departments_ref(dp) AS main_departments_ref,
+		employees_ref(exp_empl) AS main_experts_ref,
+		
+		t.permissions,
+		
+		(
+			SELECT
+				json_agg(sec_rows.sec_data)
+			FROM (
+				SELECT
+					json_build_object(
+						'section_id',sec.section_id,
+						'section_name',sec.section_name,
+						'experts_list',
+						(SELECT
+							string_agg(
+								coalesce(expert_works.comment_text,'') ||
+								'(' || person_init(employees.name,FALSE) || to_char(expert_works.date_time,'DD/MM/YY') || ')'
+								,', '
+							)
+						FROM(
+							SELECT
+								expert_works.expert_id,
+								expert_works.section_id,
+								max(expert_works.date_time) AS date_time
+							FROM expert_works
+							WHERE expert_works.contract_id=t.id AND expert_works.section_id=sec.section_id
+							GROUP BY expert_works.expert_id,expert_works.section_id
+						) AS ew_last
+						LEFT JOIN expert_works ON
+							expert_works.date_time=ew_last.date_time
+							AND expert_works.expert_id=ew_last.expert_id
+							AND expert_works.section_id=ew_last.section_id
+						LEFT JOIN employees ON employees.id=expert_works.expert_id	
+						)
+						
+					) AS sec_data
+				FROM expert_sections AS sec
+				WHERE sec.document_type=t.document_type AND construction_type_id=app.construction_type_id
+				AND sec.create_date=(
+					SELECT max(sec2.create_date)
+					FROM expert_sections AS sec2
+					WHERE sec2.document_type=t.document_type
+						AND sec2.construction_type_id=app.construction_type_id
+						AND sec2.create_date<=t.date_time
+				)
+				ORDER BY sec.section_index				
+			) AS sec_rows
+		) AS expertise_sections,
+		
+		t.application_id,
+		
+		t.contract_ext_id,
+		
+		t.contract_return_date,
+		
+		t.linked_contracts,
+		
+		t.cost_eval_validity_pd_order,
+		t.date_type,
+		t.argument_document,
+		t.order_document,
+		app.auth_letter,
+		
+		t.expert_work_day_count,
+		t.expert_work_end_date,
+		
+		folders.files AS doc_folders,
+		
+		t.for_all_employees,
+		t.in_estim_cost,
+		t.in_estim_cost_recommend,
+		t.cur_estim_cost,
+		t.cur_estim_cost_recommend,
+		
+		t.result_sign_expert_list,
+		
+		t.experts_for_notification,
+		
+		t.contract_return_date_on_sig,
+		
+		app.exp_cost_eval_validity,
+		
+		t.main_department_id,
+		t.main_expert_id,
+		t.permission_ar AS condition_ar,
+		
+		t.allow_new_file_add,
+		t.allow_client_out_documents,
+		
+		app.customer_auth_letter,
+		
+		t.service_type,
+
+		CASE
+			WHEN app.service_type='modified_documents' THEN
+				b_app.expert_maintenance_service_type
+			WHEN  app.service_type='expert_maintenance' THEN
+				app.expert_maintenance_service_type
+			ELSE NULL
+		END AS expert_maintenance_service_type,
+
+		CASE
+			WHEN app.service_type='modified_documents' THEN
+				b_app.expert_maintenance_expertise_type
+			WHEN  app.service_type='expert_maintenance' THEN
+				app.expert_maintenance_expertise_type
+			ELSE NULL
+		END AS expert_maintenance_expertise_type,				
+		
+		CASE WHEN t.service_type='expert_maintenance' THEN
+			contracts_ref(exp_main_ct)
+		ELSE NULL
+		END AS expert_maintenance_base_contracts_ref,
+		
+		/** Заполняется у контрактов по экспертному сопровождению
+		 * вытаскиваем все письма-заключения у всех измененных документаций
+		 * связанных с этим контрактом
+		 */
+		CASE WHEN app.service_type='expert_maintenance' THEN
+			(SELECT
+				json_agg(
+					json_build_object(
+						'file_id',att.file_id,
+						'file_name',att.file_name,
+						'file_size',att.file_size,
+						'file_signed',att.file_signed,
+						'file_uploaded','true',
+						'file_path',att.file_path,
+						'date_time',f_ver.date_time,
+						'signatures',
+						(WITH sign AS
+						(SELECT
+							json_agg(files_t.signatures) AS signatures
+						FROM
+							(SELECT
+								json_build_object(
+									'owner',u_certs.subject_cert,
+									'cert_from',u_certs.date_time_from,
+									'cert_to',u_certs.date_time_to,
+									'sign_date_time',f_sig.sign_date_time,
+									'check_result',ver.check_result,
+									'check_time',ver.check_time,
+									'error_str',ver.error_str
+								) AS signatures
+							FROM file_signatures AS f_sig
+							LEFT JOIN file_verifications AS ver ON ver.file_id=f_sig.file_id
+							LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id
+							WHERE f_sig.file_id=f_ver.file_id
+							ORDER BY f_sig.sign_date_time
+							) AS files_t
+						)					
+						SELECT
+							CASE
+								WHEN (SELECT sign.signatures FROM sign) IS NULL AND f_ver.file_id IS NOT NULL THEN
+									json_build_array(
+										json_build_object(
+											'sign_date_time',f_ver.date_time,
+											'check_result',f_ver.check_result,
+											'error_str',f_ver.error_str
+										)
+									)
+								ELSE (SELECT sign.signatures FROM sign)
+							END
+						),
+						'file_signed_by_client',(SELECT t1.file_signed_by_client FROM application_document_files t1 WHERE t1.file_id=att.file_id)
+					)
+				)
+			
+			FROM doc_flow_out AS mod_doc_out
+			LEFT JOIN doc_flow_attachments AS att ON
+				att.file_path='Заключение' AND att.doc_type='doc_flow_out' AND att.doc_id=mod_doc_out.id
+			LEFT JOIN file_verifications AS f_ver ON f_ver.file_id=att.file_id	
+			WHERE mod_doc_out.to_application_id IN
+				(SELECT
+					mod_app.id
+				FROM applications AS mod_app
+				WHERE mod_app.base_application_id = t.application_id 
+				)
+				AND mod_doc_out.doc_flow_type_id = (pdfn_doc_flow_types_contr_close()->'keys'->>'id')::int
+			)
+		ELSE NULL
+		END AS results_on_modified_documents_list
+		
+	FROM contracts t
+	LEFT JOIN applications AS app ON app.id=t.application_id
+	LEFT JOIN contracts AS exp_main_ct ON exp_main_ct.application_id=app.expert_maintenance_base_application_id
+	LEFT JOIN construction_types ON construction_types.id=app.construction_type_id
+	LEFT JOIN build_types ON build_types.id=app.build_type_id
+	LEFT JOIN fund_sources AS fund_sources ON fund_sources.id = coalesce(t.fund_source_id,app.fund_source_id)
+	LEFT JOIN
+		(
+		SELECT
+			doc_att.application_id,
+			json_agg(
+				json_build_object(
+					'fields',json_build_object('id',doc_att.folder_id,'descr',doc_att.folder_descr),
+					'parent_id',NULL,
+					'files',doc_att.files
+				)
+			) AS files
+		FROM
+		(SELECT
+			adf_files.application_id,
+			adf_files.file_path AS folder_descr,
+			app_fd.id AS folder_id,
+			json_agg(adf_files.files) AS files
+		FROM
+			(SELECT
+				adf.application_id,
+				adf.file_path,
+				json_build_object(
+					'file_id',adf.file_id,
+					'file_name',adf.file_name,
+					'file_size',adf.file_size,
+					'file_signed',adf.file_signed,
+					'file_uploaded','true',
+					'file_path',adf.file_path,
+					'date_time',adf.date_time,
+					'signatures',
+				
+					(WITH
+					sign AS (SELECT
+						json_agg(files_t.signatures) AS signatures
+					FROM
+						(SELECT
+							f_sig.file_id,
+							json_build_object(
+								'owner',u_certs.subject_cert,
+								'cert_from',u_certs.date_time_from,
+								'cert_to',u_certs.date_time_to,
+								'sign_date_time',f_sig.sign_date_time,
+								'check_result',ver.check_result,
+								'check_time',ver.check_time,
+								'error_str',ver.error_str
+							) AS signatures
+						FROM file_signatures AS f_sig
+						LEFT JOIN file_verifications AS ver ON ver.file_id=f_sig.file_id
+						LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id
+						WHERE f_sig.file_id=adf.file_id
+						ORDER BY f_sig.sign_date_time
+						) AS files_t
+					)
+					SELECT
+						CASE
+							WHEN (SELECT sign.signatures FROM sign) IS NULL AND f_ver.file_id IS NOT NULL THEN
+								json_build_array(
+									json_build_object(
+										'sign_date_time',f_ver.date_time,
+										'check_result',f_ver.check_result,
+										'error_str',f_ver.error_str
+									)
+								)
+							ELSE (SELECT sign.signatures FROM sign)
+						END
+					),
+					'file_signed_by_client',adf.file_signed_by_client
+					--'require_client_sig',app_fd.require_client_sig
+				) AS files
+			FROM application_document_files adf			
+			--LEFT JOIN doc_flow_out AS adf_out ON adf_out.to_application_id=adf.application_id AND adf_out.doc_flow_type_id=(pdfn_doc_flow_types_app_resp()->'keys'->>'id')::int
+			--LEFT JOIN doc_flow_attachments AS adf_att ON adf_att.doc_type='doc_flow_out' AND adf_att.doc_id=adf_out.id AND adf_att.file_name=adf.file_name
+			LEFT JOIN file_verifications AS f_ver ON f_ver.file_id=adf.file_id
+		
+			WHERE adf.document_type='documents'			
+			ORDER BY adf.application_id,adf.file_path,adf.date_time
+			)  AS adf_files
+		LEFT JOIN application_doc_folders AS app_fd ON app_fd.name=adf_files.file_path
+		GROUP BY adf_files.application_id,adf_files.file_path,app_fd.id
+		ORDER BY adf_files.application_id,adf_files.file_path
+		)  AS doc_att
+		GROUP BY doc_att.application_id
+	) AS folders ON folders.application_id=app.id
+	
+	LEFT JOIN employees ON employees.id=t.employee_id
+	LEFT JOIN expertise_reject_types AS rt ON rt.id=t.expertise_reject_type_id
+	LEFT JOIN departments AS dp ON dp.id=t.main_department_id
+	LEFT JOIN employees AS exp_empl ON exp_empl.id=t.main_expert_id
+	LEFT JOIN contracts AS prim_contr ON prim_contr.id=t.primary_contract_id
+	LEFT JOIN contracts AS modif_prim_contr ON modif_prim_contr.id=t.modif_primary_contract_id
+	
+	LEFT JOIN applications b_app ON b_app.id=app.base_application_id
+	--LEFT JOIN applications exp_maint_base ON exp_maint_base.id=exp_maint.expert_maintenance_base_application_id
+
+	--LEFT JOIN clients ON clients.id=t.client_id
+	;
+	
+ALTER VIEW contracts_dialog OWNER TO expert72;
+
+
+
+-- ******************* update 29/07/2020 18:16:34 ******************
+-- VIEW: contracts_dialog
+
+--DROP VIEW contracts_dialog;
+
+CREATE OR REPLACE VIEW contracts_dialog AS
+	SELECT
+		t.id,
+		t.date_time,		
+		employees_ref(employees) AS employees_ref,
+		t.reg_number,
+		t.expertise_type,
+		t.document_type,
+		t.expertise_result_number,
+		
+		--applications
+		applications_ref(app) AS applications_ref,
+		applications_client_descr(app.applicant) AS applicant_descr,
+		
+		CASE WHEN (app.customer->>'customer_is_developer')::bool THEN applications_client_descr(app.developer)
+		ELSE applications_client_descr(app.customer)
+		END AS customer_descr,
+		
+		applications_client_descr(app.developer) AS developer_descr,
+		
+		(SELECT
+			json_build_object(
+				'id','ContractorList_Model',
+				'rows',json_agg(
+					json_build_object(
+						'fields',
+						json_build_object(
+							'name',
+							sub.contractors->>'name'||
+							coalesce(' '||(sub.contractors->>'inn')::text,'')||
+							coalesce('/'||(sub.contractors->>'kpp')::text,'')
+						)
+					)
+				)
+			)
+		FROM (
+			SELECT
+				jsonb_array_elements(contractors) AS contractors
+			FROM applications app_contr WHERE app_contr.id=app.id
+		) AS sub		
+		)
+		AS contractors_list,
+		
+		construction_types_ref(construction_types) AS construction_types_ref,
+		t.constr_name AS constr_name,
+		--kladr_parse_addr(t.constr_address) AS constr_address,
+		t.constr_address,
+		t.constr_technical_features,
+		t.constr_technical_features_in_compound_obj,
+		app.total_cost_eval,
+		app.limit_cost_eval,
+		build_types_ref(build_types) AS build_types_ref,
+		app.cost_eval_validity_simult,
+		fund_sources_ref(fund_sources) AS fund_sources_ref,
+		coalesce(t.primary_contract_reg_number,app.primary_application_reg_number) AS primary_contract_reg_number,
+		app.modif_primary_application_reg_number AS modif_primary_contract_reg_number,
+		contracts_ref(prim_contr) AS primary_contracts_ref,
+		contracts_ref(modif_prim_contr) AS modif_primary_contracts_ref,
+		app.cost_eval_validity,
+		app.modification,
+		app.audit,
+		
+		--Documents
+		app.documents AS documents,
+		/*
+		array_to_json((
+			SELECT array_agg(l.documents) FROM document_templates_all_list_for_date(app.create_dt::date) l
+			WHERE
+				(app.construction_type_id IS NOT NULL)
+				AND
+				(l.construction_type_id=app.construction_type_id AND
+				l.document_type IN (
+					CASE WHEN app.expertise_type='pd' OR app.expertise_type='pd_eng_survey' OR app.expertise_type='cost_eval_validity_pd' OR app.expertise_type='cost_eval_validity_pd_eng_survey'
+						OR exp_maint_base.expertise_type='pd' OR exp_maint_base.expertise_type='pd_eng_survey' OR exp_maint_base.expertise_type='cost_eval_validity_pd' OR exp_maint_base.expertise_type='cost_eval_validity_pd_eng_survey'
+						THEN 'pd'::document_types
+						ELSE NULL
+					END,
+					CASE WHEN app.expertise_type='eng_survey' OR app.expertise_type='pd_eng_survey' OR app.expertise_type='cost_eval_validity_eng_survey' OR app.expertise_type='cost_eval_validity_pd_eng_survey'
+						OR exp_maint_base.expertise_type='eng_survey' OR exp_maint_base.expertise_type='pd_eng_survey' OR exp_maint_base.expertise_type='cost_eval_validity_eng_survey' OR exp_maint_base.expertise_type='cost_eval_validity_pd_eng_survey'
+						THEN 'eng_survey'::document_types
+						ELSE NULL
+					END,
+					CASE WHEN app.cost_eval_validity OR app.exp_cost_eval_validity OR app.expertise_type='cost_eval_validity' OR app.expertise_type='cost_eval_validity_pd' OR app.expertise_type='cost_eval_validity_eng_survey' OR app.expertise_type='cost_eval_validity_pd_eng_survey'
+						OR exp_maint_base.expertise_type='cost_eval_validity' OR exp_maint_base.expertise_type='cost_eval_validity_pd' OR exp_maint_base.expertise_type='cost_eval_validity_eng_survey' OR exp_maint_base.expertise_type='cost_eval_validity_pd_eng_survey'
+						THEN 'cost_eval_validity'::document_types
+						ELSE NULL
+					END,
+					CASE WHEN app.modification THEN 'modification'::document_types ELSE NULL END,
+					CASE WHEN app.audit THEN 'audit'::document_types ELSE NULL END			
+					)
+				)
+		)) AS documents,
+		*/		
+		--***********************
+		
+		t.contract_number,
+		t.contract_date,		
+		t.expertise_cost_budget,
+		t.expertise_cost_self_fund,
+		
+		t.work_start_date,
+		t.work_end_date,
+		t.akt_number,
+		t.akt_date,
+		coalesce(t.akt_total,0) As akt_total,
+		t.akt_ext_id,
+		t.invoice_date,
+		t.invoice_number,
+		t.invoice_ext_id,
+		t.expertise_day_count,
+		t.kadastr_number,
+		t.grad_plan_number,
+		t.area_document,
+		t.expertise_result,
+		t.expertise_result_date,
+		
+		t.comment_text,
+		
+		expertise_reject_types_ref(rt) AS expertise_reject_types_ref,		
+		
+		departments_ref(dp) AS main_departments_ref,
+		employees_ref(exp_empl) AS main_experts_ref,
+		
+		t.permissions,
+		
+		(
+			SELECT
+				json_agg(sec_rows.sec_data)
+			FROM (
+				SELECT
+					json_build_object(
+						'section_id',sec.section_id,
+						'section_name',sec.section_name,
+						'experts_list',
+						(SELECT
+							string_agg(
+								coalesce(expert_works.comment_text,'') ||
+								'(' || person_init(employees.name,FALSE) || to_char(expert_works.date_time,'DD/MM/YY') || ')'
+								,', '
+							)
+						FROM(
+							SELECT
+								expert_works.expert_id,
+								expert_works.section_id,
+								max(expert_works.date_time) AS date_time
+							FROM expert_works
+							WHERE expert_works.contract_id=t.id AND expert_works.section_id=sec.section_id
+							GROUP BY expert_works.expert_id,expert_works.section_id
+						) AS ew_last
+						LEFT JOIN expert_works ON
+							expert_works.date_time=ew_last.date_time
+							AND expert_works.expert_id=ew_last.expert_id
+							AND expert_works.section_id=ew_last.section_id
+						LEFT JOIN employees ON employees.id=expert_works.expert_id	
+						)
+						
+					) AS sec_data
+				FROM expert_sections AS sec
+				WHERE sec.document_type=t.document_type AND construction_type_id=app.construction_type_id
+				AND sec.create_date=(
+					SELECT max(sec2.create_date)
+					FROM expert_sections AS sec2
+					WHERE sec2.document_type=t.document_type
+						AND sec2.construction_type_id=app.construction_type_id
+						AND sec2.create_date<=t.date_time
+				)
+				ORDER BY sec.section_index				
+			) AS sec_rows
+		) AS expertise_sections,
+		
+		t.application_id,
+		
+		t.contract_ext_id,
+		
+		t.contract_return_date,
+		
+		t.linked_contracts,
+		
+		t.cost_eval_validity_pd_order,
+		t.date_type,
+		t.argument_document,
+		t.order_document,
+		app.auth_letter,
+		
+		t.expert_work_day_count,
+		t.expert_work_end_date,
+		
+		folders.files AS doc_folders,
+		
+		t.for_all_employees,
+		t.in_estim_cost,
+		t.in_estim_cost_recommend,
+		t.cur_estim_cost,
+		t.cur_estim_cost_recommend,
+		
+		t.result_sign_expert_list,
+		
+		t.experts_for_notification,
+		
+		t.contract_return_date_on_sig,
+		
+		app.exp_cost_eval_validity,
+		
+		t.main_department_id,
+		t.main_expert_id,
+		t.permission_ar AS condition_ar,
+		
+		t.allow_new_file_add,
+		t.allow_client_out_documents,
+		
+		app.customer_auth_letter,
+		
+		t.service_type,
+
+		CASE
+			WHEN app.service_type='modified_documents' THEN
+				b_app.expert_maintenance_service_type
+			WHEN  app.service_type='expert_maintenance' THEN
+				app.expert_maintenance_service_type
+			ELSE NULL
+		END AS expert_maintenance_service_type,
+
+		CASE
+			WHEN app.service_type='modified_documents' THEN
+				b_app.expert_maintenance_expertise_type
+			WHEN  app.service_type='expert_maintenance' THEN
+				app.expert_maintenance_expertise_type
+			ELSE NULL
+		END AS expert_maintenance_expertise_type,				
+		
+		CASE WHEN t.service_type='expert_maintenance' THEN
+			contracts_ref(exp_main_ct)
+		ELSE NULL
+		END AS expert_maintenance_base_contracts_ref,
+		
+		/** Заполняется у контрактов по экспертному сопровождению
+		 * вытаскиваем все письма-заключения у всех измененных документаций
+		 * связанных с этим контрактом
+		 */
+		CASE WHEN app.service_type='expert_maintenance' THEN
+			(SELECT
+				json_agg(
+					json_build_object(
+						'contract',json_build_object(
+							'reg_number',mod_doc_out_contr.reg_number,
+							'expertise_result',mod_doc_out_contr.expertise_result,
+							'expertise_result_date',mod_doc_out_contr.expertise_result_date,
+							'expertise_reject_types_ref',expertise_reject_types_ref((SELECT expertise_reject_types FROM expertise_reject_types WHERE id=mod_doc_out_contr.expertise_reject_type_id)),
+							'result_sign_expert_list',mod_doc_out_contr.result_sign_expert_list
+						),
+						'file_id',att.file_id,
+						'file_name',att.file_name,
+						'file_size',att.file_size,
+						'file_signed',att.file_signed,
+						'file_uploaded','true',
+						'file_path',att.file_path,
+						'date_time',f_ver.date_time,
+						'signatures',
+						(WITH sign AS
+						(SELECT
+							json_agg(files_t.signatures) AS signatures
+						FROM
+							(SELECT
+								json_build_object(
+									'owner',u_certs.subject_cert,
+									'cert_from',u_certs.date_time_from,
+									'cert_to',u_certs.date_time_to,
+									'sign_date_time',f_sig.sign_date_time,
+									'check_result',ver.check_result,
+									'check_time',ver.check_time,
+									'error_str',ver.error_str
+								) AS signatures
+							FROM file_signatures AS f_sig
+							LEFT JOIN file_verifications AS ver ON ver.file_id=f_sig.file_id
+							LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id
+							WHERE f_sig.file_id=f_ver.file_id
+							ORDER BY f_sig.sign_date_time
+							) AS files_t
+						)					
+						SELECT
+							CASE
+								WHEN (SELECT sign.signatures FROM sign) IS NULL AND f_ver.file_id IS NOT NULL THEN
+									json_build_array(
+										json_build_object(
+											'sign_date_time',f_ver.date_time,
+											'check_result',f_ver.check_result,
+											'error_str',f_ver.error_str
+										)
+									)
+								ELSE (SELECT sign.signatures FROM sign)
+							END
+						),
+						'file_signed_by_client',(SELECT t1.file_signed_by_client FROM application_document_files t1 WHERE t1.file_id=att.file_id)
+					)
+				)
+			
+			FROM doc_flow_out AS mod_doc_out
+			LEFT JOIN doc_flow_attachments AS att ON
+				att.file_path='Заключение' AND att.doc_type='doc_flow_out' AND att.doc_id=mod_doc_out.id
+			LEFT JOIN file_verifications AS f_ver ON f_ver.file_id=att.file_id
+			LEFT JOIN contracts AS mod_doc_out_contr ON mod_doc_out_contr.id=mod_doc_out.to_contract_id		
+			WHERE mod_doc_out.to_application_id IN
+				(SELECT
+					mod_app.id
+				FROM applications AS mod_app
+				WHERE mod_app.base_application_id = t.application_id 
+				)
+				AND mod_doc_out.doc_flow_type_id = (pdfn_doc_flow_types_contr_close()->'keys'->>'id')::int
+			)
+		ELSE NULL
+		END AS results_on_modified_documents_list
+		
+	FROM contracts t
+	LEFT JOIN applications AS app ON app.id=t.application_id
+	LEFT JOIN contracts AS exp_main_ct ON exp_main_ct.application_id=app.expert_maintenance_base_application_id
+	LEFT JOIN construction_types ON construction_types.id=app.construction_type_id
+	LEFT JOIN build_types ON build_types.id=app.build_type_id
+	LEFT JOIN fund_sources AS fund_sources ON fund_sources.id = coalesce(t.fund_source_id,app.fund_source_id)
+	LEFT JOIN
+		(
+		SELECT
+			doc_att.application_id,
+			json_agg(
+				json_build_object(
+					'fields',json_build_object('id',doc_att.folder_id,'descr',doc_att.folder_descr),
+					'parent_id',NULL,
+					'files',doc_att.files
+				)
+			) AS files
+		FROM
+		(SELECT
+			adf_files.application_id,
+			adf_files.file_path AS folder_descr,
+			app_fd.id AS folder_id,
+			json_agg(adf_files.files) AS files
+		FROM
+			(SELECT
+				adf.application_id,
+				adf.file_path,
+				json_build_object(
+					'file_id',adf.file_id,
+					'file_name',adf.file_name,
+					'file_size',adf.file_size,
+					'file_signed',adf.file_signed,
+					'file_uploaded','true',
+					'file_path',adf.file_path,
+					'date_time',adf.date_time,
+					'signatures',
+				
+					(WITH
+					sign AS (SELECT
+						json_agg(files_t.signatures) AS signatures
+					FROM
+						(SELECT
+							f_sig.file_id,
+							json_build_object(
+								'owner',u_certs.subject_cert,
+								'cert_from',u_certs.date_time_from,
+								'cert_to',u_certs.date_time_to,
+								'sign_date_time',f_sig.sign_date_time,
+								'check_result',ver.check_result,
+								'check_time',ver.check_time,
+								'error_str',ver.error_str
+							) AS signatures
+						FROM file_signatures AS f_sig
+						LEFT JOIN file_verifications AS ver ON ver.file_id=f_sig.file_id
+						LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id
+						WHERE f_sig.file_id=adf.file_id
+						ORDER BY f_sig.sign_date_time
+						) AS files_t
+					)
+					SELECT
+						CASE
+							WHEN (SELECT sign.signatures FROM sign) IS NULL AND f_ver.file_id IS NOT NULL THEN
+								json_build_array(
+									json_build_object(
+										'sign_date_time',f_ver.date_time,
+										'check_result',f_ver.check_result,
+										'error_str',f_ver.error_str
+									)
+								)
+							ELSE (SELECT sign.signatures FROM sign)
+						END
+					),
+					'file_signed_by_client',adf.file_signed_by_client
+					--'require_client_sig',app_fd.require_client_sig
+				) AS files
+			FROM application_document_files adf			
+			--LEFT JOIN doc_flow_out AS adf_out ON adf_out.to_application_id=adf.application_id AND adf_out.doc_flow_type_id=(pdfn_doc_flow_types_app_resp()->'keys'->>'id')::int
+			--LEFT JOIN doc_flow_attachments AS adf_att ON adf_att.doc_type='doc_flow_out' AND adf_att.doc_id=adf_out.id AND adf_att.file_name=adf.file_name
+			LEFT JOIN file_verifications AS f_ver ON f_ver.file_id=adf.file_id
+		
+			WHERE adf.document_type='documents'			
+			ORDER BY adf.application_id,adf.file_path,adf.date_time
+			)  AS adf_files
+		LEFT JOIN application_doc_folders AS app_fd ON app_fd.name=adf_files.file_path
+		GROUP BY adf_files.application_id,adf_files.file_path,app_fd.id
+		ORDER BY adf_files.application_id,adf_files.file_path
+		)  AS doc_att
+		GROUP BY doc_att.application_id
+	) AS folders ON folders.application_id=app.id
+	
+	LEFT JOIN employees ON employees.id=t.employee_id
+	LEFT JOIN expertise_reject_types AS rt ON rt.id=t.expertise_reject_type_id
+	LEFT JOIN departments AS dp ON dp.id=t.main_department_id
+	LEFT JOIN employees AS exp_empl ON exp_empl.id=t.main_expert_id
+	LEFT JOIN contracts AS prim_contr ON prim_contr.id=t.primary_contract_id
+	LEFT JOIN contracts AS modif_prim_contr ON modif_prim_contr.id=t.modif_primary_contract_id
+	
+	LEFT JOIN applications b_app ON b_app.id=app.base_application_id
+	--LEFT JOIN applications exp_maint_base ON exp_maint_base.id=exp_maint.expert_maintenance_base_application_id
+
+	--LEFT JOIN clients ON clients.id=t.client_id
+	;
+	
+ALTER VIEW contracts_dialog OWNER TO expert72;
+
+
+
+-- ******************* update 29/07/2020 18:27:59 ******************
+-- VIEW: contracts_dialog
+
+--DROP VIEW contracts_dialog;
+
+CREATE OR REPLACE VIEW contracts_dialog AS
+	SELECT
+		t.id,
+		t.date_time,		
+		employees_ref(employees) AS employees_ref,
+		t.reg_number,
+		t.expertise_type,
+		t.document_type,
+		t.expertise_result_number,
+		
+		--applications
+		applications_ref(app) AS applications_ref,
+		applications_client_descr(app.applicant) AS applicant_descr,
+		
+		CASE WHEN (app.customer->>'customer_is_developer')::bool THEN applications_client_descr(app.developer)
+		ELSE applications_client_descr(app.customer)
+		END AS customer_descr,
+		
+		applications_client_descr(app.developer) AS developer_descr,
+		
+		(SELECT
+			json_build_object(
+				'id','ContractorList_Model',
+				'rows',json_agg(
+					json_build_object(
+						'fields',
+						json_build_object(
+							'name',
+							sub.contractors->>'name'||
+							coalesce(' '||(sub.contractors->>'inn')::text,'')||
+							coalesce('/'||(sub.contractors->>'kpp')::text,'')
+						)
+					)
+				)
+			)
+		FROM (
+			SELECT
+				jsonb_array_elements(contractors) AS contractors
+			FROM applications app_contr WHERE app_contr.id=app.id
+		) AS sub		
+		)
+		AS contractors_list,
+		
+		construction_types_ref(construction_types) AS construction_types_ref,
+		t.constr_name AS constr_name,
+		--kladr_parse_addr(t.constr_address) AS constr_address,
+		t.constr_address,
+		t.constr_technical_features,
+		t.constr_technical_features_in_compound_obj,
+		app.total_cost_eval,
+		app.limit_cost_eval,
+		build_types_ref(build_types) AS build_types_ref,
+		app.cost_eval_validity_simult,
+		fund_sources_ref(fund_sources) AS fund_sources_ref,
+		coalesce(t.primary_contract_reg_number,app.primary_application_reg_number) AS primary_contract_reg_number,
+		app.modif_primary_application_reg_number AS modif_primary_contract_reg_number,
+		contracts_ref(prim_contr) AS primary_contracts_ref,
+		contracts_ref(modif_prim_contr) AS modif_primary_contracts_ref,
+		app.cost_eval_validity,
+		app.modification,
+		app.audit,
+		
+		--Documents
+		app.documents AS documents,
+		/*
+		array_to_json((
+			SELECT array_agg(l.documents) FROM document_templates_all_list_for_date(app.create_dt::date) l
+			WHERE
+				(app.construction_type_id IS NOT NULL)
+				AND
+				(l.construction_type_id=app.construction_type_id AND
+				l.document_type IN (
+					CASE WHEN app.expertise_type='pd' OR app.expertise_type='pd_eng_survey' OR app.expertise_type='cost_eval_validity_pd' OR app.expertise_type='cost_eval_validity_pd_eng_survey'
+						OR exp_maint_base.expertise_type='pd' OR exp_maint_base.expertise_type='pd_eng_survey' OR exp_maint_base.expertise_type='cost_eval_validity_pd' OR exp_maint_base.expertise_type='cost_eval_validity_pd_eng_survey'
+						THEN 'pd'::document_types
+						ELSE NULL
+					END,
+					CASE WHEN app.expertise_type='eng_survey' OR app.expertise_type='pd_eng_survey' OR app.expertise_type='cost_eval_validity_eng_survey' OR app.expertise_type='cost_eval_validity_pd_eng_survey'
+						OR exp_maint_base.expertise_type='eng_survey' OR exp_maint_base.expertise_type='pd_eng_survey' OR exp_maint_base.expertise_type='cost_eval_validity_eng_survey' OR exp_maint_base.expertise_type='cost_eval_validity_pd_eng_survey'
+						THEN 'eng_survey'::document_types
+						ELSE NULL
+					END,
+					CASE WHEN app.cost_eval_validity OR app.exp_cost_eval_validity OR app.expertise_type='cost_eval_validity' OR app.expertise_type='cost_eval_validity_pd' OR app.expertise_type='cost_eval_validity_eng_survey' OR app.expertise_type='cost_eval_validity_pd_eng_survey'
+						OR exp_maint_base.expertise_type='cost_eval_validity' OR exp_maint_base.expertise_type='cost_eval_validity_pd' OR exp_maint_base.expertise_type='cost_eval_validity_eng_survey' OR exp_maint_base.expertise_type='cost_eval_validity_pd_eng_survey'
+						THEN 'cost_eval_validity'::document_types
+						ELSE NULL
+					END,
+					CASE WHEN app.modification THEN 'modification'::document_types ELSE NULL END,
+					CASE WHEN app.audit THEN 'audit'::document_types ELSE NULL END			
+					)
+				)
+		)) AS documents,
+		*/		
+		--***********************
+		
+		t.contract_number,
+		t.contract_date,		
+		t.expertise_cost_budget,
+		t.expertise_cost_self_fund,
+		
+		t.work_start_date,
+		t.work_end_date,
+		t.akt_number,
+		t.akt_date,
+		coalesce(t.akt_total,0) As akt_total,
+		t.akt_ext_id,
+		t.invoice_date,
+		t.invoice_number,
+		t.invoice_ext_id,
+		t.expertise_day_count,
+		t.kadastr_number,
+		t.grad_plan_number,
+		t.area_document,
+		t.expertise_result,
+		t.expertise_result_date,
+		
+		t.comment_text,
+		
+		expertise_reject_types_ref(rt) AS expertise_reject_types_ref,		
+		
+		departments_ref(dp) AS main_departments_ref,
+		employees_ref(exp_empl) AS main_experts_ref,
+		
+		t.permissions,
+		
+		(
+			SELECT
+				json_agg(sec_rows.sec_data)
+			FROM (
+				SELECT
+					json_build_object(
+						'section_id',sec.section_id,
+						'section_name',sec.section_name,
+						'experts_list',
+						(SELECT
+							string_agg(
+								coalesce(expert_works.comment_text,'') ||
+								'(' || person_init(employees.name,FALSE) || to_char(expert_works.date_time,'DD/MM/YY') || ')'
+								,', '
+							)
+						FROM(
+							SELECT
+								expert_works.expert_id,
+								expert_works.section_id,
+								max(expert_works.date_time) AS date_time
+							FROM expert_works
+							WHERE expert_works.contract_id=t.id AND expert_works.section_id=sec.section_id
+							GROUP BY expert_works.expert_id,expert_works.section_id
+						) AS ew_last
+						LEFT JOIN expert_works ON
+							expert_works.date_time=ew_last.date_time
+							AND expert_works.expert_id=ew_last.expert_id
+							AND expert_works.section_id=ew_last.section_id
+						LEFT JOIN employees ON employees.id=expert_works.expert_id	
+						)
+						
+					) AS sec_data
+				FROM expert_sections AS sec
+				WHERE sec.document_type=t.document_type AND construction_type_id=app.construction_type_id
+				AND sec.create_date=(
+					SELECT max(sec2.create_date)
+					FROM expert_sections AS sec2
+					WHERE sec2.document_type=t.document_type
+						AND sec2.construction_type_id=app.construction_type_id
+						AND sec2.create_date<=t.date_time
+				)
+				ORDER BY sec.section_index				
+			) AS sec_rows
+		) AS expertise_sections,
+		
+		t.application_id,
+		
+		t.contract_ext_id,
+		
+		t.contract_return_date,
+		
+		t.linked_contracts,
+		
+		t.cost_eval_validity_pd_order,
+		t.date_type,
+		t.argument_document,
+		t.order_document,
+		app.auth_letter,
+		
+		t.expert_work_day_count,
+		t.expert_work_end_date,
+		
+		folders.files AS doc_folders,
+		
+		t.for_all_employees,
+		t.in_estim_cost,
+		t.in_estim_cost_recommend,
+		t.cur_estim_cost,
+		t.cur_estim_cost_recommend,
+		
+		t.result_sign_expert_list,
+		
+		t.experts_for_notification,
+		
+		t.contract_return_date_on_sig,
+		
+		app.exp_cost_eval_validity,
+		
+		t.main_department_id,
+		t.main_expert_id,
+		t.permission_ar AS condition_ar,
+		
+		t.allow_new_file_add,
+		t.allow_client_out_documents,
+		
+		app.customer_auth_letter,
+		
+		t.service_type,
+
+		CASE
+			WHEN app.service_type='modified_documents' THEN
+				b_app.expert_maintenance_service_type
+			WHEN  app.service_type='expert_maintenance' THEN
+				app.expert_maintenance_service_type
+			ELSE NULL
+		END AS expert_maintenance_service_type,
+
+		CASE
+			WHEN app.service_type='modified_documents' THEN
+				b_app.expert_maintenance_expertise_type
+			WHEN  app.service_type='expert_maintenance' THEN
+				app.expert_maintenance_expertise_type
+			ELSE NULL
+		END AS expert_maintenance_expertise_type,				
+		
+		CASE WHEN t.service_type='expert_maintenance' THEN
+			contracts_ref(exp_main_ct)
+		ELSE NULL
+		END AS expert_maintenance_base_contracts_ref,
+		
+		/** Заполняется у контрактов по экспертному сопровождению
+		 * вытаскиваем все письма-заключения у всех измененных документаций
+		 * связанных с этим контрактом
+		 */
+		CASE WHEN app.service_type='expert_maintenance' THEN
+			(SELECT
+				json_agg(
+					json_build_object(
+						'contract',json_build_object(
+							'reg_number',mod_doc_out_contr.reg_number,
+							'expertise_result',mod_doc_out_contr.expertise_result,
+							'expertise_result_date',mod_doc_out_contr.expertise_result_date,
+							'expertise_reject_types_ref',expertise_reject_types_ref((SELECT expertise_reject_types FROM expertise_reject_types WHERE id=mod_doc_out_contr.expertise_reject_type_id)),
+							'result_sign_expert_list',mod_doc_out_contr.result_sign_expert_list
+						),
+						'file_id',att.file_id,
+						'file_name',att.file_name,
+						'file_size',att.file_size,
+						'file_signed',att.file_signed,
+						'file_uploaded','true',
+						'file_path',att.file_path,
+						'date_time',f_ver.date_time,
+						'signatures',
+						(WITH sign AS
+						(SELECT
+							json_agg(files_t.signatures) AS signatures
+						FROM
+							(SELECT
+								json_build_object(
+									'owner',u_certs.subject_cert,
+									'cert_from',u_certs.date_time_from,
+									'cert_to',u_certs.date_time_to,
+									'sign_date_time',f_sig.sign_date_time,
+									'check_result',ver.check_result,
+									'check_time',ver.check_time,
+									'error_str',ver.error_str
+								) AS signatures
+							FROM file_signatures AS f_sig
+							LEFT JOIN file_verifications AS ver ON ver.file_id=f_sig.file_id
+							LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id
+							WHERE f_sig.file_id=f_ver.file_id
+							ORDER BY f_sig.sign_date_time
+							) AS files_t
+						)					
+						SELECT
+							CASE
+								WHEN (SELECT sign.signatures FROM sign) IS NULL AND f_ver.file_id IS NOT NULL THEN
+									json_build_array(
+										json_build_object(
+											'sign_date_time',f_ver.date_time,
+											'check_result',f_ver.check_result,
+											'error_str',f_ver.error_str
+										)
+									)
+								ELSE (SELECT sign.signatures FROM sign)
+							END
+						),
+						'file_signed_by_client',(SELECT t1.file_signed_by_client FROM application_document_files t1 WHERE t1.file_id=att.file_id)
+					)
+				)
+			
+			FROM doc_flow_out AS mod_doc_out
+			LEFT JOIN doc_flow_attachments AS att ON
+				att.file_path='Заключение' AND att.doc_type='doc_flow_out' AND att.doc_id=mod_doc_out.id
+			LEFT JOIN file_verifications AS f_ver ON f_ver.file_id=att.file_id
+			LEFT JOIN contracts AS mod_doc_out_contr ON mod_doc_out_contr.id=mod_doc_out.to_contract_id
+			LEFT JOIN doc_flow_in_client ON doc_flow_in_client.doc_flow_out_id=mod_doc_out.id				
+			WHERE mod_doc_out.to_application_id IN
+				(SELECT
+					mod_app.id
+				FROM applications AS mod_app
+				WHERE mod_app.base_application_id = t.application_id 
+				)
+				AND mod_doc_out.doc_flow_type_id = (pdfn_doc_flow_types_contr_close()->'keys'->>'id')::int
+			)
+		ELSE NULL
+		END AS results_on_modified_documents_list
+		
+	FROM contracts t
+	LEFT JOIN applications AS app ON app.id=t.application_id
+	LEFT JOIN contracts AS exp_main_ct ON exp_main_ct.application_id=app.expert_maintenance_base_application_id
+	LEFT JOIN construction_types ON construction_types.id=app.construction_type_id
+	LEFT JOIN build_types ON build_types.id=app.build_type_id
+	LEFT JOIN fund_sources AS fund_sources ON fund_sources.id = coalesce(t.fund_source_id,app.fund_source_id)
+	LEFT JOIN
+		(
+		SELECT
+			doc_att.application_id,
+			json_agg(
+				json_build_object(
+					'fields',json_build_object('id',doc_att.folder_id,'descr',doc_att.folder_descr),
+					'parent_id',NULL,
+					'files',doc_att.files
+				)
+			) AS files
+		FROM
+		(SELECT
+			adf_files.application_id,
+			adf_files.file_path AS folder_descr,
+			app_fd.id AS folder_id,
+			json_agg(adf_files.files) AS files
+		FROM
+			(SELECT
+				adf.application_id,
+				adf.file_path,
+				json_build_object(
+					'file_id',adf.file_id,
+					'file_name',adf.file_name,
+					'file_size',adf.file_size,
+					'file_signed',adf.file_signed,
+					'file_uploaded','true',
+					'file_path',adf.file_path,
+					'date_time',adf.date_time,
+					'signatures',
+				
+					(WITH
+					sign AS (SELECT
+						json_agg(files_t.signatures) AS signatures
+					FROM
+						(SELECT
+							f_sig.file_id,
+							json_build_object(
+								'owner',u_certs.subject_cert,
+								'cert_from',u_certs.date_time_from,
+								'cert_to',u_certs.date_time_to,
+								'sign_date_time',f_sig.sign_date_time,
+								'check_result',ver.check_result,
+								'check_time',ver.check_time,
+								'error_str',ver.error_str
+							) AS signatures
+						FROM file_signatures AS f_sig
+						LEFT JOIN file_verifications AS ver ON ver.file_id=f_sig.file_id
+						LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id
+						WHERE f_sig.file_id=adf.file_id
+						ORDER BY f_sig.sign_date_time
+						) AS files_t
+					)
+					SELECT
+						CASE
+							WHEN (SELECT sign.signatures FROM sign) IS NULL AND f_ver.file_id IS NOT NULL THEN
+								json_build_array(
+									json_build_object(
+										'sign_date_time',f_ver.date_time,
+										'check_result',f_ver.check_result,
+										'error_str',f_ver.error_str
+									)
+								)
+							ELSE (SELECT sign.signatures FROM sign)
+						END
+					),
+					'file_signed_by_client',adf.file_signed_by_client
+					--'require_client_sig',app_fd.require_client_sig
+				) AS files
+			FROM application_document_files adf			
+			--LEFT JOIN doc_flow_out AS adf_out ON adf_out.to_application_id=adf.application_id AND adf_out.doc_flow_type_id=(pdfn_doc_flow_types_app_resp()->'keys'->>'id')::int
+			--LEFT JOIN doc_flow_attachments AS adf_att ON adf_att.doc_type='doc_flow_out' AND adf_att.doc_id=adf_out.id AND adf_att.file_name=adf.file_name
+			LEFT JOIN file_verifications AS f_ver ON f_ver.file_id=adf.file_id
+		
+			WHERE adf.document_type='documents'			
+			ORDER BY adf.application_id,adf.file_path,adf.date_time
+			)  AS adf_files
+		LEFT JOIN application_doc_folders AS app_fd ON app_fd.name=adf_files.file_path
+		GROUP BY adf_files.application_id,adf_files.file_path,app_fd.id
+		ORDER BY adf_files.application_id,adf_files.file_path
+		)  AS doc_att
+		GROUP BY doc_att.application_id
+	) AS folders ON folders.application_id=app.id
+	
+	LEFT JOIN employees ON employees.id=t.employee_id
+	LEFT JOIN expertise_reject_types AS rt ON rt.id=t.expertise_reject_type_id
+	LEFT JOIN departments AS dp ON dp.id=t.main_department_id
+	LEFT JOIN employees AS exp_empl ON exp_empl.id=t.main_expert_id
+	LEFT JOIN contracts AS prim_contr ON prim_contr.id=t.primary_contract_id
+	LEFT JOIN contracts AS modif_prim_contr ON modif_prim_contr.id=t.modif_primary_contract_id
+	
+	LEFT JOIN applications b_app ON b_app.id=app.base_application_id
+	--LEFT JOIN applications exp_maint_base ON exp_maint_base.id=exp_maint.expert_maintenance_base_application_id
+
+	--LEFT JOIN clients ON clients.id=t.client_id
+	;
+	
+ALTER VIEW contracts_dialog OWNER TO expert72;
+
+
+
+-- ******************* update 29/07/2020 18:28:12 ******************
+-- VIEW: contracts_dialog
+
+--DROP VIEW contracts_dialog;
+
+CREATE OR REPLACE VIEW contracts_dialog AS
+	SELECT
+		t.id,
+		t.date_time,		
+		employees_ref(employees) AS employees_ref,
+		t.reg_number,
+		t.expertise_type,
+		t.document_type,
+		t.expertise_result_number,
+		
+		--applications
+		applications_ref(app) AS applications_ref,
+		applications_client_descr(app.applicant) AS applicant_descr,
+		
+		CASE WHEN (app.customer->>'customer_is_developer')::bool THEN applications_client_descr(app.developer)
+		ELSE applications_client_descr(app.customer)
+		END AS customer_descr,
+		
+		applications_client_descr(app.developer) AS developer_descr,
+		
+		(SELECT
+			json_build_object(
+				'id','ContractorList_Model',
+				'rows',json_agg(
+					json_build_object(
+						'fields',
+						json_build_object(
+							'name',
+							sub.contractors->>'name'||
+							coalesce(' '||(sub.contractors->>'inn')::text,'')||
+							coalesce('/'||(sub.contractors->>'kpp')::text,'')
+						)
+					)
+				)
+			)
+		FROM (
+			SELECT
+				jsonb_array_elements(contractors) AS contractors
+			FROM applications app_contr WHERE app_contr.id=app.id
+		) AS sub		
+		)
+		AS contractors_list,
+		
+		construction_types_ref(construction_types) AS construction_types_ref,
+		t.constr_name AS constr_name,
+		--kladr_parse_addr(t.constr_address) AS constr_address,
+		t.constr_address,
+		t.constr_technical_features,
+		t.constr_technical_features_in_compound_obj,
+		app.total_cost_eval,
+		app.limit_cost_eval,
+		build_types_ref(build_types) AS build_types_ref,
+		app.cost_eval_validity_simult,
+		fund_sources_ref(fund_sources) AS fund_sources_ref,
+		coalesce(t.primary_contract_reg_number,app.primary_application_reg_number) AS primary_contract_reg_number,
+		app.modif_primary_application_reg_number AS modif_primary_contract_reg_number,
+		contracts_ref(prim_contr) AS primary_contracts_ref,
+		contracts_ref(modif_prim_contr) AS modif_primary_contracts_ref,
+		app.cost_eval_validity,
+		app.modification,
+		app.audit,
+		
+		--Documents
+		app.documents AS documents,
+		/*
+		array_to_json((
+			SELECT array_agg(l.documents) FROM document_templates_all_list_for_date(app.create_dt::date) l
+			WHERE
+				(app.construction_type_id IS NOT NULL)
+				AND
+				(l.construction_type_id=app.construction_type_id AND
+				l.document_type IN (
+					CASE WHEN app.expertise_type='pd' OR app.expertise_type='pd_eng_survey' OR app.expertise_type='cost_eval_validity_pd' OR app.expertise_type='cost_eval_validity_pd_eng_survey'
+						OR exp_maint_base.expertise_type='pd' OR exp_maint_base.expertise_type='pd_eng_survey' OR exp_maint_base.expertise_type='cost_eval_validity_pd' OR exp_maint_base.expertise_type='cost_eval_validity_pd_eng_survey'
+						THEN 'pd'::document_types
+						ELSE NULL
+					END,
+					CASE WHEN app.expertise_type='eng_survey' OR app.expertise_type='pd_eng_survey' OR app.expertise_type='cost_eval_validity_eng_survey' OR app.expertise_type='cost_eval_validity_pd_eng_survey'
+						OR exp_maint_base.expertise_type='eng_survey' OR exp_maint_base.expertise_type='pd_eng_survey' OR exp_maint_base.expertise_type='cost_eval_validity_eng_survey' OR exp_maint_base.expertise_type='cost_eval_validity_pd_eng_survey'
+						THEN 'eng_survey'::document_types
+						ELSE NULL
+					END,
+					CASE WHEN app.cost_eval_validity OR app.exp_cost_eval_validity OR app.expertise_type='cost_eval_validity' OR app.expertise_type='cost_eval_validity_pd' OR app.expertise_type='cost_eval_validity_eng_survey' OR app.expertise_type='cost_eval_validity_pd_eng_survey'
+						OR exp_maint_base.expertise_type='cost_eval_validity' OR exp_maint_base.expertise_type='cost_eval_validity_pd' OR exp_maint_base.expertise_type='cost_eval_validity_eng_survey' OR exp_maint_base.expertise_type='cost_eval_validity_pd_eng_survey'
+						THEN 'cost_eval_validity'::document_types
+						ELSE NULL
+					END,
+					CASE WHEN app.modification THEN 'modification'::document_types ELSE NULL END,
+					CASE WHEN app.audit THEN 'audit'::document_types ELSE NULL END			
+					)
+				)
+		)) AS documents,
+		*/		
+		--***********************
+		
+		t.contract_number,
+		t.contract_date,		
+		t.expertise_cost_budget,
+		t.expertise_cost_self_fund,
+		
+		t.work_start_date,
+		t.work_end_date,
+		t.akt_number,
+		t.akt_date,
+		coalesce(t.akt_total,0) As akt_total,
+		t.akt_ext_id,
+		t.invoice_date,
+		t.invoice_number,
+		t.invoice_ext_id,
+		t.expertise_day_count,
+		t.kadastr_number,
+		t.grad_plan_number,
+		t.area_document,
+		t.expertise_result,
+		t.expertise_result_date,
+		
+		t.comment_text,
+		
+		expertise_reject_types_ref(rt) AS expertise_reject_types_ref,		
+		
+		departments_ref(dp) AS main_departments_ref,
+		employees_ref(exp_empl) AS main_experts_ref,
+		
+		t.permissions,
+		
+		(
+			SELECT
+				json_agg(sec_rows.sec_data)
+			FROM (
+				SELECT
+					json_build_object(
+						'section_id',sec.section_id,
+						'section_name',sec.section_name,
+						'experts_list',
+						(SELECT
+							string_agg(
+								coalesce(expert_works.comment_text,'') ||
+								'(' || person_init(employees.name,FALSE) || to_char(expert_works.date_time,'DD/MM/YY') || ')'
+								,', '
+							)
+						FROM(
+							SELECT
+								expert_works.expert_id,
+								expert_works.section_id,
+								max(expert_works.date_time) AS date_time
+							FROM expert_works
+							WHERE expert_works.contract_id=t.id AND expert_works.section_id=sec.section_id
+							GROUP BY expert_works.expert_id,expert_works.section_id
+						) AS ew_last
+						LEFT JOIN expert_works ON
+							expert_works.date_time=ew_last.date_time
+							AND expert_works.expert_id=ew_last.expert_id
+							AND expert_works.section_id=ew_last.section_id
+						LEFT JOIN employees ON employees.id=expert_works.expert_id	
+						)
+						
+					) AS sec_data
+				FROM expert_sections AS sec
+				WHERE sec.document_type=t.document_type AND construction_type_id=app.construction_type_id
+				AND sec.create_date=(
+					SELECT max(sec2.create_date)
+					FROM expert_sections AS sec2
+					WHERE sec2.document_type=t.document_type
+						AND sec2.construction_type_id=app.construction_type_id
+						AND sec2.create_date<=t.date_time
+				)
+				ORDER BY sec.section_index				
+			) AS sec_rows
+		) AS expertise_sections,
+		
+		t.application_id,
+		
+		t.contract_ext_id,
+		
+		t.contract_return_date,
+		
+		t.linked_contracts,
+		
+		t.cost_eval_validity_pd_order,
+		t.date_type,
+		t.argument_document,
+		t.order_document,
+		app.auth_letter,
+		
+		t.expert_work_day_count,
+		t.expert_work_end_date,
+		
+		folders.files AS doc_folders,
+		
+		t.for_all_employees,
+		t.in_estim_cost,
+		t.in_estim_cost_recommend,
+		t.cur_estim_cost,
+		t.cur_estim_cost_recommend,
+		
+		t.result_sign_expert_list,
+		
+		t.experts_for_notification,
+		
+		t.contract_return_date_on_sig,
+		
+		app.exp_cost_eval_validity,
+		
+		t.main_department_id,
+		t.main_expert_id,
+		t.permission_ar AS condition_ar,
+		
+		t.allow_new_file_add,
+		t.allow_client_out_documents,
+		
+		app.customer_auth_letter,
+		
+		t.service_type,
+
+		CASE
+			WHEN app.service_type='modified_documents' THEN
+				b_app.expert_maintenance_service_type
+			WHEN  app.service_type='expert_maintenance' THEN
+				app.expert_maintenance_service_type
+			ELSE NULL
+		END AS expert_maintenance_service_type,
+
+		CASE
+			WHEN app.service_type='modified_documents' THEN
+				b_app.expert_maintenance_expertise_type
+			WHEN  app.service_type='expert_maintenance' THEN
+				app.expert_maintenance_expertise_type
+			ELSE NULL
+		END AS expert_maintenance_expertise_type,				
+		
+		CASE WHEN t.service_type='expert_maintenance' THEN
+			contracts_ref(exp_main_ct)
+		ELSE NULL
+		END AS expert_maintenance_base_contracts_ref,
+		
+		/** Заполняется у контрактов по экспертному сопровождению
+		 * вытаскиваем все письма-заключения у всех измененных документаций
+		 * связанных с этим контрактом
+		 */
+		CASE WHEN app.service_type='expert_maintenance' THEN
+			(SELECT
+				json_agg(
+					json_build_object(
+						'client_viewed',doc_flow_in_client.viewed,
+						'contract',json_build_object(
+							'reg_number',mod_doc_out_contr.reg_number,
+							'expertise_result',mod_doc_out_contr.expertise_result,
+							'expertise_result_date',mod_doc_out_contr.expertise_result_date,
+							'expertise_reject_types_ref',expertise_reject_types_ref((SELECT expertise_reject_types FROM expertise_reject_types WHERE id=mod_doc_out_contr.expertise_reject_type_id)),
+							'result_sign_expert_list',mod_doc_out_contr.result_sign_expert_list
+						),
+						'file_id',att.file_id,
+						'file_name',att.file_name,
+						'file_size',att.file_size,
+						'file_signed',att.file_signed,
+						'file_uploaded','true',
+						'file_path',att.file_path,
+						'date_time',f_ver.date_time,
+						'signatures',
+						(WITH sign AS
+						(SELECT
+							json_agg(files_t.signatures) AS signatures
+						FROM
+							(SELECT
+								json_build_object(
+									'owner',u_certs.subject_cert,
+									'cert_from',u_certs.date_time_from,
+									'cert_to',u_certs.date_time_to,
+									'sign_date_time',f_sig.sign_date_time,
+									'check_result',ver.check_result,
+									'check_time',ver.check_time,
+									'error_str',ver.error_str
+								) AS signatures
+							FROM file_signatures AS f_sig
+							LEFT JOIN file_verifications AS ver ON ver.file_id=f_sig.file_id
+							LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id
+							WHERE f_sig.file_id=f_ver.file_id
+							ORDER BY f_sig.sign_date_time
+							) AS files_t
+						)					
+						SELECT
+							CASE
+								WHEN (SELECT sign.signatures FROM sign) IS NULL AND f_ver.file_id IS NOT NULL THEN
+									json_build_array(
+										json_build_object(
+											'sign_date_time',f_ver.date_time,
+											'check_result',f_ver.check_result,
+											'error_str',f_ver.error_str
+										)
+									)
+								ELSE (SELECT sign.signatures FROM sign)
+							END
+						),
+						'file_signed_by_client',(SELECT t1.file_signed_by_client FROM application_document_files t1 WHERE t1.file_id=att.file_id)
+					)
+				)
+			
+			FROM doc_flow_out AS mod_doc_out
+			LEFT JOIN doc_flow_attachments AS att ON
+				att.file_path='Заключение' AND att.doc_type='doc_flow_out' AND att.doc_id=mod_doc_out.id
+			LEFT JOIN file_verifications AS f_ver ON f_ver.file_id=att.file_id
+			LEFT JOIN contracts AS mod_doc_out_contr ON mod_doc_out_contr.id=mod_doc_out.to_contract_id
+			LEFT JOIN doc_flow_in_client ON doc_flow_in_client.doc_flow_out_id=mod_doc_out.id				
+			WHERE mod_doc_out.to_application_id IN
+				(SELECT
+					mod_app.id
+				FROM applications AS mod_app
+				WHERE mod_app.base_application_id = t.application_id 
+				)
+				AND mod_doc_out.doc_flow_type_id = (pdfn_doc_flow_types_contr_close()->'keys'->>'id')::int
+			)
+		ELSE NULL
+		END AS results_on_modified_documents_list
+		
+	FROM contracts t
+	LEFT JOIN applications AS app ON app.id=t.application_id
+	LEFT JOIN contracts AS exp_main_ct ON exp_main_ct.application_id=app.expert_maintenance_base_application_id
+	LEFT JOIN construction_types ON construction_types.id=app.construction_type_id
+	LEFT JOIN build_types ON build_types.id=app.build_type_id
+	LEFT JOIN fund_sources AS fund_sources ON fund_sources.id = coalesce(t.fund_source_id,app.fund_source_id)
+	LEFT JOIN
+		(
+		SELECT
+			doc_att.application_id,
+			json_agg(
+				json_build_object(
+					'fields',json_build_object('id',doc_att.folder_id,'descr',doc_att.folder_descr),
+					'parent_id',NULL,
+					'files',doc_att.files
+				)
+			) AS files
+		FROM
+		(SELECT
+			adf_files.application_id,
+			adf_files.file_path AS folder_descr,
+			app_fd.id AS folder_id,
+			json_agg(adf_files.files) AS files
+		FROM
+			(SELECT
+				adf.application_id,
+				adf.file_path,
+				json_build_object(
+					'file_id',adf.file_id,
+					'file_name',adf.file_name,
+					'file_size',adf.file_size,
+					'file_signed',adf.file_signed,
+					'file_uploaded','true',
+					'file_path',adf.file_path,
+					'date_time',adf.date_time,
+					'signatures',
+				
+					(WITH
+					sign AS (SELECT
+						json_agg(files_t.signatures) AS signatures
+					FROM
+						(SELECT
+							f_sig.file_id,
+							json_build_object(
+								'owner',u_certs.subject_cert,
+								'cert_from',u_certs.date_time_from,
+								'cert_to',u_certs.date_time_to,
+								'sign_date_time',f_sig.sign_date_time,
+								'check_result',ver.check_result,
+								'check_time',ver.check_time,
+								'error_str',ver.error_str
+							) AS signatures
+						FROM file_signatures AS f_sig
+						LEFT JOIN file_verifications AS ver ON ver.file_id=f_sig.file_id
+						LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id
+						WHERE f_sig.file_id=adf.file_id
+						ORDER BY f_sig.sign_date_time
+						) AS files_t
+					)
+					SELECT
+						CASE
+							WHEN (SELECT sign.signatures FROM sign) IS NULL AND f_ver.file_id IS NOT NULL THEN
+								json_build_array(
+									json_build_object(
+										'sign_date_time',f_ver.date_time,
+										'check_result',f_ver.check_result,
+										'error_str',f_ver.error_str
+									)
+								)
+							ELSE (SELECT sign.signatures FROM sign)
+						END
+					),
+					'file_signed_by_client',adf.file_signed_by_client
+					--'require_client_sig',app_fd.require_client_sig
+				) AS files
+			FROM application_document_files adf			
+			--LEFT JOIN doc_flow_out AS adf_out ON adf_out.to_application_id=adf.application_id AND adf_out.doc_flow_type_id=(pdfn_doc_flow_types_app_resp()->'keys'->>'id')::int
+			--LEFT JOIN doc_flow_attachments AS adf_att ON adf_att.doc_type='doc_flow_out' AND adf_att.doc_id=adf_out.id AND adf_att.file_name=adf.file_name
+			LEFT JOIN file_verifications AS f_ver ON f_ver.file_id=adf.file_id
+		
+			WHERE adf.document_type='documents'			
+			ORDER BY adf.application_id,adf.file_path,adf.date_time
+			)  AS adf_files
+		LEFT JOIN application_doc_folders AS app_fd ON app_fd.name=adf_files.file_path
+		GROUP BY adf_files.application_id,adf_files.file_path,app_fd.id
+		ORDER BY adf_files.application_id,adf_files.file_path
+		)  AS doc_att
+		GROUP BY doc_att.application_id
+	) AS folders ON folders.application_id=app.id
+	
+	LEFT JOIN employees ON employees.id=t.employee_id
+	LEFT JOIN expertise_reject_types AS rt ON rt.id=t.expertise_reject_type_id
+	LEFT JOIN departments AS dp ON dp.id=t.main_department_id
+	LEFT JOIN employees AS exp_empl ON exp_empl.id=t.main_expert_id
+	LEFT JOIN contracts AS prim_contr ON prim_contr.id=t.primary_contract_id
+	LEFT JOIN contracts AS modif_prim_contr ON modif_prim_contr.id=t.modif_primary_contract_id
+	
+	LEFT JOIN applications b_app ON b_app.id=app.base_application_id
+	--LEFT JOIN applications exp_maint_base ON exp_maint_base.id=exp_maint.expert_maintenance_base_application_id
+
+	--LEFT JOIN clients ON clients.id=t.client_id
+	;
+	
+ALTER VIEW contracts_dialog OWNER TO expert72;
+
+
+
+-- ******************* update 01/08/2020 10:09:51 ******************
+-- VIEW: contracts_dialog
+
+--DROP VIEW contracts_dialog;
+
+CREATE OR REPLACE VIEW contracts_dialog AS
+	SELECT
+		t.id,
+		t.date_time,		
+		employees_ref(employees) AS employees_ref,
+		t.reg_number,
+		t.expertise_type,
+		t.document_type,
+		t.expertise_result_number,
+		
+		--applications
+		applications_ref(app) AS applications_ref,
+		applications_client_descr(app.applicant) AS applicant_descr,
+		
+		CASE WHEN (app.customer->>'customer_is_developer')::bool THEN applications_client_descr(app.developer)
+		ELSE applications_client_descr(app.customer)
+		END AS customer_descr,
+		
+		applications_client_descr(app.developer) AS developer_descr,
+		
+		(SELECT
+			json_build_object(
+				'id','ContractorList_Model',
+				'rows',json_agg(
+					json_build_object(
+						'fields',
+						json_build_object(
+							'name',
+							sub.contractors->>'name'||
+							coalesce(' '||(sub.contractors->>'inn')::text,'')||
+							coalesce('/'||(sub.contractors->>'kpp')::text,'')
+						)
+					)
+				)
+			)
+		FROM (
+			SELECT
+				jsonb_array_elements(contractors) AS contractors
+			FROM applications app_contr WHERE app_contr.id=app.id
+		) AS sub		
+		)
+		AS contractors_list,
+		
+		construction_types_ref(construction_types) AS construction_types_ref,
+		t.constr_name AS constr_name,
+		--kladr_parse_addr(t.constr_address) AS constr_address,
+		t.constr_address,
+		t.constr_technical_features,
+		t.constr_technical_features_in_compound_obj,
+		app.total_cost_eval,
+		app.limit_cost_eval,
+		build_types_ref(build_types) AS build_types_ref,
+		app.cost_eval_validity_simult,
+		fund_sources_ref(fund_sources) AS fund_sources_ref,
+		coalesce(t.primary_contract_reg_number,app.primary_application_reg_number) AS primary_contract_reg_number,
+		app.modif_primary_application_reg_number AS modif_primary_contract_reg_number,
+		contracts_ref(prim_contr) AS primary_contracts_ref,
+		contracts_ref(modif_prim_contr) AS modif_primary_contracts_ref,
+		app.cost_eval_validity,
+		app.modification,
+		app.audit,
+		
+		--Documents
+		app.documents AS documents,
+		/*
+		array_to_json((
+			SELECT array_agg(l.documents) FROM document_templates_all_list_for_date(app.create_dt::date) l
+			WHERE
+				(app.construction_type_id IS NOT NULL)
+				AND
+				(l.construction_type_id=app.construction_type_id AND
+				l.document_type IN (
+					CASE WHEN app.expertise_type='pd' OR app.expertise_type='pd_eng_survey' OR app.expertise_type='cost_eval_validity_pd' OR app.expertise_type='cost_eval_validity_pd_eng_survey'
+						OR exp_maint_base.expertise_type='pd' OR exp_maint_base.expertise_type='pd_eng_survey' OR exp_maint_base.expertise_type='cost_eval_validity_pd' OR exp_maint_base.expertise_type='cost_eval_validity_pd_eng_survey'
+						THEN 'pd'::document_types
+						ELSE NULL
+					END,
+					CASE WHEN app.expertise_type='eng_survey' OR app.expertise_type='pd_eng_survey' OR app.expertise_type='cost_eval_validity_eng_survey' OR app.expertise_type='cost_eval_validity_pd_eng_survey'
+						OR exp_maint_base.expertise_type='eng_survey' OR exp_maint_base.expertise_type='pd_eng_survey' OR exp_maint_base.expertise_type='cost_eval_validity_eng_survey' OR exp_maint_base.expertise_type='cost_eval_validity_pd_eng_survey'
+						THEN 'eng_survey'::document_types
+						ELSE NULL
+					END,
+					CASE WHEN app.cost_eval_validity OR app.exp_cost_eval_validity OR app.expertise_type='cost_eval_validity' OR app.expertise_type='cost_eval_validity_pd' OR app.expertise_type='cost_eval_validity_eng_survey' OR app.expertise_type='cost_eval_validity_pd_eng_survey'
+						OR exp_maint_base.expertise_type='cost_eval_validity' OR exp_maint_base.expertise_type='cost_eval_validity_pd' OR exp_maint_base.expertise_type='cost_eval_validity_eng_survey' OR exp_maint_base.expertise_type='cost_eval_validity_pd_eng_survey'
+						THEN 'cost_eval_validity'::document_types
+						ELSE NULL
+					END,
+					CASE WHEN app.modification THEN 'modification'::document_types ELSE NULL END,
+					CASE WHEN app.audit THEN 'audit'::document_types ELSE NULL END			
+					)
+				)
+		)) AS documents,
+		*/		
+		--***********************
+		
+		t.contract_number,
+		t.contract_date,		
+		t.expertise_cost_budget,
+		t.expertise_cost_self_fund,
+		
+		t.work_start_date,
+		t.work_end_date,
+		t.akt_number,
+		t.akt_date,
+		coalesce(t.akt_total,0) As akt_total,
+		t.akt_ext_id,
+		t.invoice_date,
+		t.invoice_number,
+		t.invoice_ext_id,
+		t.expertise_day_count,
+		t.kadastr_number,
+		t.grad_plan_number,
+		t.area_document,
+		t.expertise_result,
+		t.expertise_result_date,
+		
+		t.comment_text,
+		
+		expertise_reject_types_ref(rt) AS expertise_reject_types_ref,		
+		
+		departments_ref(dp) AS main_departments_ref,
+		employees_ref(exp_empl) AS main_experts_ref,
+		
+		t.permissions,
+		
+		(
+			SELECT
+				json_agg(sec_rows.sec_data)
+			FROM (
+				SELECT
+					json_build_object(
+						'section_id',sec.section_id,
+						'section_name',sec.section_name,
+						'experts_list',
+						(SELECT
+							string_agg(
+								coalesce(expert_works.comment_text,'') ||
+								'(' || person_init(employees.name,FALSE) || to_char(expert_works.date_time,'DD/MM/YY') || ')'
+								,', '
+							)
+						FROM(
+							SELECT
+								expert_works.expert_id,
+								expert_works.section_id,
+								max(expert_works.date_time) AS date_time
+							FROM expert_works
+							WHERE expert_works.contract_id=t.id AND expert_works.section_id=sec.section_id
+							GROUP BY expert_works.expert_id,expert_works.section_id
+						) AS ew_last
+						LEFT JOIN expert_works ON
+							expert_works.date_time=ew_last.date_time
+							AND expert_works.expert_id=ew_last.expert_id
+							AND expert_works.section_id=ew_last.section_id
+						LEFT JOIN employees ON employees.id=expert_works.expert_id	
+						)
+						
+					) AS sec_data
+				FROM expert_sections AS sec
+				WHERE sec.document_type=t.document_type AND construction_type_id=app.construction_type_id
+				AND sec.create_date=(
+					SELECT max(sec2.create_date)
+					FROM expert_sections AS sec2
+					WHERE sec2.document_type=t.document_type
+						AND sec2.construction_type_id=app.construction_type_id
+						AND sec2.create_date<=t.date_time
+				)
+				ORDER BY sec.section_index				
+			) AS sec_rows
+		) AS expertise_sections,
+		
+		t.application_id,
+		
+		t.contract_ext_id,
+		
+		t.contract_return_date,
+		
+		t.linked_contracts,
+		
+		t.cost_eval_validity_pd_order,
+		t.date_type,
+		t.argument_document,
+		t.order_document,
+		app.auth_letter,
+		
+		t.expert_work_day_count,
+		t.expert_work_end_date,
+		
+		folders.files AS doc_folders,
+		
+		t.for_all_employees,
+		t.in_estim_cost,
+		t.in_estim_cost_recommend,
+		t.cur_estim_cost,
+		t.cur_estim_cost_recommend,
+		
+		t.result_sign_expert_list,
+		
+		t.experts_for_notification,
+		
+		t.contract_return_date_on_sig,
+		
+		app.exp_cost_eval_validity,
+		
+		t.main_department_id,
+		t.main_expert_id,
+		t.permission_ar AS condition_ar,
+		
+		t.allow_new_file_add,
+		t.allow_client_out_documents,
+		
+		app.customer_auth_letter,
+		
+		t.service_type,
+
+		CASE
+			WHEN app.service_type='modified_documents' THEN
+				b_app.expert_maintenance_service_type
+			WHEN  app.service_type='expert_maintenance' THEN
+				app.expert_maintenance_service_type
+			ELSE NULL
+		END AS expert_maintenance_service_type,
+
+		CASE
+			WHEN app.service_type='modified_documents' THEN
+				b_app.expert_maintenance_expertise_type
+			WHEN  app.service_type='expert_maintenance' THEN
+				app.expert_maintenance_expertise_type
+			ELSE NULL
+		END AS expert_maintenance_expertise_type,				
+		
+		CASE WHEN t.service_type='expert_maintenance' THEN
+			contracts_ref(exp_main_ct)
+		ELSE NULL
+		END AS expert_maintenance_base_contracts_ref,
+		
+		/** Заполняется у контрактов по экспертному сопровождению
+		 * вытаскиваем все письма-заключения у всех измененных документаций
+		 * связанных с этим контрактом
+		 */
+		CASE WHEN app.service_type='expert_maintenance' THEN
+			(SELECT
+				json_agg(
+					json_build_object(
+						'client_viewed',doc_flow_in_client.viewed,
+						'contract',json_build_object(
+							'reg_number',mod_doc_out_contr.reg_number,
+							'expertise_result',mod_doc_out_contr.expertise_result,
+							'expertise_result_date',mod_doc_out_contr.expertise_result_date,
+							'expertise_reject_types_ref',expertise_reject_types_ref((SELECT expertise_reject_types FROM expertise_reject_types WHERE id=mod_doc_out_contr.expertise_reject_type_id)),
+							'result_sign_expert_list',mod_doc_out_contr.result_sign_expert_list
+						),
+						'file',json_build_object(
+							'file_id',att.file_id,
+							'file_name',att.file_name,
+							'file_size',att.file_size,
+							'file_signed',att.file_signed,
+							'file_uploaded','true',
+							'file_path',att.file_path,
+							'date_time',f_ver.date_time,
+							'signatures',
+							(WITH sign AS
+							(SELECT
+								json_agg(files_t.signatures) AS signatures
+							FROM
+								(SELECT
+									json_build_object(
+										'owner',u_certs.subject_cert,
+										'cert_from',u_certs.date_time_from,
+										'cert_to',u_certs.date_time_to,
+										'sign_date_time',f_sig.sign_date_time,
+										'check_result',ver.check_result,
+										'check_time',ver.check_time,
+										'error_str',ver.error_str
+									) AS signatures
+								FROM file_signatures AS f_sig
+								LEFT JOIN file_verifications AS ver ON ver.file_id=f_sig.file_id
+								LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id
+								WHERE f_sig.file_id=f_ver.file_id
+								ORDER BY f_sig.sign_date_time
+								) AS files_t
+							)					
+							SELECT
+								CASE
+									WHEN (SELECT sign.signatures FROM sign) IS NULL AND f_ver.file_id IS NOT NULL THEN
+										json_build_array(
+											json_build_object(
+												'sign_date_time',f_ver.date_time,
+												'check_result',f_ver.check_result,
+												'error_str',f_ver.error_str
+											)
+										)
+									ELSE (SELECT sign.signatures FROM sign)
+								END
+							),
+							'file_signed_by_client',(SELECT t1.file_signed_by_client FROM application_document_files t1 WHERE t1.file_id=att.file_id)
+						)
+					)
+				)
+			
+			FROM doc_flow_out AS mod_doc_out
+			LEFT JOIN doc_flow_attachments AS att ON
+				att.file_path='Заключение' AND att.doc_type='doc_flow_out' AND att.doc_id=mod_doc_out.id
+			LEFT JOIN file_verifications AS f_ver ON f_ver.file_id=att.file_id
+			LEFT JOIN contracts AS mod_doc_out_contr ON mod_doc_out_contr.id=mod_doc_out.to_contract_id
+			LEFT JOIN doc_flow_in_client ON doc_flow_in_client.doc_flow_out_id=mod_doc_out.id				
+			WHERE mod_doc_out.to_application_id IN
+				(SELECT
+					mod_app.id
+				FROM applications AS mod_app
+				WHERE mod_app.base_application_id = t.application_id 
+				)
+				AND mod_doc_out.doc_flow_type_id = (pdfn_doc_flow_types_contr_close()->'keys'->>'id')::int
+			)
+		ELSE NULL
+		END AS results_on_modified_documents_list
+		
+	FROM contracts t
+	LEFT JOIN applications AS app ON app.id=t.application_id
+	LEFT JOIN contracts AS exp_main_ct ON exp_main_ct.application_id=app.expert_maintenance_base_application_id
+	LEFT JOIN construction_types ON construction_types.id=app.construction_type_id
+	LEFT JOIN build_types ON build_types.id=app.build_type_id
+	LEFT JOIN fund_sources AS fund_sources ON fund_sources.id = coalesce(t.fund_source_id,app.fund_source_id)
+	LEFT JOIN
+		(
+		SELECT
+			doc_att.application_id,
+			json_agg(
+				json_build_object(
+					'fields',json_build_object('id',doc_att.folder_id,'descr',doc_att.folder_descr),
+					'parent_id',NULL,
+					'files',doc_att.files
+				)
+			) AS files
+		FROM
+		(SELECT
+			adf_files.application_id,
+			adf_files.file_path AS folder_descr,
+			app_fd.id AS folder_id,
+			json_agg(adf_files.files) AS files
+		FROM
+			(SELECT
+				adf.application_id,
+				adf.file_path,
+				json_build_object(
+					'file_id',adf.file_id,
+					'file_name',adf.file_name,
+					'file_size',adf.file_size,
+					'file_signed',adf.file_signed,
+					'file_uploaded','true',
+					'file_path',adf.file_path,
+					'date_time',adf.date_time,
+					'signatures',
+				
+					(WITH
+					sign AS (SELECT
+						json_agg(files_t.signatures) AS signatures
+					FROM
+						(SELECT
+							f_sig.file_id,
+							json_build_object(
+								'owner',u_certs.subject_cert,
+								'cert_from',u_certs.date_time_from,
+								'cert_to',u_certs.date_time_to,
+								'sign_date_time',f_sig.sign_date_time,
+								'check_result',ver.check_result,
+								'check_time',ver.check_time,
+								'error_str',ver.error_str
+							) AS signatures
+						FROM file_signatures AS f_sig
+						LEFT JOIN file_verifications AS ver ON ver.file_id=f_sig.file_id
+						LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id
+						WHERE f_sig.file_id=adf.file_id
+						ORDER BY f_sig.sign_date_time
+						) AS files_t
+					)
+					SELECT
+						CASE
+							WHEN (SELECT sign.signatures FROM sign) IS NULL AND f_ver.file_id IS NOT NULL THEN
+								json_build_array(
+									json_build_object(
+										'sign_date_time',f_ver.date_time,
+										'check_result',f_ver.check_result,
+										'error_str',f_ver.error_str
+									)
+								)
+							ELSE (SELECT sign.signatures FROM sign)
+						END
+					),
+					'file_signed_by_client',adf.file_signed_by_client
+					--'require_client_sig',app_fd.require_client_sig
+				) AS files
+			FROM application_document_files adf			
+			--LEFT JOIN doc_flow_out AS adf_out ON adf_out.to_application_id=adf.application_id AND adf_out.doc_flow_type_id=(pdfn_doc_flow_types_app_resp()->'keys'->>'id')::int
+			--LEFT JOIN doc_flow_attachments AS adf_att ON adf_att.doc_type='doc_flow_out' AND adf_att.doc_id=adf_out.id AND adf_att.file_name=adf.file_name
+			LEFT JOIN file_verifications AS f_ver ON f_ver.file_id=adf.file_id
+		
+			WHERE adf.document_type='documents'			
+			ORDER BY adf.application_id,adf.file_path,adf.date_time
+			)  AS adf_files
+		LEFT JOIN application_doc_folders AS app_fd ON app_fd.name=adf_files.file_path
+		GROUP BY adf_files.application_id,adf_files.file_path,app_fd.id
+		ORDER BY adf_files.application_id,adf_files.file_path
+		)  AS doc_att
+		GROUP BY doc_att.application_id
+	) AS folders ON folders.application_id=app.id
+	
+	LEFT JOIN employees ON employees.id=t.employee_id
+	LEFT JOIN expertise_reject_types AS rt ON rt.id=t.expertise_reject_type_id
+	LEFT JOIN departments AS dp ON dp.id=t.main_department_id
+	LEFT JOIN employees AS exp_empl ON exp_empl.id=t.main_expert_id
+	LEFT JOIN contracts AS prim_contr ON prim_contr.id=t.primary_contract_id
+	LEFT JOIN contracts AS modif_prim_contr ON modif_prim_contr.id=t.modif_primary_contract_id
+	
+	LEFT JOIN applications b_app ON b_app.id=app.base_application_id
+	--LEFT JOIN applications exp_maint_base ON exp_maint_base.id=exp_maint.expert_maintenance_base_application_id
+
+	--LEFT JOIN clients ON clients.id=t.client_id
+	;
+	
+ALTER VIEW contracts_dialog OWNER TO expert72;

@@ -235,8 +235,88 @@ CREATE OR REPLACE VIEW contracts_dialog AS
 		CASE WHEN t.service_type='expert_maintenance' THEN
 			contracts_ref(exp_main_ct)
 		ELSE NULL
-		END AS expert_maintenance_base_contracts_ref
+		END AS expert_maintenance_base_contracts_ref,
 		
+		/** Заполняется у контрактов по экспертному сопровождению
+		 * вытаскиваем все письма-заключения у всех измененных документаций
+		 * связанных с этим контрактом
+		 */
+		CASE WHEN app.service_type='expert_maintenance' THEN
+			(SELECT
+				json_agg(
+					json_build_object(
+						'client_viewed',doc_flow_in_client.viewed,
+						'contract',json_build_object(
+							'reg_number',mod_doc_out_contr.reg_number,
+							'expertise_result',mod_doc_out_contr.expertise_result,
+							'expertise_result_date',mod_doc_out_contr.expertise_result_date,
+							'expertise_reject_types_ref',expertise_reject_types_ref((SELECT expertise_reject_types FROM expertise_reject_types WHERE id=mod_doc_out_contr.expertise_reject_type_id)),
+							'result_sign_expert_list',mod_doc_out_contr.result_sign_expert_list
+						),
+						'file',json_build_object(
+							'file_id',att.file_id,
+							'file_name',att.file_name,
+							'file_size',att.file_size,
+							'file_signed',att.file_signed,
+							'file_uploaded','true',
+							'file_path',att.file_path,
+							'date_time',f_ver.date_time,
+							'signatures',
+							(WITH sign AS
+							(SELECT
+								json_agg(files_t.signatures) AS signatures
+							FROM
+								(SELECT
+									json_build_object(
+										'owner',u_certs.subject_cert,
+										'cert_from',u_certs.date_time_from,
+										'cert_to',u_certs.date_time_to,
+										'sign_date_time',f_sig.sign_date_time,
+										'check_result',ver.check_result,
+										'check_time',ver.check_time,
+										'error_str',ver.error_str
+									) AS signatures
+								FROM file_signatures AS f_sig
+								LEFT JOIN file_verifications AS ver ON ver.file_id=f_sig.file_id
+								LEFT JOIN user_certificates AS u_certs ON u_certs.id=f_sig.user_certificate_id
+								WHERE f_sig.file_id=f_ver.file_id
+								ORDER BY f_sig.sign_date_time
+								) AS files_t
+							)					
+							SELECT
+								CASE
+									WHEN (SELECT sign.signatures FROM sign) IS NULL AND f_ver.file_id IS NOT NULL THEN
+										json_build_array(
+											json_build_object(
+												'sign_date_time',f_ver.date_time,
+												'check_result',f_ver.check_result,
+												'error_str',f_ver.error_str
+											)
+										)
+									ELSE (SELECT sign.signatures FROM sign)
+								END
+							),
+							'file_signed_by_client',(SELECT t1.file_signed_by_client FROM application_document_files t1 WHERE t1.file_id=att.file_id)
+						)
+					)
+				)
+			
+			FROM doc_flow_out AS mod_doc_out
+			LEFT JOIN doc_flow_attachments AS att ON
+				att.file_path='Заключение' AND att.doc_type='doc_flow_out' AND att.doc_id=mod_doc_out.id
+			LEFT JOIN file_verifications AS f_ver ON f_ver.file_id=att.file_id
+			LEFT JOIN contracts AS mod_doc_out_contr ON mod_doc_out_contr.id=mod_doc_out.to_contract_id
+			LEFT JOIN doc_flow_in_client ON doc_flow_in_client.doc_flow_out_id=mod_doc_out.id				
+			WHERE mod_doc_out.to_application_id IN
+				(SELECT
+					mod_app.id
+				FROM applications AS mod_app
+				WHERE mod_app.base_application_id = t.application_id 
+				)
+				AND mod_doc_out.doc_flow_type_id = (pdfn_doc_flow_types_contr_close()->'keys'->>'id')::int
+			)
+		ELSE NULL
+		END AS results_on_modified_documents_list
 		
 	FROM contracts t
 	LEFT JOIN applications AS app ON app.id=t.application_id

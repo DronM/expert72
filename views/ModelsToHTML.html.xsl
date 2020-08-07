@@ -67,26 +67,34 @@
 				<xsl:for-each select="./row[1]/*">
 					<xsl:variable name="field_id" select="name()"/>
 					<xsl:if test="$field_id != 'sys_level_val' and $field_id != 'sys_level_count' and $field_id != 'sys_level_col_count'">
-					<xsl:variable name="label">
+						<xsl:variable name="meta_f" select="/document/metadata[@modelId=$model_id]/field[@id=$field_id]"/>
+						<xsl:variable name="label">
+							<xsl:choose>
+								<xsl:when test="$meta_f/@alias">
+									<xsl:value-of select="$meta_f/@alias"/>
+								</xsl:when>
+								<xsl:when test="/document/metadata[@modelId=$model_id]/@id">
+									<xsl:value-of select="/document/metadata[@modelId=$model_id]/@id"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<!-- <xsl:value-of select="$field_id"/>-->
+									<xsl:call-template name="string-replace-all">
+										<xsl:with-param name="text" select="$field_id"/>
+										<xsl:with-param name="replace" select="'_x0020_'"/>
+										<xsl:with-param name="by" select="' '"/>
+									</xsl:call-template>																					
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:variable>
+						<!--<th>&#160;&#160;&#160;&#160;&#160;<xsl:value-of select="$label"/>&#160;&#160;&#160;&#160;&#160;</th>-->
 						<xsl:choose>
-							<xsl:when test="/document/metadata[@modelId=$model_id]/field[@id=$field_id]/@alias">
-								<xsl:value-of select="/document/metadata[@modelId=$model_id]/field[@id=$field_id]/@alias"/>
-							</xsl:when>
-							<xsl:when test="/document/metadata[@modelId=$model_id]/@id">
-								<xsl:value-of select="/document/metadata[@modelId=$model_id]/@id"/>
-							</xsl:when>
-							<xsl:otherwise>
-								<!-- <xsl:value-of select="$field_id"/>-->
-								<xsl:call-template name="string-replace-all">
-									<xsl:with-param name="text" select="$field_id"/>
-									<xsl:with-param name="replace" select="'_x0020_'"/>
-									<xsl:with-param name="by" select="' '"/>
-								</xsl:call-template>																					
-							</xsl:otherwise>
+						<xsl:when test="$meta_f/@sysCol='TRUE'">
+							<!-- sub -->
+						</xsl:when>
+						<xsl:otherwise>
+							<th><xsl:value-of select="$label"/></th>
+						</xsl:otherwise>	
 						</xsl:choose>
-					</xsl:variable>
-					<!--<th>&#160;&#160;&#160;&#160;&#160;<xsl:value-of select="$label"/>&#160;&#160;&#160;&#160;&#160;</th>-->
-					<th><xsl:value-of select="$label"/></th>
 					</xsl:if>
 				</xsl:for-each>
 			</tr>
@@ -121,7 +129,8 @@
 	<xsl:variable name="pos" select="position() div 2"/>
 	<xsl:variable name="field_id" select="name()"/>
 	<xsl:variable name="model_id" select="./../../@id"/>	
-	<xsl:variable name="dataType" select="/document/metadata[@modelId=$model_id]/field[@id=$field_id]/@dataType"/>
+	<xsl:variable name="meta_f" select="/document/metadata[@modelId=$model_id]/field[@id=$field_id]"/>
+	<xsl:variable name="dataType" select="$meta_f/@dataType"/>
 	
 	<xsl:variable name="td_align">
 		<xsl:choose>
@@ -145,6 +154,10 @@
 			<xsl:with-param name="formatStr" select="''" />
 		      </xsl:call-template>		
 		</td>
+	</xsl:when>
+	
+	<xsl:when test="$meta_f/@sysCol='TRUE'">
+		<!-- stub-->
 	</xsl:when>
 	
 	<!--ToDO

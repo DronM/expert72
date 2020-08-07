@@ -1069,6 +1069,11 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		if ($main_expert_id &amp;&amp; strtolower($main_expert_id)!='null'){
 			$extra_cond.= sprintf(' AND contracts.main_expert_id=%d',$main_expert_id);
 		}
+
+		$fund_source_id = $cond->getDbVal('fund_source_id','e',DT_INT);
+		if ($fund_source_id &amp;&amp; strtolower($fund_source_id)!='null'){
+			$extra_cond.= sprintf(' AND app.fund_source_id=%d',$fund_source_id);
+		}
 		
 		$customer_name = $cond->getDbVal('customer_name','e',DT_STRING);
 		if ($customer_name &amp;&amp; strtolower($customer_name)!='null'){
@@ -1209,7 +1214,8 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				CASE WHEN %s IS NOT NULL THEN (SELECT name FROM clients WHERE id=%d) ELSE '' END AS client_name,
 				'%s' AS service_descr,
 				'%s' date_type_descr,
-				CASE WHEN %s IS NOT NULL THEN (SELECT name FROM employees WHERE id=%d) ELSE '' END AS main_expert_name
+				CASE WHEN %s IS NOT NULL THEN (SELECT name FROM employees WHERE id=%d) ELSE '' END AS main_expert_name,
+				CASE WHEN %s IS NOT NULL THEN (SELECT name FROM fund_sources WHERE id=%d) ELSE '' END AS fund_source_name
 			",
 			$dt_from,
 			$dt_to,
@@ -1220,7 +1226,9 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			$service_descr,
 			$date_type_descr,
 			$main_expert_id,
-			$main_expert_id			
+			$main_expert_id,
+			$fund_source_id,
+			$fund_source_id						
 			),
 		'Head_Model'
 		);		

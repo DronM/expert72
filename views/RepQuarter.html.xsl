@@ -15,7 +15,7 @@
 
 <!-- Head -->
 <xsl:template match="model[@id='Head_Model']">
-	<h3>Квартальный отчет за период <xsl:value-of select="row/period_descr"/></h3>
+	<h3 class="reportTitle">Квартальный отчет за период <xsl:value-of select="row/period_descr"/></h3>
 	
 	<xsl:if test="not(row/client_name='')">
 		<div>Заказчик: <xsl:value-of select="row/client_name"/></div>

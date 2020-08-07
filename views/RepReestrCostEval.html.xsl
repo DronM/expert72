@@ -15,7 +15,7 @@
 
 <!-- Head -->
 <xsl:template match="model[@id='Head_Model']">
-	<h3>Реестр выданных заключений по достоверности <xsl:value-of select="row/period_descr"/></h3>
+	<h3 class="reportTitle">Реестр выданных заключений по достоверности <xsl:value-of select="row/period_descr"/></h3>
 	<div>
 	<xsl:choose>
 	<xsl:when test="row/expertise_result='positive'">Только положительные заключения</xsl:when>

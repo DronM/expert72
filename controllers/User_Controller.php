@@ -564,7 +564,7 @@ class User_Controller extends ControllerSQL{
 	}
 	
 	/* array with user inf*/
-	private function set_logged($ar){
+	private function set_logged($ar,&$pubKey){
 		$this->setLogged(TRUE);
 		
 		$_SESSION['user_id']		= $ar['id'];
@@ -695,35 +695,50 @@ class User_Controller extends ControllerSQL{
 			WHERE session_id='%s' AND user_id =%d AND date_time_out IS NULL",
 			session_id(),intval($ar['id']))
 		);
-		if (!$log_ar['pub_key']){
+		if (!isset($log_ar['pub_key'])){
 			//no user login
 			
-			$this->pub_key = uniqid();
+			$pubKey = uniqid();
 			
 			$log_ar = $this->getDbLinkMaster()->query_first(
 				sprintf("UPDATE logins SET 
 					user_id = %d,
-					pub_key = '%s'
-				WHERE session_id='%s' AND user_id IS NULL
-				RETURNING id",
-				intval($ar['id']),$this->pub_key,session_id())
+					pub_key = '%s',
+					date_time_in = now(),
+					set_date_time = now()
+					FROM (
+						SELECT
+							l.id AS id
+						FROM logins l
+						WHERE l.session_id='%s' AND l.user_id IS NULL
+						ORDER BY l.date_time_in DESC
+						LIMIT 1										
+					) AS s
+					WHERE s.id = logins.id
+					RETURNING logins.id",
+					intval($ar['id']),$pubKey,session_id()
+				)
 			);				
-			if (!$log_ar['id']){
+			if (!isset($log_ar['id'])){
 				//нет вообще юзера
 				$log_ar = $this->getDbLinkMaster()->query_first(
-					sprintf("INSERT INTO logins
-					(date_time_in,ip,session_id,pub_key,user_id)
-					VALUES('%s','%s','%s','%s',%d)
-					RETURNING id",
-					date('Y-m-d H:i:s'),$_SERVER["REMOTE_ADDR"],
-					session_id(),$this->pub_key,intval($ar['id']))
+					sprintf(
+						"INSERT INTO logins
+						(date_time_in,ip,session_id,pub_key,user_id)
+						VALUES(now(),'%s','%s','%s',%d)
+						RETURNING id",
+						$_SERVER["REMOTE_ADDR"],
+						session_id(),
+						$pubKey,
+						$ar['id']
+					)
 				);								
 			}
 			$_SESSION['LOGIN_ID'] = $ar['id'];			
 		}
 		else{
 			//user logged
-			$this->pub_key = trim($log_ar['pub_key']);
+			$pubKey = trim($log_ar['pub_key']);
 		}
 		
 		if ($ar['role_id']=='client'){
@@ -737,8 +752,8 @@ class User_Controller extends ControllerSQL{
 		$_SESSION['sess_discard_after'] = time() + $sess_len;
 	}
 	
-	private function do_login($pm){		
-		$this->pwd = $this->getExtVal($pm,'pwd');
+	private function do_login($pm,&$pubKey,&$pwd){		
+		$pwd = $this->getExtVal($pm,'pwd');
 		$ar = $this->getDbLink()->query_first(
 			sprintf(
 			"SELECT 
@@ -757,48 +772,53 @@ class User_Controller extends ControllerSQL{
 			throw new Exception(self::ER_BANNED);
 		}
 		else{
-			$this->set_logged($ar);
+			$this->set_logged($ar,$pubKey);
 			
 		}
 	}
 	
-	private function login_ext($pm){
+	/**
+	 * @returns {DateTime}
+	 */
+	private function calc_session_expiration_time(){
+		return time()+
+			(
+				(defined('SESSION_EXP_SEC')&&intval(SESSION_EXP_SEC))?
+				SESSION_EXP_SEC :
+				( (defined('SESSION_LIVE_SEC')&&intval(SESSION_LIVE_SEC))? SESSION_LIVE_SEC : 365*24*60*60)
+			);
+	}
+	
+	public function login($pm){		
+		$pubKey = '';
+		$pwd = '';
+		$this->do_login($pm,$pubKey,$pwd);
+		$this->add_auth_model($pubKey,session_id(),md5($pwd),$this->calc_session_expiration_time());
+	}
+	
+	private function add_auth_model($pubKey,$sessionId,$pwdHash,$expiration){
+	
+		$_SESSION['token'] = $pubKey.':'.md5($pubKey.$sessionId);
+		$_SESSION['tokenExpires'] = $expiration;
 		
-		$access_token = $this->pub_key.':'.md5($this->pub_key.session_id());
-		$refresh_token = $this->pub_key.':'.md5($this->pub_key.$_SESSION['user_id'].md5($this->pwd));
+		$fields = array(
+			new Field('access_token',DT_STRING, array('value'=>$_SESSION['token'])),
+			new Field('tokenExpires',DT_DATETIME,array('value'=>date('Y-m-d H:i:s',$expiration)))
+		);
 		
-		$_SESSION['token'] = $access_token;
-		$_SESSION['tokenr'] = $refresh_token;
+		if(defined('SESSION_EXP_SEC') && intval(SESSION_EXP_SEC)){
+			$_SESSION['tokenr'] = $pubKey.':'.md5($pubKey.$_SESSION['user_id'].$pwdHash);			
+			array_push($fields,new Field('refresh_token',DT_STRING,array('value'=>$_SESSION['tokenr'])));
+		}
+		
+		setcookie("token",$_SESSION['token'],$expiration,'/');
 		
 		$this->addModel(new ModelVars(
 			array('name'=>'Vars',
 				'id'=>'Auth_Model',
-				'values'=>array(
-					new Field('access_token',DT_STRING,
-						array('value'=>$access_token)),
-					new Field('refresh_token',DT_STRING,
-						array('value'=>$refresh_token)),
-					new Field('expires_in',DT_INT,
-						array('value'=>SESSION_EXP_SEC)),
-					new Field('time',DT_STRING,
-						array('value'=>round(microtime(true) * 1000)))
-				)
+				'values'=>$fields
 			)
-		));
-		
-		if (defined('PARAM_TOKEN')){
-			if ($this->getExtVal($pm,'rememberMe')){
-				setcookie(PARAM_TOKEN,$access_token,time()+SESSION_EXP_SEC,'expert72',$_SERVER['HTTP_HOST']);
-			}
-			else{
-				setcookie(PARAM_TOKEN,NULL,-1,'expert72',$_SERVER['HTTP_HOST']);
-			}
-		}
-	}
-	
-	public function login($pm){		
-		$this->do_login($pm);
-		//$this->login_ext($pm);
+		));		
 	}
 	
 	public function login_refresh($pm){
@@ -1053,8 +1073,8 @@ class User_Controller extends ControllerSQL{
 					WHERE u.id=%d",
 					$inserted_id_ar['id']
 					));
-
-				$this->set_logged($ar);
+				$pub_key = '';
+				$this->set_logged($ar,$pub_key);
 			
 				$this->getDbLinkMaster()->query('COMMIT');
 			}

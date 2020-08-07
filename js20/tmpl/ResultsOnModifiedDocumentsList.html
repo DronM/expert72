@@ -1,0 +1,25 @@
+<div id="{{id}}">
+	<div class="panel-group panel-group-control content-group-lg">	
+		{{#results}}
+		<div class="panel">
+			<div class="panel-heading bg-info">
+				<h6 class="panel-title">
+					<a data-toggle="collapse" href="#collapsible-control-group_{{contract.reg_number}}" aria-expanded="false"
+					class="collapsed file_section" title="{{contract.title}}">
+					Заключение №{{contract.reg_number}} от {{contract.expertise_result_date_descr}} ({{contract.result_descr}})</a>
+				</h6>
+			</div>
+			<div id="collapsible-control-group_{{contract.reg_number}}" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+				<div class="panel-body">				
+					<div>Эксперты, подписавшие заключение: {{result_sign_expert_list}}
+					</div>
+
+					<div id="{{id}}:file_{{file.file_id}}">
+					</div>
+				</div>
+			</div>			
+		</div>
+		{{/results}}
+	</div>
+</div>	
+

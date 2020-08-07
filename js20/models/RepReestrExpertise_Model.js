@@ -188,7 +188,7 @@ function RepReestrExpertise_Model(options){
 	
 	var filed_options = {};
 	filed_options.primaryKey = false;	
-	
+	filed_options.alias = 'Идентификатор контракта';
 	filed_options.autoInc = false;	
 	
 	options.fields.contract_id = new FieldInt("contract_id",filed_options);

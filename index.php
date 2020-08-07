@@ -5,5 +5,6 @@ require_once('Config.php');
 
 //error_reporting(E_ALL & ~ E_WARNING); 
 
+//FRAME_WORK_PATH.
 require_once('cmd.php');
 ?>

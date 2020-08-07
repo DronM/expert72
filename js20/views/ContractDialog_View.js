@@ -58,9 +58,9 @@ function ContractDialog_View(id,options){
 	
 	options.templateOptions.expertMaintenance = (options.model.getFieldValue("service_type")=="expert_maintenance");	
 	options.templateOptions.notExpertMaintenance = !options.templateOptions.expertMaintenance;
-	console.log(options.model.getFieldValue("service_type"))
-	console.log(options.templateOptions.expertMaintenance)
-	console.log(options.templateOptions.notExpertMaintenance)
+	//console.log(options.model.getFieldValue("service_type"))
+	//console.log(options.templateOptions.expertMaintenance)
+	//console.log(options.templateOptions.notExpertMaintenance)
 	
 	var employee_main_expert = (options.model.getFieldValue("main_experts_ref").getKey("id")==CommonHelper.unserialize(window.getApp().getServVar("employees_ref")).getKey("id"));
 	var employee_dep_boss = (options.model.getFieldValue("main_departments_ref").getKey("id")==CommonHelper.unserialize(window.getApp().getServVar("departments_ref")).getKey("id")
@@ -694,6 +694,90 @@ function ContractDialog_View(id,options){
 					"val":options.model.getFieldValue("id")
 				}]
 			}));
+			
+			var mod_results = options.model.getFieldValue("results_on_modified_documents_list");
+			for(var i=0;i<mod_results.length;i++){
+				mod_results[i].contract.expertise_result_date_descr = DateHelper.format(DateHelper.strtotime(mod_results[i].contract.expertise_result_date),"d/m/y");
+				mod_results[i].contract.title = (mod_results[i].client_viewed=="true")? "Заключение прочитано клиентом":"Заключение не прочитано клиентом";
+				mod_results[i].contract.result_descr = (mod_results[i].contract.expertise_result=="positive")?
+					"Положительное заключение":
+					"Отрицательное:"+mod_results[i].contract.expertise_reject_types_ref.descr;
+					
+				mod_results[i].result_sign_expert_list = "";
+				for(var j=0;j<mod_results[i].contract.result_sign_expert_list.rows.length;j++){
+					mod_results[i].result_sign_expert_list+=
+						((mod_results[i].result_sign_expert_list=="")? "":", ")+
+						mod_results[i].contract.result_sign_expert_list.rows[j].fields.employees_ref.getDescr();
+				}
+			}			
+			var file_cont = new ControlContainer(id+":results_on_modified_documents_list","DIV",{
+				"template":window.getApp().getTemplate("ResultsOnModifiedDocumentsList")
+				,"templateOptions":{
+					"results":mod_results
+				}
+			});
+			
+			var mod_results = options.model.getFieldValue("results_on_modified_documents_list");
+			for(var i=0;i<mod_results.length;i++){
+				var templateOptions = {};
+				templateOptions.file_id			= mod_results[i].file.file_id;
+				templateOptions.file_uploaded		= mod_results[i].file.file_uploaded;	
+				templateOptions.file_not_uploaded	= (mod_results[i].file.file_uploaded!=undefined)? !mod_results[i].file.file_uploaded:true;
+				templateOptions.file_deleted		= (mod_results[i].file.deleted!=undefined)? mod_results[i].file.deleted:false;
+				templateOptions.file_not_deleted	= !mod_results[i].file.deleted;
+				templateOptions.file_deleted_dt		= (mod_results[i].file.deleted && mod_results[i].file.deleted_dt)? DateHelper.format(DateHelper.strtotime(mod_results[i].file.deleted_dt),"d/m/Y H:i"):null;	
+				templateOptions.file_name		= mod_results[i].file.file_name;
+				templateOptions.file_size_formatted	= CommonHelper.byteForamt(mod_results[i].file.file_size);
+				templateOptions.file_signed		= (mod_results[i].file.file_signed!=undefined)? mod_results[i].file.file_signed:false;
+				templateOptions.file_not_signed		= !mod_results[i].file.file_signed;
+				templateOptions.file_deletable		= false;
+				templateOptions.file_switchable		= false;
+				templateOptions.separateSignature	= true;	
+				templateOptions.customFolder		= false;
+				
+				var file_ctrl = new ControlContainer(this.getId()+":results_on_modified_documents_list:file_"+mod_results[i].file.file_id,"TEMPLATE",{
+					"attrs":{
+						"file_uploaded":mod_results[i].file.file_uploaded,
+						"file_signed":mod_results[i].file.file_signed
+					},
+					"template":window.getApp().getTemplate("ApplicationFile"),
+					"templateOptions":templateOptions,
+					"events":{
+						"click":function(){
+							self.downloadResultOnModifiedDocument(this.getAttr("file_id"),true);
+						}
+					}
+				});
+				file_ctrl.m_fileId = mod_results[i].file.file_id;
+				file_ctrl.m_filePath = mod_results[i].file.file_path;
+				file_ctrl.m_fileName = mod_results[i].file.file_name;
+				file_ctrl.m_fileSize = mod_results[i].file.file_size;
+				file_ctrl.m_fileSigned = mod_results[i].file.file_signed;
+				file_ctrl.m_signatures = mod_results[i].file.signatures;
+				file_ctrl.m_dateTime = mod_results[i].file.date_time;
+				file_ctrl.m_fileSignedByClient	= mod_results[i].file.file_signed_by_client;
+				
+				//sig
+				file_ctrl.sigCont = new FileSigContainer(this.getId()+":results_on_modified_documents_list:file_"+mod_results[i].file.file_id+":sigList",{
+					"fileId":mod_results[i].file.file_id,
+					"itemId":"doc",
+					"signatures":mod_results[i].file.signatures,//array!
+					"multiSignature":true,
+					"maxSignatureCount":1,
+					"readOnly":true,
+					"onSignFile":null,
+					"onSignClick":function(fileId,itemId){
+						self.downloadResultOnModifiedDocument(fileId,false);
+					},
+					"onGetFileUploaded":null,
+					"onGetSignatureDetails":null
+				});
+				file_ctrl.sigCont.toDOM(file_ctrl.getNode());
+				
+				file_cont.addElement(file_ctrl);
+				
+			}
+			this.addElement(file_cont);	
 		}		
 	};
 		
@@ -988,4 +1072,14 @@ ContractDialog_View.prototype.onOK = function(failFunc){
 	else{
 		this.close(this.m_editResult);
 	}
+}
+
+/**
+ * isDocum = true - document itself, otherwise signature
+ */
+ContractDialog_View.prototype.downloadResultOnModifiedDocument = function(fileId,isDocum){
+	var contr = new Application_Controller();
+	var pm = contr.getPublicMethod(isDocum? "get_file":"get_file_sig");
+	pm.setFieldValue("id",fileId);
+	pm.download();	
 }

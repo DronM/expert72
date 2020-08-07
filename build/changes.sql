@@ -26,3 +26,14 @@ contracts_next_number
 f_regexpescape
 
 doc_flow_in_dialog.sql
+
+***********************************************************
+create extension pgcrypto;
+ALTER table public.sessions ADD COLUMN data_enc bytea;
+ALTER TABLE public.sessions ALTER COLUMN data DROP NOT NULL;
+ALTER TABLE sessions ADD COLUMN session_key varchar(128);
+sess_enc_read,sess_enc_write
+doc_flow_examinations_process()
+update contracts set document_type = 'pd' WHERE document_type is null
+
+contracts_dialog.sql

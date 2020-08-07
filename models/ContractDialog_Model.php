@@ -799,6 +799,22 @@ class ContractDialog_Model extends ModelSQL{
 		$f_expert_maintenance_base_contracts_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expert_maintenance_base_contracts_ref",$f_opts);
 		$this->addField($f_expert_maintenance_base_contracts_ref);
 		//********************
+		
+		//*** Field expert_maintenance_expertise_type ***
+		$f_opts = array();
+		$f_opts['id']="expert_maintenance_expertise_type";
+						
+		$f_expert_maintenance_expertise_type=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expert_maintenance_expertise_type",$f_opts);
+		$this->addField($f_expert_maintenance_expertise_type);
+		//********************
+		
+		//*** Field results_on_modified_documents_list ***
+		$f_opts = array();
+		$f_opts['id']="results_on_modified_documents_list";
+						
+		$f_results_on_modified_documents_list=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"results_on_modified_documents_list",$f_opts);
+		$this->addField($f_results_on_modified_documents_list);
+		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}
 

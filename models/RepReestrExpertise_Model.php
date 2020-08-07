@@ -202,6 +202,8 @@ class RepReestrExpertise_Model extends ModelReportSQL{
 		
 		//*** Field contract_id ***
 		$f_opts = array();
+		
+		$f_opts['alias']='Идентификатор контракта';
 		$f_opts['sysCol']=TRUE;
 		$f_opts['id']="contract_id";
 						

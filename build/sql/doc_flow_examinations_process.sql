@@ -200,6 +200,7 @@ BEGIN
 							WHEN app.cost_eval_validity THEN 'cost_eval_validity'::document_types
 							WHEN app.modification THEN 'modification'::document_types
 							WHEN app.audit THEN 'audit'::document_types						
+							ELSE  'pd'::document_types
 						END,
 						app.office_id,
 						app.service_type,

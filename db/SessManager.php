@@ -41,6 +41,11 @@ class SessManager{
 		session_name($session_name);
 		// Now we cat start the session
 		session_start();
+		
+		if(!strlen(session_id())){
+			throw new Exception('Could not generate session id.');
+		}
+		
 		// This line regenerates the session and delete the old one. 
 		// It also generates a new encryption key in the database. 
 		//session_regenerate_id(true);    
@@ -56,11 +61,13 @@ class SessManager{
 			sprintf("SELECT data FROM sessions WHERE id = md5('%s') LIMIT 1",$id)
 		);
 		if ($ar && count($ar)>0){
-			return $this->decrypt($ar['data'],$id);
+			$res = $this->decrypt($ar['data'],$id);
 		}
+		//if no session empty string MUST be returned! otherwise php7.1 and higher throws error!
+		return isset($res)? $res:'';
+		
 	}
 	function write($id, $data) {
-		//throw new Exception('ID='.$id);
 		$this->dbLinkMaster->query(sprintf(
 			"SELECT sess_write(md5('%s'),'%s','%s')",
 			$id,$this->encrypt($data,$id),isset($_SERVER["REMOTE_ADDR"])? $_SERVER["REMOTE_ADDR"] : '127.0.0.1'
@@ -89,22 +96,26 @@ class SessManager{
 	}
 	
 	private function encrypt($data, $key) {
-		//return $data;
+		return base64_encode($data);
+		/*
 		$salt = 'cH!swe!retReGu7W6bEDRup7usuDUh9THeD2CHeGE*ewr4n39=E@rAsp7c-Ph@pH';
 		$key = substr(hash('sha256', $salt.$key.$salt), 0, 32);
 		$iv_size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB);
 		$iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
 		$encrypted = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, $key, $data, MCRYPT_MODE_ECB, $iv));
 		return $encrypted;
+		*/
 	}
 	private function decrypt($data, $key) {
-		//return $data;
+		return base64_decode($data);
+		/*
 		$salt = 'cH!swe!retReGu7W6bEDRup7usuDUh9THeD2CHeGE*ewr4n39=E@rAsp7c-Ph@pH';
 		$key = substr(hash('sha256', $salt.$key.$salt), 0, 32);
 		$iv_size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB);
 		$iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
 		$decrypted = mcrypt_decrypt(MCRYPT_RIJNDAEL_256, $key, base64_decode($data), MCRYPT_MODE_ECB, $iv);
 		return $decrypted;
+		*/
 	}	
 	
 }

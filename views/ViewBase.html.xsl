@@ -31,7 +31,7 @@
 				<xsl:call-template name="emailConfNote"/>
 				
 				<xsl:call-template name="checkForError"/>
-				showView();
+				showView();				
 			}
 		</script>
 	</head>
@@ -111,6 +111,7 @@
 	<!--<script src="http://localhost:1337/vorlon.js"></script>-->
 	<script>
 		$("#waiting").hide();
+		
 	</script>
 </xsl:template>
 

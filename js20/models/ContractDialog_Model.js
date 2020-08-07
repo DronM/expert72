@@ -877,6 +877,24 @@ function ContractDialog_Model(options){
 	
 	options.fields.expert_maintenance_base_contracts_ref = new FieldJSON("expert_maintenance_base_contracts_ref",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.expert_maintenance_expertise_type = new FieldString("expert_maintenance_expertise_type",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.results_on_modified_documents_list = new FieldJSON("results_on_modified_documents_list",filed_options);
+	
 		ContractDialog_Model.superclass.constructor.call(this,id,options);
 }
 extend(ContractDialog_Model,ModelXML);

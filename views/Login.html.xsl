@@ -131,6 +131,7 @@
 	</script>
 		
 		<xsl:call-template name="initJS"/>
+		
 	</body>
 </html>		
 </xsl:template>

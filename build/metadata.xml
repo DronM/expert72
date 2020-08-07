@@ -2,7 +2,7 @@
 <metadata owner="expert72">
 	<versions>
 		<version dateOpen="2017-09-27 12:09:48" dateClose="2017-12-08 10:12:08">1.001 
-		<lastBuild>2020-07-27 15:02:55</lastBuild></version>
+		<lastBuild>2020-08-07 05:55:22</lastBuild></version>
 		<version dateOpen="2017-12-08 11:12:01" dateClose="2017-12-08 11:12:04">1.002</version>
 		<version dateOpen="2017-12-08 11:12:20" dateClose="2017-12-08 11:12:20">1.0.3</version>
 		<version dateOpen="2017-12-12 11:12:07" dateClose="2017-12-12 11:12:07">1.0.4</version>
@@ -139,6 +139,7 @@
 		<version dateOpen="2020-04-18 11:04:18" dateClose="2020-05-18 07:05:34">1.0.136</version>
 		<version dateOpen="2020-05-18 12:05:31" dateClose="2020-05-19 06:05:50">1.0.137</version>
 		<version dateOpen="2020-07-13 11:07:54" dateClose="2020-07-27 15:07:03">1.0.138</version>
+		<version dateOpen="2020-07-27 15:07:04" dateClose="2020-08-07 05:08:55">1.0.139</version>
 	</versions>
 	<globalFilters>
 		<field id="user_id"/>
@@ -2805,6 +2806,8 @@
 			<field id="allow_client_out_documents" dataType="Bool"/>
 			<field id="service_type" dataType="String" alias="&#x412;&#x438;&#x434; &#x443;&#x441;&#x43B;&#x443;&#x433;&#x438;"/>
 			<field id="expert_maintenance_base_contracts_ref" dataType="JSON"/>
+			<field id="expert_maintenance_expertise_type" dataType="String"/>
+			<field id="results_on_modified_documents_list" dataType="JSON"/>
 		</model>
 		<model id="ExpertWork" parent="ModelSQL" dataTable="expert_works" virtual="FALSE">
 			<field id="id" dataType="Int" primaryKey="TRUE" required="FALSE" autoInc="TRUE"/>
@@ -2938,7 +2941,7 @@
 			<field id="date_time" dataType="Date" alias="&#x414;&#x430;&#x442;&#x430; &#x43F;&#x440;&#x435;&#x434;&#x43E;&#x441;&#x442;&#x430;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x44F; &#x434;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x43E;&#x432;"/>
 			<field id="pay_date" dataType="Date" alias="&#x414;&#x430;&#x442;&#x430; &#x432;&#x43D;&#x435;&#x441;&#x435;&#x43D;&#x438;&#x44F; &#x43F;&#x43B;&#x430;&#x442;&#x44B;"/>
 			<field id="expertise_result_ret_date" dataType="Date" alias="&#x414;&#x430;&#x442;&#x430; &#x432;&#x440;&#x443;&#x447;&#x435;&#x43D;&#x438;&#x44F; &#x437;&#x430;&#x43A;&#x43B;&#x44E;&#x447;&#x435;&#x43D;&#x438;&#x44F;"/>
-			<field id="contract_id" dataType="Int" sysCol="TRUE"/>
+			<field id="contract_id" dataType="Int" sysCol="TRUE" alias="&#x418;&#x434;&#x435;&#x43D;&#x442;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x43E;&#x440; &#x43A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x430;"/>
 		</model>
 		<model id="RepReestrCostEval" parent="ModelReportSQL" virtual="TRUE" server="TRUE">
 			<field id="ord" dataType="String" alias="&#x2116;"/>
@@ -4577,6 +4580,7 @@
 		<jsTemplate id="DocFlowOutClientCorrectionList" file="tmpl/DocFlowOutClientCorrectionList.html"/>
 		<jsTemplate id="UserEmailConfirmation_View" file="tmpl/UserEmailConfirmation_View.html"/>
 		<jsTemplate id="AllowSectionEdit" file="tmpl/AllowSectionEdit.html"/>
+		<jsTemplate id="ResultsOnModifiedDocumentsList" file="tmpl/ResultsOnModifiedDocumentsList.html"/>
 	</jsTemplates>
 	<packages>
 		<package id="Bank" version="1.0.0" author="Andrey Mikhalevich"/>

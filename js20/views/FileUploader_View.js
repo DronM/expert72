@@ -636,6 +636,7 @@ FileUploader_View.prototype.clearContainer = function(docId){
 }
 
 FileUploader_View.prototype.addFileControls = function(items){
+debugger
 	if (!items)return;
 	var self = this;
 	

@@ -40,8 +40,9 @@
 			
 			{{#expertMaintenance}}
 			<li id="{{id}}:tab-modified_documents"><a href="#modified_documents" data-toggle="tab" aria-expanded="false">Измененная документация</a></li>
+			<li id="{{id}}:tab-results_on_modified_documents"><a href="#results_on_modified_documents" data-toggle="tab" aria-expanded="false">Заключения по разделам</a></li>
 			{{/expertMaintenance}}
-			
+
 			{{#notExpertMaintenance}}
 			{{#notExpert}}
 			<li id="{{id}}:tab-expertise"><a href="#expertise" data-toggle="tab" aria-expanded="false">Экспертиза</a></li>
@@ -318,6 +319,10 @@
 		{{#expertMaintenance}}
 		<div class="tab-pane fade" id="modified_documents">
 			<div id="{{id}}:modified_documents_list"/>
+		</div>
+		
+		<div class="tab-pane fade" id="results_on_modified_documents">
+			<div id="{{id}}:results_on_modified_documents_list"/>
 		</div>
 		{{/expertMaintenance}}
 
