@@ -64,7 +64,7 @@ CREATE OR REPLACE VIEW applications_list AS
 	) AS h_max ON h_max.application_id=l.id
 	LEFT JOIN application_processes st
 		ON st.application_id=h_max.application_id AND st.date_time = h_max.date_time
-	WHERE l.service_type <> 'modified_documents'
+	WHERE l.service_type <> 'modified_documents' AND coalesce(l.ext_contract,FALSE) = FALSE
 	ORDER BY l.user_id,l.create_dt DESC
 	
 	;

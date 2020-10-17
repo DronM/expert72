@@ -58,7 +58,11 @@ $permissions = array();
 			
 				$permissions['Application_Controller_get_list']=TRUE;
 			
+				$permissions['Application_Controller_get_ext_list']=TRUE;
+			
 				$permissions['Application_Controller_complete']=TRUE;
+			
+				$permissions['Application_Controller_complete_ext']=TRUE;
 			
 				$permissions['Application_Controller_complete_for_expert_maintenance']=TRUE;
 			

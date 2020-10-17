@@ -57,6 +57,11 @@ class Service_Controller extends ControllerSQL{
 				'alias'=>'Вид гос.экспертизы'
 			));
 		$pm->addParam($param);
+		$param = new FieldExtInt('ban_client_responses_day_cnt'
+				,array(
+				'alias'=>'За сколько дней блокировать отправку клиентских писем сответами'
+			));
+		$pm->addParam($param);
 		
 		$pm->addParam(new FieldExtInt('ret_id'));
 		
@@ -108,6 +113,12 @@ class Service_Controller extends ControllerSQL{
 				,array(
 			
 				'alias'=>'Вид гос.экспертизы'
+			));
+			$pm->addParam($param);
+		$param = new FieldExtInt('ban_client_responses_day_cnt'
+				,array(
+			
+				'alias'=>'За сколько дней блокировать отправку клиентских писем сответами'
 			));
 			$pm->addParam($param);
 		

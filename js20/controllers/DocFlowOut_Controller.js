@@ -28,6 +28,7 @@ function DocFlowOut_Controller(options){
 	this.addUpdate();
 	this.addDelete();
 	this.addGetList();
+	this.add_get_ext_list();
 	this.addGetObject();
 	this.add_remove_file();
 	this.add_remove_sig();
@@ -42,6 +43,7 @@ function DocFlowOut_Controller(options){
 	this.add_add_sig_to_file();
 	this.add_get_sig_details();
 	this.add_sign_file();
+	this.add_set_require_client_sig();
 		
 }
 extend(DocFlowOut_Controller,ControllerObjServer);
@@ -156,6 +158,12 @@ extend(DocFlowOut_Controller,ControllerObjServer);
 	var options = {};
 	
 	var field = new FieldJSONB("allow_edit_sections",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldBool("ext_contract",options);
 	
 	pm.addField(field);
 	
@@ -287,6 +295,12 @@ extend(DocFlowOut_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	
+	var field = new FieldBool("ext_contract",options);
+	
+	pm.addField(field);
+	
 		var options = {};
 				
 		pm.addField(new FieldEnum("expertise_result",options));
@@ -377,8 +391,28 @@ extend(DocFlowOut_Controller,ControllerObjServer);
 	var f_opts = {};
 	
 	pm.addField(new FieldJSONB("allow_edit_sections",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldBool("ext_contract",f_opts));
 	pm.getField(this.PARAM_ORD_FIELDS).setValue("date_time");
 	
+}
+
+			DocFlowOut_Controller.prototype.add_get_ext_list = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('get_ext_list',opts);
+	
+	pm.addField(new FieldInt(this.PARAM_COUNT));
+	pm.addField(new FieldInt(this.PARAM_FROM));
+	pm.addField(new FieldString(this.PARAM_COND_FIELDS));
+	pm.addField(new FieldString(this.PARAM_COND_SGNS));
+	pm.addField(new FieldString(this.PARAM_COND_VALS));
+	pm.addField(new FieldString(this.PARAM_COND_ICASE));
+	pm.addField(new FieldString(this.PARAM_ORD_FIELDS));
+	pm.addField(new FieldString(this.PARAM_ORD_DIRECTS));
+	pm.addField(new FieldString(this.PARAM_FIELD_SEP));
+
+	this.addPublicMethod(pm);
 }
 
 			DocFlowOut_Controller.prototype.addGetObject = function(){
@@ -534,6 +568,14 @@ extend(DocFlowOut_Controller,ControllerObjServer);
 	
 		pm.addField(new FieldInt("doc_flow_type_id",options));
 	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldBool("ext_contract",options));
+	
 			
 	this.addPublicMethod(pm);
 }
@@ -575,6 +617,14 @@ extend(DocFlowOut_Controller,ControllerObjServer);
 		options.required = true;
 	
 		pm.addField(new FieldInt("application_id",options));
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldBool("ext_contract",options));
 	
 			
 	this.addPublicMethod(pm);
@@ -709,6 +759,40 @@ extend(DocFlowOut_Controller,ControllerObjServer);
 		options.maxlength = "250";
 	
 		pm.addField(new FieldString("file_path",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			DocFlowOut_Controller.prototype.add_set_require_client_sig = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('set_require_client_sig',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("doc_id",options));
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		options.maxlength = "36";
+	
+		pm.addField(new FieldString("file_id",options));
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldBool("require_client_sig",options));
 	
 			
 	this.addPublicMethod(pm);

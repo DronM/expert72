@@ -188,7 +188,11 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 	}
 	
 	public function get_next_num($pm){
-		$this->get_next_num_on_type('out', $this->getExtDbVal($pm,'doc_flow_type_id'));
+		$this->get_next_num_on_type(
+			'out',
+			$this->getExtDbVal($pm,'doc_flow_type_id'),
+			$this->getExtDbVal($pm,'ext_contract')
+		);
 	}
 
 	public function get_next_contract_number($pm){
@@ -196,9 +200,14 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		$model->query(
 			sprintf(
 			"SELECT
-				contracts_next_number(app.service_type,now()::date) AS num
+				contracts_next_number(
+					app.service_type,
+					now()::date,
+					%s
+				) AS num
 			FROM applications AS app
 			WHERE app.id=%d",
+			$this->getExtDbVal($pm,'ext_contract'),
 			$this->getExtDbVal($pm,'application_id')
 			)		
 		,TRUE);
@@ -509,6 +518,50 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			$file_data,
 			'out'
 		);
+	}
+	
+	public function get_ext_list($pm){
+		$this->setListModelId('DocFlowOutExtList_Model');
+		parent::get_list($pm);
+	
+	}
+	
+	public function set_require_client_sig($pm){
+		try{
+			$this->getDbLinkMaster()->query('BEGIN');
+			
+			$ar = $this->getDbLinkMaster()->query_first(sprintf(
+				"UPDATE doc_flow_attachments
+				SET require_client_sig = %s
+				WHERE doc_id=%d AND file_id=%s
+				RETURNING doc_id"
+				,$this->getExtDbVal($pm,'require_client_sig')
+				,$this->getExtDbVal($pm,'doc_id')
+				,$this->getExtDbVal($pm,'file_id')
+			));
+			
+			if(!is_array($ar) || !count($ar) || !isset($ar['doc_id'])){
+				throw new Exception('Document not found!');
+			}
+			/*
+			НЕ БУДЕМ СТАВИТ ГАЛОЧКУ: все по честному, есть отметка, что файл не нужен,
+			все определяется клиентским исх.письмом, конкретно функцией
+			doc_flow_out_client_files_for_signing
+			$this->getDbLinkMaster()->query(sprintf(
+				"UPDATE application_document_files
+				SET file_signed_by_client = NOT %s
+				WHERE file_id=%s"
+				,$this->getExtDbVal($pm,'require_client_sig')
+				,$this->getExtDbVal($pm,'file_id')
+			));
+			*/
+			
+			$this->getDbLinkMaster()->query('COMMIT');
+		}
+		catch(Exception $e){
+			$this->getDbLinkMaster()->query('ROLLBACK');
+			throw $e;
+		}		
 	}
 
 </xsl:template>

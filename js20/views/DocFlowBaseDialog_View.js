@@ -169,3 +169,7 @@ DocFlowBaseDialog_View.prototype.checkDocFlowType = function(){
 	}
 	return tp.getValue().getKey();
 }
+
+DocFlowBaseDialog_View.prototype.getExtContract = function(){
+	return this.m_model.getFieldValue("ext_contract");
+}

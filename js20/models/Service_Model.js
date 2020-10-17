@@ -103,6 +103,15 @@ function Service_Model(options){
 	options.fields.expertise_type = new FieldEnum("expertise_type",filed_options);
 	filed_options.enumValues = 'pd,eng_survey,pd_eng_survey,cost_eval_validity,cost_eval_validity_pd,cost_eval_validity_eng_survey,cost_eval_validity_pd_eng_survey';
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	filed_options.alias = 'За сколько дней блокировать отправку клиентских писем сответами';
+	filed_options.autoInc = false;	
+	
+	options.fields.ban_client_responses_day_cnt = new FieldInt("ban_client_responses_day_cnt",filed_options);
+	
 			
 			
 		Service_Model.superclass.constructor.call(this,id,options);

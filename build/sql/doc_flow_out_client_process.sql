@@ -34,6 +34,7 @@ DECLARE
 	v_is_expertise_cost_budget bool;
 	v_set_budget_contrcat_date bool;
 	v_application_service_type service_types;
+	v_ext_contract bool;
 BEGIN
 	IF TG_WHEN='BEFORE' AND ( TG_OP='INSERT' OR TG_OP='UPDATE') THEN		
 		IF (const_client_lk_val() OR const_debug_val())
@@ -76,7 +77,8 @@ BEGIN
 				contracts.contract_number,
 				contracts.employee_id,
 				(coalesce(contracts.expertise_cost_budget,0)>0),
-				app.service_type
+				app.service_type,
+				coalesce(app.ext_contract,FALSE)
 			INTO
 				v_applicant,
 				v_constr_name,
@@ -90,7 +92,8 @@ BEGIN
 				v_contract_number,
 				v_contract_employee_id,
 				v_is_expertise_cost_budget,
-				v_application_service_type
+				v_application_service_type,
+				v_ext_contract
 			FROM applications AS app
 			LEFT JOIN contracts ON contracts.application_id=app.id
 				AND (
@@ -166,7 +169,7 @@ BEGIN
 		
 			--Расширенная тема с доп.атрибутами
 			IF NEW.doc_flow_out_client_type='contr_return' THEN
-				v_doc_flow_subject = NEW.subject||' №'||v_contract_number||', '||(v_applicant->>'name')::text;
+				v_doc_flow_subject = NEW.subject||' №'||v_contract_number||', '||(coalesce(v_applicant->>'name',v_applicant->>'name_full'))::text;
 			ELSIF NEW.doc_flow_out_client_type='contr_resp' THEN
 				--Разделы с изменениями для ответов на замечания, свернуто
 				SELECT
@@ -191,20 +194,24 @@ BEGIN
 					ORDER BY app_f.file_path
 				) AS paths;
 				
-				v_doc_flow_subject = NEW.subject||', контракт №'||v_contract_number||', '||(v_applicant->>'name')::text;
+				v_doc_flow_subject = NEW.subject||
+					CASE WHEN v_ext_contract THEN ' (внеконтракт)' ELSE '' END||
+					', контракт №'||v_contract_number||', '||(coalesce(v_applicant->>'name',v_applicant->>'name_full'))::text;
 			ELSE
-				v_doc_flow_subject = enum_doc_flow_out_client_types_val(NEW.doc_flow_out_client_type,'ru');
+				v_doc_flow_subject = enum_doc_flow_out_client_types_val(NEW.doc_flow_out_client_type,'ru')||
+					CASE WHEN v_ext_contract THEN ' (внеконтракт)' ELSE '' END;
 				IF v_contract_number IS NOT NULL THEN
 					v_doc_flow_subject = v_doc_flow_subject ||', контракт №'||v_contract_number;
 				END IF;
-				v_doc_flow_subject = v_doc_flow_subject ||', '||(v_applicant->>'name')::text;
+				v_doc_flow_subject = v_doc_flow_subject ||', '||(coalesce(v_applicant->>'name',v_applicant->>'name_full'))::text;
 			END IF;
 			
-			--Новое входяее письмо всегда						
+			--Новое входящее письмо всегда						
 			INSERT INTO doc_flow_in (
 				date_time,
 				from_user_id,
-				from_addr_name,from_client_signed_by,from_client_date,
+				from_addr_name,
+				from_client_signed_by,from_client_date,
 				from_application_id,
 				doc_flow_type_id,
 				end_date_time,
@@ -212,12 +219,15 @@ BEGIN
 				recipient,
 				from_doc_flow_out_client_id,
 				from_client_app,
-				corrected_sections
+				corrected_sections,
+				ext_contract
 			)
 			VALUES (
 				v_from_date_time,
 				NEW.user_id,
-				v_applicant->>'name', (v_applicant->>'responsable_person_head')::json->>'name',now()::date,
+				
+				coalesce(v_applicant->>'name',v_applicant->>'name_full'),
+				(v_applicant->>'responsable_person_head')::json->>'name',now()::date,
 				NEW.application_id,
 				
 				CASE
@@ -241,7 +251,8 @@ BEGIN
 				(SELECT departments_ref(departments) FROM departments WHERE id=v_recip_department_id),
 				NEW.id,
 				TRUE,
-				v_corrected_sections_o
+				v_corrected_sections_o,
+				v_ext_contract
 			)
 			RETURNING id,recipient,reg_number
 			INTO v_doc_flow_in_id,v_recipient,v_reg_number;
@@ -520,7 +531,7 @@ RAISE EXCEPTION 'contracts_work_end_date=%',(SELECT contracts_work_end_date(
 				departments.name,
 				sms_templates_text(
 					ARRAY[
-						ROW('applicant', (v_applicant->>'name')::text)::template_value,
+						ROW('applicant', (coalesce(v_applicant->>'name',v_applicant->>'name_full'))::text)::template_value,
 						ROW('constr_name',v_constr_name)::template_value,
 						ROW('application_id',NEW.application_id)::template_value,
 						ROW('contract_id',v_contract_id)::template_value,						

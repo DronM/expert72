@@ -91,6 +91,16 @@
 		<span id="{{id}}_client_sig_inf" class="badge badge-danger">Требуется ЭЦП заказчика.</span>
 		{{/file_not_signed_by_client}}	
 	{{/org_require_client_sig}}
+
+	{{#doc_flow_out_require_client_sig}}
+		<span>
+			Требовать подпись заказчика:
+			<input id="{{id}}_require_client_sig" type="checkbox"{{#require_client_sig}} checked="checked"{{/require_client_sig}}
+			title="Если галочку убрать,заказчик сможет отправлять ответы без подписания файла"
+			class="doc_flow_out_require_client_sig">
+			</input>			
+		</span>	
+	{{/doc_flow_out_require_client_sig}}
 	
 	{{#calc_md5}}
 	<span id="{{id}}_calc_md5" class="badge badge-info btnCalcMD5" title="Рассчитать контрольную сумму md5 файла">md5

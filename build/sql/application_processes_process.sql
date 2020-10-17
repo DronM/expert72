@@ -79,6 +79,7 @@ BEGIN
 					ex.employee_id,
 					ex.recipient,
 					'Исправление по заявлению '||
+						CASE WHEN coalesce(app.ext_contract,FALSE) THEN ' (внеконтрактному) ' ELSE '' END||
 					CASE
 						WHEN app.service_type='expert_maintenance' THEN 'Экспертное сопровождение'
 						WHEN app.service_type='modified_documents' THEN 'Измененная документация'
@@ -126,7 +127,9 @@ BEGIN
 				now(),
 				app.user_id,
 				NEW.application_id,
-				'Новое заявление: '||
+				'Новое заявление'||
+					CASE WHEN coalesce(app.ext_contract,FALSE) THEN ' (внеконтрактное)' ELSE '' END
+					||': '||
 				CASE
 					WHEN app.service_type='expert_maintenance' THEN 'Экспертное сопровождение'
 					WHEN app.service_type='modified_documents' THEN 'Измененная документация'
@@ -147,9 +150,17 @@ BEGIN
 					WHEN app.cost_eval_validity THEN 'Достоверность'
 					WHEN app.modification THEN 'Модификация'
 					WHEN app.audit THEN 'Аудит'
-				END||', '||app.constr_name
+					
+					ELSE ''
+				END||', '||coalesce(app.constr_name,'<неизвестный объект>')
 				,
-				app.applicant->>'name'||' просит провести '||
+				-- зависит от типа: enterprise - name, pboul&&person - name_full
+				coalesce(app.applicant->>'name',app.applicant->>'name_full')
+				/*CASE
+					WHEN app.applicant->>'client_type'='enterprise' THEN coalesce(coalesce(app.applicant->>'name',app.applicant->>'name_full'),'<без наименования>')
+					ELSE coalesce(app.applicant->>'name_full','<без наименования>')
+				END*/
+				||' просит провести '||
 				CASE
 					WHEN app.service_type='expert_maintenance' THEN 'Экспертное сопровождение'
 					WHEN app.service_type='modified_documents' THEN 'проверку измененной документации'
@@ -170,7 +181,8 @@ BEGIN
 					WHEN app.cost_eval_validity THEN 'проверку достоверности определения сметной стоимости'
 					WHEN app.modification THEN 'модификацию.'
 					WHEN app.audit THEN 'аудит'
-				END||' по объекту '||app.constr_name
+					ELSE ''
+				END||' по объекту '||coalesce(app.constr_name,'<неизвестный объект>')
 				,
 				'app',
 				TRUE

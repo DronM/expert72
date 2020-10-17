@@ -22,9 +22,18 @@ class DocumentTemplate_Model extends ModelSQL{
 		
 		$this->setTableName("document_templates");
 			
-		//*** Field document_type ***
+		//*** Field id ***
 		$f_opts = array();
 		$f_opts['primaryKey'] = TRUE;
+		$f_opts['autoInc']=TRUE;
+		$f_opts['id']="id";
+						
+		$f_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"id",$f_opts);
+		$this->addField($f_id);
+		//********************
+		
+		//*** Field document_type ***
+		$f_opts = array();
 		$f_opts['id']="document_type";
 						
 		$f_document_type=new FieldSQLEnum($this->getDbLink(),$this->getDbName(),$this->getTableName(),"document_type",$f_opts);
@@ -41,7 +50,6 @@ class DocumentTemplate_Model extends ModelSQL{
 		
 		//*** Field construction_type_id ***
 		$f_opts = array();
-		$f_opts['primaryKey'] = TRUE;
 		$f_opts['id']="construction_type_id";
 						
 		$f_construction_type_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"construction_type_id",$f_opts);
@@ -50,7 +58,6 @@ class DocumentTemplate_Model extends ModelSQL{
 		
 		//*** Field create_date ***
 		$f_opts = array();
-		$f_opts['primaryKey'] = TRUE;
 		
 		$f_opts['alias']='Дата создания';
 		$f_opts['defaultValue']='now()::date';

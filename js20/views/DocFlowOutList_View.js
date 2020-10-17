@@ -14,16 +14,16 @@
 function DocFlowOutList_View(id,options){
 	options = options || {};	
 	
-	this.HEAD_TITLE = DocFlowOutList_View.prototype.HEAD_TITLE;
+	//this.HEAD_TITLE = DocFlowOutList_View.prototype.HEAD_TITLE;
 	
 	DocFlowOutList_View.superclass.constructor.call(this,id,options);
 	
 	var model;
 	if (options.models){
-		model = options.models.DocFlowOutList_Model;
+		model = options.models[this.MODEL_ID];
 	}
 	else{
-		model = new DocFlowOutList_Model();
+		model = new window[this.MODEL_ID]();
 	}
 	var contr = new DocFlowOut_Controller();
 	
@@ -216,6 +216,7 @@ function DocFlowOutList_View(id,options){
 		"model":model,
 		"keyIds":["id"],
 		"controller":contr,
+		"readPublicMethod":contr.getPublicMethod(this.PM_ID),
 		"editInline":false,		
 		"editWinClass":DocFlowOutDialog_Form,
 		"popUpMenu":popup_menu,
@@ -246,7 +247,8 @@ function DocFlowOutList_View(id,options){
 extend(DocFlowOutList_View,ViewAjxList);
 
 /* Constants */
-
+DocFlowOutList_View.prototype.PM_ID = "get_list";
+DocFlowOutList_View.prototype.MODEL_ID = "DocFlowOutList_Model";
 
 /* private members */
 

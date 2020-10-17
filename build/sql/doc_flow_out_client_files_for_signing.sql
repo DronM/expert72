@@ -43,14 +43,17 @@ $$
 				ORDER BY f_sig.sign_date_time
 				) AS sign_t							
 			)
+			,'require_client_sig',att_f.require_client_sig
 		) AS attachments
 	FROM application_document_files AS app_f
-	LEFT JOIN application_doc_folders AS fld ON fld.name=app_f.file_path
+	--LEFT JOIN application_doc_folders AS fld ON fld.name=app_f.file_path
+	LEFT JOIN doc_flow_attachments AS att_f ON att_f.file_id=app_f.file_id
 	WHERE
 		app_f.application_id = in_application_id AND app_f.document_type='documents'
 		AND NOT coalesce(app_f.file_signed_by_client,FALSE)
 		AND NOT coalesce(app_f.deleted,FALSE)
-		AND fld.require_client_sig
+		AND att_f.require_client_sig
+		--fld.require_client_sig
 	ORDER BY app_f.file_name
 	) AS att
 	;

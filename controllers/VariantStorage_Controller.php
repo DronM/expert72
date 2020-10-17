@@ -375,30 +375,39 @@ class VariantStorage_Controller extends ControllerSQL{
 	}
 
 	public function delete($pm){
-		$params = new ParamsSQL($pm,$this->getDbLink());
-		$params->addAll();
+		$ar = $this->getDbLinkMaster()->query_first(sprintf(
+			"SELECT storage_name
+			FROM variant_storages
+			WHERE id=%d AND user_id=%d"
+			,$this->getExtDbVal($pm,'id')
+			,$_SESSION['user_id']
+		));
 	
-		$pm->setParamValue("user_id",$_SESSION['user_id']);
-		parent::delete($pm);
+		$this->getDbLinkMaster()->query(sprintf(
+			"DELETE FROM variant_storages
+			WHERE id=%d AND user_id=%d"
+			,$this->getExtDbVal($pm,'id')
+			,$_SESSION['user_id']
+		));
 		
-		VariantStorage::clear($params->getVal("storage_name"));
+		if(count($ar) && !is_null($ar['storage_name'])){
+			VariantStorage::clear($ar['storage_name']);
+		}
 	}
 
 	public function upsert($pm,$dataCol,$dataColVal){
-		$params = new ParamsSQL($pm,$this->getDbLink());
-		$params->addAll();
 	
 		$this->getDbLinkMaster()->query(sprintf(
 		"SELECT variant_storages_upsert_%s(%d,%s,%s,%s,%s)",
 		$dataCol,
 		$_SESSION['user_id'],
-		$params->getDbVal("storage_name"),
-		$params->getDbVal("variant_name"),
+		$this->getExtDbVal($pm,'storage_name'),
+		$this->getExtDbVal($pm,'variant_name'),
 		$dataColVal,
-		$params->getDbVal("default_variant")
+		$this->getExtDbVal($pm,'default_variant')
 		));
 		
-		VariantStorage::clear($params->getVal("storage_name"));
+		VariantStorage::clear($this->getExtVal($pm,'storage_name'));
 	}
 	
 	public function upsert_filter_data($pm){
@@ -427,28 +436,23 @@ class VariantStorage_Controller extends ControllerSQL{
 	}
 	
 	public function get_list($pm){
-		$params = new ParamsSQL($pm,$this->getDbLink());
-		$params->addAll();
+	
 		$this->AddNewModel(sprintf(
-			"SELECT
-				user_id,
-				storage_name,
-				variant_name,
-				default_variant
-			FROM variant_storages
+			"SELECT *
+			FROM variant_storages_list
 			WHERE user_id=%d AND storage_name=%s",
 			$_SESSION['user_id'],
-			$params->getParamById('storage_name')
+			$this->getExtDbVal($pm,'storage_name')
 			),
 		"VariantStorageList_Model"
 		);
 	}	
 	
 	public function get_obj_col($pm,$dataCol){
-		$params = new ParamsSQL($pm,$this->getDbLink());
-		$params->addAll();
+	
 		$this->AddNewModel(sprintf(
 			"SELECT
+				id,
 				user_id,
 				storage_name,
 				variant_name,
@@ -458,8 +462,8 @@ class VariantStorage_Controller extends ControllerSQL{
 			WHERE user_id=%d AND storage_name=%s AND variant_name=%s",
 			$dataCol,
 			$_SESSION['user_id'],
-			$params->getParamById('storage_name'),
-			$params->getParamById('variant_name')
+			$this->getExtDbVal($pm,'storage_name'),
+			$this->getExtDbVal($pm,'variant_name')
 			),
 		"VariantStorage_Model"
 		);

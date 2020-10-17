@@ -159,6 +159,10 @@ class ViewBase extends ViewHTMLXSLT {
 			if (defined('CUSTOM_APP_UPLOAD_SERVER')){
 				$this->getVarModel()->addField(new Field('custom_app_upload_server',DT_STRING));
 			}
+			
+			if (isset($_SESSION['role_id']) &amp;&amp; $_SESSION['role_id']=='client'){
+				$this->getVarModel()->addField(new Field('allow_ext_contracts',DT_BOOL));
+			}
 		}
 		$this->getVarModel()->addField(new Field('cryptopro_plugin',DT_STRING));
 		
@@ -219,6 +223,9 @@ class ViewBase extends ViewHTMLXSLT {
 				$this->setVarValue('recipient_states_ref',$_SESSION['recipient_states_ref']);
 				$this->setVarValue('cloud_key_exists',$_SESSION['cloud_key_exists']);
 				$this->setVarValue('snils',$_SESSION['snils']);
+			}
+			else if ($_SESSION['role_id']=='client'){
+				$this->setVarValue('allow_ext_contracts',$_SESSION['allow_ext_contracts']);
 			}
 			
 			//wget -O crypto_plugin.txt https://www.cryptopro.ru/sites/default/files/products/cades/latest_2_0.txt

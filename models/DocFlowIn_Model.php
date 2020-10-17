@@ -202,6 +202,15 @@ class DocFlowIn_Model extends ModelSQL{
 		$f_corrected_sections=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"corrected_sections",$f_opts);
 		$this->addField($f_corrected_sections);
 		//********************
+		
+		//*** Field ext_contract ***
+		$f_opts = array();
+		$f_opts['defaultValue']='FALSE';
+		$f_opts['id']="ext_contract";
+						
+		$f_ext_contract=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"ext_contract",$f_opts);
+		$this->addField($f_ext_contract);
+		//********************
 	
 		$order = new ModelOrderSQL();		
 		$this->setDefaultModelOrder($order);		

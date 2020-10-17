@@ -133,6 +133,20 @@ ExpertMaintenanceService.prototype.getModified = function(){
 	var val = this.getValue();
 	return (init!=val);
 }
+ExpertMaintenanceService.prototype.setEnabled = function(v){
+	for (var elem_id in this.m_elements){
+		if (this.m_elements[elem_id])
+			this.m_elements[elem_id].setEnabled(v);
+	}		
+
+	if (v){
+		DOMHelper.delAttr(this.getNode(),this.ATTR_DISABLED);
+	}
+	else{
+		DOMHelper.setAttr(this.getNode(),this.ATTR_DISABLED,this.ATTR_DISABLED);
+	}
+}
+ 
  
 function ApplicationServiceCont(id,options){
 	options = options || {};	
@@ -209,6 +223,7 @@ function ApplicationServiceCont(id,options){
 						}
 						else if (!ctrl.getValue()){
 							ctrl.setValue("pd");
+							self.m_mainView.updateServiceDependFieldsVis("pd");
 						}
 						self.toggleService("expertise",cur_val);
 					
@@ -692,9 +707,13 @@ ApplicationServiceCont.prototype.onChangeExpertiseType = function(){
 				self.m_mainView.m_documentTabs[tab_name].control = null;		
 			}								
 		
+			/*
 			var pd_usage_info_vis = (cur_val=="pd"||cur_val=="pd_eng_survey"||cur_val=="cost_eval_validity_pd"||cur_val=="cost_eval_validity_pd_eng_survey");
 			self.m_mainView.getElement("pd_usage_info").setVisible(pd_usage_info_vis);
 			self.m_mainView.getElement("pd_usage_info").setAttr("percentcalc",pd_usage_info_vis);
+			*/
+			self.m_mainView.updateServiceDependFieldsVis(cur_val);
+			
 			self.m_mainView.toggleDocTypeVis();
 		},
 		function(){
@@ -707,7 +726,7 @@ ApplicationServiceCont.prototype.onChangeExpertiseType = function(){
 
 /*
  * Эта функция работала до мая 2020
- * Теперь могут меняться все вкладки, т.к. возможно задавать шаблоны для услуши и вида экспертизы!!!
+ * Теперь могут меняться все вкладки, т.к. возможно задавать шаблоны для услуги и вида экспертизы!!!
 ApplicationServiceCont.prototype.onChangeExpertiseType = function(){
 	//ПД/РИИ могут выключиться после смены
 	var cur_val = this.getElement("expertise_type").getValue();

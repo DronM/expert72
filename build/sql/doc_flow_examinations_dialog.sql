@@ -42,7 +42,8 @@ CREATE OR REPLACE VIEW doc_flow_examinations_dialog AS
 		
 		applications_ref(applications) AS applications_ref,
 		
-		applications.service_type AS application_service_type
+		applications.service_type AS application_service_type,
+		applications.ext_contract AS application_ext_contract
 		
 		
 	FROM doc_flow_examinations AS t

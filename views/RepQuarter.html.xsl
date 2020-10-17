@@ -166,27 +166,28 @@
 		<xsl:variable name="build_type_id" select="build_type_id"/>
 		<xsl:for-each select="/document/model[@id='BuildType_Model']/row">
 			<td align="center">
-			<xsl:if test="id=$build_type_id"><i class="glyphicon glyphicon-ok"/> </xsl:if>
+			<!-- <i class="glyphicon glyphicon-ok"/>  -->
+			<xsl:if test="id=$build_type_id">V</xsl:if>
 			</td>
 		</xsl:for-each>
 		
 		<td align="center">
-		<xsl:if test="expertise_type='pd'"><i class="glyphicon glyphicon-ok"/> </xsl:if>
+		<xsl:if test="expertise_type='pd'">V</xsl:if>
 		</td>
 		<td align="center">
-		<xsl:if test="expertise_type='eng_survey'"><i class="glyphicon glyphicon-ok"/> </xsl:if>
+		<xsl:if test="expertise_type='eng_survey'">V</xsl:if>
 		</td>
 		<td align="center">
-		<xsl:if test="expertise_type='pd_eng_survey'"><i class="glyphicon glyphicon-ok"/> </xsl:if>
+		<xsl:if test="expertise_type='pd_eng_survey'">V</xsl:if>
 		</td>
 		<td align="center">
-		<xsl:if test="expertise_type='cost_eval_validity' or cost_eval_validity='true'"><i class="glyphicon glyphicon-ok"/> </xsl:if>
+		<xsl:if test="expertise_type='cost_eval_validity' or cost_eval_validity='true'">V</xsl:if>
 		</td>
 		<td align="center">
-		<xsl:if test="expertise_type='cost_eval_validity_pd'"><i class="glyphicon glyphicon-ok"/> </xsl:if>
+		<xsl:if test="expertise_type='cost_eval_validity_pd'">V</xsl:if>
 		</td>
 		<td align="center">
-		<xsl:if test="expertise_type='cost_eval_validity_pd_eng_survey'"><i class="glyphicon glyphicon-ok"/> </xsl:if>
+		<xsl:if test="expertise_type='cost_eval_validity_pd_eng_survey'">V</xsl:if>
 		</td>
 		
 		<td align="right">

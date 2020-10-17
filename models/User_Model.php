@@ -222,6 +222,15 @@ class User_Model extends ModelSQL{
 		$f_win_message_style=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"win_message_style",$f_opts);
 		$this->addField($f_win_message_style);
 		//********************
+		
+		//*** Field allow_ext_contracts ***
+		$f_opts = array();
+		$f_opts['defaultValue']='FALSE';
+		$f_opts['id']="allow_ext_contracts";
+						
+		$f_allow_ext_contracts=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"allow_ext_contracts",$f_opts);
+		$this->addField($f_allow_ext_contracts);
+		//********************
 	
 		$order = new ModelOrderSQL();		
 		$this->setDefaultModelOrder($order);		

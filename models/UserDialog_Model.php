@@ -123,6 +123,14 @@ class UserDialog_Model extends ModelSQL{
 		$f_private_file=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"private_file",$f_opts);
 		$this->addField($f_private_file);
 		//********************
+		
+		//*** Field allow_ext_contracts ***
+		$f_opts = array();
+		$f_opts['id']="allow_ext_contracts";
+						
+		$f_allow_ext_contracts=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"allow_ext_contracts",$f_opts);
+		$this->addField($f_allow_ext_contracts);
+		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}
 

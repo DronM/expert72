@@ -97,6 +97,9 @@ class DocFlowIn_Controller extends DocFlow_Controller{
 		$param = new FieldExtJSONB('corrected_sections'
 				,array());
 		$pm->addParam($param);
+		$param = new FieldExtBool('ext_contract'
+				,array());
+		$pm->addParam($param);
 		
 		$pm->addParam(new FieldExtInt('ret_id'));
 		
@@ -195,6 +198,10 @@ class DocFlowIn_Controller extends DocFlow_Controller{
 				,array(
 			));
 			$pm->addParam($param);
+		$param = new FieldExtBool('ext_contract'
+				,array(
+			));
+			$pm->addParam($param);
 		
 			$param = new FieldExtInt('id',array(
 			));
@@ -234,6 +241,21 @@ class DocFlowIn_Controller extends DocFlow_Controller{
 		
 		$this->setListModelId('DocFlowInList_Model');
 		
+			
+		$pm = new PublicMethod('get_ext_list');
+		
+		$pm->addParam(new FieldExtInt('count'));
+		$pm->addParam(new FieldExtInt('from'));
+		$pm->addParam(new FieldExtString('cond_fields'));
+		$pm->addParam(new FieldExtString('cond_sgns'));
+		$pm->addParam(new FieldExtString('cond_vals'));
+		$pm->addParam(new FieldExtString('cond_ic'));
+		$pm->addParam(new FieldExtString('ord_fields'));
+		$pm->addParam(new FieldExtString('ord_directs'));
+		$pm->addParam(new FieldExtString('field_sep'));
+
+		$this->addPublicMethod($pm);
+
 			
 		/* get_object */
 		$pm = new PublicMethod('get_object');
@@ -391,7 +413,11 @@ class DocFlowIn_Controller extends DocFlow_Controller{
 	}
 	
 	public function get_next_num($pm){
-		$this->get_next_num_on_type('in', $this->getExtDbVal($pm,'doc_flow_type_id'));
+		$this->get_next_num_on_type(
+			'in',
+			$this->getExtDbVal($pm,'doc_flow_type_id'),
+			$this->getExtDbVal($pm,'ext_contract')
+		);
 	}
 
 	public function get_object($pm){
@@ -560,6 +586,12 @@ class DocFlowIn_Controller extends DocFlow_Controller{
 			$this->setHeaderStatus($er_h_stat);
 			throw $e;
 		}
+	}
+	
+	public function get_ext_list($pm){
+		$this->setListModelId('DocFlowInExtList_Model');
+		parent::get_list($pm);
+	
 	}
 	
 

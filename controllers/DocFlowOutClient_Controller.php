@@ -1143,17 +1143,26 @@ class DocFlowOutClient_Controller extends ControllerSQL{
 
 	private function check_resp_doc($appId,$clientType){
 		//Проверка на возможность отправки писем с ответами за Х дней до окончания срока
+		//Константа const_ban_client_responses_day_cnt_val() не используется с релиза 1.0.140
+		//Вместо этого использовать одноименное поле из services в зависимости от услуги!
 		if($clientType=="contr_resp"){
 			$ar = $this->getDbLink()->query_first(sprintf(
 				"WITH
 				contr AS (SELECT
-						coalesce(allow_client_out_documents,FALSE) AS allow_client_out_documents,
-						work_end_date,
+						coalesce(ct.allow_client_out_documents,FALSE) AS allow_client_out_documents,
+						ct.work_end_date,
 						bank_day_next(
-							work_end_date,-const_ban_client_responses_day_cnt_val()
+							ct.work_end_date,
+							(SELECT -1 * coalesce(sv.ban_client_responses_day_cnt,const_ban_client_responses_day_cnt_val())
+							FROM services AS sv
+							WHERE
+								sv.expertise_type = app.expertise_type
+								AND sv.service_type = app.service_type 
+							)
 						) AS ban_from
-					FROM contracts
-					WHERE application_id=%d
+					FROM contracts AS ct
+					LEFT JOIN applications AS app ON app.id=ct.application_id
+					WHERE ct.application_id=%d
 				)
 				SELECT
 				to_char((SELECT ban_from FROM contr),'dd/mm/yy') AS ban_from,					
@@ -1225,7 +1234,7 @@ class DocFlowOutClient_Controller extends ControllerSQL{
 		WHERE file_id=%s AND doc_flow_out_client_id=%d",
 		$origFileIdForDb,$docFlowOutClientIdForDb
 		));
-		$unlink_file = (count($ar) && $ar['present']=='t');
+		$unlink_file = (is_array($ar)  && count($ar) && $ar['present']=='t');
 		Application_Controller::removeFile($dbLink,$origFileIdForDb,$unlink_file);
 
 		if (!$unlink_file){

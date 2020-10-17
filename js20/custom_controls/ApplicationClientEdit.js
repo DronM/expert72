@@ -87,7 +87,15 @@ function ApplicationClientEdit(id,options){
 		this.addElement(new ClientType(id+":client_type",{
 			"mainView":this.m_mainView,
 			"view":this,
-			"minInf":options.minInf
+			"minInf":options.minInf,
+			"onClientTypeChange":function(){
+				self.getElement("responsable_persons").onChangeClientType();
+			}
+			/*,"events":{
+				"change":function(){
+					self.getElement("responsable_persons").onChangeClientType();
+				}
+			}*/
 		}));	
 
 		/* если minInf=true то только name && name_full - обязательны для расчета процента!
@@ -445,7 +453,16 @@ extend(ApplicationClientEdit,EditJSON);
 
 ApplicationClientEdit.prototype.setInitValue = function(v){
 	ApplicationClientEdit.superclass.setInitValue.call(this,v);		
-	
+
+	this.getElement("client_type").setClientType(v.client_type);
+}
+
+/**
+ * Добавил 01/10/20 чтобы при копировании правильно отображались поля для разных типов клиентов
+ */
+ApplicationClientEdit.prototype.setValue = function(v){
+	ApplicationClientEdit.superclass.setValue.call(this,v);		
+
 	this.getElement("client_type").setClientType(v.client_type);
 }
 

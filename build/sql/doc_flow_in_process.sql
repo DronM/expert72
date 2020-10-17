@@ -17,7 +17,7 @@ BEGIN
 			)
 		THEN
 			--назначим номер
-			NEW.reg_number = doc_flow_in_next_num(NEW.doc_flow_type_id);
+			NEW.reg_number = doc_flow_in_next_num(NEW.doc_flow_type_id,coalesce(NEW.ext_contract,FALSE));
 		END IF;
 		
 		RETURN NEW;

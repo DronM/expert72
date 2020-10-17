@@ -447,6 +447,15 @@ class ApplicationForExpertMaintenanceList_Model extends ModelSQL{
 		$this->addField($f_documents);
 		//********************
 		
+		//*** Field ext_contract ***
+		$f_opts = array();
+		$f_opts['defaultValue']='FALSE';
+		$f_opts['id']="ext_contract";
+						
+		$f_ext_contract=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"ext_contract",$f_opts);
+		$this->addField($f_ext_contract);
+		//********************
+		
 		//*** Field select_descr ***
 		$f_opts = array();
 		$f_opts['id']="select_descr";

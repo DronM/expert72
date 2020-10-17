@@ -89,6 +89,12 @@ extend(Service_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	options.alias = "За сколько дней блокировать отправку клиентских писем сответами";
+	var field = new FieldInt("ban_client_responses_day_cnt",options);
+	
+	pm.addField(field);
+	
 	pm.addField(new FieldInt("ret_id",{}));
 	
 	
@@ -157,6 +163,12 @@ extend(Service_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	options.alias = "За сколько дней блокировать отправку клиентских писем сответами";
+	var field = new FieldInt("ban_client_responses_day_cnt",options);
+	
+	pm.addField(field);
+	
 	
 }
 
@@ -220,6 +232,9 @@ extend(Service_Controller,ControllerObjServer);
 	var f_opts = {};
 	f_opts.alias = "Вид гос.экспертизы";
 	pm.addField(new FieldEnum("expertise_type",f_opts));
+	var f_opts = {};
+	f_opts.alias = "За сколько дней блокировать отправку клиентских писем сответами";
+	pm.addField(new FieldInt("ban_client_responses_day_cnt",f_opts));
 	pm.getField(this.PARAM_ORD_FIELDS).setValue("service_type");
 	
 }

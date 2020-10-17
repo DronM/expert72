@@ -30,7 +30,9 @@ function Application_Controller(options){
 	this.addGetObject();
 	this.add_get_print();
 	this.addGetList();
+	this.add_get_ext_list();
 	this.addComplete();
+	this.add_complete_ext();
 	this.add_complete_for_expert_maintenance();
 	this.add_get_for_expert_maintenance_list();
 	this.add_get_modified_documents_list();
@@ -373,6 +375,12 @@ extend(Application_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	
+	var field = new FieldBool("ext_contract",options);
+	
+	pm.addField(field);
+	
 	pm.addField(new FieldInt("ret_id",{}));
 	
 		var options = {};
@@ -707,6 +715,12 @@ extend(Application_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	
+	var field = new FieldBool("ext_contract",options);
+	
+	pm.addField(field);
+	
 		var options = {};
 				
 		pm.addField(new FieldBool("set_sent",options));
@@ -957,8 +971,28 @@ extend(Application_Controller,ControllerObjServer);
 	var f_opts = {};
 	
 	pm.addField(new FieldJSON("documents",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldBool("ext_contract",f_opts));
 	pm.getField(this.PARAM_ORD_FIELDS).setValue("create_dt");
 	
+}
+
+			Application_Controller.prototype.add_get_ext_list = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('get_ext_list',opts);
+	
+	pm.addField(new FieldInt(this.PARAM_COUNT));
+	pm.addField(new FieldInt(this.PARAM_FROM));
+	pm.addField(new FieldString(this.PARAM_COND_FIELDS));
+	pm.addField(new FieldString(this.PARAM_COND_SGNS));
+	pm.addField(new FieldString(this.PARAM_COND_VALS));
+	pm.addField(new FieldString(this.PARAM_COND_ICASE));
+	pm.addField(new FieldString(this.PARAM_ORD_FIELDS));
+	pm.addField(new FieldString(this.PARAM_ORD_DIRECTS));
+	pm.addField(new FieldString(this.PARAM_FIELD_SEP));
+
+	this.addPublicMethod(pm);
 }
 
 			Application_Controller.prototype.addComplete = function(){
@@ -969,6 +1003,13 @@ extend(Application_Controller,ControllerObjServer);
 	var pm = this.getComplete();
 	pm.addField(new FieldInt("id",f_opts));
 	pm.getField(this.PARAM_ORD_FIELDS).setValue("id");	
+}
+
+			Application_Controller.prototype.add_complete_ext = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('complete_ext',opts);
+	
+	this.addPublicMethod(pm);
 }
 
 			Application_Controller.prototype.add_complete_for_expert_maintenance = function(){

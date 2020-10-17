@@ -174,11 +174,11 @@ Edit template instead.
 					{{#contractExists}}					
 					<h4>Заключение № <u>{{expertiseResultNumber}}</u>{{#expertiseResultExists}}{{expertiseResultDate}}{{/expertiseResultExists}}</h4>
 					<h4>Контракт № <u>{{contractNumber}}</u> от <u>{{contractDate}}</u> </h4>
-					<h4>Заявление № <u id="{{{{id}}}}:id"/> от <u id="{{{{id}}}}:create_dt"/> </h4>
+					<h4>Заявление{{#ext_contract}} (внеконтрактное){{/ext_contract}} № <u id="{{{{id}}}}:id"/> от <u id="{{{{id}}}}:create_dt"/> </h4>
 					{{/contractExists}}
 					
 					{{#contractNotExists}}
-					<h2>Заявление № <u id="{{{{id}}}}:id"/> от <u id="{{{{id}}}}:create_dt"/> </h2>
+					<h2>Заявление{{#ext_contract}} (внеконтрактное){{/ext_contract}} № <u id="{{{{id}}}}:id"/> от <u id="{{{{id}}}}:create_dt"/> </h2>
 					{{/contractNotExists}}
 					
 					{{#modified_documents}}

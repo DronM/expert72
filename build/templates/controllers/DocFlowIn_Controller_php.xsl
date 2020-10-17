@@ -66,7 +66,11 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 	}
 	
 	public function get_next_num($pm){
-		$this->get_next_num_on_type('in', $this->getExtDbVal($pm,'doc_flow_type_id'));
+		$this->get_next_num_on_type(
+			'in',
+			$this->getExtDbVal($pm,'doc_flow_type_id'),
+			$this->getExtDbVal($pm,'ext_contract')
+		);
 	}
 
 	public function get_object($pm){
@@ -235,6 +239,12 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			$this->setHeaderStatus($er_h_stat);
 			throw $e;
 		}
+	}
+	
+	public function get_ext_list($pm){
+		$this->setListModelId('DocFlowInExtList_Model');
+		parent::get_list($pm);
+	
 	}
 	
 

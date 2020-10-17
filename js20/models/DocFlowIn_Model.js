@@ -220,6 +220,16 @@ function DocFlowIn_Model(options){
 	
 	options.fields.corrected_sections = new FieldJSONB("corrected_sections",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	filed_options.defValue = true;
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.ext_contract = new FieldBool("ext_contract",filed_options);
+	
 			
 			
 			

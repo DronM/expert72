@@ -28,21 +28,30 @@ function FileUploaderApplication_View(id,options){
 	}
 	
 	var correct_items = function(items){
+		var fl_cnt = 0;
 		for(var i=0;i<items.length;i++){	
-			if(en_items && CommonHelper.inArray(items[i].fields.id,en_items)<0){
+		
+			items[i].disabled = (en_items && CommonHelper.inArray(items[i].fields.id,en_items)<0);
+			if(options.allowFileSwitch && !items[i].disabled && !items[i].items && (!items[i].files||!items[i].files.length) ){
+				//Это не группа, нет файлов - запрещено, т.к. добавлять всегда запрещено!
+				//ОЛЬКО ДЛЯ ОТВЕТОВ НА ЗАМЕЧАНИЯ!!!
 				items[i].disabled = true;
-				items[i].enabled = false;
-			}
-			else{
-				items[i].disabled = false;
-				items[i].enabled = true;
-			}	
-			if(items[i].items){
-				correct_items(items[i].items);
-			}
-		}				
+			}			
+
+			if(items[i].items && !correct_items(items[i].items)){
+				if(options.allowFileSwitch){
+					items[i].disabled = true;
+				}
+			}			
+			
+			items[i].enabled = !items[i].disabled;
+			
+			fl_cnt+= items[i].files? items[i].files.length:0;
+		}
+		return fl_cnt;				
 	}
 	correct_items(options.items);		
+	
 	
 	this.m_mainView = options.mainView;
 	this.m_documentType = options.documentType;

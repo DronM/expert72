@@ -51,8 +51,8 @@ function Client_View(id,options){
 		
 		this.addElement(new ClientOKPO(id+":okpo"));	
 		
-		this.addElement(new ClientOKVED(id+":okved"));	
-
+		this.addElement(new ClientOKVED(id+":okved"));
+		
 		this.addElement(new EditPersonIdPaper(id+":person_id_paper",{			
 			//"mainView":this
 		}));	
@@ -149,7 +149,7 @@ function Client_View(id,options){
 		new DataBinding({"control":this.getElement("legal_address")}),
 		new DataBinding({"control":this.getElement("post_address")}),
 		new DataBinding({"control":this.getElement("ogrn")}),
-		new DataBinding({"control":this.getElement("okved")}),
+		new DataBinding({"control":this.getElement("okved")}),		
 		new DataBinding({"control":this.getElement("base_document_for_contract")}),
 		new DataBinding({"control":this.getElement("okpo")}),
 		new DataBinding({"control":this.getElement("responsable_persons")}),
@@ -169,7 +169,7 @@ function Client_View(id,options){
 		new CommandBinding({"control":this.getElement("legal_address")}),
 		new CommandBinding({"control":this.getElement("post_address")}),
 		new CommandBinding({"control":this.getElement("ogrn")}),
-		new CommandBinding({"control":this.getElement("okved")}),
+		new CommandBinding({"control":this.getElement("okved")}),		
 		new CommandBinding({"control":this.getElement("base_document_for_contract")}),
 		new CommandBinding({"control":this.getElement("okpo")}),
 		new CommandBinding({"control":this.getElement("responsable_persons"),"fieldId":"responsable_persons"}),

@@ -50,7 +50,8 @@ CREATE OR REPLACE VIEW doc_flow_in_client_dialog AS
 								) AS sign_t
 							)
 							,
-							'file_signed_by_client',app_f.file_signed_by_client
+							'file_signed_by_client',app_f.file_signed_by_client,
+							'require_client_sig',att.require_client_sig
 						) AS files
 					FROM doc_flow_attachments AS att
 					LEFT JOIN application_document_files AS app_f ON app_f.file_id=att.file_id

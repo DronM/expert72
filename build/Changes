@@ -748,6 +748,115 @@ doc_flow_in_dialog.sql
 
 
 
+1.0.140
+1) views/functions.xsl исправлена функция форматирования сумм для правильной выгрузки в Excel и функция форматирования дат
+2) Внебрачные контракты
+	Пользоватекль: поле, разрешающее использование внебрачных контрактов  allow_ext_contracts
+	user_view.sql
+	user_dialog.sql
+	UserDialog_View.js
+	User_Controller.php новый глобальный парамтер allow_ext_contracts
+	ViewBase_php.xsl allow_ext_contracts
+	таблица applications поле ext_contract bool default FALSE
+	applications_list.sql ТОЛЬКО ext_contract=FALSE
+	Модель ApplicationExtList, полная копия ApplicationList только показывающая ext_contract=TRUE
+	Application_Controller new methods: get_ext_list,complete_ext
+	Новый пункт меню (views) заявление (внеконтрактные)
+	ApplicationExtList_View.js
+MainMenuConstructor_Controller->update исправлен косяк при вызове функции без параметра	
+	ApplicationDialog_View.js
+	ApplicationDialog_html.xsl
+	application_processes_process.sql
+	doc_flow_out_client_process.sql
+	doc_flow_in_process.sql
+	Таблица doc_flow_in поле ext_contract заполняется из doc_flow_in_process.sql
+	Новая константа ext_contract_doc_pref
+	Новый параметр в функции doc_flow_in_next_num, вызывается из doc_flow_in_process. Теперь также передается контракт/внеконтракт
+	doc_flow_in_list.sql Условие только контракт ext_contract=FALSE
+	doc_flow_in_ext_list.sql
+	views + внеконтракт
+	applications_ref.sql
+	Таблица doc_flow_out новое поле ext_contract
+	doc_flow_out_dialog.sql
+	doc_flow_examinations_dialog.sql
+	DocFlowExamination_View.js
+	DocFlowOutDialog_View.js, тема
+	Application_Controller.php,Contract_Controller.php функция get_constr_name() теперь возвращант и признак внеконтракта
+	tmpl/DocFlowOutDialog.html
+	DocFlowOut_Controller->get_next_num() теперь принимает и признак внеконтракта для формирования номера
+	Новый параметр в функции doc_flow_out_next_num, вызывается из doc_flow_in_process. Теперь также передается контракт/внеконтракт
+	doc_flow_in_dialog.sql
+	BtnNextContractNum.js
+	DocFlowOut_Controller->get_next_contract_number() теперь принимает и признак внеконтракта для формирования номера
+	contracts_next_number.sql
+	doc_flow_out_list.sql Только контракт!
+	doc_flow_out_ext_list.sql
+	views Исходящие документы (внеконтракт)
+	Новое представление для журнала исх.жлкументов внеконтракт DocFlowOutExtList_View.js
+	contracts_list.sql Только контракты!
+	views Контракты (внеконтракты)
+	forms/ContractExtList_Form.js
+	views/ContractExtList_View.js
+	doc_flow_examinations_process.sql
+	contracts_dialog.sql
+	ContractDialog_View.js
+	ContractDialog.html
+	contracts_expertise_result_number.sql
+	document_templates_list
+ДОБИТЬ функцию contracts_ext_to_contract.sql
+сталось:
+	+Исходящие документы (список,поле, создание из списка с признаком или на форме)	
+	+Создание контракта (свой список, префикс)
+	+Копирование всех документов из внеконтракт ->> контракт
+	+Убрать из меню у кого не надо
+!!!vendor/cakephp/filesys/Folder line 580,curly braces
+
++Статусы заявления на доступ админу. Все формы статусы.
+	Сделано ранне, проверил
++Копирование старой достоверности, не переходлит в новую услугу
+	Application_Controller.php
++При создании заявления по достоверности, записали, открыли, появляется обязательное поле Повторное использование/неиспользование... и требует
+его заполнения!!!
+	ApplicationDialog_View.js
++Разные сроки блокировки отправки исх.писем по услугам.
+поле ban_client_responses_day_cnt в services, ServiceList_View.js, DocFlowOutClient_Controller->check_resp_doc()
+
++Исходящее наше письмо, добавить возможность у папок, которые требуют подписания клиента, убирать галочку, или наоборот,
+чтобы при вставке в таблицу application_document_files сразу ставилась галочка file_signed_by_client
+Поле doc_flow_attachments.require_client_sig
+doc_flow_out_dialog
+doc_flow_in_client_dialog
+doc_flow_out_client_files_for_signing
+FileUploaderDocFlowOut_View.js->onFillTemplateOptions()
+
+
++Копирование документа, ИП, ФЛ ошибки отображения
+
++При продлении контракта начинает считать со дня окончания, а надо + 1 день,
+Ипрсавлена функция ExpertiseProlongation->calc_date(), прибавлен день к дате конца работ по контракту
+
++Переименовал Сроки в списке услу. ServiceList_View.js
+
++Пустые уведомления. пустая тема в письме
+	application_processes_process()
+	doc_flow_out_client_process()
+	
++Копирование внеконтрактов попадает в контракт
+
++Нумерация контракта при переводе во внеконтракт
+-Непонятные заблокированные разделы в ответах
+
+
+
+
+
+*************************************************
+Исходящее письмо клиента при удалении: удалять в триггере файлы original_file_id и физически
+все с ним связанное: вход.письмо наше, рассмотрение (если есть), статус заявления назад, если рассмотрение
+
+
+
+Файлы на доступ админу
 
 - Выбрали недействительный серт, он отметился красным, потом сменили на нормальный - все равно остался красным
 

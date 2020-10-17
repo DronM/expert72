@@ -203,7 +203,7 @@ class ExpertiseProlongation_Controller extends ControllerSQL{
 		SELECT contracts_work_end_date(
 			(SELECT office_id FROM contr),
 			%s,
-			(SELECT work_end_date FROM contr),
+			(SELECT work_end_date FROM contr)+'1 day'::interval,
 			%d
 		) AS contact_work_end_date",
 		$contractIdDb,

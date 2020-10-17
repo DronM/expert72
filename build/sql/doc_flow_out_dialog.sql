@@ -75,8 +75,13 @@ CREATE OR REPLACE VIEW doc_flow_out_dialog AS
 							ELSE (SELECT sign.signatures FROM sign)
 						END
 					),
-					'file_signed_by_client',(SELECT t1.file_signed_by_client FROM application_document_files t1 WHERE t1.file_id=att.file_id),
-					'require_client_sig',app_fd.require_client_sig
+					'file_signed_by_client',
+						CASE WHEN st.state = 'registered' THEN
+							(SELECT t1.file_signed_by_client FROM application_document_files t1 WHERE t1.file_id=att.file_id)
+							ELSE NULL
+							--(SELECT t1.require_client_sig FROM doc_flow_attachments t1 WHERE t1.file_id=att.file_id)
+						END,
+					'require_client_sig',(app_fd.require_client_sig AND att.require_client_sig)
 				)
 			) AS files
 		FROM application_doc_folders AS app_fd

@@ -231,6 +231,16 @@ function User_Model(options){
 	
 	options.fields.win_message_style = new FieldJSONB("win_message_style",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	filed_options.defValue = true;
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.allow_ext_contracts = new FieldBool("allow_ext_contracts",filed_options);
+	
 			
 			
 			

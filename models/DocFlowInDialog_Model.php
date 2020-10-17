@@ -254,6 +254,14 @@ class DocFlowInDialog_Model extends ModelSQL{
 		$f_corrected_sections=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"corrected_sections",$f_opts);
 		$this->addField($f_corrected_sections);
 		//********************
+		
+		//*** Field ext_contract ***
+		$f_opts = array();
+		$f_opts['id']="ext_contract";
+						
+		$f_ext_contract=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"ext_contract",$f_opts);
+		$this->addField($f_ext_contract);
+		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}
 

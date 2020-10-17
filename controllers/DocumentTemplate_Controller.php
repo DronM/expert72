@@ -73,6 +73,8 @@ class DocumentTemplate_Controller extends ControllerSQL{
 			));
 		$pm->addParam($param);
 		
+		$pm->addParam(new FieldExtInt('ret_id'));
+		
 		
 		$this->addPublicMethod($pm);
 		$this->setInsertModelId('DocumentTemplate_Model');
@@ -81,13 +83,13 @@ class DocumentTemplate_Controller extends ControllerSQL{
 		/* update */		
 		$pm = new PublicMethod('update');
 		
-		$pm->addParam(new FieldExtEnum('old_document_type',',','pd,eng_survey,cost_eval_validity,modification,audit,documents',array('required'=>TRUE)));
-		
-		$pm->addParam(new FieldExtInt('old_construction_type_id',array('required'=>TRUE)));
-		
-		$pm->addParam(new FieldExtDate('old_create_date',array('required'=>TRUE)));
+		$pm->addParam(new FieldExtInt('old_id',array('required'=>TRUE)));
 		
 		$pm->addParam(new FieldExtInt('obj_mode'));
+		$param = new FieldExtInt('id'
+				,array(
+			));
+			$pm->addParam($param);
 		
 				$param = new FieldExtEnum('document_type',',','pd,eng_survey,cost_eval_validity,modification,audit,documents'
 				,array(
@@ -141,17 +143,7 @@ class DocumentTemplate_Controller extends ControllerSQL{
 			));
 			$pm->addParam($param);
 		
-			$param = new FieldExtEnum('document_type',',','pd,eng_survey,cost_eval_validity,modification,audit,documents',array(
-			));
-			$pm->addParam($param);
-		
-			$param = new FieldExtInt('construction_type_id',array(
-			));
-			$pm->addParam($param);
-		
-			$param = new FieldExtDate('create_date',array(
-			
-				'alias'=>'Дата создания'
+			$param = new FieldExtInt('id',array(
 			));
 			$pm->addParam($param);
 		
@@ -163,13 +155,7 @@ class DocumentTemplate_Controller extends ControllerSQL{
 		/* delete */
 		$pm = new PublicMethod('delete');
 		
-		$pm->addParam(new FieldExtEnum('document_type'
-		,',','pd,eng_survey,cost_eval_validity,modification,audit,documents'));		
-		
-		$pm->addParam(new FieldExtInt('construction_type_id'
-		));		
-		
-		$pm->addParam(new FieldExtDate('create_date'
+		$pm->addParam(new FieldExtInt('id'
 		));		
 		
 		$pm->addParam(new FieldExtInt('count'));
@@ -200,13 +186,7 @@ class DocumentTemplate_Controller extends ControllerSQL{
 		$pm = new PublicMethod('get_object');
 		$pm->addParam(new FieldExtString('mode'));
 		
-		$pm->addParam(new FieldExtEnum('document_type'
-		,',','pd,eng_survey,cost_eval_validity,modification,audit,documents'));
-		
-		$pm->addParam(new FieldExtInt('construction_type_id'
-		));
-		
-		$pm->addParam(new FieldExtDate('create_date'
+		$pm->addParam(new FieldExtInt('id'
 		));
 		
 		

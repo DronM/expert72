@@ -29,6 +29,7 @@ function Contract_Controller(options){
 	this.addDelete();
 	this.addGetObject();
 	this.addGetList();
+	this.add_get_ext_list();
 	this.addComplete();
 	this.add_get_pd_list();
 	this.add_get_expert_maintenance_list();
@@ -54,6 +55,7 @@ function Contract_Controller(options){
 	this.add_get_reestr_pay();
 	this.add_get_reestr_contract();
 	this.add_get_quarter_rep();
+	this.add_ext_contract_to_contract();
 		
 }
 extend(Contract_Controller,ControllerObjServer);
@@ -1100,6 +1102,23 @@ extend(Contract_Controller,ControllerObjServer);
 	
 }
 
+			Contract_Controller.prototype.add_get_ext_list = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('get_ext_list',opts);
+	
+	pm.addField(new FieldInt(this.PARAM_COUNT));
+	pm.addField(new FieldInt(this.PARAM_FROM));
+	pm.addField(new FieldString(this.PARAM_COND_FIELDS));
+	pm.addField(new FieldString(this.PARAM_COND_SGNS));
+	pm.addField(new FieldString(this.PARAM_COND_VALS));
+	pm.addField(new FieldString(this.PARAM_COND_ICASE));
+	pm.addField(new FieldString(this.PARAM_ORD_FIELDS));
+	pm.addField(new FieldString(this.PARAM_ORD_DIRECTS));
+	pm.addField(new FieldString(this.PARAM_FIELD_SEP));
+
+	this.addPublicMethod(pm);
+}
+
 			Contract_Controller.prototype.addComplete = function(){
 	Contract_Controller.superclass.addComplete.call(this);
 	
@@ -1642,6 +1661,22 @@ extend(Contract_Controller,ControllerObjServer);
 	var options = {};
 	
 		pm.addField(new FieldInt("inline",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+
+			Contract_Controller.prototype.add_ext_contract_to_contract = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('ext_contract_to_contract',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("contract_id",options));
 	
 			
 	this.addPublicMethod(pm);

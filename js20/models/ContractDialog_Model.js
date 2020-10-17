@@ -895,6 +895,15 @@ function ContractDialog_Model(options){
 	
 	options.fields.results_on_modified_documents_list = new FieldJSON("results_on_modified_documents_list",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.ext_contract = new FieldBool("ext_contract",filed_options);
+	
 		ContractDialog_Model.superclass.constructor.call(this,id,options);
 }
 extend(ContractDialog_Model,ModelXML);

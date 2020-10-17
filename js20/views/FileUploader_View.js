@@ -345,7 +345,7 @@ FileUploader_View.prototype.addFileToContainer = function(container,itemFile,ite
 	//templateOptions.out_file_id		= itemFile.out_file_id;
 	templateOptions.customFolderAlt		= false;//(window.getApp().getServVar("role_id")=="admin");
 	if (this.m_onlySignature){
-		templateOptions.client_require_client_sig	= true;
+		templateOptions.client_require_client_sig	= true;//
 		templateOptions.file_signed_by_client		= itemFile.file_signed_by_client;
 		templateOptions.file_not_signed_by_client	= !itemFile.file_signed_by_client;
 	}
@@ -355,7 +355,11 @@ FileUploader_View.prototype.addFileToContainer = function(container,itemFile,ite
 		templateOptions.file_signed_by_client		= itemFile.file_signed_by_client;
 		templateOptions.file_not_signed_by_client	= !itemFile.file_signed_by_client;
 	}
-
+	else if(this.m_clientReqSigInf){
+		templateOptions.client_require_client_sig = itemFile.require_client_sig;
+		templateOptions.file_signed_by_client		= itemFile.file_signed_by_client;
+		templateOptions.file_not_signed_by_client	= !itemFile.file_signed_by_client;
+	}
 	if (this.m_includeFilePath){
 		templateOptions.file_path = (itemFile.file_path? itemFile.file_path : this.m_defaultFilePath)+"/ ";
 	}
@@ -390,7 +394,7 @@ FileUploader_View.prototype.addFileToContainer = function(container,itemFile,ite
 		templateOptions.refTitle = "ИУЛ"+((templateOptions.refTitle=="")? "":", ") + templateOptions.refTitle;
 	}
 	
-	if (this.m_onFillTemplateOptions)this.m_onFillTemplateOptions(templateOptions,itemFile);
+	if (this.m_onFillTemplateOptions)this.m_onFillTemplateOptions(templateOptions,itemFile,container);
 	
 	var file_ctrl = new ControlContainer(this.getId()+":file_"+itemFile.file_id,"TEMPLATE",{
 		"attrs":{
@@ -636,7 +640,6 @@ FileUploader_View.prototype.clearContainer = function(docId){
 }
 
 FileUploader_View.prototype.addFileControls = function(items){
-debugger
 	if (!items)return;
 	var self = this;
 	
@@ -666,6 +669,10 @@ debugger
 			this.addFileControls(items[i].items);
 		}
 	}
+	
+	if(this.assignFileEvents){
+		this.assignFileEvents();
+	}	
 }
 
 /**
@@ -1222,7 +1229,7 @@ FileUploader_View.prototype.initDownload = function(){
 				
 				file.file_id = file.file_id? file.file_id : CommonHelper.uniqid();
 				file.doc_id = doc_id;
-			
+				//debugger
 				self.addFileToContainer(
 					file_cont,
 					{
@@ -1232,10 +1239,14 @@ FileUploader_View.prototype.initDownload = function(){
 						"file_size":file.size,
 						"file_uploaded":false,
 						"file_signed":(file.file_signed!=undefined)? file.file_signed:false
+						//,"require_client_sig":???
 					},
 					doc_id
 				);
 				file_cont.toDOM();
+				if(self.assignFileEvents){
+					self.assignFileEvents();
+				}
 				
 				if (file.sigComesFirst){					
 					var file_ctrl = file_cont.getElement("file_"+file.file_id);

@@ -84,6 +84,9 @@ class DocFlowOut_Controller extends DocFlow_Controller{
 		$param = new FieldExtJSONB('allow_edit_sections'
 				,array());
 		$pm->addParam($param);
+		$param = new FieldExtBool('ext_contract'
+				,array());
+		$pm->addParam($param);
 		
 		$pm->addParam(new FieldExtInt('ret_id'));
 		
@@ -181,6 +184,10 @@ class DocFlowOut_Controller extends DocFlow_Controller{
 				,array(
 			));
 			$pm->addParam($param);
+		$param = new FieldExtBool('ext_contract'
+				,array(
+			));
+			$pm->addParam($param);
 		
 			$param = new FieldExtInt('id',array(
 			));
@@ -231,6 +238,21 @@ class DocFlowOut_Controller extends DocFlow_Controller{
 		
 		$this->setListModelId('DocFlowOutList_Model');
 		
+			
+		$pm = new PublicMethod('get_ext_list');
+		
+		$pm->addParam(new FieldExtInt('count'));
+		$pm->addParam(new FieldExtInt('from'));
+		$pm->addParam(new FieldExtString('cond_fields'));
+		$pm->addParam(new FieldExtString('cond_sgns'));
+		$pm->addParam(new FieldExtString('cond_vals'));
+		$pm->addParam(new FieldExtString('cond_ic'));
+		$pm->addParam(new FieldExtString('ord_fields'));
+		$pm->addParam(new FieldExtString('ord_directs'));
+		$pm->addParam(new FieldExtString('field_sep'));
+
+		$this->addPublicMethod($pm);
+
 			
 		/* get_object */
 		$pm = new PublicMethod('get_object');
@@ -347,6 +369,12 @@ class DocFlowOut_Controller extends DocFlow_Controller{
 		$opts['required']=TRUE;				
 		$pm->addParam(new FieldExtInt('doc_flow_type_id',$opts));
 	
+				
+	$opts=array();
+	
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtBool('ext_contract',$opts));
+	
 			
 		$this->addPublicMethod($pm);
 
@@ -381,6 +409,12 @@ class DocFlowOut_Controller extends DocFlow_Controller{
 	
 		$opts['required']=TRUE;				
 		$pm->addParam(new FieldExtInt('application_id',$opts));
+	
+				
+	$opts=array();
+	
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtBool('ext_contract',$opts));
 	
 			
 		$this->addPublicMethod($pm);
@@ -474,6 +508,31 @@ class DocFlowOut_Controller extends DocFlow_Controller{
 	
 		$opts['length']=250;				
 		$pm->addParam(new FieldExtString('file_path',$opts));
+	
+			
+		$this->addPublicMethod($pm);
+
+			
+		$pm = new PublicMethod('set_require_client_sig');
+		
+				
+	$opts=array();
+	
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtInt('doc_id',$opts));
+	
+				
+	$opts=array();
+	
+		$opts['length']=36;
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtString('file_id',$opts));
+	
+				
+	$opts=array();
+	
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtBool('require_client_sig',$opts));
 	
 			
 		$this->addPublicMethod($pm);
@@ -638,7 +697,11 @@ class DocFlowOut_Controller extends DocFlow_Controller{
 	}
 	
 	public function get_next_num($pm){
-		$this->get_next_num_on_type('out', $this->getExtDbVal($pm,'doc_flow_type_id'));
+		$this->get_next_num_on_type(
+			'out',
+			$this->getExtDbVal($pm,'doc_flow_type_id'),
+			$this->getExtDbVal($pm,'ext_contract')
+		);
 	}
 
 	public function get_next_contract_number($pm){
@@ -646,9 +709,14 @@ class DocFlowOut_Controller extends DocFlow_Controller{
 		$model->query(
 			sprintf(
 			"SELECT
-				contracts_next_number(app.service_type,now()::date) AS num
+				contracts_next_number(
+					app.service_type,
+					now()::date,
+					%s
+				) AS num
 			FROM applications AS app
 			WHERE app.id=%d",
+			$this->getExtDbVal($pm,'ext_contract'),
 			$this->getExtDbVal($pm,'application_id')
 			)		
 		,TRUE);
@@ -959,6 +1027,50 @@ class DocFlowOut_Controller extends DocFlow_Controller{
 			$file_data,
 			'out'
 		);
+	}
+	
+	public function get_ext_list($pm){
+		$this->setListModelId('DocFlowOutExtList_Model');
+		parent::get_list($pm);
+	
+	}
+	
+	public function set_require_client_sig($pm){
+		try{
+			$this->getDbLinkMaster()->query('BEGIN');
+			
+			$ar = $this->getDbLinkMaster()->query_first(sprintf(
+				"UPDATE doc_flow_attachments
+				SET require_client_sig = %s
+				WHERE doc_id=%d AND file_id=%s
+				RETURNING doc_id"
+				,$this->getExtDbVal($pm,'require_client_sig')
+				,$this->getExtDbVal($pm,'doc_id')
+				,$this->getExtDbVal($pm,'file_id')
+			));
+			
+			if(!is_array($ar) || !count($ar) || !isset($ar['doc_id'])){
+				throw new Exception('Document not found!');
+			}
+			/*
+			НЕ БУДЕМ СТАВИТ ГАЛОЧКУ: все по честному, есть отметка, что файл не нужен,
+			все определяется клиентским исх.письмом, конкретно функцией
+			doc_flow_out_client_files_for_signing
+			$this->getDbLinkMaster()->query(sprintf(
+				"UPDATE application_document_files
+				SET file_signed_by_client = NOT %s
+				WHERE file_id=%s"
+				,$this->getExtDbVal($pm,'require_client_sig')
+				,$this->getExtDbVal($pm,'file_id')
+			));
+			*/
+			
+			$this->getDbLinkMaster()->query('COMMIT');
+		}
+		catch(Exception $e){
+			$this->getDbLinkMaster()->query('ROLLBACK');
+			throw $e;
+		}		
 	}
 
 

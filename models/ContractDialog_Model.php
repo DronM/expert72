@@ -815,6 +815,14 @@ class ContractDialog_Model extends ModelSQL{
 		$f_results_on_modified_documents_list=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"results_on_modified_documents_list",$f_opts);
 		$this->addField($f_results_on_modified_documents_list);
 		//********************
+		
+		//*** Field ext_contract ***
+		$f_opts = array();
+		$f_opts['id']="ext_contract";
+						
+		$f_ext_contract=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"ext_contract",$f_opts);
+		$this->addField($f_ext_contract);
+		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}
 

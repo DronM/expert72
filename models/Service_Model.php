@@ -92,6 +92,16 @@ class Service_Model extends ModelSQL{
 		$f_expertise_type=new FieldSQLEnum($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expertise_type",$f_opts);
 		$this->addField($f_expertise_type);
 		//********************
+		
+		//*** Field ban_client_responses_day_cnt ***
+		$f_opts = array();
+		
+		$f_opts['alias']='За сколько дней блокировать отправку клиентских писем сответами';
+		$f_opts['id']="ban_client_responses_day_cnt";
+						
+		$f_ban_client_responses_day_cnt=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"ban_client_responses_day_cnt",$f_opts);
+		$this->addField($f_ban_client_responses_day_cnt);
+		//********************
 	
 		$order = new ModelOrderSQL();		
 		$this->setDefaultModelOrder($order);		

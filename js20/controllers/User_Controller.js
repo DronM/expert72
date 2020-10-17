@@ -179,6 +179,12 @@ extend(User_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	
+	var field = new FieldBool("allow_ext_contracts",options);
+	
+	pm.addField(field);
+	
 	pm.addField(new FieldInt("ret_id",{}));
 	
 	
@@ -320,6 +326,12 @@ extend(User_Controller,ControllerObjServer);
 	var options = {};
 	
 	var field = new FieldJSONB("win_message_style",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldBool("allow_ext_contracts",options);
 	
 	pm.addField(field);
 	

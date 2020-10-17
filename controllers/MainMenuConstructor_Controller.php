@@ -231,7 +231,7 @@ class MainMenu_Model%s extends Model{
 		$this->gen_menu($pm,$ids['id']);
 	}
 	public function update($pm){
-		$this->gen_menu($pm);
+		$this->gen_menu($pm,NULL);
 		parent::update($pm);	
 	}
 

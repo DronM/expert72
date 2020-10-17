@@ -2,6 +2,8 @@
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
+<xsl:decimal-format name="num_money" decimal-separator="," grouping-separator=" "/>
+
 <xsl:template name="format_num">
 	<xsl:param name="val"/>
 	<xsl:choose>
@@ -16,12 +18,13 @@
 
 <xsl:template name="format_money">
 	<xsl:param name="val"/>
+	
 	<xsl:choose>
 		<xsl:when test="$val='0' or string(number($val))='NaN'">
 			<xsl:text>&#160;</xsl:text>
 		</xsl:when>
 		<xsl:otherwise>
-			<xsl:value-of select="format-number($val,'##0.00')"/>
+			<xsl:value-of select="format-number($val,'### ###,00','num_money')"/>
 		</xsl:otherwise>		
 	</xsl:choose>
 </xsl:template>
@@ -69,7 +72,7 @@
 			<xsl:variable name="val_month" select="substring-before($part_month,'-')"/>
 			<xsl:variable name="part_date" select="substring-after($part_month,'-')"/>
 			<xsl:variable name="val_date" select="$part_date"/>
-			<xsl:value-of select="concat($val_date,'/',$val_month,'/',$val_year)" />
+			<xsl:value-of select="concat($val_date,'.',$val_month,'.',$val_year)" />
 		</xsl:when>
 		<xsl:otherwise>
 			<xsl:value-of select="$val" />

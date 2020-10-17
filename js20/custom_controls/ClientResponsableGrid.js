@@ -80,6 +80,8 @@ function ClientResponsableGrid(id,options){
 		);
 	}
 	
+	var cmd_cap = this.getCmdCaptionsOnClientType(this.m_clientEditView.getElement("client_type").getValue());
+	
 	var self = this;
 	options = {
 		"model":model,
@@ -96,17 +98,27 @@ function ClientResponsableGrid(id,options){
 					new GridCmd(id+":cmd:copyFromRepHead",{
 						"showCmdControl":true,
 						"glyph":"glyphicon-arrow-down",
-						"title":"Добавить руководителя",
-						"caption":"Руководитель ",
+						"title":cmd_cap.title,
+						"caption":cmd_cap.caption,
 						"onCommand":function(){
-							var p = self.m_clientEditView.getElement("responsable_person_head").getValueJSON();
 							var m = self.getModel();
 							m.clear();
 							m.setFieldValue("id",m.getRowCount()+1);
-							m.setFieldValue("name",p["name"]);
-							m.setFieldValue("post",p["post"]);
-							m.setFieldValue("tel",p["tel"]);
-							m.setFieldValue("email",p["email"]);
+							
+							var cl_tp = self.m_clientEditView.getElement("client_type").getValue();
+							if(cl_tp=="enterprise"){
+								var p = self.m_clientEditView.getElement("responsable_person_head").getValueJSON();								
+								m.setFieldValue("name",p["name"]);
+								m.setFieldValue("post",p["post"]);
+								m.setFieldValue("tel",p["tel"]);
+								m.setFieldValue("email",p["email"]);
+							}
+							else{
+								m.setFieldValue("name",self.m_clientEditView.getElement("name_full").getValue());
+								m.setFieldValue("post",cl_tp=="pboul"? "Руководитель":"");
+								m.setFieldValue("tel","");
+								m.setFieldValue("email",self.m_clientEditView.getElement("corp_email").getValue());
+							}	
 							m.recInsert();
 							self.onRefresh(function(){
 								self.m_mainView.calcFillPercent();
@@ -255,4 +267,27 @@ ClientResponsableGrid.prototype.closeSelect = function(){
 		this.m_form.close();
 		delete this.m_form;
 	}		
+}
+
+ClientResponsableGrid.prototype.getCmdCaptionsOnClientType = function(clType){
+	var res = {"caption":"","title":""};
+	if(clType=="enterprise"){		
+		res.caption = "Руководитель ";
+		res.title = "Подставить данные руководителя";
+	}
+	else if(clType=="pboul"){
+		res.caption = "Данные ИП ";
+		res.title = "Подставить данные иднивидулального предпринимателя";
+	}
+	else if(clType=="person"){
+		res.caption = "Данные ФЛ ";
+		res.title = "Подставить данные физического лица";
+	}
+	return res;
+}
+
+ClientResponsableGrid.prototype.onChangeClientType = function(){
+	var cmd_cap = this.getCmdCaptionsOnClientType(this.m_clientEditView.getElement("client_type").getValue());
+	this.getCommands().getElement("copyFromRepHead").setCaption(cmd_cap.caption);
+	this.getCommands().getElement("copyFromRepHead").setAttr("title",cmd_cap.title);
 }

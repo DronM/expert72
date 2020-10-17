@@ -92,7 +92,7 @@ function ServiceList_View(id,options){
 							]
 						})										
 						,new GridCellHead(id+":grid:head:work_day_count",{
-							"value":"Дней работ",
+							"value":"Срок экспертизы",//Дней работ
 							"columns":[
 								new GridColumn({
 									"field":model.getField("work_day_count"),
@@ -101,10 +101,21 @@ function ServiceList_View(id,options){
 							]
 						})										
 						,new GridCellHead(id+":grid:head:expertise_day_count",{
-							"value":"Дней экспертизы",
+							"colAttrs":{"align":"right"},
+							"value":"Срок оценки",//Дней экспертизы
 							"columns":[
 								new GridColumn({
 									"field":model.getField("expertise_day_count"),
+									"ctrlClass":EditInt
+								})
+							]
+						})										
+						,new GridCellHead(id+":grid:head:ban_client_responses_day_cnt",{
+							"colAttrs":{"align":"right"},
+							"value":"Дней для блокировки отправки ответов",
+							"columns":[
+								new GridColumn({
+									"field":model.getField("ban_client_responses_day_cnt"),
 									"ctrlClass":EditInt
 								})
 							]

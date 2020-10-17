@@ -30,7 +30,7 @@ function DocumentTemplateList_View(id,options){
 	
 	this.addElement(new GridAjx(id+":grid",{
 		"model":model,
-		"keyIds":["document_type","construction_type_id","create_date"],
+		"keyIds":["id"],
 		"controller":contr,
 		"editInline":false,
 		"editWinClass":DocumentTemplateDialog_Form,

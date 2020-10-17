@@ -40,15 +40,12 @@ class ApplicationDocumentFile_Controller extends ControllerSQL{
 				,array(
 			));
 			$pm->addParam($param);
-		$param = new FieldExtJSON('applications_ref'
-				,array(
-			));
-			$pm->addParam($param);
 		$param = new FieldExtInt('document_id'
 				,array(
 			));
 			$pm->addParam($param);
-		$param = new FieldExtString('document_type'
+		
+				$param = new FieldExtEnum('document_type',',','pd,eng_survey,cost_eval_validity,modification,audit,documents'
 				,array(
 			));
 			$pm->addParam($param);
@@ -88,6 +85,14 @@ class ApplicationDocumentFile_Controller extends ControllerSQL{
 				,array(
 			));
 			$pm->addParam($param);
+		$param = new FieldExtText('file_check_sum'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtText('sig_check_sum'
+				,array(
+			));
+			$pm->addParam($param);
 		
 			$param = new FieldExtString('file_id',array(
 			));
@@ -95,7 +100,7 @@ class ApplicationDocumentFile_Controller extends ControllerSQL{
 		
 		
 			$this->addPublicMethod($pm);
-			$this->setUpdateModelId('ApplicationDocumentFileList_Model');
+			$this->setUpdateModelId('ApplicationDocumentFile_Model');
 
 			
 		/* delete */

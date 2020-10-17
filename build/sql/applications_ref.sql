@@ -9,7 +9,9 @@ $$
 			'keys',json_build_object(
 				'id',$1.id    
 				),	
-			'descr','Заявление №'||$1.id||' от '||to_char($1.create_dt,'DD/MM/YY'),
+			'descr','Заявление '||
+				CASE WHEN coalesce($1.ext_contract,FALSE)=TRUE THEN '(внеконтракт) ' ELSE '' END||
+				'№'||$1.id||' от '||to_char($1.create_dt,'DD/MM/YY'),
 			'dataType','applications'
 		)
 	;

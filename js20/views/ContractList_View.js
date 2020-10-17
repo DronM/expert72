@@ -23,6 +23,7 @@ extend(ContractList_View,ViewAjxList);
 /* Constants */
 ContractList_View.prototype.GRID_READ_PM = "get_list";
 ContractList_View.prototype.GRID_ALL = true;
+ContractList_View.prototype.MODEL_ID = "ContractList_Model";
 
 /* private members */
 
@@ -30,11 +31,13 @@ ContractList_View.prototype.GRID_ALL = true;
 
 /* public methods */
 ContractList_View.prototype.addGrid = function(options){
-	var model = (options.models&&options.models.ContractList_Model)? options.models.ContractList_Model:new ContractList_Model();
+	var model = (options.models&&options.models[this.MODEL_ID])? options.models[this.MODEL_ID]:new window[this.MODEL_ID]();
 	var contr = new Contract_Controller();
-	
+
 	var constants = {"doc_per_page_count":null,"grid_refresh_interval":null};
 	window.getApp().getConstantManager().get(constants);
+	
+	var mobile_vers = (window.getWidthType()=="sm"||window.getWidthType()=="xs");
 	
 	var role_id = window.getApp().getServVar("role_id");
 	
@@ -470,7 +473,7 @@ ContractList_View.prototype.addGrid = function(options){
 		
 		"autoRefresh":(options.autoRefresh!=undefined)? options.autoRefresh:false,
 		"refreshInterval":constants.grid_refresh_interval.getValue()*1000,
-		"rowSelect":false,
+		"rowSelect":mobile_vers,
 		"focus":true
 	}));			
 }

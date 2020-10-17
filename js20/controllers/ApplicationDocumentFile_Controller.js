@@ -53,19 +53,17 @@ extend(ApplicationDocumentFile_Controller,ControllerObjServer);
 	
 	var options = {};
 	
-	var field = new FieldJSON("applications_ref",options);
-	
-	pm.addField(field);
-	
-	var options = {};
-	
 	var field = new FieldInt("document_id",options);
 	
 	pm.addField(field);
 	
 	var options = {};
+		
+	options.enumValues = 'pd,eng_survey,cost_eval_validity,modification,audit,documents';
+	options.enumValues+= (options.enumValues=='')? '':',';
+	options.enumValues+= 'null';
 	
-	var field = new FieldString("document_type",options);
+	var field = new FieldEnum("document_type",options);
 	
 	pm.addField(field);
 	
@@ -120,6 +118,18 @@ extend(ApplicationDocumentFile_Controller,ControllerObjServer);
 	var options = {};
 	
 	var field = new FieldBool("information_list",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldText("file_check_sum",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldText("sig_check_sum",options);
 	
 	pm.addField(field);
 	

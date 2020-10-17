@@ -33,6 +33,9 @@ require_once('functions/ExtProg.php');
 require_once(FRAME_WORK_PATH.'basic_classes/ModelVars.php');
 
 class Contract_Controller extends ControllerSQL{
+
+	const ER_NO_DOC = 'Документ не найден!';
+
 	public function __construct($dbLinkMaster=NULL,$dbLink=NULL){
 		parent::__construct($dbLinkMaster,$dbLink);
 			
@@ -567,6 +570,21 @@ class Contract_Controller extends ControllerSQL{
 		$this->setListModelId('ContractList_Model');
 		
 			
+		$pm = new PublicMethod('get_ext_list');
+		
+		$pm->addParam(new FieldExtInt('count'));
+		$pm->addParam(new FieldExtInt('from'));
+		$pm->addParam(new FieldExtString('cond_fields'));
+		$pm->addParam(new FieldExtString('cond_sgns'));
+		$pm->addParam(new FieldExtString('cond_vals'));
+		$pm->addParam(new FieldExtString('cond_ic'));
+		$pm->addParam(new FieldExtString('ord_fields'));
+		$pm->addParam(new FieldExtString('ord_directs'));
+		$pm->addParam(new FieldExtString('field_sep'));
+
+		$this->addPublicMethod($pm);
+
+			
 		/* complete  */
 		$pm = new PublicMethod('complete');
 		$pm->addParam(new FieldExtString('pattern'));
@@ -1017,6 +1035,18 @@ class Contract_Controller extends ControllerSQL{
 			
 		$this->addPublicMethod($pm);
 
+			
+		$pm = new PublicMethod('ext_contract_to_contract');
+		
+				
+	$opts=array();
+	
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtInt('contract_id',$opts));
+	
+			
+		$this->addPublicMethod($pm);
+
 		
 	}	
 	
@@ -1057,7 +1087,7 @@ class Contract_Controller extends ControllerSQL{
 		));
 	
 		if (!is_array($ar_obj) || !count($ar_obj)){
-			throw new Exception("No contract found!");
+			throw new Exception(self::ER_NO_DOC);
 		
 		}
 		
@@ -1939,10 +1969,19 @@ class Contract_Controller extends ControllerSQL{
 		);		
 	
 	}
-	
+
+	/**
+	 * Вызывается из формы исходящего документа для формирования темы письма
+	 * с 19/08/20 + признак внеконтракта
+	 */
 	public function get_constr_name($pm){
 		$this->addNewModel(sprintf(
-			"SELECT constr_name FROM contracts WHERE id=%d",
+			"SELECT
+				contr.constr_name,
+				app.ext_contract AS ext_contract
+			FROM contracts AS contr
+			LEFT JOIN applications AS app ON app.id=contr.application_id
+			WHERE contr.id=%d",
 			$this->getExtDbVal($pm,'id')
 		),'ConstrName_Model');
 	}
@@ -2401,6 +2440,55 @@ class Contract_Controller extends ControllerSQL{
 		);		
 		
 	}	
+	
+	public function get_ext_list($pm){
+		$this->setListModelId('ContractExtList_Model');
+		parent::get_list($pm);
+	
+	}
+	
+	public function ext_contract_to_contract($pm){
+		//Проверки boss + admin + main_expert
+		$app_ar = $this->getDbLink()->query_first(sprintf(
+			"WITH contr AS (
+				SELECT
+					t.application_id
+					,t.main_expert_id
+				FROM contracts AS t
+				WHERE t.id=%d
+			)
+			SELECT
+				ext_contract,
+				(SELECT main_expert_id FROM contr) AS main_expert_id
+			FROM applications
+			WHERE id = (SELECT application_id FROM contr)"
+			,$this->getExtDbVal($pm,'contract_id')
+		));
+		if(!is_array($app_ar) || !count($app_ar)){
+			throw new Exception(self::ER_NO_DOC);
+		}
+		
+		if($app_ar['ext_contract']!='t'){
+			throw new Exception('Не внеконтракт!');
+		}
+		
+		if(   !(
+			$_SESSION['role_id']=='admin'
+			|| $_SESSION['role_id']=='boss'
+			|| ($_SESSION['global_employee_id'] == $app_ar['main_expert_id'])
+			)
+		){
+			throw new Exception('Действие запрещено!');
+		}
+		
+		//Вся логика в plpg
+		$this->getDbLinkMaster()->query(sprintf(
+			"SELECT contracts_ext_to_contract(%d)"
+			,$this->getExtDbVal($pm,'contract_id')
+		));
+		
+	}
+	
 
 }
 ?>

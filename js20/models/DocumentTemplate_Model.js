@@ -27,6 +27,15 @@ function DocumentTemplate_Model(options){
 	var filed_options = {};
 	filed_options.primaryKey = true;	
 	
+	filed_options.autoInc = true;	
+	
+	options.fields.id = new FieldInt("id",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
 	filed_options.autoInc = false;	
 	
 	options.fields.document_type = new FieldEnum("document_type",filed_options);
@@ -46,7 +55,7 @@ function DocumentTemplate_Model(options){
 				
 	
 	var filed_options = {};
-	filed_options.primaryKey = true;	
+	filed_options.primaryKey = false;	
 	
 	filed_options.autoInc = false;	
 	
@@ -56,7 +65,7 @@ function DocumentTemplate_Model(options){
 				
 	
 	var filed_options = {};
-	filed_options.primaryKey = true;	
+	filed_options.primaryKey = false;	
 	filed_options.defValue = true;
 	filed_options.alias = 'Дата создания';
 	filed_options.autoInc = false;	

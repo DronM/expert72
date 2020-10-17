@@ -38,6 +38,10 @@ function FileUploaderDocFlowOut_View(id,options){
 	options.customFolder = (options.customFolder!=undefined)? options.customFolder:true;
 	
 	var self = this;
+	
+	this.m_onFillTemplateOptions = function(templateOptions,itemFile,fileContainer){
+		self.onFillTemplateOptions(templateOptions,itemFile,fileContainer);
+	}
 	options.addElement = function(){
 		this.addElement(new Control(id+":file-upload","TEMPLATE",{
 			"events":{
@@ -181,3 +185,55 @@ FileUploaderDocFlowOut_View.prototype.signFile = function(fileId,itemId){
 FileUploaderDocFlowOut_View.prototype.onGetSignatureDetails = function(fileId,callBack){
 	FileUploaderApplication_View.superclass.onGetSignatureDetails.call(this,fileId,callBack,(new DocFlowOut_Controller()));
 }
+
+FileUploaderDocFlowOut_View.prototype.onFillTemplateOptions = function(templateOptions,itemFile,container){
+	//parent with class	
+	if(container){
+		var p = container.getNode();
+		var is_fld;
+		while(p && !is_fld){
+			p = p.parentNode;
+			is_fld = DOMHelper.hasClass(p,"docFlowFolder");
+		}
+		//Показывать галочку
+		templateOptions.doc_flow_out_require_client_sig = (is_fld&&p.getAttribute("require_client_sig")=="true");
+	}
+	//отметка галочки
+	templateOptions.require_client_sig =(itemFile.require_client_sig!=undefined)? itemFile.require_client_sig:templateOptions.doc_flow_out_require_client_sig;
+}
+
+FileUploaderDocFlowOut_View.prototype.assignFileEvents = function(){
+	//extra events
+	var l = DOMHelper.getElementsByAttr("doc_flow_out_require_client_sig", this.getNode(), "class", false);
+	if(l&&l.length){
+		var self = this;
+		for(var i=0;i<l.length;i++){
+			EventHelper.add(
+				l[i]
+				,"click"
+				,(function(fileNode){
+					return function(e){
+						self.setRequireClientSig(fileNode.getAttribute("file_id"),e.target);
+					}
+				})(l[i].parentNode.parentNode)
+			)
+		}
+	}
+}
+
+FileUploaderDocFlowOut_View.prototype.setRequireClientSig = function(fileId,elem){
+//	console.log("setRequireClientSig fileId="+fileId+" required="+elem.checked)
+	var pm = (new DocFlowOut_Controller()).getPublicMethod("set_require_client_sig");
+	pm.setFieldValue("doc_id",this.m_mainView.getElement("id").getValue());
+	pm.setFieldValue("file_id",fileId);
+	pm.setFieldValue("require_client_sig",elem.checked);
+	pm.run({
+		"fail":function(resp,erCode,erStr){
+			elem.checked = !elem.checked;
+			throw new Error(erStr);				
+		}
+	});
+}
+
+
+

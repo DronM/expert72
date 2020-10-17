@@ -429,6 +429,15 @@ function ApplicationForExpertMaintenanceList_Model(options){
 	filed_options.autoInc = false;	
 	
 	options.fields.documents = new FieldJSON("documents",filed_options);
+		
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	filed_options.defValue = true;
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.ext_contract = new FieldBool("ext_contract",filed_options);
 	
 			
 				

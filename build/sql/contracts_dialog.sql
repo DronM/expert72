@@ -316,7 +316,9 @@ CREATE OR REPLACE VIEW contracts_dialog AS
 				AND mod_doc_out.doc_flow_type_id = (pdfn_doc_flow_types_contr_close()->'keys'->>'id')::int
 			)
 		ELSE NULL
-		END AS results_on_modified_documents_list
+		END AS results_on_modified_documents_list,
+		
+		app.ext_contract
 		
 	FROM contracts t
 	LEFT JOIN applications AS app ON app.id=t.application_id

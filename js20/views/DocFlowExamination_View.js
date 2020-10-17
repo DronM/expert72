@@ -386,6 +386,8 @@ DocFlowExamination_View.prototype.openDocFlowOut = function(model){
 	model.setFieldValue("employees_ref",CommonHelper.unserialize(window.getApp().getServVar("employees_ref")));
 	model.setFieldValue("signed_by_employees_ref",null);
 	model.setFieldValue("doc_flow_in_ref",this.getElement("subject_docs_ref").getValue());
+	//Отметка внеконтракт 19/08/20
+	model.setFieldValue("ext_contract",this.m_model.getFieldValue("application_ext_contract"));
 	
 	if (this.getModel().getFieldValue("application_based")){		
 		var app_st = this.getElement("application_resolution_state").getValue();

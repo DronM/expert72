@@ -513,14 +513,19 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				$ar_obj['documents'] = NULL;
 				$ar_obj['base_applications_ref'] = NULL;
 				$ar_obj['derived_applications_ref'] = NULL;
-				$ar_obj['application_state'] = NULL;
 				$ar_obj['application_state'] = 'filling';
+				$ar_obj['application_state_dt'] = NULL;
+				$ar_obj['application_state_end_date'] = NULL;
+				$ar_obj['expert_maintenance_base_applications_ref'] = NULL;
+				$ar_obj['expert_maintenance_contract_data'] = NULL;
+				$ar_obj['sent_dt'] = NULL;				
 				
 				//new order from 01/01/2019
 				if($ar_obj['cost_eval_validity']=='t'){
-					$ar_obj['exp_cost_eval_validity'] = 't';
+					$ar_obj['exp_cost_eval_validity'] = NULL;
 					$ar_obj['cost_eval_validity'] = NULL;
 					$ar_obj['expertise_type'] = 'cost_eval_validity';
+					$ar_obj['service_type'] = 'expertise';
 				}
 				
 				//04/02/20
@@ -802,6 +807,20 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 	}
 
 	public function insert($pm){		
+	
+		//Внебрачные контракты
+		$ec = $pm->getParamValue('ext_contract');
+		if(isset($ec) &amp;&amp; $ec=='1'){
+			$ar = $this->getDbLink()->query_first(sprintf(
+				"SELECT
+					coalesce(allow_ext_contracts,FALSE) AS allow_ext_contracts
+				FROM users WHERE id=%d",$_SESSION['user_id']
+			));
+			if(!is_array($ar) || !count($ar) || $ar['allow_ext_contracts']!='t'){
+				throw new Exception('Внеконтрактные заявления запрещены!');
+			}
+		}
+	
 		$set_sent_v = $pm->getParamValue('set_sent');
 		$set_sent = (isset($set_sent_v) &amp;&amp; $set_sent_v=='1');
 		
@@ -1161,7 +1180,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		self::LKPostfix(),
 		$fileIdForDb		
 		));
-		if (!count($ar) || !$ar['application_id']){
+		if (!is_array($ar) || !count($ar) || !$ar['application_id']){
 			throw new Exception(self::ER_STORAGE_FILE_NOT_FOUND);
 		}
 		
@@ -2779,10 +2798,17 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		*/
 	}
 	
-	
+	/**
+	 * Вызывается из формы исходящего документа для формирования темы письма
+	 * с 19/08/20 + признак внеконтракта
+	 */
 	public function get_constr_name($pm){
 		$this->addNewModel(sprintf(
-			"SELECT constr_name FROM applications WHERE id=%d",
+			"SELECT
+				constr_name,
+				ext_contract
+			FROM applications
+			WHERE id=%d",
 			$this->getExtDbVal($pm,'id')
 		),'ConstrName_Model');
 	}
@@ -3008,10 +3034,12 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 	
 	public static function LKPostfix(){
 		return LK_TEST? '' :
+		(
 			(
 				(isset($_SESSION['role_id']) &amp;&amp; ($_SESSION['role_id']=='client' || $_SESSION['user_name']=='adminlk'))
 				|| LK
-			)? '_lk':'';
+			)? '_lk':''
+		);
 	}
 	
 	public function sign_file($pm){
@@ -3050,7 +3078,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			",
 			$fileIdForDb,$appId)
 		);
-		if(count($ar)){
+		if(is_array($ar) &amp;&amp; count($ar) &amp;&amp; isset($ar['file_id'])){
 			return $ar['file_id'];
 		}
 	}
@@ -3069,6 +3097,19 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		$m->setTableName('application_modified_documents_list');
 		$this->modelGetList($m,$pm);
 	}
+	
+	
+	public function get_ext_list($pm){
+		$this->setListModelId('ApplicationExtList_Model');
+		parent::get_list($pm);
+	
+	}
+
+	public function complete_ext($pm){
+		$this->setCompleteModelId('ApplicationExtList_Model');
+		parent::complete($pm);	
+	}
+	
 	
 </xsl:template>
 

@@ -33,6 +33,8 @@ function ContractDialog_View(id,options){
 	if (options.model && (options.model.getRowIndex()>=0 || options.model.getNextRow()) ){			
 		options.templateOptions.expertise_sections = options.model.getFieldValue("expertise_sections");
 		options.templateOptions.documVisib = options.model.getFieldValue("contract_document_visib");
+		
+		options.templateOptions.ext_contract = options.model.getFieldValue("ext_contract");
 	}
 	
 	//все прочие папки	
@@ -525,8 +527,9 @@ function ContractDialog_View(id,options){
 		var app_key = options.model.getFieldValue("applications_ref").getKey("id");
 		
 		//*** OUT ****
-		if(role!="expert_ext"){			
-			var tab_out = new DocFlowOutList_View(id+":doc_flow_out_list",{
+		if(role!="expert_ext"){	
+			var doc_out_class = options.templateOptions.ext_contract? DocFlowOutExtList_View:DocFlowOutList_View;
+			var tab_out = new doc_out_class(id+":doc_flow_out_list",{
 				"fromApp":true,
 				"autoRefresh":true,
 				"filters":[{
@@ -537,45 +540,37 @@ function ContractDialog_View(id,options){
 				"readOnly":!options.templateOptions.setAccess
 			});
 			this.addElement(tab_out);
-			var pm = (new DocFlowOut_Controller()).getPublicMethod("get_object");
-			pm.setFieldValue("mode","insert");
-			pm.run({
-				"async":false
-			});
-			var dlg_m = pm.getController().getResponse().getModel("DocFlowOutDialog_Model");
-			dlg_m.getNextRow();
-			//var dlg_m = new DocFlowOutDialog_Model();
-			dlg_m.setFieldValue("to_contracts_ref",this_ref);
-			dlg_m.setFieldValue("to_contract_main_experts_ref",options.model.getFieldValue("main_experts_ref"));
-		
-			dlg_m.setFieldValue("subject","Замечания по "+this_ref.getDescr());
-			dlg_m.setFieldValue("doc_flow_types_ref", window.getApp().getPredefinedItem("doc_flow_types","contr"));
-			dlg_m.setFieldValue("employees_ref", CommonHelper.unserialize(window.getApp().getServVar("employees_ref")) );
-			dlg_m.setFieldValue("signed_by_employees_ref",null);
-			/*
-			var out_fld_ref = window.getApp().getPredefinedItem("application_doc_folders","doc_flow_out");
-			dlg_m.setFieldValue("files",
-				[{
-					"files":[],
-					"fields":{
-						"id":out_fld_ref.getKey(),
-						"descr":out_fld_ref.getDescr(),
-						"required":false,
-						"require_client_sig":false
+			tab_out.getElement("grid").setInsertViewOptions((function(thisRef,mainExpertsRef){
+				return function(){
+					var pm = (new DocFlowOut_Controller()).getPublicMethod("get_object");
+					pm.setFieldValue("mode","insert");
+					pm.run({
+						"async":false
+					});
+					var dlg_m = pm.getController().getResponse().getModel("DocFlowOutDialog_Model");
+					if(dlg_m.getNextRow()){
+						dlg_m.setFieldValue("to_contracts_ref",thisRef);
+						dlg_m.setFieldValue("to_contract_main_experts_ref",mainExpertsRef);
+					
+						dlg_m.setFieldValue("subject","Замечания по "+thisRef.getDescr());
+						dlg_m.setFieldValue("doc_flow_types_ref", window.getApp().getPredefinedItem("doc_flow_types","contr"));
+						dlg_m.setFieldValue("employees_ref", CommonHelper.unserialize(window.getApp().getServVar("employees_ref")) );
+						dlg_m.setFieldValue("signed_by_employees_ref",null);
 					}
-				}]
-			);
-			*/
-			//dlg_m.recInsert();
-			tab_out.getElement("grid").setInsertViewOptions({
-				"models":{
-					"DocFlowOutDialog_Model": dlg_m
+				
+					return {
+						"models":{
+							"DocFlowOutDialog_Model": dlg_m
+						}
+					}
 				}
-			});
+			})(this_ref,options.model.getFieldValue("main_experts_ref"))
+			);
 		}
 						
 		//*** IN ***
-		this.addElement(new DocFlowInList_View(id+":doc_flow_in_list",{
+		var doc_in_class = options.templateOptions.ext_contract? DocFlowInExtList_View:DocFlowInList_View;
+		this.addElement(new doc_in_class(id+":doc_flow_in_list",{
 			"fromApp":true,
 			"autoRefresh":true,
 			"filters":[{
@@ -597,17 +592,23 @@ function ContractDialog_View(id,options){
 			"readOnly":false
 		});
 		this.addElement(tab_inside);
-		var dlg_m = new DocFlowInsideDialog_Model();
-		dlg_m.setFieldValue("contracts_ref",this_ref);
-		dlg_m.setFieldValue("subject","По контракту "+this_ref.getDescr());
-		dlg_m.setFieldValue("doc_flow_importance_types_ref", window.getApp().getPredefinedItem("doc_flow_importance_types","common"));
-		dlg_m.setFieldValue("employees_ref", CommonHelper.unserialize(window.getApp().getServVar("employees_ref")) );
-		dlg_m.recInsert();
-		tab_inside.getElement("grid").setInsertViewOptions({
-			"models":{
-				"DocFlowInsideDialog_Model": dlg_m
+		tab_inside.getElement("grid").setInsertViewOptions((function(this_ref){
+			return function(){
+				var dlg_m = new DocFlowInsideDialog_Model();
+				dlg_m.setFieldValue("contracts_ref",this_ref);
+				dlg_m.setFieldValue("subject","По контракту "+this_ref.getDescr());
+				dlg_m.setFieldValue("doc_flow_importance_types_ref", window.getApp().getPredefinedItem("doc_flow_importance_types","common"));
+				dlg_m.setFieldValue("employees_ref", CommonHelper.unserialize(window.getApp().getServVar("employees_ref")) );
+				dlg_m.recInsert();
+			
+				return {
+					"models":{
+						"DocFlowInsideDialog_Model": dlg_m
+					}
+				}
 			}
-		});
+		})(this_ref)
+		);
 
 		if (options.templateOptions.notExpert){
 			//*** Пролонгация сроков экспертизы ***
@@ -640,7 +641,7 @@ function ContractDialog_View(id,options){
 		//Архив - только admin и юристы!
 		//if (role=="admin" || options.templateOptions.notExpert){
 			this.addElement(new ButtonCmd(id+":cmdZipAll",{
-				"caption":"Скачать документацию ",
+				"caption":" Скачать документацию ",
 				"glyph":"glyphicon-compressed",
 				"title":"Скачать все документы одним архивом",
 				"onClick":function(){	
@@ -657,23 +658,18 @@ function ContractDialog_View(id,options){
 			}));
 		//}
 				
-		/*
-		this.addElement(new ButtonCmd(id+":cmdObjInf",{
-			"caption":"Выписка ",
-			"title":"Печать выписки из реестра выданных заключений",
-			"glyph":"glyphicon-print",
-			"onClick":function(){
-				var pm = self.getController().getPublicMethod("get_object_inf");	
-				pm.setFieldValue("id",self.getElement("id").getValue());
-				pm.setFieldValue("templ","ObjectInf");
-				pm.setFieldValue("inline","1");
-				var h = $( window ).width()/3*2;
-				var left = $( window ).width()/2;
-				var w = left - 20;
-				pm.openHref("ViewPDF","location=0,menubar=0,status=0,titlebar=0,top="+50+",left="+left+",width="+w+",height="+h);
-			}
-		}));
-		*/
+		//Копирование документации в настоящий контракт если это внеконтракт
+		
+		if (options.templateOptions.ext_contract && role=="admin"||employee_main_expert||role=="boss" ){
+			this.addElement(new ButtonCmd(id+":cmdExtContractToContract",{
+				"caption":" Перенести в контракт ",
+				"glyph":"glyphicon-copy",
+				"title":"Перенести всю документацию в контракт",
+				"onClick":function(){	
+					self.extContractToContract();
+				}
+			}));
+		}
 		
 		//*** modified_documents ***
 		if(options.templateOptions.expertMaintenance){
@@ -696,88 +692,90 @@ function ContractDialog_View(id,options){
 			}));
 			
 			var mod_results = options.model.getFieldValue("results_on_modified_documents_list");
-			for(var i=0;i<mod_results.length;i++){
-				mod_results[i].contract.expertise_result_date_descr = DateHelper.format(DateHelper.strtotime(mod_results[i].contract.expertise_result_date),"d/m/y");
-				mod_results[i].contract.title = (mod_results[i].client_viewed=="true")? "Заключение прочитано клиентом":"Заключение не прочитано клиентом";
-				mod_results[i].contract.result_descr = (mod_results[i].contract.expertise_result=="positive")?
-					"Положительное заключение":
-					"Отрицательное:"+mod_results[i].contract.expertise_reject_types_ref.descr;
-					
-				mod_results[i].result_sign_expert_list = "";
-				for(var j=0;j<mod_results[i].contract.result_sign_expert_list.rows.length;j++){
-					mod_results[i].result_sign_expert_list+=
-						((mod_results[i].result_sign_expert_list=="")? "":", ")+
-						mod_results[i].contract.result_sign_expert_list.rows[j].fields.employees_ref.getDescr();
-				}
-			}			
-			var file_cont = new ControlContainer(id+":results_on_modified_documents_list","DIV",{
-				"template":window.getApp().getTemplate("ResultsOnModifiedDocumentsList")
-				,"templateOptions":{
-					"results":mod_results
-				}
-			});
-			
-			var mod_results = options.model.getFieldValue("results_on_modified_documents_list");
-			for(var i=0;i<mod_results.length;i++){
-				var templateOptions = {};
-				templateOptions.file_id			= mod_results[i].file.file_id;
-				templateOptions.file_uploaded		= mod_results[i].file.file_uploaded;	
-				templateOptions.file_not_uploaded	= (mod_results[i].file.file_uploaded!=undefined)? !mod_results[i].file.file_uploaded:true;
-				templateOptions.file_deleted		= (mod_results[i].file.deleted!=undefined)? mod_results[i].file.deleted:false;
-				templateOptions.file_not_deleted	= !mod_results[i].file.deleted;
-				templateOptions.file_deleted_dt		= (mod_results[i].file.deleted && mod_results[i].file.deleted_dt)? DateHelper.format(DateHelper.strtotime(mod_results[i].file.deleted_dt),"d/m/Y H:i"):null;	
-				templateOptions.file_name		= mod_results[i].file.file_name;
-				templateOptions.file_size_formatted	= CommonHelper.byteForamt(mod_results[i].file.file_size);
-				templateOptions.file_signed		= (mod_results[i].file.file_signed!=undefined)? mod_results[i].file.file_signed:false;
-				templateOptions.file_not_signed		= !mod_results[i].file.file_signed;
-				templateOptions.file_deletable		= false;
-				templateOptions.file_switchable		= false;
-				templateOptions.separateSignature	= true;	
-				templateOptions.customFolder		= false;
-				
-				var file_ctrl = new ControlContainer(this.getId()+":results_on_modified_documents_list:file_"+mod_results[i].file.file_id,"TEMPLATE",{
-					"attrs":{
-						"file_uploaded":mod_results[i].file.file_uploaded,
-						"file_signed":mod_results[i].file.file_signed
-					},
-					"template":window.getApp().getTemplate("ApplicationFile"),
-					"templateOptions":templateOptions,
-					"events":{
-						"click":function(){
-							self.downloadResultOnModifiedDocument(this.getAttr("file_id"),true);
-						}
+			if(mod_results && mod_results.length){
+				for(var i=0;i<mod_results.length;i++){
+					mod_results[i].contract.expertise_result_date_descr = DateHelper.format(DateHelper.strtotime(mod_results[i].contract.expertise_result_date),"d/m/y");
+					mod_results[i].contract.title = (mod_results[i].client_viewed=="true")? "Заключение прочитано клиентом":"Заключение не прочитано клиентом";
+					mod_results[i].contract.result_descr = (mod_results[i].contract.expertise_result=="positive")?
+						"Положительное заключение":
+						"Отрицательное:"+mod_results[i].contract.expertise_reject_types_ref.descr;
+						
+					mod_results[i].result_sign_expert_list = "";
+					for(var j=0;j<mod_results[i].contract.result_sign_expert_list.rows.length;j++){
+						mod_results[i].result_sign_expert_list+=
+							((mod_results[i].result_sign_expert_list=="")? "":", ")+
+							mod_results[i].contract.result_sign_expert_list.rows[j].fields.employees_ref.getDescr();
+					}
+				}			
+				var file_cont = new ControlContainer(id+":results_on_modified_documents_list","DIV",{
+					"template":window.getApp().getTemplate("ResultsOnModifiedDocumentsList")
+					,"templateOptions":{
+						"results":mod_results
 					}
 				});
-				file_ctrl.m_fileId = mod_results[i].file.file_id;
-				file_ctrl.m_filePath = mod_results[i].file.file_path;
-				file_ctrl.m_fileName = mod_results[i].file.file_name;
-				file_ctrl.m_fileSize = mod_results[i].file.file_size;
-				file_ctrl.m_fileSigned = mod_results[i].file.file_signed;
-				file_ctrl.m_signatures = mod_results[i].file.signatures;
-				file_ctrl.m_dateTime = mod_results[i].file.date_time;
-				file_ctrl.m_fileSignedByClient	= mod_results[i].file.file_signed_by_client;
 				
-				//sig
-				file_ctrl.sigCont = new FileSigContainer(this.getId()+":results_on_modified_documents_list:file_"+mod_results[i].file.file_id+":sigList",{
-					"fileId":mod_results[i].file.file_id,
-					"itemId":"doc",
-					"signatures":mod_results[i].file.signatures,//array!
-					"multiSignature":true,
-					"maxSignatureCount":1,
-					"readOnly":true,
-					"onSignFile":null,
-					"onSignClick":function(fileId,itemId){
-						self.downloadResultOnModifiedDocument(fileId,false);
-					},
-					"onGetFileUploaded":null,
-					"onGetSignatureDetails":null
-				});
-				file_ctrl.sigCont.toDOM(file_ctrl.getNode());
-				
-				file_cont.addElement(file_ctrl);
-				
+				var mod_results = options.model.getFieldValue("results_on_modified_documents_list");
+				for(var i=0;i<mod_results.length;i++){
+					var templateOptions = {};
+					templateOptions.file_id			= mod_results[i].file.file_id;
+					templateOptions.file_uploaded		= mod_results[i].file.file_uploaded;	
+					templateOptions.file_not_uploaded	= (mod_results[i].file.file_uploaded!=undefined)? !mod_results[i].file.file_uploaded:true;
+					templateOptions.file_deleted		= (mod_results[i].file.deleted!=undefined)? mod_results[i].file.deleted:false;
+					templateOptions.file_not_deleted	= !mod_results[i].file.deleted;
+					templateOptions.file_deleted_dt		= (mod_results[i].file.deleted && mod_results[i].file.deleted_dt)? DateHelper.format(DateHelper.strtotime(mod_results[i].file.deleted_dt),"d/m/Y H:i"):null;	
+					templateOptions.file_name		= mod_results[i].file.file_name;
+					templateOptions.file_size_formatted	= CommonHelper.byteForamt(mod_results[i].file.file_size);
+					templateOptions.file_signed		= (mod_results[i].file.file_signed!=undefined)? mod_results[i].file.file_signed:false;
+					templateOptions.file_not_signed		= !mod_results[i].file.file_signed;
+					templateOptions.file_deletable		= false;
+					templateOptions.file_switchable		= false;
+					templateOptions.separateSignature	= true;	
+					templateOptions.customFolder		= false;
+					
+					var file_ctrl = new ControlContainer(this.getId()+":results_on_modified_documents_list:file_"+mod_results[i].file.file_id,"TEMPLATE",{
+						"attrs":{
+							"file_uploaded":mod_results[i].file.file_uploaded,
+							"file_signed":mod_results[i].file.file_signed
+						},
+						"template":window.getApp().getTemplate("ApplicationFile"),
+						"templateOptions":templateOptions,
+						"events":{
+							"click":function(){
+								self.downloadResultOnModifiedDocument(this.getAttr("file_id"),true);
+							}
+						}
+					});
+					file_ctrl.m_fileId = mod_results[i].file.file_id;
+					file_ctrl.m_filePath = mod_results[i].file.file_path;
+					file_ctrl.m_fileName = mod_results[i].file.file_name;
+					file_ctrl.m_fileSize = mod_results[i].file.file_size;
+					file_ctrl.m_fileSigned = mod_results[i].file.file_signed;
+					file_ctrl.m_signatures = mod_results[i].file.signatures;
+					file_ctrl.m_dateTime = mod_results[i].file.date_time;
+					file_ctrl.m_fileSignedByClient	= mod_results[i].file.file_signed_by_client;
+					
+					//sig
+					file_ctrl.sigCont = new FileSigContainer(this.getId()+":results_on_modified_documents_list:file_"+mod_results[i].file.file_id+":sigList",{
+						"fileId":mod_results[i].file.file_id,
+						"itemId":"doc",
+						"signatures":mod_results[i].file.signatures,//array!
+						"multiSignature":true,
+						"maxSignatureCount":1,
+						"readOnly":true,
+						"onSignFile":null,
+						"onSignClick":function(fileId,itemId){
+							self.downloadResultOnModifiedDocument(fileId,false);
+						},
+						"onGetFileUploaded":null,
+						"onGetSignatureDetails":null
+					});
+					file_ctrl.sigCont.toDOM(file_ctrl.getNode());
+					
+					file_cont.addElement(file_ctrl);
+					
+				}
+				this.addElement(file_cont);	
 			}
-			this.addElement(file_cont);	
 		}		
 	};
 		
@@ -1083,3 +1081,27 @@ ContractDialog_View.prototype.downloadResultOnModifiedDocument = function(fileId
 	pm.setFieldValue("id",fileId);
 	pm.download();	
 }
+
+ContractDialog_View.prototype.extContractToContractCont = function(){
+	var pm = (new Contract_Controller()).getPublicMethod("ext_contract_to_contract");
+	pm.setFieldValue("contract_id",this.getModel().getFieldValue("id"));
+	pm.run({
+		"ok":function(resp){
+			window.location.reload(false);
+		}
+	})
+}
+
+ContractDialog_View.prototype.extContractToContract = function(){
+	var self = this;
+	WindowQuestion.show({
+		"text":"Перенести все документы в обычный контракт?",
+		"no":false,
+		"callBack":function(res){
+			if (res==WindowQuestion.RES_YES){
+				self.extContractToContractCont();
+			}
+		}
+	});
+}
+

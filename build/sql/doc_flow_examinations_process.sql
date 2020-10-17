@@ -36,6 +36,7 @@ DECLARE
 	v_new_contract_id int;
 	v_service_type service_types;
 	v_expertise_type expertise_types;
+	v_ext_contract bool;
 BEGIN
 	IF (TG_WHEN='AFTER' AND TG_OP='INSERT') THEN
 		IF NOT const_client_lk_val() OR const_debug_val() THEN
@@ -176,7 +177,7 @@ BEGIN
 				LEFT JOIN doc_flow_out ON doc_flow_out.doc_flow_in_id=doc_flow_in.id
 				WHERE doc_flow_in.id=(NEW.subject_doc->'keys'->>'id')::int;
 			
-				--НОВЫЙ КОНТРАКТ
+				--Создание Нового КОНТРАКТА
 				IF NEW.application_resolution_state='waiting_for_contract'
 					--это для измененной документации
 					OR NEW.application_resolution_state='expertise'
@@ -204,7 +205,8 @@ BEGIN
 						END,
 						app.office_id,
 						app.service_type,
-						app.expertise_type						
+						app.expertise_type,
+						app.ext_contract						
 					
 					INTO
 						v_app_expertise_type,
@@ -223,7 +225,8 @@ BEGIN
 						v_document_type,
 						v_office_id,
 						v_service_type,
-						v_expertise_type
+						v_expertise_type,
+						v_ext_contract
 					
 					FROM applications AS app
 					LEFT JOIN contracts AS p_contr ON p_contr.application_id=app.primary_application_id
@@ -321,14 +324,17 @@ BEGIN
 				
 					--Сначала из исх.письма, затем генерим новый
 					IF v_new_contract_number IS NULL THEN
-						v_new_contract_number = contracts_next_number(v_document_type,now()::date);
+						v_new_contract_number = contracts_next_number(v_service_type,now()::date,v_ext_contract);
 					END IF;
 				
 					--Номер экспертного заключения
-					v_expertise_result_number = regexp_replace(v_new_contract_number,'\D+.*$','');
-					v_expertise_result_number = substr('0000',1,4-length(v_expertise_result_number))||
-								v_expertise_result_number||
-								'/'||(extract(year FROM now())-2000)::text;
+					--'\D+.*$'
+					--Если внеконтракт, то тот же номер оставляем
+					IF v_ext_contract THEN
+						v_expertise_result_number = v_new_contract_number;
+					ELSE
+						v_expertise_result_number = contracts_expertise_result_number(v_new_contract_number, now()::date);
+					END IF;	
 				
 					--Дни проверки
 					SELECT

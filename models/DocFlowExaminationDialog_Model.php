@@ -200,6 +200,14 @@ class DocFlowExaminationDialog_Model extends ModelSQL{
 		$f_application_service_type=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"application_service_type",$f_opts);
 		$this->addField($f_application_service_type);
 		//********************
+		
+		//*** Field application_ext_contract ***
+		$f_opts = array();
+		$f_opts['id']="application_ext_contract";
+						
+		$f_application_ext_contract=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"application_ext_contract",$f_opts);
+		$this->addField($f_application_ext_contract);
+		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}
 

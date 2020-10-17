@@ -176,7 +176,9 @@ DocumentDialog_View.prototype.toggleDocTypeVis = function(){
 	else{
 		exp_type = service_ctrl.getElement("expertise_type")? service_ctrl.getElement("expertise_type").getValue():null;	
 	}
+/*	
 console.log("DocumentDialog_View.prototype.toggleDocTypeVis service_type="+service_type+" exp_type="+exp_type)
+
 console.log(
 		(
 		(service_ctrl&&service_ctrl.getElement("cost_eval_validity")&&service_ctrl.getElement("cost_eval_validity").getValue())
@@ -184,6 +186,7 @@ console.log(
 		)
 
 );
+*/
 	this.toggleDocTab("pd",(exp_type=="pd" || exp_type=="pd_eng_survey" || exp_type=="cost_eval_validity_pd" || exp_type=="cost_eval_validity_pd_eng_survey"));
 	this.toggleDocTab("eng_survey",(exp_type=="eng_survey" || exp_type=="pd_eng_survey" || exp_type=="cost_eval_validity_eng_survey" || exp_type=="cost_eval_validity_pd_eng_survey"));
 	this.toggleDocTab("cost_eval_validity",

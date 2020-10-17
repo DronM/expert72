@@ -167,6 +167,15 @@ function DocFlowOutDialog_Model(options){
 	filed_options.autoInc = false;	
 	
 	options.fields.allow_edit_sections = new FieldJSONB("allow_edit_sections",filed_options);
+		
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	filed_options.defValue = true;
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.ext_contract = new FieldBool("ext_contract",filed_options);
 	
 			
 				
@@ -345,6 +354,7 @@ function DocFlowOutDialog_Model(options){
 	
 	options.fields.to_contract_main_experts_ref = new FieldJSONB("to_contract_main_experts_ref",filed_options);
 	
+			
 		DocFlowOutDialog_Model.superclass.constructor.call(this,id,options);
 }
 extend(DocFlowOutDialog_Model,ModelXML);

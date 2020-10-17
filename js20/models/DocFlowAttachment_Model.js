@@ -108,6 +108,15 @@ function DocFlowAttachment_Model(options){
 	
 	options.fields.employee_id = new FieldInt("employee_id",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.require_client_sig = new FieldBool("require_client_sig",filed_options);
+	
 			
 		DocFlowAttachment_Model.superclass.constructor.call(this,id,options);
 }

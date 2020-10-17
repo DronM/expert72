@@ -2,7 +2,7 @@
 <metadata owner="expert72">
 	<versions>
 		<version dateOpen="2017-09-27 12:09:48" dateClose="2017-12-08 10:12:08">1.001 
-		<lastBuild>2020-08-07 05:55:22</lastBuild></version>
+		<lastBuild>2020-10-17 09:43:12</lastBuild></version>
 		<version dateOpen="2017-12-08 11:12:01" dateClose="2017-12-08 11:12:04">1.002</version>
 		<version dateOpen="2017-12-08 11:12:20" dateClose="2017-12-08 11:12:20">1.0.3</version>
 		<version dateOpen="2017-12-12 11:12:07" dateClose="2017-12-12 11:12:07">1.0.4</version>
@@ -140,6 +140,7 @@
 		<version dateOpen="2020-05-18 12:05:31" dateClose="2020-05-19 06:05:50">1.0.137</version>
 		<version dateOpen="2020-07-13 11:07:54" dateClose="2020-07-27 15:07:03">1.0.138</version>
 		<version dateOpen="2020-07-27 15:07:04" dateClose="2020-08-07 05:08:55">1.0.139</version>
+		<version dateOpen="2020-08-07 11:08:59" dateClose="2020-10-17 09:10:43">1.0.1340</version>
 	</versions>
 	<globalFilters>
 		<field id="user_id"/>
@@ -770,6 +771,7 @@
 			<field id="private_pem" dataType="Text"/>
 			<field id="private_file" dataType="JSONB"/>
 			<field id="win_message_style" dataType="JSONB" defaultValue="{&quot;win_width&quot;:&quot;18&quot;,&quot;win_position&quot;:&quot;overlap&quot;}"/>
+			<field id="allow_ext_contracts" dataType="Bool" defaultValue="FALSE"/>
 			<index unique="TRUE" id="users_name_idx">
 				<expression>lower(name)</expression>
 			</index>
@@ -804,6 +806,7 @@
 			<field id="color_palette" dataType="Text" length="" alias="&#x426;&#x432;&#x435;&#x442;&#x43E;&#x432;&#x430;&#x44F; &#x441;&#x445;&#x435;&#x43C;&#x430;"/>
 			<field id="reminders_to_email" dataType="Bool"/>
 			<field id="private_file" dataType="JSONB"/>
+			<field id="allow_ext_contracts" dataType="Bool"/>
 		</model>
 		<model id="UserProfile" parent="ModelSQL" dataTable="user_profile" virtual="TRUE">
 			<field id="id" dataType="Int" primaryKey="TRUE" alias="&#x41A;&#x43E;&#x434;"/>
@@ -984,10 +987,11 @@
 			<field id="full_name" dataType="String"/>
 		</model>
 		<model id="DocumentTemplate" parent="ModelSQL" dataTable="document_templates" virtual="FALSE">
-			<field id="document_type" dataType="Enum" enumId="document_types" required="TRUE" primaryKey="TRUE"/>
+			<field id="id" dataType="Int" autoInc="TRUE" primaryKey="TRUE"/>
+			<field id="document_type" dataType="Enum" enumId="document_types" required="TRUE"/>
 			<field id="service_type" dataType="Enum" enumId="service_types"/>
-			<field id="construction_type_id" dataType="Int" refTable="construction_types" refField="id" primaryKey="TRUE" required="TRUE"/>
-			<field id="create_date" dataType="Date" alias="&#x414;&#x430;&#x442;&#x430; &#x441;&#x43E;&#x437;&#x434;&#x430;&#x43D;&#x438;&#x44F;" defaultValue="now()::date" primaryKey="TRUE" required="TRUE"/>
+			<field id="construction_type_id" dataType="Int" refTable="construction_types" refField="id" required="TRUE"/>
+			<field id="create_date" dataType="Date" alias="&#x414;&#x430;&#x442;&#x430; &#x441;&#x43E;&#x437;&#x434;&#x430;&#x43D;&#x438;&#x44F;" defaultValue="now()::date" required="TRUE"/>
 			<field id="content" dataType="JSON" required="TRUE" alias="&#x421;&#x43E;&#x434;&#x435;&#x440;&#x436;&#x438;&#x43C;&#x43E;&#x435; &#x448;&#x430;&#x431;&#x43B;&#x43E;&#x43D;&#x430;"/>
 			<field id="content_for_experts" dataType="JSON" required="TRUE" alias="&#x421;&#x43E;&#x434;&#x435;&#x440;&#x436;&#x438;&#x43C;&#x43E;&#x435; &#x448;&#x430;&#x431;&#x43B;&#x43E;&#x43D;&#x430;"/>
 			<field id="comment_text" dataType="Text" alias="&#x41A;&#x43E;&#x43C;&#x43C;&#x435;&#x43D;&#x442;&#x430;&#x440;&#x438;&#x439;"/>
@@ -995,10 +999,11 @@
 			<field id="expertise_type" dataType="Enum" enumId="expertise_types" alias="&#x412;&#x438;&#x434; &#x433;&#x43E;&#x441;.&#x44D;&#x43A;&#x441;&#x43F;&#x435;&#x440;&#x442;&#x438;&#x437;&#x44B;"/>
 		</model>
 		<model id="DocumentTemplateList" parent="ModelSQL" virtual="TRUE" dataTable="document_templates_list">
-			<field id="document_type" dataType="String" primaryKey="TRUE"/>
+			<field id="id" dataType="Int" autoInc="TRUE" primaryKey="TRUE"/>
+			<field id="document_type" dataType="String"/>
 			<field id="service_type" dataType="String"/>
-			<field id="create_date" dataType="Date" primaryKey="TRUE"/>
-			<field id="construction_type_id" dataType="Int" primaryKey="TRUE"/>
+			<field id="create_date" dataType="Date"/>
+			<field id="construction_type_id" dataType="Int"/>
 			<field id="construction_types_ref" dataType="JSON"/>
 			<field id="comment_text" dataType="Text"/>
 			<field id="service_type" dataType="String" alias="&#x423;&#x441;&#x43B;&#x443;&#x433;&#x430;"/>
@@ -1118,6 +1123,7 @@
 			<field id="expert_maintenance_service_type" dataType="Enum" enumId="service_types"/>
 			<field id="expert_maintenance_expertise_type" dataType="Enum" enumId="expertise_types"/>
 			<field id="documents" dataType="JSON"/>
+			<field id="ext_contract" dataType="Bool" defaultValue="FALSE"/>
 			<!--<field id="customer_is_developer" dataType="Bool" defaultValue="FALSE" />-->
 			<index id="applicatios_user_idx">
 				<field id="user_id"/>
@@ -1193,6 +1199,33 @@
 			<globalFilter id="user_id"/>
 		</model>
 		<model id="ApplicationList" parent="ModelSQL" dataTable="applications_list" virtual="TRUE" baseModelId="Application">
+			<defaultOrder>
+				<field id="create_dt" sortDirect="DESC"/>
+			</defaultOrder>
+			<field id="id" dataType="Int"/>
+			<field id="user_id" dataType="Int"/>
+			<field id="users_ref" dataType="JSON"/>
+			<field id="create_dt" dataType="DateTimeTZ"/>
+			<field id="application_state" dataType="String"/>
+			<field id="application_state_dt" dataType="DateTimeTZ"/>
+			<field id="application_state_end_date" dataType="Date"/>
+			<field id="constr_name" dataType="Text"/>
+			<field id="filled_percent" dataType="Int"/>
+			<field id="office_id" dataType="Int"/>
+			<field id="office_descr" dataType="Text"/>
+			<field id="select_descr" dataType="Text"/>
+			<field id="applicant_name" dataType="String"/>
+			<field id="customer_name" dataType="String"/>
+			<field id="service_list" dataType="String"/>
+			<field id="unviewed_in_docs" dataType="JSON"/>
+			<field id="contract_number" dataType="String"/>
+			<field id="contract_date" dataType="String"/>
+			<field id="expertise_result_number" dataType="String"/>
+			<field id="expertise_result_date" dataType="Date"/>
+			<field id="base_application_id" dataType="Int"/>
+			<globalFilter id="user_id"/>
+		</model>
+		<model id="ApplicationExtList" parent="ModelSQL" dataTable="applications_ext_list" virtual="TRUE" baseModelId="Application">
 			<defaultOrder>
 				<field id="create_dt" sortDirect="DESC"/>
 			</defaultOrder>
@@ -1645,6 +1678,7 @@
 			<field id="file_date" dataType="DateTime" defaultValue="now()"/>
 			<field id="file_path" dataType="Text"/>
 			<field id="employee_id" dataType="Int" refTable="employees" refField="id"/>
+			<field id="require_client_sig" dataType="Bool"/>
 			<index id="doc_flow_attachments_doc_idx" unique="FALSE">
 				<field id="doc_type"/>
 				<field id="doc_id"/>
@@ -1672,6 +1706,7 @@
 			<field id="new_contract_number" dataType="Text"/>
 			<field id="allow_new_file_add" dataType="Bool"/>
 			<field id="allow_edit_sections" dataType="JSONB"/>
+			<field id="ext_contract" dataType="Bool" defaultValue="FALSE"/>
 			<index id="doc_flow_out_date_time_idx">
 				<field id="date_time"/>
 			</index>
@@ -1695,6 +1730,29 @@
 			</index>
 		</model>
 		<model id="DocFlowOutList" parent="ModelSQL" dataTable="doc_flow_out_list" virtual="TRUE" baseModelId="DocFlowOut">
+			<defaultOrder>
+				<field id="date_time" sortDirect="DESC"/>
+			</defaultOrder>
+			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE" required="FALSE"/>
+			<field id="date_time" dataType="DateTimeTZ"/>
+			<field id="employees_ref" dataType="JSON"/>
+			<field id="employee_short_name" dataType="String"/>
+			<field id="to_addr_names" dataType="String"/>
+			<field id="to_applications_ref" dataType="JSON"/>
+			<field id="to_application_id" dataType="Int"/>
+			<field id="to_constr_name" dataType="String"/>
+			<field id="subject" dataType="Text"/>
+			<field id="reg_number" dataType="String" length="15"/>
+			<field id="doc_flow_types_ref" dataType="JSON"/>
+			<field id="applications_ref" dataType="JSON"/>
+			<field id="state" dataType="String"/>
+			<field id="state_dt" dataType="DateTimeTZ"/>
+			<field id="state_end_dt" dataType="DateTimeTZ"/>
+			<field id="state_register_doc" dataType="JSON"/>
+			<field id="applicant_descr" dataType="Text"/>
+			<field id="content" dataType="Text"/>
+		</model>
+		<model id="DocFlowOutExtList" parent="ModelSQL" dataTable="doc_flow_out_ext_list" virtual="TRUE" baseModelId="DocFlowOut">
 			<defaultOrder>
 				<field id="date_time" sortDirect="DESC"/>
 			</defaultOrder>
@@ -1750,6 +1808,7 @@
 			<field id="allow_new_file_add" dataType="Bool"/>
 			<field id="allow_edit_sections" dataType="JSONB"/>
 			<field id="to_contract_main_experts_ref" dataType="JSONB"/>
+			<field id="ext_contract" dataType="Bool"/>
 		</model>
 		<model id="DocFlowOutProcess" parent="ModelSQL" dataTable="doc_flow_out_processes" virtual="FALSE">
 			<field id="doc_flow_out_id" dataType="Int" refTable="doc_flow_out" refField="id" required="TRUE" primaryKey="TRUE"/>
@@ -1789,6 +1848,7 @@
 			<field id="comment_text" dataType="Text"/>
 			<field id="from_client_app" dataType="Bool" defaultValue="FALSE"/>
 			<field id="corrected_sections" dataType="JSONB"/>
+			<field id="ext_contract" dataType="Bool" defaultValue="FALSE"/>
 			<index id="doc_flow_in_date_time_idx">
 				<field id="date_time"/>
 			</index>
@@ -1804,6 +1864,29 @@
 			<constraint id="doc_flow_in_recipient_check" expression="check_ref_existance(recipient,ARRAY['departments'::data_types,'employees'::data_types)"/>
 		</model>
 		<model id="DocFlowInList" parent="ModelSQL" dataTable="doc_flow_in_list" virtual="TRUE">
+			<defaultOrder>
+				<field id="date_time" sortDirect="DESC"/>
+			</defaultOrder>
+			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE" required="FALSE"/>
+			<field id="date_time" dataType="DateTimeTZ"/>
+			<field id="reg_number" dataType="String" length="30"/>
+			<field id="from_addr_name" dataType="String" length="250"/>
+			<field id="from_application_id" dataType="Int" refTable="applications" refField="id"/>
+			<field id="from_applications_ref" dataType="JSON"/>
+			<field id="from_contract_id" dataType="Int" refTable="contracts" refField="id"/>
+			<field id="from_contracts_ref" dataType="JSON"/>
+			<field id="subject" dataType="Text"/>
+			<field id="doc_flow_types_ref" dataType="JSON"/>
+			<field id="recipient" dataType="JSON"/>
+			<field id="sender" dataType="String"/>
+			<field id="sender_construction_name" dataType="String"/>
+			<field id="state" dataType="String"/>
+			<field id="state_dt" dataType="DateTimeTZ"/>
+			<field id="state_end_dt" dataType="DateTimeTZ"/>
+			<field id="state_register_doc" dataType="JSON"/>
+			<field id="corrected_sections" dataType="Text"/>
+		</model>
+		<model id="DocFlowInExtList" parent="ModelSQL" dataTable="doc_flow_in_ext_list" virtual="TRUE">
 			<defaultOrder>
 				<field id="date_time" sortDirect="DESC"/>
 			</defaultOrder>
@@ -1855,6 +1938,7 @@
 			<field id="doc_flow_in_processes_chain" dataType="JSON"/>
 			<field id="from_doc_flow_out_client_id" dataType="Int"/>
 			<field id="corrected_sections" dataType="JSON"/>
+			<field id="ext_contract" dataType="Bool"/>
 		</model>
 		<model id="DocFlowInProcess" parent="ModelSQL" dataTable="doc_flow_in_processes" virtual="FALSE">
 			<field id="doc_flow_in_id" dataType="Int" refTable="doc_flow_in" refField="id" required="TRUE" primaryKey="TRUE"/>
@@ -2137,6 +2221,7 @@
 			<field id="doc_flow_out_ref" dataType="JSON"/>
 			<field id="applications_ref" dataType="JSON"/>
 			<field id="application_service_type" dataType="String"/>
+			<field id="application_ext_contract" dataType="Bool"/>
 		</model>
 		<model id="DocFlowApprovement" parent="ModelSQL" dataTable="doc_flow_approvements" virtual="FALSE">
 			<defaultOrder>
@@ -2726,6 +2811,49 @@
 			<field id="expert_maintenance_contract_id" dataType="Int" sysCol="TRUE"/>
 			<field id="expert_maintenance_contracts_ref" dataType="JSON" alias="&#x418;&#x434;&#x435;&#x43D;&#x442;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x43E;&#x440; &#x441;&#x432;&#x44F;&#x437;&#x430;&#x43D;&#x43D;&#x43E;&#x433;&#x43E; &#x43A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x430; &#x43F;&#x43E; &#x44D;&#x43A;&#x441;&#x43F;&#x435;&#x440;&#x442;&#x43D;&#x43E;&#x43C;&#x443; &#x441;&#x43E;&#x43F;&#x440;&#x43E;&#x432;&#x43E;&#x436;&#x434;&#x435;&#x43D;&#x438;&#x44E;. &#x422;&#x43E;&#x43B;&#x44C;&#x43A;&#x43E; &#x443; &#x438;&#x437;&#x43C;&#x435;&#x43D;&#x435;&#x43D;&#x43D;&#x43E;&#x439; &#x434;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x430;&#x446;&#x438;&#x438;."/>
 		</model>
+		<model id="ContractExtList" parent="ModelSQL" dataTable="contracts_ext_list" virtual="TRUE" baseModelId="Contract" calcHash="TRUE">
+			<defaultOrder>
+				<field id="date_time" sortDirect="DESC"/>
+			</defaultOrder>
+			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE" required="FALSE"/>
+			<field id="date_time" dataType="DateTimeTZ" defaultValue="CURRENT_TIMESTAMP"/>
+			<field id="application_id" dataType="Int" refTable="applications" refField="id"/>
+			<field id="applications_ref" dataType="JSON"/>
+			<field id="client_id" dataType="Int" refTable="clients" refField="id"/>
+			<field id="client_descr" dataType="String"/>
+			<field id="constr_name" dataType="Text"/>
+			<!--<field id="clients_ref" dataType="JSON" />-->
+			<field id="employee_id" dataType="Int" refTable="employees" refField="id"/>
+			<field id="employees_ref" dataType="JSON"/>
+			<field id="reg_number" dataType="Text"/>
+			<field id="contract_number" dataType="Text"/>
+			<field id="contract_date" dataType="Date"/>
+			<field id="expertise_result_number" dataType="Text"/>
+			<field id="expertise_type" dataType="Enum" enumId="expertise_types"/>
+			<field id="document_type" dataType="Enum" enumId="document_types"/>
+			<field id="self_ref" dataType="JSON"/>
+			<field id="comment_text" dataType="Text"/>
+			<!--<field id="main_experts_ref" dataType="JSON" />-->
+			<field id="main_expert_id" dataType="Int"/>
+			<field id="main_expert_descr" dataType="String"/>
+			<field id="akt_number" dataType="Text"/>
+			<field id="akt_date" dataType="Date" defaultValue="0"/>
+			<field id="akt_total" dataType="Float" length="15" precision="2"/>
+			<field id="akt_ext_id" dataType="String" length="36"/>
+			<field id="invoice_ext_id" dataType="String" length="36"/>
+			<field id="invoice_number" dataType="Text"/>
+			<field id="invoice_date" dataType="Date"/>
+			<field id="state" dataType="String"/>
+			<field id="state_dt" dataType="DateTimeTZ"/>
+			<field id="state_end_date" dataType="Date"/>
+			<field id="for_all_employees" dataType="Bool"/>
+			<field id="state_for_color" dataType="String"/>
+			<field id="exp_cost_eval_validity" dataType="Bool"/>
+			<field id="allow_new_file_add" dataType="Bool"/>
+			<field id="service_type" dataType="String" alias="&#x412;&#x438;&#x434; &#x443;&#x441;&#x43B;&#x443;&#x433;&#x438;"/>
+			<field id="expert_maintenance_contract_id" dataType="Int" sysCol="TRUE"/>
+			<field id="expert_maintenance_contracts_ref" dataType="JSON" alias="&#x418;&#x434;&#x435;&#x43D;&#x442;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x43E;&#x440; &#x441;&#x432;&#x44F;&#x437;&#x430;&#x43D;&#x43D;&#x43E;&#x433;&#x43E; &#x43A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x430; &#x43F;&#x43E; &#x44D;&#x43A;&#x441;&#x43F;&#x435;&#x440;&#x442;&#x43D;&#x43E;&#x43C;&#x443; &#x441;&#x43E;&#x43F;&#x440;&#x43E;&#x432;&#x43E;&#x436;&#x434;&#x435;&#x43D;&#x438;&#x44E;. &#x422;&#x43E;&#x43B;&#x44C;&#x43A;&#x43E; &#x443; &#x438;&#x437;&#x43C;&#x435;&#x43D;&#x435;&#x43D;&#x43D;&#x43E;&#x439; &#x434;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x430;&#x446;&#x438;&#x438;."/>
+		</model>
 		<model id="ContractDialog" parent="ModelSQL" dataTable="contracts_dialog" virtual="TRUE" baseModelId="Contract">
 			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE" required="FALSE"/>
 			<field id="date_time" dataType="DateTimeTZ" defaultValue="CURRENT_TIMESTAMP"/>
@@ -2808,6 +2936,7 @@
 			<field id="expert_maintenance_base_contracts_ref" dataType="JSON"/>
 			<field id="expert_maintenance_expertise_type" dataType="String"/>
 			<field id="results_on_modified_documents_list" dataType="JSON"/>
+			<field id="ext_contract" dataType="Bool"/>
 		</model>
 		<model id="ExpertWork" parent="ModelSQL" dataTable="expert_works" virtual="FALSE">
 			<field id="id" dataType="Int" primaryKey="TRUE" required="FALSE" autoInc="TRUE"/>
@@ -3022,6 +3151,7 @@
 			<field id="contract_postf" dataType="String" length="5"/>
 			<field id="service_type" dataType="Enum" enumId="service_types" alias="&#x412;&#x438;&#x434; &#x443;&#x441;&#x43B;&#x443;&#x433;&#x438;" required="TRUE"/>
 			<field id="expertise_type" dataType="Enum" enumId="expertise_types" alias="&#x412;&#x438;&#x434; &#x433;&#x43E;&#x441;.&#x44D;&#x43A;&#x441;&#x43F;&#x435;&#x440;&#x442;&#x438;&#x437;&#x44B;"/>
+			<field id="ban_client_responses_day_cnt" dataType="Int" alias="&#x417;&#x430; &#x441;&#x43A;&#x43E;&#x43B;&#x44C;&#x43A;&#x43E; &#x434;&#x43D;&#x435;&#x439; &#x431;&#x43B;&#x43E;&#x43A;&#x438;&#x440;&#x43E;&#x432;&#x430;&#x442;&#x44C; &#x43E;&#x442;&#x43F;&#x440;&#x430;&#x432;&#x43A;&#x443; &#x43A;&#x43B;&#x438;&#x435;&#x43D;&#x442;&#x441;&#x43A;&#x438;&#x445; &#x43F;&#x438;&#x441;&#x435;&#x43C; &#x441;&#x43E;&#x442;&#x432;&#x435;&#x442;&#x430;&#x43C;&#x438;"/>
 			<index id="services_service_expertise_idx" unique="TRUE">
 				<field id="service_type"/>
 				<field id="expertise_types"/>
@@ -3158,6 +3288,7 @@
 		<constant id="cades_hash_algorithm" name="&#x41A;&#x440;&#x438;&#x43F;&#x442;&#x43E;&#x41F;&#x440;&#x43E; &#x43F;&#x43B;&#x430;&#x433;&#x438;&#x43D;: &#x410;&#x43B;&#x433;&#x43E;&#x440;&#x438;&#x442;&#x43C; &#x445;&#x44D;&#x448;&#x438;&#x440;&#x43E;&#x432;&#x430;&#x43D;&#x438;&#x44F;" descr="100 - &#x410;&#x43B;&#x433;&#x43E;&#x440;&#x438;&#x442;&#x43C; &#x413;&#x41E;&#x421;&#x422; &#x420; 34.11-94, 101 - &#x410;&#x43B;&#x433;&#x43E;&#x440;&#x438;&#x442;&#x43C; &#x413;&#x41E;&#x421;&#x422; &#x420; 34.10-2012 256 &#x431;&#x438;&#x442;, 102 - &#x410;&#x43B;&#x433;&#x43E;&#x440;&#x438;&#x442;&#x43C; &#x413;&#x41E;&#x421;&#x422; &#x420; 34.10-2012 512 &#x431;&#x438;&#x442;" dataType="Int" defaultValue="100" autoload="TRUE"/>
 		<constant id="contract_document_visib_expert_list" name="&#x421;&#x43F;&#x438;&#x441;&#x43E;&#x43A; &#x44D;&#x43A;&#x441;&#x43F;&#x435;&#x440;&#x442;&#x43E;&#x432;, &#x443; &#x43A;&#x43E;&#x442;&#x43E;&#x440;&#x44B;&#x445; &#x434;&#x43E;&#x441;&#x442;&#x443;&#x43F;&#x43D;&#x430; &#x437;&#x430;&#x43A;&#x43B;&#x430;&#x434;&#x43A;&#x430; '&#x414;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;' &#x432; &#x43A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x435;" descr="&#x417;&#x430;&#x43A;&#x43B;&#x430;&#x434;&#x43A;&#x430; '&#x414;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;' &#x432; &#x43A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x435; &#x43D;&#x435; &#x434;&#x43E;&#x441;&#x442;&#x443;&#x43F;&#x43D;&#x430; &#x434;&#x43B;&#x44F; &#x440;&#x43E;&#x43B;&#x438; '&#x44D;&#x43A;&#x441;&#x43F;&#x435;&#x440;&#x442;'. &#x41E;&#x434;&#x43D;&#x430;&#x43A;&#x43E; &#x43C;&#x43E;&#x436;&#x43D;&#x43E; &#x437;&#x430;&#x434;&#x430;&#x442;&#x44C; &#x441;&#x43F;&#x438;&#x441;&#x43E;&#x43A; &#x44D;&#x43A;&#x441;&#x43F;&#x435;&#x440;&#x442;&#x43E;&#x432;, &#x434;&#x43B;&#x44F; &#x43A;&#x43E;&#x442;&#x43E;&#x440;&#x44B;&#x445; &#x437;&#x430;&#x43A;&#x43B;&#x430;&#x434;&#x43A;&#x430; &#x431;&#x443;&#x434;&#x435;&#x442; &#x432;&#x438;&#x434;&#x438;&#x43C;&#x430;." dataType="JSON"/>
 		<constant id="ban_client_responses_day_cnt" name="&#x417;&#x430; &#x441;&#x43A;&#x43E;&#x43B;&#x44C;&#x43A;&#x43E; &#x440;&#x430;&#x431;&#x43E;&#x447;&#x438;&#x445; &#x434;&#x43D;&#x435;&#x439; &#x437;&#x430;&#x43F;&#x440;&#x435;&#x449;&#x430;&#x442;&#x44C; &#x43E;&#x442;&#x43F;&#x440;&#x430;&#x432;&#x43A;&#x443; &#x43E;&#x442;&#x432;&#x435;&#x442;&#x43E;&#x432; &#x43D;&#x430; &#x437;&#x430;&#x43C;&#x435;&#x447;&#x430;&#x43D;&#x438;&#x44F;" descr="&#x417;&#x430; &#x434;&#x430;&#x43D;&#x43D;&#x43E;&#x435; &#x43A;&#x43E;&#x43B;&#x438;&#x447;&#x435;&#x441;&#x442;&#x432;&#x43E; &#x440;&#x430;&#x431;&#x43E;&#x447;&#x438;&#x445; &#x434;&#x43D;&#x435;&#x439; &#x434;&#x43E; &#x43E;&#x43A;&#x43E;&#x43D;&#x447;&#x430;&#x43D;&#x438;&#x44F; &#x441;&#x440;&#x43E;&#x43A;&#x430; &#x44D;&#x43A;&#x441;&#x43F;&#x435;&#x440;&#x442;&#x438;&#x437;&#x44B; &#x43A;&#x43B;&#x438;&#x435;&#x43D;&#x442;&#x430;&#x43C; &#x431;&#x443;&#x434;&#x435;&#x442; &#x437;&#x430;&#x43F;&#x440;&#x435;&#x449;&#x435;&#x43D;&#x430; &#x43E;&#x442;&#x43F;&#x440;&#x430;&#x432;&#x43A;&#x430; &#x43F;&#x438;&#x441;&#x435;&#x43C; &#x441; &#x432;&#x438;&#x434;&#x43E;&#x43C; &#x43E;&#x442;&#x432;&#x435;&#x442;&#x44B; &#x43D;&#x430; &#x437;&#x430;&#x43C;&#x435;&#x447;&#x430;&#x43D;&#x438;&#x44F;" dataType="Int"/>
+		<constant id="ext_contract_doc_pref" name="&#x41F;&#x440;&#x435;&#x444;&#x438;&#x43A;&#x441; &#x432;&#x43D;&#x435;&#x43A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x43D;&#x44B;&#x445; &#x434;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x43E;&#x432;" descr="&#x414;&#x43E;&#x431;&#x430;&#x432;&#x43B;&#x44F;&#x435;&#x442;&#x441;&#x44F; &#x43A; &#x43D;&#x43E;&#x43C;&#x435;&#x440;&#x430;&#x446;&#x438;&#x438; &#x43F;&#x438;&#x441;&#x435;&#x43C; &#x432;&#x441;&#x435;&#x445; &#x432;&#x438;&#x434;&#x43E;&#x432;. &#x422;&#x430;&#x43A;&#x438;&#x43C; &#x43E;&#x431;&#x440;&#x430;&#x437;&#x43E;&#x43C; &#x43F;&#x43E;&#x43B;&#x43D;&#x44B;&#x439; &#x43D;&#x43E;&#x43C;&#x435;&#x440; &#x43F;&#x438;&#x441;&#x44C;&#x43C;&#x430; &#x444;&#x43E;&#x440;&#x43C;&#x438;&#x440;&#x443;&#x435;&#x442;&#x441;&#x44F; &#x43A;&#x430;&#x43A; &#x43D;&#x43E;&#x43C;&#x435;&#x440; &#x43F;&#x438;&#x441;&#x44C;&#x43C;&#x430; &#x432; &#x437;&#x430;&#x432;&#x438;&#x441;&#x438;&#x43C;&#x43E;&#x441;&#x442;&#x438; &#x43E;&#x442; &#x442;&#x438;&#x43F;&#x430;+&#x434;&#x430;&#x43D;&#x43D;&#x44B;&#x439; &#x43F;&#x440;&#x435;&#x444;&#x438;&#x43A;&#x441;" dataType="String" length="10" defaultValue="'(&#x412;&#x43D;&#x43A;)-'"/>
 	</constants>
 	<controllers>
 		<controller id="Constant" parentId="ControllerSQL">
@@ -3481,7 +3612,9 @@
 				<field id="doc_type" dataType="String" required="TRUE" length="4"/>
 			</publicMethod>
 			<publicMethod id="get_list" modelId="ApplicationList"/>
+			<publicMethod id="get_ext_list" modelId="ApplicationExtList" condFields="TRUE"/>
 			<publicMethod id="complete" patternFieldId="id" modelId="ApplicationList"/>
+			<publicMethod id="complete_ext" patternFieldId="id" modelId="ApplicationExtList"/>
 			<publicMethod id="complete_for_expert_maintenance" modelId="ApplicationList">
 				<field id="search" dataType="String" length="100" required="TRUE"/>
 				<field id="ic" dataType="Int"/>
@@ -3637,6 +3770,7 @@
 			</publicMethod>
 			<publicMethod id="delete" modelId="DocFlowOut"/>
 			<publicMethod id="get_list" modelId="DocFlowOutList"/>
+			<publicMethod id="get_ext_list" modelId="DocFlowOutExtList" condFields="TRUE"/>
 			<publicMethod id="get_object" modelId="DocFlowOutDialog"/>
 			<publicMethod id="remove_file">
 				<field id="file_id" dataType="String" length="36" required="TRUE"/>
@@ -3660,6 +3794,7 @@
 			</publicMethod>
 			<publicMethod id="get_next_num">
 				<field id="doc_flow_type_id" dataType="Int" required="TRUE"/>
+				<field id="ext_contract" dataType="Bool" required="TRUE"/>
 			</publicMethod>
 			<publicMethod id="complete" patternFieldId="reg_number" modelId="DocFlowOutList"/>
 			<publicMethod id="get_app_state">
@@ -3667,6 +3802,7 @@
 			</publicMethod>
 			<publicMethod id="get_next_contract_number">
 				<field id="application_id" dataType="Int" required="TRUE"/>
+				<field id="ext_contract" dataType="Bool" required="TRUE"/>
 			</publicMethod>
 			<publicMethod id="alter_file_folder">
 				<field id="file_id" dataType="String" length="36" required="TRUE"/>
@@ -3687,12 +3823,18 @@
 				<field id="file_data" dataType="Text"/>
 				<field id="file_path" dataType="String" length="250"/>
 			</publicMethod>
+			<publicMethod id="set_require_client_sig">
+				<field id="doc_id" dataType="Int" required="TRUE"/>
+				<field id="file_id" dataType="String" length="36" required="TRUE"/>
+				<field id="require_client_sig" dataType="Bool" required="TRUE"/>
+			</publicMethod>
 		</controller>
 		<controller id="DocFlowIn" parentId="DocFlow_Controller" parentType="user" state="TRUE">
 			<publicMethod id="insert" modelId="DocFlowIn"/>
 			<publicMethod id="update" modelId="DocFlowIn"/>
 			<publicMethod id="delete" modelId="DocFlowIn"/>
 			<publicMethod id="get_list" modelId="DocFlowInList"/>
+			<publicMethod id="get_ext_list" modelId="DocFlowInExtList" condFields="TRUE"/>
 			<publicMethod id="get_object" modelId="DocFlowInDialog"/>
 			<publicMethod id="complete" patternFieldId="reg_number" modelId="DocFlowInList"/>
 			<publicMethod id="remove_file">
@@ -4019,6 +4161,7 @@
 				<field id="fields" dataType="String"/>
 			</publicMethod>
 			<publicMethod id="get_list" modelId="ContractList"/>
+			<publicMethod id="get_ext_list" modelId="ContractExtList" condFields="TRUE"/>
 			<publicMethod id="complete" patternFieldId="expertise_result_number" modelId="ContractList"/>
 			<publicMethod id="get_pd_list" modelId="ContractList" condFields="TRUE"/>
 			<publicMethod id="get_expert_maintenance_list" modelId="ContractList" condFields="TRUE"/>
@@ -4087,6 +4230,9 @@
 			<publicMethod id="get_quarter_rep" condFields="TRUE">
 				<field id="templ" dataType="String"/>
 				<field id="inline" dataType="Int"/>
+			</publicMethod>
+			<publicMethod id="ext_contract_to_contract">
+				<field id="contract_id" dataType="Int" required="TRUE"/>
 			</publicMethod>
 		</controller>
 		<controller id="ExpertiseRejectType" parentId="ControllerSQL">
@@ -4299,7 +4445,7 @@
 			<publicMethod id="get_list" modelId="ApplicationReturnedFilesRemovedList"/>
 		</controller>
 		<controller id="ApplicationDocumentFile" parentId="ControllerSQL">
-			<publicMethod id="update" modelId="ApplicationDocumentFileList"/>
+			<publicMethod id="update" modelId="ApplicationDocumentFile"/>
 			<publicMethod id="delete" modelId="ApplicationDocumentFile"/>
 			<publicMethod id="get_object" modelId="ApplicationDocumentFileList"/>
 			<publicMethod id="get_list" modelId="ApplicationDocumentFileList"/>
@@ -4444,6 +4590,10 @@
 		<view id="20017" c="Contract_Controller" t="ContractExpertiseList" f="get_expertise_list" section="&#x414;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;" descr="&#x41A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x44B; &#x43F;&#x43E; &#x433;&#x43E;&#x441;.&#x44D;&#x43A;&#x441;&#x43F;&#x435;&#x440;&#x442;&#x438;&#x437;&#x435;"/>
 		<view id="20018" c="Contract_Controller" t="ContractExpertMaintenanceList" f="get_expert_maintenance_list" section="&#x414;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;" descr="&#x41A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x44B; &#x43F;&#x43E; &#x44D;&#x43A;&#x441;&#x43F;&#x435;&#x440;&#x442;&#x43D;&#x43E;&#x43C;&#x443; &#x441;&#x43E;&#x43F;&#x440;&#x43E;&#x432;&#x43E;&#x436;&#x434;&#x435;&#x43D;&#x438;&#x44E;"/>
 		<view id="20019" c="Contract_Controller" t="ContractModifiedDocumentsList" f="get_modified_documents_list" section="&#x414;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;" descr="&#x41A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x44B; &#x43F;&#x43E; &#x438;&#x437;&#x43C;&#x435;&#x43D;&#x435;&#x43D;&#x43D;&#x43E;&#x439; &#x434;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x430;&#x446;&#x438;&#x438;"/>
+		<view id="20020" c="Application_Controller" t="ApplicationExtList" f="get_ext_list" section="&#x414;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;" descr="&#x417;&#x430;&#x44F;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x44F; (&#x432;&#x43D;&#x435;&#x43A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x43D;&#x44B;&#x435;)"/>
+		<view id="20021" c="DocFlowIn_Controller" t="DocFlowInExtList" f="get_ext_list" section="&#x414;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;" descr="&#x412;&#x445;&#x43E;&#x434;&#x44F;&#x448;&#x438;&#x435; &#x434;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B; (&#x432;&#x43D;&#x435;&#x43A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;)"/>
+		<view id="20022" c="DocFlowOut_Controller" t="DocFlowOutExtList" f="get_ext_list" section="&#x414;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;" descr="&#x418;&#x441;&#x445;&#x43E;&#x434;&#x44F;&#x449;&#x438;&#x435; &#x434;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B; (&#x432;&#x43D;&#x435;&#x43A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;)"/>
+		<view id="20023" c="Contract_Controller" t="ContractExtList" f="get_ext_list" section="&#x414;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;" descr="&#x41A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x44B; (&#x432;&#x43D;&#x435;&#x43A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x44B;)"/>
 		<view id="30000" c="Contract_Controller" t="RepReestrExpertise" section="&#x41E;&#x442;&#x447;&#x435;&#x442;&#x44B;" descr="&#x420;&#x435;&#x435;&#x441;&#x442;&#x440; &#x437;&#x430;&#x43A;&#x43B;&#x44E;&#x447;&#x435;&#x43D;&#x438;&#x439; &#x43F;&#x43E; &#x433;&#x43E;&#x441;.&#x44D;&#x43A;&#x441;&#x43F;&#x435;&#x440;&#x442;&#x438;&#x437;&#x435;"/>
 		<view id="30001" c="Contract_Controller" t="RepReestrCostEval" section="&#x41E;&#x442;&#x447;&#x435;&#x442;&#x44B;" descr="&#x420;&#x435;&#x435;&#x441;&#x442;&#x440; &#x437;&#x430;&#x43A;&#x43B;&#x44E;&#x447;&#x435;&#x43D;&#x438;&#x439; &#x43F;&#x43E; &#x434;&#x43E;&#x441;&#x442;&#x43E;&#x432;&#x435;&#x440;&#x43D;&#x43E;&#x441;&#x442;&#x438;"/>
 		<view id="30002" c="Contract_Controller" t="RepReestrPay" section="&#x41E;&#x442;&#x447;&#x435;&#x442;&#x44B;" descr="&#x420;&#x435;&#x435;&#x441;&#x442;&#x440; &#x43E;&#x43F;&#x43B;&#x430;&#x442;"/>
@@ -4474,13 +4624,16 @@
 		<serverTemplate id="OfficeList" class="list"/>
 		<serverTemplate id="ContructionList" class="list"/>
 		<serverTemplate id="ApplicationList"/>
+		<serverTemplate id="ApplicationExtList"/>
 		<serverTemplate id="ApplicationForExpertMaintenanceList"/>
 		<serverTemplate id="ApplicationDialog"/>
 		<serverTemplate id="ApplicationClientList"/>
 		<serverTemplate id="HolidayList"/>
 		<serverTemplate id="ApplicationInMailList"/>
 		<serverTemplate id="DocFlowOutList"/>
+		<serverTemplate id="DocFlowOutExtList"/>
 		<serverTemplate id="DocFlowInList"/>
+		<serverTemplate id="DocFlowInExtList"/>
 		<serverTemplate id="DocFlowInsideList"/>
 		<serverTemplate id="DepartmentList"/>
 		<serverTemplate id="EmployeeList"/>
@@ -4500,6 +4653,7 @@
 		<serverTemplate id="DocFlowTaskList"/>
 		<serverTemplate id="ReminderList"/>
 		<serverTemplate id="ContractList"/>
+		<serverTemplate id="ContractExtList"/>
 		<serverTemplate id="ContractPdList"/>
 		<serverTemplate id="ContractExpertMaintenanceList"/>
 		<serverTemplate id="ContractModifiedDocumentsList"/>
@@ -4957,14 +5111,17 @@
 		<jsScript file="forms/DocumentTemplateDialog_Form.js"/>
 		<jsScript file="forms/ApplicationDialog_Form.js"/>
 		<jsScript file="forms/ApplicationList_Form.js"/>
+		<jsScript file="forms/ApplicationExtList_Form.js"/>
 		<jsScript file="forms/ApplicationForExpertMaintenanceList_Form.js"/>
 		<jsScript file="forms/ApplicationClientList_Form.js"/>
 		<jsScript file="forms/ApplicationCustomerList_Form.js"/>
 		<jsScript file="forms/ApplicationContractorList_Form.js"/>
 		<jsScript file="forms/ContractList_Form.js"/>
+		<jsScript file="forms/ContractExtList_Form.js"/>
 		<jsScript file="forms/ConstructionTypeDialog_Form.js"/>
 		<jsScript file="forms/DocFlowOutDialog_Form.js"/>
 		<jsScript file="forms/DocFlowOutList_Form.js"/>
+		<jsScript file="forms/DocFlowOutExtList_Form.js"/>
 		<jsScript file="forms/DocFlowInList_Form.js"/>
 		<jsScript file="forms/DocFlowInsideList_Form.js"/>
 		<jsScript file="forms/DocFlowInsideDialog_Form.js"/>
@@ -5035,6 +5192,7 @@
 		<jsScript file="views/DocFlowBaseDialog_View.js"/>
 		<jsScript file="views/ApplicationList_View.js"/>
 		<jsScript file="views/rs/ApplicationList_View.rs_ru.js"/>
+		<jsScript file="views/ApplicationExtList_View.js"/>
 		<jsScript file="views/ApplicationForExpertMaintenanceList_View.js"/>
 		<jsScript file="views/ConstrTechnicalFeature_View.js"/>
 		<jsScript file="views/ApplicationDialog_View.js"/>
@@ -5052,8 +5210,10 @@
 		<jsScript file="views/ConstructionTypeDialog_View.js"/>
 		<jsScript file="views/HolidayList_View.js"/>
 		<jsScript file="views/DocFlowOutList_View.js"/>
+		<jsScript file="views/DocFlowOutExtList_View.js"/>
 		<jsScript file="views/DocFlowOutDialog_View.js"/>
 		<jsScript file="views/DocFlowInList_View.js"/>
+		<jsScript file="views/DocFlowInExtList_View.js"/>
 		<jsScript file="views/DocFlowInDialog_View.js"/>
 		<jsScript file="views/DocFlowInsideList_View.js"/>
 		<jsScript file="views/DocFlowInsideDialog_View.js"/>
@@ -5093,6 +5253,7 @@
 		<jsScript file="views/ReminderList_View.js"/>
 		<jsScript file="views/DocFlowTaskShortList_View.js"/>
 		<jsScript file="views/ContractList_View.js"/>
+		<jsScript file="views/ContractExtList_View.js"/>
 		<jsScript file="views/ContractPdList_View.js"/>
 		<jsScript file="views/ContractExpertMaintenanceList_View.js"/>
 		<jsScript file="views/ContractModifiedDocumentsList_View.js"/>
@@ -5553,6 +5714,10 @@
 		<jsScript file="models/ApplicationForExpertMaintenanceList_Model.js"/>
 		<jsScript file="controllers/LogPKI_Controller.js"/>
 		<jsScript file="models/Log_Model.js"/>
+		<jsScript file="models/ApplicationExtList_Model.js"/>
+		<jsScript file="models/DocFlowInExtList_Model.js"/>
+		<jsScript file="models/DocFlowOutExtList_Model.js"/>
+		<jsScript file="models/ContractExtList_Model.js"/>
 	</jsScripts>
 	<cssScripts>
 		<cssScript file="assets/css/icons/icomoon/styles.css" compressed="TRUE" standalone="TRUE"/>

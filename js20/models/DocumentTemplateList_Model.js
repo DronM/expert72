@@ -27,6 +27,15 @@ function DocumentTemplateList_Model(options){
 	var filed_options = {};
 	filed_options.primaryKey = true;	
 	
+	filed_options.autoInc = true;	
+	
+	options.fields.id = new FieldInt("id",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
 	filed_options.autoInc = false;	
 	
 	options.fields.document_type = new FieldString("document_type",filed_options);
@@ -43,7 +52,7 @@ function DocumentTemplateList_Model(options){
 				
 	
 	var filed_options = {};
-	filed_options.primaryKey = true;	
+	filed_options.primaryKey = false;	
 	
 	filed_options.autoInc = false;	
 	
@@ -52,7 +61,7 @@ function DocumentTemplateList_Model(options){
 				
 	
 	var filed_options = {};
-	filed_options.primaryKey = true;	
+	filed_options.primaryKey = false;	
 	
 	filed_options.autoInc = false;	
 	

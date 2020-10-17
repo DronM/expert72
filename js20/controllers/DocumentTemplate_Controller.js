@@ -39,7 +39,13 @@ extend(DocumentTemplate_Controller,ControllerObjServer);
 	var pm = this.getInsert();
 	
 	var options = {};
-	options.primaryKey = true;options.required = true;	
+	options.primaryKey = true;options.autoInc = true;
+	var field = new FieldInt("id",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	options.required = true;	
 	options.enumValues = 'pd,eng_survey,cost_eval_validity,modification,audit,documents';
 	var field = new FieldEnum("document_type",options);
 	
@@ -53,13 +59,13 @@ extend(DocumentTemplate_Controller,ControllerObjServer);
 	pm.addField(field);
 	
 	var options = {};
-	options.primaryKey = true;options.required = true;
+	options.required = true;
 	var field = new FieldInt("construction_type_id",options);
 	
 	pm.addField(field);
 	
 	var options = {};
-	options.alias = "Дата создания";options.primaryKey = true;options.required = true;
+	options.alias = "Дата создания";options.required = true;
 	var field = new FieldDate("create_date",options);
 	
 	pm.addField(field);
@@ -96,6 +102,8 @@ extend(DocumentTemplate_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	pm.addField(new FieldInt("ret_id",{}));
+	
 	
 }
 
@@ -104,16 +112,22 @@ extend(DocumentTemplate_Controller,ControllerObjServer);
 	var pm = this.getUpdate();
 	
 	var options = {};
-	options.primaryKey = true;	
+	options.primaryKey = true;options.autoInc = true;
+	var field = new FieldInt("id",options);
+	
+	pm.addField(field);
+	
+	field = new FieldInt("old_id",{});
+	pm.addField(field);
+	
+	var options = {};
+		
 	options.enumValues = 'pd,eng_survey,cost_eval_validity,modification,audit,documents';
 	options.enumValues+= (options.enumValues=='')? '':',';
 	options.enumValues+= 'null';
 	
 	var field = new FieldEnum("document_type",options);
 	
-	pm.addField(field);
-	
-	field = new FieldEnum("old_document_type",{});
 	pm.addField(field);
 	
 	var options = {};
@@ -125,21 +139,15 @@ extend(DocumentTemplate_Controller,ControllerObjServer);
 	pm.addField(field);
 	
 	var options = {};
-	options.primaryKey = true;
+	
 	var field = new FieldInt("construction_type_id",options);
 	
 	pm.addField(field);
 	
-	field = new FieldInt("old_construction_type_id",{});
-	pm.addField(field);
-	
 	var options = {};
-	options.alias = "Дата создания";options.primaryKey = true;
+	options.alias = "Дата создания";
 	var field = new FieldDate("create_date",options);
 	
-	pm.addField(field);
-	
-	field = new FieldDate("old_create_date",{});
 	pm.addField(field);
 	
 	var options = {};
@@ -184,13 +192,7 @@ extend(DocumentTemplate_Controller,ControllerObjServer);
 	var pm = this.getDelete();
 	var options = {"required":true};
 		
-	pm.addField(new FieldEnum("document_type",options));
-	var options = {"required":true};
-		
-	pm.addField(new FieldInt("construction_type_id",options));
-	var options = {"required":true};
-	options.alias = "Дата создания";	
-	pm.addField(new FieldDate("create_date",options));
+	pm.addField(new FieldInt("id",options));
 }
 
 			DocumentTemplate_Controller.prototype.addGetList = function(){
@@ -210,6 +212,9 @@ extend(DocumentTemplate_Controller,ControllerObjServer);
 	pm.addField(new FieldString(this.PARAM_ORD_DIRECTS));
 	pm.addField(new FieldString(this.PARAM_FIELD_SEP));
 
+	var f_opts = {};
+	
+	pm.addField(new FieldInt("id",f_opts));
 	var f_opts = {};
 	
 	pm.addField(new FieldString("document_type",f_opts));
@@ -242,13 +247,7 @@ extend(DocumentTemplate_Controller,ControllerObjServer);
 	var pm = this.getGetObject();
 	var f_opts = {};
 		
-	pm.addField(new FieldEnum("document_type",f_opts));
-	var f_opts = {};
-		
-	pm.addField(new FieldInt("construction_type_id",f_opts));
-	var f_opts = {};
-	f_opts.alias = "Дата создания";	
-	pm.addField(new FieldDate("create_date",f_opts));
+	pm.addField(new FieldInt("id",f_opts));
 	
 	pm.addField(new FieldString("mode"));
 }

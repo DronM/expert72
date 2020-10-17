@@ -16,7 +16,7 @@ function ApplicationList_View(id,options){
 	
 	ApplicationList_View.superclass.constructor.call(this,id,options);
 	
-	var model = (options.models&&options.models.ApplicationList_Model)? options.models.ApplicationList_Model: new ApplicationList_Model();
+	var model = (options.models&&options.models[this.MODEL_ID])? options.models[this.MODEL_ID]: new window[this.MODEL_ID]();
 	var contr = new Application_Controller();
 	
 	var constants = {"doc_per_page_count":null,"grid_refresh_interval":null};
@@ -240,13 +240,15 @@ function ApplicationList_View(id,options){
 			]
 		})
 	);
-
+	
+	var self = this;
 	this.addElement(new GridAjx(id+":grid",{
 		"model":model,
 		"keyIds":["id"],
 		"controller":contr,
-		"readPublicMethod":contr.getPublicMethod( (options.fromApp? "get_modified_documents_list": "get_list") ),
+		"readPublicMethod":contr.getPublicMethod( (options.fromApp? "get_modified_documents_list": this.METHOD_ID) ),
 		"editInline":false,
+		"insertViewOptions":this.GRID_INSERT_OPTS,
 		"editWinClass":ApplicationDialog_Form,//ApplicationForEmploye_Form,
 		"popUpMenu":popup_menu,
 		"commands":new GridCmdContainerAjx(id+":grid:cmd",{
@@ -273,7 +275,9 @@ function ApplicationList_View(id,options){
 extend(ApplicationList_View,ViewAjxList);
 
 /* Constants */
-
+ApplicationList_View.prototype.MODEL_ID = "ApplicationList_Model";
+ApplicationList_View.prototype.METHOD_ID = "get_list";
+ApplicationList_View.prototype.GRID_INSERT_OPTS = null;
 
 /* private members */
 
@@ -281,4 +285,6 @@ extend(ApplicationList_View,ViewAjxList);
 
 
 /* public methods */
-
+ApplicationList_View.prototype.getGridInsertViewOptions = function(){
+	return null;
+}

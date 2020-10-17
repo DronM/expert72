@@ -51,11 +51,11 @@ function mkdir_or_error($dir){
 	if (!file_exists($dir)){
 		if (strlen($dir)>DIR_MAX_LENGTH){
 			throw_common_error('file_uploader Path lenght exceeds maximum value!');
-		}
+		}		
 		if(@mkdir($dir,0775,TRUE)!==TRUE){
-			
+			sleep(1);
 			if (file_exists($dir) && is_dir($dir)) {
-				// The directory was created by a concurrent process, so do nothing, keep calm and carry on
+				// The directory was created by a concurrent process, so do nothing
 			} else {
 				$error = error_get_last();
 				throw_common_error('file_uploader mkdir_or_error '.$dir.' error:'.$error['message']);
@@ -277,7 +277,7 @@ function get_doc_flow_out_client_id_for_db($dbLink,$appIdForDb,$docFlowOutClient
 		FROM doc_flow_out_client
 		WHERE id=%d",$appIdForDb,$db_doc_flow_out_client_id
 	));
-	if (!count($docFlowFields) || $docFlowFields['app_checked']!='t'){
+	if (!is_array($docFlowFields) || !count($docFlowFields) || $docFlowFields['app_checked']!='t'){
 		error_log('file_uploader, function get_doc_flow_out_client_id_for_db, checking not passed, application='.$appIdForDb);
 		throw new Exception(ER_NO_DOC);
 	}
@@ -491,7 +491,7 @@ try{
 						$db_file_id
 						));
 			
-						if (count($ar) && $ar['signed']=='t'){
+						if (is_array($ar) && count($ar) && $ar['signed']=='t'){
 							throw new Exception(ER_SIGNED);
 						}
 									
@@ -557,7 +557,8 @@ try{
 								$db_app_id,$db_doc_type,$db_file_path,$db_fileName
 								));
 								if (
-									count($ar) && $ar['present']=='t'
+									is_array($ar)
+									&& count($ar) && $ar['present']=='t'
 									&& $ar['file_id']!=$par_file_id
 									&& (!isset($_REQUEST['original_file_id']) || $ar['file_id']!=$_REQUEST['original_file_id'])
 								){
@@ -594,6 +595,10 @@ try{
 								$db_file_id,$db_doc_flow_out_client_id
 								));
 							}
+							//Если при COMMIT возникнет ошибка при ответах на замечания - все сломается!
+							//исходный файл потеряли, а нового нет
+							//Поэтому - сначала COMMIT, потом физическое удаление!!!
+							$dbLink->query('COMMIT');
 							
 							if (isset($_REQUEST['original_file_id'])&&isset($_REQUEST['doc_flow_out_client_id'])){
 								//Загружен новый файл с подписью - удаление оригинального файлы, который заменили
@@ -610,41 +615,18 @@ try{
 									//throw new Exception('Deleting original file '.$db_original_file_id);
 									DocFlowOutClient_Controller::removeOriginalFile($dbLink,$db_original_file_id,$db_file_id,$db_doc_flow_out_client_id);
 								}
-								/*
-								$db_original_file_id = NULL;
-								FieldSQLString::formatForDb($dbLink,$_REQUEST['original_file_id'],$db_original_file_id);
-								if ($db_original_file_id!='null'){
-									//if uploaded by this same document - actual unlinking!
-									$ar = $dbLink->query_first(sprintf(		
-									"SELECT TRUE AS present
-									FROM doc_flow_out_client_document_files
-									WHERE file_id=%s AND doc_flow_out_client_id=%d",
-									$db_original_file_id,$db_doc_flow_out_client_id
-									));
-									$unlink_file = (count($ar) && $ar['present']=='t');
-									Application_Controller::removeFile($dbLink,$db_original_file_id,$unlink_file);
-							
-									if (!$unlink_file){
-										$dbLink->query(sprintf(		
-										"INSERT INTO doc_flow_out_client_document_files
-										(file_id,doc_flow_out_client_id,is_new)
-										VALUES (%s,%d,FALSE)
-										ON CONFLICT DO NOTHING",
-										$db_original_file_id,$db_doc_flow_out_client_id
-										));
-									}
-								}
-								*/
 							}
-							
-							$dbLink->query('COMMIT');
 						}	
 						catch(Exception $e){
 							$dbLink->query('ROLLBACK');
 							
 							//Косяк БД - удалим файл и подпись
-							unlink($file_doc);
-							unlink($file_doc_sig);						
+							if(file_exists($file_doc)){
+								unlink($file_doc);
+							}
+							if(file_exists($file_doc_sig)){
+								unlink($file_doc_sig);
+							}
 							
 							throw $e;
 						}
@@ -661,7 +643,7 @@ try{
 							Application_Controller::LKPostfix(),
 							$db_file_id
 							));
-							if (!count($ar) || $ar['present']!='t'){
+							if (!is_array($ar) || !count($ar) || $ar['present']!='t'){
 								check_signature($dbLink,$file_doc,$file_doc_sig,$db_file_id);
 							}
 						}
@@ -728,7 +710,7 @@ try{
 			
 			$ar = $dbLink->query_first($ar_q);
 			
-			if (!count($ar)){
+			if (!is_array($ar) || !count($ar)){
 				throw new Exception(DocFlow_Controller::ER_NOT_FOUND);
 			}
 			else if ($ar['to_application_id']){
@@ -808,7 +790,7 @@ try{
 					WHERE file_id=%s",
 				$db_file_id
 				));
-				$file_exists_in_db = (count($fl_ar) && $fl_ar['file_exists']=='t');
+				$file_exists_in_db = (is_array($fl_ar) && count($fl_ar) && $fl_ar['file_exists']=='t');
 				
 				if (!$sig_add && !$is_sig){
 					//data file
@@ -834,9 +816,11 @@ try{
 	
 						$dbLink->query(sprintf(
 						"INSERT INTO doc_flow_attachments
-						(file_id,doc_type,doc_id,file_size,file_name,file_path,file_signed,employee_id)
+						(file_id,doc_type,doc_id,file_size,file_name,file_path,file_signed,employee_id,require_client_sig)
 						VALUES
-						(%s,'%s'::data_types,%d,%s,%s,%s,%s,%d)",
+						(%s,'%s'::data_types,%d,%s,%s,%s,%s,%d,
+						(SELECT fld.require_client_sig FROM application_doc_folders AS fld
+						WHERE fld.name=%s))",
 							$db_file_id,
 							$doc_type,
 							$db_id,			
@@ -844,7 +828,8 @@ try{
 							$db_file_name,
 							$db_file_path,
 							(isset($_REQUEST['file_signed']) && $_REQUEST['file_signed']=='true')? 'TRUE':'FALSE',
-							json_decode($_SESSION['employees_ref'])->keys->id
+							json_decode($_SESSION['employees_ref'])->keys->id,
+							$db_file_path
 						));
 					
 						if ($doc_type=='doc_flow_out'){

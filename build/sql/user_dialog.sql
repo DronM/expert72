@@ -14,7 +14,8 @@ CREATE OR REPLACE VIEW user_dialog AS
 		users.phone_cel,
 		users.color_palette,
 		users.reminders_to_email,
-		users.private_file
+		users.private_file,
+		users.allow_ext_contracts
 		
 	FROM users
 	LEFT JOIN time_zone_locales ON time_zone_locales.id=users.time_zone_locale_id

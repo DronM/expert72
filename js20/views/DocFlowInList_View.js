@@ -16,16 +16,16 @@ function DocFlowInList_View(id,options){
 	
 	var is_client = (window.getApp().getServVar("role_id")=="client");
 	
-	this.HEAD_TITLE = is_client? DocFlowOutList_View.prototype.HEAD_TITLE : DocFlowInList_View.prototype.HEAD_TITLE;
+	this.HEAD_TITLE = is_client? DocFlowOutList_View.prototype.HEAD_TITLE : this.HEAD_TITLE;
 	
 	DocFlowInList_View.superclass.constructor.call(this,id,options);
 	
 	var model;
 	if (options.models){
-		model = is_client? options.models.DocFlowInClientList_Model : options.models.DocFlowInList_Model;
+		model = is_client? options.models.DocFlowInClientList_Model : options.models[this.MODEL_ID];
 	}
 	else{
-		model = (is_client)? new DocFlowInClientList_Model() : new DocFlowInList_Model();
+		model = (is_client)? new DocFlowInClientList_Model() : new window[this.MODEL_ID]();
 	}
 	
 	var contr = new DocFlowIn_Controller();
@@ -135,6 +135,7 @@ function DocFlowInList_View(id,options){
 			],
 			"sortable":true
 		})
+		
 		,new GridCellHead(id+":grid:head:sender_construction_name",{
 			"value":"Объект",
 			"columns":[
@@ -210,7 +211,7 @@ function DocFlowInList_View(id,options){
 		"model":model,
 		"keyIds":["id"],
 		"controller":contr,
-		"readPublicMethod":(is_client)? contr.getPublicMethod("get_client_list") : null,
+		"readPublicMethod":contr.getPublicMethod((is_client)? "get_client_list":this.METHOD_ID),
 		"editInline":false,
 		"editWinClass":DocFlowInDialog_Form,
 		"popUpMenu":popup_menu,
@@ -235,6 +236,8 @@ function DocFlowInList_View(id,options){
 extend(DocFlowInList_View,ViewAjxList);
 
 /* Constants */
+DocFlowInList_View.prototype.MODEL_ID = "DocFlowInList_Model";
+DocFlowInList_View.prototype.METHOD_ID = "get_list";
 
 
 /* private members */

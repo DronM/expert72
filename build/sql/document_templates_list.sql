@@ -4,6 +4,7 @@ DROP VIEW document_templates_list;
 
 CREATE OR REPLACE VIEW document_templates_list AS
 	SELECT
+		tmpl.id,
 		tmpl.document_type,
 		tmpl.service_type,
 		tmpl.expertise_type,

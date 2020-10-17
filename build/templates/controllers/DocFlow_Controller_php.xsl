@@ -526,10 +526,15 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		return $this->get_afile($pm,TRUE);
 	}
 	
-	protected function get_next_num_on_type($docFlowType,$typeId){
+	protected function get_next_num_on_type($docFlowType,$typeId,$extContractDbVal){
 		$model = new ModelSQL($this->getDbLinkMaster(),array('id'=>'NewNum_Model'));
 		$model->query(
-			sprintf("SELECT doc_flow_%s_next_num(%d) AS num",$docFlowType,$typeId)		
+			sprintf(
+				"SELECT doc_flow_%s_next_num(%d,%s) AS num"
+				,$docFlowType
+				,$typeId
+				,$extContractDbVal
+			)
 		,TRUE);
 		$this->addModel($model);	
 	}

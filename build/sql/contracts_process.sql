@@ -27,6 +27,7 @@ BEGIN
 				END IF;
 			END IF;
 			*/
+			
 			SELECT
 				array_agg( ((sub.obj->'fields'->>'obj')::json->>'dataType')||((sub.obj->'fields'->>'obj')::json->'keys'->>'id') )
 			INTO NEW.permission_ar
@@ -35,6 +36,7 @@ BEGIN
 			) AS sub		
 			;
 		END IF;
+		
 		/*
 		IF (TG_OP='UPDATE' AND NEW.experts_for_notification<>OLD.experts_for_notification) THEN
 			SELECT
@@ -46,11 +48,13 @@ BEGIN
 			;
 		END IF;
 		*/
+		
 		/*
 		IF TG_OP='UPDATE' THEN
 			RAISE EXCEPTION 'Updating contracts linked_contracts=%',NEW.linked_contracts;
 		END IF;
 		*/
+		
 		/*		
 		--ГЕНЕРАЦИЯ НОМЕРА ЭКСПЕРТНОГО ЗАКЛЮЧЕНИЯ
 		IF TG_OP='INSERT' AND (NOT const_client_lk_val() OR const_debug_val()) THEN

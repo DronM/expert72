@@ -87,12 +87,28 @@ BEGIN
 			IF NEW.subject_doc->>'dataType'='doc_flow_out' THEN
 				--Если есть вложения с папками "в дело" - копируем в application_document_files
 				INSERT INTO application_document_files
-				(file_id,application_id,document_id,document_type,date_time,file_name,
-				file_path,file_signed,file_size)
+				(file_id,
+				application_id,
+				document_id,
+				document_type,
+				date_time,
+				file_name,
+				file_path,
+				file_signed,
+				file_size
+				--,file_signed_by_client
+				)
 				SELECT
 					at.file_id,
-					out.to_application_id,0,'documents',at.file_date,at.file_name,
-					at.file_path,at.file_signed,at.file_size
+					out.to_application_id,
+					0,
+					'documents',
+					at.file_date,
+					at.file_name,
+					at.file_path,
+					at.file_signed,
+					at.file_size
+					--,NOT at.require_client_sig
 				
 				FROM doc_flow_attachments AS at
 				LEFT JOIN doc_flow_out out ON out.id=(NEW.subject_doc->'keys'->>'id')::int

@@ -142,7 +142,9 @@ function DocFlowOutDialog_View(id,options){
 				self.getModel().setFieldValue("to_contract_main_experts_ref",fields.main_experts_ref.getValue());
 				var tp = self.getElement("doc_flow_types_ref").getValue();
 				if(tp&&tp.getKey()==window.getApp().getPredefinedItem("doc_flow_types","contr").getKey()){
-					self.fillSections();
+					self.fillSections(function(){
+						self.secSetValue(true);
+					});
 				}
 				
 			}
@@ -178,7 +180,9 @@ function DocFlowOutDialog_View(id,options){
 				"change":function(){
 					self.setDocVis();
 					if(this.getValue()&&this.getValue().getKey()==window.getApp().getPredefinedItem("doc_flow_types","contr").getKey()){
-						self.fillSections();
+						self.fillSections(function(){
+							self.secSetValue(true);
+						});
 					}
 				}
 			}			
@@ -205,6 +209,12 @@ function DocFlowOutDialog_View(id,options){
 			}
 		}));	
 		
+		this.addElement(new EditCheckBox(id+":ext_contract",{
+			"editContClassName":editContClassName,
+			"labelClassName":labelClassName,
+			"labelCaption":"Внеконтрактное",
+			"visible":false
+		}));	
 
 		this.addElement(new FileUploaderDocFlowOut_View(this.getId()+":attachments",{
 			"mainView":this,
@@ -356,6 +366,7 @@ function DocFlowOutDialog_View(id,options){
 		,new DataBinding({"control":this.getElement("signed_by_employees_ref")})
 		,new DataBinding({"control":this.getElement("expertise_reject_types_ref")})
 		,new DataBinding({"control":this.getElement("expertise_result")})
+		,new DataBinding({"control":this.getElement("ext_contract")})
 	];	
 	if (this.m_permissionsVisible){
 		read_b.push(new DataBinding({"control":this.getElement("allow_new_file_add")}));
@@ -380,6 +391,7 @@ function DocFlowOutDialog_View(id,options){
 		,new CommandBinding({"control":this.getElement("signed_by_employees_ref"),"fieldId":"signed_by_employee_id"})
 		,new CommandBinding({"control":this.getElement("expertise_reject_types_ref"),"fieldId":"expertise_reject_type_id"})
 		,new CommandBinding({"control":this.getElement("expertise_result")})
+		,new CommandBinding({"control":this.getElement("ext_contract")})
 	];
 	if (this.m_permissionsVisible){
 		write_b.push(new CommandBinding({"control":this.getElement("allow_new_file_add")}));
@@ -506,7 +518,7 @@ DocFlowOutDialog_View.prototype.fillSections = function(callBack){
 		});
 	}
 	else{
-		this.addDocTabTemplate(tabName);
+		//this.addDocTabTemplate(tabName);//????07/10/20
 		if(callBack)callBack();
 	}			
 }
@@ -530,6 +542,7 @@ DocFlowOutDialog_View.prototype.setDocVis = function(){
 	
 	this.getElement("to_addr_names").setVisible(!params.app_vis && !params.contr_vis);
 	this.getElement("doc_flow_in_ref").setVisible(!params.app_vis && !params.contr_vis);
+	this.getElement("ext_contract").setVisible(!params.app_vis && !params.contr_vis);
 		
 	if (params.app_vis){
 		this.setSubjectFromApplication(params.doc_type);
@@ -790,7 +803,12 @@ DocFlowOutDialog_View.prototype.setSubject = function(docType,docId,pm){
 					"data":resp.getModelData("ConstrName_Model")
 				});
 				if (m.getNextRow()){
-					subj = subj + ", "+m.getFieldValue("constr_name");
+					//с 19/08/20 + признак внебрачных контрагентов
+					var ext_contract = m.getFieldValue("ext_contract");
+					self.getElement("ext_contract").setValue(ext_contract);
+					subj = subj +
+						(ext_contract? " (внеконтракт)":"") +
+						", "+m.getFieldValue("constr_name");
 					self.getElement("subject").setValue(subj);
 				}
 			}
@@ -905,3 +923,6 @@ DocFlowOutDialog_View.prototype.setSectionControls = function(){
 	}
 }
 
+DocFlowOutDialog_View.prototype.getExtContract = function(){
+	return this.getElement("ext_contract").getValue();
+}

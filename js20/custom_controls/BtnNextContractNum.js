@@ -40,6 +40,8 @@ extend(BtnNextContractNum,ButtonCtrl);
 BtnNextContractNum.prototype.getNextNum = function(){
 	var pm = this.m_view.getController().getPublicMethod("get_next_contract_number");
 	pm.setFieldValue("application_id", this.m_view.getElement("to_applications_ref").getValue().getKey("id"));
+	pm.setFieldValue("ext_contract", this.m_view.getExtContract());
+	
 	var self = this.m_view;
 	pm.run({
 		"ok":function(resp){

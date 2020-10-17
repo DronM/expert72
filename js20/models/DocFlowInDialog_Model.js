@@ -279,6 +279,15 @@ function DocFlowInDialog_Model(options){
 	
 	options.fields.corrected_sections = new FieldJSON("corrected_sections",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.ext_contract = new FieldBool("ext_contract",filed_options);
+	
 		DocFlowInDialog_Model.superclass.constructor.call(this,id,options);
 }
 extend(DocFlowInDialog_Model,ModelXML);

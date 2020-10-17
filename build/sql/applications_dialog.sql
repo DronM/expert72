@@ -1,7 +1,7 @@
 -- VIEW: applications_dialog
 
-DROP VIEW contracts_dialog;
-DROP VIEW applications_dialog;
+--DROP VIEW contracts_dialog;
+--DROP VIEW applications_dialog;
 
 CREATE OR REPLACE VIEW applications_dialog AS
 	SELECT
@@ -260,11 +260,11 @@ CREATE OR REPLACE VIEW applications_dialog AS
 						END
 					),
 					'file_signed_by_client',adf.file_signed_by_client
-					--'require_client_sig',app_fd.require_client_sig
+					,'require_client_sig',att_f.require_client_sig
 				) AS files
 			FROM application_document_files adf			
 			--LEFT JOIN doc_flow_out AS adf_out ON adf_out.to_application_id=adf.application_id AND adf_out.doc_flow_type_id=(pdfn_doc_flow_types_app_resp()->'keys'->>'id')::int
-			--LEFT JOIN doc_flow_attachments AS adf_att ON adf_att.doc_type='doc_flow_out' AND adf_att.doc_id=adf_out.id AND adf_att.file_name=adf.file_name
+			LEFT JOIN doc_flow_attachments AS att_f ON att_f.file_id=adf.file_id AND att_f.file_id=adf.file_id
 			LEFT JOIN file_verifications AS f_ver ON f_ver.file_id=adf.file_id
 		
 			WHERE adf.document_type='documents'			

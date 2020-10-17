@@ -82,6 +82,11 @@ function UserDialog_View(id,options){
 			}
 		}));	
 		
+		this.addElement(new EditCheckBox(id+":allow_ext_contracts",{
+			"labelCaption":"Разрешить внебрачные контракты:"
+		}));		
+
+		
 	}
 	
 	UserDialog_View.superclass.constructor.call(this,id,options);
@@ -102,6 +107,7 @@ function UserDialog_View(id,options){
 		new DataBinding({"control":this.getElement("color_palette")}),
 		new DataBinding({"control":this.getElement("reminders_to_email")})
 		,new DataBinding({"control":this.getElement("private_file")})
+		,new DataBinding({"control":this.getElement("allow_ext_contracts")})
 	];
 	/*
 	if (window.getApp().getServVars().role_id=="client1c"){
@@ -120,6 +126,7 @@ function UserDialog_View(id,options){
 		new CommandBinding({"control":this.getElement("banned")}),
 		new CommandBinding({"control":this.getElement("color_palette")}),
 		new CommandBinding({"control":this.getElement("reminders_to_email")})
+		,new CommandBinding({"control":this.getElement("allow_ext_contracts")})
 	]);
 	
 }

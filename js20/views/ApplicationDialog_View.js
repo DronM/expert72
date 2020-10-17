@@ -20,6 +20,8 @@ function ApplicationDialog_View(id,options){
 	options.controller = new Application_Controller();
 	options.model = options.models.ApplicationDialog_Model;
 	
+	this.m_extContract = options.ext_contract;
+	
 	this.m_DocFlowOutClientList_Model = options.models.DocFlowOutClientList_Model;
 	this.m_DocFlowInClientList_Model = options.models.DocFlowInClientList_Model;
 	
@@ -28,6 +30,7 @@ function ApplicationDialog_View(id,options){
 	options.uploaderClass = FileUploaderApplication_View;
 	
 	options.templateOptions = options.templateOptions || {};
+	options.templateOptions.ext_contract = this.m_extContract;
 
 	this.m_order010119 = true;//true!!!
 
@@ -40,7 +43,7 @@ function ApplicationDialog_View(id,options){
 		options.templateOptions.is_admin = (role_id=="admin");
 		options.readOnly = (options.model.getField("application_state").isSet() && options.model.getFieldValue("application_state")!="filling" && options.model.getFieldValue("application_state")!="correcting");
 		//var exp_tp = options.model.getField("expertise_type");
-		var sent_d = options.model.getFieldValue("sent_dt");
+		var sent_d = options.model.getFieldValue("sent_dt");		
 		if (sent_d && sent_d.getTime()<DateHelper.strtotime("2020-01-17").getTime()){// && options.readOnly
 			this.m_order010119 = false;
 		}
@@ -610,8 +613,12 @@ function ApplicationDialog_View(id,options){
 	}
 	this.setWriteBindings(w_binds);
 
+	if(options.ext_contract){
+		options.controller.getPublicMethod("insert").setFieldValue("ext_contract",true);
+	}
+
 	//*************************
-	var f_getFillPercent = function(){
+	this.m_getFillPercent = function(){
 		return (this.getAttr("percentcalc")=="true"&&this.isNull())? 0:100;
 	};
 	var f_setAppPrintActive = function(v){
@@ -620,7 +627,7 @@ function ApplicationDialog_View(id,options){
 	}
 
 	
-	this.getElement("offices_ref").getFillPercent = f_getFillPercent;
+	this.getElement("offices_ref").getFillPercent = this.m_getFillPercent;
 	
 	//ИСПОЛЬЗУЕТСЯ В f_setAppPrintActive
 	this.m_getAppPrintFillPercent = function(){
@@ -639,16 +646,16 @@ function ApplicationDialog_View(id,options){
 	this.getElement("app_print").getFillPercent = this.m_getAppPrintFillPercent;
 	
 	if(!modified_documents){			
-		//this.getElement("service_cont").getFillPercent = f_getFillPercent;
-		this.getElement("fund_sources_ref").getFillPercent = f_getFillPercent;
-		this.getElement("build_types_ref").getFillPercent = f_getFillPercent;
-		this.getElement("constr_name").getFillPercent = f_getFillPercent;
-		this.getElement("constr_address").getFillPercent = f_getFillPercent;
-		this.getElement("construction_types_ref").getFillPercent = f_getFillPercent;
-		this.getElement("total_cost_eval").getFillPercent = f_getFillPercent;
-		this.getElement("limit_cost_eval").getFillPercent = f_getFillPercent;
-		this.getElement("primary_application").getFillPercent = f_getFillPercent;
-		this.getElement("pd_usage_info").getFillPercent = f_getFillPercent;
+		//this.getElement("service_cont").getFillPercent = this.m_getFillPercent;
+		this.getElement("fund_sources_ref").getFillPercent = this.m_getFillPercent;
+		this.getElement("build_types_ref").getFillPercent = this.m_getFillPercent;
+		this.getElement("constr_name").getFillPercent = this.m_getFillPercent;
+		this.getElement("constr_address").getFillPercent = this.m_getFillPercent;
+		this.getElement("construction_types_ref").getFillPercent = this.m_getFillPercent;
+		this.getElement("total_cost_eval").getFillPercent = this.m_getFillPercent;
+		this.getElement("limit_cost_eval").getFillPercent = this.m_getFillPercent;
+		this.getElement("primary_application").getFillPercent = this.m_getFillPercent;
+		this.getElement("pd_usage_info").getFillPercent = this.m_getFillPercent;
 	
 		this.getElement("applicant").getElement("auth_letter_file").getFillPercent = this.m_getAppPrintFillPercent;
 		this.getElement("customer").getElement("customer_auth_letter_file").getFillPercent = this.m_getAppPrintFillPercent;
@@ -1001,11 +1008,27 @@ ApplicationDialog_View.prototype.onGetData = function(resp,cmd){
 	DOMHelper.delClass(document.getElementById(this.getId()+":"+mes_id),"hidden");
 	
 	this.getElement("applicant").setAuthLetterRequired(true);
-	/*
-	if (cmd=="insert"||cmd=="copy"){
-		this.calcFillPercent();
+	
+	this.updateServiceDependFieldsVis(m.getFieldValue("expertise_type"));
+	//01/10/20 Добавил чтобы пересчитывался процент, тк. например поле 
+	//pd_usage_info невидимо для Достоверности, и процент остается неверным	
+}
+
+/**
+ * Устанавливает видимость некоторых полей, зависимых от типа услуги
+ */
+ApplicationDialog_View.prototype.updateServiceDependFieldsVis = function(expertiseType){
+	var pd_usage_info_vis = (expertiseType=="pd"||expertiseType=="pd_eng_survey"||expertiseType=="cost_eval_validity_pd"||expertiseType=="cost_eval_validity_pd_eng_survey");
+	this.getElement("pd_usage_info").setVisible(pd_usage_info_vis);
+
+	if(pd_usage_info_vis){
+		this.getElement("pd_usage_info").setAttr("percentcalc",pd_usage_info_vis);
 	}
-	*/
+	else{
+		this.getElement("pd_usage_info").delAttr("percentcalc");
+	}
+	this.getElement("pd_usage_info").getFillPercent = pd_usage_info_vis? this.m_getFillPercent:null;	
+	this.calcFillPercent();
 }
 
 ApplicationDialog_View.prototype.setCmdEnabled = function(){

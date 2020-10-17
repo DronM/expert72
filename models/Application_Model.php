@@ -443,6 +443,15 @@ class Application_Model extends ModelSQL{
 		$f_documents=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"documents",$f_opts);
 		$this->addField($f_documents);
 		//********************
+		
+		//*** Field ext_contract ***
+		$f_opts = array();
+		$f_opts['defaultValue']='FALSE';
+		$f_opts['id']="ext_contract";
+						
+		$f_ext_contract=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"ext_contract",$f_opts);
+		$this->addField($f_ext_contract);
+		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}
 

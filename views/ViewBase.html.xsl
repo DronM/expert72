@@ -9,6 +9,7 @@
 <xsl:variable name="BASE_PATH" select="/document/model[@id='ModelVars']/row[1]/basePath"/>
 <xsl:variable name="VERSION" select="/document/model[@id='ModelVars']/row[1]/scriptId"/>
 <xsl:variable name="COLOR_PALETTE" select="/document/model[@id='Page_Model']/row[1]/DEFAULT_COLOR_PALETTE"/>
+<xsl:variable name="ALLOW_EXT_CONTRACTS" select="/document/model[@id='ModelVars']/row[1]/allow_ext_contracts"/>
 <xsl:variable name="TOKEN">
 	<xsl:choose>
 		<xsl:when test="/document/model[@id='ModelVars']/row[1]/token and not(/document/model[@id='ModelVars']/row[1]/token='')"><xsl:value-of select="concat('&amp;token=',/document/model[@id='ModelVars']/row[1]/token)"/></xsl:when>
@@ -74,7 +75,7 @@
 						
 						<!-- Footer -->
 						<div class="footer text-muted text-center">
-							2017-2019. <a href="#">Катрэн+</a>
+							2017-2020. <a href="#">Катрэн+</a>
 						</div>
 						<!-- /footer -->
 
@@ -297,6 +298,9 @@
 				</ul>						
 			</li>
 		</xsl:when>
+		<xsl:when test="$ALLOW_EXT_CONTRACTS='f' and @f='get_ext_list'">
+			<!-- stub -->
+		</xsl:when>
 		<xsl:otherwise>
 			<!-- one level-->
 			<li>
@@ -315,29 +319,7 @@
 		</xsl:otherwise>
 	</xsl:choose>
 </xsl:template>
-<!--
-<xsl:template match="menuitem">
-	<xsl:choose>
-		<xsl:when test="@isgroup='1'">
-			<li>
-				<a href="#" class="has-ul"><i class="{@glyphclass}"></i> <span><xsl:value-of select="@descr"/> </span></a>
-				<ul class="hidden-ul" style="display: none;">
-					<xsl:apply-templates/>
-				</ul>						
-			</li>
-		</xsl:when>
-		<xsl:otherwise>
-			<li>
-			    <a href="index.php?c={@c}&amp;f={@f}&amp;t={@t}{$TOKEN}"
-			    onclick="window.getApp().showMenuItem(this,'{@c}','{@f}','{@t}{$TOKEN}');return false;"
-			    defaultItem="{@default='true'}">
-			    <xsl:if test="@glyphclass"><i class="{@glyphclass}"></i></xsl:if>
-			    <xsl:value-of select="@descr"/> </a>
-			</li>			
-		</xsl:otherwise>
-	</xsl:choose>
-</xsl:template>
--->
+
 <!--*************** templates ********************* -->
 <xsl:template match="model[@templateId]">
 <xsl:copy-of select="*"/>

@@ -91,6 +91,9 @@ CREATE OR REPLACE VIEW contracts_list AS
 		FROM client_payments
 		GROUP BY client_payments.contract_id
 	) AS pm ON pm.contract_id=t.id
+	
+	WHERE coalesce(applications.ext_contract,FALSE)=FALSE
+	
 	ORDER BY t.date_time DESC
 	;
 	

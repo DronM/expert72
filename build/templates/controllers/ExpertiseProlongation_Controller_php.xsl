@@ -44,7 +44,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		SELECT contracts_work_end_date(
 			(SELECT office_id FROM contr),
 			%s,
-			(SELECT work_end_date FROM contr),
+			(SELECT work_end_date FROM contr)+'1 day'::interval,
 			%d
 		) AS contact_work_end_date",
 		$contractIdDb,

@@ -28,6 +28,7 @@ function DocFlowIn_Controller(options){
 	this.addUpdate();
 	this.addDelete();
 	this.addGetList();
+	this.add_get_ext_list();
 	this.addGetObject();
 	this.addComplete();
 	this.add_remove_file();
@@ -171,6 +172,12 @@ extend(DocFlowIn_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	
+	var field = new FieldBool("ext_contract",options);
+	
+	pm.addField(field);
+	
 	pm.addField(new FieldInt("ret_id",{}));
 	
 	
@@ -309,6 +316,12 @@ extend(DocFlowIn_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	
+	var field = new FieldBool("ext_contract",options);
+	
+	pm.addField(field);
+	
 	
 }
 
@@ -393,6 +406,23 @@ extend(DocFlowIn_Controller,ControllerObjServer);
 	pm.addField(new FieldText("corrected_sections",f_opts));
 	pm.getField(this.PARAM_ORD_FIELDS).setValue("date_time");
 	
+}
+
+			DocFlowIn_Controller.prototype.add_get_ext_list = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('get_ext_list',opts);
+	
+	pm.addField(new FieldInt(this.PARAM_COUNT));
+	pm.addField(new FieldInt(this.PARAM_FROM));
+	pm.addField(new FieldString(this.PARAM_COND_FIELDS));
+	pm.addField(new FieldString(this.PARAM_COND_SGNS));
+	pm.addField(new FieldString(this.PARAM_COND_VALS));
+	pm.addField(new FieldString(this.PARAM_COND_ICASE));
+	pm.addField(new FieldString(this.PARAM_ORD_FIELDS));
+	pm.addField(new FieldString(this.PARAM_ORD_DIRECTS));
+	pm.addField(new FieldString(this.PARAM_FIELD_SEP));
+
+	this.addPublicMethod(pm);
 }
 
 			DocFlowIn_Controller.prototype.addGetObject = function(){

@@ -87,6 +87,7 @@ tr.grid_foot{
       height: 100%;
     }
 }
+
 .modal-dialog {
   display: inline-block;
   text-align: left;
@@ -457,4 +458,46 @@ table,tr,td.noBorder{
 }
 input.checkBoxCtrl{
 	margin-right:5px;
+}
+
+@media screen and (max-width: 765px) {
+	.sidebar{
+		display: block;
+		vertical-align: top;
+	}
+	
+	.smallWidthCardFormat > thead > tr > th{
+		border: none; !important;
+	}
+	.smallWidthCardFormat  thead{
+		display: none; !important;
+	}
+	.smallWidthCardFormat tr{
+		margin-bottom: 20px;  !important;
+		display: block;  !important;
+		border-bottom: 2px solid #ddd;  !important;
+		box-shadow: 2px 2px 1px #dadada;  !important;
+	}
+	.smallWidthCardFormat td{
+		display: block;  !important;
+		text-align: right; !important;
+		font-size: 13px; !important;
+	}
+	.smallWidthCardFormat td:last-child{
+		border-bottom: 1px solid black;  !important;
+	}
+	.smallWidthCardFormat td:first-child{
+		border-top: 1px solid black; !important;
+	}
+	
+	.smallWidthCardFormat td::before{
+		content: attr(data-label);
+		float: left;
+		font-weight: bold;
+	}
+	
+}
+
+.error{
+	background:#fc7462;
 }

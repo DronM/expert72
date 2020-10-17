@@ -123,6 +123,15 @@ function UserDialog_Model(options){
 	
 	options.fields.private_file = new FieldJSONB("private_file",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.allow_ext_contracts = new FieldBool("allow_ext_contracts",filed_options);
+	
 		UserDialog_Model.superclass.constructor.call(this,id,options);
 }
 extend(UserDialog_Model,ModelXML);

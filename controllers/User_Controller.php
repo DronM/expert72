@@ -133,6 +133,9 @@ class User_Controller extends ControllerSQL{
 		$param = new FieldExtJSONB('win_message_style'
 				,array());
 		$pm->addParam($param);
+		$param = new FieldExtBool('allow_ext_contracts'
+				,array());
+		$pm->addParam($param);
 		
 		$pm->addParam(new FieldExtInt('ret_id'));
 		
@@ -246,6 +249,10 @@ class User_Controller extends ControllerSQL{
 			));
 			$pm->addParam($param);
 		$param = new FieldExtJSONB('win_message_style'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtBool('allow_ext_contracts'
 				,array(
 			));
 			$pm->addParam($param);
@@ -590,8 +597,11 @@ class User_Controller extends ControllerSQL{
 		}
 		
 		//global filters				
-		if ($ar['role_id']=='client'){			
-			$_SESSION['global_user_id'] = $ar['id'];
+		if ($ar['role_id']=='client'){
+			$_SESSION['allow_ext_contracts'] = $ar['allow_ext_contracts'];
+						
+			$_SESSION['global_user_id'] = $ar['id'];			
+			
 						
 			$model = new UserProfile_Model($this->getDbLink());
 			$filter = new ModelWhereSQL();
@@ -620,6 +630,13 @@ class User_Controller extends ControllerSQL{
 			$field->setValue($ar['id']);
 			$filter->addField($field,'=');
 			GlobalFilter::set('ApplicationList_Model',$filter);
+						
+			$model = new ApplicationExtList_Model($this->getDbLink());
+			$filter = new ModelWhereSQL();
+			$field = clone $model->getFieldById('user_id');
+			$field->setValue($ar['id']);
+			$filter->addField($field,'=');
+			GlobalFilter::set('ApplicationExtList_Model',$filter);
 						
 			$model = new ApplicationForExpertMaintenanceList_Model($this->getDbLink());
 			$filter = new ModelWhereSQL();

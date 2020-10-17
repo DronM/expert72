@@ -98,6 +98,7 @@ FileUploaderDocFlowInClient_View.prototype.uploadAll = function(){
 }
 
 FileUploaderDocFlowInClient_View.prototype.onFillTemplateOptions = function(opts,itemFile){
+	/*
 	var require_client_sig = false;
 	if (!this.m_folders){
 		this.m_folders = {};
@@ -115,7 +116,9 @@ FileUploaderDocFlowInClient_View.prototype.onFillTemplateOptions = function(opts
 			}
 		}
 	}
-	opts.doc_flow_in_require_client_sig = require_client_sig;
+	*/
+	opts.doc_flow_in_require_client_sig = itemFile.require_client_sig;//require_client_sig;
+	//itemFile.require_client_sig;//
 	opts.file_signed_by_client = itemFile.file_signed_by_client;
 	opts.file_not_signed_by_client = !itemFile.file_signed_by_client;
 }

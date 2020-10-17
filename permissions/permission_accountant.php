@@ -270,7 +270,11 @@ $permissions = array();
 				
 					$permissions['Application_Controller_get_list']=TRUE;
 				
+					$permissions['Application_Controller_get_ext_list']=TRUE;
+				
 					$permissions['Application_Controller_complete']=TRUE;
+				
+					$permissions['Application_Controller_complete_ext']=TRUE;
 				
 					$permissions['Application_Controller_complete_for_expert_maintenance']=TRUE;
 				
@@ -370,6 +374,8 @@ $permissions = array();
 				
 					$permissions['DocFlowOut_Controller_get_list']=TRUE;
 				
+					$permissions['DocFlowOut_Controller_get_ext_list']=TRUE;
+				
 					$permissions['DocFlowOut_Controller_get_object']=TRUE;
 				
 					$permissions['DocFlowOut_Controller_remove_file']=TRUE;
@@ -398,6 +404,8 @@ $permissions = array();
 				
 					$permissions['DocFlowOut_Controller_sign_file']=TRUE;
 				
+					$permissions['DocFlowOut_Controller_set_require_client_sig']=TRUE;
+				
 					$permissions['DocFlowIn_Controller_insert']=TRUE;
 				
 					$permissions['DocFlowIn_Controller_update']=TRUE;
@@ -405,6 +413,8 @@ $permissions = array();
 					$permissions['DocFlowIn_Controller_delete']=TRUE;
 				
 					$permissions['DocFlowIn_Controller_get_list']=TRUE;
+				
+					$permissions['DocFlowIn_Controller_get_ext_list']=TRUE;
 				
 					$permissions['DocFlowIn_Controller_get_object']=TRUE;
 				
@@ -724,6 +734,8 @@ $permissions = array();
 				
 					$permissions['Contract_Controller_get_list']=TRUE;
 				
+					$permissions['Contract_Controller_get_ext_list']=TRUE;
+				
 					$permissions['Contract_Controller_complete']=TRUE;
 				
 					$permissions['Contract_Controller_get_pd_list']=TRUE;
@@ -773,6 +785,8 @@ $permissions = array();
 					$permissions['Contract_Controller_get_reestr_contract']=TRUE;
 				
 					$permissions['Contract_Controller_get_quarter_rep']=TRUE;
+				
+					$permissions['Contract_Controller_ext_contract_to_contract']=TRUE;
 				
 					$permissions['ExpertiseRejectType_Controller_insert']=TRUE;
 				

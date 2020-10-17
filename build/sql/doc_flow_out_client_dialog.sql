@@ -107,7 +107,7 @@ CREATE OR REPLACE VIEW doc_flow_out_client_dialog AS
 						ORDER BY f_sig.sign_date_time
 						) AS sign_t
 					),
-					'file_signed_by_client',app_f.file_signed_by_client
+					'file_signed_by_client',app_f.file_signed_by_client					
 				) AS attachments			
 			FROM doc_flow_out_client_document_files AS out_f
 			LEFT JOIN application_document_files AS app_f ON app_f.file_id=out_f.file_id

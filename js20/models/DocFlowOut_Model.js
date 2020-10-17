@@ -189,6 +189,16 @@ function DocFlowOut_Model(options){
 	
 	options.fields.allow_edit_sections = new FieldJSONB("allow_edit_sections",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	filed_options.defValue = true;
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.ext_contract = new FieldBool("ext_contract",filed_options);
+	
 			
 			
 			

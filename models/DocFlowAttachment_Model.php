@@ -98,6 +98,14 @@ class DocFlowAttachment_Model extends ModelSQL{
 		$f_employee_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"employee_id",$f_opts);
 		$this->addField($f_employee_id);
 		//********************
+		
+		//*** Field require_client_sig ***
+		$f_opts = array();
+		$f_opts['id']="require_client_sig";
+						
+		$f_require_client_sig=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"require_client_sig",$f_opts);
+		$this->addField($f_require_client_sig);
+		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}
 

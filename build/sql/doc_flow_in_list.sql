@@ -55,6 +55,8 @@ CREATE OR REPLACE VIEW doc_flow_in_list AS
 	LEFT JOIN doc_flow_in_processes st
 		ON st.doc_flow_in_id=h_max.doc_id AND st.date_time = h_max.date_time
 	
+	WHERE coalesce(doc_flow_in.ext_contract,FALSE) = FALSE
+	
 	ORDER BY doc_flow_in.date_time DESC
 	;
 	

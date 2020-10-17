@@ -197,6 +197,7 @@ function ClientType(id,options){
 	
 	this.m_mainView = options.mainView;
 	this.m_view = options.view;
+	this.m_onClientTypeChange = options.onClientTypeChange;
 	
 	var self = this;
 	options.elements = [
@@ -291,6 +292,7 @@ if (ctp==undefined)return;
 			}
 		}
 	}
+	this.m_onClientTypeChange();
 }
 
 

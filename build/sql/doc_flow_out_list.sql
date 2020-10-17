@@ -39,7 +39,7 @@ CREATE OR REPLACE VIEW doc_flow_out_list AS
 	) AS h_max ON h_max.doc_id=doc_flow_out.id
 	LEFT JOIN doc_flow_out_processes st
 		ON st.doc_flow_out_id=h_max.doc_id AND st.date_time = h_max.date_time
-	
+	WHERE coalesce(doc_flow_out.ext_contract,FALSE)=FALSE
 	ORDER BY doc_flow_out.date_time DESC
 	;
 	

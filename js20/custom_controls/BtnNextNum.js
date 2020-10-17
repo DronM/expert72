@@ -42,6 +42,7 @@ BtnNextNum.prototype.getNextNum = function(){
 		
 	var pm = this.m_view.getController().getPublicMethod("get_next_num");
 	pm.setFieldValue("doc_flow_type_id",key);
+	pm.setFieldValue("ext_contract",this.m_view.getExtContract());
 	var self = this.m_view;
 	pm.run({
 		"ok":function(resp){

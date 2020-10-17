@@ -148,6 +148,7 @@
 <li><a href="#Application_Model">Application_Model</a></li>
 <li><a href="#ApplicationDialog_Model">ApplicationDialog_Model</a></li>
 <li><a href="#ApplicationList_Model">ApplicationList_Model</a></li>
+<li><a href="#ApplicationExtList_Model">ApplicationExtList_Model</a></li>
 <li><a href="#ApplicationForExpertMaintenanceList_Model">ApplicationForExpertMaintenanceList_Model</a></li>
 <li><a href="#ApplicationClientList_Model">ApplicationClientList_Model</a></li>
 <li><a href="#ApplicationCustomerList_Model">ApplicationCustomerList_Model</a></li>
@@ -181,10 +182,12 @@
 <li><a href="#DocFlowAttachment_Model">DocFlowAttachment_Model</a></li>
 <li><a href="#DocFlowOut_Model">DocFlowOut_Model</a></li>
 <li><a href="#DocFlowOutList_Model">DocFlowOutList_Model</a></li>
+<li><a href="#DocFlowOutExtList_Model">DocFlowOutExtList_Model</a></li>
 <li><a href="#DocFlowOutDialog_Model">DocFlowOutDialog_Model</a></li>
 <li><a href="#DocFlowOutProcess_Model">DocFlowOutProcess_Model</a></li>
 <li><a href="#DocFlowIn_Model">DocFlowIn_Model</a></li>
 <li><a href="#DocFlowInList_Model">DocFlowInList_Model</a></li>
+<li><a href="#DocFlowInExtList_Model">DocFlowInExtList_Model</a></li>
 <li><a href="#DocFlowInDialog_Model">DocFlowInDialog_Model</a></li>
 <li><a href="#DocFlowInProcess_Model">DocFlowInProcess_Model</a></li>
 <li><a href="#DocFlowInside_Model">DocFlowInside_Model</a></li>
@@ -240,6 +243,7 @@
 <li><a href="#ContactName_Model">ContactName_Model</a></li>
 <li><a href="#Contract_Model">Contract_Model</a></li>
 <li><a href="#ContractList_Model">ContractList_Model</a></li>
+<li><a href="#ContractExtList_Model">ContractExtList_Model</a></li>
 <li><a href="#ContractDialog_Model">ContractDialog_Model</a></li>
 <li><a href="#ExpertWork_Model">ExpertWork_Model</a></li>
 <li><a href="#ExpertWorkList_Model">ExpertWorkList_Model</a></li>
@@ -367,8 +371,10 @@
 </div>
 </div>
 <h2>get_list</h2>
-<a href="#ApplicationList_Model">Model: ApplicationList_Model</a><h2>complete</h2>
-<a href="#ApplicationList_Model">Model: ApplicationList_Model</a><h2>complete_for_expert_maintenance</h2>
+<a href="#ApplicationList_Model">Model: ApplicationList_Model</a><h2>get_ext_list</h2>
+<a href="#ApplicationExtList_Model">Model: ApplicationExtList_Model</a><h2>complete</h2>
+<a href="#ApplicationList_Model">Model: ApplicationList_Model</a><h2>complete_ext</h2>
+<a href="#ApplicationExtList_Model">Model: ApplicationExtList_Model</a><h2>complete_for_expert_maintenance</h2>
 <a href="#ApplicationList_Model">Model: ApplicationList_Model</a><h2>get_for_expert_maintenance_list</h2>
 <a href="#ApplicationForExpertMaintenanceList_Model">Model: ApplicationForExpertMaintenanceList_Model</a><h2>get_modified_documents_list</h2>
 <a href="#ApplicationList_Model">Model: ApplicationList_Model</a><h2>get_client_list</h2>
@@ -716,7 +722,7 @@
 <p class="big"></p>
 <p>Методы:</p>
 <h2>update</h2>
-<a href="#ApplicationDocumentFileList_Model">Model: ApplicationDocumentFileList_Model</a><h2>delete</h2>
+<a href="#ApplicationDocumentFile_Model">Model: ApplicationDocumentFile_Model</a><h2>delete</h2>
 <a href="#ApplicationDocumentFile_Model">Model: ApplicationDocumentFile_Model</a><h2>get_object</h2>
 <a href="#ApplicationDocumentFileList_Model">Model: ApplicationDocumentFileList_Model</a><h2>get_list</h2>
 <a href="#ApplicationDocumentFileList_Model">Model: ApplicationDocumentFileList_Model</a>
@@ -980,7 +986,8 @@
 <a href="#Contract_Model">Model: Contract_Model</a><h2>delete</h2>
 <a href="#Contract_Model">Model: Contract_Model</a><h2>get_object</h2>
 <a href="#ContractDialog_Model">Model: ContractDialog_Model</a><h2>get_list</h2>
-<a href="#ContractList_Model">Model: ContractList_Model</a><h2>complete</h2>
+<a href="#ContractList_Model">Model: ContractList_Model</a><h2>get_ext_list</h2>
+<a href="#ContractExtList_Model">Model: ContractExtList_Model</a><h2>complete</h2>
 <a href="#ContractList_Model">Model: ContractList_Model</a><h2>get_pd_list</h2>
 <a href="#ContractList_Model">Model: ContractList_Model</a><h2>get_expert_maintenance_list</h2>
 <a href="#ContractList_Model">Model: ContractList_Model</a><h2>get_modified_documents_list</h2>
@@ -1257,6 +1264,17 @@
 								Нет</p>
 </div>
 </div>
+<h2>ext_contract_to_contract</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>contract_id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Да</p>
+</div>
+</div>
 </div>
 </div>
 <div id="ContractSection_Controller" class="content_box">
@@ -1509,7 +1527,8 @@
 <a href="#DocFlowIn_Model">Model: DocFlowIn_Model</a><h2>update</h2>
 <a href="#DocFlowIn_Model">Model: DocFlowIn_Model</a><h2>delete</h2>
 <a href="#DocFlowIn_Model">Model: DocFlowIn_Model</a><h2>get_list</h2>
-<a href="#DocFlowInList_Model">Model: DocFlowInList_Model</a><h2>get_object</h2>
+<a href="#DocFlowInList_Model">Model: DocFlowInList_Model</a><h2>get_ext_list</h2>
+<a href="#DocFlowInExtList_Model">Model: DocFlowInExtList_Model</a><h2>get_object</h2>
 <a href="#DocFlowInDialog_Model">Model: DocFlowInDialog_Model</a><h2>complete</h2>
 <a href="#DocFlowInList_Model">Model: DocFlowInList_Model</a><h2>remove_file</h2>
 <p>Arguments:</p>
@@ -1782,7 +1801,8 @@
 <a href="#DocFlowOut_Model">Model: DocFlowOut_Model</a><h2>update</h2>
 <a href="#DocFlowOut_Model">Model: DocFlowOut_Model</a><h2>delete</h2>
 <a href="#DocFlowOut_Model">Model: DocFlowOut_Model</a><h2>get_list</h2>
-<a href="#DocFlowOutList_Model">Model: DocFlowOutList_Model</a><h2>get_object</h2>
+<a href="#DocFlowOutList_Model">Model: DocFlowOutList_Model</a><h2>get_ext_list</h2>
+<a href="#DocFlowOutExtList_Model">Model: DocFlowOutExtList_Model</a><h2>get_object</h2>
 <a href="#DocFlowOutDialog_Model">Model: DocFlowOutDialog_Model</a><h2>remove_file</h2>
 <p>Arguments:</p>
 <div class="content_item content_item2">
@@ -1888,6 +1908,13 @@
 <p>Required:
 								Да</p>
 </div>
+<h3>ext_contract</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Bool</p>
+<p>Required:
+								Да</p>
+</div>
 </div>
 <h2>complete</h2>
 <a href="#DocFlowOutList_Model">Model: DocFlowOutList_Model</a><h2>get_app_state</h2>
@@ -1908,6 +1935,13 @@
 <p></p>
 <div class="content_item content_item3">
 <p>Type:Int</p>
+<p>Required:
+								Да</p>
+</div>
+<h3>ext_contract</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Bool</p>
 <p>Required:
 								Да</p>
 </div>
@@ -1977,7 +2011,32 @@
 </div>
 </div>
 <h2>sign_file</h2>
-<a href="#Signature_Model">Model: Signature_Model</a>
+<a href="#Signature_Model">Model: Signature_Model</a><h2>set_require_client_sig</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>doc_id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Да</p>
+</div>
+<h3>file_id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Да</p>
+<p>Length:36</p>
+</div>
+<h3>require_client_sig</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Bool</p>
+<p>Required:
+								Да</p>
+</div>
+</div>
 </div>
 </div>
 <div id="DocFlowOutClient_Controller" class="content_box">
@@ -3761,6 +3820,12 @@
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
+<h2>ext_contract</h2>
+<div>Type:Bool</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
 </div>
 </div>
 <div id="ApplicationClient_Model" class="content_box">
@@ -4489,6 +4554,138 @@
 <div>Precision:</div>
 <h2>information_list</h2>
 <div>Type:Bool</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="ApplicationExtList_Model" class="content_box">
+<h1>ApplicationExtList_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>user_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>users_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>create_dt</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>application_state</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>application_state_dt</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>application_state_end_date</h2>
+<div>Type:Date</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>constr_name</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>filled_percent</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>office_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>office_descr</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>select_descr</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>applicant_name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>customer_name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>service_list</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>unviewed_in_docs</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>contract_number</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>contract_date</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>expertise_result_number</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>expertise_result_date</h2>
+<div>Type:Date</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>base_application_id</h2>
+<div>Type:Int</div>
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>
@@ -6515,6 +6712,234 @@
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
+<h2>ext_contract</h2>
+<div>Type:Bool</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="ContractExtList_Model" class="content_box">
+<h1>ContractExtList_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:FALSE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>date_time</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>application_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>applications_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>client_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>client_descr</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>constr_name</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>employee_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>employees_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>reg_number</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>contract_number</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>contract_date</h2>
+<div>Type:Date</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>expertise_result_number</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>expertise_type</h2>
+<div>Type:Enum</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>document_type</h2>
+<div>Type:Enum</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>self_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>comment_text</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>main_expert_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>main_expert_descr</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>akt_number</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>akt_date</h2>
+<div>Type:Date</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>akt_total</h2>
+<div>Type:Float</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:15</div>
+<div>Precision:2</div>
+<h2>akt_ext_id</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:36</div>
+<div>Precision:</div>
+<h2>invoice_ext_id</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:36</div>
+<div>Precision:</div>
+<h2>invoice_number</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>invoice_date</h2>
+<div>Type:Date</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>state</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>state_dt</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>state_end_date</h2>
+<div>Type:Date</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>for_all_employees</h2>
+<div>Type:Bool</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>state_for_color</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>exp_cost_eval_validity</h2>
+<div>Type:Bool</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>allow_new_file_add</h2>
+<div>Type:Bool</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>service_type</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>expert_maintenance_contract_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>expert_maintenance_contracts_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
 </div>
 </div>
 <div id="ContractList_Model" class="content_box">
@@ -7511,6 +7936,12 @@
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
+<h2>require_client_sig</h2>
+<div>Type:Bool</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
 </div>
 </div>
 <div id="DocFlowExamination_Model" class="content_box">
@@ -7735,6 +8166,12 @@
 <div>Precision:</div>
 <h2>application_service_type</h2>
 <div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>application_ext_contract</h2>
+<div>Type:Bool</div>
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>
@@ -8101,6 +8538,12 @@
 <div>Precision:</div>
 <h2>corrected_sections</h2>
 <div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>ext_contract</h2>
+<div>Type:Bool</div>
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>
@@ -8503,6 +8946,126 @@
 <div>Precision:</div>
 <h2>corrected_sections</h2>
 <div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>ext_contract</h2>
+<div>Type:Bool</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="DocFlowInExtList_Model" class="content_box">
+<h1>DocFlowInExtList_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:FALSE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>date_time</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>reg_number</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:30</div>
+<div>Precision:</div>
+<h2>from_addr_name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:250</div>
+<div>Precision:</div>
+<h2>from_application_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>from_applications_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>from_contract_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>from_contracts_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>subject</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>doc_flow_types_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>recipient</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>sender</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>sender_construction_name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>state</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>state_dt</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>state_end_dt</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>state_register_doc</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>corrected_sections</h2>
+<div>Type:Text</div>
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>
@@ -9059,6 +9622,12 @@
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
+<h2>ext_contract</h2>
+<div>Type:Bool</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
 </div>
 </div>
 <div id="DocFlowOutClient_Model" class="content_box">
@@ -9595,6 +10164,126 @@
 <div>Precision:</div>
 <h2>to_contract_main_experts_ref</h2>
 <div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>ext_contract</h2>
+<div>Type:Bool</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="DocFlowOutExtList_Model" class="content_box">
+<h1>DocFlowOutExtList_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:FALSE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>date_time</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>employees_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>employee_short_name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>to_addr_names</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>to_applications_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>to_application_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>to_constr_name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>subject</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>reg_number</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:15</div>
+<div>Precision:</div>
+<h2>doc_flow_types_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>applications_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>state</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>state_dt</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>state_end_dt</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>state_register_doc</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>applicant_descr</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>content</h2>
+<div>Type:Text</div>
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>
@@ -10205,9 +10894,15 @@
 <h1>DocumentTemplate_Model</h1>
 <div class="content_item">
 <p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
 <h2>document_type</h2>
 <div>Type:Enum</div>
-<div>Primary key:TRUE</div>
+<div>Primary key:</div>
 <div>Required:TRUE</div>
 <div>Length:</div>
 <div>Precision:</div>
@@ -10219,13 +10914,13 @@
 <div>Precision:</div>
 <h2>construction_type_id</h2>
 <div>Type:Int</div>
-<div>Primary key:TRUE</div>
+<div>Primary key:</div>
 <div>Required:TRUE</div>
 <div>Length:</div>
 <div>Precision:</div>
 <h2>create_date</h2>
 <div>Type:Date</div>
-<div>Primary key:TRUE</div>
+<div>Primary key:</div>
 <div>Required:TRUE</div>
 <div>Length:</div>
 <div>Precision:</div>
@@ -10295,9 +10990,15 @@
 <h1>DocumentTemplateList_Model</h1>
 <div class="content_item">
 <p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
 <h2>document_type</h2>
 <div>Type:String</div>
-<div>Primary key:TRUE</div>
+<div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
@@ -10309,13 +11010,13 @@
 <div>Precision:</div>
 <h2>create_date</h2>
 <div>Type:Date</div>
-<div>Primary key:TRUE</div>
+<div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
 <h2>construction_type_id</h2>
 <div>Type:Int</div>
-<div>Primary key:TRUE</div>
+<div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
@@ -12695,6 +13396,12 @@
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
+<h2>ban_client_responses_day_cnt</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
 </div>
 </div>
 <div id="ShortMessage_Model" class="content_box">
@@ -13193,6 +13900,12 @@
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
+<h2>allow_ext_contracts</h2>
+<div>Type:Bool</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
 </div>
 </div>
 <div id="UserCertificate_Model" class="content_box">
@@ -13315,6 +14028,12 @@
 <div>Precision:</div>
 <h2>private_file</h2>
 <div>Type:JSONB</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>allow_ext_contracts</h2>
+<div>Type:Bool</div>
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>
