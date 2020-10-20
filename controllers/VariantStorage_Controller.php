@@ -33,6 +33,9 @@ class VariantStorage_Controller extends ControllerSQL{
 
 		/* insert */
 		$pm = new PublicMethod('insert');
+		$param = new FieldExtInt('id'
+				,array());
+		$pm->addParam($param);
 		$param = new FieldExtInt('user_id'
 				,array('required'=>TRUE));
 		$pm->addParam($param);
@@ -178,13 +181,13 @@ class VariantStorage_Controller extends ControllerSQL{
 		/* update */		
 		$pm = new PublicMethod('update');
 		
-		$pm->addParam(new FieldExtInt('old_user_id',array('required'=>TRUE)));
-		
-		$pm->addParam(new FieldExtText('old_storage_name',array('required'=>TRUE)));
-		
-		$pm->addParam(new FieldExtText('old_variant_name',array('required'=>TRUE)));
+		$pm->addParam(new FieldExtInt('old_id',array('required'=>TRUE)));
 		
 		$pm->addParam(new FieldExtInt('obj_mode'));
+		$param = new FieldExtInt('id'
+				,array(
+			));
+			$pm->addParam($param);
 		$param = new FieldExtInt('user_id'
 				,array(
 			));
@@ -214,15 +217,7 @@ class VariantStorage_Controller extends ControllerSQL{
 			));
 			$pm->addParam($param);
 		
-			$param = new FieldExtInt('user_id',array(
-			));
-			$pm->addParam($param);
-		
-			$param = new FieldExtText('storage_name',array(
-			));
-			$pm->addParam($param);
-		
-			$param = new FieldExtText('variant_name',array(
+			$param = new FieldExtInt('id',array(
 			));
 			$pm->addParam($param);
 		
@@ -234,13 +229,7 @@ class VariantStorage_Controller extends ControllerSQL{
 		/* delete */
 		$pm = new PublicMethod('delete');
 		
-		$pm->addParam(new FieldExtInt('user_id'
-		));		
-		
-		$pm->addParam(new FieldExtText('storage_name'
-		));		
-		
-		$pm->addParam(new FieldExtText('variant_name'
+		$pm->addParam(new FieldExtInt('id'
 		));		
 		
 		$pm->addParam(new FieldExtInt('count'));
@@ -281,13 +270,7 @@ class VariantStorage_Controller extends ControllerSQL{
 		$pm = new PublicMethod('get_object');
 		$pm->addParam(new FieldExtString('mode'));
 		
-		$pm->addParam(new FieldExtInt('user_id'
-		));
-		
-		$pm->addParam(new FieldExtText('storage_name'
-		));
-		
-		$pm->addParam(new FieldExtText('variant_name'
+		$pm->addParam(new FieldExtInt('id'
 		));
 		
 		

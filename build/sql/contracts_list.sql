@@ -33,8 +33,7 @@ CREATE OR REPLACE VIEW contracts_list AS
 		
 		t.main_expert_id,
 		t.main_department_id,
-		m_exp.name AS main_expert_descr,
-		--employees_ref(m_exp) AS main_experts_ref,
+		m_exp.name AS main_expert_descr,		
 		
 		t.contract_number,
 		t.contract_date,
@@ -67,7 +66,9 @@ CREATE OR REPLACE VIEW contracts_list AS
 		END AS expert_maintenance_contracts_ref,
 		CASE WHEN t.service_type = 'modified_documents' THEN exp_maint_ct.id
 		ELSE NULL
-		END AS expert_maintenance_contract_id
+		END AS expert_maintenance_contract_id,
+		
+		employees_ref(m_exp) AS main_experts_ref
 		
 	FROM contracts AS t
 	LEFT JOIN applications ON applications.id=t.application_id

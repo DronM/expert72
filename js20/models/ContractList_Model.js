@@ -611,7 +611,15 @@ function ContractList_Model(options){
 	options.fields.self_ref = new FieldJSON("self_ref",filed_options);
 	
 			
-			
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.main_experts_ref = new FieldJSON("main_experts_ref",filed_options);
+	
 			
 				
 	

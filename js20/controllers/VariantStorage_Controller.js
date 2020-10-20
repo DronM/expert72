@@ -46,19 +46,25 @@ extend(VariantStorage_Controller,ControllerObjServer);
 	var pm = this.getInsert();
 	
 	var options = {};
-	options.primaryKey = true;options.required = true;
+	options.primaryKey = true;
+	var field = new FieldInt("id",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	options.required = true;
 	var field = new FieldInt("user_id",options);
 	
 	pm.addField(field);
 	
 	var options = {};
-	options.primaryKey = true;options.required = true;
+	options.required = true;
 	var field = new FieldText("storage_name",options);
 	
 	pm.addField(field);
 	
 	var options = {};
-	options.primaryKey = true;options.required = true;
+	options.required = true;
 	var field = new FieldText("variant_name",options);
 	
 	pm.addField(field);
@@ -256,29 +262,29 @@ extend(VariantStorage_Controller,ControllerObjServer);
 	
 	var options = {};
 	options.primaryKey = true;
+	var field = new FieldInt("id",options);
+	
+	pm.addField(field);
+	
+	field = new FieldInt("old_id",{});
+	pm.addField(field);
+	
+	var options = {};
+	
 	var field = new FieldInt("user_id",options);
 	
 	pm.addField(field);
 	
-	field = new FieldInt("old_user_id",{});
-	pm.addField(field);
-	
 	var options = {};
-	options.primaryKey = true;
+	
 	var field = new FieldText("storage_name",options);
 	
 	pm.addField(field);
 	
-	field = new FieldText("old_storage_name",{});
-	pm.addField(field);
-	
 	var options = {};
-	options.primaryKey = true;
+	
 	var field = new FieldText("variant_name",options);
 	
-	pm.addField(field);
-	
-	field = new FieldText("old_variant_name",{});
 	pm.addField(field);
 	
 	var options = {};
@@ -313,13 +319,7 @@ extend(VariantStorage_Controller,ControllerObjServer);
 	var pm = this.getDelete();
 	var options = {"required":true};
 		
-	pm.addField(new FieldInt("user_id",options));
-	var options = {"required":true};
-		
-	pm.addField(new FieldText("storage_name",options));
-	var options = {"required":true};
-		
-	pm.addField(new FieldText("variant_name",options));
+	pm.addField(new FieldInt("id",options));
 }
 
 			VariantStorage_Controller.prototype.addGetList = function(){
@@ -357,13 +357,7 @@ extend(VariantStorage_Controller,ControllerObjServer);
 	var pm = this.getGetObject();
 	var f_opts = {};
 		
-	pm.addField(new FieldInt("user_id",f_opts));
-	var f_opts = {};
-		
-	pm.addField(new FieldText("storage_name",f_opts));
-	var f_opts = {};
-		
-	pm.addField(new FieldText("variant_name",f_opts));
+	pm.addField(new FieldInt("id",f_opts));
 	
 	pm.addField(new FieldString("mode"));
 }

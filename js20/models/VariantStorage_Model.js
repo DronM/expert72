@@ -29,13 +29,22 @@ function VariantStorage_Model(options){
 	
 	filed_options.autoInc = false;	
 	
+	options.fields.id = new FieldInt("id",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
 	options.fields.user_id = new FieldInt("user_id",filed_options);
 	options.fields.user_id.getValidator().setRequired(true);
 	
 				
 	
 	var filed_options = {};
-	filed_options.primaryKey = true;	
+	filed_options.primaryKey = false;	
 	
 	filed_options.autoInc = false;	
 	
@@ -45,7 +54,7 @@ function VariantStorage_Model(options){
 				
 	
 	var filed_options = {};
-	filed_options.primaryKey = true;	
+	filed_options.primaryKey = false;	
 	
 	filed_options.autoInc = false;	
 	
@@ -88,6 +97,7 @@ function VariantStorage_Model(options){
 	
 	options.fields.col_order_data = new FieldJSON("col_order_data",filed_options);
 	
+			
 		VariantStorage_Model.superclass.constructor.call(this,id,options);
 }
 extend(VariantStorage_Model,ModelXML);

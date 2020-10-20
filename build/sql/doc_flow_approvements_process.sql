@@ -65,8 +65,8 @@ BEGIN
 			IF NEW.date_time<>OLD.date_time
 				OR NEW.end_date_time<>OLD.end_date_time
 				OR NEW.doc_flow_importance_type_id<>OLD.doc_flow_importance_type_id
-				OR NEW.subject_doc<>OLD.subject_doc
-				OR NEW.subject<>OLD.subject
+				--OR NEW.subject_doc<>OLD.subject_doc
+				--OR NEW.subject<>OLD.subject
 			THEN
 				IF NEW.subject_doc->>'dataType'='doc_flow_out' THEN
 					UPDATE doc_flow_out_processes

@@ -20,9 +20,17 @@ class VariantStorageList_Model extends ModelSQL{
 		
 		$this->setTableName("variant_storages_list");
 			
-		//*** Field user_id ***
+		//*** Field id ***
 		$f_opts = array();
 		$f_opts['primaryKey'] = TRUE;
+		$f_opts['id']="id";
+						
+		$f_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"id",$f_opts);
+		$this->addField($f_id);
+		//********************
+		
+		//*** Field user_id ***
+		$f_opts = array();
 		$f_opts['id']="user_id";
 						
 		$f_user_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"user_id",$f_opts);
@@ -31,7 +39,6 @@ class VariantStorageList_Model extends ModelSQL{
 		
 		//*** Field storage_name ***
 		$f_opts = array();
-		$f_opts['primaryKey'] = TRUE;
 		$f_opts['id']="storage_name";
 						
 		$f_storage_name=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"storage_name",$f_opts);

@@ -5,12 +5,14 @@
 если TRUE выдавать как есть с файлами
 
 
+--ALTER TABLE variant_storages ADD COLUMN id serial
+ALTER TABLE public.variant_storages DROP CONSTRAINT variant_storages_pkey;
+ALTER TABLE public.variant_storages ADD CONSTRAINT variant_storages_pkey PRIMARY KEY (id);
 
-					<div id="{{id}}:file_{{file.file_id}}"
-					uploaded="true" file_id="{{file.file_id}}" file_name="{{file.file_name}}" class="appFileItem">
-						<a id="{{id}}:file_{{file.file_id}}_href" href="#" title="{{refTitle}}" download_href="true" file_uploaded="true" class="{{refClass}}">
-							{{file.file_name}} ({{file.file_size_formatted}}, {{file.file_date_time_formatted}})
-						</a>
-						<span id="{{id}}:file_{{file.file_id}}:sigList"></span>
-					</div>
 
+--select REPLACE(subject,' (внеконтракт)','') from doc_flow_out where POSITION(' (внеконтракт)' in subject)>0
+--update doc_flow_out set subject=REPLACE(subject,' (внеконтракт)','') where POSITION(' (внеконтракт)' in subject)>0
+--select REPLACE(subject,' (внеконтракт)','') from doc_flow_approvements where POSITION(' (внеконтракт)' in subject)>0
+UPDATE doc_flow_approvements SET subject=REPLACE(subject,' (внеконтракт)','') where POSITION(' (внеконтракт)' in subject)>0
+--SELECT REPLACE(content,' (внеконтракт)','') FROM reminders where POSITION(' (внеконтракт)' in content)>0
+--UPDATE reminders set content=REPLACE(content,' (внеконтракт)','') where POSITION(' (внеконтракт)' in content)>0

@@ -2,7 +2,7 @@
 <metadata owner="expert72">
 	<versions>
 		<version dateOpen="2017-09-27 12:09:48" dateClose="2017-12-08 10:12:08">1.001 
-		<lastBuild>2020-10-17 09:43:12</lastBuild></version>
+		<lastBuild>2020-10-20 05:31:13</lastBuild></version>
 		<version dateOpen="2017-12-08 11:12:01" dateClose="2017-12-08 11:12:04">1.002</version>
 		<version dateOpen="2017-12-08 11:12:20" dateClose="2017-12-08 11:12:20">1.0.3</version>
 		<version dateOpen="2017-12-12 11:12:07" dateClose="2017-12-12 11:12:07">1.0.4</version>
@@ -141,6 +141,8 @@
 		<version dateOpen="2020-07-13 11:07:54" dateClose="2020-07-27 15:07:03">1.0.138</version>
 		<version dateOpen="2020-07-27 15:07:04" dateClose="2020-08-07 05:08:55">1.0.139</version>
 		<version dateOpen="2020-08-07 11:08:59" dateClose="2020-10-17 09:10:43">1.0.1340</version>
+		<version dateOpen="2020-10-17 09:10:48" dateClose="2020-10-17 09:10:50">1.0.1341</version>
+		<version dateOpen="2020-10-19 16:10:50" dateClose="2020-10-20 05:10:31">1.0.1342</version>
 	</versions>
 	<globalFilters>
 		<field id="user_id"/>
@@ -707,17 +709,23 @@
 			</index>
 		</model>
 		<model id="VariantStorage" parent="ModelSQL" dataTable="variant_storages" virtual="FALSE">
-			<field id="user_id" dataType="Int" refTable="users" refField="id" primaryKey="TRUE" required="TRUE"/>
-			<field id="storage_name" dataType="Text" primaryKey="TRUE" required="TRUE"/>
-			<field id="variant_name" dataType="Text" primaryKey="TRUE" required="TRUE"/>
+			<field id="id" dataType="Int" primaryKey="TRUE"/>
+			<field id="user_id" dataType="Int" refTable="users" refField="id" required="TRUE"/>
+			<field id="storage_name" dataType="Text" required="TRUE"/>
+			<field id="variant_name" dataType="Text" required="TRUE"/>
 			<field id="default_variant" dataType="Bool"/>
 			<field id="filter_data" dataType="JSON"/>
 			<field id="col_visib_data" dataType="JSON"/>
 			<field id="col_order_data" dataType="JSON"/>
+			<index id="variant_storages_user_idx">
+				<field id="user_id"/>
+				<field id="storage_name"/>
+			</index>
 		</model>
 		<model id="VariantStorageList" parent="ModelSQL" dataTable="variant_storages_list" virtual="TRUE">
-			<field id="user_id" dataType="Int" refTable="users" refField="id" primaryKey="TRUE" required="TRUE"/>
-			<field id="storage_name" dataType="Text" primaryKey="TRUE" required="TRUE"/>
+			<field id="id" dataType="Int" primaryKey="TRUE"/>
+			<field id="user_id" dataType="Int" refTable="users" refField="id" required="TRUE"/>
+			<field id="storage_name" dataType="Text" required="TRUE"/>
 			<field id="default_variant" dataType="Bool"/>
 			<field id="variant_name" dataType="Text"/>
 		</model>
@@ -2790,7 +2798,7 @@
 			<field id="document_type" dataType="Enum" enumId="document_types"/>
 			<field id="self_ref" dataType="JSON"/>
 			<field id="comment_text" dataType="Text"/>
-			<!--<field id="main_experts_ref" dataType="JSON" />-->
+			<field id="main_experts_ref" dataType="JSON"/>
 			<field id="main_expert_id" dataType="Int"/>
 			<field id="main_expert_descr" dataType="String"/>
 			<field id="akt_number" dataType="Text"/>

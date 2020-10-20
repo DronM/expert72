@@ -593,6 +593,14 @@ class ContractList_Model extends ModelSQL{
 		$this->addField($f_self_ref);
 		//********************
 		
+		//*** Field main_experts_ref ***
+		$f_opts = array();
+		$f_opts['id']="main_experts_ref";
+						
+		$f_main_experts_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"main_experts_ref",$f_opts);
+		$this->addField($f_main_experts_ref);
+		//********************
+		
 		//*** Field main_expert_descr ***
 		$f_opts = array();
 		$f_opts['id']="main_expert_descr";

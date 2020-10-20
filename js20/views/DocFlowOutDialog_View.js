@@ -139,7 +139,7 @@ function DocFlowOutDialog_View(id,options){
 				//self.getElement("doc_flow_types_ref").getValue
 				self.setSubjectFromContract();
 				
-				self.getModel().setFieldValue("to_contract_main_experts_ref",fields.main_experts_ref.getValue());
+				self.getModel().setFieldValue("to_contract_main_experts_ref",fields.main_experts_ref? fields.main_experts_ref.getValue():null);
 				var tp = self.getElement("doc_flow_types_ref").getValue();
 				if(tp&&tp.getKey()==window.getApp().getPredefinedItem("doc_flow_types","contr").getKey()){
 					self.fillSections(function(){
@@ -807,7 +807,7 @@ DocFlowOutDialog_View.prototype.setSubject = function(docType,docId,pm){
 					var ext_contract = m.getFieldValue("ext_contract");
 					self.getElement("ext_contract").setValue(ext_contract);
 					subj = subj +
-						(ext_contract? " (внеконтракт)":"") +
+						( (ext_contract===true||ext_contract=="true")? " (внеконтракт)":"") +
 						", "+m.getFieldValue("constr_name");
 					self.getElement("subject").setValue(subj);
 				}

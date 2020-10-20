@@ -1,25 +1,21 @@
--- VIEW: document_templates_list
+-- VIEW: variant_storages_list
 
-DROP VIEW document_templates_list;
+DROP VIEW variant_storages_list;
 
-CREATE OR REPLACE VIEW document_templates_list AS
+--ALTER TABLE variant_storages ADD COLUMN id serial
+/*ALTER TABLE public.variant_storages ADD COLUMN id serial;
+ALTER TABLE public.variant_storages DROP CONSTRAINT variant_storages_pkey;
+ALTER TABLE public.variant_storages ADD CONSTRAINT variant_storages_pkey PRIMARY KEY (id);
+*/
+
+CREATE OR REPLACE VIEW variant_storages_list AS
 	SELECT
-		tmpl.id,
-		tmpl.document_type,
-		tmpl.service_type,
-		tmpl.expertise_type,
-		tmpl.create_date,
-		tmpl.construction_type_id,
-		construction_types_ref(ct) AS construction_types_ref,		
-		tmpl.comment_text		
-		
-	FROM document_templates AS tmpl
-	LEFT JOIN construction_types AS ct ON ct.id=tmpl.construction_type_id
-	ORDER BY
-		tmpl.document_type,
-		tmpl.service_type,
-		ct.id,
-		tmpl.create_date DESC
+		id,
+		user_id,
+		storage_name,
+		variant_name
+	FROM variant_storages
 	;
 	
-ALTER VIEW document_templates_list OWNER TO expert72;
+ALTER VIEW variant_storages_list OWNER TO expert72;
+
