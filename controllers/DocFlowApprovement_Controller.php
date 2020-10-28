@@ -208,6 +208,21 @@ class DocFlowApprovement_Controller extends ControllerSQL{
 		$this->setListModelId('DocFlowApprovementList_Model');
 		
 			
+		$pm = new PublicMethod('get_ext_list');
+		
+		$pm->addParam(new FieldExtInt('count'));
+		$pm->addParam(new FieldExtInt('from'));
+		$pm->addParam(new FieldExtString('cond_fields'));
+		$pm->addParam(new FieldExtString('cond_sgns'));
+		$pm->addParam(new FieldExtString('cond_vals'));
+		$pm->addParam(new FieldExtString('cond_ic'));
+		$pm->addParam(new FieldExtString('ord_fields'));
+		$pm->addParam(new FieldExtString('ord_directs'));
+		$pm->addParam(new FieldExtString('field_sep'));
+
+		$this->addPublicMethod($pm);
+
+			
 		$pm = new PublicMethod('set_approved');
 		
 				
@@ -537,6 +552,11 @@ class DocFlowApprovement_Controller extends ControllerSQL{
 		}
 	}
 	
+	public function get_ext_list($pm){
+		$this->setListModelId('DocFlowApprovementExtList_Model');
+		parent::get_list($pm);
+	
+	}
 	
 
 }

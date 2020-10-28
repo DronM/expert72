@@ -575,7 +575,7 @@ RAISE EXCEPTION 'contracts_work_end_date=%',(SELECT contracts_work_end_date(
 						FROM contracts
 						WHERE contracts.id=v_contract_id
 					) AS fld
-					WHERE fld.obj->>'dataType'='employees'
+					WHERE fld.obj->>'dataType'='employees' AND fld.obj->'keys'->>'id' ~ '^[0-9\.]+$'
 					)
 				)
 			);

@@ -1191,6 +1191,8 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/DocFlowApprovementTemplateList_Form.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/ShortMessage_Form.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/Manual_Form.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/DocFlowExaminationExtList_Form.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/DocFlowApprovementExtList_Form.js'));
 		
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/UserDialog_Form.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/Login_View.js'));
@@ -1365,6 +1367,8 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ExpertiseProlongationList_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ApplicationReturnedFilesRemovedList_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ApplicationDocumentFileList_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/DocFlowExaminationExtList_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/DocFlowApprovementExtList_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'tmpl/App.templates.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/App.enums.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/App.predefinedItems.js'));
@@ -1791,6 +1795,8 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowInExtList_Model.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowOutExtList_Model.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ContractExtList_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowExaminationExtList_Model.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowApprovementExtList_Model.js'));
 	
 			if (isset($_SESSION['scriptId'])){
 				$script_id = $_SESSION['scriptId'];

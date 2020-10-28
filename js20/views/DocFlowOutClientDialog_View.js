@@ -615,6 +615,7 @@ DocFlowOutClientDialog_View.prototype.getDocFlowOutAttrs = function(){
 	pm.setFieldValue("application_id",app.getKey());
 	pm.run({
 		"ok":function(resp){
+			debugger
 			var m = resp.getModel("DocFlowOutAttrList_Model");
 			if(m.getNextRow()){
 				var attrs = m.getFieldValue("attrs");
@@ -642,7 +643,7 @@ DocFlowOutClientDialog_View.prototype.getDocFlowOutAttrs = function(){
 							DOMHelper.hide(doc_sec_uploader[j]);
 						}
 					}
-					else if(!self.m_docFlowOutAttrs.allow_new_file_add){
+					else if(self.m_docFlowOutAttrs.allow_new_file_add===true){
 						//изменение разрешено - но не удаление!!!
 						var doc_sec_del = DOMHelper.getElementsByAttr("fileDeleteBtn",doc_sections[i],"class");
 						for(var j=0;j< doc_sec_del.length;j++){
@@ -667,6 +668,6 @@ DocFlowOutClientDialog_View.prototype.getDocFlowOutAttrs = function(){
 }
 
 DocFlowOutClientDialog_View.prototype.getUploaderOptions = function(){
-	return {"allowNewFileAdd":self.m_docFlowOutAttrs? self.m_docFlowOutAttrs.allow_new_file_add:true};
+	return {"allowNewFileAdd":this.m_docFlowOutAttrs? this.m_docFlowOutAttrs.allow_new_file_add:true};
 }
 

@@ -196,6 +196,21 @@ class DocFlowExamination_Controller extends ControllerSQL{
 		$this->setListModelId('DocFlowExaminationList_Model');
 		
 			
+		$pm = new PublicMethod('get_ext_list');
+		
+		$pm->addParam(new FieldExtInt('count'));
+		$pm->addParam(new FieldExtInt('from'));
+		$pm->addParam(new FieldExtString('cond_fields'));
+		$pm->addParam(new FieldExtString('cond_sgns'));
+		$pm->addParam(new FieldExtString('cond_vals'));
+		$pm->addParam(new FieldExtString('cond_ic'));
+		$pm->addParam(new FieldExtString('ord_fields'));
+		$pm->addParam(new FieldExtString('ord_directs'));
+		$pm->addParam(new FieldExtString('field_sep'));
+
+		$this->addPublicMethod($pm);
+
+			
 		$pm = new PublicMethod('resolve');
 		
 				
@@ -449,6 +464,12 @@ class DocFlowExamination_Controller extends ControllerSQL{
 		$_SESSION['user_id'],
 		$this->getExtDbVal($pm,'id')
 		));
+	}
+	
+	public function get_ext_list($pm){
+		$this->setListModelId('DocFlowExaminationExtList_Model');
+		parent::get_list($pm);
+	
 	}
 	
 

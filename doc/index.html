@@ -203,9 +203,11 @@
 <li><a href="#DocFlowFulfilment_Model">DocFlowFulfilment_Model</a></li>
 <li><a href="#DocFlowExamination_Model">DocFlowExamination_Model</a></li>
 <li><a href="#DocFlowExaminationList_Model">DocFlowExaminationList_Model</a></li>
+<li><a href="#DocFlowExaminationExtList_Model">DocFlowExaminationExtList_Model</a></li>
 <li><a href="#DocFlowExaminationDialog_Model">DocFlowExaminationDialog_Model</a></li>
 <li><a href="#DocFlowApprovement_Model">DocFlowApprovement_Model</a></li>
 <li><a href="#DocFlowApprovementList_Model">DocFlowApprovementList_Model</a></li>
+<li><a href="#DocFlowApprovementExtList_Model">DocFlowApprovementExtList_Model</a></li>
 <li><a href="#DocFlowApprovementDialog_Model">DocFlowApprovementDialog_Model</a></li>
 <li><a href="#DocFlowApprovementTemplate_Model">DocFlowApprovementTemplate_Model</a></li>
 <li><a href="#DocFlowApprovementTemplateList_Model">DocFlowApprovementTemplateList_Model</a></li>
@@ -1338,7 +1340,8 @@
 <a href="#DocFlowApprovement_Model">Model: DocFlowApprovement_Model</a><h2>delete</h2>
 <a href="#DocFlowApprovement_Model">Model: DocFlowApprovement_Model</a><h2>get_object</h2>
 <a href="#DocFlowApprovementDialog_Model">Model: DocFlowApprovementDialog_Model</a><h2>get_list</h2>
-<a href="#DocFlowApprovementList_Model">Model: DocFlowApprovementList_Model</a><h2>set_approved</h2>
+<a href="#DocFlowApprovementList_Model">Model: DocFlowApprovementList_Model</a><h2>get_ext_list</h2>
+<a href="#DocFlowApprovementExtList_Model">Model: DocFlowApprovementExtList_Model</a><h2>set_approved</h2>
 <p>Arguments:</p>
 <div class="content_item content_item2">
 <h3>id</h3>
@@ -1442,7 +1445,8 @@
 <a href="#DocFlowExamination_Model">Model: DocFlowExamination_Model</a><h2>delete</h2>
 <a href="#DocFlowExamination_Model">Model: DocFlowExamination_Model</a><h2>get_object</h2>
 <a href="#DocFlowExaminationDialog_Model">Model: DocFlowExaminationDialog_Model</a><h2>get_list</h2>
-<a href="#DocFlowExaminationList_Model">Model: DocFlowExaminationList_Model</a><h2>resolve</h2>
+<a href="#DocFlowExaminationList_Model">Model: DocFlowExaminationList_Model</a><h2>get_ext_list</h2>
+<a href="#DocFlowExaminationExtList_Model">Model: DocFlowExaminationExtList_Model</a><h2>resolve</h2>
 <p>Arguments:</p>
 <div class="content_item content_item2">
 <h3>id</h3>
@@ -7572,6 +7576,102 @@
 <div>Precision:</div>
 </div>
 </div>
+<div id="DocFlowApprovementExtList_Model" class="content_box">
+<h1>DocFlowApprovementExtList_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:FALSE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>date_time</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>subject</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>subject_docs_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>doc_flow_importance_types_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>end_date_time</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>employees_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>close_date_time</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>closed</h2>
+<div>Type:Bool</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>recipient_list</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>step_count</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>current_step</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>close_result</h2>
+<div>Type:Enum</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>contract_state</h2>
+<div>Type:Enum</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>employee_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
 <div id="DocFlowApprovementList_Model" class="content_box">
 <h1>DocFlowApprovementList_Model</h1>
 <div class="content_item">
@@ -8178,6 +8278,96 @@
 <div>Precision:</div>
 <h2>application_ext_contract</h2>
 <div>Type:Bool</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="DocFlowExaminationExtList_Model" class="content_box">
+<h1>DocFlowExaminationExtList_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:FALSE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>date_time</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>subject</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>subject_docs_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>doc_flow_importance_types_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>end_date_time</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>recipients_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>employees_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>close_date_time</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>closed</h2>
+<div>Type:Bool</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>close_employees_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>close_employee_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>application_resolution_state</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>employee_id</h2>
+<div>Type:Int</div>
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>

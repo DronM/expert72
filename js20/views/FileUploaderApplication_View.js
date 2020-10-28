@@ -30,15 +30,16 @@ function FileUploaderApplication_View(id,options){
 	var correct_items = function(items){
 		var fl_cnt = 0;
 		for(var i=0;i<items.length;i++){	
-		
-			items[i].disabled = (en_items && CommonHelper.inArray(items[i].fields.id,en_items)<0);
-			if(options.allowFileSwitch && !items[i].disabled && !items[i].items && (!items[i].files||!items[i].files.length) ){
+			//Если разрешение у контракта - никаких запретов!
+			items[i].disabled = (options.allowNewFileAdd!==true && en_items && CommonHelper.inArray(items[i].fields.id,en_items)<0);
+			
+			if(options.allowNewFileAdd!==true && options.allowFileSwitch && !items[i].disabled && !items[i].items && (!items[i].files||!items[i].files.length) ){
 				//Это не группа, нет файлов - запрещено, т.к. добавлять всегда запрещено!
 				//ОЛЬКО ДЛЯ ОТВЕТОВ НА ЗАМЕЧАНИЯ!!!
 				items[i].disabled = true;
 			}			
 
-			if(items[i].items && !correct_items(items[i].items)){
+			if(options.allowNewFileAdd!==true && items[i].items && !correct_items(items[i].items)){
 				if(options.allowFileSwitch){
 					items[i].disabled = true;
 				}
@@ -49,7 +50,7 @@ function FileUploaderApplication_View(id,options){
 			fl_cnt+= items[i].files? items[i].files.length:0;
 		}
 		return fl_cnt;				
-	}
+	}	
 	correct_items(options.items);		
 	
 	

@@ -847,10 +847,24 @@ FileUploaderDocFlowOut_View.js->onFillTemplateOptions()
 -Непонятные заблокированные разделы в ответах
 
 
-1.0.1342
+1.0.1342 20/10/20
 1) Косяк: все исх. письма - внеконтракт
 2) Меню XML Tree не отображает все строки!!!
 3) Косяк с открытием сохраненной настройки
+
+1.0.143
+1) Рассмотрения. Разделить контракт/внеконтракт
+DocFlowExamination_Controller->get_ext_list
+DocFlowExaminationExtList_Model
+2) Согласования. Разделить контракт/внеконтракт
+DocFlowApprovement_Controller->get_ext_list
+DocFlowApprovementExtList_Model
+
+3) doc_flow_out_client_process insert into reminders (fld->obj->>keys):int ошибка, при косячных строках!
+обавить проверку ~ '^[0-9\.]+$'
+4) Контракт: установлено разрешение - менять/добавлять файлы в письма. Все разделы все равно закрыты.
+FileUploaderApplication_View.js correct_items
+
 
 
 *************************************************

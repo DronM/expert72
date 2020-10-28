@@ -2,7 +2,7 @@
 <metadata owner="expert72">
 	<versions>
 		<version dateOpen="2017-09-27 12:09:48" dateClose="2017-12-08 10:12:08">1.001 
-		<lastBuild>2020-10-20 05:31:13</lastBuild></version>
+		<lastBuild>2020-10-28 10:18:23</lastBuild></version>
 		<version dateOpen="2017-12-08 11:12:01" dateClose="2017-12-08 11:12:04">1.002</version>
 		<version dateOpen="2017-12-08 11:12:20" dateClose="2017-12-08 11:12:20">1.0.3</version>
 		<version dateOpen="2017-12-12 11:12:07" dateClose="2017-12-12 11:12:07">1.0.4</version>
@@ -143,6 +143,7 @@
 		<version dateOpen="2020-08-07 11:08:59" dateClose="2020-10-17 09:10:43">1.0.1340</version>
 		<version dateOpen="2020-10-17 09:10:48" dateClose="2020-10-17 09:10:50">1.0.1341</version>
 		<version dateOpen="2020-10-19 16:10:50" dateClose="2020-10-20 05:10:31">1.0.1342</version>
+		<version dateOpen="2020-10-28 08:10:25" dateClose="2020-10-28 10:10:18">1.0.143</version>
 	</versions>
 	<globalFilters>
 		<field id="user_id"/>
@@ -2206,6 +2207,22 @@
 			<field id="application_resolution_state" dataType="String"/>
 			<field id="employee_id" dataType="Int"/>
 		</model>
+		<model id="DocFlowExaminationExtList" parent="ModelSQL" dataTable="doc_flow_examinations_ext_list" virtual="TRUE">
+			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE" required="FALSE"/>
+			<field id="date_time" dataType="DateTimeTZ"/>
+			<field id="subject" dataType="Text"/>
+			<field id="subject_docs_ref" dataType="JSON"/>
+			<field id="doc_flow_importance_types_ref" dataType="JSON"/>
+			<field id="end_date_time" dataType="DateTimeTZ"/>
+			<field id="recipients_ref" dataType="JSON"/>
+			<field id="employees_ref" dataType="JSON"/>
+			<field id="close_date_time" dataType="DateTimeTZ"/>
+			<field id="closed" dataType="Bool"/>
+			<field id="close_employees_ref" dataType="JSON"/>
+			<field id="close_employee_id" dataType="Int"/>
+			<field id="application_resolution_state" dataType="String"/>
+			<field id="employee_id" dataType="Int"/>
+		</model>
 		<model id="DocFlowExaminationDialog" parent="ModelSQL" dataTable="doc_flow_examinations_dialog" virtual="TRUE">
 			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE" required="FALSE"/>
 			<field id="date_time" dataType="DateTimeTZ"/>
@@ -2265,6 +2282,23 @@
 			<constraint id="doc_flow_approvements_subject_doc_check" expression="check_ref_existance(subject_doc,ARRAY['doc_flow_out'::data_types,'doc_flow_inside'::data_types])"/>
 		</model>
 		<model id="DocFlowApprovementList" parent="ModelSQL" dataTable="doc_flow_approvements_list" virtual="TRUE">
+			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE" required="FALSE"/>
+			<field id="date_time" dataType="DateTimeTZ"/>
+			<field id="subject" dataType="Text"/>
+			<field id="subject_docs_ref" dataType="JSON"/>
+			<field id="doc_flow_importance_types_ref" dataType="JSON"/>
+			<field id="end_date_time" dataType="DateTimeTZ"/>
+			<field id="employees_ref" dataType="JSON"/>
+			<field id="close_date_time" dataType="DateTimeTZ"/>
+			<field id="closed" dataType="Bool"/>
+			<field id="recipient_list" dataType="Text"/>
+			<field id="step_count" dataType="Int"/>
+			<field id="current_step" dataType="Int"/>
+			<field id="close_result" dataType="Enum" enumId="doc_flow_approvement_results"/>
+			<field id="contract_state" dataType="Enum" enumId="application_states"/>
+			<field id="employee_id" dataType="Int"/>
+		</model>
+		<model id="DocFlowApprovementExtList" parent="ModelSQL" dataTable="doc_flow_approvements_ext_list" virtual="TRUE">
 			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE" required="FALSE"/>
 			<field id="date_time" dataType="DateTimeTZ"/>
 			<field id="subject" dataType="Text"/>
@@ -4017,6 +4051,7 @@
 			<publicMethod id="delete" modelId="DocFlowExamination"/>
 			<publicMethod id="get_object" modelId="DocFlowExaminationDialog"/>
 			<publicMethod id="get_list" modelId="DocFlowExaminationList"/>
+			<publicMethod id="get_ext_list" modelId="DocFlowExaminationExtList" condFields="TRUE"/>
 			<publicMethod id="resolve">
 				<field id="id" dataType="Int" required="TRUE"/>
 				<field id="resolution" dataType="Text"/>
@@ -4037,6 +4072,7 @@
 			<publicMethod id="delete" modelId="DocFlowApprovement"/>
 			<publicMethod id="get_object" modelId="DocFlowApprovementDialog"/>
 			<publicMethod id="get_list" modelId="DocFlowApprovementList"/>
+			<publicMethod id="get_ext_list" modelId="DocFlowApprovementExtList" condFields="TRUE"/>
 			<publicMethod id="set_approved">
 				<field id="id" dataType="Int" required="TRUE"/>
 				<field id="employee_comment" dataType="Text"/>
@@ -4602,6 +4638,8 @@
 		<view id="20021" c="DocFlowIn_Controller" t="DocFlowInExtList" f="get_ext_list" section="&#x414;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;" descr="&#x412;&#x445;&#x43E;&#x434;&#x44F;&#x448;&#x438;&#x435; &#x434;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B; (&#x432;&#x43D;&#x435;&#x43A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;)"/>
 		<view id="20022" c="DocFlowOut_Controller" t="DocFlowOutExtList" f="get_ext_list" section="&#x414;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;" descr="&#x418;&#x441;&#x445;&#x43E;&#x434;&#x44F;&#x449;&#x438;&#x435; &#x434;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B; (&#x432;&#x43D;&#x435;&#x43A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;)"/>
 		<view id="20023" c="Contract_Controller" t="ContractExtList" f="get_ext_list" section="&#x414;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;" descr="&#x41A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x44B; (&#x432;&#x43D;&#x435;&#x43A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x44B;)"/>
+		<view id="20024" c="DocFlowExamination_Controller" t="DocFlowExaminationExtList" f="get_ext_list" section="&#x414;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;" descr="&#x420;&#x430;&#x441;&#x441;&#x43C;&#x43E;&#x442;&#x440;&#x435;&#x43D;&#x438;&#x44F; (&#x432;&#x43D;&#x435;&#x43A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x44B;)"/>
+		<view id="20025" c="DocFlowApprovement_Controller" t="DocFlowApprovementExtList" f="get_ext_list" section="&#x414;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;" descr="&#x421;&#x43E;&#x433;&#x43B;&#x430;&#x441;&#x43E;&#x432;&#x430;&#x43D;&#x438;&#x44F; (&#x432;&#x43D;&#x435;&#x43A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x44B;)"/>
 		<view id="30000" c="Contract_Controller" t="RepReestrExpertise" section="&#x41E;&#x442;&#x447;&#x435;&#x442;&#x44B;" descr="&#x420;&#x435;&#x435;&#x441;&#x442;&#x440; &#x437;&#x430;&#x43A;&#x43B;&#x44E;&#x447;&#x435;&#x43D;&#x438;&#x439; &#x43F;&#x43E; &#x433;&#x43E;&#x441;.&#x44D;&#x43A;&#x441;&#x43F;&#x435;&#x440;&#x442;&#x438;&#x437;&#x435;"/>
 		<view id="30001" c="Contract_Controller" t="RepReestrCostEval" section="&#x41E;&#x442;&#x447;&#x435;&#x442;&#x44B;" descr="&#x420;&#x435;&#x435;&#x441;&#x442;&#x440; &#x437;&#x430;&#x43A;&#x43B;&#x44E;&#x447;&#x435;&#x43D;&#x438;&#x439; &#x43F;&#x43E; &#x434;&#x43E;&#x441;&#x442;&#x43E;&#x432;&#x435;&#x440;&#x43D;&#x43E;&#x441;&#x442;&#x438;"/>
 		<view id="30002" c="Contract_Controller" t="RepReestrPay" section="&#x41E;&#x442;&#x447;&#x435;&#x442;&#x44B;" descr="&#x420;&#x435;&#x435;&#x441;&#x442;&#x440; &#x43E;&#x43F;&#x43B;&#x430;&#x442;"/>
@@ -4689,6 +4727,8 @@
 		<serverTemplate id="ExpertiseProlongationList"/>
 		<serverTemplate id="ApplicationReturnedFilesRemovedList"/>
 		<serverTemplate id="ApplicationDocumentFileList"/>
+		<serverTemplate id="DocFlowExaminationExtList"/>
+		<serverTemplate id="DocFlowApprovementExtList"/>
 	</serverTemplates>
 	<jsTemplates>
 		<jsTemplate id="FatalException" file="tmpl/FatalException.html"/>
@@ -5158,6 +5198,8 @@
 		<jsScript file="forms/DocFlowApprovementTemplateList_Form.js"/>
 		<jsScript file="forms/ShortMessage_Form.js"/>
 		<jsScript file="forms/Manual_Form.js"/>
+		<jsScript file="forms/DocFlowExaminationExtList_Form.js"/>
+		<jsScript file="forms/DocFlowApprovementExtList_Form.js"/>
 		<!-- **** Views *** -->
 		<jsScript file="forms/UserDialog_Form.js"/>
 		<jsScript file="views/Login_View.js"/>
@@ -5300,6 +5342,8 @@
 		<jsScript file="views/ExpertiseProlongationList_View.js"/>
 		<jsScript file="views/ApplicationReturnedFilesRemovedList_View.js"/>
 		<jsScript file="views/ApplicationDocumentFileList_View.js"/>
+		<jsScript file="views/DocFlowExaminationExtList_View.js"/>
+		<jsScript file="views/DocFlowApprovementExtList_View.js"/>
 		<jsScript file="tmpl/App.templates.js" compressed="FALSE" standalone="FALSE"/>
 		<jsScript file="custom_controls/App.enums.js"/>
 		<jsScript file="custom_controls/App.predefinedItems.js"/>
@@ -5726,6 +5770,8 @@
 		<jsScript file="models/DocFlowInExtList_Model.js"/>
 		<jsScript file="models/DocFlowOutExtList_Model.js"/>
 		<jsScript file="models/ContractExtList_Model.js"/>
+		<jsScript file="models/DocFlowExaminationExtList_Model.js"/>
+		<jsScript file="models/DocFlowApprovementExtList_Model.js"/>
 	</jsScripts>
 	<cssScripts>
 		<cssScript file="assets/css/icons/icomoon/styles.css" compressed="TRUE" standalone="TRUE"/>

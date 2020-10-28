@@ -90,47 +90,6 @@ FileUploaderDocFlowOutClient_View.prototype.deleteFileFromServerContinue = funct
 	if(reread_tabs && this.getForUploadFileCount()){
 		throw new Error('Загрузить все незагруженные файлы!');
 	}
-	/*
-	if(reread_tabs){
-		var pm = (new DocFlowOutClient_Controller()).getPublicMethod("get_object");
-		pm.setFieldValue("id",this.m_mainView.getElement("id").getValue());
-		var self = this;
-		pm.run({
-			"ok":function(resp){
-				//self.addFileControls(this.m_items);	
-				var m = resp.getModel("ApplicationDialog_Model");
-				if(m.getNextRow()){
-					var docs = m.getFieldValue("documents");
-					//console.log(docs)
-					if(docs && docs.length){
-						for(var i=0;i<docs.length;i++){
-							if(docs[i].document_type==self.m_documentType){
-								//expanded nodes
-								var nodes = DOMHelper.getElementsByAttr("file_section", self.m_mainView.getNode(),"class");
-								var expanded_nodes = [];
-								for(var k=0;k<nodes.length;k++){
-									if(nodes[k].getAttribute("aria-expanded")=="true"){
-										expanded_nodes.push(nodes[k].getAttribute("href"));
-									}
-								}
-								self.m_mainView.m_documentTabs[self.m_documentType].control.delDOM();
-								delete self.m_mainView.m_documentTabs[self.m_documentType].control;
-								self.m_mainView.addDocTab(self.m_documentType,docs[i]["document"],true);
-								
-								for(var k=0;k<expanded_nodes.length;k++){									
-									$(expanded_nodes[k]).collapse();
-								}
-								break;
-							}
-						}
-					}
-				}
-			}
-		})
-		
-	}
-	return;
-	*/
 	var self = this;	
 	var pm = (new DocFlowOutClient_Controller()).getPublicMethod("remove_document_file");
 	pm.setFieldValue("file_id",fileId);

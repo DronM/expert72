@@ -16,7 +16,7 @@ function DocFlowExaminationList_View(id,options){
 	
 	DocFlowExaminationList_View.superclass.constructor.call(this,id,options);
 	
-	var model = options.models.DocFlowExaminationList_Model;
+	var model = (options.models&&options.models[this.MODEL_ID])? options.models[this.MODEL_ID]:new window[this.MODEL_ID]();
 	
 	var contr = new DocFlowExamination_Controller();
 	
@@ -234,6 +234,7 @@ function DocFlowExaminationList_View(id,options){
 	this.addElement(new GridAjx(id+":grid",{
 		"model":model,
 		"keyIds":["id"],
+		"readPublicMethod":contr.getPublicMethod(this.GRID_READ_PM),
 		"controller":contr,
 		"editInline":false,
 		"editWinClass":DocFlowExamination_Form,
@@ -262,7 +263,9 @@ function DocFlowExaminationList_View(id,options){
 extend(DocFlowExaminationList_View,ViewAjxList);
 
 /* Constants */
-
+DocFlowExaminationList_View.prototype.GRID_READ_PM = "get_list";
+DocFlowExaminationList_View.prototype.MODEL_ID = "DocFlowExaminationList_Model";
+DocFlowExaminationList_View.prototype.HEAD_TITLE = "Рассмотрения";
 
 /* private members */
 

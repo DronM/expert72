@@ -1,4 +1,4 @@
-/* Copyright (c) 2020
+/** Copyright (c) 2020
  *	Andrey Mikhalevich, Katren ltd.
  */
 function ContractExtList_Form(options){

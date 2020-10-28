@@ -1,8 +1,8 @@
--- VIEW: doc_flow_examinations_list
+-- VIEW: doc_flow_examinations_ext_list
 
---DROP VIEW doc_flow_examinations_list;
+--DROP VIEW doc_flow_examinations_ext_list;
 
-CREATE OR REPLACE VIEW doc_flow_examinations_list AS
+CREATE OR REPLACE VIEW doc_flow_examinations_ext_list AS
 	SELECT
 		t.id,
 		t.date_time,
@@ -38,10 +38,10 @@ CREATE OR REPLACE VIEW doc_flow_examinations_list AS
 	LEFT JOIN departments ON departments.id = (t.recipient->'keys'->>'id')::int AND t.recipient->>'dataType'='departments'
 	LEFT JOIN employees AS tp_emp ON tp_emp.id = (t.recipient->'keys'->>'id')::int AND t.recipient->>'dataType'='employees'
 	
-	-- NOT EXT
-	WHERE coalesce(doc_flow_in.ext_contract,FALSE)=FALSE
+	-- EXT
+	WHERE coalesce(doc_flow_in.ext_contract,FALSE)=TRUE
 	
 	ORDER BY t.date_time DESC
 	;
 	
-ALTER VIEW doc_flow_examinations_list OWNER TO ;
+ALTER VIEW doc_flow_examinations_ext_list OWNER TO ;

@@ -16,7 +16,7 @@ function DocFlowApprovementList_View(id,options){
 	
 	DocFlowApprovementList_View.superclass.constructor.call(this,id,options);
 	
-	var model = options.models.DocFlowApprovementList_Model;
+	var model = (options.models&&options.models[this.MODEL_ID])? options.models[this.MODEL_ID]:new window[this.MODEL_ID]();
 	
 	var contr = new DocFlowApprovement_Controller();
 	
@@ -218,6 +218,7 @@ function DocFlowApprovementList_View(id,options){
 		"model":model,
 		"keyIds":["id"],
 		"controller":contr,
+		"readPublicMethod":contr.getPublicMethod(this.GRID_READ_PM),
 		"editInline":false,
 		"editWinClass":DocFlowApprovement_Form,
 		"popUpMenu":popup_menu,
@@ -245,7 +246,9 @@ function DocFlowApprovementList_View(id,options){
 extend(DocFlowApprovementList_View,ViewAjxList);
 
 /* Constants */
-
+DocFlowApprovementList_View.prototype.GRID_READ_PM = "get_list";
+DocFlowApprovementList_View.prototype.MODEL_ID = "DocFlowApprovementList_Model";
+DocFlowApprovementList_View.prototype.HEAD_TITLE = "Согласования";
 
 /* private members */
 

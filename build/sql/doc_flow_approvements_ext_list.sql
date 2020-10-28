@@ -69,4 +69,4 @@ CREATE OR REPLACE VIEW doc_flow_approvements_ext_list AS
 	ORDER BY t.date_time DESC
 	;
 	
-ALTER VIEW doc_flow_approvements_ext_list OWNER TO expert72;
+ALTER VIEW doc_flow_approvements_ext_list OWNER TO ;

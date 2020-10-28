@@ -299,6 +299,11 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		}
 	}
 	
+	public function get_ext_list($pm){
+		$this->setListModelId('DocFlowApprovementExtList_Model');
+		parent::get_list($pm);
+	
+	}
 	
 </xsl:template>
 

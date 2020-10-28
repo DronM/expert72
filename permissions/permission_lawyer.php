@@ -600,6 +600,8 @@ $permissions = array();
 				
 					$permissions['DocFlowExamination_Controller_get_list']=TRUE;
 				
+					$permissions['DocFlowExamination_Controller_get_ext_list']=TRUE;
+				
 					$permissions['DocFlowExamination_Controller_resolve']=TRUE;
 				
 					$permissions['DocFlowExamination_Controller_unresolve']=TRUE;
@@ -615,6 +617,8 @@ $permissions = array();
 					$permissions['DocFlowApprovement_Controller_get_object']=TRUE;
 				
 					$permissions['DocFlowApprovement_Controller_get_list']=TRUE;
+				
+					$permissions['DocFlowApprovement_Controller_get_ext_list']=TRUE;
 				
 					$permissions['DocFlowApprovement_Controller_set_approved']=TRUE;
 				

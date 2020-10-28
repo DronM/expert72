@@ -63,6 +63,9 @@ CREATE OR REPLACE VIEW doc_flow_approvements_list AS
 	LEFT JOIN application_processes st
 		ON st.application_id=h_max.application_id AND st.date_time = h_max.date_time
 	
+	--NOT EXT
+	WHERE coalesce(doc_flow_out.ext_contract,FALSE)=FALSE
+	
 	ORDER BY t.date_time DESC
 	;
 	
