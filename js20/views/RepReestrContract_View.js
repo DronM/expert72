@@ -112,6 +112,31 @@ function RepReestrContract_View(id,options){
 			}),
 			"sign":"e"
 		}
+		,"service_type":{
+			"binding":new CommandBinding({
+				"control":new EditSelect(id+":filter-ctrl-service_type",{
+					"labelCaption":"Вид экспертизы:",
+					"contClassName":"form-group-filter",
+					"addNotSelected":false,
+					"elements":[
+						new EditSelectOption(id+":filter-ctrl-service_type:"+"expertise",{
+							"value":"expertise",
+							"descr":"Государственная экспертиза"
+						})
+						,new EditSelectOption(id+":filter-ctrl-service_type:"+"modified_documents",{
+							"value":"modified_documents",
+							"descr":"Измененная документация"
+						})
+						,new EditSelectOption(id+":filter-ctrl-service_type:"+"expert_maintenance",{
+							"value":"expert_maintenance",
+							"descr":"Экспертное сопровождение"
+						})
+					]
+				}),
+				"field":new FieldString("service_type")
+			}),
+			"sign":"e"
+		}
 		
 		,"service":{
 			"binding":new CommandBinding({
@@ -120,7 +145,12 @@ function RepReestrContract_View(id,options){
 					"contClassName":"form-group-filter",
 					"addNotSelected":false,
 					"elements":[
-						new EditSelectOption(id+":filter-ctrl-service:"+"pd",{
+						new EditSelectOption(id+":filter-ctrl-service:"+"null",{
+							"value":"null",
+							"descr":"<Не задана>"
+						})
+					
+						,new EditSelectOption(id+":filter-ctrl-service:"+"pd",{
 							"value":"pd",
 							"descr":"Проектная документация"
 						})
@@ -148,6 +178,32 @@ function RepReestrContract_View(id,options){
 					]
 				}),
 				"field":new FieldString("service")
+			}),
+			"sign":"e"
+		}
+		,"contract_type":{
+			"binding":new CommandBinding({
+				"control":new EditSelect(id+":filter-ctrl-contract_type",{
+					"labelCaption":"Контракт:",
+					"contClassName":"form-group-filter",
+					"addNotSelected":false,
+					"elements":[
+						new EditSelectOption(id+":filter-ctrl-contract_type:"+"not_ext_contract",{
+							"value":"not_ext_contract",
+							"descr":"Контракт"
+						})
+						,new EditSelectOption(id+":filter-ctrl-contract_type:"+"ext_contract",{
+							"value":"ext_contract",
+							"descr":"Внеконтракт"
+						})
+						
+						,new EditSelectOption(id+":filter-ctrl-contract_type:"+"null",{
+							"value":"null",
+							"descr":"Все"
+						})
+					]
+				}),
+				"field":new FieldString("contract_type")
 			}),
 			"sign":"e"
 		}

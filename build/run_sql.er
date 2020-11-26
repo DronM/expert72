@@ -1,0 +1,1 @@
+psql:/home/andrey/www/htdocs/expert72/build/sql/last_update.sql:5: ЗАМЕЧАНИЕ:  отношение "const_off_work_app_send_not_allowed_error" уже существует, пропускается

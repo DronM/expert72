@@ -1915,6 +1915,32 @@ class Application_Controller extends ControllerSQL{
 		}	
 	}
 
+	private static function check_send_allowed($dbLink,$officeId){
+		$ar_send_allowed = $dbLink->query_first(sprintf(
+			"SELECT
+				CASE
+					WHEN const_off_work_app_send_not_allowed_val()=TRUE
+						AND
+						coalesce(
+							(SELECT applications_work_h(now() AT TIME ZONE 'Asia/Yekaterinburg',%d))
+						,FALSE)=FALSE THEN FALSE
+					ELSE TRUE
+				END AS allowed"
+			,$officeId
+		));
+		
+		if(!is_array($ar_send_allowed) || !count($ar_send_allowed) || $ar_send_allowed['allowed']!='t'){
+			$ar = $dbLink->query_first("SELECT const_off_work_app_send_not_allowed_error_val() AS t");
+			if(!is_array($ar) || !count($ar) || !isset($ar['t'])){
+				$t = 'Отправка запрещена. Ведутся технические работы.';
+			}
+			else{
+				$t = $ar['t'];
+			}
+			throw new Exception($t);
+		}	
+	}
+
 	public function insert($pm){		
 	
 		//Внебрачные контракты
@@ -1933,7 +1959,10 @@ class Application_Controller extends ControllerSQL{
 		$set_sent_v = $pm->getParamValue('set_sent');
 		$set_sent = (isset($set_sent_v) && $set_sent_v=='1');
 		
-		if ($set_sent){			
+		if ($set_sent){	
+		
+			self::check_send_allowed($this->getDbLink(), $pm->getExtDbVal('office_id'));
+					
 			$stp = $pm->getParamValue("service_type")? $this->getExtVal($pm,"service_type"):null;
 			if(!$stp){
 				error_log('Отправка нового заявелния без указания типы услуги юзер='.$_SESSION['user_id']);
@@ -2143,7 +2172,8 @@ class Application_Controller extends ControllerSQL{
 							WHERE b_app.id=applications.base_application_id
 							)
 						ELSE NULL
-					END AS modified_documents_before_exp_maint_sent";
+					END AS modified_documents_before_exp_maint_sent,
+					office_id";
 				$ar = $this->getDbLinkMaster()->query_first($q);
 			}
 			else if ($set_sent){
@@ -2172,7 +2202,8 @@ class Application_Controller extends ControllerSQL{
 							WHERE b_app.id=app.base_application_id
 							)
 						ELSE NULL
-					END AS modified_documents_before_exp_maint_sent
+					END AS modified_documents_before_exp_maint_sent,
+					app.office_id
 				FROM applications AS app
 				WHERE app.id=%d",
 				$this->getExtDbVal($pm,'old_id')
@@ -2204,6 +2235,8 @@ class Application_Controller extends ControllerSQL{
 					//checkModDocumentBeforeSending
 					throw new Exception(self::ER_APP_EXPERT_MAINT_NOT_FOUND);
 				}
+				
+				self::check_send_allowed($this->getDbLink(), $ar['office_id']);
 				
 				$l = $this->getDbLinkMaster();
 				self::checkIULs($l,$this->getExtDbVal($pm,'old_id'));

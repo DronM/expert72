@@ -73,33 +73,59 @@ function RepQuarter_View(id,options){
 			}),
 			"sign":"e"
 		}
+		,"service_type":{
+			"binding":new CommandBinding({
+				"control":new EditSelect(id+":filter-ctrl-service_type",{
+					"labelCaption":"Вид экспертизы:",
+					"contClassName":"form-group-filter",
+					"addNotSelected":false,
+					"elements":[
+						new EditSelectOption(id+":filter-ctrl-service_type:"+"expertise",{
+							"value":"expertise",
+							"descr":"Государственная экспертиза"
+						})
+						,new EditSelectOption(id+":filter-ctrl-service_type:"+"modified_documents",{
+							"value":"modified_documents",
+							"descr":"Измененная документация"
+						})
+						,new EditSelectOption(id+":filter-ctrl-service_type:"+"expert_maintenance",{
+							"value":"expert_maintenance",
+							"descr":"Экспертное сопровождение"
+						})
+					]
+				}),
+				"field":new FieldString("service_type")
+			}),
+			"sign":"e"
+		}
+		
 		,"expertise_type":{
 			"binding":new CommandBinding({
-				"control":new EditSelect(id+":filter-ctrl-service",{
+				"control":new EditSelect(id+":filter-ctrl-expertise_type",{
 					"labelCaption":"Вид экспертизы:",
 					"contClassName":"form-group-filter",
 					"elements":[
-						new EditSelectOption(id+":filter-ctrl-service:"+"pd",{
+						new EditSelectOption(id+":filter-ctrl-expertise_type:"+"pd",{
 							"value":"pd",
 							"descr":"Проектная документация"
 						})
-						,new EditSelectOption(id+":filter-ctrl-service:"+"eng_survey",{
+						,new EditSelectOption(id+":filter-ctrl-expertise_type:"+"eng_survey",{
 							"value":"eng_survey",
 							"descr":"Результаты инженерных изысканий"
 						})
-						,new EditSelectOption(id+":filter-ctrl-service:"+"pd_eng_survey",{
+						,new EditSelectOption(id+":filter-ctrl-expertise_type:"+"pd_eng_survey",{
 							"value":"pd_eng_survey",
 							"descr":"Проектная документация и Результаты инженерных изысканий"
 						})
-						,new EditSelectOption(id+":filter-ctrl-service:"+"cost_eval_validity",{
+						,new EditSelectOption(id+":filter-ctrl-expertise_type:"+"cost_eval_validity",{
 							"value":"cost_eval_validity",
 							"descr":"Достоверность"
 						})
-						,new EditSelectOption(id+":filter-ctrl-service:"+"cost_eval_validity_pd",{
+						,new EditSelectOption(id+":filter-ctrl-expertise_type:"+"cost_eval_validity_pd",{
 							"value":"cost_eval_validity_pd",
 							"descr":"Проектная документация и Достоверность"
 						})
-						,new EditSelectOption(id+":filter-ctrl-service:"+"cost_eval_validity_pd_eng_survey",{
+						,new EditSelectOption(id+":filter-ctrl-expertise_type:"+"cost_eval_validity_pd_eng_survey",{
 							"value":"cost_eval_validity_pd_eng_survey",
 							"descr":"Проектная документация, РИИ, Достоверность"
 						})

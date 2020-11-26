@@ -16,6 +16,16 @@
 <!-- Head -->
 <xsl:template match="model[@id='Head_Model']">
 	<h3 class="reportTitle">Квартальный отчет за период <xsl:value-of select="row/period_descr"/></h3>
+	<xsl:if test="not(row/service_type_descr='')">
+		<div><xsl:value-of select="row/service_type_descr"/></div>
+	</xsl:if>
+
+	<xsl:if test="not(row/expertise_type_descr='')">
+		<div><xsl:value-of select="row/expertise_type_descr"/></div>
+	</xsl:if>
+	<xsl:if test="not(row/expertise_result_descr='')">
+		<div><xsl:value-of select="row/expertise_result_descr"/></div>
+	</xsl:if>
 	
 	<xsl:if test="not(row/client_name='')">
 		<div>Заказчик: <xsl:value-of select="row/client_name"/></div>
@@ -33,12 +43,6 @@
 		<div>Объект: <xsl:value-of select="row/constr_name"/></div>
 	</xsl:if>
 	
-	<xsl:if test="not(row/expertise_type_descr='')">
-		<div><xsl:value-of select="row/expertise_type_descr"/></div>
-	</xsl:if>
-	<xsl:if test="not(row/expertise_result_descr='')">
-		<div><xsl:value-of select="row/expertise_result_descr"/></div>
-	</xsl:if>
 	<xsl:if test="not(row/build_type_name='')">
 		<div>Вид строительства: <xsl:value-of select="row/build_type_name"/></div>
 	</xsl:if>

@@ -93,7 +93,7 @@ CREATE OR REPLACE VIEW contracts_list AS
 		GROUP BY client_payments.contract_id
 	) AS pm ON pm.contract_id=t.id
 	
-	WHERE coalesce(applications.ext_contract,FALSE)=FALSE
+	WHERE coalesce(applications.ext_contract,FALSE)=FALSE --AND t.service_type <> 'modified_documents'
 	
 	ORDER BY t.date_time DESC
 	;

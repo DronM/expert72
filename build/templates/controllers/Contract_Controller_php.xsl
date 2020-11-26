@@ -827,6 +827,10 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 					WHEN t.expertise_type='pd' THEN 'ПД'
 					WHEN t.expertise_type='eng_survey' THEN 'РИИ'
 					WHEN t.expertise_type='pd_eng_survey' THEN 'ПД и РИИ'
+					WHEN t.expertise_type='cost_eval_validity' THEN 'Достоверность'
+					WHEN t.expertise_type='cost_eval_validity_pd' THEN 'ПД и Достоверность'
+					WHEN t.expertise_type='cost_eval_validity_eng_survey' THEN 'РИИ и Достоверность'
+					WHEN t.expertise_type='cost_eval_validity_pd_eng_survey' THEN 'ПД,РИИ,Достоверность'
 					ELSE '-'
 				END AS exeprtise_type,
 				
@@ -1133,26 +1137,33 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			$extra_cond.= " AND contracts.expertise_type='cost_eval_validity_pd_eng_survey'";
 			$service_descr = 'Проектная документация, Достоверность, Результаты инженерных изысканий';
 		}
-		/*
-		if ($service &amp;&amp; strtolower($service)!='null'){
-			if ($service=='expertise'){
-				$extra_cond.= " AND (app.expertise_type='pd' OR app.expertise_type='eng_survey' OR app.expertise_type='pd_eng_survey')";
-				$service_descr = 'ПД и РИИ';
-			}
-			else if ($service=='cost_eval_validity'){
-				$extra_cond.= " AND app.cost_eval_validity";
-				$service_descr = 'Достоверность';
-			}			
-			else if ($service=='audit'){
-				$extra_cond.= " AND app.audit";
-				$service_descr = 'Аудит';
-			}
-			else if ($service=='expertise_cost_eval_validity'){
-				$extra_cond.= " AND (app.expertise_type='pd' OR app.expertise_type='eng_survey' OR app.expertise_type='pd_eng_survey' OR app.cost_eval_validity)";
-				$service_descr = 'ПД, РИИ, Достоверность';
-			}			
+
+
+		$service_type = strtolower($cond->getVal('service_type','e',DT_STRING));
+		$service_type_descr = 'Все виды экспертиз';
+		if ($service_type &amp;&amp; $service_type=='expertise'){
+			$extra_cond.= " AND contracts.service_type='expertise'";
+			$service_type_descr = 'Государственная экспертиза';
 		}
-		*/
+		else if ($service_type &amp;&amp; $service_type=='modified_documents'){
+			$extra_cond.= " AND contracts.service_type='modified_documents'";
+			$service_type_descr = 'Измененная документация';
+		}
+		else if ($service_type &amp;&amp; $service_type=='expert_maintenance'){
+			$extra_cond.= " AND contracts.service_type='expert_maintenance'";
+			$service_type_descr = 'Экспертное сопровождение';
+		}
+		
+		$contract_type = strtolower($cond->getVal('contract_type','e',DT_STRING));
+		$contract_type_descr = 'Все виды контрактов';
+		if ($contract_type &amp;&amp; $contract_type=='not_ext_contract'){
+			$extra_cond.= " AND coalesce(app.ext_contract,FALSE)=FALSE";
+			$contract_type_descr = 'Только контракты';
+		}
+		else if ($contract_type &amp;&amp; $contract_type=='ext_contract'){
+			$extra_cond.= " AND coalesce(app.ext_contract,FALSE)=TRUE";
+			$contract_type_descr = 'Только внеконтракты';
+		}
 		
 		$model = new RepReestrContract_Model($this->getDbLink());
 		$model->query(
@@ -1225,6 +1236,8 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				%s AS contractor_name,
 				CASE WHEN %s IS NOT NULL THEN (SELECT name FROM clients WHERE id=%d) ELSE '' END AS client_name,
 				'%s' AS service_descr,
+				'%s' AS service_type_descr,
+				'%s' AS contract_type_descr,
 				'%s' date_type_descr,
 				CASE WHEN %s IS NOT NULL THEN (SELECT name FROM employees WHERE id=%d) ELSE '' END AS main_expert_name,
 				CASE WHEN %s IS NOT NULL THEN (SELECT name FROM fund_sources WHERE id=%d) ELSE '' END AS fund_source_name
@@ -1236,6 +1249,8 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			$client_id,
 			$client_id,
 			$service_descr,
+			$service_type_descr,
+			$contract_type_descr,
 			$date_type_descr,
 			$main_expert_id,
 			$main_expert_id,
@@ -1308,6 +1323,21 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 					WHERE app_t.id=app.id
 				) AS s)) ) )",
 				$contractor_name);
+		}
+		
+		$service_type = strtolower($cond->getVal('service_type','e',DT_STRING));
+		$service_type_descr = 'Все виды экспертиз';
+		if ($service_type &amp;&amp; $service_type=='expertise'){
+			$extra_cond.= " AND contracts.service_type='expertise'";
+			$service_type_descr = 'Государственная экспертиза';
+		}
+		else if ($service_type &amp;&amp; $service_type=='modified_documents'){
+			$extra_cond.= " AND contracts.service_type='modified_documents'";
+			$service_type_descr = 'Измененная документация';
+		}
+		else if ($service_type &amp;&amp; $service_type=='expert_maintenance'){
+			$extra_cond.= " AND contracts.service_type='expert_maintenance'";
+			$service_type_descr = 'Экспертное сопровождение';
 		}
 		
 		$expertise_type_par = strtolower($cond->getVal('expertise_type','e',DT_STRING));		
@@ -1383,6 +1413,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			LEFT JOIN build_types ON build_types.id=app.build_type_id
 			LEFT JOIN contracts AS primary_ct ON primary_ct.id=contracts.primary_contract_id
 			WHERE contracts.expertise_result_date BETWEEN %s AND (%s::timestamp+'1 day'::interval-'1 second'::interval)
+			AND coalesce(app.ext_contract,FALSE)=FALSE
 			%s
 			ORDER BY contracts.expertise_result_date",
 			$dt_from,
@@ -1403,6 +1434,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				%s AS constr_name,
 				CASE WHEN %s IS NOT NULL THEN (SELECT name FROM build_types WHERE id=%d) ELSE '' END AS build_type_name,
 				CASE WHEN %s IS NOT NULL THEN (SELECT name FROM employees WHERE id=%d) ELSE '' END AS main_expert_name,
+				'%s' AS service_type_descr,
 				'%s' AS expertise_type_descr,
 				'%s' AS expertise_result_descr
 			",
@@ -1418,6 +1450,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			$build_type_id,
 			$main_expert_id,
 			$main_expert_id,
+			$service_type_descr,
 			$expertise_type_descr,
 			$expertise_result_descr
 			),

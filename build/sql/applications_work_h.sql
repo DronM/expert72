@@ -23,6 +23,6 @@ $$
 $$
   LANGUAGE sql VOLATILE
   COST 100;
-ALTER FUNCTION applications_work_h(in_date_time timestampTZ,in_office_id int) OWNER TO expert72;
+ALTER FUNCTION applications_work_h(in_date_time timestampTZ,in_office_id int) OWNER TO ;
 
 

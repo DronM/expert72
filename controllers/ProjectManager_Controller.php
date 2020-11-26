@@ -282,7 +282,7 @@ class ProjectManager_Controller extends Controller{
 			),
 			$this->log
 		);
-		$this->printLog();	
+		$this->printLog();
 	}
 	
 }

@@ -20,6 +20,17 @@
 		<div>Вид периода: <xsl:value-of select="row/date_type_descr"/></div>
 	</xsl:if>
 	
+	<xsl:if test="not(row/service_type_descr='')">
+		<div>Вид экспертизы: <xsl:value-of select="row/service_type_descr"/></div>
+	</xsl:if>
+	<xsl:if test="not(row/contrcat_type_descr='')">
+		<div>Контракт: <xsl:value-of select="row/contrcat_type_descr"/></div>
+	</xsl:if>
+	
+	<xsl:if test="not(row/service_descr='')">
+		<div>Услуга: <xsl:value-of select="row/service_descr"/></div>
+	</xsl:if>
+	
 	<xsl:if test="not(row/client_name='')">
 		<div>Заказчик: <xsl:value-of select="row/client_name"/></div>
 	</xsl:if>
@@ -35,11 +46,7 @@
 	<xsl:if test="not(row/fund_source_name='') and not(row/fund_source_name='null')">
 		<div>Источник финансирования: <xsl:value-of select="row/fund_source_name"/></div>
 	</xsl:if>
-	
-	<xsl:if test="not(row/service_descr='')">
-		<div>Услуга: <xsl:value-of select="row/service_descr"/></div>
-	</xsl:if>
-	
+		
 </xsl:template>
 
 <xsl:template match="model[@id='RepReestrContract_Model']">

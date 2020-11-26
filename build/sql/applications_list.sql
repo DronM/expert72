@@ -1,6 +1,6 @@
 -- VIEW: applications_list
 
-DROP VIEW applications_list;
+--DROP VIEW applications_list;
 
 CREATE OR REPLACE VIEW applications_list AS
 	SELECT
@@ -33,6 +33,7 @@ CREATE OR REPLACE VIEW applications_list AS
 			WHEN l.expertise_type='cost_eval_validity' OR coalesce(l.cost_eval_validity,FALSE) THEN 'Достоверность'
 			WHEN l.expertise_type='cost_eval_validity_pd' THEN 'ПД,Достоверность'
 			WHEN l.expertise_type='pd_eng_survey' THEN 'ПД,РИИ'
+			WHEN l.expertise_type='eng_survey' THEN 'РИИ'
 			WHEN l.expertise_type='cost_eval_validity_pd_eng_survey' THEN 'ПД,РИИ,Достоверность'
 			WHEN l.expertise_type='cost_eval_validity_eng_survey' THEN 'РИИ,Достоверность'
 			ELSE ''

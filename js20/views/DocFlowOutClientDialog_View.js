@@ -645,10 +645,12 @@ DocFlowOutClientDialog_View.prototype.getDocFlowOutAttrs = function(){
 					}
 					else if(self.m_docFlowOutAttrs.allow_new_file_add===true){
 						//изменение разрешено - но не удаление!!!
+						/*
 						var doc_sec_del = DOMHelper.getElementsByAttr("fileDeleteBtn",doc_sections[i],"class");
 						for(var j=0;j< doc_sec_del.length;j++){
 							DOMHelper.hide(doc_sec_del[j]);
-						}						
+						}
+						*/						
 					}					
 				}
 				if(!self.m_docFlowOutAttrs.allow_new_file_add){
