@@ -181,7 +181,7 @@ function ApplicationList_View(id,options){
 		}),
 		*/
 		new GridCellHead(id+":grid:head:contract_number",{
-			"value":"Контракт",
+			"value":"Контракт,заключение",
 			"columns":[
 				new GridColumn({
 					"field":model.getField("contract_number"),
@@ -200,6 +200,36 @@ function ApplicationList_View(id,options){
 					}
 				})
 			]
+		})
+		
+		,new GridCellHead(id+":grid:head:work_start_date",{
+			"value":"Дата начало экспертизы",
+			"columns":[
+				new GridColumnDate({
+					"field":model.getField("work_start_date"),
+					"ctrlClass":EditDate,
+					"searchOptions":{
+						"field":new FieldDate("work_start_date"),
+						"searchType":"on_beg"
+					}
+				})
+			],
+			"sortable":true
+		})
+		,new GridCellHead(id+":grid:head:ban_from",{
+			"value":"Дата завершения отправки ответов на замечание",
+			"title":"Начиная с этой даты отправка ответов на замечания будет запрещена",
+			"columns":[
+				new GridColumnDate({
+					"field":model.getField("ban_from"),
+					"ctrlClass":EditDate,
+					"searchOptions":{
+						"field":new FieldDate("ban_from"),
+						"searchType":"on_beg"
+					}
+				})
+			],
+			"sortable":true
 		})
 		
 	];

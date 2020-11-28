@@ -667,6 +667,14 @@ class ContractList_Model extends ModelSQL{
 		$f_expert_maintenance_contracts_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expert_maintenance_contracts_ref",$f_opts);
 		$this->addField($f_expert_maintenance_contracts_ref);
 		//********************
+		
+		//*** Field ban_from ***
+		$f_opts = array();
+		$f_opts['id']="ban_from";
+						
+		$f_ban_from=new FieldSQLDate($this->getDbLink(),$this->getDbName(),$this->getTableName(),"ban_from",$f_opts);
+		$this->addField($f_ban_from);
+		//********************
 	
 		$order = new ModelOrderSQL();		
 		$this->setDefaultModelOrder($order);		

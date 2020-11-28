@@ -872,6 +872,18 @@ FileUploaderApplication_View.js correct_items
 3) Новая константа Запретить отправлять заявления на проверку в нерабочее время
 Функция applications_work_h проверки
 
+
+1.0.145 28/11/20
+1) Функция doc_flow_out_client_ban_inf
+2) applications_list
+fields: work_start_date, ban_from
+3) contracts_list,contracts_ext_list
+fields: work_start_date, ban_from
+
+
+Файл доверенности не удаляется при недоступности
+ApplicationClientEdit
+
 отчет квартпльный, заключния, контракты. попадает по измененной документации и по экспеорт сопровождо, внеконтракт проверить .
 
 

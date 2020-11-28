@@ -569,6 +569,22 @@ class ApplicationList_Model extends ModelSQL{
 		$f_expertise_result_date=new FieldSQLDate($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expertise_result_date",$f_opts);
 		$this->addField($f_expertise_result_date);
 		//********************
+		
+		//*** Field work_start_date ***
+		$f_opts = array();
+		$f_opts['id']="work_start_date";
+						
+		$f_work_start_date=new FieldSQLDate($this->getDbLink(),$this->getDbName(),$this->getTableName(),"work_start_date",$f_opts);
+		$this->addField($f_work_start_date);
+		//********************
+		
+		//*** Field ban_from ***
+		$f_opts = array();
+		$f_opts['id']="ban_from";
+						
+		$f_ban_from=new FieldSQLDate($this->getDbLink(),$this->getDbName(),$this->getTableName(),"ban_from",$f_opts);
+		$this->addField($f_ban_from);
+		//********************
 	
 		$order = new ModelOrderSQL();		
 		$this->setDefaultModelOrder($order);		

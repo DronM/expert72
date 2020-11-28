@@ -619,5 +619,6 @@ ApplicationClientEdit.prototype.resetValues = function(){
 	}
 	this.getElement("customer_auth_letter").reset();
 	this.getElement("customer_auth_letter_file").reset();
+	//this.setAuthLetterRequired(false);
 }
 

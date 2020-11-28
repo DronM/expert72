@@ -1148,28 +1148,17 @@ class DocFlowOutClient_Controller extends ControllerSQL{
 		if($clientType=="contr_resp"){
 			$ar = $this->getDbLink()->query_first(sprintf(
 				"WITH
-				contr AS (SELECT
-						coalesce(ct.allow_client_out_documents,FALSE) AS allow_client_out_documents,
-						ct.work_end_date,
-						bank_day_next(
-							ct.work_end_date,
-							(SELECT -1 * coalesce(sv.ban_client_responses_day_cnt,const_ban_client_responses_day_cnt_val())
-							FROM services AS sv
-							WHERE
-								sv.expertise_type = app.expertise_type
-								AND sv.service_type = app.service_type 
-							)
-						) AS ban_from
-					FROM contracts AS ct
-					LEFT JOIN applications AS app ON app.id=ct.application_id
-					WHERE ct.application_id=%d
+				ban_inf AS (
+					SELECT *
+					FROM doc_flow_out_client_ban_inf(%d)
+					AS (allow_client_out_documents bool, work_end_date date,ban_from date )
 				)
 				SELECT
-				to_char((SELECT ban_from FROM contr),'dd/mm/yy') AS ban_from,					
+				to_char((SELECT ban_from FROM ban_inf),'dd/mm/yy') AS ban_from,					
 				coalesce(
 					(
-						(SELECT allow_client_out_documents FROM contr)=FALSE
-						AND now()::date>=(SELECT ban_from FROM contr)
+						(SELECT allow_client_out_documents FROM ban_inf)=FALSE
+						AND now()::date>=(SELECT ban_from FROM ban_inf)
 					)
 				,FALSE) AS banned",
 			$appId

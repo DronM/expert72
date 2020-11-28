@@ -69,6 +69,12 @@ CREATE OR REPLACE VIEW contracts_ext_list AS
 		ELSE NULL
 		END AS expert_maintenance_contract_id
 		
+		,t.work_start_date
+		,(SELECT
+			CASE WHEN allow_client_out_documents=TRUE THEN NULL ELSE ban_from END
+		FROM doc_flow_out_client_ban_inf(t.application_id) AS (allow_client_out_documents bool, work_end_date date,ban_from date )
+		) AS ban_from
+		
 	FROM contracts AS t
 	LEFT JOIN applications ON applications.id=t.application_id
 	LEFT JOIN employees ON employees.id=t.employee_id

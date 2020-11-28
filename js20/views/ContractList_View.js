@@ -394,6 +394,41 @@ ContractList_View.prototype.addGrid = function(options){
 			]
 		})										
 	);
+	
+	fields.push(
+		new GridCellHead(id+":grid:head:work_start_date",{
+			"value":"Дата начало экспертизы",
+			"columns":[
+				new GridColumnDate({
+					"field":model.getField("work_start_date"),
+					"ctrlClass":EditDate,
+					"searchOptions":{
+						"field":new FieldDate("work_start_date"),
+						"searchType":"on_beg"
+					}
+				})
+			],
+			"sortable":true
+		})
+	);
+	fields.push(
+		new GridCellHead(id+":grid:head:ban_from",{
+			"value":"Дата завершения отправки ответов на замечание",
+			"title":"Начиная с этой даты отправка ответов на замечания будет запрещена",
+			"columns":[
+				new GridColumnDate({
+					"field":model.getField("ban_from"),
+					"ctrlClass":EditDate,
+					"searchOptions":{
+						"field":new FieldDate("ban_from"),
+						"searchType":"on_beg"
+					}
+				})
+			],
+			"sortable":true
+		})
+	);
+	
 	fields.push(	
 		new GridCellHead(id+":grid:head:comment_text",{
 			"value":"Комментарий",

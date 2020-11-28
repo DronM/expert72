@@ -2,7 +2,7 @@
 <metadata owner="expert72">
 	<versions>
 		<version dateOpen="2017-09-27 12:09:48" dateClose="2017-12-08 10:12:08">1.001 
-		<lastBuild>2020-11-26 08:35:12</lastBuild></version>
+		<lastBuild>2020-11-28 10:13:28</lastBuild></version>
 		<version dateOpen="2017-12-08 11:12:01" dateClose="2017-12-08 11:12:04">1.002</version>
 		<version dateOpen="2017-12-08 11:12:20" dateClose="2017-12-08 11:12:20">1.0.3</version>
 		<version dateOpen="2017-12-12 11:12:07" dateClose="2017-12-12 11:12:07">1.0.4</version>
@@ -145,6 +145,7 @@
 		<version dateOpen="2020-10-19 16:10:50" dateClose="2020-10-20 05:10:31">1.0.1342</version>
 		<version dateOpen="2020-10-28 08:10:25" dateClose="2020-10-28 10:10:18">1.0.143</version>
 		<version dateOpen="2020-11-05 08:11:23" dateClose="2020-11-26 08:11:35">1.0.144</version>
+		<version dateOpen="2020-11-27 13:11:33" dateClose="2020-11-28 10:11:13">1.0.145</version>
 	</versions>
 	<globalFilters>
 		<field id="user_id"/>
@@ -1233,6 +1234,8 @@
 			<field id="expertise_result_number" dataType="String"/>
 			<field id="expertise_result_date" dataType="Date"/>
 			<field id="base_application_id" dataType="Int"/>
+			<field id="work_start_date" dataType="Date"/>
+			<field id="ban_from" dataType="Date"/>
 			<globalFilter id="user_id"/>
 		</model>
 		<model id="ApplicationExtList" parent="ModelSQL" dataTable="applications_ext_list" virtual="TRUE" baseModelId="Application">
@@ -2853,6 +2856,8 @@
 			<field id="service_type" dataType="String" alias="&#x412;&#x438;&#x434; &#x443;&#x441;&#x43B;&#x443;&#x433;&#x438;"/>
 			<field id="expert_maintenance_contract_id" dataType="Int" sysCol="TRUE"/>
 			<field id="expert_maintenance_contracts_ref" dataType="JSON" alias="&#x418;&#x434;&#x435;&#x43D;&#x442;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x43E;&#x440; &#x441;&#x432;&#x44F;&#x437;&#x430;&#x43D;&#x43D;&#x43E;&#x433;&#x43E; &#x43A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x430; &#x43F;&#x43E; &#x44D;&#x43A;&#x441;&#x43F;&#x435;&#x440;&#x442;&#x43D;&#x43E;&#x43C;&#x443; &#x441;&#x43E;&#x43F;&#x440;&#x43E;&#x432;&#x43E;&#x436;&#x434;&#x435;&#x43D;&#x438;&#x44E;. &#x422;&#x43E;&#x43B;&#x44C;&#x43A;&#x43E; &#x443; &#x438;&#x437;&#x43C;&#x435;&#x43D;&#x435;&#x43D;&#x43D;&#x43E;&#x439; &#x434;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x430;&#x446;&#x438;&#x438;."/>
+			<field id="work_start_date" dataType="Date"/>
+			<field id="ban_from" dataType="Date"/>
 		</model>
 		<model id="ContractExtList" parent="ModelSQL" dataTable="contracts_ext_list" virtual="TRUE" baseModelId="Contract" calcHash="TRUE">
 			<defaultOrder>
@@ -2896,6 +2901,8 @@
 			<field id="service_type" dataType="String" alias="&#x412;&#x438;&#x434; &#x443;&#x441;&#x43B;&#x443;&#x433;&#x438;"/>
 			<field id="expert_maintenance_contract_id" dataType="Int" sysCol="TRUE"/>
 			<field id="expert_maintenance_contracts_ref" dataType="JSON" alias="&#x418;&#x434;&#x435;&#x43D;&#x442;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x43E;&#x440; &#x441;&#x432;&#x44F;&#x437;&#x430;&#x43D;&#x43D;&#x43E;&#x433;&#x43E; &#x43A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x430; &#x43F;&#x43E; &#x44D;&#x43A;&#x441;&#x43F;&#x435;&#x440;&#x442;&#x43D;&#x43E;&#x43C;&#x443; &#x441;&#x43E;&#x43F;&#x440;&#x43E;&#x432;&#x43E;&#x436;&#x434;&#x435;&#x43D;&#x438;&#x44E;. &#x422;&#x43E;&#x43B;&#x44C;&#x43A;&#x43E; &#x443; &#x438;&#x437;&#x43C;&#x435;&#x43D;&#x435;&#x43D;&#x43D;&#x43E;&#x439; &#x434;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x430;&#x446;&#x438;&#x438;."/>
+			<field id="work_start_date" dataType="Date"/>
+			<field id="ban_from" dataType="Date"/>
 		</model>
 		<model id="ContractDialog" parent="ModelSQL" dataTable="contracts_dialog" virtual="TRUE" baseModelId="Contract">
 			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE" required="FALSE"/>

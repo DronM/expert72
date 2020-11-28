@@ -695,6 +695,16 @@ function ContractExtList_Model(options){
 	
 	options.fields.expert_maintenance_contracts_ref = new FieldJSON("expert_maintenance_contracts_ref",filed_options);
 	
+			
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.ban_from = new FieldDate("ban_from",filed_options);
+	
 		
 	options.calcHash = true;
 	ContractExtList_Model.superclass.constructor.call(this,id,options);
