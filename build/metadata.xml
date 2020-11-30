@@ -2,7 +2,7 @@
 <metadata owner="expert72">
 	<versions>
 		<version dateOpen="2017-09-27 12:09:48" dateClose="2017-12-08 10:12:08">1.001 
-		<lastBuild>2020-11-30 14:50:19</lastBuild></version>
+		<lastBuild>2020-11-30 16:08:39</lastBuild></version>
 		<version dateOpen="2017-12-08 11:12:01" dateClose="2017-12-08 11:12:04">1.002</version>
 		<version dateOpen="2017-12-08 11:12:20" dateClose="2017-12-08 11:12:20">1.0.3</version>
 		<version dateOpen="2017-12-12 11:12:07" dateClose="2017-12-12 11:12:07">1.0.4</version>
@@ -147,6 +147,7 @@
 		<version dateOpen="2020-11-05 08:11:23" dateClose="2020-11-26 08:11:35">1.0.144</version>
 		<version dateOpen="2020-11-27 13:11:33" dateClose="2020-11-28 10:11:13">1.0.145</version>
 		<version dateOpen="2020-11-30 14:11:41" dateClose="2020-11-30 14:11:50">1.0.146</version>
+		<version dateOpen="2020-11-30 15:11:47" dateClose="2020-11-30 16:11:08">1.0.147</version>
 	</versions>
 	<globalFilters>
 		<field id="user_id"/>
@@ -4551,18 +4552,10 @@
 		<permission type="allow" controllerId="Reminder" methodId="get_object" roleId="expert_ext"/>
 		<permission type="allow" controllerId="Reminder" methodId="get_unviewed_list" roleId="expert_ext"/>
 		<permission type="allow" controllerId="Reminder" methodId="set_viewed" roleId="expert_ext"/>
-		<permission type="allow" controllerId="DocFlowIn" methodId="get_list" roleId="expert_ext"/>
-		<permission type="allow" controllerId="DocFlowIn" methodId="get_object" roleId="expert_ext"/>
-		<permission type="allow" controllerId="DocFlowIn" methodId="get_file" roleId="expert_ext"/>
-		<permission type="allow" controllerId="DocFlowIn" methodId="get_file_sig" roleId="expert_ext"/>
-		<permission type="allow" controllerId="DocFlowIn" methodId="download_attachments" roleId="expert_ext"/>
+		<permission type="allow" controllerId="DocFlowIn" methodId="all" roleId="expert_ext"/>
 		<permission type="allow" controllerId="DocFlowInside" methodId="all" roleId="expert_ext"/>
-		<permission type="allow" controllerId="DocFlowOut" methodId="get_file" roleId="expert_ext"/>
-		<permission type="allow" controllerId="DocFlowOut" methodId="get_file_sig" roleId="expert_ext"/>
-		<permission type="allow" controllerId="DocFlowApprovement" methodId="get_object" roleId="expert_ext"/>
-		<permission type="allow" controllerId="DocFlowApprovement" methodId="get_list" roleId="expert_ext"/>
-		<permission type="allow" controllerId="DocFlowApprovement" methodId="insert" roleId="expert_ext"/>
-		<permission type="allow" controllerId="DocFlowApprovement" methodId="update" roleId="expert_ext"/>
+		<permission type="allow" controllerId="DocFlowOut" methodId="all" roleId="expert_ext"/>
+		<permission type="allow" controllerId="DocFlowApprovement" methodId="all" roleId="expert_ext"/>
 		<permission type="allow" controllerId="Application" methodId="get_file" roleId="expert_ext"/>
 		<permission type="allow" controllerId="Application" methodId="get_file_sig" roleId="expert_ext"/>
 		<permission type="allow" controllerId="Application" methodId="zip_all" roleId="expert_ext"/>

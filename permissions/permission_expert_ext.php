@@ -150,16 +150,32 @@ $permissions = array();
 		
 			$permissions['Reminder_Controller_set_viewed']=TRUE;
 		
-			$permissions['DocFlowIn_Controller_get_list']=TRUE;
-		
-			$permissions['DocFlowIn_Controller_get_object']=TRUE;
-		
-			$permissions['DocFlowIn_Controller_get_file']=TRUE;
-		
-			$permissions['DocFlowIn_Controller_get_file_sig']=TRUE;
-		
-			$permissions['DocFlowIn_Controller_download_attachments']=TRUE;
-		
+				$permissions['DocFlowIn_Controller_insert']=TRUE;
+			
+				$permissions['DocFlowIn_Controller_update']=TRUE;
+			
+				$permissions['DocFlowIn_Controller_delete']=TRUE;
+			
+				$permissions['DocFlowIn_Controller_get_list']=TRUE;
+			
+				$permissions['DocFlowIn_Controller_get_ext_list']=TRUE;
+			
+				$permissions['DocFlowIn_Controller_get_object']=TRUE;
+			
+				$permissions['DocFlowIn_Controller_complete']=TRUE;
+			
+				$permissions['DocFlowIn_Controller_remove_file']=TRUE;
+			
+				$permissions['DocFlowIn_Controller_remove_sig']=TRUE;
+			
+				$permissions['DocFlowIn_Controller_get_file']=TRUE;
+			
+				$permissions['DocFlowIn_Controller_get_file_sig']=TRUE;
+			
+				$permissions['DocFlowIn_Controller_get_next_num']=TRUE;
+			
+				$permissions['DocFlowIn_Controller_download_attachments']=TRUE;
+			
 				$permissions['DocFlowInside_Controller_insert']=TRUE;
 			
 				$permissions['DocFlowInside_Controller_update']=TRUE;
@@ -184,18 +200,66 @@ $permissions = array();
 			
 				$permissions['DocFlowInside_Controller_sign_file']=TRUE;
 			
-			$permissions['DocFlowOut_Controller_get_file']=TRUE;
-		
-			$permissions['DocFlowOut_Controller_get_file_sig']=TRUE;
-		
-			$permissions['DocFlowApprovement_Controller_get_object']=TRUE;
-		
-			$permissions['DocFlowApprovement_Controller_get_list']=TRUE;
-		
-			$permissions['DocFlowApprovement_Controller_insert']=TRUE;
-		
-			$permissions['DocFlowApprovement_Controller_update']=TRUE;
-		
+				$permissions['DocFlowOut_Controller_insert']=TRUE;
+			
+				$permissions['DocFlowOut_Controller_update']=TRUE;
+			
+				$permissions['DocFlowOut_Controller_delete']=TRUE;
+			
+				$permissions['DocFlowOut_Controller_get_list']=TRUE;
+			
+				$permissions['DocFlowOut_Controller_get_ext_list']=TRUE;
+			
+				$permissions['DocFlowOut_Controller_get_object']=TRUE;
+			
+				$permissions['DocFlowOut_Controller_remove_file']=TRUE;
+			
+				$permissions['DocFlowOut_Controller_remove_sig']=TRUE;
+			
+				$permissions['DocFlowOut_Controller_get_file']=TRUE;
+			
+				$permissions['DocFlowOut_Controller_get_file_hash']=TRUE;
+			
+				$permissions['DocFlowOut_Controller_get_file_sig']=TRUE;
+			
+				$permissions['DocFlowOut_Controller_get_next_num']=TRUE;
+			
+				$permissions['DocFlowOut_Controller_complete']=TRUE;
+			
+				$permissions['DocFlowOut_Controller_get_app_state']=TRUE;
+			
+				$permissions['DocFlowOut_Controller_get_next_contract_number']=TRUE;
+			
+				$permissions['DocFlowOut_Controller_alter_file_folder']=TRUE;
+			
+				$permissions['DocFlowOut_Controller_add_sig_to_file']=TRUE;
+			
+				$permissions['DocFlowOut_Controller_get_sig_details']=TRUE;
+			
+				$permissions['DocFlowOut_Controller_sign_file']=TRUE;
+			
+				$permissions['DocFlowOut_Controller_set_require_client_sig']=TRUE;
+			
+				$permissions['DocFlowApprovement_Controller_insert']=TRUE;
+			
+				$permissions['DocFlowApprovement_Controller_update']=TRUE;
+			
+				$permissions['DocFlowApprovement_Controller_delete']=TRUE;
+			
+				$permissions['DocFlowApprovement_Controller_get_object']=TRUE;
+			
+				$permissions['DocFlowApprovement_Controller_get_list']=TRUE;
+			
+				$permissions['DocFlowApprovement_Controller_get_ext_list']=TRUE;
+			
+				$permissions['DocFlowApprovement_Controller_set_approved']=TRUE;
+			
+				$permissions['DocFlowApprovement_Controller_set_approved_with_remarks']=TRUE;
+			
+				$permissions['DocFlowApprovement_Controller_set_disapproved']=TRUE;
+			
+				$permissions['DocFlowApprovement_Controller_set_closed']=TRUE;
+			
 			$permissions['Application_Controller_get_file']=TRUE;
 		
 			$permissions['Application_Controller_get_file_sig']=TRUE;
