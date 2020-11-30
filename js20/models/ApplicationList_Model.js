@@ -593,6 +593,15 @@ function ApplicationList_Model(options){
 	
 	options.fields.ban_from = new FieldDate("ban_from",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.expert_work_end_date = new FieldDate("expert_work_end_date",filed_options);
+	
 			
 		ApplicationList_Model.superclass.constructor.call(this,id,options);
 }

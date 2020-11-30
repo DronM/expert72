@@ -585,6 +585,14 @@ class ApplicationList_Model extends ModelSQL{
 		$f_ban_from=new FieldSQLDate($this->getDbLink(),$this->getDbName(),$this->getTableName(),"ban_from",$f_opts);
 		$this->addField($f_ban_from);
 		//********************
+		
+		//*** Field expert_work_end_date ***
+		$f_opts = array();
+		$f_opts['id']="expert_work_end_date";
+						
+		$f_expert_work_end_date=new FieldSQLDate($this->getDbLink(),$this->getDbName(),$this->getTableName(),"expert_work_end_date",$f_opts);
+		$this->addField($f_expert_work_end_date);
+		//********************
 	
 		$order = new ModelOrderSQL();		
 		$this->setDefaultModelOrder($order);		

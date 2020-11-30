@@ -181,7 +181,7 @@ function ApplicationList_View(id,options){
 		}),
 		*/
 		new GridCellHead(id+":grid:head:contract_number",{
-			"value":"Контракт,заключение",
+			"value":"Контракт, заключение",
 			"columns":[
 				new GridColumn({
 					"field":model.getField("contract_number"),
@@ -201,7 +201,6 @@ function ApplicationList_View(id,options){
 				})
 			]
 		})
-		
 		,new GridCellHead(id+":grid:head:work_start_date",{
 			"value":"Дата начало экспертизы",
 			"columns":[
@@ -216,8 +215,24 @@ function ApplicationList_View(id,options){
 			],
 			"sortable":true
 		})
+		
+		,new GridCellHead(id+":grid:head:expert_work_end_date",{
+			"value":"Дата завершения первоначального рассмотрения",
+			"columns":[
+				new GridColumnDate({
+					"field":model.getField("expert_work_end_date"),
+					"ctrlClass":EditDate,
+					"searchOptions":{
+						"field":new FieldDate("expert_work_end_date"),
+						"searchType":"on_beg"
+					}
+				})
+			],
+			"sortable":true
+		})
+		
 		,new GridCellHead(id+":grid:head:ban_from",{
-			"value":"Дата завершения отправки ответов на замечание",
+			"value":"Дата завершения отправки ответов на замечания",
 			"title":"Начиная с этой даты отправка ответов на замечания будет запрещена",
 			"columns":[
 				new GridColumnDate({

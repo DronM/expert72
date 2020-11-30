@@ -31,11 +31,11 @@ CREATE OR REPLACE VIEW applications_list AS
 			WHEN l.service_type='modification' THEN 'Модификация'
 			WHEN l.expertise_type='pd' AND coalesce(l.cost_eval_validity,FALSE)=FALSE THEN 'ПД'
 			WHEN l.expertise_type='cost_eval_validity' OR coalesce(l.cost_eval_validity,FALSE) THEN 'Достоверность'
-			WHEN l.expertise_type='cost_eval_validity_pd' THEN 'ПД,Достоверность'
-			WHEN l.expertise_type='pd_eng_survey' THEN 'ПД,РИИ'
+			WHEN l.expertise_type='cost_eval_validity_pd' THEN 'ПД, Достоверность'
+			WHEN l.expertise_type='pd_eng_survey' THEN 'ПД, РИИ'
 			WHEN l.expertise_type='eng_survey' THEN 'РИИ'
-			WHEN l.expertise_type='cost_eval_validity_pd_eng_survey' THEN 'ПД,РИИ,Достоверность'
-			WHEN l.expertise_type='cost_eval_validity_eng_survey' THEN 'РИИ,Достоверность'
+			WHEN l.expertise_type='cost_eval_validity_pd_eng_survey' THEN 'ПД, РИИ, Достоверность'
+			WHEN l.expertise_type='cost_eval_validity_eng_survey' THEN 'РИИ, Достоверность'
 			ELSE ''
 			END
 		) AS service_list,
@@ -58,6 +58,8 @@ CREATE OR REPLACE VIEW applications_list AS
 			CASE WHEN allow_client_out_documents=TRUE THEN NULL ELSE ban_from END
 		FROM doc_flow_out_client_ban_inf(l.id) AS (allow_client_out_documents bool, work_end_date date,ban_from date )
 		) AS ban_from
+		
+		,contr.expert_work_end_date
 				
 	FROM applications AS l
 	LEFT JOIN offices_list AS off ON off.id=l.office_id

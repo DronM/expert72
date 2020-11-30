@@ -880,6 +880,10 @@ fields: work_start_date, ban_from
 3) contracts_list,contracts_ext_list
 fields: work_start_date, ban_from
 
+1.0.146
+1) Ошибка при открытии списка заявления внеконтракт
+2) Список контрактов убрал новые поля - не нужны
+3) Заяваления + expert_work_end_date
 
 Файл доверенности не удаляется при недоступности
 ApplicationClientEdit

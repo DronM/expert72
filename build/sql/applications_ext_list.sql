@@ -51,6 +51,14 @@ CREATE OR REPLACE VIEW applications_ext_list AS
 		contr.expertise_result_date,
 		
 		l.base_application_id
+		
+		,contr.work_start_date
+		,(SELECT
+			CASE WHEN allow_client_out_documents=TRUE THEN NULL ELSE ban_from END
+		FROM doc_flow_out_client_ban_inf(l.id) AS (allow_client_out_documents bool, work_end_date date,ban_from date )
+		) AS ban_from
+		
+		,contr.expert_work_end_date
 				
 	FROM applications AS l
 	LEFT JOIN offices_list AS off ON off.id=l.office_id

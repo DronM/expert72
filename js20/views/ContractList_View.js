@@ -325,7 +325,7 @@ ContractList_View.prototype.addGrid = function(options){
 	
 	fields.push(
 		new GridCellHead(id+":grid:head:reg_number",{
-			"value":"Рег.номер",
+			"value":"Рег. номер",
 			"columns":[
 				new GridColumn({"field":model.getField("reg_number")})
 			],
@@ -394,7 +394,7 @@ ContractList_View.prototype.addGrid = function(options){
 			]
 		})										
 	);
-	
+	/*
 	fields.push(
 		new GridCellHead(id+":grid:head:work_start_date",{
 			"value":"Дата начало экспертизы",
@@ -428,7 +428,7 @@ ContractList_View.prototype.addGrid = function(options){
 			"sortable":true
 		})
 	);
-	
+	*/
 	fields.push(	
 		new GridCellHead(id+":grid:head:comment_text",{
 			"value":"Комментарий",

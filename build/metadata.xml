@@ -2,7 +2,7 @@
 <metadata owner="expert72">
 	<versions>
 		<version dateOpen="2017-09-27 12:09:48" dateClose="2017-12-08 10:12:08">1.001 
-		<lastBuild>2020-11-28 10:13:28</lastBuild></version>
+		<lastBuild>2020-11-30 14:50:19</lastBuild></version>
 		<version dateOpen="2017-12-08 11:12:01" dateClose="2017-12-08 11:12:04">1.002</version>
 		<version dateOpen="2017-12-08 11:12:20" dateClose="2017-12-08 11:12:20">1.0.3</version>
 		<version dateOpen="2017-12-12 11:12:07" dateClose="2017-12-12 11:12:07">1.0.4</version>
@@ -146,6 +146,7 @@
 		<version dateOpen="2020-10-28 08:10:25" dateClose="2020-10-28 10:10:18">1.0.143</version>
 		<version dateOpen="2020-11-05 08:11:23" dateClose="2020-11-26 08:11:35">1.0.144</version>
 		<version dateOpen="2020-11-27 13:11:33" dateClose="2020-11-28 10:11:13">1.0.145</version>
+		<version dateOpen="2020-11-30 14:11:41" dateClose="2020-11-30 14:11:50">1.0.146</version>
 	</versions>
 	<globalFilters>
 		<field id="user_id"/>
@@ -1236,6 +1237,7 @@
 			<field id="base_application_id" dataType="Int"/>
 			<field id="work_start_date" dataType="Date"/>
 			<field id="ban_from" dataType="Date"/>
+			<field id="expert_work_end_date" dataType="Date"/>
 			<globalFilter id="user_id"/>
 		</model>
 		<model id="ApplicationExtList" parent="ModelSQL" dataTable="applications_ext_list" virtual="TRUE" baseModelId="Application">
@@ -1263,6 +1265,9 @@
 			<field id="expertise_result_number" dataType="String"/>
 			<field id="expertise_result_date" dataType="Date"/>
 			<field id="base_application_id" dataType="Int"/>
+			<field id="work_start_date" dataType="Date"/>
+			<field id="ban_from" dataType="Date"/>
+			<field id="expert_work_end_date" dataType="Date"/>
 			<globalFilter id="user_id"/>
 		</model>
 		<model id="ApplicationForExpertMaintenanceList" parent="ModelSQL" dataTable="applications_for_expert_maintenance_list" virtual="TRUE" baseModelId="Application">

@@ -575,6 +575,33 @@ function ApplicationExtList_Model(options){
 	options.fields.expertise_result_date = new FieldDate("expertise_result_date",filed_options);
 	
 			
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.work_start_date = new FieldDate("work_start_date",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.ban_from = new FieldDate("ban_from",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.expert_work_end_date = new FieldDate("expert_work_end_date",filed_options);
+	
 			
 		ApplicationExtList_Model.superclass.constructor.call(this,id,options);
 }
