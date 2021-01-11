@@ -1314,6 +1314,11 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			$extra_cond.= sprintf(" AND app.customer->>'name'=%s",$customer_name);
 		}
 
+		$fund_source_id = $cond->getDbVal('fund_source_id','e',DT_INT);
+		if ($fund_source_id &amp;&amp; strtolower($fund_source_id)!='null'){
+			$extra_cond.= sprintf(" AND app.fund_source_id=%d",$fund_source_id);
+		}
+
 		$contractor_name = $cond->getDbVal('contractor_name','e',DT_STRING);
 		if ($contractor_name &amp;&amp; strtolower($contractor_name)!='null'){
 			$extra_cond.= sprintf(

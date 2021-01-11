@@ -33,7 +33,6 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 	const ER_NO_DOC_FILE = 'Файл с данными не найден!';
 	const ER_VERIF_SIG = 'Ошибка проверки подписи:%s';
 	const ER_UNSENT_DOC_EXISTS = 'По данному заявлению уже есть неотправленный документ с таким видом письма от %s';
-	const ER_CLIENT_OUT_DOC_BANNED = 'С %s по данному контракту запрещена отправка ответов на замечания!';
 	const ER_COULD_NOT_REMOVE_SIG = 'Ошибка при удалении подписи заказчика!';
 	const ER_NO_SIG_ATTACHMENTS = 'Нет подписанных Вами документов!';
 	const ER_DEL_NOT_ALLOWED = 'Удаление файлов запрещено!@1010';
@@ -842,26 +841,41 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		//Проверка на возможность отправки писем с ответами за Х дней до окончания срока
 		//Константа const_ban_client_responses_day_cnt_val() не используется с релиза 1.0.140
 		//Вместо этого использовать одноименное поле из services в зависимости от услуги!
+		//Также с 1.0.148 проверяется настройка disable_client_out_documents, если TRUE, то всегда запрещено!
 		if($clientType=="contr_resp"){
 			$ar = $this->getDbLink()->query_first(sprintf(
 				"WITH
-				ban_inf AS (
+				contr AS (SELECT
+						  coalesce(disable_client_out_documents,FALSE) AS disabled 
+						  FROM contracts
+						  WHERE application_id=%d
+				)
+				,ban_inf AS (
 					SELECT *
 					FROM doc_flow_out_client_ban_inf(%d)
 					AS (allow_client_out_documents bool, work_end_date date,ban_from date )
 				)
 				SELECT
-				to_char((SELECT ban_from FROM ban_inf),'dd/mm/yy') AS ban_from,					
-				coalesce(
-					(
-						(SELECT allow_client_out_documents FROM ban_inf)=FALSE
-						AND now()::date>=(SELECT ban_from FROM ban_inf)
-					)
-				,FALSE) AS banned",
-			$appId
+					CASE WHEN (SELECT disabled FROM contr) THEN (SELECT const_disabled_client_out_documents_error_val())
+					ELSE
+						'С ' || to_char((SELECT ban_from FROM ban_inf),'dd/mm/yy') ||
+						' по данному контракту запрещена отправка ответов на замечания!'
+					END
+					AS ban_text,
+					( 	(SELECT disabled FROM contr)
+						OR 
+						coalesce(
+							(
+								(SELECT allow_client_out_documents FROM ban_inf)=FALSE
+								AND now()::date>=(SELECT ban_from FROM ban_inf)
+							)
+						,FALSE)
+					) AS banned"
+				,$appId
+				,$appId
 			));
 			if (is_array($ar) &amp;&amp; count($ar) &amp;&amp; $ar['banned']!='f'){
-				throw new Exception(sprintf(self::ER_CLIENT_OUT_DOC_BANNED,$ar['ban_from']));
+				throw new Exception($ar['ban_text']);
 			}
 		}
 	}

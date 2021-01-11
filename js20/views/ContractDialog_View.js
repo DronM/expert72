@@ -512,6 +512,13 @@ function ContractDialog_View(id,options){
 				"editContClassName":"input-group "+bs+"8",
 				"labelClassName":"control-label "+bs+"4"
 			}));	
+			
+			this.addElement(new EditCheckBox(id+":disable_client_out_documents",{
+				"labelCaption":"Запретить отправку  ответов на замечания:",
+				"editContClassName":"input-group "+bs+"8",
+				"labelClassName":"control-label "+bs+"4"
+			}));	
+			
 		}
 		
 		//Вкладки с документацией
@@ -868,6 +875,7 @@ function ContractDialog_View(id,options){
 	if(is_admin){
 		read_b.push(new DataBinding({"control":this.getElement("allow_new_file_add")}));
 		read_b.push(new DataBinding({"control":this.getElement("allow_client_out_documents")}));
+		read_b.push(new DataBinding({"control":this.getElement("disable_client_out_documents")}));
 	}
 	
 	if(options.templateOptions.expertMaintenance){
@@ -938,7 +946,8 @@ function ContractDialog_View(id,options){
 	}
 	if(is_admin){
 		write_b.push(new CommandBinding({"control":this.getElement("allow_new_file_add")}));
-		write_b.push(new CommandBinding({"control":this.getElement("allow_client_out_documents")}));		
+		write_b.push(new CommandBinding({"control":this.getElement("allow_client_out_documents")}));
+		write_b.push(new CommandBinding({"control":this.getElement("disable_client_out_documents")}));				
 	}
 	
 	this.setWriteBindings(write_b);

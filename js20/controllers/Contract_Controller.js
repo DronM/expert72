@@ -455,6 +455,12 @@ extend(Contract_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	
+	var field = new FieldBool("disable_client_out_documents",options);
+	
+	pm.addField(field);
+	
 	pm.addField(new FieldInt("ret_id",{}));
 	
 	
@@ -863,6 +869,12 @@ extend(Contract_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	
+	var field = new FieldBool("disable_client_out_documents",options);
+	
+	pm.addField(field);
+	
 	
 }
 
@@ -1098,6 +1110,9 @@ extend(Contract_Controller,ControllerObjServer);
 	var f_opts = {};
 	
 	pm.addField(new FieldEnum("service_type",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldBool("disable_client_out_documents",f_opts));
 	pm.getField(this.PARAM_ORD_FIELDS).setValue("date_time");
 	
 }

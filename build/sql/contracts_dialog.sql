@@ -318,7 +318,9 @@ CREATE OR REPLACE VIEW contracts_dialog AS
 		ELSE NULL
 		END AS results_on_modified_documents_list,
 		
-		app.ext_contract
+		app.ext_contract,
+		
+		t.disable_client_out_documents
 		
 	FROM contracts t
 	LEFT JOIN applications AS app ON app.id=t.application_id

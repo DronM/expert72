@@ -19,7 +19,8 @@ class DocFlowType_Model extends ModelSQL{
 	public function __construct($dbLink){
 		parent::__construct($dbLink);
 		
-		$this->setDbName("");
+		
+		$this->setDbName('');
 		
 		$this->setTableName("doc_flow_types");
 			

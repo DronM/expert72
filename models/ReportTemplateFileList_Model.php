@@ -17,7 +17,8 @@ class ReportTemplateFileList_Model extends ModelSQL{
 	public function __construct($dbLink){
 		parent::__construct($dbLink);
 		
-		$this->setDbName("");
+		
+		$this->setDbName('');
 		
 		$this->setTableName("report_template_files_list");
 			

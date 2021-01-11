@@ -164,7 +164,15 @@ function RepQuarter_View(id,options){
 				"field":new FieldString("constr_name")
 			}),
 			"sign":"e"
-		}		
+		}
+		,"fund_source":{
+			"binding":new CommandBinding({
+				"control":new FundSourceSelect(id+":filter-ctrl-fund_source",{"labelCaption":"Источник финансирования:","contClassName":"form-group-filter"}),
+				"field":new FieldInt("fund_source_id")
+			}),
+			"sign":"e"
+		}
+				
 		,"customer":{
 			"binding":new CommandBinding({
 				"control":new ApplicationCustomerEditRef(id+":filter-ctrl-customer",{"labelCaption":"Заявитель:","contClassName":"form-group-filter"}),

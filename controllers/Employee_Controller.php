@@ -61,7 +61,20 @@ class Employee_Controller extends ControllerSQL{
 			,$f_params);
 		$pm->addParam($param);		
 		
+		//default event
+		$ev_opts = [
+			'dbTrigger'=>FALSE
+			,'eventParams' =>['id'
+			]
+		];
+		$pm->addEvent('Employee.insert',$ev_opts);
 		
+				
+	$opts=array();
+					
+		$pm->addParam(new FieldExtText('picture_file',$opts));
+	
+			
 		$this->addPublicMethod($pm);
 		$this->setInsertModelId('Employee_Model');
 
@@ -114,7 +127,20 @@ class Employee_Controller extends ControllerSQL{
 			,$f_params);
 		$pm->addParam($param);		
 		
-		
+			//default event
+			$ev_opts = [
+				'dbTrigger'=>FALSE
+				,'eventParams' =>['id'
+				]
+			];
+			$pm->addEvent('Employee.update',$ev_opts);
+			
+				
+	$opts=array();
+					
+		$pm->addParam(new FieldExtText('picture_file',$opts));
+	
+			
 			$this->addPublicMethod($pm);
 			$this->setUpdateModelId('Employee_Model');
 
@@ -127,6 +153,16 @@ class Employee_Controller extends ControllerSQL{
 		
 		$pm->addParam(new FieldExtInt('count'));
 		$pm->addParam(new FieldExtInt('from'));				
+				
+		
+		//default event
+		$ev_opts = [
+			'dbTrigger'=>FALSE
+			,'eventParams' =>['id'
+			]
+		];
+		$pm->addEvent('Employee.delete',$ev_opts);
+		
 		$this->addPublicMethod($pm);					
 		$this->setDeleteModelId('Employee_Model');
 

@@ -57,6 +57,14 @@ class ExpertiseProlongation_Controller extends ControllerSQL{
 			));
 		$pm->addParam($param);
 		
+		//default event
+		$ev_opts = [
+			'dbTrigger'=>FALSE
+			,'eventParams' =>['contract_id'
+			,'date_time'
+			]
+		];
+		$pm->addEvent('ExpertiseProlongation.insert',$ev_opts);
 		
 		$this->addPublicMethod($pm);
 		$this->setInsertModelId('ExpertiseProlongation_Model');
@@ -110,7 +118,15 @@ class ExpertiseProlongation_Controller extends ControllerSQL{
 			));
 			$pm->addParam($param);
 		
-		
+			//default event
+			$ev_opts = [
+				'dbTrigger'=>FALSE
+				,'eventParams' =>['contract_id'
+				,'date_time'
+				]
+			];
+			$pm->addEvent('ExpertiseProlongation.update',$ev_opts);
+			
 			$this->addPublicMethod($pm);
 			$this->setUpdateModelId('ExpertiseProlongation_Model');
 
@@ -126,6 +142,17 @@ class ExpertiseProlongation_Controller extends ControllerSQL{
 		
 		$pm->addParam(new FieldExtInt('count'));
 		$pm->addParam(new FieldExtInt('from'));				
+				
+		
+		//default event
+		$ev_opts = [
+			'dbTrigger'=>FALSE
+			,'eventParams' =>['contract_id'
+			,'date_time'
+			]
+		];
+		$pm->addEvent('ExpertiseProlongation.delete',$ev_opts);
+		
 		$this->addPublicMethod($pm);					
 		$this->setDeleteModelId('ExpertiseProlongation_Model');
 

@@ -60,7 +60,20 @@ class ExpertWork_Controller extends ControllerSQL{
 			,$f_params);
 		$pm->addParam($param);		
 		
+		//default event
+		$ev_opts = [
+			'dbTrigger'=>FALSE
+			,'eventParams' =>['id'
+			]
+		];
+		$pm->addEvent('ExpertWork.insert',$ev_opts);
 		
+				
+	$opts=array();
+					
+		$pm->addParam(new FieldExtText('file_data',$opts));
+	
+			
 		$this->addPublicMethod($pm);
 		$this->setInsertModelId('ExpertWork_Model');
 
@@ -111,7 +124,20 @@ class ExpertWork_Controller extends ControllerSQL{
 			,$f_params);
 		$pm->addParam($param);		
 		
-		
+			//default event
+			$ev_opts = [
+				'dbTrigger'=>FALSE
+				,'eventParams' =>['id'
+				]
+			];
+			$pm->addEvent('ExpertWork.update',$ev_opts);
+			
+				
+	$opts=array();
+					
+		$pm->addParam(new FieldExtText('file_data',$opts));
+	
+			
 			$this->addPublicMethod($pm);
 			$this->setUpdateModelId('ExpertWork_Model');
 
@@ -124,6 +150,16 @@ class ExpertWork_Controller extends ControllerSQL{
 		
 		$pm->addParam(new FieldExtInt('count'));
 		$pm->addParam(new FieldExtInt('from'));				
+				
+		
+		//default event
+		$ev_opts = [
+			'dbTrigger'=>FALSE
+			,'eventParams' =>['id'
+			]
+		];
+		$pm->addEvent('ExpertWork.delete',$ev_opts);
+		
 		$this->addPublicMethod($pm);					
 		$this->setDeleteModelId('ExpertWork_Model');
 

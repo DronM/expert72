@@ -25,7 +25,8 @@ class ContractExtList_Model extends ModelSQL{
 	public function __construct($dbLink){
 		parent::__construct($dbLink);
 		
-		$this->setDbName("");
+		
+		$this->setDbName('');
 		
 		$this->setTableName("contracts_ext_list");
 			
@@ -559,6 +560,15 @@ class ContractExtList_Model extends ModelSQL{
 						
 		$f_service_type=new FieldSQLEnum($this->getDbLink(),$this->getDbName(),$this->getTableName(),"service_type",$f_opts);
 		$this->addField($f_service_type);
+		//********************
+		
+		//*** Field disable_client_out_documents ***
+		$f_opts = array();
+		$f_opts['defaultValue']='FALSE';
+		$f_opts['id']="disable_client_out_documents";
+						
+		$f_disable_client_out_documents=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"disable_client_out_documents",$f_opts);
+		$this->addField($f_disable_client_out_documents);
 		//********************
 		
 		//*** Field applications_ref ***

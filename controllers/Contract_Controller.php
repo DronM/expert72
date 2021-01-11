@@ -237,9 +237,19 @@ class Contract_Controller extends ControllerSQL{
 				$param = new FieldExtEnum('service_type',',','expertise,cost_eval_validity,audit,modification,modified_documents,expert_maintenance'
 				,array());
 		$pm->addParam($param);
+		$param = new FieldExtBool('disable_client_out_documents'
+				,array());
+		$pm->addParam($param);
 		
 		$pm->addParam(new FieldExtInt('ret_id'));
 		
+		//default event
+		$ev_opts = [
+			'dbTrigger'=>FALSE
+			,'eventParams' =>['id'
+			]
+		];
+		$pm->addEvent('Contract.insert',$ev_opts);
 		
 		$this->addPublicMethod($pm);
 		$this->setInsertModelId('Contract_Model');
@@ -513,12 +523,23 @@ class Contract_Controller extends ControllerSQL{
 				,array(
 			));
 			$pm->addParam($param);
+		$param = new FieldExtBool('disable_client_out_documents'
+				,array(
+			));
+			$pm->addParam($param);
 		
 			$param = new FieldExtInt('id',array(
 			));
 			$pm->addParam($param);
 		
-		
+			//default event
+			$ev_opts = [
+				'dbTrigger'=>FALSE
+				,'eventParams' =>['id'
+				]
+			];
+			$pm->addEvent('Contract.update',$ev_opts);
+			
 			$this->addPublicMethod($pm);
 			$this->setUpdateModelId('Contract_Model');
 
@@ -531,6 +552,16 @@ class Contract_Controller extends ControllerSQL{
 		
 		$pm->addParam(new FieldExtInt('count'));
 		$pm->addParam(new FieldExtInt('from'));				
+				
+		
+		//default event
+		$ev_opts = [
+			'dbTrigger'=>FALSE
+			,'eventParams' =>['id'
+			]
+		];
+		$pm->addEvent('Contract.delete',$ev_opts);
+		
 		$this->addPublicMethod($pm);					
 		$this->setDeleteModelId('Contract_Model');
 
@@ -2322,6 +2353,11 @@ class Contract_Controller extends ControllerSQL{
 		$customer_name = $cond->getDbVal('customer_name','e',DT_STRING);
 		if ($customer_name && strtolower($customer_name)!='null'){
 			$extra_cond.= sprintf(" AND app.customer->>'name'=%s",$customer_name);
+		}
+
+		$fund_source_id = $cond->getDbVal('fund_source_id','e',DT_INT);
+		if ($fund_source_id && strtolower($fund_source_id)!='null'){
+			$extra_cond.= sprintf(" AND app.fund_source_id=%d",$fund_source_id);
 		}
 
 		$contractor_name = $cond->getDbVal('contractor_name','e',DT_STRING);

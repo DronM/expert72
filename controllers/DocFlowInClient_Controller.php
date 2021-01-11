@@ -100,7 +100,20 @@ class DocFlowInClient_Controller extends ControllerSQL{
 			,$f_params);
 		$pm->addParam($param);		
 		
-		
+			//default event
+			$ev_opts = [
+				'dbTrigger'=>FALSE
+				,'eventParams' =>['id'
+				]
+			];
+			$pm->addEvent('DocFlowInClient.update',$ev_opts);
+			
+				
+	$opts=array();
+					
+		$pm->addParam(new FieldExtText('reg_number_out',$opts));
+	
+			
 			$this->addPublicMethod($pm);
 			$this->setUpdateModelId('DocFlowInClient_Model');
 

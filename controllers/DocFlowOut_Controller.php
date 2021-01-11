@@ -101,7 +101,25 @@ class DocFlowOut_Controller extends DocFlow_Controller{
 			,$f_params);
 		$pm->addParam($param);		
 		
+		//default event
+		$ev_opts = [
+			'dbTrigger'=>FALSE
+			,'eventParams' =>['id'
+			]
+		];
+		$pm->addEvent('DocFlowOut.insert',$ev_opts);
 		
+				
+	$opts=array();
+					
+		$pm->addParam(new FieldExtEnum('expertise_result',$opts));
+	
+				
+	$opts=array();
+					
+		$pm->addParam(new FieldExtInt('expertise_reject_type_id',$opts));
+	
+			
 		$this->addPublicMethod($pm);
 		$this->setInsertModelId('DocFlowOut_Model');
 
@@ -204,7 +222,25 @@ class DocFlowOut_Controller extends DocFlow_Controller{
 			,$f_params);
 		$pm->addParam($param);		
 		
-		
+			//default event
+			$ev_opts = [
+				'dbTrigger'=>FALSE
+				,'eventParams' =>['id'
+				]
+			];
+			$pm->addEvent('DocFlowOut.update',$ev_opts);
+			
+				
+	$opts=array();
+					
+		$pm->addParam(new FieldExtEnum('expertise_result',$opts));
+	
+				
+	$opts=array();
+					
+		$pm->addParam(new FieldExtInt('expertise_reject_type_id',$opts));
+	
+			
 			$this->addPublicMethod($pm);
 			$this->setUpdateModelId('DocFlowOut_Model');
 
@@ -217,6 +253,16 @@ class DocFlowOut_Controller extends DocFlow_Controller{
 		
 		$pm->addParam(new FieldExtInt('count'));
 		$pm->addParam(new FieldExtInt('from'));				
+				
+		
+		//default event
+		$ev_opts = [
+			'dbTrigger'=>FALSE
+			,'eventParams' =>['id'
+			]
+		];
+		$pm->addEvent('DocFlowOut.delete',$ev_opts);
+		
 		$this->addPublicMethod($pm);					
 		$this->setDeleteModelId('DocFlowOut_Model');
 

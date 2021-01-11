@@ -263,7 +263,35 @@ class Application_Controller extends ControllerSQL{
 			,$f_params);
 		$pm->addParam($param);		
 		
+		//default event
+		$ev_opts = [
+			'dbTrigger'=>FALSE
+			,'eventParams' =>['id'
+			]
+		];
+		$pm->addEvent('Application.insert',$ev_opts);
 		
+				
+	$opts=array();
+					
+		$pm->addParam(new FieldExtBool('set_sent',$opts));
+	
+				
+	$opts=array();
+					
+		$pm->addParam(new FieldExtText('app_print_files',$opts));
+	
+				
+	$opts=array();
+					
+		$pm->addParam(new FieldExtText('auth_letter_files',$opts));
+	
+				
+	$opts=array();
+					
+		$pm->addParam(new FieldExtText('customer_auth_letter_files',$opts));
+	
+			
 		$this->addPublicMethod($pm);
 		$this->setInsertModelId('Application_Model');
 
@@ -515,7 +543,35 @@ class Application_Controller extends ControllerSQL{
 			,$f_params);
 		$pm->addParam($param);		
 		
-		
+			//default event
+			$ev_opts = [
+				'dbTrigger'=>FALSE
+				,'eventParams' =>['id'
+				]
+			];
+			$pm->addEvent('Application.update',$ev_opts);
+			
+				
+	$opts=array();
+					
+		$pm->addParam(new FieldExtBool('set_sent',$opts));
+	
+				
+	$opts=array();
+					
+		$pm->addParam(new FieldExtText('app_print_files',$opts));
+	
+				
+	$opts=array();
+					
+		$pm->addParam(new FieldExtText('auth_letter_files',$opts));
+	
+				
+	$opts=array();
+					
+		$pm->addParam(new FieldExtText('customer_auth_letter_files',$opts));
+	
+			
 			$this->addPublicMethod($pm);
 			$this->setUpdateModelId('Application_Model');
 
@@ -528,6 +584,16 @@ class Application_Controller extends ControllerSQL{
 		
 		$pm->addParam(new FieldExtInt('count'));
 		$pm->addParam(new FieldExtInt('from'));				
+				
+		
+		//default event
+		$ev_opts = [
+			'dbTrigger'=>FALSE
+			,'eventParams' =>['id'
+			]
+		];
+		$pm->addEvent('Application.delete',$ev_opts);
+		
 		$this->addPublicMethod($pm);					
 		$this->setDeleteModelId('Application_Model');
 

@@ -15,7 +15,8 @@ class RepReestrCostEval_Model extends ModelReportSQL{
 	public function __construct($dbLink){
 		parent::__construct($dbLink);
 		
-		$this->setDbName("");
+		
+		$this->setDbName('');
 		
 		$this->setTableName("");
 			

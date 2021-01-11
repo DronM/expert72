@@ -39,6 +39,14 @@ class OfficeDaySchedule_Controller extends ControllerSQL{
 				,array());
 		$pm->addParam($param);
 		
+		//default event
+		$ev_opts = [
+			'dbTrigger'=>FALSE
+			,'eventParams' =>['office_id'
+			,'day'
+			]
+		];
+		$pm->addEvent('OfficeDaySchedule.insert',$ev_opts);
 		
 		$this->addPublicMethod($pm);
 		$this->setInsertModelId('OfficeDaySchedule_Model');
@@ -73,7 +81,15 @@ class OfficeDaySchedule_Controller extends ControllerSQL{
 			));
 			$pm->addParam($param);
 		
-		
+			//default event
+			$ev_opts = [
+				'dbTrigger'=>FALSE
+				,'eventParams' =>['office_id'
+				,'day'
+				]
+			];
+			$pm->addEvent('OfficeDaySchedule.update',$ev_opts);
+			
 			$this->addPublicMethod($pm);
 			$this->setUpdateModelId('OfficeDaySchedule_Model');
 
@@ -89,6 +105,17 @@ class OfficeDaySchedule_Controller extends ControllerSQL{
 		
 		$pm->addParam(new FieldExtInt('count'));
 		$pm->addParam(new FieldExtInt('from'));				
+				
+		
+		//default event
+		$ev_opts = [
+			'dbTrigger'=>FALSE
+			,'eventParams' =>['office_id'
+			,'day'
+			]
+		];
+		$pm->addEvent('OfficeDaySchedule.delete',$ev_opts);
+		
 		$this->addPublicMethod($pm);					
 		$this->setDeleteModelId('OfficeDaySchedule_Model');
 

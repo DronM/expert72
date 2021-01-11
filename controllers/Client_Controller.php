@@ -86,7 +86,20 @@ class Client_Controller extends ControllerSQL{
 			,$f_params);
 		$pm->addParam($param);		
 		
+		//default event
+		$ev_opts = [
+			'dbTrigger'=>FALSE
+			,'eventParams' =>['id'
+			]
+		];
+		$pm->addEvent('Client.insert',$ev_opts);
 		
+				
+	$opts=array();
+					
+		$pm->addParam(new FieldExtJSON('responsable_persons',$opts));
+	
+			
 		$this->addPublicMethod($pm);
 		$this->setInsertModelId('Client_Model');
 
@@ -176,7 +189,20 @@ class Client_Controller extends ControllerSQL{
 			,$f_params);
 		$pm->addParam($param);		
 		
-		
+			//default event
+			$ev_opts = [
+				'dbTrigger'=>FALSE
+				,'eventParams' =>['id'
+				]
+			];
+			$pm->addEvent('Client.update',$ev_opts);
+			
+				
+	$opts=array();
+					
+		$pm->addParam(new FieldExtJSON('responsable_persons',$opts));
+	
+			
 			$this->addPublicMethod($pm);
 			$this->setUpdateModelId('Client_Model');
 
@@ -189,6 +215,16 @@ class Client_Controller extends ControllerSQL{
 		
 		$pm->addParam(new FieldExtInt('count'));
 		$pm->addParam(new FieldExtInt('from'));				
+				
+		
+		//default event
+		$ev_opts = [
+			'dbTrigger'=>FALSE
+			,'eventParams' =>['id'
+			]
+		];
+		$pm->addEvent('Client.delete',$ev_opts);
+		
 		$this->addPublicMethod($pm);					
 		$this->setDeleteModelId('Client_Model');
 

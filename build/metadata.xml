@@ -2,7 +2,7 @@
 <metadata owner="expert72">
 	<versions>
 		<version dateOpen="2017-09-27 12:09:48" dateClose="2017-12-08 10:12:08">1.001 
-		<lastBuild>2020-11-30 16:08:39</lastBuild></version>
+		<lastBuild>2021-01-11 15:48:42</lastBuild></version>
 		<version dateOpen="2017-12-08 11:12:01" dateClose="2017-12-08 11:12:04">1.002</version>
 		<version dateOpen="2017-12-08 11:12:20" dateClose="2017-12-08 11:12:20">1.0.3</version>
 		<version dateOpen="2017-12-12 11:12:07" dateClose="2017-12-12 11:12:07">1.0.4</version>
@@ -148,6 +148,7 @@
 		<version dateOpen="2020-11-27 13:11:33" dateClose="2020-11-28 10:11:13">1.0.145</version>
 		<version dateOpen="2020-11-30 14:11:41" dateClose="2020-11-30 14:11:50">1.0.146</version>
 		<version dateOpen="2020-11-30 15:11:47" dateClose="2020-11-30 16:11:08">1.0.147</version>
+		<version dateOpen="2020-12-22 09:12:20" dateClose="2021-01-11 15:01:48">1.0.148</version>
 	</versions>
 	<globalFilters>
 		<field id="user_id"/>
@@ -2783,6 +2784,7 @@
 			<field id="allow_new_file_add" dataType="Bool" defaultValue="FALSE"/>
 			<field id="allow_client_out_documents" dataType="Bool" defaultValue="FALSE"/>
 			<field id="service_type" dataType="Enum" enumId="service_types"/>
+			<field id="disable_client_out_documents" dataType="Bool" defaultValue="FALSE"/>
 			<index id="contracts_reg_number_idx" unique="TRUE">
 				<field id="reg_number"/>
 			</index>
@@ -2993,6 +2995,7 @@
 			<field id="expert_maintenance_expertise_type" dataType="String"/>
 			<field id="results_on_modified_documents_list" dataType="JSON"/>
 			<field id="ext_contract" dataType="Bool"/>
+			<field id="disable_client_out_documents" dataType="Bool"/>
 		</model>
 		<model id="ExpertWork" parent="ModelSQL" dataTable="expert_works" virtual="FALSE">
 			<field id="id" dataType="Int" primaryKey="TRUE" required="FALSE" autoInc="TRUE"/>
@@ -3347,6 +3350,7 @@
 		<constant id="ext_contract_doc_pref" name="&#x41F;&#x440;&#x435;&#x444;&#x438;&#x43A;&#x441; &#x432;&#x43D;&#x435;&#x43A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x43D;&#x44B;&#x445; &#x434;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x43E;&#x432;" descr="&#x414;&#x43E;&#x431;&#x430;&#x432;&#x43B;&#x44F;&#x435;&#x442;&#x441;&#x44F; &#x43A; &#x43D;&#x43E;&#x43C;&#x435;&#x440;&#x430;&#x446;&#x438;&#x438; &#x43F;&#x438;&#x441;&#x435;&#x43C; &#x432;&#x441;&#x435;&#x445; &#x432;&#x438;&#x434;&#x43E;&#x432;. &#x422;&#x430;&#x43A;&#x438;&#x43C; &#x43E;&#x431;&#x440;&#x430;&#x437;&#x43E;&#x43C; &#x43F;&#x43E;&#x43B;&#x43D;&#x44B;&#x439; &#x43D;&#x43E;&#x43C;&#x435;&#x440; &#x43F;&#x438;&#x441;&#x44C;&#x43C;&#x430; &#x444;&#x43E;&#x440;&#x43C;&#x438;&#x440;&#x443;&#x435;&#x442;&#x441;&#x44F; &#x43A;&#x430;&#x43A; &#x43D;&#x43E;&#x43C;&#x435;&#x440; &#x43F;&#x438;&#x441;&#x44C;&#x43C;&#x430; &#x432; &#x437;&#x430;&#x432;&#x438;&#x441;&#x438;&#x43C;&#x43E;&#x441;&#x442;&#x438; &#x43E;&#x442; &#x442;&#x438;&#x43F;&#x430;+&#x434;&#x430;&#x43D;&#x43D;&#x44B;&#x439; &#x43F;&#x440;&#x435;&#x444;&#x438;&#x43A;&#x441;" dataType="String" length="10" defaultValue="'(&#x412;&#x43D;&#x43A;)-'"/>
 		<constant id="off_work_app_send_not_allowed" name="&#x417;&#x430;&#x43F;&#x440;&#x435;&#x442;&#x438;&#x442;&#x44C; &#x43E;&#x442;&#x43F;&#x440;&#x430;&#x432;&#x43B;&#x44F;&#x442;&#x44C; &#x437;&#x430;&#x44F;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x44F; &#x43D;&#x430; &#x43F;&#x440;&#x43E;&#x432;&#x435;&#x440;&#x43A;&#x443; &#x432; &#x43D;&#x435;&#x440;&#x430;&#x431;&#x43E;&#x447;&#x435;&#x435; &#x432;&#x440;&#x435;&#x43C;&#x44F;" descr="&#x417;&#x43D;&#x430;&#x447;&#x435;&#x43D;&#x438;&#x435; &#x43E;&#x43F;&#x440;&#x435;&#x434;&#x435;&#x43B;&#x44F;&#x435;&#x442; &#x432;&#x43E;&#x437;&#x43C;&#x43E;&#x436;&#x43D;&#x43E;&#x441;&#x442;&#x44C; &#x43E;&#x442;&#x43F;&#x440;&#x430;&#x432;&#x43B;&#x44F;&#x442;&#x44C; &#x437;&#x430;&#x44F;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x44F; &#x43D;&#x430; &#x43F;&#x440;&#x43E;&#x432;&#x435;&#x440;&#x43A;&#x443; &#x432; &#x43D;&#x435;&#x440;&#x430;&#x431;&#x43E;&#x447;&#x435;&#x435; &#x432;&#x440;&#x435;&#x43C;&#x44F;." dataType="Bool" defaultValue="FALSE" ctrlClass="EditCheckBox"/>
 		<constant id="off_work_app_send_not_allowed_error" name="&#x422;&#x435;&#x43A;&#x441;&#x442; &#x441;&#x43E;&#x43E;&#x431;&#x449;&#x435;&#x43D;&#x438;&#x44F; &#x43E;&#x431; &#x43E;&#x448;&#x438;&#x431;&#x43A;&#x435;" descr="&#x422;&#x435;&#x43A;&#x441;&#x442; &#x441;&#x43E;&#x43E;&#x431;&#x449;&#x435;&#x43D;&#x438;&#x44F; &#x43E;&#x431; &#x43E;&#x448;&#x438;&#x431;&#x43A;&#x435; &#x43F;&#x440;&#x438; &#x43D;&#x435;&#x432;&#x43E;&#x437;&#x43C;&#x43E;&#x436;&#x43D;&#x43E;&#x441;&#x442;&#x438; &#x43E;&#x442;&#x43F;&#x440;&#x430;&#x432;&#x43A;&#x438;." dataType="Text" ctrlClass="Text" defaultValue="'&#x41E;&#x442;&#x43F;&#x440;&#x430;&#x432;&#x43A;&#x430; &#x437;&#x430;&#x44F;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x439; &#x440;&#x430;&#x437;&#x440;&#x435;&#x448;&#x435;&#x43D;&#x430; &#x442;&#x43E;&#x43B;&#x44C;&#x43A;&#x43E; &#x432; &#x440;&#x430;&#x431;&#x43E;&#x447;&#x435;&#x435; &#x432;&#x440;&#x435;&#x43C;&#x44F;.'"/>
+		<constant id="disabled_client_out_documents_error" name="&#x422;&#x435;&#x43A;&#x441;&#x442; &#x441;&#x43E;&#x43E;&#x431;&#x449;&#x435;&#x43D;&#x438;&#x44F; &#x43E;&#x431; &#x43E;&#x448;&#x438;&#x431;&#x43A;&#x435; &#x43F;&#x440;&#x438; &#x437;&#x430;&#x43F;&#x440;&#x435;&#x442;&#x435; &#x43E;&#x442;&#x43F;&#x440;&#x430;&#x432;&#x43A;&#x438; &#x43E;&#x442;&#x432;&#x435;&#x442;&#x43E;&#x432; &#x438;&#x437; &#x43A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x430;" descr="&#x422;&#x435;&#x43A;&#x441;&#x442; &#x441;&#x43E;&#x43E;&#x431;&#x449;&#x435;&#x43D;&#x438;&#x44F; &#x43E;&#x431; &#x43E;&#x448;&#x438;&#x431;&#x43A;&#x435; &#x43F;&#x440;&#x438; &#x43D;&#x435;&#x432;&#x43E;&#x437;&#x43C;&#x43E;&#x436;&#x43D;&#x43E;&#x441;&#x442;&#x438; &#x43E;&#x442;&#x43F;&#x440;&#x430;&#x432;&#x43A;&#x438; &#x43E;&#x442;&#x432;&#x435;&#x442;&#x43E;&#x432; &#x43D;&#x430; &#x437;&#x430;&#x43C;&#x435;&#x447;&#x430;&#x43D;&#x438;&#x44F;. &#x421;&#x442;&#x430;&#x432;&#x438;&#x442;&#x441;&#x44F; &#x432; &#x43A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x435;" dataType="Text" ctrlClass="Text" defaultValue="'&#x41E;&#x442;&#x43F;&#x440;&#x430;&#x432;&#x43A;&#x430; &#x43E;&#x442;&#x432;&#x435;&#x442;&#x43E;&#x432; &#x43D;&#x430; &#x437;&#x430;&#x43C;&#x435;&#x447;&#x430;&#x43D;&#x438;&#x44F; &#x437;&#x430;&#x43F;&#x440;&#x435;&#x449;&#x435;&#x43D;&#x430;.'"/>
 	</constants>
 	<controllers>
 		<controller id="Constant" parentId="ControllerSQL">

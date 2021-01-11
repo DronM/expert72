@@ -52,6 +52,14 @@ class ApplicationProcess_Controller extends ControllerSQL{
 				,array());
 		$pm->addParam($param);
 		
+		//default event
+		$ev_opts = [
+			'dbTrigger'=>FALSE
+			,'eventParams' =>['application_id'
+			,'date_time'
+			]
+		];
+		$pm->addEvent('ApplicationProcess.insert',$ev_opts);
 		
 		$this->addPublicMethod($pm);
 		$this->setInsertModelId('ApplicationProcess_Model');
@@ -99,7 +107,15 @@ class ApplicationProcess_Controller extends ControllerSQL{
 			));
 			$pm->addParam($param);
 		
-		
+			//default event
+			$ev_opts = [
+				'dbTrigger'=>FALSE
+				,'eventParams' =>['application_id'
+				,'date_time'
+				]
+			];
+			$pm->addEvent('ApplicationProcess.update',$ev_opts);
+			
 			$this->addPublicMethod($pm);
 			$this->setUpdateModelId('ApplicationProcess_Model');
 
@@ -115,6 +131,17 @@ class ApplicationProcess_Controller extends ControllerSQL{
 		
 		$pm->addParam(new FieldExtInt('count'));
 		$pm->addParam(new FieldExtInt('from'));				
+				
+		
+		//default event
+		$ev_opts = [
+			'dbTrigger'=>FALSE
+			,'eventParams' =>['application_id'
+			,'date_time'
+			]
+		];
+		$pm->addEvent('ApplicationProcess.delete',$ev_opts);
+		
 		$this->addPublicMethod($pm);					
 		$this->setDeleteModelId('ApplicationProcess_Model');
 

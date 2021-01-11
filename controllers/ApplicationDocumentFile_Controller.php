@@ -98,7 +98,14 @@ class ApplicationDocumentFile_Controller extends ControllerSQL{
 			));
 			$pm->addParam($param);
 		
-		
+			//default event
+			$ev_opts = [
+				'dbTrigger'=>FALSE
+				,'eventParams' =>['file_id'
+				]
+			];
+			$pm->addEvent('ApplicationDocumentFile.update',$ev_opts);
+			
 			$this->addPublicMethod($pm);
 			$this->setUpdateModelId('ApplicationDocumentFile_Model');
 
@@ -111,6 +118,16 @@ class ApplicationDocumentFile_Controller extends ControllerSQL{
 		
 		$pm->addParam(new FieldExtInt('count'));
 		$pm->addParam(new FieldExtInt('from'));				
+				
+		
+		//default event
+		$ev_opts = [
+			'dbTrigger'=>FALSE
+			,'eventParams' =>['file_id'
+			]
+		];
+		$pm->addEvent('ApplicationDocumentFile.delete',$ev_opts);
+		
 		$this->addPublicMethod($pm);					
 		$this->setDeleteModelId('ApplicationDocumentFile_Model');
 
