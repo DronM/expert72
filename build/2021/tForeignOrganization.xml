@@ -1,0 +1,22 @@
+<!-- Полное наименование юридического лица T(500)-->
+<OrgFullName>{{name_full}}</OrgFullName>
+
+<!-- Т(13) -->
+<OrgOGRN>{{ogrn}}</OrgOGRN>
+
+<!-- Т(10) -->
+<OrgINN>{{inn}}</OrgINN>
+
+<!-- Т(9) -->
+<OrgKPP>{{kpp}}</OrgKPP>
+
+<!-- tAddress -->
+<Address>{{address}}</Address>
+
+<!-- tForeignAddress -->
+<ForeignAddress>{{foreignAddress}}</ForeignAddress>
+
+<!-- Н T{100} -->
+{{email}}
+<Email>{{email}}</Email>
+{{/email}}

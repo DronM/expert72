@@ -1042,6 +1042,18 @@ $permissions = array();
 				
 					$permissions['ApplicationDocumentFile_Controller_get_list']=TRUE;
 				
+					$permissions['ConclusionDictionary_Controller_update']=TRUE;
+				
+					$permissions['ConclusionDictionary_Controller_get_object']=TRUE;
+				
+					$permissions['ConclusionDictionary_Controller_get_list']=TRUE;
+				
+					$permissions['ConclusionDictionaryDetail_Controller_update']=TRUE;
+				
+					$permissions['ConclusionDictionaryDetail_Controller_get_object']=TRUE;
+				
+					$permissions['ConclusionDictionaryDetail_Controller_get_list']=TRUE;
+				
 return array_key_exists($contrId.'_'.$methId,$permissions);
 }
 ?>

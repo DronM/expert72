@@ -30,6 +30,8 @@
 <li><a href="#ClientPayment_Controller">ClientPayment_Controller</a></li>
 <li><a href="#ClientResponsablePerson_Controller">ClientResponsablePerson_Controller</a></li>
 <li><a href="#ClientSearch_Controller">ClientSearch_Controller</a></li>
+<li><a href="#ConclusionDictionary_Controller">ConclusionDictionary_Controller</a></li>
+<li><a href="#ConclusionDictionaryDetail_Controller">ConclusionDictionaryDetail_Controller</a></li>
 <li><a href="#Constant_Controller">Constant_Controller</a></li>
 <li><a href="#ConstructionType_Controller">ConstructionType_Controller</a></li>
 <li><a href="#Contact_Controller">Contact_Controller</a></li>
@@ -280,6 +282,8 @@
 <li><a href="#DocFlowOutClientOriginalFile_Model">DocFlowOutClientOriginalFile_Model</a></li>
 <li><a href="#ApplicationReturnedFilesRemoved_Model">ApplicationReturnedFilesRemoved_Model</a></li>
 <li><a href="#ApplicationReturnedFilesRemovedList_Model">ApplicationReturnedFilesRemovedList_Model</a></li>
+<li><a href="#ConclusionDictionary_Model">ConclusionDictionary_Model</a></li>
+<li><a href="#ConclusionDictionaryDetail_Model">ConclusionDictionaryDetail_Model</a></li>
 </ul>
 <div class="section-title">Enumerations</div>
 <ul>
@@ -894,6 +898,28 @@
 <p>Length:250</p>
 </div>
 </div>
+</div>
+</div>
+<div id="ConclusionDictionary_Controller" class="content_box">
+<h1>ConclusionDictionary_Controller</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Методы:</p>
+<h2>update</h2>
+<a href="#ConclusionDictionary_Model">Model: ConclusionDictionary_Model</a><h2>get_object</h2>
+<a href="#ConclusionDictionary_Model">Model: ConclusionDictionary_Model</a><h2>get_list</h2>
+<a href="#ConclusionDictionaryList_Model">Model: ConclusionDictionaryList_Model</a>
+</div>
+</div>
+<div id="ConclusionDictionaryDetail_Controller" class="content_box">
+<h1>ConclusionDictionaryDetail_Controller</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Методы:</p>
+<h2>update</h2>
+<a href="#ConclusionDictionaryDetail_Model">Model: ConclusionDictionaryDetail_Model</a><h2>get_object</h2>
+<a href="#ConclusionDictionaryDetail_Model">Model: ConclusionDictionaryDetail_Model</a><h2>get_list</h2>
+<a href="#ConclusionDictionaryDetail_Model">Model: ConclusionDictionaryDetail_Model</a>
 </div>
 </div>
 <div id="Constant_Controller" class="content_box">
@@ -5638,6 +5664,66 @@
 <div>Precision:</div>
 <h2>person_type</h2>
 <div>Type:Enum</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="ConclusionDictionary_Model" class="content_box">
+<h1>ConclusionDictionary_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:50</div>
+<div>Precision:</div>
+<h2>descr</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="ConclusionDictionaryDetail_Model" class="content_box">
+<h1>ConclusionDictionaryDetail_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>conclusion_dictionary_name</h2>
+<div>Type:String</div>
+<div>Primary key:TRUE</div>
+<div>Required:TRUE</div>
+<div>Length:50</div>
+<div>Precision:</div>
+<h2>code</h2>
+<div>Type:String</div>
+<div>Primary key:TRUE</div>
+<div>Required:TRUE</div>
+<div>Length:10</div>
+<div>Precision:</div>
+<h2>descr</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>is_group</h2>
+<div>Type:Bool</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>ord</h2>
+<div>Type:Int</div>
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:</div>

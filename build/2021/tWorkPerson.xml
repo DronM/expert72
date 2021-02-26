@@ -1,0 +1,14 @@
+<!-- Фамилия T(100)-->
+<FamilyName>{{name}}</FamilyName>
+
+<!-- Имя T(100)-->
+<FirstName>{{name}}</FirstName>
+
+<!-- Отчество T(50)-->
+{{otchestvo}}
+<SecondName>{{otchestvo}}</SecondName>
+{{/otchestvo}}
+
+<!-- Position T(500) -->
+<Position>{{post}}</Position>
+

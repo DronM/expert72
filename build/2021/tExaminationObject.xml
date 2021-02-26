@@ -1,0 +1,29 @@
+<!-- K1 -->
+<ExaminationForm>{{ExaminationForm}}</ExaminationForm>
+
+<!-- K2 -->
+<ExaminationResult>{{ExaminationResult}}</ExaminationResult>
+
+<!-- K4 -->
+<ExaminationObjectType>{{ExaminationObjectType}}</ExaminationObjectType>
+
+<!-- K18 -->
+{{#ExaminationType}}
+<ExaminationType>{{CODE}}</ExaminationType>
+{{/ExaminationType}}
+
+<!-- K5 -->
+<ConstructionType>{{ConstructionType}}</ConstructionType>
+
+<!-- K3 -->
+<ExaminationStage>{{ExaminationStage}}</ExaminationStage>
+
+
+<!-- Н Дополнительные сведения о виде проведения экспертизы -->
+{{ExaminationStageNote}}
+<ExaminationStageNote>{{ExaminationStageNote}}</ExaminationStageNote>
+{{/ExaminationStageNote}}
+
+<!-- O Наименование объекта экспертизы T(1000) -->
+<Name>{{Name}}</Name>
+

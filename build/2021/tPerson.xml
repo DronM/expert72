@@ -1,0 +1,21 @@
+<!-- Фамилия T(100)-->
+<FamilyName>{{name}}</FamilyName>
+
+<!-- Имя T(100)-->
+<FirstName>{{name}}</FirstName>
+
+<!-- Отчество T(50)-->
+{{otchestvo}}
+<SecondName>{{otchestvo}}</SecondName>
+{{/otchestvo}}
+
+<!-- SNILS T(14) XXX-XXX-XXX XX -->
+<SNILS>{{snils}}</SNILS>
+
+<!-- tPostAddress -->
+<PostAddress>{{address_post}}</PostAddress>
+
+<!-- Н T{100} -->
+{{email}}
+<Email>{{email}}</Email>
+{{/email}}

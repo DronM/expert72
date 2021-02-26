@@ -2,7 +2,7 @@
 <metadata owner="expert72">
 	<versions>
 		<version dateOpen="2017-09-27 12:09:48" dateClose="2017-12-08 10:12:08">1.001 
-		<lastBuild>2021-01-11 15:48:42</lastBuild></version>
+		<lastBuild>2021-02-26 13:09:17</lastBuild></version>
 		<version dateOpen="2017-12-08 11:12:01" dateClose="2017-12-08 11:12:04">1.002</version>
 		<version dateOpen="2017-12-08 11:12:20" dateClose="2017-12-08 11:12:20">1.0.3</version>
 		<version dateOpen="2017-12-12 11:12:07" dateClose="2017-12-12 11:12:07">1.0.4</version>
@@ -149,7 +149,7 @@
 		<version dateOpen="2020-11-30 14:11:41" dateClose="2020-11-30 14:11:50">1.0.146</version>
 		<version dateOpen="2020-11-30 15:11:47" dateClose="2020-11-30 16:11:08">1.0.147</version>
 		<version dateOpen="2020-12-22 09:12:20" dateClose="2021-01-11 15:01:48">1.0.148</version>
-	</versions>
+	<version dateOpen="2021-02-17 08:02:41" dateClose="2021-02-26 13:02:09">1.0.149</version></versions>
 	<globalFilters>
 		<field id="user_id"/>
 		<field id="employee_id"/>
@@ -3325,6 +3325,32 @@
 			<field id="applications_ref" dataType="JSON"/>
 			<field id="date_time" dataType="DateTimeTZ"/>
 		</model>
+		<model id="ConclusionDictionary" parent="ModelSQL" dataTable="conclusion_dictionaries" virtual="FALSE">
+			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE"/>
+			<field id="name" dataType="String" length="50"/>
+			<field id="descr" dataType="Text"/>
+		</model>
+		<model id="ConclusionDictionaryDetail" parent="ModelSQL" dataTable="conclusion_dictionary_detail" virtual="FALSE">
+			<defaultOrder>
+				<field id="conclusion_dictionary_name"/>
+				<field id="ord"/>
+			</defaultOrder>
+			<field id="conclusion_dictionary_name" dataType="String" length="50" refTable="conclusion_dictionaries" refField="name" required="TRUE" primaryKey="TRUE" autoInc="FALSE"/>
+			<field id="code" dataType="String" length="10" required="TRUE" primaryKey="TRUE"/>
+			<field id="descr" dataType="Text" required="TRUE"/>
+			<field id="is_group" dataType="Bool" defaultValue="FALSE"/>
+			<field id="ord" dataType="Int" autoInc="TRUE"/>
+			<index id="conclusion_dictionary_detail_descr_idx">
+				<field id="conclusion_dictionary_name"/>
+				<field id="descr"/>
+			</index>
+			<index id="conclusion_dictionary_detail_ord_idx" unique="TRUE">
+				<field id="conclusion_dictionary_name"/>
+				<field id="ord"/>
+			</index>
+			
+		</model>
+		
 	</models>
 	<constants>
 		<constant id="doc_per_page_count" name="&#x41A;&#x43E;&#x43B;&#x438;&#x447;&#x435;&#x441;&#x442;&#x432;&#x43E; &#x434;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x43E;&#x432; &#x43D;&#x430; &#x441;&#x442;&#x440;&#x430;&#x43D;&#x438;&#x446;&#x435;" descr="&#x41A;&#x43E;&#x43B;&#x438;&#x447;&#x435;&#x441;&#x442;&#x432;&#x43E; &#x434;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x43E;&#x432; &#x43D;&#x430; &#x441;&#x442;&#x440;&#x430;&#x43D;&#x438;&#x446;&#x435; &#x432; &#x436;&#x443;&#x440;&#x43D;&#x430;&#x43B;&#x435; &#x434;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x43E;&#x432;" dataType="Int" defaultValue="60" autoload="TRUE"/>
@@ -4514,6 +4540,17 @@
 			<publicMethod id="get_object" modelId="ApplicationDocumentFileList"/>
 			<publicMethod id="get_list" modelId="ApplicationDocumentFileList"/>
 		</controller>
+		<controller id="ConclusionDictionary" parentId="ControllerSQL">
+			<publicMethod id="update" modelId="ConclusionDictionary"/>
+			<publicMethod id="get_object" modelId="ConclusionDictionary"/>
+			<publicMethod id="get_list" modelId="ConclusionDictionaryList"/>
+		</controller>
+		<controller id="ConclusionDictionaryDetail" parentId="ControllerSQL">
+			<publicMethod id="update" modelId="ConclusionDictionaryDetail"/>
+			<publicMethod id="get_object" modelId="ConclusionDictionaryDetail"/>
+			<publicMethod id="get_list" modelId="ConclusionDictionaryDetail"/>
+		</controller>
+		
 	</controllers>
 	<permissions>
 		<permission type="allow" controllerId="all" methodId="all" roleId="admin"/>
@@ -5784,7 +5821,7 @@
 		<jsScript file="models/ContractExtList_Model.js"/>
 		<jsScript file="models/DocFlowExaminationExtList_Model.js"/>
 		<jsScript file="models/DocFlowApprovementExtList_Model.js"/>
-	</jsScripts>
+	<jsScript file="controllers/ConclusionDictionary_Controller.js"/><jsScript file="models/ConclusionDictionary_Model.js"/><jsScript file="models/ConclusionDictionaryList_Model.js"/><jsScript file="controllers/ConclusionDictionaryDetail_Controller.js"/><jsScript file="models/ConclusionDictionaryDetail_Model.js"/></jsScripts>
 	<cssScripts>
 		<cssScript file="assets/css/icons/icomoon/styles.css" compressed="TRUE" standalone="TRUE"/>
 		<cssScript file="assets/css/bootstrap.min.css" compressed="TRUE" standalone="TRUE"/>

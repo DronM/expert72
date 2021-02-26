@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Conclusion ConclusionGUID="{{ConclusionGUID}}" SchemaVersion="01.00" SchemaLink="{{SchemaLink}}">
+	
+	<!-- tOrganization -->
+	<ExpertOrganization></ExpertOrganization>
+</Conclusion>
+
+
+</xml>

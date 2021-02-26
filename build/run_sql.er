@@ -1,0 +1,1 @@
+psql:/home/andrey/www/htdocs/expert72/build/sql/last_update.sql:14: ЗАМЕЧАНИЕ:  индекс "conclusion_dictionary_detail_descr_idx" не существует, пропускается
