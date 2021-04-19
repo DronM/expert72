@@ -21,7 +21,6 @@ function BtnNextContractNum(id,options){
 		self.getNextNum();
 	}
 	
-	
 	this.m_view = options.view;
 	
 	BtnNextContractNum.superclass.constructor.call(this,id,options);

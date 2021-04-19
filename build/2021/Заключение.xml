@@ -1,0 +1,386 @@
+<Conclusion ConclusionGUID="11111111-1111-1111-1111-111111111111" SchemaVersion="55-55" SchemaLink="https://">
+  <ExpertOrganization>
+    <OrgFullName>ООО ГЭПД</OrgFullName>
+    <OrgOGRN>1111111111111</OrgOGRN>
+    <OrgINN>5555555555</OrgINN>
+    <OrgKPP>666666666</OrgKPP>
+    <Address>
+      <Region>
+        <conclusionValue sysNode="TRUE">72</conclusionValue>
+        <sysValue skeepNode="TRUE">{"keys":{"conclusion_dictionary_name":"tRegionsRF","code":"72"},"descr":"72 Тюменская область"}</sysValue>
+      </Region>
+    </Address>
+  </ExpertOrganization>
+  <Approver>
+    <FamilyName>Кучерявый</FamilyName>
+    <FirstName>Алексей</FirstName>
+    <SecondName>Александрович</SecondName>
+    <Position>Директор</Position>
+  </Approver>
+  <ExaminationObject>
+    <ExaminationForm>
+      <conclusionValue sysNode="TRUE">1</conclusionValue>
+      <sysValue skeepNode="TRUE">{"keys":{"conclusion_dictionary_name":"tExaminationForm","code":"1"},"descr":"1 Государственная"}</sysValue>
+    </ExaminationForm>
+    <ExaminationResult>
+      <conclusionValue sysNode="TRUE">1</conclusionValue>
+      <sysValue skeepNode="TRUE">{"keys":{"conclusion_dictionary_name":"tExaminationResult","code":"1"},"descr":"1 Положительный"}</sysValue>
+    </ExaminationResult>
+    <ExaminationObjectType>
+      <conclusionValue sysNode="TRUE">2</conclusionValue>
+      <sysValue skeepNode="TRUE">{"keys":{"conclusion_dictionary_name":"tExaminationObjectType","code":"2"},"descr":"2 Проектная документация"}</sysValue>
+    </ExaminationObjectType>
+    <ExaminationType>
+      <conclusionValue sysNode="TRUE">2</conclusionValue>
+      <sysValue skeepNode="TRUE">{"keys":{"conclusion_dictionary_name":"tExaminationType","code":"2"},"descr":"2 Оценка соответствия проектной документации установленным требованиям (подпункт 1 пункт 5 статьи 49 Градостроительного кодекса Российской Федерации)"}</sysValue>
+    </ExaminationType>
+    <ConstructionType>
+      <conclusionValue sysNode="TRUE">3</conclusionValue>
+      <sysValue skeepNode="TRUE">{"keys":{"conclusion_dictionary_name":"tConstractionType","code":"3"},"descr":"3 Капитальный ремонт"}</sysValue>
+    </ConstructionType>
+    <ExaminationStage>
+      <conclusionValue sysNode="TRUE">1</conclusionValue>
+      <sysValue skeepNode="TRUE">{"keys":{"conclusion_dictionary_name":"tExaminationStage","code":"1"},"descr":"1 Первичная"}</sysValue>
+    </ExaminationStage>
+    <ExaminationStageNote>Какие-то дополнительные сведения</ExaminationStageNote>
+    <sysName conclusionTagName="Name">Школа №1111</sysName>
+  </ExaminationObject>
+  <Documents>
+    <Document>
+      <DocType>
+        <conclusionValue sysNode="TRUE">07.02</conclusionValue>
+        <sysValue skeepNode="TRUE">{"keys":{"conclusion_dictionary_name":"tDocumentType","code":"07.02"},"descr":"07.02 Раздел 2. «Схема планировочной организации земельного участка»"}</sysValue>
+      </DocType>
+      <DocName>Какой-то документ</DocName>
+      <DocNumber>1</DocNumber>
+      <DocDate>2019-01-01</DocDate>
+      <DocIssueAuthor>Михалевич Андрей</DocIssueAuthor>
+      <DocChanges>Примечание об изменениях</DocChanges>
+      <File>
+        <FileName>Ф1.doc</FileName>
+        <FileFormat>doc</FileFormat>
+        <FileChecksum>11111111</FileChecksum>
+        <SignFile>
+          <FileName>Ф1.doc.sig</FileName>
+          <FileFormat>sig</FileFormat>
+          <FileChecksum>55555555</FileChecksum>
+        </SignFile>
+      </File>
+      <File>
+        <FileName>ф2.doc</FileName>
+        <FileFormat>doc</FileFormat>
+        <FileChecksum>65465465</FileChecksum>
+        <SignFile>
+          <FileName>ф2.doc.sig</FileName>
+          <FileFormat>sig</FileFormat>
+          <FileChecksum>45646546</FileChecksum>
+        </SignFile>
+      </File>
+    </Document>
+    <Document>
+      <DocType>
+        <conclusionValue sysNode="TRUE">08.02</conclusionValue>
+        <sysValue skeepNode="TRUE">{"keys":{"conclusion_dictionary_name":"tDocumentType","code":"08.02"},"descr":"08.02 Раздел 2. «Проект полосы отвода»"}</sysValue>
+      </DocType>
+      <DocName>Еще один документ</DocName>
+      <DocNumber>2</DocNumber>
+      <DocDate>2020-01-01</DocDate>
+      <DocIssueAuthor>Михалевич Андрей</DocIssueAuthor>
+      <DocChanges>Примечание об изменениях документа 2</DocChanges>
+      <File>
+        <FileName>Док2.xsl</FileName>
+        <FileFormat>xsl</FileFormat>
+        <FileChecksum>56465465</FileChecksum>
+        <SignFile>
+          <FileName>Док2.xsl.sig</FileName>
+          <FileFormat>sig</FileFormat>
+          <FileChecksum>65465465</FileChecksum>
+        </SignFile>
+      </File>
+    </Document>
+    <Document>
+      <DocType>
+        <conclusionValue sysNode="TRUE">07.03</conclusionValue>
+        <sysValue skeepNode="TRUE">{"keys":{"conclusion_dictionary_name":"tDocumentType","code":"07.03"},"descr":"07.03 Раздел 3. «Архитектурные решения»"}</sysValue>
+      </DocType>
+      <DocName>Документ3</DocName>
+      <DocNumber>3</DocNumber>
+      <DocDate>2021-01-01</DocDate>
+      <DocIssueAuthor>Иванов А.</DocIssueAuthor>
+      <File>
+        <FileName>ффф1.doc</FileName>
+        <FileFormat>doc</FileFormat>
+        <FileChecksum>46546546</FileChecksum>
+        <SignFile>
+          <FileName>ффф1.doc.sig</FileName>
+          <FileFormat>sig</FileFormat>
+          <FileChecksum>54546546</FileChecksum>
+        </SignFile>
+      </File>
+    </Document>
+  </Documents>
+  <Object>
+    <Name>Школа №111111111111</Name>
+    <addressContainer sysNode="TRUE">
+      <conclusionValue conclusionTagName="Address">
+        <Region>
+          <conclusionValue sysNode="TRUE">72</conclusionValue>
+          <sysValue skeepNode="TRUE">{"keys":{"conclusion_dictionary_name":"tRegionsRF","code":"72"},"descr":"72 Тюменская область"}</sysValue>
+        </Region>
+        <City>Тюмень</City>
+        <Street>Профсоюзная</Street>
+        <Building>10</Building>
+      </conclusionValue>
+      <sysValue skeepNode="TRUE">Address</sysValue>
+    </addressContainer>
+    <Type>
+      <conclusionValue sysNode="TRUE">2</conclusionValue>
+      <sysValue skeepNode="TRUE">{"keys":{"conclusion_dictionary_name":"tObjectType","code":"2"},"descr":"2 Объект непроизводственного назначения"}</sysValue>
+    </Type>
+    <functionContainer sysNode="TRUE">
+      <conclusionValue conclusionTagName="Functions">Место для учебы и тусовок</conclusionValue>
+      <sysValue skeepNode="TRUE">Functions</sysValue>
+    </functionContainer>
+    <TEI>
+      <Name>показатель1</Name>
+      <Measure>е</Measure>
+      <Value>1321</Value>
+    </TEI>
+    <TEI>
+      <Name>показатель2</Name>
+      <Measure>к</Measure>
+      <Value>6354654</Value>
+    </TEI>
+    <TEI>
+      <Name>показатель3</Name>
+      <Measure>мм</Measure>
+      <Value>длодлодлодло лорл лор лор</Value>
+    </TEI>
+    <ObjectPart>
+      <Name>Хоз. постройка1</Name>
+      <addressContainer sysNode="TRUE">
+        <conclusionValue conclusionTagName="Address">
+          <Region>
+            <conclusionValue sysNode="TRUE">72</conclusionValue>
+            <sysValue skeepNode="TRUE">{"keys":{"conclusion_dictionary_name":"tRegionsRF","code":"72"},"descr":"72 Тюменская область"}</sysValue>
+          </Region>
+          <City>Тюмень</City>
+          <Street>Профсоюзная</Street>
+          <Building>10</Building>
+        </conclusionValue>
+        <sysValue skeepNode="TRUE">Address</sysValue>
+      </addressContainer>
+      <functionContainer sysNode="TRUE">
+        <conclusionValue conclusionTagName="Functions">Для хозяйства</conclusionValue>
+        <sysValue skeepNode="TRUE">Functions</sysValue>
+      </functionContainer>
+    </ObjectPart>
+    <ObjectPart>
+      <Name>Собственно здание школы</Name>
+      <addressContainer sysNode="TRUE">
+        <conclusionValue conclusionTagName="Address">
+          <Region>
+            <conclusionValue sysNode="TRUE">72</conclusionValue>
+            <sysValue skeepNode="TRUE">{"keys":{"conclusion_dictionary_name":"tRegionsRF","code":"72"},"descr":"72 Тюменская область"}</sysValue>
+          </Region>
+          <City>Тюмень</City>
+          <Street>Профсоюзная</Street>
+          <Building>10а</Building>
+        </conclusionValue>
+        <sysValue skeepNode="TRUE">Address</sysValue>
+      </addressContainer>
+      <functionContainer sysNode="TRUE">
+        <conclusionValue conclusionTagName="Functions">Собственно школа</conclusionValue>
+        <sysValue skeepNode="TRUE">Functions</sysValue>
+      </functionContainer>
+    </ObjectPart>
+  </Object>
+  <Declarant>
+    <conclusionValue conclusionTagName="Organization">
+      <OrgFullName>ООО "Заявитель"</OrgFullName>
+      <OrgOGRN>1111111111111</OrgOGRN>
+      <OrgINN>4444444444</OrgINN>
+      <OrgKPP>555555555</OrgKPP>
+      <Address>
+        <Region>
+          <conclusionValue sysNode="TRUE">72</conclusionValue>
+          <sysValue skeepNode="TRUE">{"keys":{"conclusion_dictionary_name":"tRegionsRF","code":"72"},"descr":"72 Тюменская область"}</sysValue>
+        </Region>
+        <City>Тюмень</City>
+        <Street>Республики</Street>
+        <Building>1</Building>
+      </Address>
+      <Email>zayavitel@mail.ru</Email>
+    </conclusionValue>
+    <sysValue skeepNode="TRUE">Organization</sysValue>
+  </Declarant>
+  <Finance>
+    <FinanceType>
+      <conclusionValue sysNode="TRUE">1</conclusionValue>
+      <sysValue skeepNode="TRUE">{"keys":{"conclusion_dictionary_name":"tFinanceType","code":"1"},"descr":"1 Бюджетные средства"}</sysValue>
+    </FinanceType>
+    <BudgetType>
+      <conclusionValue sysNode="TRUE">1</conclusionValue>
+      <sysValue skeepNode="TRUE">{"keys":{"conclusion_dictionary_name":"tBudgetType","code":"1"},"descr":"1 Федеральный бюджет"}</sysValue>
+    </BudgetType>
+    <FinanceSize>100</FinanceSize>
+  </Finance>
+  <ProjectDocumentsTechnicalCustomer>
+    <conclusionValue conclusionTagName="Organization">
+      <OrgFullName>ООО</OrgFullName>
+      <OrgOGRN>1111111111111</OrgOGRN>
+      <OrgINN>5555555555</OrgINN>
+      <OrgKPP>222222222</OrgKPP>
+      <Address>
+        <Region>
+          <conclusionValue sysNode="TRUE">72</conclusionValue>
+          <sysValue skeepNode="TRUE">{"keys":{"conclusion_dictionary_name":"tRegionsRF","code":"72"},"descr":"72 Тюменская область"}</sysValue>
+        </Region>
+      </Address>
+    </conclusionValue>
+    <sysValue skeepNode="TRUE">Organization</sysValue>
+  </ProjectDocumentsTechnicalCustomer>
+  <EstimatedCost>
+    <conclusionValue sysNode="TRUE">
+      <EstimatedCompleteCostBefore>1000000</EstimatedCompleteCostBefore>
+      <EstimatedCompleteCostPost>100001</EstimatedCompleteCostPost>
+    </conclusionValue>
+    <sysValue skeepNode="TRUE">EstimatedCompleteCost</sysValue>
+  </EstimatedCost>
+  <ClimateConditions>
+    <ClimateDistrict>
+      <conclusionValue sysNode="TRUE">I</conclusionValue>
+      <sysValue skeepNode="TRUE">{"keys":{"conclusion_dictionary_name":"tClimateDistrict","code":"I"},"descr":"I климатический район I"}</sysValue>
+    </ClimateDistrict>
+    <GeologicalConditions>
+      <conclusionValue sysNode="TRUE">I</conclusionValue>
+      <sysValue skeepNode="TRUE">{"keys":{"conclusion_dictionary_name":"tGeologicalConditions","code":"I"},"descr":"I I (простые)"}</sysValue>
+    </GeologicalConditions>
+    <WindDistrict>
+      <conclusionValue sysNode="TRUE">IV</conclusionValue>
+      <sysValue skeepNode="TRUE">{"keys":{"conclusion_dictionary_name":"tWindDistrict","code":"IV"},"descr":"IV Ветровой район IV"}</sysValue>
+    </WindDistrict>
+    <SnowDistrict>
+      <conclusionValue sysNode="TRUE">VI</conclusionValue>
+      <sysValue skeepNode="TRUE">{"keys":{"conclusion_dictionary_name":"tSnowDistrict","code":"VI"},"descr":"VI Снеговой район VI"}</sysValue>
+    </SnowDistrict>
+    <SeismicActivity>
+      <conclusionValue sysNode="TRUE">5 и менее баллов</conclusionValue>
+      <sysValue skeepNode="TRUE">{"keys":{"conclusion_dictionary_name":"tSeismicActivity","code":"5 и менее баллов"},"descr":"5 и менее баллов 5 и менее баллов"}</sysValue>
+    </SeismicActivity>
+  </ClimateConditions>
+  <ClimateConditionsNote>Еще какие-то сведения о территории</ClimateConditionsNote>
+  <Designer>
+    <conclusionValue conclusionTagName="IP">
+      <FamilyName>Иванов</FamilyName>
+      <FirstName>Сергей</FirstName>
+      <SecondName>Иванович</SecondName>
+      <OGRNIP>456546546546546</OGRNIP>
+      <PostAddress>
+        <Region>
+          <conclusionValue sysNode="TRUE">72</conclusionValue>
+          <sysValue skeepNode="TRUE">{"keys":{"conclusion_dictionary_name":"tRegionsRF","code":"72"},"descr":"72 Тюменская область"}</sysValue>
+        </Region>
+        <PostIndex>625000</PostIndex>
+        <City>Тюмень</City>
+        <Street>Сакко</Street>
+        <Building>5</Building>
+      </PostAddress>
+      <Email>ivanov@mail.ru</Email>
+    </conclusionValue>
+    <sysValue skeepNode="TRUE">IP</sysValue>
+  </Designer>
+  <ProjectTaskNote>Дополнительные сведения о задании на проектирование</ProjectTaskNote>
+  <TerritoryPlanNote>Дополнительные сведения о документации по планировке территории:</TerritoryPlanNote>
+  <NetworkNote>Дополнительные сведения о технических условиях подключения к сетям инженерно-технического обеспечения</NetworkNote>
+  <ExpertConclusion ExpertType="2.1.3." Result="1">
+    <ExpertType skeepNode="TRUE">
+      <conclusionValue skeepNode="TRUE">2.1.3.</conclusionValue>
+      <sysValue skeepNode="TRUE">{"keys":{"conclusion_dictionary_name":"tExpertType","code":"2.1.3."},"descr":"2.1.3. 2.1.3. Конструктивные решения"}</sysValue>
+    </ExpertType>
+    <Result skeepNode="TRUE">
+      <conclusionValue skeepNode="TRUE">1</conclusionValue>
+      <sysValue skeepNode="TRUE">{"keys":{"conclusion_dictionary_name":"tExaminationResult","code":"1"},"descr":"1 Положительный"}</sysValue>
+    </Result>
+    <expertConclusionContainer sysNode="TRUE">
+      <conclusionValue conclusionTagName="ExpertProjectDocuments">
+        <EngineeringSurveyType>
+          <conclusionValue sysNode="TRUE">5</conclusionValue>
+          <sysValue skeepNode="TRUE">{"keys":{"conclusion_dictionary_name":"tEngineeringSurveyType","code":"5"},"descr":"5 Инженерно-геотехнические изыскания"}</sysValue>
+        </EngineeringSurveyType>
+        <ProjectDocumentsReview>Описание основных решений (мероприятий), принятых в проектной документации или описание изменений, внесенных в проектную документацию в ходе проведения повторной экспертизы или оценки соответствия в рамках экспертного сопровождения</ProjectDocumentsReview>
+        <ProjectDocumentsChanges>Сведения об оперативных изменениях, внесенных заявителем в разделы (подразделы) проектной документации в процессе проведения экспертизы</ProjectDocumentsChanges>
+      </conclusionValue>
+      <sysValue skeepNode="TRUE">ExpertProjectDocuments</sysValue>
+    </expertConclusionContainer>
+  </ExpertConclusion>
+  <ExpertConclusion ExpertType="2.2.3" Result="1">
+    <ExpertType skeepNode="TRUE">
+      <conclusionValue skeepNode="TRUE">2.2.3</conclusionValue>
+      <sysValue skeepNode="TRUE">{"keys":{"conclusion_dictionary_name":"tExpertType","code":"2.2.3"},"descr":"2.2.3 2.2.3. Системы газоснабжения"}</sysValue>
+    </ExpertType>
+    <Result skeepNode="TRUE">
+      <conclusionValue skeepNode="TRUE">1</conclusionValue>
+      <sysValue skeepNode="TRUE">{"keys":{"conclusion_dictionary_name":"tExaminationResult","code":"1"},"descr":"1 Положительный"}</sysValue>
+    </Result>
+    <expertConclusionContainer sysNode="TRUE">
+      <conclusionValue conclusionTagName="ExpertProjectDocuments">
+        <EngineeringSurveyType>
+          <conclusionValue sysNode="TRUE">11</conclusionValue>
+          <sysValue skeepNode="TRUE">{"keys":{"conclusion_dictionary_name":"tEngineeringSurveyType","code":"11"},"descr":"11 Локальные обследования загрязнения грунтов и грунтовых вод"}</sysValue>
+        </EngineeringSurveyType>
+        <ProjectDocumentsReview>писание основных решений (мероприятий), принятых в проектной документации или описание изменений, внесенных в проектную документацию в ходе проведения повторной экспертизы или оценки соответствия в рамках экспертного сопровождения:</ProjectDocumentsReview>
+        <ProjectDocumentsChanges>Сведения об оперативных изменениях, внесенных заявителем в разделы (подразделы) проектной документации в процессе проведения экспертизы:
+        </ProjectDocumentsChanges>
+      </conclusionValue>
+      <sysValue skeepNode="TRUE">ExpertProjectDocuments</sysValue>
+    </expertConclusionContainer>
+  </ExpertConclusion>
+  <Summary>
+    <EngineeringSurveySummary>Вывод о соответствии или несоответствии результатов инженерных изысканий требованиям технических регламентов:</EngineeringSurveySummary>
+    <ProjectDocumentsSummary>Вывод о соответствии или несоответствии технической части проектной документации результатам инженерных изысканий, заданию застройщика или технического заказчика на проектирование и требованиям технических регламентов:
+    </ProjectDocumentsSummary>
+    <EstimateNormsAndWorksSummary>ывод о соответствии (несоответствии) расчетов,содержащихся в сметной сметным нормативам, сведения о которых включены в федеральный реестр сметных нормативов, физическим объемам работ,конструктивным,организационно-технологическим и другим решениям, предусмотренным проектной документацией или Выводы о соответствии (несоответствии) расчетов,содержащихся в сметной документации, физическим объемам работ, включенным в ведомость объемов работ или акт, утвержденный застройщиком или техническим заказчиком и содержащий перечень дефектов оснований, строительных конструкций, систем инженерно-технического обеспечения и сетей инженерно-технического обеспечения с указанием качественных и количественных характеристик таких дефектов, при проведении проверки достоверности определения сметной стоимости капитального ремонта:</EstimateNormsAndWorksSummary>
+    <EstimateSummary>Вывод о достоверности или недостоверности определения сметной стоимости строительства, реконструкции,капитального ремонта, сноса объекта капитального строительства, работ по сохранению объектов культурного наследия (памятников истории и культуры) народов РФ:
+    </EstimateSummary>
+    <ExaminationSummary>Общие выводы (итоговые выводы по результатам проведенной экспертизы):</ExaminationSummary>
+  </Summary>
+  <Experts>
+    <Expert>
+      <FamilyName>Торопова</FamilyName>
+      <FirstName>Наталья</FirstName>
+      <SecondName>Ивановна</SecondName>
+      <ExpertType>
+        <conclusionValue sysNode="TRUE">2.1.3.</conclusionValue>
+        <sysValue skeepNode="TRUE">{"keys":{"conclusion_dictionary_name":"tExpertType","code":"2.1.3."},"descr":"2.1.3. 2.1.3. Конструктивные решения"}</sysValue>
+      </ExpertType>
+      <ExpertCertificate>ГС-Э-11-22-33445</ExpertCertificate>
+      <ExpertCertificateBeginDate>2018-01-01</ExpertCertificateBeginDate>
+      <ExpertCertificateEndDate>2025-12-31</ExpertCertificateEndDate>
+    </Expert>
+    <Expert>
+      <FamilyName>Огородников</FamilyName>
+      <FirstName>Леонид</FirstName>
+      <SecondName>Васильевич</SecondName>
+      <ExpertType>
+        <conclusionValue sysNode="TRUE">16.</conclusionValue>
+        <sysValue skeepNode="TRUE">{"keys":{"conclusion_dictionary_name":"tExpertType","code":"16."},"descr":"16. 16. Системы электроснабжения"}</sysValue>
+      </ExpertType>
+      <ExpertCertificate>ГС-Э-11-22-14563</ExpertCertificate>
+      <ExpertCertificateBeginDate>2015-01-01</ExpertCertificateBeginDate>
+      <ExpertCertificateEndDate>2035-12-31</ExpertCertificateEndDate>
+    </Expert>
+    <Expert>
+      <FamilyName>Апкаликов</FamilyName>
+      <FirstName>Владимир</FirstName>
+      <SecondName>Ансаликович</SecondName>
+      <ExpertType>
+        <conclusionValue sysNode="TRUE">19.</conclusionValue>
+        <sysValue skeepNode="TRUE">{"keys":{"conclusion_dictionary_name":"tExpertType","code":"19."},"descr":"19. 19. Автомобильные дороги"}</sysValue>
+      </ExpertType>
+      <ExpertCertificate>МС-Э-11-22-12345</ExpertCertificate>
+      <ExpertCertificateBeginDate>2018-01-01</ExpertCertificateBeginDate>
+      <ExpertCertificateEndDate>2021-12-31</ExpertCertificateEndDate>
+    </Expert>
+  </Experts>
+</Conclusion>

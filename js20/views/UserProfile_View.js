@@ -14,8 +14,12 @@ function UserProfile_View(id,options){
 		"email_not_confirmed":!user_email_confirmed
 	}
 	
+	var role_id = window.getApp().getServVar("role_id");
+	options.templateOptions.is_employee = (role_id!="client");
+	
 	var self = this;
 	options.addElement = function(){
+	
 		this.addElement(new HiddenKey(id+":id"));	
 	
 		this.addElement(new UserNameEdit(id+":name",{			
@@ -96,7 +100,7 @@ function UserProfile_View(id,options){
 
 		this.addElement(new EditCheckBox(id+":reminders_to_email",{
 			"labelCaption":"Дублировать напоминания на электронную почту",
-			"visible":(window.getApp().getServVar("role_id")!="client"),
+			"visible":(role_id!="client"),
 			"events":{
 				"change":function(){
 					self.getControlSave().setEnabled(true);
@@ -114,6 +118,18 @@ function UserProfile_View(id,options){
 			this.addElement(new UserEmailConfirmation_View(id+":email_confirmation"));
 		}
 	
+		//ссылка на сотрудника
+		if(options.templateOptions.is_employee){
+			this.addElement(new ButtonCmd(id+":cmdEmployeeRef",{
+				"caption":" Карточка сотрудника ",
+				"glyph":" glyphicon-user",
+				"title":"Открыть карточку сотрудника",
+				"onClick":function(){	
+					self.openEmployeeDialogForm();
+				}
+			}));
+			
+		}
 	}
 	
 	UserProfile_View.superclass.constructor.call(this,id,options);
@@ -176,3 +192,17 @@ UserProfile_View.prototype.onSave = function(okFunc,failFunc,allFunc){
 	}
 	UserProfile_View.superclass.onSave.call(this,okFunc,failFunc,allFunc);
 }
+
+UserProfile_View.prototype.openEmployeeDialogForm = function(){
+	var emp_id = this.getModel().getFieldValue("employee_id");
+	if(!emp_id){
+		throw Error("Карточка сотрудника не найдена!");
+	}
+	var f = new EmployeeDialog_Form({
+		"keys":{"id":emp_id}
+	});
+	f.open();
+	//alert("openEmployeeDialogForm")
+}
+
+

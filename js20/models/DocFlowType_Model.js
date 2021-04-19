@@ -82,6 +82,17 @@ function DocFlowType_Model(options){
 	options.fields.doc_flow_types_type_id = new FieldEnum("doc_flow_types_type_id",filed_options);
 	filed_options.enumValues = 'in,out,inside';
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.document_type = new FieldString("document_type",filed_options);
+	options.fields.document_type.getValidator().setRequired(true);
+	options.fields.document_type.getValidator().setMaxLength('30');
+	
 			
 		DocFlowType_Model.superclass.constructor.call(this,id,options);
 }

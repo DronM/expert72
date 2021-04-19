@@ -20,7 +20,7 @@
 function ConstructionType_Controller(options){
 	options = options || {};
 	options.listModelClass = ConstructionType_Model;
-	options.objModelClass = ConstructionType_Model;
+	options.objModelClass = ConstructionTypeDialog_Model;
 	ConstructionType_Controller.superclass.constructor.call(this,options);	
 	
 	//methods
@@ -56,6 +56,18 @@ extend(ConstructionType_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	
+	var field = new FieldString("object_type_code",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldString("object_type_dictionary_name",options);
+	
+	pm.addField(field);
+	
 	pm.addField(new FieldInt("ret_id",{}));
 	
 	
@@ -83,6 +95,18 @@ extend(ConstructionType_Controller,ControllerObjServer);
 	var options = {};
 	
 	var field = new FieldJSONB("technical_features",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldString("object_type_code",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldString("object_type_dictionary_name",options);
 	
 	pm.addField(field);
 	
@@ -134,6 +158,12 @@ extend(ConstructionType_Controller,ControllerObjServer);
 	var f_opts = {};
 	
 	pm.addField(new FieldJSONB("technical_features",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldString("object_type_code",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldString("object_type_dictionary_name",f_opts));
 	pm.getField(this.PARAM_ORD_FIELDS).setValue("name");
 	
 }

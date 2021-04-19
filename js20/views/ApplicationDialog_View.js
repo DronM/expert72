@@ -113,13 +113,14 @@ function ApplicationDialog_View(id,options){
 		this.addElement(new OfficeSelect(id+":offices_ref",{
 			"attrs":{"percentCalc":"true","forModifiedDocuments":"true"},
 			"labelClassName": "control-label percentcalc "+bs,
-			"labelCaption":this.FIELD_CAP_office
-			,"events":{
+			"labelCaption":this.FIELD_CAP_office,
+			"asyncRefresh":false,
+			"events":{
 				"change":function(){
 					self.calcFillPercent();
 				}
-			}
-			,"addNotSelected":false
+			},
+			"addNotSelected":false
 			//"value":new RefType({"keys":{"office_id":1}})
 		}));	
 		
@@ -141,6 +142,7 @@ function ApplicationDialog_View(id,options){
 		this.addElement(new FundSourceSelect(id+":fund_sources_ref",{
 			"attrs":{"percentCalc":"true"},
 			"labelClassName": "control-label percentcalc "+bs,
+			"asyncRefresh":false,
 			"events":{
 				"change":function(){
 					self.calcFillPercent();					
@@ -163,6 +165,7 @@ function ApplicationDialog_View(id,options){
 		this.addElement(new BuildTypeSelect(id+":build_types_ref",{
 			"attrs":{"percentCalc":"true"},
 			"labelClassName": "control-label percentcalc "+bs,
+			"asyncRefresh":false,
 			"events":{
 				"change":function(){
 					self.calcFillPercent();					
@@ -231,6 +234,7 @@ function ApplicationDialog_View(id,options){
 			"attrs":{"percentCalc":"true"},
 			"labelClassName": "control-label percentcalc "+bs,
 			"labelCaption":this.FIELD_CAP_construction_types_ref,
+			"asyncRefresh":false,
 			"events":{
 				"change":function(){
 					//содержимое всех вкладок МЕНЯЕТСЯ!!!										

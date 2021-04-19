@@ -75,6 +75,15 @@ class DocFlowType_Model extends ModelSQL{
 		$f_doc_flow_types_type_id=new FieldSQLEnum($this->getDbLink(),$this->getDbName(),$this->getTableName(),"doc_flow_types_type_id",$f_opts);
 		$this->addField($f_doc_flow_types_type_id);
 		//********************
+		
+		//*** Field document_type ***
+		$f_opts = array();
+		$f_opts['length']=30;
+		$f_opts['id']="document_type";
+						
+		$f_document_type=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"document_type",$f_opts);
+		$this->addField($f_document_type);
+		//********************
 	
 		$order = new ModelOrderSQL();		
 		$this->setDefaultModelOrder($order);		

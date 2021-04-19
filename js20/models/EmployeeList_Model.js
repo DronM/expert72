@@ -103,6 +103,15 @@ function EmployeeList_Model(options){
 	
 	options.fields.departments_ref = new FieldJSON("departments_ref",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.posts_ref = new FieldJSON("posts_ref",filed_options);
+	
 		EmployeeList_Model.superclass.constructor.call(this,id,options);
 }
 extend(EmployeeList_Model,ModelXML);

@@ -1,0 +1,19 @@
+<!-- УО  tOrganization -->
+{{#Organization}}
+<Organization>{{Organization}}</Organization>
+{{/Organization}}
+
+<!-- УО  tForeignOrganization -->
+{{#ForeignOrganization}}
+<ForeignOrganization>{{ForeignOrganization}}</ForeignOrganization>
+{{/ForeignOrganization}}
+
+<!-- УО  tIP -->
+{{#IP}}
+<IP>{{IP}}</IP>
+{{/IP}}
+
+<!-- УО  tIP -->
+{{#Person}}
+<Person>{{Person}}</Person>
+{{/Person}}

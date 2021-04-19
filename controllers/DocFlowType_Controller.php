@@ -45,6 +45,9 @@ class DocFlowType_Controller extends ControllerSQL{
 				$param = new FieldExtEnum('doc_flow_types_type_id',',','in,out,inside'
 				,array());
 		$pm->addParam($param);
+		$param = new FieldExtString('document_type'
+				,array('required'=>TRUE));
+		$pm->addParam($param);
 		
 		$pm->addParam(new FieldExtInt('ret_id'));
 		
@@ -88,6 +91,10 @@ class DocFlowType_Controller extends ControllerSQL{
 			$pm->addParam($param);
 		
 				$param = new FieldExtEnum('doc_flow_types_type_id',',','in,out,inside'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtString('document_type'
 				,array(
 			));
 			$pm->addParam($param);

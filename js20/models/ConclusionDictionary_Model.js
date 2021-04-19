@@ -22,19 +22,13 @@ function ConclusionDictionary_Model(options){
 	
 	options.fields = {};
 	
+			
+				
+			
 				
 	
 	var filed_options = {};
 	filed_options.primaryKey = true;	
-	
-	filed_options.autoInc = true;	
-	
-	options.fields.id = new FieldInt("id",filed_options);
-	
-				
-	
-	var filed_options = {};
-	filed_options.primaryKey = false;	
 	
 	filed_options.autoInc = false;	
 	

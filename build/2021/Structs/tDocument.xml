@@ -1,0 +1,28 @@
+<!-- O K(6) -->
+<DocType>{{DocType}}</DocType>
+
+<!-- O T(1000) -->
+<DocName>{{DocName}}</DocName>
+
+<!-- O T(50) -->
+<DocNumber>{{DocNumber}}</DocNumber>
+
+<!-- O D -->
+<DocDate>{{DocDate}}</DocDate>
+
+<!-- УO, Наименование или ФИО автора О, для доков 06.00 до 06.99 - опция -->
+<DocIssueAuthor>{{DocIssueAuthor}}</DocIssueAuthor>
+
+<!-- УO tDeclarant, О для оков 06.00 до 06.99 -->
+<FullDocIssueAuthor>{{FullDocIssueAuthor}}</FullDocIssueAuthor>
+
+<!-- Н Т(255) -->
+{{DocChanges}}
+<DocChanges>{{DocChanges}}</DocChanges>
+{{/DocChanges}}
+
+<!--o Т(255), файлы разбиты по 80мг -->
+{{#Files}}
+<File>{{File}}</File>
+{{/Files}}
+

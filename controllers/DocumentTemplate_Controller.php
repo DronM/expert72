@@ -33,10 +33,6 @@ class DocumentTemplate_Controller extends ControllerSQL{
 				$param = new FieldExtEnum('document_type',',','pd,eng_survey,cost_eval_validity,modification,audit,documents'
 				,array('required'=>TRUE));
 		$pm->addParam($param);
-		
-				$param = new FieldExtEnum('service_type',',','expertise,cost_eval_validity,audit,modification,modified_documents,expert_maintenance'
-				,array());
-		$pm->addParam($param);
 		$param = new FieldExtInt('construction_type_id'
 				,array('required'=>TRUE));
 		$pm->addParam($param);
@@ -99,11 +95,6 @@ class DocumentTemplate_Controller extends ControllerSQL{
 			$pm->addParam($param);
 		
 				$param = new FieldExtEnum('document_type',',','pd,eng_survey,cost_eval_validity,modification,audit,documents'
-				,array(
-			));
-			$pm->addParam($param);
-		
-				$param = new FieldExtEnum('service_type',',','expertise,cost_eval_validity,audit,modification,modified_documents,expert_maintenance'
 				,array(
 			));
 			$pm->addParam($param);

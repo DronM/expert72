@@ -29,13 +29,9 @@ class ConclusionDictionary_Controller extends ControllerSQL{
 		/* update */		
 		$pm = new PublicMethod('update');
 		
-		$pm->addParam(new FieldExtInt('old_id',array('required'=>TRUE)));
+		$pm->addParam(new FieldExtString('old_name',array('required'=>TRUE)));
 		
 		$pm->addParam(new FieldExtInt('obj_mode'));
-		$param = new FieldExtInt('id'
-				,array(
-			));
-			$pm->addParam($param);
 		$param = new FieldExtString('name'
 				,array(
 			));
@@ -45,14 +41,14 @@ class ConclusionDictionary_Controller extends ControllerSQL{
 			));
 			$pm->addParam($param);
 		
-			$param = new FieldExtInt('id',array(
+			$param = new FieldExtString('name',array(
 			));
 			$pm->addParam($param);
 		
 			//default event
 			$ev_opts = [
 				'dbTrigger'=>FALSE
-				,'eventParams' =>['id'
+				,'eventParams' =>['name'
 				]
 			];
 			$pm->addEvent('ConclusionDictionary.update',$ev_opts);
@@ -65,7 +61,7 @@ class ConclusionDictionary_Controller extends ControllerSQL{
 		$pm = new PublicMethod('get_object');
 		$pm->addParam(new FieldExtString('mode'));
 		
-		$pm->addParam(new FieldExtInt('id'
+		$pm->addParam(new FieldExtString('name'
 		));
 		
 		
@@ -88,7 +84,7 @@ class ConclusionDictionary_Controller extends ControllerSQL{
 
 		$this->addPublicMethod($pm);
 		
-		$this->setListModelId('ConclusionDictionaryList_Model');
+		$this->setListModelId('ConclusionDictionary_Model');
 		
 		
 	}	

@@ -39,6 +39,15 @@ class BuildType_Model extends ModelSQL{
 		$f_name=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"name",$f_opts);
 		$this->addField($f_name);
 		//********************
+		
+		//*** Field dt_code ***
+		$f_opts = array();
+		$f_opts['length']=30;
+		$f_opts['id']="dt_code";
+						
+		$f_dt_code=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"dt_code",$f_opts);
+		$this->addField($f_dt_code);
+		//********************
 	
 		$order = new ModelOrderSQL();		
 		$this->setDefaultModelOrder($order);		

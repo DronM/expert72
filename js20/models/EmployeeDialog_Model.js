@@ -119,6 +119,15 @@ function EmployeeDialog_Model(options){
 	
 	options.fields.departments_ref = new FieldJSON("departments_ref",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.is_expert = new FieldBool("is_expert",filed_options);
+	
 		EmployeeDialog_Model.superclass.constructor.call(this,id,options);
 }
 extend(EmployeeDialog_Model,ModelXML);

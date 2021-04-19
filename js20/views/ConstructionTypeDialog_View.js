@@ -14,14 +14,29 @@ function ConstructionTypeDialog_View(id,options){
 
 	options = options || {};
 	
-	options.model = options.model || options.models.ConstructionType_Model;
+	options.model = options.model || options.models.ConstructionTypeDialog_Model;
 	options.controller = options.controller || new ConstructionType_Controller();
 	
 	ConstructionTypeDialog_View.superclass.constructor.call(this,id,options);
 	
 	var self = this;
 		
-	this.addElement(new EditString(id+":name",{"maxLength":"200","required":true}));	
+	this.addElement(new EditString(id+":name",{"maxLength":"200","required":true}));
+	
+	var object_types_pm = (new ConclusionDictionaryDetail_Controller()).getPublicMethod("get_list");
+	object_types_pm.setFieldValue("cond_fields","conclusion_dictionary_name");
+	object_types_pm.setFieldValue("cond_sgns","e");
+	object_types_pm.setFieldValue("cond_vals","tObjectType");
+	var object_types_m = new ConclusionDictionaryDetail_Model();	
+	this.addElement(new EditSelectRef(id+":object_types_ref",{
+		"labelCaption":"Значение по классификатору:"
+		,"keyIds":["object_type_code","object_type_dictionary_name"]
+		,"model":object_types_m
+		,"modelKeyFields":[object_types_m.getField("code"),object_types_m.getField("conclusion_dictionary_name")]
+		,"modelDescrFields":[object_types_m.getField("code"),object_types_m.getField("descr")]		
+		,"readPublicMethod":object_types_pm
+		,"cashId":"ConclusionDictionaryDetailSelect_tObjectType"		
+	}));		
 
 	//********* features grid ***********************
 	var model = new TechnicalFeature_Model();
@@ -47,8 +62,8 @@ function ConstructionTypeDialog_View(id,options){
 								new GridColumn({
 									"field":model.getField("name")})
 							]
-						}),					
-						new GridCellHead(id+":technical_features:head:value",{
+						})					
+						,new GridCellHead(id+":technical_features:head:value",{
 							"value":"Значение",
 							"columns":[
 								new GridColumn({
@@ -71,6 +86,7 @@ function ConstructionTypeDialog_View(id,options){
 	//read
 	var read_b = [
 		new DataBinding({"control":this.getElement("name")}),
+		new DataBinding({"control":this.getElement("object_types_ref")}),
 		new DataBinding({"control":this.getElement("technical_features"),"fieldId":"technical_features"})
 	];
 	this.setDataBindings(read_b);
@@ -78,6 +94,7 @@ function ConstructionTypeDialog_View(id,options){
 	//write
 	var write_b = [
 			new CommandBinding({"control":this.getElement("name")}),
+			new CommandBinding({"control":this.getElement("object_types_ref")}),
 			new CommandBinding({"control":this.getElement("technical_features"),"fieldId":"technical_features"})
 	];
 	this.setWriteBindings(write_b);

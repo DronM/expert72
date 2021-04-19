@@ -35,6 +35,12 @@ function DocFlowTypeDialog_View(id,options){
 		this.addElement(new Enum_doc_flow_type_types(id+":doc_flow_type_types",{
 			"labelCaption":this.FIELD_CAP_doc_flow_type_types
 		}));	
+		
+		this.addElement(new ConclusionDictionaryDetailEdit(id+":document_types_ref",{
+			"labelCaption":"Вид документа по классификатору:"
+			,"conclusion_dictionary_name":"tDocumentType"
+		}));	
+		
 	}
 	
 	DocFlowTypeDialog_View.superclass.constructor.call(this,id,options);
@@ -46,6 +52,7 @@ function DocFlowTypeDialog_View(id,options){
 		,new DataBinding({"control":this.getElement("num_prefix")})
 		,new DataBinding({"control":this.getElement("def_interval")})
 		,new DataBinding({"control":this.getElement("doc_flow_type_types"),"field":options.model.getField("doc_flow_types_type_id")})
+		,new DataBinding({"control":this.getElement("document_types_ref"),"field":options.model.getField("document_type")})
 	]);
 	
 	//write
@@ -54,6 +61,7 @@ function DocFlowTypeDialog_View(id,options){
 		,new CommandBinding({"control":this.getElement("num_prefix"),"fieldId":"num_prefix"})
 		,new CommandBinding({"control":this.getElement("def_interval")})
 		,new CommandBinding({"control":this.getElement("doc_flow_type_types"),"fieldId":"doc_flow_types_type_id"})
+		,new CommandBinding({"control":this.getElement("document_types_ref"),"fieldId":"document_type"})
 	]);
 		
 }

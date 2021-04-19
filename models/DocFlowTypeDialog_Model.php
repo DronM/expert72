@@ -10,6 +10,7 @@ require_once(FRAME_WORK_PATH.'basic_classes/ModelSQL.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLInt.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLString.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLInterval.php');
+require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLJSON.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLJSONB.php');
  
 class DocFlowTypeDialog_Model extends ModelSQL{
@@ -72,6 +73,14 @@ class DocFlowTypeDialog_Model extends ModelSQL{
 						
 		$f_def_interval=new FieldSQLInterval($this->getDbLink(),$this->getDbName(),$this->getTableName(),"def_interval",$f_opts);
 		$this->addField($f_def_interval);
+		//********************
+		
+		//*** Field document_types_ref ***
+		$f_opts = array();
+		$f_opts['id']="document_types_ref";
+						
+		$f_document_types_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"document_types_ref",$f_opts);
+		$this->addField($f_document_types_ref);
 		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}

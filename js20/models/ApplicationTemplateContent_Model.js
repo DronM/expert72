@@ -49,6 +49,33 @@ function ApplicationTemplateContent_Model(options){
 	
 	options.fields.required = new FieldBool("required",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.dt_descr = new FieldString("dt_descr",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.dt_code = new FieldString("dt_code",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.dt_dictionary_name = new FieldString("dt_dictionary_name",filed_options);
+	
 		ApplicationTemplateContent_Model.superclass.constructor.call(this,id,options);
 }
 extend(ApplicationTemplateContent_Model,ModelJSONTree);

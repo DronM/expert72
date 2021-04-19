@@ -1,0 +1,238 @@
+<div id="{{id}}" class="panel panel-flat">
+	<div id="{{id}}:cmd">
+		<div id="{{id}}:cmdOk"/>
+		<div id="{{id}}:cmdSave"/>
+		<div id="{{id}}:cmdDoanload"/>
+		<div id="{{id}}:cmdPrint"/>
+		<div id="{{id}}:cmdCheck"/>
+		<div id="{{id}}:cmdFill"/>
+		<div id="{{id}}:cmdCancel"/>
+	</div>
+
+	<div class="panel-heading">
+		<h3 class="panel-title">Заключение</h3>
+	</div>
+
+	<div class="tabbable">
+		<ul class="nav nav-tabs nav-tabs-highlight">				
+			<li class="active">
+				<a href="#common" data-toggle="tab" aria-expanded="true">
+					Общая</a>
+			</li>
+			<li id="{{id}}:tab-documents" class="" title="Документы, представленные на экспертизы"><a href="#documents" data-toggle="tab" aria-expanded="false">Документация</a></li>
+			<li id="{{id}}:tab-prevConcl" class=""><a href="#prevConcl" data-toggle="tab" aria-expanded="false">Ранее выданные заключ.</a></li>
+			<li id="{{id}}:tab-declarant" class=""><a href="#declarant" data-toggle="tab" aria-expanded="false">Заявитель,застройщик,тех.заказчик</a></li>
+			<li id="{{id}}:tab-object" class=""><a href="#object" data-toggle="tab" aria-expanded="false">Объект стр-ва</a></li>
+			<li id="{{id}}:tab-engSurvey" class=""><a href="#engSurvey" data-toggle="tab" aria-expanded="false">РИИ</a></li>
+			<li id="{{id}}:tab-expertConclusion" class=""><a href="#expertConclusion" data-toggle="tab" aria-expanded="false">Рассмотрение</a></li>
+			<li id="{{id}}:tab-summary" class=""><a href="#summary" data-toggle="tab" aria-expanded="false">Выводы</a></li>
+			<li id="{{id}}:tab-experts" class=""><a href="#experts" data-toggle="tab" aria-expanded="false">Эксперты</a></li>
+		</ul>
+	</div>	
+	
+	<div class="tab-content dialogForm">
+		<div class="tab-pane fade in active" id="common">
+			<div id="{{id}}:contracts_ref"/>			
+			<div id="{{id}}:create_dt"/>
+			<div id="{{id}}:employees_ref"/>	
+			<div id="{{id}}:comment_text"/>
+			
+			<div class="panel panel-flat">
+				<div class="panel-heading">
+					<h4 class="panel-title">Идентификатор заключения, ссылка</h4>
+				</div>
+			
+				<div class="panel-body">
+					<div id="{{id}}:Conclusion:ConclusionGUID"/>
+					<div id="{{id}}:Conclusion:SchemaVersion"/>
+					<div id="{{id}}:Conclusion:SchemaLink"/>											
+				</div>
+			</div>	
+			
+			<div class="panel panel-flat">
+				<div class="panel-heading">
+					<h4 class="panel-title">Экспертная организация, кто утвердил заключение</h4>
+				</div>
+			
+				<div class="panel-body">
+					<div id="{{id}}:Conclusion:ExpertOrganization"/>
+					<div id="{{id}}:Conclusion:Approver"/>
+				</div>
+			</div>
+
+			<div class="panel panel-flat">
+				<div class="panel-heading">
+					<h4 class="panel-title">Сведения об объекте экспертизы</h4>
+				</div>
+			
+				<div id="{{id}}:Conclusion:ExaminationObject" class="panel-body">
+					<div id="{{id}}:Conclusion:ExaminationObject:ExaminationForm"/>
+					<div id="{{id}}:Conclusion:ExaminationObject:ExaminationResult"/>
+					<div id="{{id}}:Conclusion:ExaminationObject:ExaminationObjectType"/>
+					
+					<div class="panel panel-flat">
+						<div class="panel-heading">
+							<h4 class="panel-title">Предмет экспертизы</h4>
+						</div>
+						<div id="{{id}}:Conclusion:ExaminationObject:ExaminationType" class="panel-body">
+						</div>
+					</div>	
+					
+					<div id="{{id}}:Conclusion:ExaminationObject:ConstructionType"/>
+					<div id="{{id}}:Conclusion:ExaminationObject:ExaminationStage"/>
+					<div id="{{id}}:Conclusion:ExaminationObject:ExaminationStageNote"/>
+					<div id="{{id}}:Conclusion:ExaminationObject:Name"/>
+				</div>	
+			</div>
+		</div>
+
+		<div class="tab-pane fade" id="documents">
+			<div id="{{id}}:Conclusion:Documents"/>
+		</div>	
+
+		<div class="tab-pane fade" id="prevConcl">
+			<div class="panel panel-flat">
+				<div class="panel-heading">
+					<h4 class="panel-title">Заключения экспертизы</h4>
+				</div>
+				<div id="{{id}}:Conclusion:PreviousConclusions" class="panel-body">
+				</div>
+			</div>	
+
+			<div class="panel panel-flat">
+				<div class="panel-heading">
+					<h4 class="panel-title">Заключения экспертизы (экспертное сопровождение)</h4>
+				</div>
+				<div id="{{id}}:Conclusion:PreviousSimpleConclusions" class="panel-body">
+				</div>
+			</div>	
+		</div>	
+
+		<div class="tab-pane fade" id="declarant">
+			
+			<div class="panel panel-flat">
+				<div class="panel-heading">
+					<h4 class="panel-title">Сведения о заявителе</h4>
+				</div>
+				<div class="panel-body">
+					<div id="{{id}}:Conclusion:Declarant"/>
+				</div>
+			</div>	
+
+			<div class="panel panel-flat">
+				<div class="panel-heading">
+					<h4 class="panel-title">Сведения о застройщиках</h4>
+				</div>
+				<div id="{{id}}:Conclusion:ProjectDocumentsDeveloper" class="panel-body"/>
+			</div>	
+
+			<div class="panel panel-flat">
+				<div class="panel-heading">
+					<h4 class="panel-title">Сведения о технических заказчиках</h4>
+				</div>
+				<div id="{{id}}:Conclusion:ProjectDocumentsTechnicalCustomer" class="panel-body"/>
+			</div>	
+
+			<div class="panel panel-flat">
+				<div class="panel-heading">
+					<h4 class="panel-title">Сведения о лицах, подготовивших проктную документацию</h4>
+				</div>
+				<div id="{{id}}:Conclusion:Designer" class="panel-body"/>
+			</div>	
+		</div>	
+
+		<div class="tab-pane fade" id="object">
+			<div id="{{id}}:Conclusion:Object:Name"/>
+			
+			<div class="panel panel-flat">
+				<div class="panel-heading">
+					<h4 class="panel-title">Адрес (точки линейного объекта)</h4>
+				</div>
+				<div id="{{id}}:Conclusion:Object:addressContainer" class="panel-body"/>
+			</div>	
+			
+			<div id="{{id}}:Conclusion:Object:functionContainer"/>
+			<div id="{{id}}:Conclusion:Object:Type"/>
+
+			<div class="panel panel-flat">
+				<div class="panel-heading">
+					<h4 class="panel-title">Технико-экономические показатели объекта капитального строительства</h4>
+				</div>
+				<div id="{{id}}:Conclusion:Object:TEI" class="panel-body"/>
+			</div>	
+
+			<div class="panel panel-flat">
+				<div class="panel-heading">
+					<h4 class="panel-title">Описание составных частей сложного объекта</h4>
+				</div>
+				<div id="{{id}}:Conclusion:Object:ObjectPart" class="panel-body"/>
+			</div>	
+			
+			<div class="panel panel-flat">
+				<div class="panel-heading">
+					<h4 class="panel-title">Кадастровые номера земельных участков</h4>
+				</div>
+				<div id="{{id}}:Conclusion:CadastralNumber" class="panel-body"/>
+			</div>	
+			
+			<div class="panel panel-flat">
+				<div class="panel-heading">
+					<h4 class="panel-title">Сведения об источниках финансирования</h4>
+				</div>
+				<div id="{{id}}:Conclusion:Finance" class="panel-body"/>
+			</div>	
+			
+			<div id="{{id}}:Conclusion:EstimatedCost"/>
+			<div id="{{id}}:Conclusion:ClimateConditions"/>
+			<div id="{{id}}:Conclusion:ClimateConditionsNote"/>
+			<div id="{{id}}:Conclusion:EEPDUse"/>
+			<div id="{{id}}:Conclusion:ProjectTaskNote"/>
+			<div id="{{id}}:Conclusion:TerritoryPlanNote"/>
+			<div id="{{id}}:Conclusion:NetworkNote"/>
+		</div>	
+
+		<div class="tab-pane fade" id="engSurvey">
+			<div id="{{id}}:Conclusion:EngineeringSurveyAddress"/>
+			
+			<div class="panel panel-flat">
+				<div class="panel-heading">
+					<h4 class="panel-title">Сведения о застройщиках, обеспечивших подготовку РИИ</h4>
+				</div>
+				<div id="{{id}}:Conclusion:EngineeringSurveyDeveloper" class="panel-body"/>
+			</div>	
+
+			<div class="panel panel-flat">
+				<div class="panel-heading">
+					<h4 class="panel-title">Сведения о технических заказчиках, обеспечивших подготовку РИИ</h4>
+				</div>
+				<div id="{{id}}:Conclusion:EngineeringSurveyTechnicalCustomer" class="panel-body"/>
+			</div>	
+		</div>	
+
+		<div class="tab-pane fade" id="expertConclusion">
+			<div class="panel panel-flat">
+				<div class="panel-heading">
+					<h4 class="panel-title">Сведения о рассмотрении документации по направлению</h4>
+				</div>
+				<div id="{{id}}:Conclusion:ExpertConclusion" class="panel-body"/>
+			</div>	
+			
+		</div>	
+		
+		<div class="tab-pane fade" id="summary">
+			<div id="{{id}}:Conclusion:Summary"/>
+		</div>	
+
+		<div class="tab-pane fade" id="experts">			
+			<div class="panel panel-flat">
+				<div class="panel-heading">
+					<h4 class="panel-title">Перечень лиц, аттестованных на право подготовки заключений экспертизы</h4>
+				</div>
+				<div id="{{id}}:Conclusion:Experts" class="panel-body"/>
+			</div>	
+			
+		</div>	
+		
+	</div>	
+	
+</div>

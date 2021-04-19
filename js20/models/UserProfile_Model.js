@@ -114,6 +114,15 @@ function UserProfile_Model(options){
 	
 	options.fields.reminders_to_email = new FieldBool("reminders_to_email",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.employee_id = new FieldInt("employee_id",filed_options);
+	
 			
 		UserProfile_Model.superclass.constructor.call(this,id,options);
 }

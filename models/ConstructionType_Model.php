@@ -48,6 +48,24 @@ class ConstructionType_Model extends ModelSQL{
 		$f_technical_features=new FieldSQLJSONB($this->getDbLink(),$this->getDbName(),$this->getTableName(),"technical_features",$f_opts);
 		$this->addField($f_technical_features);
 		//********************
+		
+		//*** Field object_type_code ***
+		$f_opts = array();
+		$f_opts['length']=30;
+		$f_opts['id']="object_type_code";
+						
+		$f_object_type_code=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"object_type_code",$f_opts);
+		$this->addField($f_object_type_code);
+		//********************
+		
+		//*** Field object_type_dictionary_name ***
+		$f_opts = array();
+		$f_opts['length']=50;
+		$f_opts['id']="object_type_dictionary_name";
+						
+		$f_object_type_dictionary_name=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"object_type_dictionary_name",$f_opts);
+		$this->addField($f_object_type_dictionary_name);
+		//********************
 	
 		$order = new ModelOrderSQL();		
 		$this->setDefaultModelOrder($order);		

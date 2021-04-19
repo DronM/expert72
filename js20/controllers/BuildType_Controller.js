@@ -19,8 +19,8 @@
 
 function BuildType_Controller(options){
 	options = options || {};
-	options.listModelClass = BuildType_Model;
-	options.objModelClass = BuildType_Model;
+	options.listModelClass = BuildTypeList_Model;
+	options.objModelClass = BuildTypeList_Model;
 	BuildType_Controller.superclass.constructor.call(this,options);	
 	
 	//methods
@@ -50,6 +50,12 @@ extend(BuildType_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	
+	var field = new FieldString("dt_code",options);
+	
+	pm.addField(field);
+	
 	pm.addField(new FieldInt("ret_id",{}));
 	
 	
@@ -71,6 +77,12 @@ extend(BuildType_Controller,ControllerObjServer);
 	var options = {};
 	
 	var field = new FieldString("name",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldString("dt_code",options);
 	
 	pm.addField(field);
 	
@@ -119,6 +131,9 @@ extend(BuildType_Controller,ControllerObjServer);
 	var f_opts = {};
 	
 	pm.addField(new FieldString("name",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldJSON("document_types_ref",f_opts));
 	pm.getField(this.PARAM_ORD_FIELDS).setValue("name");
 	
 }

@@ -9,7 +9,7 @@
  */	
 function BuildTypeSelect(id,options){
 	options = options || {};
-	options.model = new BuildType_Model();
+	options.model = new BuildTypeList_Model();
 	
 	if (options.labelCaption!=""){
 		options.labelCaption = options.labelCaption || "Вид работ:";

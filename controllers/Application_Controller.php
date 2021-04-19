@@ -2220,7 +2220,6 @@ class Application_Controller extends ControllerSQL{
 					service_type,
 					app_print IS NOT NULL AS app_print_set,
 					(SELECT COUNT(*) FROM application_document_files af WHERE af.application_id=id) AS file_count,
-					(SELECT COUNT(*) FROM application_document_files af WHERE af.application_id=id) AS file_count,
 					CASE
 						WHEN service_type='modified_documents' THEN
 							(SELECT

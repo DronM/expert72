@@ -56,6 +56,24 @@ extend(ApplicationTemplateContent_Controller,ControllerObjClient);
 	
 	pm.addField(field);
 	
+	var options = {};
+	
+	var field = new FieldString("dt_descr",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldString("dt_code",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldString("dt_dictionary_name",options);
+	
+	pm.addField(field);
+	
 	pm.addField(new FieldInt("ret_id",{}));
 	
 	
@@ -83,6 +101,24 @@ extend(ApplicationTemplateContent_Controller,ControllerObjClient);
 	var options = {};
 	
 	var field = new FieldBool("required",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldString("dt_descr",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldString("dt_code",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldString("dt_dictionary_name",options);
 	
 	pm.addField(field);
 	
@@ -123,6 +159,15 @@ extend(ApplicationTemplateContent_Controller,ControllerObjClient);
 	var f_opts = {};
 	
 	pm.addField(new FieldBool("required",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldString("dt_descr",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldString("dt_code",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldString("dt_dictionary_name",f_opts));
 }
 
 			ApplicationTemplateContent_Controller.prototype.addGetObject = function(){

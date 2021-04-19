@@ -71,7 +71,7 @@ function DocFlowTypeList_Model(options){
 	
 	options.fields.num_prefix = new FieldString("num_prefix",filed_options);
 	options.fields.num_prefix.getValidator().setMaxLength('10');
-	
+				
 		DocFlowTypeList_Model.superclass.constructor.call(this,id,options);
 }
 extend(DocFlowTypeList_Model,ModelXML);

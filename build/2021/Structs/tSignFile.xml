@@ -1,0 +1,14 @@
+<!-- О Т(255) Имя файла подписи к документу-->
+<FileName>{{FileName}}</FileName>
+
+<!-- О Т(4) Формат файла подписи к документу-->
+<FileFormat>{{FileFormat}}</FileFormat>
+
+<!-- О Т(8) CRC32-->
+<FileChecksum>{{FileChecksum}}</FileChecksum>
+
+<!-- Н S Файл подписи к документу-->
+{{SignFile}}
+<SignFile>{{SignFile}}</SignFile>
+{{/SignFile}}
+

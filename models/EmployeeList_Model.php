@@ -98,6 +98,14 @@ class EmployeeList_Model extends ModelSQL{
 		$f_departments_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"departments_ref",$f_opts);
 		$this->addField($f_departments_ref);
 		//********************
+		
+		//*** Field posts_ref ***
+		$f_opts = array();
+		$f_opts['id']="posts_ref";
+						
+		$f_posts_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"posts_ref",$f_opts);
+		$this->addField($f_posts_ref);
+		//********************
 	
 		$order = new ModelOrderSQL();		
 		$this->setDefaultModelOrder($order);		

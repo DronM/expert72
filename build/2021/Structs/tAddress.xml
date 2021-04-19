@@ -1,0 +1,38 @@
+<!--- O Таблица 8 регионы, код -->
+<Region>{{Region}}</Region>
+
+<!--- Н T(200) Наименование района -->
+{{District}}
+<District>{{District}}</District>
+{{/District}}
+
+<!--- Н T(200) город -->
+{{City}}
+<City>{{City}}</City>
+{{/City}}
+
+<!--- Н T(200) нас.пункт -->
+{{Settlement}}
+<Settlement>{{Settlement}}</Settlement>
+{{/Settlement}}
+
+<!--- Н T(200) улица -->
+{{Street}}
+<Street>{{Street}}</Street>
+{{/Street}}
+
+<!--- Н T(200) -->
+{{Building}}
+<Building>{{Building}}</Building>
+{{/Building}}
+
+<!--- Н T(200) -->
+{{Room}}
+<Room>{{Room}}</Room>
+{{/Room}}
+
+<!--- Н Текст, неформализованное описание -->
+{{Note}}
+<Note>{{Note}}</Note>
+{{/Note}}
+

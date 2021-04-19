@@ -1,4 +1,6 @@
 <?php
+phpinfo();
+return;
 require_once('Config.php');
 
 

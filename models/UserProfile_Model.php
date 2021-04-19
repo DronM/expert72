@@ -115,6 +115,14 @@ class UserProfile_Model extends ModelSQL{
 		$f_reminders_to_email=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"reminders_to_email",$f_opts);
 		$this->addField($f_reminders_to_email);
 		//********************
+		
+		//*** Field employee_id ***
+		$f_opts = array();
+		$f_opts['id']="employee_id";
+						
+		$f_employee_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"employee_id",$f_opts);
+		$this->addField($f_employee_id);
+		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}
 

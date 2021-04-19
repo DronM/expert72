@@ -19,7 +19,7 @@
 
 function ConclusionDictionary_Controller(options){
 	options = options || {};
-	options.listModelClass = ConclusionDictionaryList_Model;
+	options.listModelClass = ConclusionDictionary_Model;
 	options.objModelClass = ConclusionDictionary_Model;
 	ConclusionDictionary_Controller.superclass.constructor.call(this,options);	
 	
@@ -36,18 +36,12 @@ extend(ConclusionDictionary_Controller,ControllerObjServer);
 	var pm = this.getUpdate();
 	
 	var options = {};
-	options.primaryKey = true;options.autoInc = true;
-	var field = new FieldInt("id",options);
-	
-	pm.addField(field);
-	
-	field = new FieldInt("old_id",{});
-	pm.addField(field);
-	
-	var options = {};
-	
+	options.primaryKey = true;
 	var field = new FieldString("name",options);
 	
+	pm.addField(field);
+	
+	field = new FieldString("old_name",{});
 	pm.addField(field);
 	
 	var options = {};
@@ -65,7 +59,7 @@ extend(ConclusionDictionary_Controller,ControllerObjServer);
 	var pm = this.getGetObject();
 	var f_opts = {};
 		
-	pm.addField(new FieldInt("id",f_opts));
+	pm.addField(new FieldString("name",f_opts));
 	
 	pm.addField(new FieldString("mode"));
 }
@@ -87,6 +81,14 @@ extend(ConclusionDictionary_Controller,ControllerObjServer);
 	pm.addField(new FieldString(this.PARAM_ORD_DIRECTS));
 	pm.addField(new FieldString(this.PARAM_FIELD_SEP));
 
+	var f_opts = {};
+	
+	pm.addField(new FieldString("name",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldText("descr",f_opts));
+	pm.getField(this.PARAM_ORD_FIELDS).setValue("name");
+	
 }
 
 		

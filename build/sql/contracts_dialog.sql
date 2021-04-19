@@ -320,7 +320,10 @@ CREATE OR REPLACE VIEW contracts_dialog AS
 		
 		app.ext_contract,
 		
-		t.disable_client_out_documents
+		t.disable_client_out_documents,
+		
+		concl.id AS conclusion_id,
+		contracts_ref(t)->>'descr' AS select_descr
 		
 	FROM contracts t
 	LEFT JOIN applications AS app ON app.id=t.application_id
@@ -420,6 +423,9 @@ CREATE OR REPLACE VIEW contracts_dialog AS
 	LEFT JOIN contracts AS modif_prim_contr ON modif_prim_contr.id=t.modif_primary_contract_id
 	
 	LEFT JOIN applications b_app ON b_app.id=app.base_application_id
+	
+	LEFT JOIN conclusions AS concl ON concl.contract_id = t.id
+	
 	--LEFT JOIN applications exp_maint_base ON exp_maint_base.id=exp_maint.expert_maintenance_base_application_id
 
 	--LEFT JOIN clients ON clients.id=t.client_id

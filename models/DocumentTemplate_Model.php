@@ -41,14 +41,6 @@ class DocumentTemplate_Model extends ModelSQL{
 		$this->addField($f_document_type);
 		//********************
 		
-		//*** Field service_type ***
-		$f_opts = array();
-		$f_opts['id']="service_type";
-						
-		$f_service_type=new FieldSQLEnum($this->getDbLink(),$this->getDbName(),$this->getTableName(),"service_type",$f_opts);
-		$this->addField($f_service_type);
-		//********************
-		
 		//*** Field construction_type_id ***
 		$f_opts = array();
 		$f_opts['id']="construction_type_id";

@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<meta name="Description" content="">
+<link rel="stylesheet" href="js20/assets/css/icons/icomoon/styles.css?{{scriptId}}" type="text/css">
+<link rel="stylesheet" href="js20/assets/css/bootstrap.min.css?{{scriptId}}" type="text/css">
+<link rel="stylesheet" href="js20/assets/css/core.min.css?{{scriptId}}" type="text/css">
+<link rel="stylesheet" href="js20/assets/css/components.min.css?{{scriptId}}" type="text/css">
+<link rel="stylesheet" href="js20/assets/css/colors.min.css?{{scriptId}}" type="text/css">
+<link rel="stylesheet" href="js20/assets/css/icons/fontawesome/styles.min.css?{{scriptId}}" type="text/css">
+<link rel="stylesheet" href="js20/custom-css/easyTree.css?{{scriptId}}" type="text/css">
+<link rel="stylesheet" href="js20/ext/bootstrap-datepicker/bootstrap-datepicker.standalone.min.css?{{scriptId}}" type="text/css">
+<link rel="stylesheet" href="js20/custom-css/style.css?{{scriptId}}" type="text/css">
+<link rel="stylesheet" href="js20/custom-css/print.css?{{scriptId}}" type="text/css">
+<link rel="icon" type="image/png" href="img/favicon.png">
+<title>Управление государственной экспертизы</title>
+
+</head>
+
+<body>
+	<div class="panel panel-flat">
+		<div class="panel-heading">
+			<h3 class="panel-title">Результат проверки заключения <strong>№{{conclusionNum}}</strong>
+			</h3>
+		</div>
+
+		<div class="panel-body">	
+			{{#isValid}}<p class="alert alert-info alert-styled-left alert-bordered">Заключение соответствует схеме.</p>{{/isValid}}
+			{{#isNotValid}}
+			<p class="alert alert-danger alert-styled-left alert-bordered">Заключение не соответствует схеме.
+			Всего ошибок: {{errorCount}}
+			</p>
+			<ol>
+				{{#errors}}
+				<li>
+					{{#isWarn}}<p class="alert alert-warn">Предупреждение</p>{{/isWarn}}
+					{{#isError}}<p class="alert alert-danger">Ошибка</p>{{/isError}}
+					{{#isFatal}}<p class="alert alert-danger">Критическая ошибка</p>{{/isFatal}}
+					<p>Строка файла: {{line}}</p>
+					<p>Колонка файла: {{column}}</p>
+					<p>Код ошибки: {{code}}</p>
+					<p>Тип ошибки: {{errorType}}</p>
+					<p>{{message}}</p>
+				</li>	
+				{{/errors}}
+			</ul>
+			{{/isNotValid}}
+		</div>	
+	</div>
+	
+</body>	
+
+</html>

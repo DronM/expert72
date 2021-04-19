@@ -27,6 +27,7 @@ function ConclusionDictionaryDetail_Controller(options){
 	this.addUpdate();
 	this.addGetObject();
 	this.addGetList();
+	this.add_complete_search();
 		
 }
 extend(ConclusionDictionaryDetail_Controller,ControllerObjServer);
@@ -124,4 +125,45 @@ extend(ConclusionDictionaryDetail_Controller,ControllerObjServer);
 	
 }
 
+			ConclusionDictionaryDetail_Controller.prototype.add_complete_search = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('complete_search',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		options.maxlength = "50";
+	
+		pm.addField(new FieldString("conclusion_dictionary_name",options));
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		options.maxlength = "500";
+	
+		pm.addField(new FieldString("search",options));
+	
+				
+	
+	var options = {};
+	
+		pm.addField(new FieldInt("ic",options));
+	
+				
+	
+	var options = {};
+	
+		pm.addField(new FieldInt("mid",options));
+					
+			
+	this.addPublicMethod(pm);
+}
+
+			
 		

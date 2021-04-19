@@ -914,6 +914,24 @@ function ContractDialog_Model(options){
 	options.fields.ext_contract = new FieldBool("ext_contract",filed_options);
 	
 			
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.conclusion_id = new FieldInt("conclusion_id",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.select_descr = new FieldText("select_descr",filed_options);
+	
 		ContractDialog_Model.superclass.constructor.call(this,id,options);
 }
 extend(ContractDialog_Model,ModelXML);

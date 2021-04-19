@@ -167,6 +167,9 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/bootstrap-datepicker/bootstrap-datepicker.ru.min.js'));
 		
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'jquery.maskedinput.js'));
+		
+		
+		
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/mustache/mustache.min.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/jshash-2.2/md5-min.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/resumablejs/resumable.js'));
@@ -205,11 +208,11 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'core/ModelXML.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'core/ModelObjectXML.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'core/ModelServRespXML.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'core/ModelJSON.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ModelJSON.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'core/ModelObjectJSON.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'core/ModelServRespJSON.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'core/ModelXMLTree.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'core/ModelJSONTree.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ModelJSONTree.js'));
 		
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'core/Validator.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'core/ValidatorString.js'));
@@ -522,10 +525,12 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/rs/EditModalDialog.rs_ru.js'));
 	}
 
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/EditModalDialogXML.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/EditRef.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/ControlForm.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/HiddenKey.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/EditJSON.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/EditXML.js'));
 		
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/EditFile.js'));
 		
@@ -1193,6 +1198,13 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/Manual_Form.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/DocFlowExaminationExtList_Form.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/DocFlowApprovementExtList_Form.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/ConclusionDictionaryDialog_Form.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/ConclusionList_Form.js'));
+		
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/ConclusionDialog_Form.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/ConclusionDictionaryDetailList_Form.js'));		
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/EmployeeExpertCertificateList_Form.js'));
+		
 		
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/UserDialog_Form.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/Login_View.js'));
@@ -1365,10 +1377,16 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/UserEmailConfirmation_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ManualForUser_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ExpertiseProlongationList_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ConclusionDictionaryList_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ConclusionDictionaryDialog_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ConclusionDictionaryDetailList_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ApplicationReturnedFilesRemovedList_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ApplicationDocumentFileList_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/DocFlowExaminationExtList_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/DocFlowApprovementExtList_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ConclusionList_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ConclusionDialog_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/EmployeeExpertCertificateList_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'tmpl/App.templates.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/App.enums.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/App.predefinedItems.js'));
@@ -1394,6 +1412,7 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ApplicationContractorEditRef.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ApplicationConstrNameEdit.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/BaseContainer.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/BaseContainerXML.js'));		
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ApplicationClientContainer.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/CompoundObjTechFeatureCont.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/EditBankAcc.js'));
@@ -1470,6 +1489,78 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/AllowSectionEdit.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ExpertMaintenanceContractDataEdit.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ExpertMaintenanceContractData.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ConclusionDictionaryDetailEdit.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ConclusionDictionaryDetailSelect.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/EmployeeExpertCertificateId.js'));										
+		
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_EditCompound.js'));		
+		
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_Container.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tAddress.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tForeignAddress.js'));
+				
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tEmail.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tPerson.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tWorkPerson.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tPostAddress.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tOrganization.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tForeignOrganization.js'));				
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tIP.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tPreviousConclusions.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tPreviousConclusion.js'));				
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tPreviousSimpleConclusions.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tPreviousSimpleConclusion.js'));		
+		
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tFileChecksum.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tSignFile.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tFile.js'));		
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tDeclarant.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tEngineeringSurveyMismatches.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tProjectDocumentsMismatches.js'));		
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tMismatch.js'));
+		
+				
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tDocuments.js'));
+		
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tDocument.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tTEI.js'));
+		
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tTechnicalCustomer.js'));
+		
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tFinance.js'));		
+		
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tObject.js'));
+		
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tObjectPart.js'));		
+		
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tExaminationObject.js'));
+				
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tEstimatedComplexCost.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tEstimatedCompleteCost.js'));		
+		
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tComplexEstimatedCost.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tClimateConditions.js'));
+		
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tDesigner.js'));		
+
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tEEPDUse.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tEngineeringSurveyAddress.js'));
+
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tExpertConclusion.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tExpertEngineeringSurveys.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tExpertProjectDocuments.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tExpertEstimate.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tEstimateMismatches.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tSummary.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tExperts.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tExpert.js'));		
+
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ConclusionDialogCmdGetFile.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ConclusionDialogCmdPrint.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ConclusionDialogCmdCheck.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ConclusionDialogCmdFill.js'));
+		
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/Enum_role_types.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/rs_ru.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/rs_common_ru.js'));
@@ -1797,7 +1888,7 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ContractExtList_Model.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowExaminationExtList_Model.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowApprovementExtList_Model.js'));
-	$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/ConclusionDictionary_Controller.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ConclusionDictionary_Model.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ConclusionDictionaryList_Model.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/ConclusionDictionaryDetail_Controller.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ConclusionDictionaryDetail_Model.js'));
+	$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/ConclusionDictionary_Controller.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ConclusionDictionary_Model.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ConclusionDictionaryList_Model.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/ConclusionDictionaryDetail_Controller.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ConclusionDictionaryDetail_Model.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/Conclusion_Model.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/Conclusion_Controller.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ConclusionList_Model.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ConclusionDialog_Model.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/ConclusionDictionaryDetailLocalList_Controller.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ConclusionDictionaryDetailLocalList_Model.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/EmployeeExpertCertificate_Controller.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/EmployeeExpertCertificate_Model.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/EmployeeExpertCertificateList_Model.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/EmployeeWithExpertCertificateList_Model.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/BuildTypeList_Model.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ConstructionTypeDialog_Model.js'));
 			if (isset($_SESSION['scriptId'])){
 				$script_id = $_SESSION['scriptId'];
 			}

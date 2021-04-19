@@ -13,7 +13,12 @@ CREATE OR REPLACE VIEW user_profile AS
 		u.reminders_to_email,
 		u.cades_chunk_size,
 		u.cades_load_timeout,
-		u.win_message_style
-	FROM users u;
+		u.win_message_style,
+		CASE WHEN u.role_id<>'client' THEN emp.id
+		ELSE NULL
+		END AS employee_id
+		
+	FROM users u
+	LEFT JOIN employees AS emp ON emp.user_id=u.id;
 
 ALTER TABLE user_profile OWNER TO ;

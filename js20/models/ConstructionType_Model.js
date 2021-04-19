@@ -53,6 +53,26 @@ function ConstructionType_Model(options){
 	
 	options.fields.technical_features = new FieldJSONB("technical_features",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.object_type_code = new FieldString("object_type_code",filed_options);
+	options.fields.object_type_code.getValidator().setMaxLength('30');
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.object_type_dictionary_name = new FieldString("object_type_dictionary_name",filed_options);
+	options.fields.object_type_dictionary_name.getValidator().setMaxLength('50');
+	
 		ConstructionType_Model.superclass.constructor.call(this,id,options);
 }
 extend(ConstructionType_Model,ModelXML);

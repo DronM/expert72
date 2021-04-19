@@ -32,6 +32,7 @@ function Employee_Controller(options){
 	this.addComplete();
 	this.add_download_picture();
 	this.add_delete_picture();
+	this.add_complete_with_expert_cert();
 		
 }
 extend(Employee_Controller,ControllerObjServer);
@@ -256,6 +257,57 @@ extend(Employee_Controller,ControllerObjServer);
 	this.addPublicMethod(pm);
 }
 
+			Employee_Controller.prototype.add_complete_with_expert_cert = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('complete_with_expert_cert',opts);
+	
+				
+	
+	var options = {};
+	
+		options.maxlength = "100";
+	
+		pm.addField(new FieldString("name",options));
+	
+				
+	
+	var options = {};
+	
+		options.maxlength = "50";
+	
+		pm.addField(new FieldString("cert_id",options));
+	
+				
+	
+	var options = {};
+	
+		pm.addField(new FieldInt("employee_id",options));
+	
+				
+	
+	var options = {};
+	
+		options.maxlength = "30";
+	
+		pm.addField(new FieldString("expert_type",options));
+	
+				
+	
+	var options = {};
+	
+		pm.addField(new FieldInt("ic",options));
+	
+				
+	
+	var options = {};
+	
+		pm.addField(new FieldInt("mid",options));
+					
+			
+	this.addPublicMethod(pm);
+}
+
+			
 		
 	
 Employee_Controller.prototype.getInitials = function(fullName){

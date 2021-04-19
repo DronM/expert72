@@ -217,6 +217,45 @@ class Employee_Controller extends ControllerSQL{
 		
 		$this->addPublicMethod($pm);
 
+			
+		$pm = new PublicMethod('complete_with_expert_cert');
+		
+				
+	$opts=array();
+			
+		$pm->addParam(new FieldExtString('name',$opts));
+	
+				
+	$opts=array();
+	
+		$opts['length']=50;				
+		$pm->addParam(new FieldExtString('cert_id',$opts));
+	
+				
+	$opts=array();
+					
+		$pm->addParam(new FieldExtInt('employee_id',$opts));
+	
+				
+	$opts=array();
+	
+		$opts['length']=30;				
+		$pm->addParam(new FieldExtString('expert_type',$opts));
+	
+				
+	$opts=array();
+					
+		$pm->addParam(new FieldExtInt('ic',$opts));
+	
+				
+	$opts=array();
+					
+		$pm->addParam(new FieldExtInt('mid',$opts));
+					
+			
+		$this->addPublicMethod($pm);
+
+			
 		
 	}	
 	
@@ -249,6 +288,21 @@ class Employee_Controller extends ControllerSQL{
 		$this->upload_file($pm);
 		parent::update($pm);
 	}
+
+	public function get_object($pm){
+	
+		if (
+			$_SESSION['role_id']!='admin'
+			&& $_SESSION['role_id']!='boss'
+			&& $_SESSION['role_id']!='accountant'
+			&& intval(json_decode($_SESSION['employees_ref'])->keys->id)!=intval($pm->getParamValue('id'))
+		){
+			throw new Exception('Запрещено отркывать карточку другого сотрудника!');
+		}
+			
+		parent::get_object($pm);
+	}
+	
 
 	public function delete_picture($pm){
 		$this->getDbLinkMaster()->query(sprintf(
@@ -287,6 +341,18 @@ class Employee_Controller extends ControllerSQL{
 		
 		return TRUE;
 		
+	}
+	
+	public function complete_with_expert_cert($pm){
+	
+		//Search on expert name, all certs
+		$q = sprintf(
+			"SELECT * FROM employee_expert_certificate_list
+			WHERE lower(name) LIKE '%%'||lower(%s)||'%%'
+			LIMIT 10"
+			,$this->getExtDbVal($pm,'name')
+		);
+		$this->addNewModel($q,'EmployeeWithExpertCertificateList_Model');			
 	}
 	
 

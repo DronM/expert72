@@ -108,8 +108,57 @@ class ConclusionDictionaryDetail_Controller extends ControllerSQL{
 		
 		$this->setListModelId('ConclusionDictionaryDetail_Model');
 		
+			
+		$pm = new PublicMethod('complete_search');
+		
+				
+	$opts=array();
+	
+		$opts['length']=50;
+		$opts['required']=TRUE;		
+		$pm->addParam(new FieldExtString('conclusion_dictionary_name',$opts));
+	
+				
+	$opts=array();
+	
+		$opts['length']=500;
+		$opts['required']=TRUE;				
+		$pm->addParam(new FieldExtString('search',$opts));
+	
+				
+	$opts=array();
+					
+		$pm->addParam(new FieldExtInt('ic',$opts));
+	
+				
+	$opts=array();
+					
+		$pm->addParam(new FieldExtInt('mid',$opts));
+					
+			
+		$this->addPublicMethod($pm);
+
+			
 		
 	}	
 	
+
+	public function complete_search($pm){
+		$this->addNewModel(sprintf(
+			"SELECT *
+			FROM conclusion_dictionary_detail
+			WHERE	conclusion_dictionary_name = %s
+				AND (lower(descr) LIKE '%%'||lower(%s)||'%%' OR code LIKE %s||'%%')
+			ORDER BY ord	
+			LIMIT 10"			
+			,$this->getExtDbVal($pm,'conclusion_dictionary_name')
+			,$this->getExtDbVal($pm,'search')
+			,$this->getExtDbVal($pm,'search')
+			),
+			'ConclusionDictionaryDetail_Model'
+		);	
+	}
+
+
 }
 ?>

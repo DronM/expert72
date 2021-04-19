@@ -35,6 +35,9 @@ function ApplicationTemplateContentTree(id,options){
 		}
 	}
 	
+	var ac_controller = new ConclusionDictionaryDetail_Controller();
+	ac_controller.getPublicMethod("complete_search").setFieldValue("conclusion_dictionary_name","tDocumentType");	
+	var ac_model = new ConclusionDictionaryDetail_Model();
 	
 	CommonHelper.merge(options,{
 		"keyIds":["id"],		
@@ -66,15 +69,47 @@ function ApplicationTemplateContentTree(id,options){
 									"cellOptions":{
 										"tagName":"SPAN"									
 									},
+									"ctrlClass":EditCheckBox,
 									"ctrlOptions":{									
 										"labelCaption":"Обязательно наличие файлов:",
-										"contTagName":"DIV",
-										"ctrlClass":EditCheckBox,
+										"contTagName":"DIV",										
 										"labelClassName":"control-label "+window.getBsCol(2),
 										"editContClassName":"input-group "+window.getBsCol(1)
 									}
 								}),
-								
+								new GridColumn({
+									"field":content_model.getField("dt_descr"),
+									"model":content_model,
+									"cellOptions":{
+										"tagName":"SPAN"									
+									},
+									"ctrlClass":EditString,
+									//"ctrlBindField":content_model.getField("document_type_descr"),
+									"ctrlOptions":{									
+										"labelCaption":"Вид документа (классификатор):",
+										//"keyIds":["dt_dictionary_name","dt_code"],
+										"contTagName":"DIV",
+										"labelClassName":"control-label "+window.getBsCol(2),
+										"editContClassName":"input-group "+window.getBsCol(1),
+										"onSelect":function(fields){
+											self.onDocTypeSelected(fields);
+										},
+										"cmdAutoComplete":true,
+										"cmdInsert":false,
+										"selectWinClass":ConclusionDictionaryDetailList_Form,
+										"selectWinParams":"cond_vals=tDocumentType&cond_sgns=e&cond_fields=conclusion_dictionary_name",
+										"selectDescrIds":["code","descr"],
+										"acMinLengthForQuery":1,
+										"acController":ac_controller,
+										"acPublicMethod":ac_controller.getPublicMethod("complete_search"),
+										"acModel":ac_model,
+										"acPatternFieldId":"search",
+										"acKeyFields":[ac_model.getField("conclusion_dictionary_name"),ac_model.getField("code")],
+										"acDescrFields":[ac_model.getField("code"),ac_model.getField("descr")],
+										"acICase":"1",
+										"acMid":"1"
+									}
+								})								
 							]
 						})
 					]
@@ -96,4 +131,17 @@ extend(ApplicationTemplateContentTree,TreeAjx);
 
 
 /* public methods */
+ApplicationTemplateContentTree.prototype.onDocTypeSelected = function(fields){
+	var code = fields.code.getValue();
+	var descr = fields.descr.getValue();
+	this.getEditViewObj().getElement("dt_descr").setValue(code+" "+descr);
+
+	this.getInsertPublicMethod().setFieldValue("dt_code", code);
+	this.getUpdatePublicMethod().setFieldValue("dt_code", code);
+	this.getInsertPublicMethod().setFieldValue("dt_descr", code+" "+descr);
+	this.getUpdatePublicMethod().setFieldValue("dt_descr", code+" "+descr);
+	this.getInsertPublicMethod().setFieldValue("dt_dictionary_name", "tDocumentType");
+	this.getUpdatePublicMethod().setFieldValue("dt_dictionary_name", "tDocumentType");
+}
+
 

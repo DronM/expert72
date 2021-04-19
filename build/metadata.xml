@@ -2,7 +2,7 @@
 <metadata owner="expert72">
 	<versions>
 		<version dateOpen="2017-09-27 12:09:48" dateClose="2017-12-08 10:12:08">1.001 
-		<lastBuild>2021-02-26 13:09:17</lastBuild></version>
+		<lastBuild>2021-04-19 08:59:49</lastBuild></version>
 		<version dateOpen="2017-12-08 11:12:01" dateClose="2017-12-08 11:12:04">1.002</version>
 		<version dateOpen="2017-12-08 11:12:20" dateClose="2017-12-08 11:12:20">1.0.3</version>
 		<version dateOpen="2017-12-12 11:12:07" dateClose="2017-12-12 11:12:07">1.0.4</version>
@@ -149,7 +149,7 @@
 		<version dateOpen="2020-11-30 14:11:41" dateClose="2020-11-30 14:11:50">1.0.146</version>
 		<version dateOpen="2020-11-30 15:11:47" dateClose="2020-11-30 16:11:08">1.0.147</version>
 		<version dateOpen="2020-12-22 09:12:20" dateClose="2021-01-11 15:01:48">1.0.148</version>
-	<version dateOpen="2021-02-17 08:02:41" dateClose="2021-02-26 13:02:09">1.0.149</version></versions>
+	<version dateOpen="2021-02-17 08:02:41" dateClose="2021-02-26 13:02:09">1.0.149</version><version dateOpen="2021-02-26 13:02:09" dateClose="2021-04-19 08:04:59">1.0.150</version></versions>
 	<globalFilters>
 		<field id="user_id"/>
 		<field id="employee_id"/>
@@ -833,6 +833,7 @@
 			<field id="cades_chunk_size" dataType="Int"/>
 			<field id="win_message_style" dataType="JSONB"/>
 			<field id="reminders_to_email" dataType="Bool"/>
+			<field id="employee_id" dataType="Int"/>
 			<globalFilter id="user_id" fieldId="id"/>
 		</model>
 		<model id="UserEmailConfirmation" parent="ModelSQL" dataTable="user_email_confirmations" virtual="FALSE">
@@ -1003,7 +1004,6 @@
 		<model id="DocumentTemplate" parent="ModelSQL" dataTable="document_templates" virtual="FALSE">
 			<field id="id" dataType="Int" autoInc="TRUE" primaryKey="TRUE"/>
 			<field id="document_type" dataType="Enum" enumId="document_types" required="TRUE"/>
-			<field id="service_type" dataType="Enum" enumId="service_types"/>
 			<field id="construction_type_id" dataType="Int" refTable="construction_types" refField="id" required="TRUE"/>
 			<field id="create_date" dataType="Date" alias="&#x414;&#x430;&#x442;&#x430; &#x441;&#x43E;&#x437;&#x434;&#x430;&#x43D;&#x438;&#x44F;" defaultValue="now()::date" required="TRUE"/>
 			<field id="content" dataType="JSON" required="TRUE" alias="&#x421;&#x43E;&#x434;&#x435;&#x440;&#x436;&#x438;&#x43C;&#x43E;&#x435; &#x448;&#x430;&#x431;&#x43B;&#x43E;&#x43D;&#x430;"/>
@@ -1043,6 +1043,9 @@
 			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE"/>
 			<field id="descr" dataType="String"/>
 			<field id="required" dataType="Bool"/>
+			<field id="dt_descr" dataType="String"/>
+			<field id="dt_code" dataType="String"/>
+			<field id="dt_dictionary_name" dataType="String"/>
 		</model>
 		<model id="Office" parent="ModelSQL" dataTable="offices" virtual="FALSE">
 			<defaultOrder>
@@ -1086,7 +1089,19 @@
 			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE" required="FALSE"/>
 			<field id="name" dataType="String" length="200"/>
 			<field id="technical_features" dataType="JSONB"/>
+			<field id="object_type_code" dataType="String" length="30"/>
+			<field id="object_type_dictionary_name" dataType="String" length="50"/>
 		</model>
+		<model id="ConstructionTypeDialog" parent="ModelSQL" dataTable="construction_types_dialog" virtual="FALSE">
+			<defaultOrder>
+				<field id="name"/>
+			</defaultOrder>
+			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE" required="FALSE"/>
+			<field id="name" dataType="String" length="200"/>
+			<field id="technical_features" dataType="JSONB"/>
+			<field id="object_types_ref" dataType="JSON"/>
+		</model>
+		
 		<model id="Application" parent="ModelSQL" dataTable="applications" virtual="FALSE" refFunction="applications_ref">
 			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE" required="FALSE"/>
 			<field id="user_id" dataType="Int"/>
@@ -1535,6 +1550,7 @@
 			<field id="posts_ref" dataType="JSON"/>
 			<field id="snils" dataType="String"/>
 			<field id="departments_ref" dataType="JSON"/>
+			<field id="is_expert" dataType="Bool"/>
 		</model>
 		<model id="EmployeeList" parent="ModelSQL" dataTable="employees_list" virtual="TRUE" baseModelId="Employee">
 			<defaultOrder>
@@ -1543,7 +1559,46 @@
 			<field id="id" dataType="Int"/>
 			<field id="name" dataType="String"/>
 			<field id="departments_ref" dataType="JSON"/>
+			<field id="posts_ref" dataType="JSON"/>
 		</model>
+		<model id="EmployeeWithExpertCertificateList" parent="ModelSQL" dataTable="employees_expert_certificate_list" virtual="TRUE" baseModelId="Employee">
+			<defaultOrder>
+				<field id="name"/>
+			</defaultOrder>
+			<field id="id" dataType="Int"/>
+			<field id="name" dataType="String"/>
+			<field id="cert_list" dataType="JSON"/>
+		</model>
+		
+		<model id="EmployeeExpertCertificate" parent="ModelSQL" dataTable="employee_expert_certificates" virtual="FALSE">
+			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE" required="FALSE"/>
+			<field id="employee_id" dataType="Int" refTable="employees" refField="id" required="TRUE"/>
+			<field id="expert_type" dataType="String" length="30" required="TRUE"/>
+			<field id="cert_id" dataType="String" length="50" required="TRUE"/>
+			<field id="date_from" dataType="Date" required="TRUE"/>
+			<field id="date_to" dataType="Date" required="TRUE"/>
+			
+			<index id="employee_expert_certificates_employee_idx">
+				<field id="employee_id"/>
+			</index>
+			<index unique="TRUE" id="employee_expert_certificates_cert_idx">
+				<field id="cert_id"/>
+			</index>
+		</model>
+		<model id="EmployeeExpertCertificateList" parent="ModelSQL" dataTable="employee_expert_certificates_list" virtual="TRUE">
+			<defaultOrder>
+				<field id="date_to" sortDirect="DESC"/>
+			</defaultOrder>
+			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE" required="FALSE"/>
+			<field id="employee_id" dataType="Int"/>
+			<field id="employees_ref" dataType="JSON"/>
+			<field id="expert_types_ref" dataType="JSON"/>
+			<field id="cert_id" dataType="String"/>
+			<field id="date_from" dataType="Date"/>
+			<field id="date_to" dataType="Date"/>
+			<field id="cert_not_expired" dataType="Bool"/>			
+		</model>
+		
 		<model id="DocFlowType" parent="ModelSQL" dataTable="doc_flow_types" virtual="FALSE">
 			<defaultOrder>
 				<field id="doc_flow_types_type_id"/>
@@ -1554,6 +1609,7 @@
 			<field id="def_interval" dataType="Interval"/>
 			<field id="def_intervals" dataType="JSONB"/>
 			<field id="doc_flow_types_type_id" dataType="Enum" enumId="doc_flow_type_types"/>
+			<field id="document_type" dataType="String" length="30" required="TRUE"/>
 			<predefinedItems>
 				<predefinedItem alias="app">
 					<id>1</id>
@@ -1643,7 +1699,7 @@
 			<field id="name" dataType="String" length="250"/>
 			<field id="def_interval" dataType="Interval"/>
 			<field id="doc_flow_types_type_id" dataType="String"/>
-			<field id="num_prefix" dataType="String" length="10"/>
+			<field id="num_prefix" dataType="String" length="10"/>			
 		</model>
 		<model id="DocFlowTypeDialog" parent="ModelSQL" dataTable="doc_flow_types_dialog" virtual="FALSE">
 			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE" required="FALSE"/>
@@ -1652,6 +1708,7 @@
 			<field id="doc_flow_types_type_id" dataType="String"/>
 			<field id="def_intervals" dataType="JSONB"/>
 			<field id="def_interval" dataType="Interval"/>
+			<field id="document_types_ref" dataType="JSON"/>
 		</model>
 		<model id="DocFlowImportanceType" parent="ModelSQL" dataTable="doc_flow_importance_types" virtual="FALSE">
 			<defaultOrder>
@@ -2704,7 +2761,17 @@
 			</defaultOrder>
 			<field id="id" dataType="Int" primaryKey="TRUE" required="FALSE" autoInc="TRUE"/>
 			<field id="name" dataType="String" length="250" required="TRUE"/>
+			<field id="dt_code" dataType="String" length="30"/>
 		</model>
+		<model id="BuildTypeList" parent="ModelSQL" dataTable="build_types_list" virtual="FALSE">
+			<defaultOrder>
+				<field id="name"/>
+			</defaultOrder>
+			<field id="id" dataType="Int" primaryKey="TRUE" required="FALSE" autoInc="TRUE"/>
+			<field id="name" dataType="String" length="250" required="TRUE"/>
+			<field id="document_types_ref" dataType="JSON"/>
+		</model>
+		
 		<model id="ExpertiseRejectType" parent="ModelSQL" dataTable="expertise_reject_types" virtual="FALSE">
 			<defaultOrder>
 				<field id="name"/>
@@ -2996,7 +3063,51 @@
 			<field id="results_on_modified_documents_list" dataType="JSON"/>
 			<field id="ext_contract" dataType="Bool"/>
 			<field id="disable_client_out_documents" dataType="Bool"/>
+			<field id="conclusion_id" dataType="Int"/>
+			<field id="select_descr" dataType="Text"/>
 		</model>
+		<model id="Conclusion" parent="ModelSQL" dataTable="conclusions" virtual="FALSE" refFunction="conclusions_ref">
+			<defaultOrder>
+				<field id="create_dt" sortDirect="DESC"/>
+			</defaultOrder>
+			<field id="id" dataType="Int" primaryKey="TRUE" required="FALSE" autoInc="TRUE"/>
+			<field id="contract_id" dataType="Int" refTable="contracts" refField="id" required="TRUE"/>
+			<field id="create_dt" dataType="DateTimeTZ" dbRequired="TRUE" alias="&#x414;&#x430;&#x442;&#x430; &#x441;&#x43E;&#x437;&#x434;&#x430;&#x43D;&#x438;&#x44F;" defaultValue="CURRENT_TIMESTAMP"/>
+			<field id="employee_id" dataType="Int" refTable="employees" refField="id" dbRequired="TRUE" alias="&#x414;&#x430;&#x442;&#x430; &#x441;&#x43E;&#x437;&#x434;&#x430;&#x43D;&#x438;&#x44F;"/>
+			<field id="content" dataType="XML" dbRequired="TRUE" alias="XML &#x437;&#x430;&#x43A;&#x43B;&#x44E;&#x447;&#x435;&#x43D;&#x438;&#x435;"/>
+			<field id="comment_text" dataType="Text"/>
+			<field id="content_hash" dataType="String" length="36"/>
+			<index id="conclusions_contract_idx">
+				<field id="contract_id"/>
+			</index>
+			<index id="conclusions_create_dt_idx">
+				<field id="create_dt"/>
+			</index>
+			
+		</model>
+		<model id="ConclusionList" parent="ModelSQL" dataTable="conclusions_list" virtual="TRUE">
+			<defaultOrder>
+				<field id="create_dt" sortDirect="DESC"/>
+			</defaultOrder>
+			<field id="id" dataType="Int" primaryKey="TRUE" required="FALSE" autoInc="TRUE"/>
+			<field id="contract_id" dataType="Int"/>
+			<field id="contracts_ref" dataType="JSON"/>
+			<field id="create_dt" dataType="DateTimeTZ" dbRequired="TRUE" alias="&#x414;&#x430;&#x442;&#x430; &#x441;&#x43E;&#x437;&#x434;&#x430;&#x43D;&#x438;&#x44F;" defaultValue="CURRENT_TIMESTAMP"/>
+			<field id="employee_id" dataType="Int"/>
+			<field id="employees_ref" dataType="JSON"/>
+			<field id="comment_text" dataType="Text"/>
+		</model>
+		<model id="ConclusionDialog" parent="ModelSQL" dataTable="conclusions_dialog" virtual="TRUE">
+			<field id="id" dataType="Int" primaryKey="TRUE" required="FALSE" autoInc="TRUE"/>
+			<field id="contract_id" dataType="Int"/>
+			<field id="contracts_ref" dataType="JSON"/>
+			<field id="create_dt" dataType="DateTimeTZ" dbRequired="TRUE" alias="&#x414;&#x430;&#x442;&#x430; &#x441;&#x43E;&#x437;&#x434;&#x430;&#x43D;&#x438;&#x44F;" defaultValue="CURRENT_TIMESTAMP"/>
+			<field id="employee_id" dataType="Int"/>
+			<field id="employees_ref" dataType="JSON"/>
+			<field id="comment_text" dataType="Text"/>
+			<field id="content" dataType="XML"/>
+		</model>
+		
 		<model id="ExpertWork" parent="ModelSQL" dataTable="expert_works" virtual="FALSE">
 			<field id="id" dataType="Int" primaryKey="TRUE" required="FALSE" autoInc="TRUE"/>
 			<field id="contract_id" dataType="Int" refTable="contracts" refField="id" required="TRUE"/>
@@ -3178,6 +3289,7 @@
 			<field id="comment_text" dataType="String" alias="&#x41A;&#x43E;&#x43C;&#x43C;&#x435;&#x43D;&#x442;&#x430;&#x440;&#x438;&#x439;"/>
 			<field id="contract_id" dataType="Int" sysCol="TRUE" alias="&#x41A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;"/>
 		</model>
+		
 		<model id="RepQuarter" parent="ModelReportSQL" virtual="TRUE" server="TRUE">
 			<field id="ord" dataType="String" alias="&#x2116;"/>
 			<field id="expertise_result_number" dataType="String" alias="&#x2116; &#x44D;&#x43A;&#x441;&#x43F;.&#x437;&#x430;&#x43A;&#x43B;&#x44E;&#x447;."/>
@@ -3326,8 +3438,10 @@
 			<field id="date_time" dataType="DateTimeTZ"/>
 		</model>
 		<model id="ConclusionDictionary" parent="ModelSQL" dataTable="conclusion_dictionaries" virtual="FALSE">
-			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE"/>
-			<field id="name" dataType="String" length="50"/>
+			<defaultOrder>
+				<field id="name"/>
+			</defaultOrder>
+			<field id="name" dataType="String" length="50" primaryKey="TRUE"/>
 			<field id="descr" dataType="Text"/>
 		</model>
 		<model id="ConclusionDictionaryDetail" parent="ModelSQL" dataTable="conclusion_dictionary_detail" virtual="FALSE">
@@ -3336,7 +3450,7 @@
 				<field id="ord"/>
 			</defaultOrder>
 			<field id="conclusion_dictionary_name" dataType="String" length="50" refTable="conclusion_dictionaries" refField="name" required="TRUE" primaryKey="TRUE" autoInc="FALSE"/>
-			<field id="code" dataType="String" length="10" required="TRUE" primaryKey="TRUE"/>
+			<field id="code" dataType="String" length="30" required="TRUE" primaryKey="TRUE"/>
 			<field id="descr" dataType="Text" required="TRUE"/>
 			<field id="is_group" dataType="Bool" defaultValue="FALSE"/>
 			<field id="ord" dataType="Int" autoInc="TRUE"/>
@@ -3344,11 +3458,15 @@
 				<field id="conclusion_dictionary_name"/>
 				<field id="descr"/>
 			</index>
-			<index id="conclusion_dictionary_detail_ord_idx" unique="TRUE">
+			<index id="conclusion_dictionary_detail_ord_idx">
 				<field id="conclusion_dictionary_name"/>
 				<field id="ord"/>
 			</index>
 			
+		</model>
+		<model id="ConclusionDictionaryDetailLocalList" parentJS="ModelJSON" virtual="TRUE" server="FALSE">
+			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE"/>
+			<field id="conclusion_dictionary_details_ref" dataType="JSON"/>
 		</model>
 		
 	</models>
@@ -3377,6 +3495,7 @@
 		<constant id="off_work_app_send_not_allowed" name="&#x417;&#x430;&#x43F;&#x440;&#x435;&#x442;&#x438;&#x442;&#x44C; &#x43E;&#x442;&#x43F;&#x440;&#x430;&#x432;&#x43B;&#x44F;&#x442;&#x44C; &#x437;&#x430;&#x44F;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x44F; &#x43D;&#x430; &#x43F;&#x440;&#x43E;&#x432;&#x435;&#x440;&#x43A;&#x443; &#x432; &#x43D;&#x435;&#x440;&#x430;&#x431;&#x43E;&#x447;&#x435;&#x435; &#x432;&#x440;&#x435;&#x43C;&#x44F;" descr="&#x417;&#x43D;&#x430;&#x447;&#x435;&#x43D;&#x438;&#x435; &#x43E;&#x43F;&#x440;&#x435;&#x434;&#x435;&#x43B;&#x44F;&#x435;&#x442; &#x432;&#x43E;&#x437;&#x43C;&#x43E;&#x436;&#x43D;&#x43E;&#x441;&#x442;&#x44C; &#x43E;&#x442;&#x43F;&#x440;&#x430;&#x432;&#x43B;&#x44F;&#x442;&#x44C; &#x437;&#x430;&#x44F;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x44F; &#x43D;&#x430; &#x43F;&#x440;&#x43E;&#x432;&#x435;&#x440;&#x43A;&#x443; &#x432; &#x43D;&#x435;&#x440;&#x430;&#x431;&#x43E;&#x447;&#x435;&#x435; &#x432;&#x440;&#x435;&#x43C;&#x44F;." dataType="Bool" defaultValue="FALSE" ctrlClass="EditCheckBox"/>
 		<constant id="off_work_app_send_not_allowed_error" name="&#x422;&#x435;&#x43A;&#x441;&#x442; &#x441;&#x43E;&#x43E;&#x431;&#x449;&#x435;&#x43D;&#x438;&#x44F; &#x43E;&#x431; &#x43E;&#x448;&#x438;&#x431;&#x43A;&#x435;" descr="&#x422;&#x435;&#x43A;&#x441;&#x442; &#x441;&#x43E;&#x43E;&#x431;&#x449;&#x435;&#x43D;&#x438;&#x44F; &#x43E;&#x431; &#x43E;&#x448;&#x438;&#x431;&#x43A;&#x435; &#x43F;&#x440;&#x438; &#x43D;&#x435;&#x432;&#x43E;&#x437;&#x43C;&#x43E;&#x436;&#x43D;&#x43E;&#x441;&#x442;&#x438; &#x43E;&#x442;&#x43F;&#x440;&#x430;&#x432;&#x43A;&#x438;." dataType="Text" ctrlClass="Text" defaultValue="'&#x41E;&#x442;&#x43F;&#x440;&#x430;&#x432;&#x43A;&#x430; &#x437;&#x430;&#x44F;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x439; &#x440;&#x430;&#x437;&#x440;&#x435;&#x448;&#x435;&#x43D;&#x430; &#x442;&#x43E;&#x43B;&#x44C;&#x43A;&#x43E; &#x432; &#x440;&#x430;&#x431;&#x43E;&#x447;&#x435;&#x435; &#x432;&#x440;&#x435;&#x43C;&#x44F;.'"/>
 		<constant id="disabled_client_out_documents_error" name="&#x422;&#x435;&#x43A;&#x441;&#x442; &#x441;&#x43E;&#x43E;&#x431;&#x449;&#x435;&#x43D;&#x438;&#x44F; &#x43E;&#x431; &#x43E;&#x448;&#x438;&#x431;&#x43A;&#x435; &#x43F;&#x440;&#x438; &#x437;&#x430;&#x43F;&#x440;&#x435;&#x442;&#x435; &#x43E;&#x442;&#x43F;&#x440;&#x430;&#x432;&#x43A;&#x438; &#x43E;&#x442;&#x432;&#x435;&#x442;&#x43E;&#x432; &#x438;&#x437; &#x43A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x430;" descr="&#x422;&#x435;&#x43A;&#x441;&#x442; &#x441;&#x43E;&#x43E;&#x431;&#x449;&#x435;&#x43D;&#x438;&#x44F; &#x43E;&#x431; &#x43E;&#x448;&#x438;&#x431;&#x43A;&#x435; &#x43F;&#x440;&#x438; &#x43D;&#x435;&#x432;&#x43E;&#x437;&#x43C;&#x43E;&#x436;&#x43D;&#x43E;&#x441;&#x442;&#x438; &#x43E;&#x442;&#x43F;&#x440;&#x430;&#x432;&#x43A;&#x438; &#x43E;&#x442;&#x432;&#x435;&#x442;&#x43E;&#x432; &#x43D;&#x430; &#x437;&#x430;&#x43C;&#x435;&#x447;&#x430;&#x43D;&#x438;&#x44F;. &#x421;&#x442;&#x430;&#x432;&#x438;&#x442;&#x441;&#x44F; &#x432; &#x43A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x435;" dataType="Text" ctrlClass="Text" defaultValue="'&#x41E;&#x442;&#x43F;&#x440;&#x430;&#x432;&#x43A;&#x430; &#x43E;&#x442;&#x432;&#x435;&#x442;&#x43E;&#x432; &#x43D;&#x430; &#x437;&#x430;&#x43C;&#x435;&#x447;&#x430;&#x43D;&#x438;&#x44F; &#x437;&#x430;&#x43F;&#x440;&#x435;&#x449;&#x435;&#x43D;&#x430;.'"/>
+		<constant id="applucation_document_types_match" name="&#x421;&#x43E;&#x43E;&#x442;&#x432;&#x435;&#x442;&#x441;&#x442;&#x432;&#x438;&#x435; &#x432;&#x438;&#x434;&#x43E;&#x432; &#x434;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x43E;&#x432; &#x437;&#x430;&#x44F;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x44F; &#x43A;&#x43B;&#x430;&#x441;&#x441;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x43E;&#x440;&#x443;" descr="&#x421;&#x442;&#x440;&#x443;&#x43A;&#x442;&#x443;&#x440;&#x430; &#x441;&#x43E;&#x43E;&#x442;&#x432;&#x435;&#x442;&#x441;&#x442;&#x432;&#x438;&#x44F; &#x440;&#x430;&#x437;&#x43B;&#x438;&#x447;&#x43D;&#x44B;&#x445; &#x43F;&#x435;&#x447;&#x430;&#x442;&#x43D;&#x44B;&#x445; &#x444;&#x43E;&#x440;&#x43C; &#x437;&#x430;&#x44F;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x44F; &#x43A;&#x43B;&#x430;&#x441;&#x441;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x43E;&#x440;&#x443; &#x43C;&#x438;&#x43D;&#x441;&#x442;&#x440;&#x43E;&#x44F;" dataType="JSON"/>
 	</constants>
 	<controllers>
 		<controller id="Constant" parentId="ControllerSQL">
@@ -4009,6 +4128,15 @@
 			<publicMethod id="complete" patternFieldId="name" modelId="EmployeeList"/>
 			<publicMethod id="download_picture"/>
 			<publicMethod id="delete_picture"/>
+			<publicMethod id="complete_with_expert_cert" modelId="EmployeeWithExpertCertificateList">
+				<field id="name" dataType="String" length="100"/>
+				<field id="cert_id" dataType="String" length="50"/>
+				<field id="employee_id" dataType="Int"/>
+				<field id="expert_type" dataType="String" length="30"/>
+				<field id="ic" dataType="Int"/>
+				<field id="mid" dataType="Int"/>				
+			</publicMethod>
+			
 		</controller>
 		<controller id="DocFlowType" parentId="ControllerSQL">
 			<publicMethod id="insert" modelId="DocFlowType"/>
@@ -4038,7 +4166,7 @@
 			<publicMethod id="insert" modelId="ConstructionType"/>
 			<publicMethod id="update" modelId="ConstructionType"/>
 			<publicMethod id="delete" modelId="ConstructionType"/>
-			<publicMethod id="get_object" modelId="ConstructionType"/>
+			<publicMethod id="get_object" modelId="ConstructionTypeDialog"/>
 			<publicMethod id="get_list" modelId="ConstructionType"/>
 		</controller>
 		<controller id="FundSource" parentId="ControllerSQL">
@@ -4150,8 +4278,8 @@
 			<publicMethod id="insert" modelId="BuildType"/>
 			<publicMethod id="update" modelId="BuildType"/>
 			<publicMethod id="delete" modelId="BuildType"/>
-			<publicMethod id="get_object" modelId="BuildType"/>
-			<publicMethod id="get_list" modelId="BuildType"/>
+			<publicMethod id="get_object" modelId="BuildTypeList"/>
+			<publicMethod id="get_list" modelId="BuildTypeList"/>
 		</controller>
 		<controller id="DocFlowOutClient" parentId="ControllerSQL">
 			<publicMethod id="insert" modelId="DocFlowOutClient"/>
@@ -4543,13 +4671,62 @@
 		<controller id="ConclusionDictionary" parentId="ControllerSQL">
 			<publicMethod id="update" modelId="ConclusionDictionary"/>
 			<publicMethod id="get_object" modelId="ConclusionDictionary"/>
-			<publicMethod id="get_list" modelId="ConclusionDictionaryList"/>
+			<publicMethod id="get_list" modelId="ConclusionDictionary"/>
 		</controller>
 		<controller id="ConclusionDictionaryDetail" parentId="ControllerSQL">
 			<publicMethod id="update" modelId="ConclusionDictionaryDetail"/>
 			<publicMethod id="get_object" modelId="ConclusionDictionaryDetail"/>
 			<publicMethod id="get_list" modelId="ConclusionDictionaryDetail"/>
+			<publicMethod id="complete_search" modelId="ConclusionDictionaryDetail">
+				<field id="conclusion_dictionary_name" dataType="String" length="50" required="TRUE"/>
+				<field id="search" dataType="String" required="TRUE" length="500"/>
+				<field id="ic" dataType="Int"/>
+				<field id="mid" dataType="Int"/>				
+			</publicMethod>
+			
 		</controller>
+		<controller id="ConclusionDictionaryDetailLocalList" parentIdJS="ControllerObjClient" server="FALSE">
+			<publicMethod id="insert" modelId="ConclusionDictionaryDetailLocalList"/>
+			<publicMethod id="update" modelId="ConclusionDictionaryDetailLocalList"/>
+			<publicMethod id="delete" modelId="ConclusionDictionaryDetailLocalList"/>
+			<publicMethod id="get_object" modelId="ConclusionDictionaryDetailLocalList"/>
+			<publicMethod id="get_list" modelId="ConclusionDictionaryDetailLocalList"/>
+		</controller>
+		
+		<controller id="Conclusion" parentId="ControllerSQL">
+			<publicMethod id="insert" modelId="Conclusion"/>
+			<publicMethod id="update" modelId="Conclusion"/>
+			<publicMethod id="delete" modelId="Conclusion"/>
+			<publicMethod id="get_object" modelId="ConclusionDialog"/>
+			<publicMethod id="get_list" modelId="ConclusionList"/>
+			<publicMethod id="get_file">
+				<field id="doc_id" dataType="Int" required="TRUE"/>
+			</publicMethod>	
+			<publicMethod id="get_print">
+				<field id="doc_id" dataType="Int" required="TRUE"/>
+			</publicMethod>	
+			<publicMethod id="get_check">
+				<field id="doc_id" dataType="Int" required="TRUE"/>
+			</publicMethod>	
+			<publicMethod id="fill_on_contract">
+				<field id="doc_id" dataType="Int" required="TRUE"/>
+			</publicMethod>	
+			
+		</controller>		
+		<controller id="EmployeeExpertCertificate" parentId="ControllerSQL">
+			<publicMethod id="insert" modelId="EmployeeExpertCertificate"/>
+			<publicMethod id="update" modelId="EmployeeExpertCertificate"/>
+			<publicMethod id="delete" modelId="EmployeeExpertCertificate"/>
+			<publicMethod id="get_object" modelId="EmployeeExpertCertificateList"/>
+			<publicMethod id="get_list" modelId="EmployeeExpertCertificateList"/>
+			<publicMethod id="complete_on_cert_id" modelId="EmployeeExpertCertificateList">
+				<field id="employee_id" dataType="Int" required="TRUE"/>
+				<field id="cert_id" dataType="String" length="50"/>
+				<field id="ic" dataType="Int"/>
+				<field id="mid" dataType="Int"/>				
+			</publicMethod>
+			
+		</controller>		
 		
 	</controllers>
 	<permissions>
@@ -4663,6 +4840,8 @@
 		<view id="10028" c="ShortMessageRecipientState_Controller" t="ShortMessageRecipientStateList" f="get_list" section="&#x421;&#x43F;&#x440;&#x430;&#x432;&#x43E;&#x447;&#x43D;&#x438;&#x43A;&#x438;" descr="&#x427;&#x430;&#x442;: &#x441;&#x442;&#x430;&#x442;&#x443;&#x441;&#x44B; &#x441;&#x43E;&#x442;&#x440;&#x443;&#x434;&#x43D;&#x438;&#x43A;&#x43E;&#x432;"/>
 		<view id="10029" c="Manual_Controller" t="ManualList" f="get_list" section="&#x421;&#x43F;&#x440;&#x430;&#x432;&#x43E;&#x447;&#x43D;&#x438;&#x43A;&#x438;" descr="&#x421;&#x43F;&#x440;&#x430;&#x432;&#x43A;&#x438;"/>
 		<view id="10030" c="ExpertiseProlongation_Controller" t="ExpertiseProlongationList" f="get_list" section="&#x421;&#x43F;&#x440;&#x430;&#x432;&#x43E;&#x447;&#x43D;&#x438;&#x43A;&#x438;" descr="&#x41F;&#x440;&#x43E;&#x434;&#x43B;&#x435;&#x43D;&#x438;&#x435; &#x44D;&#x43A;&#x441;&#x43F;&#x435;&#x440;&#x442;&#x438;&#x437;&#x44B;"/>
+		<view id="10031" c="ConclusionDictionary_Controller" t="ConclusionDictionary" f="get_list" section="&#x421;&#x43F;&#x440;&#x430;&#x432;&#x43E;&#x447;&#x43D;&#x438;&#x43A;&#x438;" descr="&#x41A;&#x43B;&#x430;&#x441;&#x441;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x43E;&#x440;&#x44B; &#x437;&#x430;&#x43A;&#x43B;&#x44E;&#x447;&#x435;&#x43D;&#x438;&#x439;"/>
+		<view id="10032" c="EmployeeExpertCertificate_Controller" t="EmployeeExpertCertificateList" f="get_list" section="&#x421;&#x43F;&#x440;&#x430;&#x432;&#x43E;&#x447;&#x43D;&#x438;&#x43A;&#x438;" descr="&#x435;&#x440;&#x442;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x44B; &#x44D;&#x43A;&#x441;&#x43F;&#x435;&#x440;&#x442;&#x43E;&#x432;"/>
 		<view id="20000" c="Application_Controller" t="ApplicationList" f="get_list" section="&#x414;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;" descr="&#x417;&#x430;&#x44F;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x44F;"/>
 		<view id="20001" c="DocFlowExamination_Controller" t="DocFlowExaminationList" f="get_list" section="&#x414;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;" descr="&#x420;&#x430;&#x441;&#x441;&#x43C;&#x43E;&#x442;&#x440;&#x435;&#x43D;&#x438;&#x44F;"/>
 		<view id="20002" c="DocFlowInClient_Controller" t="DocFlowInClientList" f="get_list" section="&#x414;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;" descr="&#x412;&#x445;&#x43E;&#x434;&#x44F;&#x449;&#x438;&#x435; &#x43A;&#x43B;&#x438;&#x435;&#x43D;&#x442;&#x430;"/>
@@ -4689,11 +4868,12 @@
 		<view id="20023" c="Contract_Controller" t="ContractExtList" f="get_ext_list" section="&#x414;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;" descr="&#x41A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x44B; (&#x432;&#x43D;&#x435;&#x43A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x44B;)"/>
 		<view id="20024" c="DocFlowExamination_Controller" t="DocFlowExaminationExtList" f="get_ext_list" section="&#x414;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;" descr="&#x420;&#x430;&#x441;&#x441;&#x43C;&#x43E;&#x442;&#x440;&#x435;&#x43D;&#x438;&#x44F; (&#x432;&#x43D;&#x435;&#x43A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x44B;)"/>
 		<view id="20025" c="DocFlowApprovement_Controller" t="DocFlowApprovementExtList" f="get_ext_list" section="&#x414;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;" descr="&#x421;&#x43E;&#x433;&#x43B;&#x430;&#x441;&#x43E;&#x432;&#x430;&#x43D;&#x438;&#x44F; (&#x432;&#x43D;&#x435;&#x43A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x44B;)"/>
+		<view id="20026" c="Conclusion_Controller" f="get_list" t="ConclusionList" section="&#x414;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;" descr="&#x417;&#x430;&#x43A;&#x43B;&#x44E;&#x447;&#x435;&#x43D;&#x438;&#x44F;"/>
 		<view id="30000" c="Contract_Controller" t="RepReestrExpertise" section="&#x41E;&#x442;&#x447;&#x435;&#x442;&#x44B;" descr="&#x420;&#x435;&#x435;&#x441;&#x442;&#x440; &#x437;&#x430;&#x43A;&#x43B;&#x44E;&#x447;&#x435;&#x43D;&#x438;&#x439; &#x43F;&#x43E; &#x433;&#x43E;&#x441;.&#x44D;&#x43A;&#x441;&#x43F;&#x435;&#x440;&#x442;&#x438;&#x437;&#x435;"/>
 		<view id="30001" c="Contract_Controller" t="RepReestrCostEval" section="&#x41E;&#x442;&#x447;&#x435;&#x442;&#x44B;" descr="&#x420;&#x435;&#x435;&#x441;&#x442;&#x440; &#x437;&#x430;&#x43A;&#x43B;&#x44E;&#x447;&#x435;&#x43D;&#x438;&#x439; &#x43F;&#x43E; &#x434;&#x43E;&#x441;&#x442;&#x43E;&#x432;&#x435;&#x440;&#x43D;&#x43E;&#x441;&#x442;&#x438;"/>
 		<view id="30002" c="Contract_Controller" t="RepReestrPay" section="&#x41E;&#x442;&#x447;&#x435;&#x442;&#x44B;" descr="&#x420;&#x435;&#x435;&#x441;&#x442;&#x440; &#x43E;&#x43F;&#x43B;&#x430;&#x442;"/>
 		<view id="30003" c="Contract_Controller" t="RepReestrContract" section="&#x41E;&#x442;&#x447;&#x435;&#x442;&#x44B;" descr="&#x420;&#x435;&#x435;&#x441;&#x442;&#x440; &#x43A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x43E;&#x432; (&#x432;&#x44B;&#x431;&#x43E;&#x440;&#x43A;&#x430;)"/>
-		<view id="30004" c="Contract_Controller" t="RepQuarter" section="&#x41E;&#x442;&#x447;&#x435;&#x442;&#x44B;" descr="&#x41A;&#x432;&#x430;&#x440;&#x442;&#x430;&#x43B;&#x44C;&#x43D;&#x44B;&#x439; &#x43E;&#x442;&#x447;&#x435;&#x442;"/>
+		<view id="30004" c="Contract_Controller" t="RepQuarter" section="&#x41E;&#x442;&#x447;&#x435;&#x442;&#x44B;" descr="&#x41A;&#x432;&#x430;&#x440;&#x442;&#x430;&#x43B;&#x44C;&#x43D;&#x44B;&#x439; &#x43E;&#x442;&#x447;&#x435;&#x442;"/>		
 		<view id="50000" c="User_Controller" t="UserProfile" f="get_profile" section="&#x424;&#x43E;&#x440;&#x43C;&#x44B;" descr="&#x41F;&#x440;&#x43E;&#x444;&#x438;&#x43B;&#x44C; &#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x435;&#x43B;&#x44F;"/>
 		<view id="50001" c="Client_Controller" t="ClientSearch" section="&#x424;&#x43E;&#x440;&#x43C;&#x44B;" descr="&#x41F;&#x43E;&#x438;&#x441;&#x43A; &#x43A;&#x43B;&#x438;&#x435;&#x43D;&#x442;&#x43E;&#x432;"/>
 		<view id="50003" c="DocFlowTask_Controller" t="DocFlowTaskList" f="get_list" section="&#x424;&#x43E;&#x440;&#x43C;&#x44B;" descr="&#x417;&#x430;&#x434;&#x430;&#x447;&#x438; (&#x432;&#x441;&#x435;)"/>
@@ -4778,6 +4958,11 @@
 		<serverTemplate id="ApplicationDocumentFileList"/>
 		<serverTemplate id="DocFlowExaminationExtList"/>
 		<serverTemplate id="DocFlowApprovementExtList"/>
+		<serverTemplate id="ConclusionDictionary"/>
+		<serverTemplate id="ConclusionDictionaryDetailList"/>
+		<serverTemplate id="ConclusionList"/>
+		<serverTemplate id="EmployeeExpertCertificateList"/>
+		
 	</serverTemplates>
 	<jsTemplates>
 		<jsTemplate id="FatalException" file="tmpl/FatalException.html"/>
@@ -4832,6 +5017,19 @@
 		<jsTemplate id="UserEmailConfirmation_View" file="tmpl/UserEmailConfirmation_View.html"/>
 		<jsTemplate id="AllowSectionEdit" file="tmpl/AllowSectionEdit.html"/>
 		<jsTemplate id="ResultsOnModifiedDocumentsList" file="tmpl/ResultsOnModifiedDocumentsList.html"/>
+		<jsTemplate id="Conclusion_ContainerPanel" file="tmpl/Conclusion_ContainerPanel.html"/>
+		<jsTemplate id="Conclusion_tDocument" file="tmpl/Conclusion_tDocument.html"/>
+		<!--<jsTemplate id="Conclusion_tObject" file="tmpl/Conclusion_tObject.html"/> -->
+		<jsTemplate id="Conclusion_tExpertEngineeringSurveys" file="tmpl/Conclusion_tExpertEngineeringSurveys.html"/>
+		<jsTemplate id="Conclusion_tExpertProjectDocuments" file="tmpl/Conclusion_tExpertProjectDocuments.html"/>
+		<jsTemplate id="Conclusion_tProjectDocumentsMismatches" file="tmpl/Conclusion_tProjectDocumentsMismatches.html"/>
+		<jsTemplate id="Conclusion_tExpertEstimate" file="tmpl/Conclusion_tExpertEstimate.html"/>
+		<jsTemplate id="Conclusion_tEstimateMismatches" file="tmpl/Conclusion_tEstimateMismatches.html"/>
+		<jsTemplate id="Conclusion_tClimateConditions" file="tmpl/Conclusion_tClimateConditions.html"/>
+		<jsTemplate id="Conclusion_tObjectPart" file="tmpl/Conclusion_tObjectPart.html"/>
+		
+		
+		
 	</jsTemplates>
 	<packages>
 		<package id="Bank" version="1.0.0" author="Andrey Mikhalevich"/>
@@ -4868,6 +5066,11 @@
 		<jsScript file="ext/bootstrap-datepicker/bootstrap-datepicker.ru.min.js" compressed="TRUE" standalone="TRUE" version="1.0"/>
 		<!-- /theme JS files -->
 		<jsScript file="jquery.maskedinput.js" compressed="FALSE" standalone="FALSE" version="1.0"/>
+		
+		<!--<jsScript file="ext/cleave/cleave.min.js" compressed="TRUE" standalone="TRUE" version="1.6"/>
+		<jsScript file="ext/cleave/cleave-phone.ru.js" compressed="TRUE" standalone="TRUE" version="1.6"/>
+		-->
+		
 		<jsScript file="ext/mustache/mustache.min.js" compressed="TRUE" standalone="TRUE"/>
 		<jsScript file="ext/jshash-2.2/md5-min.js" compressed="TRUE" standalone="TRUE"/>
 		<jsScript file="ext/resumablejs/resumable.js" compressed="FALSE" standalone="FALSE"/>
@@ -4906,11 +5109,11 @@
 		<jsScript file="core/ModelXML.js"/>
 		<jsScript file="core/ModelObjectXML.js"/>
 		<jsScript file="core/ModelServRespXML.js"/>
-		<jsScript file="core/ModelJSON.js"/>
+		<jsScript file="custom_controls/ModelJSON.js"/>
 		<jsScript file="core/ModelObjectJSON.js"/>
 		<jsScript file="core/ModelServRespJSON.js"/>
 		<jsScript file="core/ModelXMLTree.js"/>
-		<jsScript file="core/ModelJSONTree.js"/>
+		<jsScript file="custom_controls/ModelJSONTree.js"/>
 		<!--<jsScript file="core/ModelServAuthXML.js"/>-->
 		<jsScript file="core/Validator.js"/>
 		<jsScript file="core/ValidatorString.js"/>
@@ -5031,10 +5234,12 @@
 		<jsScript file="controls/PrintObj.js"/>
 		<jsScript file="controls/EditModalDialog.js"/>
 		<jsScript file="controls/rs/EditModalDialog.rs_ru.js" resource="ru"/>
+		<jsScript file="controls/EditModalDialogXML.js"/>
 		<jsScript file="controls/EditRef.js"/>
 		<jsScript file="controls/ControlForm.js"/>
 		<jsScript file="controls/HiddenKey.js"/>
 		<jsScript file="controls/EditJSON.js"/>
+		<jsScript file="controls/EditXML.js"/>
 		<!--<jsScript file="controls/EditHTML.js" />-->
 		<jsScript file="custom_controls/EditFile.js"/>
 		<jsScript file="controls/rs/EditFile.rs_ru.js" resource="ru"/>
@@ -5249,6 +5454,13 @@
 		<jsScript file="forms/Manual_Form.js"/>
 		<jsScript file="forms/DocFlowExaminationExtList_Form.js"/>
 		<jsScript file="forms/DocFlowApprovementExtList_Form.js"/>
+		<jsScript file="forms/ConclusionDictionaryDialog_Form.js"/>
+		<jsScript file="forms/ConclusionList_Form.js"/>
+		
+		<jsScript file="forms/ConclusionDialog_Form.js"/>
+		<jsScript file="forms/ConclusionDictionaryDetailList_Form.js"/>		
+		<jsScript file="forms/EmployeeExpertCertificateList_Form.js"/>
+		
 		<!-- **** Views *** -->
 		<jsScript file="forms/UserDialog_Form.js"/>
 		<jsScript file="views/Login_View.js"/>
@@ -5389,10 +5601,16 @@
 		<jsScript file="views/UserEmailConfirmation_View.js"/>
 		<jsScript file="views/ManualForUser_View.js"/>
 		<jsScript file="views/ExpertiseProlongationList_View.js"/>
+		<jsScript file="views/ConclusionDictionaryList_View.js"/>
+		<jsScript file="views/ConclusionDictionaryDialog_View.js"/>
+		<jsScript file="views/ConclusionDictionaryDetailList_View.js"/>
 		<jsScript file="views/ApplicationReturnedFilesRemovedList_View.js"/>
 		<jsScript file="views/ApplicationDocumentFileList_View.js"/>
 		<jsScript file="views/DocFlowExaminationExtList_View.js"/>
 		<jsScript file="views/DocFlowApprovementExtList_View.js"/>
+		<jsScript file="views/ConclusionList_View.js"/>
+		<jsScript file="views/ConclusionDialog_View.js"/>
+		<jsScript file="views/EmployeeExpertCertificateList_View.js"/>
 		<jsScript file="tmpl/App.templates.js" compressed="FALSE" standalone="FALSE"/>
 		<jsScript file="custom_controls/App.enums.js"/>
 		<jsScript file="custom_controls/App.predefinedItems.js"/>
@@ -5418,6 +5636,7 @@
 		<jsScript file="custom_controls/ApplicationContractorEditRef.js"/>
 		<jsScript file="custom_controls/ApplicationConstrNameEdit.js"/>
 		<jsScript file="custom_controls/BaseContainer.js"/>
+		<jsScript file="custom_controls/BaseContainerXML.js"/>		
 		<jsScript file="custom_controls/ApplicationClientContainer.js"/>
 		<jsScript file="custom_controls/CompoundObjTechFeatureCont.js"/>
 		<jsScript file="custom_controls/EditBankAcc.js"/>
@@ -5494,6 +5713,100 @@
 		<jsScript file="custom_controls/AllowSectionEdit.js"/>
 		<jsScript file="custom_controls/ExpertMaintenanceContractDataEdit.js"/>
 		<jsScript file="custom_controls/ExpertMaintenanceContractData.js"/>
+		<jsScript file="custom_controls/ConclusionDictionaryDetailEdit.js"/>
+		<jsScript file="custom_controls/ConclusionDictionaryDetailSelect.js"/>
+		<jsScript file="custom_controls/EmployeeExpertCertificateId.js"/>										
+		
+		<jsScript file="custom_controls/Conclusion_EditCompound.js"/>		
+		
+		<jsScript file="custom_controls/Conclusion.js"/>
+		<jsScript file="custom_controls/Conclusion_Container.js"/>
+		<jsScript file="custom_controls/Conclusion_tAddress.js"/>
+		<jsScript file="custom_controls/Conclusion_tForeignAddress.js"/>
+				
+		<jsScript file="custom_controls/Conclusion_tEmail.js"/>
+		<jsScript file="custom_controls/Conclusion_tPerson.js"/>
+		<jsScript file="custom_controls/Conclusion_tWorkPerson.js"/>
+		<jsScript file="custom_controls/Conclusion_tPostAddress.js"/>
+		<jsScript file="custom_controls/Conclusion_tOrganization.js"/>
+		<jsScript file="custom_controls/Conclusion_tForeignOrganization.js"/>				
+		<jsScript file="custom_controls/Conclusion_tIP.js"/>
+		<jsScript file="custom_controls/Conclusion_tPreviousConclusions.js"/>
+		<jsScript file="custom_controls/Conclusion_tPreviousConclusion.js"/>				
+		<jsScript file="custom_controls/Conclusion_tPreviousSimpleConclusions.js"/>
+		<jsScript file="custom_controls/Conclusion_tPreviousSimpleConclusion.js"/>		
+		
+		<jsScript file="custom_controls/Conclusion_tFileChecksum.js"/>
+		<jsScript file="custom_controls/Conclusion_tSignFile.js"/>
+		<jsScript file="custom_controls/Conclusion_tFile.js"/>		
+		<jsScript file="custom_controls/Conclusion_tDeclarant.js"/>
+		<jsScript file="custom_controls/Conclusion_tEngineeringSurveyMismatches.js"/>
+		<jsScript file="custom_controls/Conclusion_tProjectDocumentsMismatches.js"/>		
+		<jsScript file="custom_controls/Conclusion_tMismatch.js"/>
+		
+		<!--
+		<jsScript file="custom_controls/Conclusion_tDeclarant_Container.js"/>
+		<jsScript file="custom_controls/Conclusion_tExaminationType_Container.js"/>		
+		<jsScript file="custom_controls/Conclusion_tCadastralNumber_Container.js"/>
+		<jsScript file="custom_controls/Conclusion_tTechnicalCustomer_Container.js"/>
+		<jsScript file="custom_controls/Conclusion_tFinance_Container.js"/>
+		<jsScript file="custom_controls/Conclusion_tDesigner_Container.js"/>
+		<jsScript file="custom_controls/Conclusion_tDocument_Container.js"/>
+		<jsScript file="custom_controls/Conclusion_tPreviousSimpleConclusion_Container.js"/>				
+		<jsScript file="custom_controls/Conclusion_tPreviousConclusion_Container.js"/>
+		<jsScript file="custom_controls/Conclusion_tTEI_Container.js"/>		
+		<jsScript file="custom_controls/Conclusion_tFile_Container.js"/>		
+		<jsScript file="custom_controls/Conclusion_tSeismicActivity_Container.js"/>
+		
+		<jsScript file="custom_controls/Conclusion_tClimateDistrict_Container.js"/>
+		<jsScript file="custom_controls/Conclusion_tGeologicalConditions_Container.js"/>
+		<jsScript file="custom_controls/Conclusion_tWindDistrict_Container.js"/>
+		<jsScript file="custom_controls/Conclusion_tSnowDistrict_Container.js"/>		
+		<jsScript file="custom_controls/Conclusion_tObjectPart_Container.js"/>
+		<jsScript file="custom_controls/Conclusion_tAddress_Container.js"/>		
+		<jsScript file="custom_controls/Conclusion_tForeignAddress_Container.js"/>
+		<jsScript file="custom_controls/Conclusion_tEstimatedCost.js"/>
+		-->		
+		<jsScript file="custom_controls/Conclusion_tDocuments.js"/>
+		
+		<jsScript file="custom_controls/Conclusion_tDocument.js"/>
+		<jsScript file="custom_controls/Conclusion_tTEI.js"/>
+		
+		<jsScript file="custom_controls/Conclusion_tTechnicalCustomer.js"/>
+		
+		<jsScript file="custom_controls/Conclusion_tFinance.js"/>		
+		
+		<jsScript file="custom_controls/Conclusion_tObject.js"/>
+		
+		<jsScript file="custom_controls/Conclusion_tObjectPart.js"/>		
+		
+		<jsScript file="custom_controls/Conclusion_tExaminationObject.js"/>
+				
+		<jsScript file="custom_controls/Conclusion_tEstimatedComplexCost.js"/>
+		<jsScript file="custom_controls/Conclusion_tEstimatedCompleteCost.js"/>		
+		
+		<jsScript file="custom_controls/Conclusion_tComplexEstimatedCost.js"/>
+		<jsScript file="custom_controls/Conclusion_tClimateConditions.js"/>
+		
+		<jsScript file="custom_controls/Conclusion_tDesigner.js"/>		
+
+		<jsScript file="custom_controls/Conclusion_tEEPDUse.js"/>
+		<jsScript file="custom_controls/Conclusion_tEngineeringSurveyAddress.js"/>
+
+		<jsScript file="custom_controls/Conclusion_tExpertConclusion.js"/>
+		<jsScript file="custom_controls/Conclusion_tExpertEngineeringSurveys.js"/>
+		<jsScript file="custom_controls/Conclusion_tExpertProjectDocuments.js"/>
+		<jsScript file="custom_controls/Conclusion_tExpertEstimate.js"/>
+		<jsScript file="custom_controls/Conclusion_tEstimateMismatches.js"/>
+		<jsScript file="custom_controls/Conclusion_tSummary.js"/>
+		<jsScript file="custom_controls/Conclusion_tExperts.js"/>
+		<jsScript file="custom_controls/Conclusion_tExpert.js"/>		
+
+		<jsScript file="custom_controls/ConclusionDialogCmdGetFile.js"/>
+		<jsScript file="custom_controls/ConclusionDialogCmdPrint.js"/>
+		<jsScript file="custom_controls/ConclusionDialogCmdCheck.js"/>
+		<jsScript file="custom_controls/ConclusionDialogCmdFill.js"/>
+		
 		<jsScript file="enum_controls/Enum_role_types.js"/>
 		<jsScript file="views/rs_ru.js"/>
 		<jsScript file="views/rs_common_ru.js"/>
@@ -5821,7 +6134,7 @@
 		<jsScript file="models/ContractExtList_Model.js"/>
 		<jsScript file="models/DocFlowExaminationExtList_Model.js"/>
 		<jsScript file="models/DocFlowApprovementExtList_Model.js"/>
-	<jsScript file="controllers/ConclusionDictionary_Controller.js"/><jsScript file="models/ConclusionDictionary_Model.js"/><jsScript file="models/ConclusionDictionaryList_Model.js"/><jsScript file="controllers/ConclusionDictionaryDetail_Controller.js"/><jsScript file="models/ConclusionDictionaryDetail_Model.js"/></jsScripts>
+	<jsScript file="controllers/ConclusionDictionary_Controller.js"/><jsScript file="models/ConclusionDictionary_Model.js"/><jsScript file="models/ConclusionDictionaryList_Model.js"/><jsScript file="controllers/ConclusionDictionaryDetail_Controller.js"/><jsScript file="models/ConclusionDictionaryDetail_Model.js"/><jsScript file="models/Conclusion_Model.js"/><jsScript file="controllers/Conclusion_Controller.js"/><jsScript file="models/ConclusionList_Model.js"/><jsScript file="models/ConclusionDialog_Model.js"/><jsScript file="controllers/ConclusionDictionaryDetailLocalList_Controller.js"/><jsScript file="models/ConclusionDictionaryDetailLocalList_Model.js"/><jsScript file="controllers/EmployeeExpertCertificate_Controller.js"/><jsScript file="models/EmployeeExpertCertificate_Model.js"/><jsScript file="models/EmployeeExpertCertificateList_Model.js"/><jsScript file="models/EmployeeWithExpertCertificateList_Model.js"/><jsScript file="models/BuildTypeList_Model.js"/><jsScript file="models/ConstructionTypeDialog_Model.js"/></jsScripts>
 	<cssScripts>
 		<cssScript file="assets/css/icons/icomoon/styles.css" compressed="TRUE" standalone="TRUE"/>
 		<cssScript file="assets/css/bootstrap.min.css" compressed="TRUE" standalone="TRUE"/>

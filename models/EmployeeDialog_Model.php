@@ -10,6 +10,7 @@ require_once(FRAME_WORK_PATH.'basic_classes/ModelSQL.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLInt.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLString.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLText.php');
+require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLBool.php');
 require_once(FRAME_WORK_PATH.'basic_classes/FieldSQLJSON.php');
  
 class EmployeeDialog_Model extends ModelSQL{
@@ -112,6 +113,14 @@ class EmployeeDialog_Model extends ModelSQL{
 						
 		$f_departments_ref=new FieldSQLJSON($this->getDbLink(),$this->getDbName(),$this->getTableName(),"departments_ref",$f_opts);
 		$this->addField($f_departments_ref);
+		//********************
+		
+		//*** Field is_expert ***
+		$f_opts = array();
+		$f_opts['id']="is_expert";
+						
+		$f_is_expert=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"is_expert",$f_opts);
+		$this->addField($f_is_expert);
 		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}

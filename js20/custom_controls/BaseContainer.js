@@ -1,9 +1,9 @@
 /**	
  * @author Andrey Mikhalevich <katrenplus@mail.ru>, 2018
 
- * @extends BaseContainer
+ * @extends ControlContainer
  * @requires core/extend.js
- * @requires BaseContainer.js     
+ * @requires ControlContainer.js     
 
  * @class
  * @classdesc
@@ -14,14 +14,20 @@
 function BaseContainer(id,options){
 	options = options || {};	
 	
+	options.elementOptions = options.elementOptions || {};
+	
 	this.m_elementClass = options.elementClass;
 	this.m_elementOptions = options.elementOptions;
 	
-	this.m_mainView = options.elementOptions.mainView;
+	if(options.elementOptions && options.elementOptions.mainView){
+		this.m_mainView = options.elementOptions.mainView;
+	}
 	
 	this.m_readOnly = options.readOnly;
 
-	options.template.templateOptions = {"readOnly":options.readOnly};
+	if(options.template){
+		options.template.templateOptions = {"readOnly":options.readOnly};
+	}
 	
 	BaseContainer.superclass.constructor.call(this,id,options.tagName,options);
 	
@@ -65,34 +71,63 @@ BaseContainer.prototype.createNewElement = function(){
 	opts.attrs = opts.attrs||{};
 	opts.attrs.ind=ind;
 	
-	self = this;	
-	opts.onClosePanel = function(e){
-		//self.m_container.delElement(this.getAttr("ind"));
-		//this.delDOM();
-		var cur_index = this.getAttr("ind");
-		var element = self.findElementByIndex(cur_index);
-		self.m_container.delElement(element.getName());
-		this.delDOM();
-		var elem_list = self.m_container.getElements();
-		for(var id in elem_list){
-			if (elem_list[id]){
-				var elem_ind = parseInt(elem_list[id].getAttr("ind"),10);
-				if ( elem_ind>=cur_index){
-					elem_ind--;
-					elem_list[id].setAttr("ind",elem_ind);
-					elem_list[id].setAttr("class",("panel panel-"+((elem_ind%2==0)? "even":"odd")));
+	//self = this;	
+	/*
+	opts.onClosePanel = (function(self){
+		return function(e){
+			var cur_index = e.target.getAttribute("ind");
+			var element = self.findElementByIndex(cur_index);
+			self.m_container.delElement(element.getName());
+			this.delDOM();
+			var elem_list = self.m_container.getElements();
+			for(var id in elem_list){
+				if (elem_list[id]){
+					var elem_ind = parseInt(elem_list[id].getAttr("ind"),10);
+					if ( elem_ind>=cur_index){
+						elem_ind--;
+						elem_list[id].setAttr("ind",elem_ind);
+						elem_list[id].setAttr("class",("panel panel-"+((elem_ind%2==0)? "even":"odd")));
+					}
 				}
+			}				
+			
+			if(self.m_mainView){
+				self.m_mainView.calcFillPercent();
 			}
-		}				
-		
-		self.m_mainView.calcFillPercent();
-	}
+		}
+	})(this);
+	*/
 	opts.templateOptions = {
 		"IND":(ind+1),
 		"panelClass":"panel  panel-"+((ind%2==0)? "even":"odd"),
 		"cmdClose":!this.m_readOnly
 	};
+//	console.log("Adding element with index="+ind)
 	var new_elem = new this.m_elementClass(id,opts);
+	new_elem.onClosePanel = (function(self,new_elem){
+		return function(){
+			var cur_index = new_elem.getAttr("ind");
+			//console.log("cur_index="+cur_index)
+			var element = self.findElementByIndex(cur_index);
+			self.m_container.delElement(element.getName());
+			this.delDOM();
+			var elem_list = self.m_container.getElements();
+			for(var id in elem_list){
+				if (elem_list[id]){
+					var elem_ind = parseInt(elem_list[id].getAttr("ind"),10);
+					if ( elem_ind>=cur_index){
+						elem_ind--;
+						elem_list[id].setAttr("ind",elem_ind);
+						elem_list[id].setAttr("class",("panel panel-"+((elem_ind%2==0)? "even":"odd")));
+					}
+				}
+			}				
+			
+			if(self.m_mainView){
+				self.m_mainView.calcFillPercent();
+			}
+		}
+	})(this,new_elem);
 	
 	return new_elem;	
 }
@@ -200,7 +235,7 @@ BaseContainer.prototype.findElementByIndex = function(ind){
 	var res;
 	var elem_list = this.m_container.getElements();
 	for(var elem_id in elem_list){
-		if (elem_list[elem_id].getAttr("ind")==ind){
+		if (elem_list[elem_id]&&elem_list[elem_id].getAttr("ind")==ind){
 			res = elem_list[elem_id]; 
 			break;
 		}

@@ -49,16 +49,6 @@ function DocumentTemplate_Model(options){
 	
 	filed_options.autoInc = false;	
 	
-	options.fields.service_type = new FieldEnum("service_type",filed_options);
-	filed_options.enumValues = 'expertise,cost_eval_validity,audit,modification,modified_documents,expert_maintenance';
-	
-				
-	
-	var filed_options = {};
-	filed_options.primaryKey = false;	
-	
-	filed_options.autoInc = false;	
-	
 	options.fields.construction_type_id = new FieldInt("construction_type_id",filed_options);
 	options.fields.construction_type_id.getValidator().setRequired(true);
 	

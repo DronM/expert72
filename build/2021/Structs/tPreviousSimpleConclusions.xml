@@ -1,0 +1,5 @@
+<!-- ОМ -->
+{{#PreviousSimpleConclusions}}
+<PreviousSimpleConclusion>{{PreviousSimpleConclusion}}</PreviousSimpleConclusion>
+{{/PreviousSimpleConclusions}}
+

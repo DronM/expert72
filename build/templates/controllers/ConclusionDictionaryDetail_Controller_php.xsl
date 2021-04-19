@@ -27,6 +27,23 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 </xsl:template>
 
 <xsl:template name="extra_methods">
+
+	public function complete_search($pm){
+		$this->addNewModel(sprintf(
+			"SELECT *
+			FROM conclusion_dictionary_detail
+			WHERE	conclusion_dictionary_name = %s
+				AND (lower(descr) LIKE '%%'||lower(%s)||'%%' OR code LIKE %s||'%%')
+			ORDER BY ord	
+			LIMIT 10"			
+			,$this->getExtDbVal($pm,'conclusion_dictionary_name')
+			,$this->getExtDbVal($pm,'search')
+			,$this->getExtDbVal($pm,'search')
+			),
+			'ConclusionDictionaryDetail_Model'
+		);	
+	}
+
 </xsl:template>
 
 </xsl:stylesheet>

@@ -1,0 +1,23 @@
+<!-- УО  tOrganization -->
+{{#Organization}}
+<Organization>{{Organization}}</Organization>
+{{/Organization}}
+
+<!-- УО  tForeignOrganization -->
+{{#ForeignOrganization}}
+<ForeignOrganization>{{ForeignOrganization}}</ForeignOrganization>
+{{/ForeignOrganization}}
+
+<!-- О  tFinanceType K9 -->
+<FinanceType>{{FinanceType}}</FinanceType>
+
+<!-- О  tBudgetType K10 Обязательно присутствует, если элемент FinanceType имеет значение 1 -->
+<BudgetType>{{BudgetType}}</BudgetType>
+
+<!-- Н DN Обязательно присутствует, если элемент FinanceType имеет значение 2 или 2 -->
+{{#FinanceSize}}
+<FinanceSize>{{FinanceSize}}</FinanceSize>
+{{/FinanceSize}}
+
+<!-- Н,tTechnicalCustomer Обязательно присутствует, если элемент FinanceType имеет значение 2 -->
+<FinanceOwner>{{FinanceOwner}}</FinanceOwner>

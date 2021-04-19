@@ -78,6 +78,15 @@ function DocFlowTypeDialog_Model(options){
 	
 	options.fields.def_interval = new FieldInterval("def_interval",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.document_types_ref = new FieldJSON("document_types_ref",filed_options);
+	
 		DocFlowTypeDialog_Model.superclass.constructor.call(this,id,options);
 }
 extend(DocFlowTypeDialog_Model,ModelXML);

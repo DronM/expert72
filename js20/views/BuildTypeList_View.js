@@ -16,7 +16,7 @@ function BuildTypeList_View(id,options){
 	
 	BuildTypeList_View.superclass.constructor.call(this,id,options);
 	
-	var model = options.models.BuildType_Model;
+	var model = options.models.BuildTypeList_Model;
 	var contr = new BuildType_Controller();
 	
 	var constants = {"doc_per_page_count":null};
@@ -25,7 +25,7 @@ function BuildTypeList_View(id,options){
 	var pagClass = window.getApp().getPaginationClass();
 	
 	var popup_menu = new PopUpMenu();
-	
+	var self = this;
 	this.addElement(new GridAjx(id+":grid",{
 		"model":model,
 		"keyIds":["id"],
@@ -42,6 +42,28 @@ function BuildTypeList_View(id,options){
 							"value":"Тип объекта",
 							"columns":[
 								new GridColumn({"field":model.getField("name")})
+							],
+							"sortable":true
+						})
+						,new GridCellHead(id+":grid:head:document_types_ref",{
+							"value":"Вид документа (классификатор)",
+							"columns":[
+								new GridColumnRef({
+									"field":model.getField("document_types_ref"),
+									"ctrlClass":ConclusionDictionaryDetailSelect,
+									"ctrlOptions":{
+										"labelCaption":""
+										,"conclusion_dictionary_name":"tConstractionType"
+										,"onSelect":function(fields){
+											var gr = self.getElement("grid");
+											if(gr){
+												var tp = fields.code.getValue();
+												gr.getInsertPublicMethod().setFieldValue("dt_code",tp);
+												gr.getUpdatePublicMethod().setFieldValue("dt_code",tp);
+											}
+										}
+									}
+								})
 							]
 						})
 					]

@@ -22,6 +22,11 @@ function EmployeeDialog_View(id,options){
 	
 	var self = this;
 	
+	options.templateOptions = options.templateOptions || {};
+	if (options.model && (options.model.getRowIndex()>=0 || options.model.getNextRow()) ){			
+		options.templateOptions.expert = options.model.getFieldValue("is_expert");
+	}
+	
 	options.addElement = function(){
 		this.addElement(new EditString(id+":name",{
 			"labelCaption":this.FIELD_CAP_name,
@@ -56,7 +61,13 @@ function EmployeeDialog_View(id,options){
 			}
 			
 		}));		
-						
+		
+		if(options.templateOptions.expert){
+			//сертификаты экспертиа
+			this.addElement(new EmployeeExpertCertificateList_View(id+":expert_certificate_list",{
+				"detail":true
+			}));			
+		}				
 	}
 	
 	EmployeeDialog_View.superclass.constructor.call(this,id,options);
@@ -82,7 +93,14 @@ function EmployeeDialog_View(id,options){
 		,new CommandBinding({"control":this.getElement("picture_file"),"fieldId":"picture_file"})
 		,new CommandBinding({"control":this.getElement("snils")})
 	]);
-		
+	
+	if(options.templateOptions.expert){
+		this.addDetailDataSet({
+			"control":this.getElement("expert_certificate_list").getElement("grid"),
+			"controlFieldId":"employee_id",
+			"value":options.model.getFieldValue("id")
+		});
+	}
 }
 extend(EmployeeDialog_View,ViewObjectAjx);
 

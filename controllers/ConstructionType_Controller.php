@@ -35,6 +35,12 @@ class ConstructionType_Controller extends ControllerSQL{
 		$param = new FieldExtJSONB('technical_features'
 				,array());
 		$pm->addParam($param);
+		$param = new FieldExtString('object_type_code'
+				,array());
+		$pm->addParam($param);
+		$param = new FieldExtString('object_type_dictionary_name'
+				,array());
+		$pm->addParam($param);
 		
 		$pm->addParam(new FieldExtInt('ret_id'));
 		
@@ -65,6 +71,14 @@ class ConstructionType_Controller extends ControllerSQL{
 			));
 			$pm->addParam($param);
 		$param = new FieldExtJSONB('technical_features'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtString('object_type_code'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtString('object_type_dictionary_name'
 				,array(
 			));
 			$pm->addParam($param);
@@ -116,7 +130,7 @@ class ConstructionType_Controller extends ControllerSQL{
 		
 		
 		$this->addPublicMethod($pm);
-		$this->setObjectModelId('ConstructionType_Model');		
+		$this->setObjectModelId('ConstructionTypeDialog_Model');		
 
 			
 		/* get_list */

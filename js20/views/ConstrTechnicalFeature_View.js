@@ -28,7 +28,7 @@ function ConstrTechnicalFeature_View(id,options){
 							"cancel":false,
 							"callBack":function(res){			
 								if (res==WindowQuestion.RES_YES){
-									options.onClosePanel.call(self);
+									self.onClosePanel();
 								}
 							}
 						});

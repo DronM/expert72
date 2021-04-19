@@ -21,8 +21,8 @@ if(file_exists($er_f)){
 	unlink($er_f);
 }
 //sudo export PGPASSWORD=%s ; 
-$cmd = sprintf('psql -h %s -d %s -U %s -f '.$sql_f.' 2>'.$er_f,
-		//DB_PASSWORD,
+$cmd = sprintf('export PGPASSWORD=%s ; psql -h %s -d %s -U %s -f '.$sql_f.' 2>'.$er_f,
+		DB_PASSWORD,
 		DB_SERVER_MASTER,
 		DB_NAME,
 		DB_USER

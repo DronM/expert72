@@ -267,6 +267,7 @@ function ContractDialog_View(id,options){
 			this.addElement(new BuildTypeSelect(id+":build_types_ref",{
 				"editContClassName":editContClassName,
 				"labelClassName":labelClassName,
+				"asyncRefresh":false,
 				"enabled":false
 			}));	
 		
@@ -342,6 +343,31 @@ function ContractDialog_View(id,options){
 
 			this.addElement(new EmployeeListGrid(id+":result_sign_expert_list",{
 				"notExpert":options.templateOptions.notExpert
+			}));		
+
+			var conclusion_id = options.model.getFieldValue("conclusion_id");
+			this.addElement(new Control(id+":conclusions_ref","A",{
+				"value":( (conclusion_id && !isNaN(conclusion_id))? "Открыть документ":"Создать документ")
+				,"events":{
+					"click":(function(conclusion_id){
+						return function(){
+							var f_params = {};
+							if(conclusion_id){
+								f_params.keys = {"id":conclusion_id};
+							}else{
+								var m = self.getModel();
+								f_params.params = {
+									"cmd":"insert"
+									,"editViewOptions":{
+										"contracts_ref":new RefType({"keys":{"id":m.getFieldValue("id")},"descr":m.getFieldValue("select_descr")})
+									}									
+								};
+							}
+							(new ConclusionDialog_Form(f_params)).open();
+							
+						}
+					})(conclusion_id)
+				}
 			}));		
 		
 			if (options.templateOptions.costEvalValidity && options.templateOptions.notExpert){

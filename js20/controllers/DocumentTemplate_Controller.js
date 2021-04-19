@@ -52,13 +52,6 @@ extend(DocumentTemplate_Controller,ControllerObjServer);
 	pm.addField(field);
 	
 	var options = {};
-		
-	options.enumValues = 'expertise,cost_eval_validity,audit,modification,modified_documents,expert_maintenance';
-	var field = new FieldEnum("service_type",options);
-	
-	pm.addField(field);
-	
-	var options = {};
 	options.required = true;
 	var field = new FieldInt("construction_type_id",options);
 	
@@ -127,14 +120,6 @@ extend(DocumentTemplate_Controller,ControllerObjServer);
 	options.enumValues+= 'null';
 	
 	var field = new FieldEnum("document_type",options);
-	
-	pm.addField(field);
-	
-	var options = {};
-		
-	options.enumValues = 'expertise,cost_eval_validity,audit,modification,modified_documents,expert_maintenance';
-	
-	var field = new FieldEnum("service_type",options);
 	
 	pm.addField(field);
 	

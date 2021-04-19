@@ -833,6 +833,22 @@ class ContractDialog_Model extends ModelSQL{
 		$f_ext_contract=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"ext_contract",$f_opts);
 		$this->addField($f_ext_contract);
 		//********************
+		
+		//*** Field conclusion_id ***
+		$f_opts = array();
+		$f_opts['id']="conclusion_id";
+						
+		$f_conclusion_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"conclusion_id",$f_opts);
+		$this->addField($f_conclusion_id);
+		//********************
+		
+		//*** Field select_descr ***
+		$f_opts = array();
+		$f_opts['id']="select_descr";
+						
+		$f_select_descr=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"select_descr",$f_opts);
+		$this->addField($f_select_descr);
+		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}
 

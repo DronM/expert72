@@ -46,6 +46,30 @@ class ApplicationTemplateContent_Model extends {
 		$f_required=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"required",$f_opts);
 		$this->addField($f_required);
 		//********************
+		
+		//*** Field dt_descr ***
+		$f_opts = array();
+		$f_opts['id']="dt_descr";
+						
+		$f_dt_descr=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"dt_descr",$f_opts);
+		$this->addField($f_dt_descr);
+		//********************
+		
+		//*** Field dt_code ***
+		$f_opts = array();
+		$f_opts['id']="dt_code";
+						
+		$f_dt_code=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"dt_code",$f_opts);
+		$this->addField($f_dt_code);
+		//********************
+		
+		//*** Field dt_dictionary_name ***
+		$f_opts = array();
+		$f_opts['id']="dt_dictionary_name";
+						
+		$f_dt_dictionary_name=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"dt_dictionary_name",$f_opts);
+		$this->addField($f_dt_dictionary_name);
+		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}
 

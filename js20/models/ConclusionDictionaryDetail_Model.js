@@ -46,7 +46,7 @@ function ConclusionDictionaryDetail_Model(options){
 	
 	options.fields.code = new FieldString("code",filed_options);
 	options.fields.code.getValidator().setRequired(true);
-	options.fields.code.getValidator().setMaxLength('10');
+	options.fields.code.getValidator().setMaxLength('30');
 	
 				
 	

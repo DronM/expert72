@@ -76,6 +76,12 @@ extend(DocFlowType_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	options.required = true;
+	var field = new FieldString("document_type",options);
+	
+	pm.addField(field);
+	
 	pm.addField(new FieldInt("ret_id",{}));
 	
 	
@@ -123,6 +129,12 @@ extend(DocFlowType_Controller,ControllerObjServer);
 	options.enumValues = 'in,out,inside';
 	
 	var field = new FieldEnum("doc_flow_types_type_id",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldString("document_type",options);
 	
 	pm.addField(field);
 	

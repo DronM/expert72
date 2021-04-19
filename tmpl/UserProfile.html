@@ -53,10 +53,17 @@
 		</div>		
 	</fieldset>
 	
+	{{#is_employee}}
+	<div class="panel">
+		<div id="{{id}}:cmdEmployeeRef">
+		</div>
+	</div>
+	{{/is_employee}}
+	
 	<div class="panel-footer">
 		<div class="heading-elements">
 			<div class="heading-btn pull-left">
-	
+				
 				<div id="{{id}}:cmdSave"/>
 			</div>
 		</div>

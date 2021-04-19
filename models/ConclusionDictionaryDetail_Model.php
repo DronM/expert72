@@ -37,7 +37,7 @@ class ConclusionDictionaryDetail_Model extends ModelSQL{
 		//*** Field code ***
 		$f_opts = array();
 		$f_opts['primaryKey'] = TRUE;
-		$f_opts['length']=10;
+		$f_opts['length']=30;
 		$f_opts['id']="code";
 						
 		$f_code=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"code",$f_opts);

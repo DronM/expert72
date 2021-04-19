@@ -45,6 +45,16 @@ function BuildType_Model(options){
 	options.fields.name.getValidator().setRequired(true);
 	options.fields.name.getValidator().setMaxLength('250');
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.dt_code = new FieldString("dt_code",filed_options);
+	options.fields.dt_code.getValidator().setMaxLength('30');
+	
 		BuildType_Model.superclass.constructor.call(this,id,options);
 }
 extend(BuildType_Model,ModelXML);

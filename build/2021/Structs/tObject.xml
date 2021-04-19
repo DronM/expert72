@@ -1,0 +1,39 @@
+<!-- O, T(1000)-->
+<Name>{{Name}}</Name>
+
+<!-- УО, tAddress Может содержаться несколько элементов для обозначения точек линейного объекта -->
+{{#Addresses}}
+<Address>{{Address}}</Address>
+{{/Addresses}}
+
+<!-- УО, tAddress Может содержаться несколько элементов для обозначения точек линейного объекта -->
+{{#ForeignAddresses}}
+<ForeignAddress>{{ForeignAddress}}</ForeignAddress>
+{{/ForeignAddresses}}
+
+<!-- O, T(1000) Заполняется в обязательном порядке, если не представлен элемент FunctionsClass.-->
+{{#Functions}}
+<Functions>{{Functions}}</Functions>
+{{/Functions}}
+
+<!-- O, tFunctionsClass T(13) Формат xx.xx.xxx.xxx или xx.xx.xxx Наложенные ограничения
+([0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,3}\.[0-9]{1,3})|([0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,3})
+Заполняется в обязательном порядке, если не представлен элемент Functions
+-->
+{{#FunctionsClass}}
+<FunctionsClass>{{FunctionsClass}}</FunctionsClass>
+{{/FunctionsClass}}
+
+<!-- НM tTEI, Технико-экономический показатель объекта капитального строительства -->
+{{#TEIs}}
+<TEI>{{TEI}}<TEI>
+{{/TEIs}}
+
+<!--- О, К7 -->
+<Type>{{Type}}</Type>
+
+<!--- НМ, tObjectPart -->
+{{#ObjectParts}}
+<ObjectPart>{{ObjectPart}}</ObjectPart>
+{{/ObjectParts}}
+

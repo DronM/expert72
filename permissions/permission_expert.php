@@ -494,6 +494,8 @@ $permissions = array();
 				
 					$permissions['Employee_Controller_delete_picture']=TRUE;
 				
+					$permissions['Employee_Controller_complete_with_expert_cert']=TRUE;
+				
 					$permissions['DocFlowType_Controller_insert']=TRUE;
 				
 					$permissions['DocFlowType_Controller_update']=TRUE;
@@ -1053,6 +1055,48 @@ $permissions = array();
 					$permissions['ConclusionDictionaryDetail_Controller_get_object']=TRUE;
 				
 					$permissions['ConclusionDictionaryDetail_Controller_get_list']=TRUE;
+				
+					$permissions['ConclusionDictionaryDetail_Controller_complete_search']=TRUE;
+				
+					$permissions['ConclusionDictionaryDetailLocalList_Controller_insert']=TRUE;
+				
+					$permissions['ConclusionDictionaryDetailLocalList_Controller_update']=TRUE;
+				
+					$permissions['ConclusionDictionaryDetailLocalList_Controller_delete']=TRUE;
+				
+					$permissions['ConclusionDictionaryDetailLocalList_Controller_get_object']=TRUE;
+				
+					$permissions['ConclusionDictionaryDetailLocalList_Controller_get_list']=TRUE;
+				
+					$permissions['Conclusion_Controller_insert']=TRUE;
+				
+					$permissions['Conclusion_Controller_update']=TRUE;
+				
+					$permissions['Conclusion_Controller_delete']=TRUE;
+				
+					$permissions['Conclusion_Controller_get_object']=TRUE;
+				
+					$permissions['Conclusion_Controller_get_list']=TRUE;
+				
+					$permissions['Conclusion_Controller_get_file']=TRUE;
+				
+					$permissions['Conclusion_Controller_get_print']=TRUE;
+				
+					$permissions['Conclusion_Controller_get_check']=TRUE;
+				
+					$permissions['Conclusion_Controller_fill_on_contract']=TRUE;
+				
+					$permissions['EmployeeExpertCertificate_Controller_insert']=TRUE;
+				
+					$permissions['EmployeeExpertCertificate_Controller_update']=TRUE;
+				
+					$permissions['EmployeeExpertCertificate_Controller_delete']=TRUE;
+				
+					$permissions['EmployeeExpertCertificate_Controller_get_object']=TRUE;
+				
+					$permissions['EmployeeExpertCertificate_Controller_get_list']=TRUE;
+				
+					$permissions['EmployeeExpertCertificate_Controller_complete_on_cert_id']=TRUE;
 				
 return array_key_exists($contrId.'_'.$methId,$permissions);
 }

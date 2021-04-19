@@ -60,6 +60,21 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		parent::update($pm);
 	}
 
+	public function get_object($pm){
+	
+		if (
+			$_SESSION['role_id']!='admin'
+			&amp;&amp; $_SESSION['role_id']!='boss'
+			&amp;&amp; $_SESSION['role_id']!='accountant'
+			&amp;&amp; intval(json_decode($_SESSION['employees_ref'])->keys->id)!=intval($pm->getParamValue('id'))
+		){
+			throw new Exception('Запрещено отркывать карточку другого сотрудника!');
+		}
+			
+		parent::get_object($pm);
+	}
+	
+
 	public function delete_picture($pm){
 		$this->getDbLinkMaster()->query(sprintf(
 			"UPDATE employees
@@ -97,6 +112,18 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		
 		return TRUE;
 		
+	}
+	
+	public function complete_with_expert_cert($pm){
+	
+		//Search on expert name, all certs
+		$q = sprintf(
+			"SELECT * FROM employee_expert_certificate_list
+			WHERE lower(name) LIKE '%%'||lower(%s)||'%%'
+			LIMIT 10"
+			,$this->getExtDbVal($pm,'name')
+		);
+		$this->addNewModel($q,'EmployeeWithExpertCertificateList_Model');			
 	}
 	
 </xsl:template>

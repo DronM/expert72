@@ -32,6 +32,9 @@ class BuildType_Controller extends ControllerSQL{
 		$param = new FieldExtString('name'
 				,array('required'=>TRUE));
 		$pm->addParam($param);
+		$param = new FieldExtString('dt_code'
+				,array());
+		$pm->addParam($param);
 		
 		$pm->addParam(new FieldExtInt('ret_id'));
 		
@@ -58,6 +61,10 @@ class BuildType_Controller extends ControllerSQL{
 			));
 			$pm->addParam($param);
 		$param = new FieldExtString('name'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtString('dt_code'
 				,array(
 			));
 			$pm->addParam($param);
@@ -109,7 +116,7 @@ class BuildType_Controller extends ControllerSQL{
 		
 		
 		$this->addPublicMethod($pm);
-		$this->setObjectModelId('BuildType_Model');		
+		$this->setObjectModelId('BuildTypeList_Model');		
 
 			
 		/* get_list */
@@ -127,7 +134,7 @@ class BuildType_Controller extends ControllerSQL{
 
 		$this->addPublicMethod($pm);
 		
-		$this->setListModelId('BuildType_Model');
+		$this->setListModelId('BuildTypeList_Model');
 		
 		
 	}	

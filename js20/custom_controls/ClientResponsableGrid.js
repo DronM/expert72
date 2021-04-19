@@ -80,7 +80,10 @@ function ClientResponsableGrid(id,options){
 		);
 	}
 	
-	var cmd_cap = this.getCmdCaptionsOnClientType(this.m_clientEditView.getElement("client_type").getValue());
+	var cmd_cap;
+	if(this.m_clientEditView && this.m_clientEditView.getElement("client_type")){
+		cmd_cap = this.getCmdCaptionsOnClientType(this.m_clientEditView.getElement("client_type").getValue());
+	}
 	
 	var self = this;
 	options = {
@@ -98,8 +101,8 @@ function ClientResponsableGrid(id,options){
 					new GridCmd(id+":cmd:copyFromRepHead",{
 						"showCmdControl":true,
 						"glyph":"glyphicon-arrow-down",
-						"title":cmd_cap.title,
-						"caption":cmd_cap.caption,
+						"title":cmd_cap? cmd_cap.title:"",
+						"caption":cmd_cap? cmd_cap.caption:"",
 						"onCommand":function(){
 							var m = self.getModel();
 							m.clear();
@@ -287,7 +290,9 @@ ClientResponsableGrid.prototype.getCmdCaptionsOnClientType = function(clType){
 }
 
 ClientResponsableGrid.prototype.onChangeClientType = function(){
-	var cmd_cap = this.getCmdCaptionsOnClientType(this.m_clientEditView.getElement("client_type").getValue());
-	this.getCommands().getElement("copyFromRepHead").setCaption(cmd_cap.caption);
-	this.getCommands().getElement("copyFromRepHead").setAttr("title",cmd_cap.title);
+	if(this.m_clientEditView && this.m_clientEditView.getElement("client_type")){
+		var cmd_cap = this.getCmdCaptionsOnClientType(this.m_clientEditView.getElement("client_type").getValue());
+		this.getCommands().getElement("copyFromRepHead").setCaption(cmd_cap.caption);
+		this.getCommands().getElement("copyFromRepHead").setAttr("title",cmd_cap.title);
+	}
 }
