@@ -490,7 +490,10 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/EditRadioGroup.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/EditRadio.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/EditSelect.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controls/EditSelectRef.js'));
+		
+				
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/EditSelectRef.js'));
+		
 		
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'ext/cadesplugin/EditCertificateSelect.js'));
 		
