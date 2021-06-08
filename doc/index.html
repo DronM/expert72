@@ -63,6 +63,7 @@
 <li><a href="#EmployeeExpertCertificate_Controller">EmployeeExpertCertificate_Controller</a></li>
 <li><a href="#EmployeeLocalList_Controller">EmployeeLocalList_Controller</a></li>
 <li><a href="#Enum_Controller">Enum_Controller</a></li>
+<li><a href="#ExpertConclusion_Controller">ExpertConclusion_Controller</a></li>
 <li><a href="#ExpertNotification_Controller">ExpertNotification_Controller</a></li>
 <li><a href="#ExpertWork_Controller">ExpertWork_Controller</a></li>
 <li><a href="#ExpertiseProlongation_Controller">ExpertiseProlongation_Controller</a></li>
@@ -149,6 +150,7 @@
 <li><a href="#OfficeBankAccList_Model">OfficeBankAccList_Model</a></li>
 <li><a href="#OfficeDaySchedule_Model">OfficeDaySchedule_Model</a></li>
 <li><a href="#FundSource_Model">FundSource_Model</a></li>
+<li><a href="#FundSourceList_Model">FundSourceList_Model</a></li>
 <li><a href="#ConstructionType_Model">ConstructionType_Model</a></li>
 <li><a href="#ConstructionTypeDialog_Model">ConstructionTypeDialog_Model</a></li>
 <li><a href="#Application_Model">Application_Model</a></li>
@@ -296,6 +298,9 @@
 <li><a href="#ConclusionDictionary_Model">ConclusionDictionary_Model</a></li>
 <li><a href="#ConclusionDictionaryDetail_Model">ConclusionDictionaryDetail_Model</a></li>
 <li><a href="#ConclusionDictionaryDetailLocalList_Model">ConclusionDictionaryDetailLocalList_Model</a></li>
+<li><a href="#ExpertConclusion_Model">ExpertConclusion_Model</a></li>
+<li><a href="#ExpertConclusionList_Model">ExpertConclusionList_Model</a></li>
+<li><a href="#ExpertConclusionDialog_Model">ExpertConclusionDialog_Model</a></li>
 </ul>
 <div class="section-title">Enumerations</div>
 <ul>
@@ -964,6 +969,33 @@
 <p>Type:Int</p>
 <p>Required:
 								Да</p>
+</div>
+<h3>tm</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Да</p>
+<p>Length:50</p>
+</div>
+</div>
+<h2>fill_expert_conclusions</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>doc_id</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:Int</p>
+<p>Required:
+								Да</p>
+</div>
+<h3>tm</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Да</p>
+<p>Length:50</p>
 </div>
 </div>
 </div>
@@ -2478,6 +2510,19 @@
 </div>
 </div>
 </div>
+<div id="ExpertConclusion_Controller" class="content_box">
+<h1>ExpertConclusion_Controller</h1>
+<div class="content_item">
+<p class="big"></p>
+<p>Методы:</p>
+<h2>insert</h2>
+<a href="#ExpertConclusion_Model">Model: ExpertConclusion_Model</a><h2>update</h2>
+<a href="#ExpertConclusion_Model">Model: ExpertConclusion_Model</a><h2>delete</h2>
+<a href="#ExpertConclusion_Model">Model: ExpertConclusion_Model</a><h2>get_object</h2>
+<a href="#ExpertConclusionDialog_Model">Model: ExpertConclusionDialog_Model</a><h2>get_list</h2>
+<a href="#ExpertConclusionList_Model">Model: ExpertConclusionList_Model</a>
+</div>
+</div>
 <div id="ExpertNotification_Controller" class="content_box">
 <h1>ExpertNotification_Controller</h1>
 <div class="content_item">
@@ -2628,8 +2673,8 @@
 <a href="#FundSource_Model">Model: FundSource_Model</a><h2>update</h2>
 <a href="#FundSource_Model">Model: FundSource_Model</a><h2>delete</h2>
 <a href="#FundSource_Model">Model: FundSource_Model</a><h2>get_object</h2>
-<a href="#FundSource_Model">Model: FundSource_Model</a><h2>get_list</h2>
-<a href="#FundSource_Model">Model: FundSource_Model</a>
+<a href="#FundSourceList_Model">Model: FundSourceList_Model</a><h2>get_list</h2>
+<a href="#FundSourceList_Model">Model: FundSourceList_Model</a>
 </div>
 </div>
 <div id="Holiday_Controller" class="content_box">
@@ -12116,6 +12161,180 @@
 <div>Precision:</div>
 </div>
 </div>
+<div id="ExpertConclusion_Model" class="content_box">
+<h1>ExpertConclusion_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>contract_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>expert_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>date_time</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>last_modified</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>conclusion</h2>
+<div>Type:XML</div>
+<div>Primary key:</div>
+<div>Required:TRUE</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>conclusion_type</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:10</div>
+<div>Precision:</div>
+<h2>conclusion_type_descr</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="ExpertConclusionDialog_Model" class="content_box">
+<h1>ExpertConclusionDialog_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>contracts_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>experts_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>date_time</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>last_modified</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>conclusion</h2>
+<div>Type:XML</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>expert_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>conclusion_type</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:10</div>
+<div>Precision:</div>
+<h2>conclusion_type_descr</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="ExpertConclusionList_Model" class="content_box">
+<h1>ExpertConclusionList_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>contracts_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>experts_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>date_time</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>last_modified</h2>
+<div>Type:DateTimeTZ</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>expert_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>contract_id</h2>
+<div>Type:Int</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>conclusion_type</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:10</div>
+<div>Precision:</div>
+<h2>conclusion_type_descr</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+</div>
+</div>
 <div id="ExpertNotification_Model" class="content_box">
 <h1>ExpertNotification_Model</h1>
 <div class="content_item">
@@ -12509,6 +12728,60 @@
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:200</div>
+<div>Precision:</div>
+<h2>finance_type_code</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:30</div>
+<div>Precision:</div>
+<h2>finance_type_dictionary_name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:50</div>
+<div>Precision:</div>
+<h2>budget_type_code</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:30</div>
+<div>Precision:</div>
+<h2>budget_type_dictionary_name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:50</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="FundSourceList_Model" class="content_box">
+<h1>FundSourceList_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>id</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>finance_types_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>budget_types_ref</h2>
+<div>Type:JSON</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
 <div>Precision:</div>
 </div>
 </div>

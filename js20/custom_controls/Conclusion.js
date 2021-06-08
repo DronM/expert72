@@ -111,20 +111,6 @@ function Conclusion(id,options){
 			,"title":"Обязательный элемент."			
 		}));										
 		
-		this.addElement(new Conclusion_Container(id+":Finance",{
-			"name":"Finance"
-			,"xmlNodeName":"Finance"
-			,"elementControlClass":Conclusion_tFinance
-			,"elementControlOptions":{
-				"labelCaption":"Сведения об источнике финансирования:"
-				,"title":"Обязательный элемент."
-			}
-			,"deleteTitle":"Удалить источник финансирования"
-			,"deleteConf":"Удалить источник финансирования?"
-			,"addTitle":"Добавить сведения об источнике финансирования"
-			,"addCaption":"Добавить источник финансирования"			
-		}));
-
 		this.addElement(new Conclusion_Container(id+":ProjectDocumentsDeveloper",{
 			"name":"ProjectDocumentsDeveloper"
 			,"elementControlClass":Conclusion_tDeclarant
@@ -152,6 +138,27 @@ function Conclusion(id,options){
 			,"addCaption":"Добавить технического заказчика ПД"
 		}));
 
+		
+		this.addElement(new Conclusion_Container(id+":Finance",{
+			"name":"Finance"
+			,"xmlNodeName":"Finance"
+			,"elementControlClass":Conclusion_tFinance
+			,"elementControlOptions":{
+				"labelCaption":"Сведения об источнике финансирования:"
+				,"title":"Обязательный элемент."
+			}
+			,"deleteTitle":"Удалить источник финансирования"
+			,"deleteConf":"Удалить источник финансирования?"
+			,"addTitle":"Добавить сведения об источнике финансирования"
+			,"addCaption":"Добавить источник финансирования"			
+		}));
+		
+		this.addElement(new EditText(id+":FinanceComment",{
+			"labelCaption":"Дополнительные сведения об источнике финансирования:"
+			,"title":"Необязательный элемент"
+		}));										
+		
+		
 		this.addElement(new Conclusion_Container(id+":CadastralNumber",{
 			"name":"CadastralNumber"
 			,"xmlNodeName":"CadastralNumber"
@@ -266,6 +273,8 @@ function Conclusion(id,options){
 			,"addCaption":"Добавить технического заказчика РИИ"
 		}));
 
+		/*
+		* Исключено из схемы
 		this.addElement(new Conclusion_Container(id+":ExpertConclusion",{
 			"name":"ExpertConclusion"
 			,"elementControlClass":Conclusion_tExpertConclusion
@@ -279,6 +288,44 @@ function Conclusion(id,options){
 			
 			,"labelCaption":"Сведения о рассмотрении документации по направлению:"
 			,"title":"Обязательный элемент.Обязательное присутствие хотя бы одного элемента в схеме"
+		}));
+		*/
+		this.addElement(new Conclusion_Container(id+":ExpertEngineeringSurveys",{			
+			"elementControlClass":Conclusion_tExpertEngineeringSurveys_View
+			,"elementControlOptions":{
+				"name":"ExpertEngineeringSurveys"
+				,"labelCaption":"Заключение эксперта по РИИ:"
+			}
+			,"deleteTitle":"Удалить заключение в части экспертизы РИИ, подготовленные экспертом"
+			,"deleteConf":"Удалить сведение?"
+			,"addTitle":"Добавить сведение"
+			,"addCaption":"Добавить заключение РИИ"
+			,"labelCaption":"Заключение эксперта по РИИ:"
+			,"title":"Обязательный элемент при РИИ"
+		}));
+		this.addElement(new Conclusion_Container(id+":ExpertProjectDocuments",{			
+			"elementControlClass":Conclusion_tExpertProjectDocuments_View
+			,"elementControlOptions":{
+				"name":"ExpertProjectDocuments"
+				,"labelCaption":"Заключение эксперта по ПД:"
+			}
+			,"deleteTitle":"Удалить заключение в части экспертизы ПД, подготовленные экспертом"
+			,"deleteConf":"Удалить заключение?"
+			,"addTitle":"Добавить заключение по ПД"
+			,"addCaption":"Добавить заключение ПД"			
+			,"title":"Обязательный элемент при ПД"
+		}));
+		this.addElement(new Conclusion_Container(id+":ExpertEstimate",{			
+			"elementControlClass":Conclusion_tExpertEstimate_View
+			,"elementControlOptions":{
+				"name":"ExpertEstimate"
+				,"labelCaption":"Заключение эксперта по проверке достоверности сметной стоимости:"
+			}
+			,"deleteTitle":"Удалить заключение в части экспертизы проверки достоверности сметной стоимости, подготовленные экспертом"
+			,"deleteConf":"Удалить заключение?"
+			,"addTitle":"Добавить заключение по проверке достоверности смотной стоимости"
+			,"addCaption":"Добавить заключение по достоверности"
+			,"title":"Обязательный элемент при достоверности"
 		}));
 		
 		this.addElement(new Conclusion_tSummary(id+":Summary",{

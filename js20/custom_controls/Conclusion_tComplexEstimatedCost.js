@@ -19,44 +19,36 @@ function Conclusion_tComplexEstimatedCost(id,options){
 		var lb_col = window.getBsCol(9);
 		var ed_col = window.getBsCol(2);
 		
-		this.addElement(new EditMoney(id+":CostBasic",{
+		this.addElement(new Conclusion_tEstimatedSum(id+":CostBasic",{
 			"required":true
 			,"labelClassName":"control-label contentRequired "+lb_col
 			,"editContClassName":"input-group "+ed_col
 			,"labelCaption":"Сметная стоимость в базисном уровне цен:"
-			,"placeholder":"тыс.руб."
-			,"title":"Обязательный элемент."
 			,"focus":true
 		}));								
 
-		this.addElement(new EditMoney(id+":WorksCostBasic",{
+		this.addElement(new Conclusion_tEstimatedSum(id+":WorksCostBasic",{
 			"required":true
 			,"labelClassName":"control-label contentRequired "+lb_col
 			,"editContClassName":"input-group "+ed_col
 			,"labelCaption":"Сметная стоимость строительно-монтажных работ в базисном уровне цен:"
-			,"placeholder":"тыс.руб."
-			,"title":"Обязательный элемент."
 		}));								
 
-		this.addElement(new EditMoney(id+":HardwareCostBasic",{
+		this.addElement(new Conclusion_tEstimatedSum(id+":HardwareCostBasic",{
 			"required":true
 			,"labelClassName":"control-label contentRequired "+lb_col
 			,"editContClassName":"input-group "+ed_col
 			,"labelCaption":"Сметная стоимость оборудования в базисном уровне цен:"
-			,"placeholder":"тыс.руб."
-			,"title":"Обязательный элемент."
 		}));								
 
-		this.addElement(new EditMoney(id+":OtherCostBasic",{
+		this.addElement(new Conclusion_tEstimatedSum(id+":OtherCostBasic",{
 			"required":true
 			,"labelClassName":"control-label contentRequired "+lb_col
 			,"editContClassName":"input-group "+ed_col
 			,"labelCaption":"Сметная стоимость прочих затрат в базисном уровне цен:"
-			,"placeholder":"тыс.руб."
-			,"title":"Обязательный элемент."
 		}));								
 
-		this.addElement(new EditMoney(id+":ProjectWorksCostBasic",{
+		this.addElement(new Conclusion_tEstimatedSum(id+":ProjectWorksCostBasic",{
 			"required":true
 			,"labelClassName":"control-label contentRequired "+lb_col
 			,"editContClassName":"input-group "+ed_col
@@ -65,78 +57,66 @@ function Conclusion_tComplexEstimatedCost(id,options){
 			,"title":"Обязательный элемент."
 		}));								
 
-		this.addElement(new EditMoney(id+":BackSumCostBasic",{
+		this.addElement(new Conclusion_tEstimatedSum(id+":BackSumCostBasic",{
 			"required":true
 			,"labelClassName":"control-label contentRequired "+lb_col
 			,"editContClassName":"input-group "+ed_col
 			,"labelCaption":"Возвратные суммы в базисном уровне цен:"
-			,"placeholder":"тыс.руб."
-			,"title":"Обязательный элемент."
 		}));								
 
-		this.addElement(new EditMoney(id+":Cost",{
+		this.addElement(new Conclusion_tEstimatedSum(id+":Cost",{
 			"required":true
 			,"labelClassName":"control-label contentRequired "+lb_col
 			,"editContClassName":"input-group "+ed_col
 			,"labelCaption":"Сметная стоимость в уровне цен, сложившихся на дату представления сметной документации:"
-			,"placeholder":"тыс.руб."
-			,"title":"Обязательный элемент."
 		}));								
 
-		this.addElement(new EditMoney(id+":WorksCost",{
+		this.addElement(new Conclusion_tEstimatedSum(id+":WorksCost",{
 			"required":true
 			,"labelClassName":"control-label contentRequired "+lb_col
 			,"editContClassName":"input-group "+ed_col
 			,"labelCaption":"Сметная стоимость строительно-монтажных работ в уровне цен, сложившихся на дату представления сметной документации:"
-			,"placeholder":"тыс.руб."
-			,"title":"Обязательный элемент."
 		}));								
 
-		this.addElement(new EditMoney(id+":HardwareCost",{
+		this.addElement(new Conclusion_tEstimatedSum(id+":HardwareCost",{
 			"required":true
 			,"labelClassName":"control-label contentRequired "+lb_col
 			,"editContClassName":"input-group "+ed_col
 			,"labelCaption":"Сметная стоимость оборудования в уровне цен, сложившихся на дату представления сметной документации:"
-			,"placeholder":"тыс.руб."
-			,"title":"Обязательный элемент."
 		}));								
 
-		this.addElement(new EditMoney(id+":OtherCost",{
+		this.addElement(new Conclusion_tEstimatedSum(id+":OtherCost",{
 			"required":true
 			,"labelClassName":"control-label contentRequired "+lb_col
 			,"editContClassName":"input-group "+ed_col
 			,"labelCaption":"Сметная стоимость прочих затрат в уровне цен, сложившихся на дату представления сметной документации:"
-			,"placeholder":"тыс.руб."
-			,"title":"Обязательный элемент."
 		}));								
 
-		this.addElement(new EditMoney(id+":ProjectWorksCost",{
+		this.addElement(new Conclusion_tEstimatedSum(id+":ProjectWorksCost",{
 			"required":true
 			,"labelClassName":"control-label contentRequired "+lb_col
 			,"editContClassName":"input-group "+ed_col
 			,"labelCaption":"Сметная стоимость проектно-изыскательских работ в уровне цен, сложившихся на дату представления сметной документаци:"
-			,"placeholder":"тыс.руб."
-			,"title":"Обязательный элемент."
 		}));								
 
-		this.addElement(new EditMoney(id+":NDSCost",{
+		this.addElement(new Conclusion_tEstimatedSum(id+":NDSCost",{
 			"required":true
 			,"labelClassName":"control-label contentRequired "+lb_col
 			,"editContClassName":"input-group "+ed_col
 			,"labelCaption":"Сумма налога на добавленную стоимость:"
-			,"placeholder":"тыс.руб."
-			,"title":"Обязательный элемент."
 		}));								
 
-		this.addElement(new EditMoney(id+":BackSumCost",{
+		this.addElement(new Conclusion_tEstimatedSum(id+":BackSumCost",{
 			"required":true
 			,"labelClassName":"control-label contentRequired "+lb_col
 			,"editContClassName":"input-group "+ed_col
 			,"labelCaption":"Возвратные суммы в уровне цен, сложившихся на дату представления сметной документации:"
-			,"placeholder":"тыс.руб."
-			,"title":"Обязательный элемент."
 		}));								
 
+		this.addElement(new EditText(id+":CostComment",{
+			"required":false
+			,"labelCaption":"Комментарий к сметной стоимости в текущем уровне цен:"
+		}));								
 
 	}
 	

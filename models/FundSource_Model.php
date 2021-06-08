@@ -39,6 +39,42 @@ class FundSource_Model extends ModelSQL{
 		$f_name=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"name",$f_opts);
 		$this->addField($f_name);
 		//********************
+		
+		//*** Field finance_type_code ***
+		$f_opts = array();
+		$f_opts['length']=30;
+		$f_opts['id']="finance_type_code";
+						
+		$f_finance_type_code=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"finance_type_code",$f_opts);
+		$this->addField($f_finance_type_code);
+		//********************
+		
+		//*** Field finance_type_dictionary_name ***
+		$f_opts = array();
+		$f_opts['length']=50;
+		$f_opts['id']="finance_type_dictionary_name";
+						
+		$f_finance_type_dictionary_name=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"finance_type_dictionary_name",$f_opts);
+		$this->addField($f_finance_type_dictionary_name);
+		//********************
+		
+		//*** Field budget_type_code ***
+		$f_opts = array();
+		$f_opts['length']=30;
+		$f_opts['id']="budget_type_code";
+						
+		$f_budget_type_code=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"budget_type_code",$f_opts);
+		$this->addField($f_budget_type_code);
+		//********************
+		
+		//*** Field budget_type_dictionary_name ***
+		$f_opts = array();
+		$f_opts['length']=50;
+		$f_opts['id']="budget_type_dictionary_name";
+						
+		$f_budget_type_dictionary_name=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"budget_type_dictionary_name",$f_opts);
+		$this->addField($f_budget_type_dictionary_name);
+		//********************
 	
 		$order = new ModelOrderSQL();		
 		$this->setDefaultModelOrder($order);		

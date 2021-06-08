@@ -23,10 +23,35 @@ function Conclusion_tSummary(id,options){
 			"required":true
 			,"labelClassName":"control-label contentRequired "+lb_col
 			,"editContClassName":"input-group "+ed_col
-			,"labelClassName":"control-label contentRequired "+lb_col
 			,"labelCaption":"Вывод о соответствии или несоответствии результатов инженерных изысканий требованиям технических регламентов:"
 			,"title":"Необязательный элемент. Обязательный элемент если значение элемента ExaminationType равно 1"
 			,"focus":true
+		}));								
+
+		this.addElement(new EditString(id+":EngineeringSurveySummaryDate",{
+			"required":true
+			,"labelClassName":"control-label contentRequired "+lb_col
+			,"editContClassName":"input-group "+ed_col
+			,"labelCaption":"Сведения о дате, по состоянию на которую действовали требования, примененные в соответствии с частью 5.2 статьи 49 Градостроительного кодекса Российской Федерации (в части экспертизы результатов инженерных изысканий):"
+			,"title":"Необязательный элемент. Обязательный элемент если значение элемента ExaminationType равно 1"
+		}));								
+
+		this.addElement(new Conclusion_Container(id+":EngineeringSurveyType",{
+			"required":true
+			,"labelClassName":"control-label contentRequired "+lb_col
+			,"name":"EngineeringSurveyType"
+			,"xmlNodeName":"EngineeringSurveyType"
+			,"elementControlClass":ConclusionDictionaryDetailSelect
+			,"elementControlOptions":{
+				"labelCaption":"Вид инженерных изысканий:"
+				,"name":"EngineeringSurveyType"
+				,"title":"Обязательный элемент. Указывается код из классификатора – Таблица 12."
+				,"conclusion_dictionary_name":"tEngineeringSurveyType"				
+			}
+			,"deleteTitle":"Удалить вид инженерных изысканий, на соответствие которым проводилась экспертиза проектной документации"
+			,"deleteConf":"Удалить вид инженерных изысканий?"
+			,"addTitle":"Добавить вид инженерных изысканий, на соответствие которым проводилась экспертиза проектной документации"
+			,"addCaption":"Добавить вид инженерных изысканий"
 		}));								
 
 		this.addElement(new EditText(id+":ProjectDocumentsSummary",{
@@ -36,6 +61,14 @@ function Conclusion_tSummary(id,options){
 			,"labelCaption":"Вывод о соответствии или несоответствии технической части проектной документации результатам инженерных изысканий, заданию застройщика или технического заказчика на проектирование и требованиям технических регламентов:"
 			,"title":"Необязательный элемент. Обязательный элемент если значение элемента ExaminationType равно 2"
 		}));								
+		this.addElement(new EditString(id+":ProjectDocumentsSummaryDate",{
+			"required":true
+			,"labelClassName":"control-label contentRequired "+lb_col
+			,"editContClassName":"input-group "+ed_col
+			,"labelCaption":"Сведения о дате, по состоянию на которую действовали требования, примененные в соответствии с частью 5.2 статьи 49 Градостроительного кодекса Российской Федерации (в части экспертизы проектной документации):"
+			,"title":"Необязательный элемент. Обязательный элемент если значение элемента ExaminationType равно 2 и отсутствуют сведения о несоответствии проектной документации установленным требованиям"
+		}));								
+
 
 		this.addElement(new EditText(id+":EstimateNormsAndWorksSummary",{
 			"required":true
@@ -49,7 +82,7 @@ function Conclusion_tSummary(id,options){
 			"required":true
 			,"labelClassName":"control-label contentRequired "+lb_col
 			,"editContClassName":"input-group "+ed_col
-			,"labelCaption":"Вывод о достоверности или недостоверности определения сметной стоимости строительства, реконструкции,капитального ремонта, сноса объекта капитального строительства, работ по сохранению объектов культурного наследия (памятников истории и культуры) народов РФ:"
+			,"labelCaption":"Вывод о достоверности определения сметной стоимости строительства,капитального ремонта,сноса объекта кап. строительства, работ по сохранению объектов культурного наследия народов РФ:"
 			,"title":"Необязательный элемент. Обязательный элемент если значение элемента ExaminationType равно 3"
 		}));								
 		

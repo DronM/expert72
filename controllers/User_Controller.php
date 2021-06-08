@@ -729,6 +729,26 @@ class User_Controller extends ControllerSQL{
 			$field->setValue($_SESSION['global_employee_id']);
 			$filter->addField($field,'<>');
 			GlobalFilter::set('ShortMessageRecipientList_Model',$filter);
+			
+			if ($ar['role_id']=='expert' || $ar['role_id']=='expert_ext'){
+				$_SESSION['global_expert_id'] = json_decode($ar['employees_ref'])->keys->id;
+				
+							
+				$model = new ExpertConclusionList_Model($this->getDbLink());
+				$filter = new ModelWhereSQL();
+				$field = clone $model->getFieldById('expert_id');
+				$field->setValue($ar['id']);
+				$filter->addField($field,'=');
+				GlobalFilter::set('ExpertConclusionList_Model',$filter);
+							
+				$model = new ExpertConclusionDialog_Model($this->getDbLink());
+				$filter = new ModelWhereSQL();
+				$field = clone $model->getFieldById('expert_id');
+				$field->setValue($ar['id']);
+				$filter->addField($field,'=');
+				GlobalFilter::set('ExpertConclusionDialog_Model',$filter);
+								
+			}
 		}
 		
 		$log_ar = $this->getDbLinkMaster()->query_first(

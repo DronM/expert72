@@ -83,7 +83,7 @@ function ApplicationTemplateContentTree(id,options){
 									"cellOptions":{
 										"tagName":"SPAN"									
 									},
-									"ctrlClass":EditString,
+									"ctrlClass":EditDocumentType,
 									//"ctrlBindField":content_model.getField("document_type_descr"),
 									"ctrlOptions":{									
 										"labelCaption":"Вид документа (классификатор):",
@@ -91,6 +91,17 @@ function ApplicationTemplateContentTree(id,options){
 										"contTagName":"DIV",
 										"labelClassName":"control-label "+window.getBsCol(2),
 										"editContClassName":"input-group "+window.getBsCol(1),
+										/*"buttonSelect": new ButtonSelectRef(id+":btn_select",
+											{"winClass":ConclusionDictionaryDetailList_Form,
+											"winParams":"cond_vals=tDocumentType&cond_sgns=e&cond_fields=conclusion_dictionary_name",
+											"winEditViewOptions":"tDocumentType",
+											"descrIds":["code","descr"],
+											"keyIds":["conclusion_dictionary_name","code"],
+											"control":this,
+											"onSelect":function(fields){
+												self.onDocTypeSelected(fields);
+											}
+										}),*/
 										"onSelect":function(fields){
 											self.onDocTypeSelected(fields);
 										},
@@ -98,6 +109,7 @@ function ApplicationTemplateContentTree(id,options){
 										"cmdInsert":false,
 										"selectWinClass":ConclusionDictionaryDetailList_Form,
 										"selectWinParams":"cond_vals=tDocumentType&cond_sgns=e&cond_fields=conclusion_dictionary_name",
+										"selectWinEditViewOptions":{"conclusion_dictionary_name":"tDocumentType"},
 										"selectDescrIds":["code","descr"],
 										"acMinLengthForQuery":1,
 										"acController":ac_controller,
@@ -144,4 +156,25 @@ ApplicationTemplateContentTree.prototype.onDocTypeSelected = function(fields){
 	this.getUpdatePublicMethod().setFieldValue("dt_dictionary_name", "tDocumentType");
 }
 
+//*******************************************************
+function EditDocumentType(id,options){
+	var self = this;
+	options.buttonSelect = new ButtonSelectRef(id+":btn_select",
+		{"winClass":options.selectWinClass,
+		"winParams":options.selectWinParams,
+		"winEditViewOptions":options.selectWinEditViewOptions,
+		"descrIds":options.selectDescrIds,
+		"keyIds":options.selectKeyIds,
+		"control":this,
+		"onSelect":function(fields){
+			self.onDocTypeSelected(fields);
+		},
+		"formatFunction":options.selectFormatFunction,
+		"multySelect":options.selectMultySelect,
+		"enabled":options.enabled
+	});
+
+	EditDocumentType.superclass.constructor.call(this,id,options);
+}
+extend(EditDocumentType,EditString);
 

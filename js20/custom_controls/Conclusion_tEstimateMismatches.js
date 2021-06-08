@@ -51,7 +51,7 @@ function Conclusion_tEstimateMismatches(id,options){
 		this.addElement(new Conclusion_Container(id+":ProjectDocumentsMismatch",{
 			"name":"ProjectDocumentsMismatch"
 			,"xmlNodeName":"ProjectDocumentsMismatch"
-			,"elementControlClass":Conclusion_tMismatch
+			,"elementControlClass":Conclusion_tMismatchExtended
 			,"deleteTitle":"Удалить замечание в части соответствия расчетов, содержащихся в сметной документации,физическим объемам работ конструктивным,организационно-технологическим и другим решениям"
 			,"deleteConf":"Удалить замечание?"
 			,"addTitle":"Добавить замечание"

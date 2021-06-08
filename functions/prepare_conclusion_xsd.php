@@ -13,9 +13,9 @@ $target = dirname(__FILE__).'/../views/conclusion_corrected.xsd';
 if(!file_exists($source)){
 	die('Source file not found!');
 }
-if(!file_exists($xslt_file)){
+/*if(!file_exists($xslt_file)){
 	die('XSLT file not found!');
-}
+}*/
 
 $dom = new DOMDocument();
 $dom->load($source);

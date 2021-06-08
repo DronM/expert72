@@ -53,11 +53,11 @@ try{
 		)
 	){
 		//Клиент - всегда доступ ТОЛЬКО клиентский с любого сервера
-		$db_server = DB_SERVER_LK;
-		$db_user = DB_USER_LK;
-		$db_password = DB_PASSWORD_LK;
-		$port = DB_PORT_LK;
-		$db_name = DB_NAME_LK;
+		$db_server = defined('DB_SERVER_LK')? DB_SERVER_LK:DB_SERVER_OFFICE;
+		$db_user = defined('DB_USER_LK')? DB_USER_LK:DB_USER_OFFICE;
+		$db_password = defined('DB_PASSWORD_LK')? DB_PASSWORD_LK:DB_PASSWORD_OFFICE;
+		$port = defined('DB_PORT_LK')? DB_PORT_LK:DB_PORT_OFFICE;
+		$db_name = defined('DB_NAME_LK')? DB_NAME_LK:DB_NAME;
 	}
 	else{
 		//не клиент, здесь доступ из офиса

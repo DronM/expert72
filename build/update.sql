@@ -3354,3 +3354,333 @@ CREATE OR REPLACE VIEW contracts_dialog AS
 ALTER VIEW contracts_dialog OWNER TO expert72;
 
 
+
+-- ******************* update 28/04/2021 14:06:49 ******************
+
+	-- ********** Adding new table from model **********
+	ALTER TABLE public.fund_sources ADD COLUMN finance_type_code  varchar(30);
+	ALTER TABLE public.fund_sources ADD COLUMN finance_type_dictionary_name  varchar(50);
+	ALTER TABLE public.fund_sources ADD COLUMN budget_type_code  varchar(30);
+	ALTER TABLE public.fund_sources ADD COLUMN budget_type_dictionary_name  varchar(50);
+		
+
+
+-- ******************* update 28/04/2021 14:11:06 ******************
+-- VIEW: fund_sources_list
+
+--DROP VIEW fund_sources_list;
+
+CREATE OR REPLACE VIEW fund_sources_list AS
+	SELECT
+		fnd.*
+		,conclusion_dictionary_detail_ref(fn) AS finance_types_ref
+		,conclusion_dictionary_detail_ref(bdgt) AS budget_types_ref
+		
+	FROM fund_sources AS fnd
+	LEFT JOIN conclusion_dictionary_detail AS fn ON fnd.finance_type_code = fn.code AND fn.conclusion_dictionary_name='tFinaceType'
+	LEFT JOIN conclusion_dictionary_detail AS bdgt ON fnd.budget_type_code = bdgt.code AND bdgt.conclusion_dictionary_name='tBudgetType'
+	;
+	
+ALTER VIEW fund_sources_list OWNER TO expert72;
+
+
+-- ******************* update 28/04/2021 15:39:46 ******************
+-- VIEW: fund_sources_list
+
+--DROP VIEW fund_sources_list;
+
+CREATE OR REPLACE VIEW fund_sources_list AS
+	SELECT
+		fnd.*
+		,conclusion_dictionary_detail_ref(fn) AS finance_types_ref
+		,conclusion_dictionary_detail_ref(bdgt) AS budget_types_ref
+		
+	FROM fund_sources AS fnd
+	LEFT JOIN conclusion_dictionary_detail AS fn ON fnd.finance_type_code = fn.code AND fn.conclusion_dictionary_name='tFinanceType'
+	LEFT JOIN conclusion_dictionary_detail AS bdgt ON fnd.budget_type_code = bdgt.code AND bdgt.conclusion_dictionary_name='tBudgetType'
+	;
+	
+ALTER VIEW fund_sources_list OWNER TO expert72;
+
+
+-- ******************* update 29/04/2021 17:24:04 ******************
+
+	-- ********** Adding new table from model **********
+	CREATE TABLE public.expert_conclusions
+	(id serial NOT NULL,contract_id int NOT NULL REFERENCES contracts(id),expert_id int NOT NULL REFERENCES employees(id),date_time timestampTZ
+			DEFAULT CURRENT_TIMESTAMP NOT NULL,last_modified timestampTZ
+			DEFAULT CURRENT_TIMESTAMP NOT NULL,conclusion xml NOT NULL,conclusion_dictionary_details_ref jsonb,CONSTRAINT expert_conclusions_pkey PRIMARY KEY (id)
+	);
+
+
+
+-- ******************* update 29/04/2021 17:33:10 ******************
+-- VIEW: expert_conclusions_list
+
+--DROP VIEW expert_conclusions_list;
+
+CREATE OR REPLACE VIEW expert_conclusions_list AS
+	SELECT
+		t.id
+		,contracts_ref(ct) AS contracts_ref
+		,employees_ref(emp) AS experts_ref
+		,t.date_time
+		,t.last_modified
+		,t.conclusion_dictionary_details_ref
+		
+	FROM expert_conclusions AS t
+	LEFT JOIN contracts AS ct ON ct.id = t.contract_id
+	LEFT JOIN employees AS emp ON emp.id = t.expert_id
+	LEFT JOIN conclusion_dictionary_detail AS dict ON
+		dict.conclusion_dictionary_name = t.conclusion_dictionary_details_ref->'keys'->>'conclusion_dictionary_name'
+		AND dict.code = t.conclusion_dictionary_details_ref->'keys'->>'code'
+	;
+	
+ALTER VIEW expert_conclusions_list OWNER TO expert72;
+
+
+-- ******************* update 29/04/2021 17:33:55 ******************
+-- VIEW: expert_conclusions_list
+
+--DROP VIEW expert_conclusions_list;
+
+CREATE OR REPLACE VIEW expert_conclusions_list AS
+	SELECT
+		t.id
+		,contracts_ref(ct) AS contracts_ref
+		,employees_ref(emp) AS experts_ref
+		,t.date_time
+		,t.last_modified
+		,t.conclusion_dictionary_details_ref
+		
+	FROM expert_conclusions AS t
+	LEFT JOIN contracts AS ct ON ct.id = t.contract_id
+	LEFT JOIN employees AS emp ON emp.id = t.expert_id
+	LEFT JOIN conclusion_dictionary_detail AS dict ON
+		dict.conclusion_dictionary_name = t.conclusion_dictionary_details_ref->'keys'->>'conclusion_dictionary_name'
+		AND dict.code = t.conclusion_dictionary_details_ref->'keys'->>'code'
+	ORDER BY t.date_time DESC	
+	;
+	
+ALTER VIEW expert_conclusions_list OWNER TO expert72;
+
+
+-- ******************* update 29/04/2021 17:34:41 ******************
+-- VIEW: expert_conclusions_dialog
+
+--DROP VIEW expert_conclusions_dialog;
+
+CREATE OR REPLACE VIEW expert_conclusions_dialog AS
+	SELECT
+		t.id
+		,contracts_ref(ct) AS contracts_ref
+		,employees_ref(emp) AS experts_ref
+		,t.date_time
+		,t.last_modified
+		,t.conclusion_dictionary_details_ref
+		
+		,t.conclusion
+		
+	FROM expert_conclusions AS t
+	LEFT JOIN contracts AS ct ON ct.id = t.contract_id
+	LEFT JOIN employees AS emp ON emp.id = t.expert_id
+	LEFT JOIN conclusion_dictionary_detail AS dict ON
+		dict.conclusion_dictionary_name = t.conclusion_dictionary_details_ref->'keys'->>'conclusion_dictionary_name'
+		AND dict.code = t.conclusion_dictionary_details_ref->'keys'->>'code'
+	;
+	
+ALTER VIEW expert_conclusions_dialog OWNER TO expert72;
+
+
+-- ******************* update 29/04/2021 17:35:10 ******************
+	CREATE INDEX expert_conclusions_date_time_idx
+	ON expert_conclusions(date_time);
+
+
+
+-- ******************* update 29/04/2021 17:46:57 ******************
+
+	-- Adding menu item
+	INSERT INTO views
+	(id,c,f,t,section,descr,limited)
+	VALUES (
+	'50009',
+	'ExpertConclusion_Controller',
+	'get_list',
+	'ExpertConclusionList',
+	'Формы',
+	'Заключения экспертов',
+	FALSE
+	);
+	
+
+-- ******************* update 30/04/2021 14:26:18 ******************
+-- VIEW: expert_conclusions_list
+
+--DROP VIEW expert_conclusions_list;
+
+CREATE OR REPLACE VIEW expert_conclusions_list AS
+	SELECT
+		t.id
+		,contracts_ref(ct) AS contracts_ref
+		,employees_ref(emp) AS experts_ref
+		,t.date_time
+		,t.last_modified
+		,t.conclusion_dictionary_details_ref
+		,t.expert_id
+		
+	FROM expert_conclusions AS t
+	LEFT JOIN contracts AS ct ON ct.id = t.contract_id
+	LEFT JOIN employees AS emp ON emp.id = t.expert_id
+	LEFT JOIN conclusion_dictionary_detail AS dict ON
+		dict.conclusion_dictionary_name = t.conclusion_dictionary_details_ref->'keys'->>'conclusion_dictionary_name'
+		AND dict.code = t.conclusion_dictionary_details_ref->'keys'->>'code'
+	ORDER BY t.date_time DESC	
+	;
+	
+ALTER VIEW expert_conclusions_list OWNER TO expert72;
+
+
+-- ******************* update 30/04/2021 14:26:30 ******************
+-- VIEW: expert_conclusions_dialog
+
+--DROP VIEW expert_conclusions_dialog;
+
+CREATE OR REPLACE VIEW expert_conclusions_dialog AS
+	SELECT
+		t.id
+		,contracts_ref(ct) AS contracts_ref
+		,employees_ref(emp) AS experts_ref
+		,t.date_time
+		,t.last_modified
+		,t.conclusion_dictionary_details_ref
+		
+		,t.conclusion
+		,t.expert_id
+		
+	FROM expert_conclusions AS t
+	LEFT JOIN contracts AS ct ON ct.id = t.contract_id
+	LEFT JOIN employees AS emp ON emp.id = t.expert_id
+	LEFT JOIN conclusion_dictionary_detail AS dict ON
+		dict.conclusion_dictionary_name = t.conclusion_dictionary_details_ref->'keys'->>'conclusion_dictionary_name'
+		AND dict.code = t.conclusion_dictionary_details_ref->'keys'->>'code'
+	;
+	
+ALTER VIEW expert_conclusions_dialog OWNER TO expert72;
+
+
+-- ******************* update 30/04/2021 16:52:19 ******************
+-- VIEW: expert_conclusions_list
+
+--DROP VIEW expert_conclusions_list;
+
+CREATE OR REPLACE VIEW expert_conclusions_list AS
+	SELECT
+		t.id
+		,contracts_ref(ct) AS contracts_ref
+		,employees_ref(emp) AS experts_ref
+		,t.date_time
+		,t.last_modified
+		,t.conclusion_dictionary_details_ref
+		,t.expert_id
+		,t.contract_id
+		
+	FROM expert_conclusions AS t
+	LEFT JOIN contracts AS ct ON ct.id = t.contract_id
+	LEFT JOIN employees AS emp ON emp.id = t.expert_id
+	LEFT JOIN conclusion_dictionary_detail AS dict ON
+		dict.conclusion_dictionary_name = t.conclusion_dictionary_details_ref->'keys'->>'conclusion_dictionary_name'
+		AND dict.code = t.conclusion_dictionary_details_ref->'keys'->>'code'
+	ORDER BY t.date_time DESC	
+	;
+	
+ALTER VIEW expert_conclusions_list OWNER TO expert72;
+
+
+-- ******************* update 01/05/2021 08:01:32 ******************
+
+		ALTER TABLE public.expert_conclusions ADD COLUMN conclusion_type  varchar(10),ADD COLUMN conclusion_type_descr text;
+
+
+
+-- ******************* update 01/05/2021 08:02:31 ******************
+-- VIEW: expert_conclusions_list
+
+DROP VIEW expert_conclusions_list;
+
+CREATE OR REPLACE VIEW expert_conclusions_list AS
+	SELECT
+		t.id
+		,contracts_ref(ct) AS contracts_ref
+		,employees_ref(emp) AS experts_ref
+		,t.date_time
+		,t.last_modified
+		,t.expert_id
+		,t.contract_id
+		,t.conclusion_type
+		,t.conclusion_type_descr
+		
+	FROM expert_conclusions AS t
+	LEFT JOIN contracts AS ct ON ct.id = t.contract_id
+	LEFT JOIN employees AS emp ON emp.id = t.expert_id
+	ORDER BY t.date_time DESC	
+	;
+	
+ALTER VIEW expert_conclusions_list OWNER TO expert72;
+
+
+-- ******************* update 01/05/2021 08:02:51 ******************
+-- VIEW: expert_conclusions_dialog
+
+DROP VIEW expert_conclusions_dialog;
+
+CREATE OR REPLACE VIEW expert_conclusions_dialog AS
+	SELECT
+		t.id
+		,contracts_ref(ct) AS contracts_ref
+		,employees_ref(emp) AS experts_ref
+		,t.date_time
+		,t.last_modified
+		
+		,t.conclusion
+		,t.expert_id
+		,t.conclusion_type
+		,t.conclusion_type_descr
+		
+	FROM expert_conclusions AS t
+	LEFT JOIN contracts AS ct ON ct.id = t.contract_id
+	LEFT JOIN employees AS emp ON emp.id = t.expert_id
+	;
+	
+ALTER VIEW expert_conclusions_dialog OWNER TO expert72;
+
+
+-- ******************* update 11/05/2021 11:36:50 ******************
+-- VIEW: employees_dialog
+
+--DROP VIEW public.employees_dialog;
+
+CREATE OR REPLACE VIEW public.employees_dialog AS
+	SELECT
+		t.id
+		,t.name
+		,t.picture_info
+		,public.users_ref(users_join) AS users_ref
+		,public.posts_ref(posts_join) AS posts_ref
+		,public.departments_ref(departments_join) AS departments_ref
+		,t.snils
+		,(users_join.role_id='expert' OR users_join.role_id='expert_ext' OR users_join.role_id='boss' OR users_join.role_id='admin') AS is_expert
+	FROM public.employees AS t
+	LEFT JOIN public.users AS users_join ON
+		t.user_id=users_join.id
+	LEFT JOIN public.departments AS departments_join ON
+		t.department_id=departments_join.id
+	LEFT JOIN public.posts AS posts_join ON
+		t.post_id=posts_join.id
+		
+	ORDER BY
+		t.id
+	;
+	
+ALTER VIEW employees_dialog OWNER TO expert72;
+

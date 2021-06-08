@@ -32,6 +32,18 @@ class FundSource_Controller extends ControllerSQL{
 		$param = new FieldExtString('name'
 				,array());
 		$pm->addParam($param);
+		$param = new FieldExtString('finance_type_code'
+				,array());
+		$pm->addParam($param);
+		$param = new FieldExtString('finance_type_dictionary_name'
+				,array());
+		$pm->addParam($param);
+		$param = new FieldExtString('budget_type_code'
+				,array());
+		$pm->addParam($param);
+		$param = new FieldExtString('budget_type_dictionary_name'
+				,array());
+		$pm->addParam($param);
 		
 		$pm->addParam(new FieldExtInt('ret_id'));
 		
@@ -58,6 +70,22 @@ class FundSource_Controller extends ControllerSQL{
 			));
 			$pm->addParam($param);
 		$param = new FieldExtString('name'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtString('finance_type_code'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtString('finance_type_dictionary_name'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtString('budget_type_code'
+				,array(
+			));
+			$pm->addParam($param);
+		$param = new FieldExtString('budget_type_dictionary_name'
 				,array(
 			));
 			$pm->addParam($param);
@@ -109,7 +137,7 @@ class FundSource_Controller extends ControllerSQL{
 		
 		
 		$this->addPublicMethod($pm);
-		$this->setObjectModelId('FundSource_Model');		
+		$this->setObjectModelId('FundSourceList_Model');		
 
 			
 		/* get_list */
@@ -127,7 +155,7 @@ class FundSource_Controller extends ControllerSQL{
 
 		$this->addPublicMethod($pm);
 		
-		$this->setListModelId('FundSource_Model');
+		$this->setListModelId('FundSourceList_Model');
 		
 		
 	}	

@@ -24,7 +24,14 @@ function ConclusionDictionaryDetailList_View(id,options){
 	var constants = {"doc_per_page_count":null};
 	window.getApp().getConstantManager().get(constants);
 	var pagClass = window.getApp().getPaginationClass();
-	
+
+	var grid_filters;
+	if(options.conclusion_dictionary_name){
+		grid_filters = [
+			{"field":"conclusion_dictionary_name","sign":"e","val":options.conclusion_dictionary_name}
+		];
+	}
+
 	this.addElement(new GridAjx(id+":grid",{
 		"model":model,
 		"keyIds":["conclusion_dictionary_name","code"],
@@ -32,6 +39,7 @@ function ConclusionDictionaryDetailList_View(id,options){
 		"editInline":true,
 		"editWinClass":null,
 		"popUpMenu":popup_menu,
+		"filters":grid_filters,
 		"commands":new GridCmdContainerAjx(id+":grid:cmd",{
 			"filters":null,
 			"variantStorage":options.variantStorage

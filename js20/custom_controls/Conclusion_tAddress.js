@@ -17,6 +17,12 @@ function Conclusion_tAddress(id,options){
 	options.addElement = function(){
 	
 		var lb_col = window.getBsCol(4);
+
+		this.addElement(new EditString(id+":Country",{
+			"maxLength":"200"
+			,"labelCaption":"Страна:"
+			,"title":"Необязательный элемент."
+		}));								
 		
 		this.addElement(new ConclusionDictionaryDetailEdit(id+":Region",{
 			"labelClassName":"control-label contentRequired "+lb_col

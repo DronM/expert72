@@ -19,7 +19,7 @@ function Conclusion_tDocument(id,options){
 	options.addElement = function(){
 		
 		var lb_col = window.getBsCol(4);
-		
+		var self = this;
 		this.addElement(new ConclusionDictionaryDetailEdit(id+":DocType",{			
 			"required":true
 			,"labelClassName":"control-label contentRequired "+lb_col
@@ -27,6 +27,9 @@ function Conclusion_tDocument(id,options){
 			,"title":"Обязательный элемент. Указывается код из классификатора – Таблица 6."
 			,"conclusion_dictionary_name":"tDocumentType"
 			,"focus":true
+			,"onSelect":function(f){
+				self.getElement("DocName").setValue(f.descr.getValue());
+			}
 		}));								
 
 		this.addElement(new EditString(id+":DocName",{			
@@ -97,6 +100,14 @@ function Conclusion_tDocument(id,options){
 			,"labelCaption":"Примечание об изменении документа:"
 			,"title":"Необязательный элемент."
 		}));								
+
+		this.addElement(new EditText(id+":Included",{			
+			//"required":true
+			"maxLength":"1000"
+			,"labelCaption":"Сведения о документе,приложением к которому является текущий документ и в составе которого поступил на экспертизу:"
+			,"title":"Необязательный элемент."
+		}));								
+
 
 		//множественная структура!!!
 		this.addElement(new Conclusion_Container(id+":File",{			

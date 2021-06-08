@@ -22,6 +22,7 @@ function Conclusion_tExpertEngineeringSurveys(id,options){
 
 		this.addElement(new ConclusionDictionaryDetailSelect(id+":EngineeringSurveyType",{
 			"required":true
+			,"attrs":{"xmlAttr":true}
 			,"labelClassName":"control-label contentRequired "+lb_col
 			,"labelCaption":"Вид инженерных изысканий:"
 			,"title":"Обязательный элемент.Значение из таблицы 12."

@@ -9,7 +9,7 @@
  */	
 function FundSourceSelect(id,options){
 	options = options || {};
-	options.model = new FundSource_Model();
+	options.model = new FundSourceList_Model();
 	
 	if (options.labelCaption!=""){
 		options.labelCaption = options.labelCaption || "Источник финансирования:";

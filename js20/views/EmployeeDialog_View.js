@@ -24,7 +24,7 @@ function EmployeeDialog_View(id,options){
 	
 	options.templateOptions = options.templateOptions || {};
 	if (options.model && (options.model.getRowIndex()>=0 || options.model.getNextRow()) ){			
-		options.templateOptions.expert = options.model.getFieldValue("is_expert");
+		options.templateOptions.expertCetrif = options.model.getFieldValue("is_expert");
 	}
 	
 	options.addElement = function(){
@@ -62,7 +62,7 @@ function EmployeeDialog_View(id,options){
 			
 		}));		
 		
-		if(options.templateOptions.expert){
+		if(options.templateOptions.expertCetrif){
 			//сертификаты экспертиа
 			this.addElement(new EmployeeExpertCertificateList_View(id+":expert_certificate_list",{
 				"detail":true

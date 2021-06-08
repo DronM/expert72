@@ -19,8 +19,8 @@
 
 function FundSource_Controller(options){
 	options = options || {};
-	options.listModelClass = FundSource_Model;
-	options.objModelClass = FundSource_Model;
+	options.listModelClass = FundSourceList_Model;
+	options.objModelClass = FundSourceList_Model;
 	FundSource_Controller.superclass.constructor.call(this,options);	
 	
 	//methods
@@ -50,6 +50,30 @@ extend(FundSource_Controller,ControllerObjServer);
 	
 	pm.addField(field);
 	
+	var options = {};
+	
+	var field = new FieldString("finance_type_code",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldString("finance_type_dictionary_name",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldString("budget_type_code",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldString("budget_type_dictionary_name",options);
+	
+	pm.addField(field);
+	
 	pm.addField(new FieldInt("ret_id",{}));
 	
 	
@@ -71,6 +95,30 @@ extend(FundSource_Controller,ControllerObjServer);
 	var options = {};
 	
 	var field = new FieldString("name",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldString("finance_type_code",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldString("finance_type_dictionary_name",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldString("budget_type_code",options);
+	
+	pm.addField(field);
+	
+	var options = {};
+	
+	var field = new FieldString("budget_type_dictionary_name",options);
 	
 	pm.addField(field);
 	
@@ -119,6 +167,12 @@ extend(FundSource_Controller,ControllerObjServer);
 	var f_opts = {};
 	
 	pm.addField(new FieldString("name",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldJSON("finance_types_ref",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldJSON("budget_types_ref",f_opts));
 	pm.getField(this.PARAM_ORD_FIELDS).setValue("name");
 	
 }

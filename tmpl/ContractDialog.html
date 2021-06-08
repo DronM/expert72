@@ -65,6 +65,8 @@
 			
 			<li id="{{id}}:tab-doc_flow_inside" class=""><a href="#doc_flow_inside" data-toggle="tab" aria-expanded="false">Внутренние</a></li>
 			
+			<li id="{{id}}:tab-expert_conclusions" class=""><a href="#expert_conclusions" data-toggle="tab" aria-expanded="false">Заключения экспертов</a></li>
+			
 			{{#notExpert}}
 			<li id="{{id}}:tab-states" class=""><a href="#states" data-toggle="tab" aria-expanded="false">Статусы</a></li>
 			{{/notExpert}}
@@ -415,6 +417,11 @@
 		
 		<div class="tab-pane fade" id="doc_flow_inside">
 			<div id="{{id}}:doc_flow_inside_list"/>
+		</div>
+
+		<div class="tab-pane fade" id="expert_conclusions">
+			<h4>Сведения о рассмотрении документации по направлениям</h4>
+			<div id="{{id}}:expert_conclusion_list"/>
 		</div>
 		
 		<div class="tab-pane fade" id="states">

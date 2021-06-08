@@ -183,6 +183,26 @@ class <xsl:value-of select="@id"/>_Controller extends ControllerSQL{
 			$field->setValue($_SESSION['global_employee_id']);
 			$filter->addField($field,'&lt;&gt;');
 			GlobalFilter::set('ShortMessageRecipientList_Model',$filter);
+			
+			if ($ar['role_id']=='expert' || $ar['role_id']=='expert_ext'){
+				$_SESSION['global_expert_id'] = json_decode($ar['employees_ref'])->keys->id;
+				
+				<xsl:for-each select="/metadata/models/model/globalFilter[@id='expert_id']">
+				<xsl:variable name="model_id" select="concat(../@id,'_Model')"/>
+				<xsl:variable name="field_id">
+					<xsl:choose>
+						<xsl:when test="@fieldId">'<xsl:value-of select="@fieldId"/>'</xsl:when>
+						<xsl:otherwise>'user_id'</xsl:otherwise>
+					</xsl:choose>
+				</xsl:variable>			
+				$model = new <xsl:value-of select="$model_id"/>($this->getDbLink());
+				$filter = new ModelWhereSQL();
+				$field = clone $model->getFieldById(<xsl:value-of select="$field_id"/>);
+				$field->setValue($ar['id']);
+				$filter->addField($field,'=');
+				GlobalFilter::set('<xsl:value-of select="$model_id"/>',$filter);
+				</xsl:for-each>				
+			}
 		}
 		
 		$log_ar = $this->getDbLinkMaster()->query_first(

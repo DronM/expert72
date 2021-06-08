@@ -57,6 +57,8 @@ function Conclusion_tForeignOrganization(id,options){
 			,"title":"Обязательный элемент."
 		}));								
 
+		/*
+		 * Исключен!
 		this.addElement(new Conclusion_tForeignAddress_View(id+":ForeignAddress",{
 			"labelClassName":"control-label contentRequired "+lb_col
 			,"required":"true"
@@ -64,7 +66,7 @@ function Conclusion_tForeignOrganization(id,options){
 			,"labelCaption":"Адрес (местонахождение) за пределами РФ:"
 			,"title":"Обязательный элемент."
 		}));								
-	
+		*/
 	
 		this.addElement(new Conclusion_tEmail(id+":Email",{
 			"required":false

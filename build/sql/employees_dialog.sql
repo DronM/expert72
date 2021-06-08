@@ -11,7 +11,7 @@ CREATE OR REPLACE VIEW {{DB_SCHEMA}}.employees_dialog AS
 		,{{DB_SCHEMA}}.posts_ref(posts_join) AS posts_ref
 		,{{DB_SCHEMA}}.departments_ref(departments_join) AS departments_ref
 		,t.snils
-		,(users_join.role_id='expert' OR users_join.role_id='expert_ext') AS is_expert
+		,(users_join.role_id='expert' OR users_join.role_id='expert_ext' OR users_join.role_id='boss' OR users_join.role_id='admin') AS is_expert
 	FROM {{DB_SCHEMA}}.employees AS t
 	LEFT JOIN {{DB_SCHEMA}}.users AS users_join ON
 		t.user_id=users_join.id

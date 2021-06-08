@@ -44,6 +44,46 @@ function FundSource_Model(options){
 	options.fields.name = new FieldString("name",filed_options);
 	options.fields.name.getValidator().setMaxLength('200');
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.finance_type_code = new FieldString("finance_type_code",filed_options);
+	options.fields.finance_type_code.getValidator().setMaxLength('30');
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.finance_type_dictionary_name = new FieldString("finance_type_dictionary_name",filed_options);
+	options.fields.finance_type_dictionary_name.getValidator().setMaxLength('50');
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.budget_type_code = new FieldString("budget_type_code",filed_options);
+	options.fields.budget_type_code.getValidator().setMaxLength('30');
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.budget_type_dictionary_name = new FieldString("budget_type_dictionary_name",filed_options);
+	options.fields.budget_type_dictionary_name.getValidator().setMaxLength('50');
+	
 		FundSource_Model.superclass.constructor.call(this,id,options);
 }
 extend(FundSource_Model,ModelXML);

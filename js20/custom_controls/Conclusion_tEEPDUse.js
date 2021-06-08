@@ -19,12 +19,14 @@ function Conclusion_tEEPDUse(id,options){
 		var lb_col = window.getBsCol(4);
 		
 		this.addElement(new EditText(id+":EEPDNote",{
-			"required":false		
-			,"labelCaption":"Сведения об использовании экономически эффективной проектной документации повторного использования:"
+			"required":true
+			,"labelClassName":"control-label contentRequired "+lb_col
+			,"labelCaption":"Сведения о разделах ПД, которые не подвергались изменению и полностью соответствуют экономически эффективной ПД повторного использования:"
 			,"title":"Необязательный элемент."
 			,"focus":true
 		}));								
-	
+		/*
+		 * Теперь не строка а структура!
 		this.addElement(new EditString(id+":EEPDNumber",{
 			"required":true
 			,"labelClassName":"control-label contentRequired "+lb_col
@@ -35,6 +37,15 @@ function Conclusion_tEEPDUse(id,options){
 			,"regExpression":/^([0-9]{2}-[1-2]{1}-[1-2]{1}-[1-3]{1}-[0-9]{6}-[0-9]{4})|([0-9]{2}-[1-2]{1}-[1-2]{1}-[1-3]{1}-[0-9]{4}-[0-9]{2})$/
 			
 		}));								
+		*/
+		
+		this.addElement(new Conclusion_tConclusionNumber(id+":EEPDNumber",{
+			"required":true
+			,"labelClassName":"control-label contentRequired "+lb_col
+			,"labelCaption":"Номер заключения экспертизы:"
+			,"title":"Обязательный элемент."
+		}));								
+		
 		this.addElement(new EditDate(id+":EEPDDate",{
 			"required":true
 			,"labelClassName":"control-label contentRequired "+lb_col

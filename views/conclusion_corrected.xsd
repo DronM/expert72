@@ -29,7 +29,7 @@
 				</xs:element>
 				<xs:element name="PreviousConclusions" type="tPreviousConclusions" minOccurs="0" maxOccurs="1">
 					<xs:annotation>
-						<xs:documentation>Сведения о ранее подготовленных заключениях экспертизы в отношении объекта капитального строительства, проектная документация и (или) результаты инженерных изысканий по которому представлены для проведения (повторной) экспертизы</xs:documentation>
+						<xs:documentation>Сведения о ранее выданных заключениях экспертизы в отношении объекта капитального строительства, проектная документация и (или) результаты инженерных изысканий по которому представлены для проведения (повторной) экспертизы</xs:documentation>
 					</xs:annotation>
 				</xs:element>
 				<xs:element name="PreviousSimpleConclusions" type="tPreviousSimpleConclusions" minOccurs="0" maxOccurs="1">
@@ -69,6 +69,11 @@
 						<xs:documentation>Сведения об источнике финансирования</xs:documentation>
 					</xs:annotation>
 				</xs:element>
+				<xs:element name="FinanceComment" type="xs:string" minOccurs="0" maxOccurs="1">
+					<xs:annotation>
+						<xs:documentation>Дополнительные сведения об источнике финансирования</xs:documentation>
+					</xs:annotation>
+				</xs:element>
 				<xs:element name="EstimatedCost" type="tEstimatedCost" minOccurs="0" maxOccurs="1">
 					<xs:annotation>
 						<xs:documentation>Сведения о сметной стоимости</xs:documentation>
@@ -76,37 +81,22 @@
 				</xs:element>
 				<xs:element name="ClimateConditions" type="tClimateConditions" minOccurs="0" maxOccurs="1">
 					<xs:annotation>
-						<xs:documentation>Сведения о природных условиях</xs:documentation>
+						<xs:documentation>Сведения о природных и техногенных условиях территории, на которой планируется осуществлять строительство, реконструкцию, капитальный ремонт объекта капитального строительства</xs:documentation>
 					</xs:annotation>
 				</xs:element>
 				<xs:element name="ClimateConditionsNote" type="xs:string" minOccurs="0" maxOccurs="1">
 					<xs:annotation>
-						<xs:documentation>Дополнительные сведения о природных условиях</xs:documentation>
+						<xs:documentation>Дополнительные сведения о природных и техногенных условиях территории, на которой планируется осуществлять строительство, реконструкцию, капитальный ремонт объекта капитального строительства</xs:documentation>
 					</xs:annotation>
 				</xs:element>
 				<xs:element name="Designer" type="tDesigner" minOccurs="0" maxOccurs="unbounded">
 					<xs:annotation>
-						<xs:documentation>Сведения о лицах, подготовивших проектную документацию (изменения в проектную документацию)</xs:documentation>
+						<xs:documentation>Сведения о лице, принимавшем участие в подготовке проектной документации (изменений в проектную документацию)</xs:documentation>
 					</xs:annotation>
 				</xs:element>
 				<xs:element name="EEPDUse" type="tEEPDUse" minOccurs="0" maxOccurs="1">
 					<xs:annotation>
 						<xs:documentation>Сведения об использовании экономически эффективной проектной документации повторного использования</xs:documentation>
-					</xs:annotation>
-				</xs:element>
-				<xs:element name="ProjectTaskNote" type="xs:string" minOccurs="0" maxOccurs="1">
-					<xs:annotation>
-						<xs:documentation>Дополнительные сведения о задании на проектирование</xs:documentation>
-					</xs:annotation>
-				</xs:element>
-				<xs:element name="TerritoryPlanNote" type="xs:string" minOccurs="0" maxOccurs="1">
-					<xs:annotation>
-						<xs:documentation>Дополнительные сведения о документации по планировке территории</xs:documentation>
-					</xs:annotation>
-				</xs:element>
-				<xs:element name="NetworkNote" type="xs:string" minOccurs="0" maxOccurs="1">
-					<xs:annotation>
-						<xs:documentation>Дополнительные сведения о технических условиях подключения к инженерным сетям</xs:documentation>
 					</xs:annotation>
 				</xs:element>
 				<xs:element name="EngineeringSurveyAddress" type="tEngineeringSurveyAddress" minOccurs="0" maxOccurs="unbounded">
@@ -126,9 +116,19 @@
 					</xs:annotation>
 				</xs:element>
 				</xs:choice>
-				<xs:element name="ExpertConclusion" type="tExpertСonclusion" minOccurs="1" maxOccurs="unbounded">
+				<xs:element name="ExpertEngineeringSurveys" type="tExpertEngineeringSurveys" minOccurs="0" maxOccurs="unbounded">
 					<xs:annotation>
-						<xs:documentation>Сведения о рассмотрении документации по направлению</xs:documentation>
+						<xs:documentation>Сведения в части экспертизы результатов инженерных изысканий, подготовленные экспертом</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="ExpertProjectDocuments" type="tExpertProjectDocuments" minOccurs="0" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>Сведения в части эспертизы проектной документации, подготовленные экспертом</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="ExpertEstimate" type="tExpertEstimate" minOccurs="0" maxOccurs="1">
+					<xs:annotation>
+						<xs:documentation>Сведения в части проверки достоверности определения сметной стоимости, подготовленные экспертом</xs:documentation>
 					</xs:annotation>
 				</xs:element>
 				<xs:element name="Summary" type="tSummary" minOccurs="1" maxOccurs="1">
@@ -144,7 +144,7 @@
 			</xs:sequence>
 			<xs:attribute name="ConclusionGUID" type="tConclusionGUID" use="required">
 				<xs:annotation>
-					<xs:documentation>Уникальный идентификатор формирования заключения экспертизы для идентификации при включении сведений и документов в ЕГРЗ</xs:documentation>
+					<xs:documentation>Уникальный идентификатор формирования заключения экспертизы для идентификации</xs:documentation>
 				</xs:annotation>
 			</xs:attribute>
 			<xs:attribute name="SchemaVersion" type="tSchemaVersion" use="required">
@@ -152,17 +152,17 @@
 					<xs:documentation>Номер версии схемы, используемой при создании заключения</xs:documentation>
 				</xs:annotation>
 			</xs:attribute>
-			<xs:attribute name="SchemaLink" type="xs:string" use="required">
+			<xs:attribute name="SchemaLink" type="xs:string" use="optional">
 				<xs:annotation>
 					<xs:documentation>Ссылка на xml-схему на официальном сайте, где опубликована схема</xs:documentation>
 				</xs:annotation>
 			</xs:attribute>
 			
 			<!-- Проверка на соблюдение условий порядка оформления заключения --> 
-			<xs:assert test="not(ExaminationObject/ExaminationType!=3 and not(ClimateConditions))" xerces:message="Заключение экспертизы, предметом экспертизы которого является оценка результатов инженерных изысканий и(или) проектной документации, не содержит сведений о климатических условиях">
+			<xs:assert test="not(ExaminationObject/ExaminationType!=3 and not(ClimateConditions) and Object/Address[Region!='00'])" xerces:message="Заключение экспертизы, предметом экспертизы которого является оценка результатов инженерных изысканий и(или) проектной документации, по объектам расположенным на территории Российской Федерации не содержит сведений о климатических условиях">
 				<xs:annotation>
 					<xs:documentation>
-						Заключение экспертизы, предметом экспертизы которого является оценка результатов инженерных изысканий и(или) проектной документации, не содержит сведений о климатических условиях
+						Заключение экспертизы, предметом экспертизы которого является оценка результатов инженерных изысканий и(или) проектной документации, по объектам расположенным на территории Российской Федерации не содержит сведений о климатических условиях
 					</xs:documentation>
 				</xs:annotation>
 			</xs:assert>
@@ -187,7 +187,14 @@
 					</xs:documentation>
 				</xs:annotation>
 			</xs:assert>
-			<xs:assert test="not(count(ExaminationObject/ExaminationType[text()=1]) gt 1 or count(ExaminationObject/ExaminationType[text()=2]) gt 1 or count(ExaminationObject/ExaminationType[text()=3]) gt 1)" xerces:message="Заключение экспертизы, содержит недопустимую комбинацию предметов экспертизы (дважды указан один из предметов экспертизы)">
+			<xs:assert test="not(ExaminationObject/ExaminationType!=1 and (count(Designer[@General='да']) &gt; 1))" xerces:message="Заключение экспертизы, предметом которой является оценка проектной документации, содержит сведения более чем об одной организации, разработавшей проектную документацию с ролью &quot;генеральный проектировщик&quot;">
+				<xs:annotation>
+					<xs:documentation>
+						Заключение экспертизы, предметом которой является оценка проектной документации, содержит сведения более чем об одной организации, разработавшей проектную документацию с ролью "генеральный проектировщик"   
+					</xs:documentation>
+				</xs:annotation>
+			</xs:assert>
+			<xs:assert test="not(count(ExaminationObject/ExaminationType[text()=1]) &gt; 1 or count(ExaminationObject/ExaminationType[text()=2]) &gt; 1 or count(ExaminationObject/ExaminationType[text()=3]) &gt; 1)" xerces:message="Заключение экспертизы, содержит недопустимую комбинацию предметов экспертизы (дважды указан один из предметов экспертизы)">
 				<xs:annotation>
 					<xs:documentation>
 						Заключение экспертизы, содержит недопустимую комбинацию предметов экспертизы (дважды указан один из предметов экспертизы)
@@ -222,24 +229,24 @@
 					</xs:documentation>
 				</xs:annotation>
 			</xs:assert>
-			<xs:assert test="not(ExaminationObject/ExaminationType=1 and not(ExpertConclusion[ExpertEngineeringSurveys]))" xerces:message="Заключение экспертизы, одним из предметов которого является оценка соответствия результатов инженерных изысканий техническим регламентам (ExaminationObject/ExaminationType=1), не содержит хотя бы одного заключение эксперта по данному направлению (ExpertConclusion/ExpertEngeneeringSurveys)">
+			<xs:assert test="not(ExaminationObject/ExaminationType=1 and not(ExpertEngineeringSurveys))" xerces:message="Заключение экспертизы, одним из предметов которого является оценка соответствия результатов инженерных изысканий техническим регламентам (ExaminationObject/ExaminationType=1), не содержит хотя бы одного блока сведений, подготовленных экспертом по данному направлению (ExpertEngeneeringSurveys)">
 				<xs:annotation>
 					<xs:documentation>
-						Заключение экспертизы, одним из предметов которого является оценка соответствия результатов инженерных изысканий техническим регламентам (ExaminationObject/ExaminationType=1), не содержит хотя бы одного заключение эксперта по данному направлению (ExpertConclusion/ExpertEngeneeringSurveys)
+						Заключение экспертизы, одним из предметов которого является оценка соответствия результатов инженерных изысканий техническим регламентам (ExaminationObject/ExaminationType=1), не содержит хотя бы одного блока сведений, подготовленных экспертом по данному направлению (ExpertEngeneeringSurveys)
 					</xs:documentation>
 				</xs:annotation>
 			</xs:assert>
-			<xs:assert test="not(ExaminationObject/ExaminationType=2 and not(ExpertConclusion[ExpertProjectDocuments]))" xerces:message="Заключение экспертизы, одним из предметов которого является оценка соответствия результатов проектной документации установленным требованиям (ExaminationObject/ExaminationType=2), не содержит хотя бы одного заключение эксперта по данному направлению (ExpertConclusion/ExpertProjectDocuments)">
+			<xs:assert test="not(ExaminationObject/ExaminationType=2 and not(ExpertProjectDocuments))" xerces:message="Заключение экспертизы, одним из предметов которого является оценка соответствия результатов проектной документации установленным требованиям (ExaminationObject/ExaminationType=2), не содержит одного блока сведений, подготовленных экспертом по данному направлению (ExpertProjectDocuments)">
 				<xs:annotation>
 					<xs:documentation>
-						Заключение экспертизы, одним из предметов которого является оценка соответствия результатов проектной документации установленным требованиям (ExaminationObject/ExaminationType=2), не содержит хотя бы одного заключение эксперта по данному направлению (ExpertConclusion/ExpertProjectDocuments)
+						Заключение экспертизы, одним из предметов которого является оценка соответствия результатов проектной документации установленным требованиям (ExaminationObject/ExaminationType=2), не содержит одного блока сведений, подготовленных экспертом по данному направлению (ExpertProjectDocuments)
 					</xs:documentation>
 				</xs:annotation>
 			</xs:assert>
-			<xs:assert test="not(ExaminationObject/ExaminationType=3 and not(ExpertConclusion[ExpertEstimate]))" xerces:message="Заключение экспертизы, одним из предметов которого является оценка соответствия проектной документации установленным требованиям (ExaminationObject/ExaminationType=3), не содержит хотя бы одного заключение эксперта по данному направлению (ExpertConclusion/ExpertEstimate)">
+			<xs:assert test="not(ExaminationObject/ExaminationType=3 and not(ExpertEstimate))" xerces:message="Заключение экспертизы, одним из предметов которого является проверка достоверности определения сметной стоимости (ExaminationObject/ExaminationType=3), не содержит блока сведений, подоготовленного экспертом по данному направлению (ExpertEstimate)">
 				<xs:annotation>
 					<xs:documentation>
-						Заключение экспертизы, одним из предметов которого является оценка соответствия проектной документации установленным требованиям (ExaminationObject/ExaminationType=3), не содержит хотя бы одного заключение эксперта по данному направлению (ExpertConclusion/ExpertEstimate)
+						Заключение экспертизы, одним из предметов которого является проверка достоверности определения сметной стоимости (ExaminationObject/ExaminationType=3), не содержит блока сведений, подоготовленного экспертом по данному направлению (ExpertEstimate)
 					</xs:documentation>
 				</xs:annotation>
 			</xs:assert>
@@ -257,45 +264,45 @@
 					</xs:documentation>
 				</xs:annotation>
 			</xs:assert>
-			<xs:assert test="not(ExaminationObject/ExaminationObjectType=1 and count(ProjectDocumentsDeveloper) gt 0)" xerces:message="Заключение экспертизы, в котором объектом экспертизы является оценка соответствия результатов инженерных изысканий техническим регламентам (ExaminationObjectType=1), содержит сведения о застройщике, обеспечившем подготовку проектной документации">
+			<xs:assert test="not(ExaminationObject/ExaminationObjectType=1 and count(ProjectDocumentsDeveloper) &gt; 0)" xerces:message="Заключение экспертизы, в котором объектом экспертизы является оценка соответствия результатов инженерных изысканий техническим регламентам (ExaminationObjectType=1), содержит сведения о застройщике, обеспечившем подготовку проектной документации">
 				<xs:annotation>
 					<xs:documentation>
 						Заключение экспертизы, в котором объектом экспертизы является оценка соответствия результатов инженерных изысканий техническим регламентам (ExaminationObjectType=1), содержит сведения о застройщике, обеспечившем подготовку проектной документации
 					</xs:documentation>
 				</xs:annotation>
 			</xs:assert>
-			<xs:assert test="not(ExaminationObject/ExaminationObjectType=1 and count(ProjectDocumentsTechnicalCustomer) gt 0)" xerces:message="Заключение экспертизы, в котором объектом экспертизы является оценка соответствия результатов инженерных изысканий техническим регламентам (ExaminationObjectType=1), содержит сведения о техническом заказчике, обеспечившем подготовку проектной документации">
+			<xs:assert test="not(ExaminationObject/ExaminationObjectType=1 and count(ProjectDocumentsTechnicalCustomer) &gt; 0)" xerces:message="Заключение экспертизы, в котором объектом экспертизы является оценка соответствия результатов инженерных изысканий техническим регламентам (ExaminationObjectType=1), содержит сведения о техническом заказчике, обеспечившем подготовку проектной документации">
 				<xs:annotation>
 					<xs:documentation>
 						Заключение экспертизы, в котором объектом экспертизы является оценка соответствия результатов инженерных изысканий техническим регламентам (ExaminationObjectType=1), содержит сведения о техническом заказчике, обеспечившем подготовку проектной документации
 					</xs:documentation>
 				</xs:annotation>
 			</xs:assert>
-			<xs:assert test="not(ExaminationObject/ExaminationObjectType=2 and count(EngineeringSurveyDeveloper) gt 0)" xerces:message="Заключение экспертизы, в котором объектом экспертизы является оценка проектной документации (ExaminationObjectType=2 или ExaminationObjectType=3), содержит сведения о застройщике, обеспечившем подготовку результатов инженерных изысканий">
+			<xs:assert test="not(ExaminationObject/ExaminationObjectType=2 and count(EngineeringSurveyDeveloper) &gt; 0)" xerces:message="Заключение экспертизы, в котором объектом экспертизы является оценка проектной документации (ExaminationObjectType=2 или ExaminationObjectType=3), содержит сведения о застройщике, обеспечившем подготовку результатов инженерных изысканий">
 				<xs:annotation>
 					<xs:documentation>
 						Заключение экспертизы, в котором объектом экспертизы является оценка проектной документации (ExaminationObjectType=2 или ExaminationObjectType=3), содержит сведения о застройщике, обеспечившем подготовку результатов инженерных изысканий
 					</xs:documentation>
 				</xs:annotation>
 			</xs:assert>
-			<xs:assert test="not(ExaminationObject/ExaminationObjectType=2 and count(EngineeringSurveyTechnicalCustomer) gt 0)" xerces:message="Заключение экспертизы, в котором объектом экспертизы является оценка проектной докуминтации (ExaminationObjectType=2 или ExaminationObjectType=3), содержит сведения о техническом заказчике, обеспечившем подготовку результатов инженерных изысканий">
+			<xs:assert test="not(ExaminationObject/ExaminationObjectType=2 and count(EngineeringSurveyTechnicalCustomer) &gt; 0)" xerces:message="Заключение экспертизы, в котором объектом экспертизы является оценка проектной документации (ExaminationObjectType=2 или ExaminationObjectType=3), содержит сведения о техническом заказчике, обеспечившем подготовку результатов инженерных изысканий">
 				<xs:annotation>
 					<xs:documentation>
-						Заключение экспертизы, в котором объектом экспертизы является оценка проектной докуминтации (ExaminationObjectType=2 или ExaminationObjectType=3), содержит сведения о техническом заказчике, обеспечившем подготовку результатов инженерных изысканий
+						Заключение экспертизы, в котором объектом экспертизы является оценка проектной документации (ExaminationObjectType=2 или ExaminationObjectType=3), содержит сведения о техническом заказчике, обеспечившем подготовку результатов инженерных изысканий
 					</xs:documentation>
 				</xs:annotation>
 			</xs:assert>
-			<xs:assert test="not(ExaminationObject/ExaminationObjectType!=1 and ExaminationObject/ExaminationForm=1 and count(EstimatedCost)=0)" xerces:message="Заключение экспертизы (при условии финансирования из бюджета или средств юридических лиц, входящих в перечень части 2 статьи 48.2 ГрК РФ), в котором объектом экспертизы является оценка соответствия проектной документации установленным требованиям (ExaminationObjectType=2) или проверка достоверности определения сметной стоимости (ExaminationObjectType=3), не содержит сведения о сметной стоимости (EstimadetCost)">
+			<xs:assert test="not(ExaminationObject/ExaminationObjectType!=1 and ExaminationObject/ExaminationForm=1 and count(EstimatedCost)=0)" xerces:message="Заключение государственной экспертизы, в котором объектом экспертизы является оценка соответствия проектной документации установленным требованиям (ExaminationObjectType=2) или проверка достоверности определения сметной стоимости (ExaminationObjectType=3), не содержит сведения о сметной стоимости (EstimadetCost)">
 				<xs:annotation>
 					<xs:documentation>
-						Заключение экспертизы (при условии финансирования из бюджета или средств юридических лиц, входящих в перечень части 2 статьи 48.2 ГрК РФ), в котором объектом экспертизы является оценка соответствия проектной документации установленным требованиям (ExaminationObjectType=2) или проверка достоверности определения сметной стоимости (ExaminationObjectType=3), не содержит сведения о сметной стоимости (EstimadetCost)
+						Заключение государственной экспертизы, в котором объектом экспертизы является оценка соответствия проектной документации установленным требованиям (ExaminationObjectType=2) или проверка достоверности определения сметной стоимости (ExaminationObjectType=3), не содержит сведения о сметной стоимости (EstimadetCost)
 					</xs:documentation>
 				</xs:annotation>
 			</xs:assert>
-			<xs:assert test="not(Finance[(FinanceType=1 or FinanceType=2)] and ExaminationObject/ExaminationType=2 and not(ExaminationObject/ExaminationType=3) and count(EstimatedCost/EstimatedCompleteCostBefore)=0)" xerces:message="Заключение экспертизы (при условии финансирования из бюджета или средств юридических лиц, входящих в перечень части 2 статьи 48.2 ГрК РФ), в котором объектом экспертизы является оценка соответствия проектной документации установленным требованиям (ExaminationObjectType=2) без проведения проверки определения сметной стоимости, не содержит сведения о сметной стоимости (EstimadetCost/EstimatedCompleteCostBefore)">
+			<xs:assert test="not(Finance[(FinanceType=1 or FinanceType=2)] and ExaminationObject/ExaminationType=2 and not(ExaminationObject/ExaminationType=3) and count(EstimatedCost/EstimatedCompleteCostBefore)=0)" xerces:message="Заключение экспертизы (при условии финансирования из бюджета или средств юридических лиц, входящих в перечень части 2 статьи 48.2 ГрК РФ), в котором объектом экспертизы является оценка соответствия проектной документации установленным требованиям (ExaminationObjectType=2) без проведения проверки достоверности определения сметной стоимости, не содержит сведения о сметной стоимости (EstimadetCost/EstimatedCompleteCostBefore)">
 				<xs:annotation>
 					<xs:documentation>
-						Заключение экспертизы (при условии финансирования из бюджета или средств юридических лиц, входящих в перечень части 2 статьи 48.2 ГрК РФ), в котором объектом экспертизы является оценка соответствия проектной документации установленным требованиям (ExaminationObjectType=2) без проведения проверки определения сметной стоимости, не содержит сведения о сметной стоимости (EstimadetCost/EstimatedCompleteCostBefore)
+						Заключение экспертизы (при условии финансирования из бюджета или средств юридических лиц, входящих в перечень части 2 статьи 48.2 ГрК РФ), в котором объектом экспертизы является оценка соответствия проектной документации установленным требованиям (ExaminationObjectType=2) без проведения проверки достоверности определения сметной стоимости, не содержит сведения о сметной стоимости (EstimadetCost/EstimatedCompleteCostBefore)
 					</xs:documentation>
 				</xs:annotation>
 			</xs:assert>
@@ -313,77 +320,94 @@
 				</xs:documentation>
 			</xs:annotation>
 		</xs:assert>
-		<xs:assert test="not(count(Finance[FinanceType=1 and not(BudgetType)]) gt 0)" xerces:message="Не все источники финансирования, предусматривающие финансирование из бюджета (Finance/FinanceType=1), содержать описание уровня бюджета (Finance/BudgetType=1)">
+		<xs:assert test="not(count(Finance[FinanceType=1 and not(BudgetType)]) &gt; 0)" xerces:message="Не все источники финансирования, предусматривающие финансирование из бюджета (Finance/FinanceType=1), содержат описание уровня бюджета (Finance/BudgetType)">
 			<xs:annotation>
 				<xs:documentation>
-					Не все источники финансирования, предусматривающие финансирование из бюджета (Finance/FinanceType=1), содержать описание уровня бюджета (Finance/BudgetType=1) 
+					Не все источники финансирования, предусматривающие финансирование из бюджета (Finance/FinanceType=1), содержат описание уровня бюджета (Finance/BudgetType) 
 				</xs:documentation>
 			</xs:annotation>
 		</xs:assert>
-			<xs:assert test="not(count(Finance[FinanceType=2 and not(FinanceOwner)]) gt 0)" xerces:message="Не все источники финансирования, предусматривающие финансирование из средств юридических лиц, включенных в перечень части 2 статьи 48.2. ГрК РФ (Finance/FinanceType=2), содержать сведения о таком юридическом лице (Finance/FinanceOwner)">
+			<xs:assert test="not(count(Finance[FinanceType=2 and not(FinanceOwner)]) &gt; 0)" xerces:message="Не все источники финансирования, предусматривающие финансирование из средств юридических лиц, включенных в перечень части 2 статьи 48.2. ГрК РФ (Finance/FinanceType=2), содержать сведения о таком юридическом лице (Finance/FinanceOwner)">
 			<xs:annotation>
 				<xs:documentation>
 					Не все источники финансирования, предусматривающие финансирование из средств юридических лиц, включенных в перечень части 2 статьи 48.2. ГрК РФ (Finance/FinanceType=2), содержать сведения о таком юридическом лице (Finance/FinanceOwner) 
 				</xs:documentation>
 			</xs:annotation>
 		</xs:assert>	
-			<xs:assert test="not(count(Finance[(FinanceType=1 or FinanceType=2) and not(FinanceSize)]) gt 0)" xerces:message="Не все источники финансирования, предусматривающие финансирование из бюджетных источников или из средств юридических лиц, включенных в перечень части 2 статьи 48.2. ГрК РФ (Finance/FinanceType=1 или Finance/FinanceType=2), содержать сведения о размере финансирования (Finance/FinanceSize)">
+			<xs:assert test="not(count(Finance[(FinanceType=1 or FinanceType=2) and not(FinanceSize)]) &gt; 0)" xerces:message="Не все источники финансирования, предусматривающие финансирование из бюджетных источников или из средств юридических лиц, включенных в перечень части 2 статьи 48.2. ГрК РФ (Finance/FinanceType=1 или Finance/FinanceType=2), содержать сведения о размере финансирования (Finance/FinanceSize)">
 				<xs:annotation>
 					<xs:documentation>
 						Не все источники финансирования, предусматривающие финансирование из бюджетных источников или из средств юридических лиц, включенных в перечень части 2 статьи 48.2. ГрК РФ (Finance/FinanceType=1 или Finance/FinanceType=2), содержать сведения о размере финансирования (Finance/FinanceSize) 
 					</xs:documentation>
 				</xs:annotation>
 			</xs:assert>
-			<xs:assert test="not(not(Summary/EngineeringSurveySummary) and not(ExpertConclusion[@Result=2]/ExpertEngineeringSurveys[Mismatches]) and ExaminationObject/ExaminationType=1)" xerces:message="Заключение экспертизы, одним из предметов которого является Оценка соответствия результатов инженерных изысканий требованиям технических регламентов (ExaminationObject/ExaminationType=1) не содержит как Выводы о соответствии(Summary/EngineeringSurveySummary) так и выводы о несоответствии (ExpertConclusion/ExpertEngineeringSurveys/Mismatches) результатов инженерных изысканий требованиям технических регламентов">
+			
+			<xs:assert test="not(not(Summary/EngineeringSurveySummaryDate) and ExaminationObject/ExaminationType=1)" xerces:message="Заключение экспертизы, одним из предметов которого является Оценка соответствия результатов инженерных изысканий требованиям технических регламентов (ExaminationObject/ExaminationType=1) не содержит сведения о дате, по состоянию на которую действовали требования, примененные в соответствии с частью 5.2 статьи 49 Градостроительного кодекса Российской Федерации (в части экспертизы результатов инженерных изысканий)">
+				<xs:annotation>
+					<xs:documentation>
+						Заключение экспертизы, одним из предметов которого является Оценка соответствия результатов инженерных изысканий требованиям технических регламентов (ExaminationObject/ExaminationType=1) не содержит сведения о дате, по состоянию на которую действовали требования, примененные в соответствии с частью 5.2 статьи 49 Градостроительного кодекса Российской Федерации (в части экспертизы результатов инженерных изысканий)
+					</xs:documentation>
+				</xs:annotation>
+			</xs:assert>
+			<xs:assert test="not(not(Summary/ProjectDocumentsSummaryDate) and ExaminationObject/ExaminationType=2)" xerces:message="Заключение экспертизы, одним из предметов которого является Оценка соответствия проектной документации установленным требованиям (ExaminationObject/ExaminationType=2) не содержит сведения о дате, по состоянию на которую действовали требования, примененные в соответствии с частью 5.2 статьи 49 Градостроительного кодекса Российской Федерации (в части экспертизы проектной документации)">
+				<xs:annotation>
+					<xs:documentation>
+						Заключение экспертизы, одним из предметов которого является Оценка соответствия проектной документации установленным требованиям (ExaminationObject/ExaminationType=2) не содержит сведения о дате, по состоянию на которую действовали требования, примененные в соответствии с частью 5.2 статьи 49 Градостроительного кодекса Российской Федерации (в части экспертизы проектной документации)
+					</xs:documentation>
+				</xs:annotation>
+			</xs:assert>
+			
+			<xs:assert test="not(not(Summary/EngineeringSurveySummary) and not(ExpertEngineeringSurveys[Mismatches]) and ExaminationObject/ExaminationType=1)" xerces:message="Заключение экспертизы, одним из предметов которого является Оценка соответствия результатов инженерных изысканий требованиям технических регламентов (ExaminationObject/ExaminationType=1) не содержит как Выводы о соответствии(Summary/EngineeringSurveySummary) так и выводы о несоответствии (ExpertConclusion/ExpertEngineeringSurveys/Mismatches) результатов инженерных изысканий требованиям технических регламентов">
 				<xs:annotation>
 					<xs:documentation>
 						Заключение экспертизы, одним из предметов которого является Оценка соответствия результатов инженерных изысканий требованиям технических регламентов (ExaminationObject/ExaminationType=1) не содержит как Выводы о соответствии(Summary/EngineeringSurveySummary) так и выводы о несоответствии (ExpertConclusion/ExpertEngineeringSurveys/Mismatches) результатов инженерных изысканий требованиям технических регламентов
 					</xs:documentation>
 				</xs:annotation>
 			</xs:assert>
-			<xs:assert test="not(Summary/EngineeringSurveySummary and ExpertConclusion[@Result=2]/ExpertEngineeringSurveys[Mismatches] and ExaminationObject/ExaminationType=1)" xerces:message="Заключение экспертизы, одним из предметов которого является Оценка соответствия результатов инженерных изысканий требованиям технических регламентов (ExaminationObject/ExaminationType=1) содержит как Выводы о соответствии(Summary/EngineeringSurveySummary) так и выводы о несоответствии (ExpertConclusion/ExpertEngineeringSurveys/Mismatches) результатов инженерных изысканий требованиям технических регламентов">
+			
+			<xs:assert test="not(Summary/EngineeringSurveySummary and ExpertEngineeringSurveys[Mismatches] and ExaminationObject/ExaminationType=1)" xerces:message="Заключение экспертизы, одним из предметов которого является Оценка соответствия результатов инженерных изысканий требованиям технических регламентов (ExaminationObject/ExaminationType=1) содержит как Выводы о соответствии(Summary/EngineeringSurveySummary) так и выводы о несоответствии (ExpertConclusion/ExpertEngineeringSurveys/Mismatches) результатов инженерных изысканий требованиям технических регламентов">
 				<xs:annotation>
 					<xs:documentation>
 						Заключение экспертизы, одним из предметов которого является Оценка соответствия результатов инженерных изысканий требованиям технических регламентов (ExaminationObject/ExaminationType=1) содержит как Выводы о соответствии(Summary/EngineeringSurveySummary) так и выводы о несоответствии (ExpertConclusion/ExpertEngineeringSurveys/Mismatches) результатов инженерных изысканий требованиям технических регламентов    
 					</xs:documentation>
 				</xs:annotation>
 			</xs:assert>
-			<xs:assert test="not(not(Summary/ProjectDocumentsSummary) and not(ExpertConclusion[@Result=2]/ExpertProjectDocuments[Mismatches]) and ExaminationObject/ExaminationType=2)" xerces:message="Заключение экспертизы, одним из предметов которого является Оценка соответствия проектной документации установленным требованиям (ExaminationObject/ExaminationType=2) не содержит как Выводы о соответствии (Summary/ProjectDocumentsSummary) так и выводы о несоответсвии (ExpertConclusion/ExpertProjectDocuments/Mismatches) проектной документации установленным требованиям">
+			<xs:assert test="not(not(Summary/ProjectDocumentsSummary) and not(ExpertProjectDocuments[Mismatches]) and ExaminationObject/ExaminationType=2)" xerces:message="Заключение экспертизы, одним из предметов которого является Оценка соответствия проектной документации установленным требованиям (ExaminationObject/ExaminationType=2) не содержит как Выводы о соответствии (Summary/ProjectDocumentsSummary) так и выводы о несоответсвии (ExpertConclusion/ExpertProjectDocuments/Mismatches) проектной документации установленным требованиям">
 				<xs:annotation>
 					<xs:documentation>
 						Заключение экспертизы, одним из предметов которого является Оценка соответствия проектной документации установленным требованиям (ExaminationObject/ExaminationType=2) не содержит как Выводы о соответствии (Summary/ProjectDocumentsSummary) так и выводы о несоответсвии (ExpertConclusion/ExpertProjectDocuments/Mismatches) проектной документации установленным требованиям    
 					</xs:documentation>
 				</xs:annotation>
 			</xs:assert>
-			<xs:assert test="not(Summary/ProjectDocumentsSummary and ExpertConclusion[@Result=2]/ExpertProjectDocuments[Mismatches] and ExaminationObject/ExaminationType=2)" xerces:message="Заключение экспертизы, одним из предметов которого является Оценка соответствия проектной документации установленным требованиям (ExaminationObject/ExaminationType=2) содержит как Выводы о соответствии (Summary/ProjectDocumentsSummary) так и выводы о несоответсвии (ExpertConclusion/ExpertProjectDocuments/Mismatches) проектной документации установленным требованиям">
+			<xs:assert test="not(Summary/ProjectDocumentsSummary and ExpertProjectDocuments[Mismatches] and ExaminationObject/ExaminationType=2)" xerces:message="Заключение экспертизы, одним из предметов которого является Оценка соответствия проектной документации установленным требованиям (ExaminationObject/ExaminationType=2) содержит как Выводы о соответствии (Summary/ProjectDocumentsSummary) так и выводы о несоответсвии (ExpertConclusion/ExpertProjectDocuments/Mismatches) проектной документации установленным требованиям">
 				<xs:annotation>
 					<xs:documentation>
 						Заключение экспертизы, одним из предметов которого является Оценка соответствия проектной документации установленным требованиям (ExaminationObject/ExaminationType=2) содержит как Выводы о соответствии (Summary/ProjectDocumentsSummary) так и выводы о несоответсвии (ExpertConclusion/ExpertProjectDocuments/Mismatches) проектной документации установленным требованиям    
 					</xs:documentation>
 				</xs:annotation>
 			</xs:assert>
-			<xs:assert test="not(not(Summary/EstimateNormsAndWorksSummary) and not(ExpertConclusion[@Result=2]/ExpertEstimate[Mismatches]) and ExaminationObject/ExaminationType=3 and ExaminationObject/ConstructionType=3)" xerces:message="Заключение экспертизы, одним из предметов которого является проверка достоверности определения сметной стоимости (ExaminationObject/ExaminationType=3) не содержит как Выводы о соответствии (Summary/EstimateNormsAndWorksSummary) так и Выводы о несоответсвтвии (ExpertConclusion/ExpertEstimate/Mismatches) расчетов, содержащихся в сметной документации, физическим объемам работ, включенным в ведомость объемов работ, акт, утвержденный застройщиком или техническим заказчиком (в случаее вида работ капитальный ремонт (ExaminationObject/ConstructionType=3))">
+			<xs:assert test="not(not(Summary/EstimateNormsAndWorksSummary) and not(ExpertEstimate[Mismatches]) and ExaminationObject/ExaminationType=3 and ExaminationObject/ConstructionType=3)" xerces:message="Заключение экспертизы, одним из предметов которого является проверка достоверности определения сметной стоимости (ExaminationObject/ExaminationType=3) не содержит как Выводы о соответствии (Summary/EstimateNormsAndWorksSummary) так и Выводы о несоответсвтвии (ExpertConclusion/ExpertEstimate/Mismatches) расчетов, содержащихся в сметной документации, физическим объемам работ, включенным в ведомость объемов работ, акт, утвержденный застройщиком или техническим заказчиком (в случае вида работ капитальный ремонт (ExaminationObject/ConstructionType=3))">
 				<xs:annotation>
 					<xs:documentation>
-						Заключение экспертизы, одним из предметов которого является проверка достоверности определения сметной стоимости (ExaminationObject/ExaminationType=3) не содержит как Выводы о соответствии (Summary/EstimateNormsAndWorksSummary) так и Выводы о несоответсвтвии (ExpertConclusion/ExpertEstimate/Mismatches) расчетов, содержащихся в сметной документации, физическим объемам работ, включенным в ведомость объемов работ, акт, утвержденный застройщиком или техническим заказчиком (в случаее вида работ капитальный ремонт (ExaminationObject/ConstructionType=3))
+						Заключение экспертизы, одним из предметов которого является проверка достоверности определения сметной стоимости (ExaminationObject/ExaminationType=3) не содержит как Выводы о соответствии (Summary/EstimateNormsAndWorksSummary) так и Выводы о несоответсвтвии (ExpertConclusion/ExpertEstimate/Mismatches) расчетов, содержащихся в сметной документации, физическим объемам работ, включенным в ведомость объемов работ, акт, утвержденный застройщиком или техническим заказчиком (в случае вида работ капитальный ремонт (ExaminationObject/ConstructionType=3))
 					</xs:documentation>
 				</xs:annotation>
 			</xs:assert>
-			<xs:assert test="not(Summary/EstimateNormsAndWorksSummary and ExpertConclusion[@Result=2]/ExpertEstimate[Mismatches] and ExaminationObject/ExaminationType=3 and ExaminationObject/ConstructionType=3)" xerces:message="Заключение экспертизы, одним из предметов которого является проверка достоверности определения сметной стоимости (ExaminationObject/ExaminationType=3) содержит как Выводы о соответствии (Summary/EstimateNormsAndWorksSummary) так и Выводы о несоответсвтвии (ExpertConclusion/ExpertEstimate/Mismatches) расчетов, содержащихся в сметной документации, физическим объемам работ, включенным в ведомость объемов работ, акт, утвержденный застройщиком или техническим заказчиком (в случаее вида работ капитальный ремонт (ExaminationObject/ConstructionType=3))">
+			<xs:assert test="not(Summary/EstimateNormsAndWorksSummary and ExpertEstimate[Mismatches] and ExaminationObject/ExaminationType=3 and ExaminationObject/ConstructionType=3)" xerces:message="Заключение экспертизы, одним из предметов которого является проверка достоверности определения сметной стоимости (ExaminationObject/ExaminationType=3) содержит как Выводы о соответствии (Summary/EstimateNormsAndWorksSummary) так и Выводы о несоответсвтвии (ExpertConclusion/ExpertEstimate/Mismatches) расчетов, содержащихся в сметной документации, физическим объемам работ, включенным в ведомость объемов работ, акт, утвержденный застройщиком или техническим заказчиком (в случае вида работ капитальный ремонт (ExaminationObject/ConstructionType=3))">
 				<xs:annotation>
 					<xs:documentation>
-						Заключение экспертизы, одним из предметов которого является проверка достоверности определения сметной стоимости (ExaminationObject/ExaminationType=3) содержит как Выводы о соответствии (Summary/EstimateNormsAndWorksSummary) так и Выводы о несоответсвтвии (ExpertConclusion/ExpertEstimate/Mismatches) расчетов, содержащихся в сметной документации, физическим объемам работ, включенным в ведомость объемов работ, акт, утвержденный застройщиком или техническим заказчиком (в случаее вида работ капитальный ремонт (ExaminationObject/ConstructionType=3))
+						Заключение экспертизы, одним из предметов которого является проверка достоверности определения сметной стоимости (ExaminationObject/ExaminationType=3) содержит как Выводы о соответствии (Summary/EstimateNormsAndWorksSummary) так и Выводы о несоответсвтвии (ExpertConclusion/ExpertEstimate/Mismatches) расчетов, содержащихся в сметной документации, физическим объемам работ, включенным в ведомость объемов работ, акт, утвержденный застройщиком или техническим заказчиком (в случае вида работ капитальный ремонт (ExaminationObject/ConstructionType=3))
 					</xs:documentation>
 				</xs:annotation>
 			</xs:assert>
-			<xs:assert test="not(not(Summary/EstimateNormsAndWorksSummary) and not(ExpertConclusion[@Result=2]/ExpertEstimate[Mismatches]) and ExaminationObject/ExaminationType=3 and ExaminationObject/ConstructionType!=3)" xerces:message="Заключение экспертизы, одним из предметов которого является проверка достоверности определения сметной стоимости (ExaminationObject/ExaminationType=3) не содержит как Выводы о соответствии (Summary/EstimateNormsAndWorksSummary) так и Выводы о несоответсвтвии (ExpertConclusion/ExpertEstimate/Mismatches) расчетов, содержащихся в сметной документации, утвержденным сметным нормативам, сведения о которых включены в федеральный реестр сметных нормативов, физическим объемам работ, конструктивным, организационно-технологическим и другим решениям, предусмотренным проектной документацией">
+			<xs:assert test="not(not(Summary/EstimateNormsAndWorksSummary) and not(ExpertEstimate[Mismatches]) and ExaminationObject/ExaminationType=3 and ExaminationObject/ConstructionType!=3)" xerces:message="Заключение экспертизы, одним из предметов которого является проверка достоверности определения сметной стоимости (ExaminationObject/ExaminationType=3) не содержит как Выводы о соответствии (Summary/EstimateNormsAndWorksSummary) так и Выводы о несоответсвтвии (ExpertConclusion/ExpertEstimate/Mismatches) расчетов, содержащихся в сметной документации, утвержденным сметным нормативам, сведения о которых включены в федеральный реестр сметных нормативов, физическим объемам работ, конструктивным, организационно-технологическим и другим решениям, предусмотренным проектной документацией">
 				<xs:annotation>
 					<xs:documentation>
 						Заключение экспертизы, одним из предметов которого является проверка достоверности определения сметной стоимости (ExaminationObject/ExaminationType=3) не содержит как Выводы о соответствии (Summary/EstimateNormsAndWorksSummary) так и Выводы о несоответсвтвии (ExpertConclusion/ExpertEstimate/Mismatches) расчетов, содержащихся в сметной документации, утвержденным сметным нормативам, сведения о которых включены в федеральный реестр сметных нормативов, физическим объемам работ, конструктивным, организационно-технологическим и другим решениям, предусмотренным проектной документацией    
 					</xs:documentation>
 				</xs:annotation>
 			</xs:assert>
-			<xs:assert test="not(Summary/EstimateNormsAndWorksSummary and ExpertConclusion[@Result=2]/ExpertEstimate[Mismatches] and ExaminationObject/ExaminationType=3 and ExaminationObject/ConstructionType!=3)" xerces:message="Заключение экспертизы, одним из предметов которого является проверка достоверности определения сметной стоимости (ExaminationObject/ExaminationType=3) содержит как Выводы о соответствии (Summary/EstimateNormsAndWorksSummary) так и Выводы о несоответсвтвии (ExpertConclusion/ExpertEstimate/Mismatches) расчетов, содержащихся в сметной документации, утвержденным сметным нормативам, сведения о которых включены в федеральный реестр сметных нормативов, физическим объемам работ, конструктивным, организационно-технологическим и другим решениям, предусмотренным проектной документацией">
+			<xs:assert test="not(Summary/EstimateNormsAndWorksSummary and ExpertEstimate[Mismatches] and ExaminationObject/ExaminationType=3 and ExaminationObject/ConstructionType!=3)" xerces:message="Заключение экспертизы, одним из предметов которого является проверка достоверности определения сметной стоимости (ExaminationObject/ExaminationType=3) содержит как Выводы о соответствии (Summary/EstimateNormsAndWorksSummary) так и Выводы о несоответсвтвии (ExpertConclusion/ExpertEstimate/Mismatches) расчетов, содержащихся в сметной документации, утвержденным сметным нормативам, сведения о которых включены в федеральный реестр сметных нормативов, физическим объемам работ, конструктивным, организационно-технологическим и другим решениям, предусмотренным проектной документацией">
 				<xs:annotation>
 					<xs:documentation>
 						Заключение экспертизы, одним из предметов которого является проверка достоверности определения сметной стоимости (ExaminationObject/ExaminationType=3) содержит как Выводы о соответствии (Summary/EstimateNormsAndWorksSummary) так и Выводы о несоответсвтвии (ExpertConclusion/ExpertEstimate/Mismatches) расчетов, содержащихся в сметной документации, утвержденным сметным нормативам, сведения о которых включены в федеральный реестр сметных нормативов, физическим объемам работ, конструктивным, организационно-технологическим и другим решениям, предусмотренным проектной документацией  
@@ -404,10 +428,9 @@
 	<!-- Окончание основного элемента - заключение -->
 	
 	<!-- Определение сложных типов -->
-	
 	<xs:complexType name="tAddress">
 		<xs:annotation>
-			<xs:documentation>Адрес в Российской Федерации</xs:documentation>
+			<xs:documentation>Адрес</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
 			<xs:element name="Country" type="string200" minOccurs="0" maxOccurs="1">
@@ -460,7 +483,7 @@
 
 	<xs:complexType name="tPostAddress">
 		<xs:annotation>
-			<xs:documentation>Адрес в Российской Федерации</xs:documentation>
+			<xs:documentation>Почтовый адрес</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
 			<xs:element name="Country" type="string200" minOccurs="0" maxOccurs="1">
@@ -741,7 +764,7 @@
 	
 	<xs:complexType name="tDocuments">
 		<xs:annotation>
-			<xs:documentation>Документы, представленные на экспертизу</xs:documentation>
+			<xs:documentation>Документы, рассмотренные в рамках экспертизы</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
 			<xs:element name="Document" type="tDocument" minOccurs="1" maxOccurs="unbounded">
@@ -764,23 +787,23 @@
 					<xs:documentation>Наименование документа</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="DocNumber" type="string50" minOccurs="1" maxOccurs="1">
+			<xs:element name="DocNumber" type="string50" minOccurs="0" maxOccurs="1">
 				<xs:annotation>
-					<xs:documentation>Номер документа</xs:documentation>
+					<xs:documentation>Номер (обозначение, шифр) документа</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="DocDate" type="xs:date" minOccurs="1" maxOccurs="1">
+			<xs:element name="DocDate" type="xs:date" minOccurs="0" maxOccurs="1">
 				<xs:annotation>
 					<xs:documentation>Дата документа</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:choice minOccurs="1" maxOccurs="1">
+			<xs:choice minOccurs="0" maxOccurs="1">
 			<xs:element name="DocIssueAuthor" type="string1000" minOccurs="1" maxOccurs="1">
 				<xs:annotation>
 					<xs:documentation>Организации, ИП или физическое лицо - автор документа</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="FullDocIssueAuthor" type="tDeclarant" minOccurs="1" maxOccurs="1">
+			<xs:element name="FullDocIssueAuthor" type="tDeclarant" minOccurs="1" maxOccurs="unbounded">
 				<xs:annotation>
 					<xs:documentation>Организации, ИП или физическое лицо - автор документа</xs:documentation>
 				</xs:annotation>
@@ -807,12 +830,30 @@
 		
 		</xs:sequence>
 		<!-- Проверка на наличие полных реквизитов организаций - автора отчетных материалов результатов инженерных изысканий -->  
-		<xs:assert test="not((DocType gt '06.00' and DocType lt '07.00') and not(FullDocIssueAuthor))" xerces:message="Для отчетных материалов о выполнении результатов инженерных изысканий не указаны полные реквизиты организации, подготовившей отчетные материалы">
+		<xs:assert test="not((DocType &gt; '06.00' and DocType &lt; '07.00') and not(FullDocIssueAuthor))" xerces:message="Для отчетных материалов о выполнении результатов инженерных изысканий не указаны полные реквизиты организации, подготовившей отчетные материалы">
 			<xs:annotation>
 				<xs:documentation>Для отчетных материалов о выполнении результатов инженерных изысканий не указаны полные реквизиты организации, подготовившей отчетные материалы</xs:documentation>
 			</xs:annotation>
 		</xs:assert>
 		<!-- Конец проверки на наличее полных реквизитов организаций - автора отчетных материалов результатов инженерных изысканий -->  
+		
+		<!-- Проверка на наличие номера и даты документа - для документов с кодами не входящими в диапазоны 07.00 - 08.99, 13.00 -->  
+		<xs:assert test="not((DocType &lt; '07.00' or (DocType &gt; '08.99' and DocType &lt; '13.00') or (DocType &gt; '13.99' and DocType &lt; '99.99')) and not(DocDate))" xerces:message="Для документа, не входящего в состав проектной документации (документации по организации сноса объкта капитального строительства), не указаны необходимый реквизит документа - дата">
+			<xs:annotation>
+				<xs:documentation>Для документа, не входящего в состав проектной документации (документации по организации сноса объкта капитального строительства), не указаны необходимый реквизит документа - дата</xs:documentation>
+			</xs:annotation>
+		</xs:assert>
+		<xs:assert test="not((DocType &lt; '07.00' or (DocType &gt; '08.99' and DocType &lt; '13.00') or (DocType &gt; '13.99' and DocType &lt; '99.99')) and not(DocNumber))" xerces:message="Для документа, не входящего в состав проектной документации (документации по организации сноса объкта капитального строительства), не указаны необходимый реквизит документа - номер">
+			<xs:annotation>
+				<xs:documentation>Для документа, не входящего в состав проектной документации (документации по организации сноса объкта капитального строительства), не указаны необходимый реквизит документа - номер</xs:documentation>
+			</xs:annotation>
+		</xs:assert>
+		<xs:assert test="not((DocType &lt; '07.00' or (DocType &gt; '08.99' and DocType &lt; '13.00') or (DocType &gt; '13.99' and DocType &lt; '99.99')) and (not(FullDocIssueAuthor) and not(DocIssueAuthor)))" xerces:message="Для документа, не входящего в состав проектной документации (документации по организации сноса объкта капитального строительства), не указаны необходимый реквизит документа - автор документа (организация выдавшая документ)">
+			<xs:annotation>
+				<xs:documentation>Для документа, не входящего в состав проектной документации (документации по организации сноса объкта капитального строительства), не указаны необходимый реквизит документа - автор документа (организация выдавшая документ)</xs:documentation>
+			</xs:annotation>
+		</xs:assert>
+		<!-- Конец проверке на наличие номера и даты документа - для документов с кодами не входящими в диапазон 07.00 - 08.99-->  
 	</xs:complexType>
 
 	<xs:complexType name="tFile">
@@ -866,38 +907,103 @@
 		</xs:sequence>
 	</xs:complexType>
 	
-	<xs:complexType name="tObjectPart">
+	<xs:complexType name="tPreviousConclusions">
 		<xs:annotation>
-			<xs:documentation>Описание объекта (части объекта)</xs:documentation>
+			<xs:documentation>Сведения о ранее выданных заключениях экспертизы в отношении объекта капитального строительства, проектная документация и (или) результаты инженерных изысканий по которому представлены для проведения (повторной) экспертизы</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="Name" type="string1000" minOccurs="1" maxOccurs="1">
+			<xs:element name="PreviousConclusion" type="tPreviousConclusion" minOccurs="1" maxOccurs="unbounded">
 				<xs:annotation>
-					<xs:documentation>Наименование объекта капитального строительства</xs:documentation>
+					<xs:documentation>Сведения о ранее выданном заключении экспертизы в отношении объекта капитального строительства, проектная документация и (или) результаты инженерных изысканий по которому представлены для проведения (повторной) экспертизы</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-				<xs:element name="Address" type="tAddress" minOccurs="1" maxOccurs="unbounded">
-					<xs:annotation>
-						<xs:documentation>Адрес объекта капитального строительства в пределах Российской Федерации</xs:documentation>
-					</xs:annotation>
-				</xs:element>
-			<xs:choice minOccurs="1" maxOccurs="1">
-				<xs:element name="Functions" type="string1000">
-					<xs:annotation>
-						<xs:documentation>Функциональное назначение объекта капитального строительства</xs:documentation>
-					</xs:annotation>
-				</xs:element>
-				<xs:element name="FunctionsClass" type="tFunctionsClassFull">
-					<xs:annotation>
-						<xs:documentation>Код классификатора функционального назначения объектов капитального строительства</xs:documentation>
-					</xs:annotation>
-				</xs:element>
-			</xs:choice>
-			<xs:element name="TEI" type="tTEI" minOccurs="0" maxOccurs="unbounded">
+		</xs:sequence>
+	</xs:complexType>	
+	
+	<xs:complexType name="tConclusionNumber">
+		<xs:annotation>
+			<xs:documentation>Номер заключения экспертизы</xs:documentation>
+		</xs:annotation>
+		<xs:choice>
+			<xs:element name="EGRZ" type="tConclusionNumberEGRZ">
 				<xs:annotation>
-					<xs:documentation>Технико-экономические показатели объекта капитального строительства</xs:documentation>
+					<xs:documentation>Номер заключения экспертизы в формате ЕГРЗ</xs:documentation>
 				</xs:annotation>
 			</xs:element>
+			<xs:element name="noEGRZ" type="string50">
+				<xs:annotation>
+					<xs:documentation>Номер заключения экспертизы в произвольном формате</xs:documentation>
+				</xs:annotation>
+			</xs:element>	
+		</xs:choice>
+	</xs:complexType>
+	
+	<xs:complexType name="tPreviousSimpleConclusions">
+		<xs:annotation>
+			<xs:documentation>Сведения о ранее выданных заключениях по результатам оценки соответствия в рамках экспертного сопровождения в отношении объекта капитального строительства, проектная документация по которому представлена для проведения оценки соответствия в рамках экспертного сопровождения</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="PreviousSimpleConclusion" type="tPreviousSimpleConclusion" minOccurs="1" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Сведения о ранее выданном заключении по результатам оценки соответствия в рамках экспертного сопровождения в отношении объекта капитального строительства, проектная документация по которому представлена для проведения оценки соответствия в рамках экспертного сопровождения</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="tPreviousConclusion">
+		<xs:annotation>
+			<xs:documentation>Сведения о ранее выданном заключении экспертизы в отношении объекта капитального строительства, проектная документация и (или) результаты инженерных изысканий по которому представлены для проведения (повторной) экспертизы</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Date" type="xs:date" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Дата заключения экспертизы</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Number" type="tConclusionNumber" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Номер заключения экспертизы</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ExaminationObjectType" type="tExaminationObjectType" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Вид объекта экспертизы</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Name" type="xs:string" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Наименование объекта экспертизы</xs:documentation>
+				</xs:annotation>
+			</xs:element>	
+			<xs:element name="Result" type="tExaminationResult" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Результат экспертизы</xs:documentation>
+				</xs:annotation>
+			</xs:element>	
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="tPreviousSimpleConclusion">
+		<xs:annotation>
+			<xs:documentation>Сведения о ранее выданном заключении по результатам оценки соответствия в рамках экспертного сопровождения в отношении объекта капитального строительства, проектная документация по которому представлена для проведения оценки соответствия в рамках экспертного сопровождения</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Date" type="xs:date" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Дата заключения по результатам оценки в рамках экспертного сопровождения</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Number" type="tSimpleConclusionNumber" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Номер заключения по результатам оценки в рамках экспертного сопровождения</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Result" type="tExaminationResult" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Результат оценки соответствия в рамках экспертного сопровождения</xs:documentation>
+				</xs:annotation>
+			</xs:element>	
 		</xs:sequence>
 	</xs:complexType>
 	
@@ -913,7 +1019,7 @@
 				</xs:element>
 					<xs:element name="Address" type="tAddress" minOccurs="1" maxOccurs="unbounded">
 						<xs:annotation>
-							<xs:documentation>Адрес объекта капитального строительства в пределах Российской Федерации</xs:documentation>
+							<xs:documentation>Почтовый (строительный) адрес (местоположение) объекта капитального строительства</xs:documentation>
 						</xs:annotation>
 					</xs:element>
 				<xs:element name="Type" type="tObjectType" minOccurs="1" maxOccurs="1">
@@ -944,6 +1050,41 @@
 						</xs:annotation>
 					</xs:element>
 			</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="tObjectPart">
+		<xs:annotation>
+			<xs:documentation>Описание объекта (части объекта)</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Name" type="string1000" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Наименование объекта капитального строительства</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Address" type="tAddress" minOccurs="1" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Почтовый (строительный) адрес (местоположение) объекта капитального строительства</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:choice minOccurs="1" maxOccurs="1">
+				<xs:element name="Functions" type="string1000">
+					<xs:annotation>
+						<xs:documentation>Функциональное назначение объекта капитального строительства</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="FunctionsClass" type="tFunctionsClassFull">
+					<xs:annotation>
+						<xs:documentation>Код классификатора функционального назначения объектов капитального строительства</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:choice>
+			<xs:element name="TEI" type="tTEI" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Технико-экономические показатели объекта капитального строительства</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
 	</xs:complexType>
 	
 	<xs:complexType name="tTEI">
@@ -1045,7 +1186,7 @@
 	
 	<xs:complexType name="tClimateConditions">
 		<xs:annotation>
-			<xs:documentation>Климатические условия</xs:documentation>
+			<xs:documentation>Климатические условия территории</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
 			<xs:element name="ClimateDistrict" type="tClimateDistrict" minOccurs="1" maxOccurs="unbounded">
@@ -1090,14 +1231,14 @@
 	
 	<xs:group name="CompleteEstimatedCostGroup">
 		<xs:sequence>
-			<xs:element name="EstimatedCompleteCostBefore" type="xs:decimal" minOccurs="1" maxOccurs="1">
+			<xs:element name="EstimatedCompleteCostBefore" type="tEstimatedSum" minOccurs="1" maxOccurs="1">
 					<xs:annotation>
-						<xs:documentation>Сметная стоимость в уровне цен, сложившихся на дату представления сметной документации</xs:documentation>
+						<xs:documentation>Сметная стоимость на дату представления документации для проведения экспертизы </xs:documentation>
 					</xs:annotation>
 				</xs:element>
-			<xs:element name="EstimatedCompleteCostPost" type="xs:decimal" minOccurs="1" maxOccurs="1">
+			<xs:element name="EstimatedCompleteCostPost" type="tEstimatedSum" minOccurs="1" maxOccurs="1">
 				<xs:annotation>
-					<xs:documentation>Сметная стоимость в уровне цен, сложившихся на дату утверждения заключения экспертизы</xs:documentation>
+					<xs:documentation>Сметная стоимость на дату утверждения заключения экспертизы</xs:documentation>
 				</xs:annotation>
 			</xs:element>			
 		</xs:sequence>
@@ -1123,69 +1264,79 @@
 			<xs:documentation>Сметная стоимость (расшифровка по составляющим)</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="CostBasic" type="xs:decimal" minOccurs="1" maxOccurs="1">
+			<xs:element name="CostBasic" type="tEstimatedSum" minOccurs="1" maxOccurs="1">
 				<xs:annotation>
 					<xs:documentation>Сметная стоимость в базисном уровне цен (в тысячах рублей)</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="WorksCostBasic" type="xs:decimal" minOccurs="1" maxOccurs="1">
+			<xs:element name="WorksCostBasic" type="tEstimatedSum" minOccurs="1" maxOccurs="1">
 				<xs:annotation>
 					<xs:documentation>Сметная стоимость строительно-монтажных работ в базисном уровне цен (в тысячах рублей)</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="HardwareCostBasic" type="xs:decimal" minOccurs="1" maxOccurs="1">
+			<xs:element name="HardwareCostBasic" type="tEstimatedSum" minOccurs="1" maxOccurs="1">
 				<xs:annotation>
 					<xs:documentation>Сметная стоимость оборудования в базисном уровне цен (в тысячах рублей)</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="OtherCostBasic" type="xs:decimal" minOccurs="1" maxOccurs="1">
+			<xs:element name="OtherCostBasic" type="tEstimatedSum" minOccurs="1" maxOccurs="1">
 				<xs:annotation>
 					<xs:documentation>Сметная стоимость прочих затрат в базисном уровне цен (в тысячах рублей)</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="ProjectWorksCostBasic" type="xs:decimal" minOccurs="1" maxOccurs="1">
+			<xs:element name="ProjectWorksCostBasic" type="tEstimatedSum" minOccurs="1" maxOccurs="1">
 				<xs:annotation>
 					<xs:documentation>Сметная стоимость проектно-изыскательских работ в базисном уровне цен (в тысячах рублей)</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="BackSumCostBasic" type="xs:decimal" minOccurs="1" maxOccurs="1">
+			<xs:element name="BackSumCostBasic" type="tEstimatedSum" minOccurs="1" maxOccurs="1">
 				<xs:annotation>
 					<xs:documentation>Возвратные суммы в базисном уровне цен (в тысячах рублей)</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="Cost" type="xs:decimal" minOccurs="1" maxOccurs="1">
+			<xs:element name="Cost" type="tEstimatedSum" minOccurs="1" maxOccurs="1">
 				<xs:annotation>
-					<xs:documentation>Сметная стоимость в уровне цен, сложившихся на дату представления сметной документации (в тысячах рублей) </xs:documentation>
+					<xs:documentation>Сметная стоимость в текущем уровне цен (в тысячах рублей) </xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="WorksCost" type="xs:decimal" minOccurs="1" maxOccurs="1">
+			<xs:element name="WorksCost" type="tEstimatedSum" minOccurs="1" maxOccurs="1">
 				<xs:annotation>
-					<xs:documentation>Сметная стоимость строительно-монтажных работ в уровне цен, сложившихся на дату представления сметной документации (в тысячах рублей)</xs:documentation>
+					<xs:documentation>Сметная стоимость строительно-монтажных работ в текущем уровне цен (в тысячах рублей)</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="HardwareCost" type="xs:decimal" minOccurs="1" maxOccurs="1">
+			<xs:element name="HardwareCost" type="tEstimatedSum" minOccurs="1" maxOccurs="1">
 				<xs:annotation>
-					<xs:documentation>Сметная стоимость оборудования в уровне цен, сложившихся на дату представления сметной документации (в тысячах рублей) </xs:documentation>
+					<xs:documentation>Сметная стоимость оборудования в текущем уровне цен (в тысячах рублей) </xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="OtherCost" type="xs:decimal" minOccurs="1" maxOccurs="1">
+			<xs:element name="OtherCost" type="tEstimatedSum" minOccurs="1" maxOccurs="1">
 				<xs:annotation>
-					<xs:documentation>Сметная стоимость прочих затрат в уровне цен, сложившихся на дату представления сметной документации (в тысячах рублей)</xs:documentation>
+					<xs:documentation>Сметная стоимость прочих затрат в текущем уровне цен (в тысячах рублей)</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="ProjectWorksCost" type="xs:decimal" minOccurs="1" maxOccurs="1">
+			<xs:element name="ProjectWorksCost" type="tEstimatedSum" minOccurs="1" maxOccurs="1">
 				<xs:annotation>
-					<xs:documentation>Сметная стоимость проектно-изыскательских работ в уровне цен, сложившихся на дату представления сметной документации (в тысячах рублей)</xs:documentation>
+					<xs:documentation>Сметная стоимость проектно-изыскательских работ в текущем уровне цен (в тысячах рублей)</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="NDSCost" type="xs:decimal" minOccurs="1" maxOccurs="1">
+			<xs:element name="NDSCost" type="tEstimatedSum" minOccurs="1" maxOccurs="1">
 				<xs:annotation>
 					<xs:documentation>Сумма налога на добавленную стоимость (в тысячах рублей)</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="BackSumCost" type="xs:decimal" minOccurs="1" maxOccurs="1">
+			<xs:element name="BackSumCost" type="tEstimatedSum" minOccurs="1" maxOccurs="1">
 				<xs:annotation>
-					<xs:documentation>Возвратные суммы в текущих ценах в уровне цен, сложившихся на дату представления сметной документации (в тысячах рублей)</xs:documentation>
+					<xs:documentation>Возвратные суммы в текущем уровне цен  (в тысячах рублей)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CostBasicComment" type="non-empty-string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Комментарий к сметной стоимости в базисном уровне цен</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CostComment" type="non-empty-string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Комментарий к сметной стоимости в текущем уровне цен </xs:documentation>
 				</xs:annotation>
 			</xs:element>
 		</xs:sequence>
@@ -1195,6 +1346,7 @@
 		<xs:annotation>
 			<xs:documentation>Сведения о лицах, подготовивших проектную документацию</xs:documentation>
 		</xs:annotation>
+		
 		<xs:choice minOccurs="1" maxOccurs="1">
 			<xs:element name="Organization" type="tOrganization">
 				<xs:annotation>
@@ -1212,6 +1364,12 @@
 				</xs:annotation>
 			</xs:element>
 		</xs:choice>
+		<xs:attribute name="General" type="tYesNo" use="optional">
+			<xs:annotation>
+				<xs:documentation>Отметка о роли генерального проектировщика</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		
 	</xs:complexType>
 	
 	<xs:complexType name="tEEPDUse">
@@ -1219,9 +1377,9 @@
 			<xs:documentation>Использование экономически эффективной проектной документации</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="EEPDNote" type="xs:string" minOccurs="0" maxOccurs="1">
+			<xs:element name="EEPDNote" type="xs:string" minOccurs="1" maxOccurs="1">
 				<xs:annotation>
-					<xs:documentation>Сведения об использовании экономически-эффективной документации повторного использования</xs:documentation>
+					<xs:documentation>Сведения о разделах представленной на экспертизу проектной документации, которые не подвергались изменению и полностью соответствуют экономически эффективной проектной документации повторного использования</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="EEPDNumber" type="tConclusionNumber" minOccurs="1" maxOccurs="1">
@@ -1255,85 +1413,7 @@
 		</xs:sequence>
 	</xs:complexType>
 	
-	<xs:complexType name="tExpertСonclusion">
-		<xs:annotation>
-			<xs:documentation>Сведения о рассмотрении документации по направлению</xs:documentation>
-		</xs:annotation>
-		<xs:sequence>
-			<xs:choice minOccurs="1" maxOccurs="1">
-				<xs:element name="ExpertEngineeringSurveys" type="tExpertEngineeringSurveys">
-					<xs:annotation>
-						<xs:documentation>Заключение эксперта по результатам инженерных изысканий</xs:documentation>
-					</xs:annotation>
-				</xs:element>
-				<xs:element name="ExpertProjectDocuments" type="tExpertProjectDocuments">
-					<xs:annotation>
-						<xs:documentation>Заключение эксперта по проектной документации</xs:documentation>
-					</xs:annotation>
-				</xs:element>
-				<xs:element name="ExpertEstimate" type="tExpertEstimate">
-					<xs:annotation>
-						<xs:documentation>Заключение эксперта по проверке достоверности определения сметной стоимости</xs:documentation>
-					</xs:annotation>
-				</xs:element>
-			</xs:choice>
-		</xs:sequence>
-		<xs:attribute name="ExpertType" type="tExpertType" use="required">
-			<xs:annotation>
-				<xs:documentation>Направление деятельности</xs:documentation>
-			</xs:annotation>
-		</xs:attribute>
-		<xs:attribute name="Result" type="tExaminationResult" use="required">
-			<xs:annotation>
-				<xs:documentation>Результат оценки по направлению деятельности </xs:documentation>
-			</xs:annotation>
-		</xs:attribute>
-		<!-- Проверки заключения эксперта по направлению в части результата и наличия замечаний к документации -->
-		<xs:assert test="not(ExpertEngineeringSurveys and (not(ExpertEngineeringSurveys/Mismatches) and @Result=2))" xerces:message="Отрицательное (@Result=2) заключение по направлению деятельности в части инженерных изысканий не содержит замечаний (Mismatches)">
-			<xs:annotation>
-				<xs:documentation>
-					Отрицательное (@Result=2) заключение по направлению деятельности в части инженерных изысканий не содержит замечаний (Mismatches)
-				</xs:documentation>
-			</xs:annotation>
-		</xs:assert>
-		<xs:assert test="not(ExpertEngineeringSurveys and (ExpertEngineeringSurveys/Mismatches and @Result=1))" xerces:message="Положительное (@Result=1) заключение по направлению деятельности в части инженерных изысканий содержит замечания о несоответствии (Mismatches)">
-			<xs:annotation>
-				<xs:documentation>
-					Положительное (@Result=1) заключение по направлению деятельности в части инженерных изысканий содержит замечания о несоответствии (Mismatches)
-				</xs:documentation>
-			</xs:annotation>
-		</xs:assert>
-		<xs:assert test="not(ExpertProjectDocuments and (not(ExpertProjectDocuments/Mismatches) and @Result=2))" xerces:message="Отрицательное (@Result=2) заключение по направлению деятельности в части проектной документации не содержит замечаний (Mismatches)">
-			<xs:annotation>
-				<xs:documentation>
-					Отрицательное (@Result=2) заключение по направлению деятельности в части проектной документации не содержит замечаний (Mismatches)
-				</xs:documentation>
-			</xs:annotation>
-		</xs:assert>
-		<xs:assert test="not(ExpertProjectDocuments and (ExpertProjectDocuments/Mismatches and @Result=1))" xerces:message="Положительное (@Result=1) заключение по направлению деятельности в части проектной документации содержит замечания о несоответствии(Mismatches)">
-			<xs:annotation>
-				<xs:documentation>
-					Положительное (@Result=1) заключение по направлению деятельности в части проектной документации содержит замечания о несоответствии(Mismatches)
-				</xs:documentation>
-			</xs:annotation>
-		</xs:assert>
-		<xs:assert test="not(ExpertEstimate and (not(ExpertEstimate/Mismatches) and @Result=2))" xerces:message="Отрицательное (@Result=2) заключение по направлению деятельности в части проверки определения достоверности сметной стоимости не содержит замечаний(Mismatches)">
-			<xs:annotation>
-				<xs:documentation>
-					Отрицательное (@Result=2) заключение по направлению деятельности в части проверки определения достоверности сметной стоимости не содержит замечаний(Mismatches)
-				</xs:documentation>
-			</xs:annotation>
-		</xs:assert>
-		<xs:assert test="not(ExpertEstimate and (ExpertEstimate/Mismatches and @Result=1))" xerces:message="Положительное (@Result=1) заключение по направлению деятельности в части проверки определения достоверности сметной стоимости содержит замечания о несоответствии(Mismatches)">
-			<xs:annotation>
-				<xs:documentation>
-					Положительное (@Result=1) заключение по направлению деятельности в части проверки определения достоверности сметной стоимости содержит замечания о несоответствии(Mismatches)
-				</xs:documentation>
-			</xs:annotation>
-		</xs:assert>
-		<!-- Конец проверки заключения эксперта по направлению в части результат и наличия замечаний к документации -->
-	</xs:complexType>
-	
+
 	<xs:complexType name="tExperts">
 		<xs:annotation>
 			<xs:documentation>Перечень лиц, аттестованных на право подготовки заключений экспертизы, подписавших заключение экспертизы</xs:documentation>
@@ -1392,14 +1472,9 @@
 	
 	<xs:complexType name="tExpertEngineeringSurveys">
 		<xs:annotation>
-			<xs:documentation>Заключение эксперта по результатам инженерных изысканий</xs:documentation>
+			<xs:documentation>Сведения в части экспертизы результатов инженерных изысканий, подготовленные экспертом</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="EngineeringSurveyType" type="tEngineeringSurveyType" minOccurs="1" maxOccurs="1">
-				<xs:annotation>
-					<xs:documentation>Вид инженерных изысканий</xs:documentation>
-				</xs:annotation>
-			</xs:element>
 			<xs:element name="EngineeringSurveyConditions" type="xs:string" minOccurs="1" maxOccurs="1">
 				<xs:annotation>
 					<xs:documentation>Сведения о природных и техногенных условиях территории, на которой планируется осуществлять строительство, реконструкцию, капитальный ремонт объекта капитального строительства</xs:documentation>
@@ -1431,6 +1506,11 @@
 				</xs:annotation>
 			</xs:element>
 		</xs:sequence>
+		<xs:attribute name="EngineeringSurveyType" type="tEngineeringSurveyType" use="required">
+			<xs:annotation>
+				<xs:documentation>Вид инженерных изысканий</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
 	</xs:complexType>
 	
 	<xs:complexType name="tEngineeringSurveyMismatches">
@@ -1448,14 +1528,9 @@
 	
 	<xs:complexType name="tExpertProjectDocuments">
 		<xs:annotation>
-			<xs:documentation>Заключение эксперта по проектной документации</xs:documentation>
+			<xs:documentation>Сведения в части эспертизы проектной документации, подготовленные экспертом</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="EngineeringSurveyType" type="tEngineeringSurveyType" minOccurs="1" maxOccurs="unbounded">
-				<xs:annotation>
-					<xs:documentation>Вид инженерных изысканий, на соответствие которым проводилась экспертиза проектной документации</xs:documentation>
-				</xs:annotation>
-			</xs:element>
 			<xs:element name="ProjectDocumentsReview" type="xs:string" minOccurs="1" maxOccurs="1">
 				<xs:annotation>
 					<xs:documentation>Описание основных решений (мероприятий), принятых в проектной документации или описание изменений, внесенных в проектную документацию в ходе проведения повторной экспертизы или оценки соответствия в рамках экспертного сопровождения</xs:documentation>
@@ -1472,6 +1547,11 @@
 				</xs:annotation>
 			</xs:element>
 		</xs:sequence>
+		<xs:attribute name="ExpertType" type="tExpertType" use="required">
+			<xs:annotation>
+				<xs:documentation>Направление деятельности в области экспертизы проектной документации</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
 	</xs:complexType>
 	
 	<xs:complexType name="tProjectDocumentsMismatches">
@@ -1500,11 +1580,16 @@
 				</xs:annotation>
 			</xs:element>				
 		</xs:sequence>
+		<xs:assert test="EngineeringSurveyMismatch or ProjectTaskMismatch or NormsMismatch or DangerMismatch" xerces:message="Раздел &quot;Сведения о несоответствии проектной документации установленным требованиям&quot; не содержит ни одного описания несоответствия">
+			<xs:annotation>
+				<xs:documentation>Раздел "Сведения о несоответствии проектной документации установленным требованиям" не содержит ни одного описания несоответствия</xs:documentation>
+			</xs:annotation>
+		</xs:assert>
 	</xs:complexType>
 	
 	<xs:complexType name="tExpertEstimate">
 		<xs:annotation>
-			<xs:documentation>Заключение эксперта по проверке достоверности определения сметной стоимости </xs:documentation>
+			<xs:documentation>Сведения в части проверки достоверности определения сметной стоимости, подготовленные экспертом</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
 			<xs:element name="EstimateNorms" type="xs:string" minOccurs="1" maxOccurs="1">
@@ -1551,6 +1636,11 @@
 				</xs:annotation>
 			</xs:element>
 		</xs:sequence>
+		<xs:assert test="CommonMismatch or FullCalculationMismatch or LocalCalculationMismatch or ProjectDocumentsMismatch or BasicMismatch" xerces:message="Раздел &quot;Сведения о несоответствии сметной документации, выявленных в ходе проверки достоверности определения сметной стоимости&quot; не содержит ни одного описания несоответсвия">
+			<xs:annotation>
+				<xs:documentation>Раздел "Сведения о несоответствии сметной документации, выявленных в ходе проверки достоверности определения сметной стоимости" не содержит ни одного описания несоответсвия</xs:documentation>
+			</xs:annotation>
+		</xs:assert>
 	</xs:complexType>
 	
 	<xs:complexType name="tSummary">
@@ -1563,9 +1653,24 @@
 					<xs:documentation>Вывод о соответствии результатов инженерных изысканий требованиям технических регламентов</xs:documentation>
 				</xs:annotation>
 			</xs:element>
+			<xs:element name="EngineeringSurveySummaryDate" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Сведения о дате, по состоянию на которую действовали требования, примененные в соответствии с частью 5.2 статьи 49 Градостроительного кодекса Российской Федерации (в части экспертизы результатов инжененрных изысканий)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="EngineeringSurveyType" type="tEngineeringSurveyType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Вид инженерных изысканий, на соответствие которым проводилась экспертиза проектной документации</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="ProjectDocumentsSummary" type="xs:string" minOccurs="0" maxOccurs="1">
 				<xs:annotation>
 					<xs:documentation>Вывод о соответствии технической части проектной документации результатам инженерных изысканий, заданию застройщика или технического заказчика на проектирование и требованиям технических регламентов</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ProjectDocumentsSummaryDate" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Сведения о дате, по состоянию на которую действовали требования, примененные в соответствии с частью 5.2 статьи 49 Градостроительного кодекса Российской Федерации (в части экспертизы проектной документации)</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="EstimateNormsAndWorksSummary" type="xs:string" minOccurs="0" maxOccurs="1">
@@ -1636,85 +1741,9 @@
 			</xs:annotation>
 		</xs:attribute>
 	</xs:complexType>
-	
-	<xs:complexType name="tPreviousConclusions">
-		<xs:annotation>
-			<xs:documentation>Сведения о ранее подготовленных заключениях экспертизы в отношении объекта капитального строительства, проектная документация и (или) результаты инженерных изысканий по которому представлены для проведения (повторной) экспертизы</xs:documentation>
-		</xs:annotation>
-		<xs:sequence>
-			<xs:element name="PreviousConclusion" type="tPreviousConclusion" minOccurs="1" maxOccurs="unbounded">
-				<xs:annotation>
-					<xs:documentation>Сведения о ранее подготовленном заключении экспертизы в отношении объекта капитального строительства, проектная документация и (или) результаты инженерных изысканий по которому представлены для проведения (повторной) экспертизы</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-		</xs:sequence>
-	</xs:complexType>	
-	
-	<xs:complexType name="tPreviousSimpleConclusions">
-		<xs:annotation>
-			<xs:documentation>Сведения о ранее выданных заключениях по результатам оценки соответствия в рамках экспертного сопровождения в отношении объекта капитального строительства, проектная документация по которому представлена для проведения оценки соответствия в рамках экспертного сопровождения</xs:documentation>
-		</xs:annotation>
-		<xs:sequence>
-			<xs:element name="PreviousSimpleConclusion" type="tPreviousSimpleConclusion" minOccurs="1" maxOccurs="unbounded">
-				<xs:annotation>
-					<xs:documentation>Сведения о ранее выданном заключении по результатам оценки соответствия в рамках экспертного сопровождения в отношении объекта капитального строительства, проектная документация по которому представлена для проведения оценки соответствия в рамках экспертного сопровождения</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-		</xs:sequence>
-	</xs:complexType>
-	
-	<xs:complexType name="tPreviousConclusion">
-		<xs:annotation>
-			<xs:documentation>Сведения о ранее подготовленном заключении экспертизы в отношении объекта капитального строительства, проектная документация и (или) результаты инженерных изысканий по которому представлены для проведения (повторной) экспертизы</xs:documentation>
-		</xs:annotation>
-		<xs:sequence>
-			<xs:element name="Date" type="xs:date" minOccurs="1" maxOccurs="1">
-				<xs:annotation>
-					<xs:documentation>Дата заключения экспертизы</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="Number" type="tConclusionNumber" minOccurs="1" maxOccurs="1">
-				<xs:annotation>
-					<xs:documentation>Номер заключения экспертизы</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="Name" type="xs:string" minOccurs="1" maxOccurs="1">
-				<xs:annotation>
-					<xs:documentation>Наименование материалов в отношении, которых подготовлено заключение</xs:documentation>
-				</xs:annotation>
-			</xs:element>	
-			<xs:element name="Result" type="tExaminationResult" minOccurs="1" maxOccurs="1">
-				<xs:annotation>
-					<xs:documentation>Результат экспертизы</xs:documentation>
-				</xs:annotation>
-			</xs:element>	
-		</xs:sequence>
-	</xs:complexType>
-	
-	<xs:complexType name="tPreviousSimpleConclusion">
-		<xs:annotation>
-			<xs:documentation>Сведения о ранее выданном заключении по результатам оценки соответствия в рамках экспертного сопровождения в отношении объекта капитального строительства, проектная документация по которому представлена для проведения оценки соответствия в рамках экспертного сопровождения</xs:documentation>
-		</xs:annotation>
-		<xs:sequence>
-			<xs:element name="Date" type="xs:date" minOccurs="1" maxOccurs="1">
-				<xs:annotation>
-					<xs:documentation>Дата заключения по результатам оценки в рамках экспертного сопровождения</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="Number" type="tSimpleConclusionNumber" minOccurs="1" maxOccurs="1">
-				<xs:annotation>
-					<xs:documentation>Номер заключения по результатам оценки в рамках экспертного сопровождения</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="Result" type="tExaminationResult" minOccurs="1" maxOccurs="1">
-				<xs:annotation>
-					<xs:documentation>Результат оценки соответствия в рамках экспертного сопровождения</xs:documentation>
-				</xs:annotation>
-			</xs:element>	
-		</xs:sequence>
-	</xs:complexType>
-	
 	<!-- Окончание определения сложных типов -->
+	
+	
 	<!-- Определение простых типов -->
 	<xs:simpleType name="tFileFormat">
 		<xs:annotation>
@@ -1732,7 +1761,40 @@
 			<xs:pattern value="[0-9a-fA-F]{8}"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:simpleType name="string50">
+	<xs:simpleType name="non-empty-string">
+		<xs:annotation>
+			<xs:documentation>Непустая текстовая строка</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="(\s*[^\s]\s*)+"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tYesNo">
+		<xs:annotation>
+			<xs:documentation>Непустая текстовая строка, содержащая одно из значений "да" или "нет"</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="да">
+				<xs:annotation>
+					<xs:documentation>Логическое значение "да"/"истина"</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="нет">
+				<xs:annotation>
+					<xs:documentation>Логическое значение "нет"/"ложь"</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tEstimatedSum">
+		<xs:annotation>
+			<xs:documentation>Описание сумм при указании сметной стоимости</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="(Не требуется)|(Отсутствует)|(-{0,1}\d*\.{0,1}\d*)"/>
+		</xs:restriction>
+	</xs:simpleType>
+		<xs:simpleType name="string50">
 		<xs:annotation>
 			<xs:documentation>Текстовая строка длиной 50 символа</xs:documentation>
 		</xs:annotation>
@@ -1777,7 +1839,7 @@
 			<xs:documentation>Кадастровый номер участка</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
-			<xs:pattern value="\d+:\d+:\d+:\d+"/>
+		<xs:pattern value="\d+:\d+:\d+:\d+"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="tFileName">
@@ -1812,12 +1874,12 @@
 			<xs:pattern value="[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,3}\.[0-9]{1,3}"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:simpleType name="tConclusionNumber">
+	<xs:simpleType name="tConclusionNumberEGRZ">
 		<xs:annotation>
-			<xs:documentation>Номер заключения экспертизы (старый формат или ЕГРЗ)</xs:documentation>
+			<xs:documentation>Номер заключения экспертизы (формат ЕГРЗ)</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
-			<xs:pattern value="([0-9]{2}-[1-2]{1}-[1-2]{1}-[1-3]{1}-[0-9]{6}-[0-9]{4})|([0-9]{2}-[1-2]{1}-[1-2]{1}-[1-3]{1}-[0-9]{4}-[0-9]{2})"/>
+			<xs:pattern value="[0-9]{2}-[1-2]{1}-[1-2]{1}-[1-3]{1}-[0-9]{6}-[0-9]{4}"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="tSimpleConclusionNumber">
@@ -1841,7 +1903,7 @@
 			<xs:documentation>Номер версии, использованной при формировании заключения в формате xx.xx</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
-			<xs:pattern value="([0-9]){2}.([0-9]){2}"/>
+			<xs:pattern value="([0-9]){2}\.([0-9]){2}"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="tExpertCertificate">
@@ -2736,7 +2798,7 @@
 			<xs:documentation>Интенсивность сейсмических воздействий</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
-			<xs:enumeration value="5 и менее баллов">
+			<xs:enumeration value="5">
 				<xs:annotation>
 					<xs:documentation>5 и менее баллов</xs:documentation>
 				</xs:annotation>
@@ -2761,7 +2823,7 @@
 					<xs:documentation>9</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
-			<xs:enumeration value="Более 9 баллов">
+			<xs:enumeration value="10">
 				<xs:annotation>
 					<xs:documentation>Более 9 баллов</xs:documentation>
 				</xs:annotation>
@@ -2837,7 +2899,7 @@
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="00">
 				<xs:annotation>
-					<xs:documentation>Объект расположен на территории двух и более субъектов Российской Федерации или за пределами территории Российской Федерации</xs:documentation>
+					<xs:documentation>Объект расположен за пределами территории Российской Федерации, во внутренних морских водах, территориальном море и прилежащей зоне Российской Федерации, в исключительной экономической зоне Российской Федерации, в границах российской части (российском секторе) дна Каспийского моря и континентального шельфа Российской Федерации</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="01">
@@ -3327,7 +3389,7 @@
 					<xs:documentation>2.2. Теплогазоснабжение, водоснабжение, водоотведение, канализация, вентиляция и кондиционирование</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
-			<xs:enumeration value="2.2.1">
+			<xs:enumeration value="2.2.1.">
 				<xs:annotation>
 					<xs:documentation>2.2.1. Водоснабжение, водоотведение и канализация</xs:documentation>
 				</xs:annotation>
@@ -3337,7 +3399,7 @@
 					<xs:documentation>2.2.2. Теплоснабжение, вентиляция и кондиционирование</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
-			<xs:enumeration value="2.2.3">
+			<xs:enumeration value="2.2.3.">
 				<xs:annotation>
 					<xs:documentation>2.2.3. Системы газоснабжения</xs:documentation>
 				</xs:annotation>
@@ -3367,7 +3429,7 @@
 					<xs:documentation>2.4.1. Охрана окружающей среды</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
-			<xs:enumeration value="2.4.2">
+			<xs:enumeration value="2.4.2.">
 				<xs:annotation>
 					<xs:documentation>2.4.2. Санитарно-эпидемиологическая безопасность</xs:documentation>
 				</xs:annotation>
@@ -3387,7 +3449,7 @@
 					<xs:documentation>4.1. Мосты и трубы</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
-			<xs:enumeration value="4.2">
+			<xs:enumeration value="4.2.">
 				<xs:annotation>
 					<xs:documentation>4.2. Автомобильные дороги</xs:documentation>
 				</xs:annotation>

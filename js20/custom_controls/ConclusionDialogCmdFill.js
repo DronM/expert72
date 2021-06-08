@@ -48,7 +48,7 @@ extend(ConclusionDialogCmdFill,ButtonCmd);
 
 
 /* public methods */
-ConclusionDialogCmdFill.prototype.fillConclusion = function(){
+ConclusionDialogCmdFill.prototype.fillConclusionCont = function(){
 
 	var contracts_ref = this.m_docView.getElement("contracts_ref").getValue();
 	if(!contracts_ref && contracts_ref.isNull()){
@@ -57,17 +57,41 @@ ConclusionDialogCmdFill.prototype.fillConclusion = function(){
 //alert('ContractID='+contracts_ref.getKey("id"))
 	var pm = (new Conclusion_Controller()).getPublicMethod("fill_on_contract");
 	pm.setFieldValue("doc_id", contracts_ref.getKey("id"));
+	pm.setFieldValue("tm", (new Date).getTime());
 	
 	window.setGlobalWait(true);
-	var docView = this.m_docView;
+	//var docView = this.m_docView;
+	var self = this
 	pm.run({
 		"ok":function(resp){
 			//XML result!			
-			console.log(resp);
-			docView.getElement("Conclusion").setValueXML(resp);
-		}
-		,"all":function(){
+			/*setTimeout(function(){
+				docView.getElement("Conclusion").setValueXML(resp);
+				window.showTempNote("Заключение заполнено");
+			}, 3000);
+			*/
+			//.childNodes[0]
+			self.m_docView.getElement("Conclusion").setValueXML(resp);
+			window.showTempNote("Заключение заполнено");
 			window.setGlobalWait(false);
+			
+		}
+		,"fail":function(resp,errCode,errStr){
+			window.setGlobalWait(false);
+			throw Error(errStr);
+		}
+	});
+}
+
+ConclusionDialogCmdFill.prototype.fillConclusion = function(){
+	var self = this;
+	WindowQuestion.show({
+		"no":false
+		,"text":"Заполнить по данным заявления?"
+		,"callBack":function(res){
+			if (res == WindowQuestion.RES_YES){
+				self.fillConclusionCont();
+			}
 		}
 	});
 }

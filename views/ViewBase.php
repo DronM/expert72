@@ -1207,6 +1207,8 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/ConclusionDialog_Form.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/ConclusionDictionaryDetailList_Form.js'));		
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/EmployeeExpertCertificateList_Form.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/ExpertConclusionDialog_Form.js'));
+		
 		
 		
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'forms/UserDialog_Form.js'));
@@ -1390,6 +1392,9 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ConclusionList_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ConclusionDialog_View.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/EmployeeExpertCertificateList_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ExpertConclusionList_View.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/ExpertConclusionDialog_View.js'));
+		
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'tmpl/App.templates.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/App.enums.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/App.predefinedItems.js'));
@@ -1522,6 +1527,7 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tEngineeringSurveyMismatches.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tProjectDocumentsMismatches.js'));		
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tMismatch.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tMismatchExtended.js'));
 		
 				
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tDocuments.js'));
@@ -1557,12 +1563,17 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tEstimateMismatches.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tSummary.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tExperts.js'));
-		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tExpert.js'));		
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tExpert.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tConclusionNumber.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/Conclusion_tEstimatedSum.js'));								
 
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ConclusionDialogCmdGetFile.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ConclusionDialogCmdPrint.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ConclusionDialogCmdCheck.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ConclusionDialogCmdFill.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ConclusionDialogCmdFillExpertConclusions.js'));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'custom_controls/ExpertConclusion.js'));
+		
 		
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'enum_controls/Enum_role_types.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'views/rs_ru.js'));
@@ -1891,7 +1902,7 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ContractExtList_Model.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowExaminationExtList_Model.js'));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DocFlowApprovementExtList_Model.js'));
-	$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/ConclusionDictionary_Controller.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ConclusionDictionary_Model.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ConclusionDictionaryList_Model.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/ConclusionDictionaryDetail_Controller.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ConclusionDictionaryDetail_Model.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/Conclusion_Model.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/Conclusion_Controller.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ConclusionList_Model.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ConclusionDialog_Model.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/ConclusionDictionaryDetailLocalList_Controller.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ConclusionDictionaryDetailLocalList_Model.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/EmployeeExpertCertificate_Controller.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/EmployeeExpertCertificate_Model.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/EmployeeExpertCertificateList_Model.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/EmployeeWithExpertCertificateList_Model.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/BuildTypeList_Model.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ConstructionTypeDialog_Model.js'));
+	$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/ConclusionDictionary_Controller.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ConclusionDictionary_Model.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ConclusionDictionaryList_Model.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/ConclusionDictionaryDetail_Controller.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ConclusionDictionaryDetail_Model.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/Conclusion_Model.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/Conclusion_Controller.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ConclusionList_Model.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ConclusionDialog_Model.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/ConclusionDictionaryDetailLocalList_Controller.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ConclusionDictionaryDetailLocalList_Model.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/EmployeeExpertCertificate_Controller.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/EmployeeExpertCertificate_Model.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/EmployeeExpertCertificateList_Model.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/EmployeeWithExpertCertificateList_Model.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/BuildTypeList_Model.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ConstructionTypeDialog_Model.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/FundSourceList_Model.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/ExpertConclusion_Controller.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ExpertConclusion_Model.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ExpertConclusionList_Model.js'));$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ExpertConclusionDialog_Model.js'));
 			if (isset($_SESSION['scriptId'])){
 				$script_id = $_SESSION['scriptId'];
 			}

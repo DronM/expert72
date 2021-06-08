@@ -23,8 +23,23 @@ require_once(USER_CONTROLLERS_PATH.'Application_Controller.php');
 
 require_once('common/XSD11Validator/XSD11Validator.php');
 
-use mustache\Mustache\Engine;
-include ABSOLUTE_PATH.'vendor/autoload.php';
+require_once('mustache.php/src/Mustache/Loader.php');
+require_once('mustache.php/src/Mustache/Cache.php');
+require_once('mustache.php/src/Mustache/Logger.php');
+require_once('mustache.php/src/Mustache/Parser.php');
+require_once('mustache.php/src/Mustache/Tokenizer.php');
+require_once('mustache.php/src/Mustache/Compiler.php');
+require_once('mustache.php/src/Mustache/Template.php');
+require_once('mustache.php/src/Mustache/Context.php');
+require_once('mustache.php/src/Mustache/Exception.php');
+require_once('mustache.php/src/Mustache/HelperCollection.php');
+require_once('mustache.php/src/Mustache/LambdaHelper.php');
+require_once('mustache.php/src/Mustache/Loader/StringLoader.php');
+require_once('mustache.php/src/Mustache/Cache/AbstractCache.php');
+require_once('mustache.php/src/Mustache/Cache/NoopCache.php');
+require_once('mustache.php/src/Mustache/Logger/AbstractLogger.php');
+require_once('mustache.php/src/Mustache/Logger/StreamLogger.php');
+require_once('mustache.php/src/Mustache/Engine.php');
 
 class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@parentId"/>{
 	public function __construct($dbLinkMaster=NULL,$dbLink=NULL){
@@ -187,75 +202,99 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 	
 	//returns HTML text
 	public function get_check($pm){
-		$xsd_file = $this->checkSchemaFile();
-		
-		$doc_id = $this->getExtDbVal($pm,'doc_id');
-		$cash_id = self::cash_file($doc_id);
-		if(!file_exists($fl_check = $cash_id.'_vld.html')){
+		try{
+			$xsd_file = $this->checkSchemaFile();
 			
-			if(!file_exists($mst_tmpl = USER_VIEWS_PATH.self::CHECK_RES_TMPL)){
-				throw new Exception('Шаблон результата проверки не найден!');
-			}
-					
-			$fl_xml = $cash_id.'.xml';
-			$conclusion_num = $this->conclusionToXML($this->getDbLink(),$doc_id, $fl_xml);
-			
-			// Enable user error handling
-			libxml_use_internal_errors(true);		
-			
-			//$xmlDoc = new DOMDocument();
-			//$xmlDoc->load(file_get_contents($fl_xml));
-			
-			$tmpl_data = array('scriptId' => (defined('DEBUG')&amp;&amp;DEBUG&amp;&amp;isset($_SESSION['scriptId']))? $_SESSION['scriptId']:VERSION);
-			$tmpl_data['conclusionNum'] = $conclusion_num;
-			
-			XSD11Validator::validate($tmpl_data, $xsd_file, $fl_xml, 'rus');
-			
-			/*
-			if(!$xmlDoc->schemaValidate($xsd_file)){
-				$tmpl_data['isValid'] = FALSE;
+			$doc_id = $this->getExtDbVal($pm,'doc_id');
+			$cash_id = self::cash_file($doc_id);
+			if(!file_exists($fl_check = $cash_id.'_vld.html')){
 				
-				$tmpl_data['errors'] = array();
-				$errors = libxml_get_errors();
-				foreach ($errors as $error) {
-					$err = array();
-					switch ($error->level) {
-						case LIBXML_ERR_WARNING:
-							$err['isWarning'] = TRUE;
-							$err['code'] = $error->code;
-							break;
-						case LIBXML_ERR_ERROR:
-							$err['isError'] = TRUE;
-							$err['code'] = $error->code;
-							break;
-						case LIBXML_ERR_FATAL:
-							$err['isFatal'] = TRUE;
-							$err['code'] = $error->code;							
-							break;
-					}
-					$err['message'] = trim($error->message);
-					$err['line'] = $error->line;
-					
-					array_push($tmpl_data['errors'],$err);
+				if(!file_exists($mst_tmpl = USER_VIEWS_PATH.self::CHECK_RES_TMPL)){
+					throw new Exception('Шаблон результата проверки не найден!');
 				}
+						
+				$fl_xml = $cash_id.'.xml';
+				$conclusion_num = $this->conclusionToXML($this->getDbLink(),$doc_id, $fl_xml);
 				
-				libxml_clear_errors();				
-			}else{
-				$tmpl_data['isValid'] = TRUE;
+				// Enable user error handling
+				libxml_use_internal_errors(true);		
+				
+				//$xmlDoc = new DOMDocument();
+				//$xmlDoc->load(file_get_contents($fl_xml));
+				
+				$tmpl_data = array(
+					'scriptId' => (defined('DEBUG')&amp;&amp;DEBUG&amp;&amp;isset($_SESSION['scriptId']))? $_SESSION['scriptId']:VERSION
+					,'conclusionNum' => $conclusion_num
+				);
+				
+				XSD11Validator::validate($tmpl_data, $xsd_file, $fl_xml, 'rus');
+				
+				/*
+				if(!$xmlDoc->schemaValidate($xsd_file)){
+					$tmpl_data['isValid'] = FALSE;
+					
+					$tmpl_data['errors'] = array();
+					$errors = libxml_get_errors();
+					foreach ($errors as $error) {
+						$err = array();
+						switch ($error->level) {
+							case LIBXML_ERR_WARNING:
+								$err['isWarning'] = TRUE;
+								$err['code'] = $error->code;
+								break;
+							case LIBXML_ERR_ERROR:
+								$err['isError'] = TRUE;
+								$err['code'] = $error->code;
+								break;
+							case LIBXML_ERR_FATAL:
+								$err['isFatal'] = TRUE;
+								$err['code'] = $error->code;							
+								break;
+						}
+						$err['message'] = trim($error->message);
+						$err['line'] = $error->line;
+						
+						array_push($tmpl_data['errors'],$err);
+					}
+					
+					libxml_clear_errors();				
+				}else{
+					$tmpl_data['isValid'] = TRUE;
+				}
+				*/
+				
+                                if(!class_exists('Mustache_Engine')){
+                                        throw new Exception('Mustache engine not found!');
+                                }
+				
+				$mustache = new Mustache_Engine();				
+				file_put_contents(
+					$fl_check,
+					$mustache->render(
+						file_get_contents($mst_tmpl)
+						,$tmpl_data
+					)
+				);
+				
+				/*$out_f = file_get_contents($mst_tmpl);
+				foreach($tmpl_data as $tmpl_k=>$tmpl_v){
+					$out_f = str_replace('{{'.$tmpl_k.'}}',$tmpl_v,$out_f);
+				}
+				file_put_contents($fl_check,$out_f);
+				*/
 			}
-			*/
 			
-			$mustache = new Mustache_Engine;				
-			file_put_contents(
-				$fl_check,
-				$mustache->render(
-					file_get_contents($mst_tmpl)
-					,$tmpl_data
-				)
-			);
+			self::echo_html($fl_check);
+		}catch(Exception $e){
+			echo sprintf("<html>
+				<body>
+					<h4>%s
+					</h4>
+				</body>
+				</html>
+			",$e->getMessage());
 		}
 		
-		self::echo_html($fl_check);
 		return TRUE;				
 	}
 
@@ -324,8 +363,8 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 
 	private function get_addr_from_struc($jsonVal,$post){
 		$addr = '';
-		if(isset($jsonVal) &amp;&amp; isset($jsonVal->region)){
-			if($jsonVal->region->keys &amp;&amp; $jsonVal->region->keys->region_code){
+		if(isset($jsonVal)){
+			if(isset($jsonVal->region) &amp;&amp; isset($jsonVal->region->keys) &amp;&amp; isset($jsonVal->region->keys->region_code)){
 				$reg_code = substr($jsonVal->region->keys->region_code,0,2);
 				$reg_descr = $jsonVal->region->descr;
 				
@@ -335,22 +374,22 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				//НЕТ ИНДЕКСА!!!
 				$addr .= '&lt;PostIndex&gt;'.'000000'.'&lt;/PostIndex&gt;';
 			}
-			if($jsonVal->raion &amp;&amp; $jsonVal->raion->descr){
+			if(isset($jsonVal->raion) &amp;&amp; isset($jsonVal->raion->descr)){
 				$addr .= '&lt;District&gt;'.$jsonVal->raion->descr.'&lt;/District&gt;';
 			}
-			if($jsonVal->gorod &amp;&amp; $jsonVal->gorod->descr){
+			if(isset($jsonVal->gorod) &amp;&amp; isset($jsonVal->gorod->descr)){
 				$addr .= '&lt;City&gt;'.$jsonVal->gorod->descr.'&lt;/City&gt;';
 			}
-			if($jsonVal->naspunkt &amp;&amp; $jsonVal->naspunkt->descr){
+			if(isset($jsonVal->naspunkt) &amp;&amp; isset($jsonVal->naspunkt->descr)){
 				$addr .= '&lt;Settlement&gt;'.$jsonVal->naspunkt->descr.'&lt;/Settlement&gt;';
 			}
-			if($jsonVal->ulitsa &amp;&amp; $jsonVal->ulitsa->descr){
+			if(isset($jsonVal->ulitsa) &amp;&amp; isset($jsonVal->ulitsa->descr)){
 				$addr .= '&lt;Street&gt;'.$jsonVal->ulitsa->descr.'&lt;/Street&gt;';
 			}
-			if($jsonVal->dom){
+			if(isset($jsonVal->dom)){
 				$addr .= '&lt;Building&gt;'.$jsonVal->dom.($jsonVal->korpus? ' '.$jsonVal->korpus:'').'&lt;/Building&gt;';
 			}
-			if($jsonVal->kvartira){
+			if(isset($jsonVal->kvartira)){
 				$addr .= '&lt;Room&gt;'.$jsonVal->kvartira.'&lt;/Room&gt;';
 			}
 			
@@ -391,7 +430,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		
 	}	
 	
-	private function concl_xml_add_contragent($tagName,$val,&amp;$xml){
+	private function concl_get_contragent($tagName, $val, $multyType=FALSE){
 		$inner_val = '';
 		if($val->client_type == 'enterprise'){
 			$tag_name = 'Organization';
@@ -400,7 +439,10 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			$inner_val.= '&lt;OrgINN&gt;'.$val->inn.'&lt;/OrgINN&gt;';
 			$inner_val.= '&lt;OrgKPP&gt;'.$val->kpp.'&lt;/OrgKPP&gt;';			
 			
-			$inner_val.= '&lt;Address&gt;'.$this->get_addr_from_struc($val->legal_address,FALSE).'&lt;/Address&gt;';
+			$addr = isset($val->legal_address)? $val->legal_address : (isset($val->post_address)? $val->post_address:NULL);
+			if($addr){
+				$inner_val.= '&lt;Address&gt;'.$this->get_addr_from_struc($addr,FALSE).'&lt;/Address&gt;';
+			}	
 			/* No Email!
 			if($val->corp_email &amp;&amp;strlen($val->corp_email)){
 				$inner_val.= '&lt;Email&gt;'.$val->corp_email.'&lt;/Email&gt;';
@@ -444,12 +486,28 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			throw new Exception('Незадан тип клиента:'.$val->name_full);
 		}
 		
-		$xml.= '&lt;'.$tagName.'&gt;'.
-				'&lt;conclusionValue conclusionTagName="'. $tag_name .'"&gt;'.
-					$inner_val.	
-				'&lt;/conclusionValue&gt;'.
-				 '&lt;sysValue skeepNode="TRUE"&gt;'. $tag_name .'&lt;/sysValue&gt;'.
-			'&lt;/'.$tagName.'&gt;';
+		if(!$multyType){
+			return '&lt;'.$tagName.'&gt;'.
+					'&lt;conclusionValue conclusionTagName="'. $tag_name .'"&gt;'.
+						$inner_val.	
+					'&lt;/conclusionValue&gt;'.
+					 '&lt;sysValue skeepNode="TRUE"&gt;'. $tag_name .'&lt;/sysValue&gt;'.
+				'&lt;/'.$tagName.'&gt;';
+								
+		}else{
+			return '&lt;'.$tagName.'&gt;'.
+				 '&lt;orgType sysNode="TRUE"&gt;'.
+					'&lt;conclusionValue conclusionTagName="'. $tag_name .'"&gt;'.
+						$inner_val.	
+					'&lt;/conclusionValue&gt;'.
+					'&lt;sysValue skeepNode="TRUE"&gt;'. $tag_name .'&lt;/sysValue&gt;'.
+				'&lt;/orgType&gt;'.
+				'&lt;/'.$tagName.'&gt;';
+		}
+	}
+	
+	private function concl_xml_add_contragent($tagName,$val,&amp;$xml){
+		$xml.= $this->concl_get_contragent($tagName,$val);
 	}
 	
 	private static function concl_xml_sys_node($nodeName,$conclVal,$sysVal){
@@ -461,6 +519,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 	}
 	
 	private static function concl_xml_sys_node_dict($nodeName,$dictName,$dictCode,$dictDescr){
+		$dictDescr = str_replace('"','\"',$dictDescr);
 		$sys_val = '{"keys":{"conclusion_dictionary_name":"'. $dictName .'","code":"'. $dictCode .'"},"descr":"'. $dictDescr .'"}';
 		return self::concl_xml_sys_node($nodeName, $dictCode, $sys_val);
 	}
@@ -479,11 +538,11 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			$examine_res_descr = '';
 		}
 		
+		
 		//Тип 1 - РИИ, 2 - ПД, 3 - РИИ+ПД
 		if($ar['expertise_type']=='pd' || $ar['expertise_type']=='cost_eval_validity_pd' || $ar['expertise_type']=='cost_eval_validity'){
 			$examine_obj_type = '2';
 			$examine_obj_type_descr = '2 Проектная документация';
-			
 		}else if($ar['expertise_type']=='eng_survey' || $ar['expertise_type']=='cost_eval_validity_eng_survey'){
 			$examine_obj_type = '1';
 			$examine_obj_type_descr = '1 Результаты инженерных изысканий';
@@ -495,12 +554,19 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			$examine_obj_type = '';
 			$examine_obj_type_descr = '';
 		}
-		
-		//???
-		$examine_type = '';
-		$examine_type_descr = '';
-		
-		//construction type
+
+		//предмет экспертизы много
+		$examination_types = '';
+		if($ar['expertise_type']=='pd' || $ar['expertise_type']=='cost_eval_validity_pd'){
+			$examination_types.= self::concl_xml_sys_node_dict('ExaminationType', 'tExaminationType', '2', '2 Оценка соответствия проектной документации установленным требованиям (подпункт 1 пункт 5 статьи 49 Градостроительного кодекса Российской Федерации)');
+			
+		}
+		if($ar['expertise_type']=='pd_eng_survey' || $ar['expertise_type']=='eng_survey' || $ar['expertise_type']=='cost_eval_validity_eng_survey'){
+			$examination_types.= self::concl_xml_sys_node_dict('ExaminationType', 'tExaminationType', '1', '1 Оценка соответствия результатов инженерных изысканий требованиям технических регламентов (абзац 1 пункта 5 статьи 49 Градостроительного кодекса Российской Федерации)');	
+		}
+		if($ar['expertise_type']=='cost_eval_validity' || $ar['expertise_type']=='cost_eval_validity_pd' || $ar['expertise_type']=='cost_eval_validity_pd_eng_survey'){
+			$examination_types.= self::concl_xml_sys_node_dict('ExaminationType', 'tExaminationType', '3', '3 Проверка достоверности определения сметной стоимости (подпункт 2 пункт 5 статьи 49 Градостроительного кодекса Российской Федерации)');	
+		}
 		
 		//ExaminationStage 1-Первичная, 2-вторичная, 3-сопровождение
 		if($ar['service_type']=='expert_maintenance'){
@@ -524,10 +590,10 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				self::concl_xml_sys_node_dict('ExaminationForm', 'tExaminationForm', $examine_form, $examine_form_descr).
 				self::concl_xml_sys_node_dict('ExaminationResult', 'tExaminationResult', $examine_res, $examine_res_descr).
 				self::concl_xml_sys_node_dict('ExaminationObjectType', 'tExaminationObjectType', $examine_obj_type, $examine_obj_type_descr).
-				//ПРОПУСТИЛИ! '&lt;ExaminationType&gt;'. $examine_type .'&lt;/ExaminationType&gt;'.
+				$examination_types.
 				self::concl_xml_sys_node_dict('ConstructionType', 'tConstractionType', $ar['constr_type'], $ar['constr_type_descr']).
 				self::concl_xml_sys_node_dict('ExaminationStage', 'tExaminationStage', $examine_stage, $examine_stage_descr).
-				'&lt;Name&gt;'. $ar['constr_name'] .'&lt;/Name&gt;'.
+				'&lt;sysName conclusionTagName="Name"&gt;'. $ar['constr_name'] .'&lt;/sysName&gt;'.
 			'&lt;/ExaminationObject&gt;';
 	}
 	
@@ -544,7 +610,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 	
 	}
 	
-	private function concl_xml_add_File($fileName, $docTypeCode, $docTypeDescr, $docDate, $docIssueAuthor, $fileDoc, $sigExists, $fileSig, &amp;$docNum, &amp;$xml){
+	private static function concl_xml_add_File($fileName, $docTypeCode, $docTypeDescr, $docDate, $docIssuerTag, $fileDoc, $sigExists, $fileSig, &amp;$docNum, &amp;$xml){
 		
 		$doc_name = '';
 		$doc_ext = '';
@@ -552,18 +618,20 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		$doc_h = hash_file('crc32', $fileDoc);		
 		
 		if($sigExists){
-			$sig_name = $fileName.Application_Controller::SIG_EXT;
+			$sig_name = $fileName;
 			$sig_ext = substr(Application_Controller::SIG_EXT,1);
 			$sig_h = hash_file('crc32', $fileSig);		
 		}
 		
 		$docNum++;
+		//str_replace($doc_ext,'',$doc_name) = Наименование раздела!!!
+		//$docIssuerTag = Проектная организация
+		//брал совсем так как не обязателен $docIssuerTag.
 		$xml.=	'&lt;Document&gt;'.
 				self::concl_xml_sys_node_dict('DocType', 'tDocumentType', $docTypeCode, $docTypeDescr).
-				'&lt;DocName&gt;'. str_replace($doc_ext,'',$doc_name) .'&lt;/DocName&gt;'.
+				'&lt;DocName&gt;'. $docTypeDescr .'&lt;/DocName&gt;'.
 				'&lt;DocNumber&gt;'. $docNum .'&lt;/DocNumber&gt;'.
-				'&lt;DocDate&gt;'. $docDate .'&lt;/DocDate&gt;'.
-				'&lt;DocIssueAuthor&gt;'. $docIssueAuthor .'&lt;/DocIssueAuthor&gt;'.
+				'&lt;DocDate&gt;'. $docDate .'&lt;/DocDate&gt;'.				
 				'&lt;File&gt;'.
 					'&lt;FileName&gt;'. $doc_name .'&lt;/FileName&gt;'.
 					'&lt;FileFormat&gt;'.$doc_ext .'&lt;/FileFormat&gt;'.
@@ -581,16 +649,13 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			;
 	}
 	
-	private static function concl_xml_add_app_File($docType, &amp;$fileInfo, $fileDate, $docTypeCode, $docTypeDescr, $docIssuerName, &amp;$relDirZip, &amp;$docNum ){
+	private static function concl_xml_add_app_File($docType, &amp;$fileInfo, $fileDate, $docTypeCode, $docTypeDescr, $docIssuerTag, &amp;$relDirZip, &amp;$docNum ){
 		$file_ar = json_decode($fileInfo);
 		if (count($file_ar)){
 			$rel_path = Application_Controller::dirNameOnDocType($docType).DIRECTORY_SEPARATOR;
 			if (file_exists($file_doc = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$relDirZip.DIRECTORY_SEPARATOR. $rel_path.$file_ar[0]->id)
 			||( defined('FILE_STORAGE_DIR_MAIN') &amp;&amp; file_exists($file_doc = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$relDirZip.DIRECTORY_SEPARATOR. $rel_path.$file_ar[0]->id) )
 			){
-				$zip->addFile($file_doc, $rel_path.$file_ar[0]->name);
-				$cnt++;
-				
 				$sig_exists = FALSE;				
 				if (file_exists($sig_doc = FILE_STORAGE_DIR.DIRECTORY_SEPARATOR.$relDirZip.DIRECTORY_SEPARATOR.$rel_path.$file_ar[0]->id.Application_Controller::SIG_EXT)
 				||( defined('FILE_STORAGE_DIR_MAIN') &amp;&amp; file_exists($sig_doc = FILE_STORAGE_DIR_MAIN.DIRECTORY_SEPARATOR.$relDirZip.DIRECTORY_SEPARATOR.$rel_path.$file_ar[0]->id.Application_Controller::SIG_EXT))
@@ -598,21 +663,38 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 					$sig_exists = TRUE;
 				}
 				
-				$this->concl_xml_add_File($file_ar[0]->name, $docTypeCode, $docTypeDescr, $fileDate, $docIssuerName,  $file_doc, $sig_exists, $sig_doc, $docNum, $xml);
+				self::concl_xml_add_File($file_ar[0]->name, $docTypeCode, $docTypeDescr, $fileDate, $docIssuerTag,  $file_doc, $sig_exists, $sig_doc, $docNum, $xml);
 			}							
 		}
 	}
 	
 	private function concl_xml_add_object(&amp;$arApp, &amp;$xml){
+		if(!isset($arApp['constr_address']) || !strlen($arApp['constr_address'])){
+			return;
+		}
+	
 		$xml.=	'&lt;Object&gt;'.
 				'&lt;Name&gt;'. $arApp['constr_name'] .'&lt;/Name&gt;'.
-				'&lt;Address&gt;'.$this->get_addr_from_struc( $arApp['constr_address'],FALSE).'&lt;/Address&gt;'.
-		
+				'&lt;addressContainer sysNode="TRUE"&gt;'.
+					'&lt;conclusionValue conclusionTagName="Address"&gt;'.
+						$this->get_addr_from_struc( json_decode($arApp['constr_address']),FALSE).
+			       		'&lt;/conclusionValue&gt;'.
+			      		'&lt;sysValue skeepNode="TRUE"&gt;Address&lt;/sysValue&gt;'.
+			   	'&lt;/addressContainer&gt;'.
 				self::concl_xml_sys_node_dict('Type', 'tObjectType', $arApp['object_type'], $arApp['object_type_descr']).
 			'&lt;/Object&gt;'
 			;	
 	}
-	
+
+	private function concl_xml_add_finance(&amp;$arApp, &amp;$xml){
+		$xml.=	'&lt;Finance&gt;'.
+				self::concl_xml_sys_node_dict('FinanceType', 'tFinanceType', $arApp['finance_type'], $arApp['finance_type_descr']).
+				self::concl_xml_sys_node_dict('BudgetType', 'tBudgetType', $arApp['budget_type'], $arApp['budget_type_descr']).
+				'&lt;FinanceSize&gt;'. $arApp['fund_percent'] .'&lt;/FinanceSize&gt;'.
+			'&lt;/Finance&gt;'
+			;	
+	}
+		
 	private function concl_xml_add_documents(&amp;$arApp, &amp;$xml){
 		/**
 		 * document_templates.tmpl fields:
@@ -632,14 +714,18 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				adf.*
 				,adf.date_time::date AS file_d
 				
-				,(SELECT
+				,(SELECT					
 					json_build_object(
-						'code', d_tmpl.tmpl->'document'->>'dt_code',
-						'descr', d_tmpl.tmpl->'document'->>'dt_descr'
-					)
-				FROM document_templates AS d_tmpl
-				WHERE (d_tmpl.tmpl->>'document_type')::document_types = adf.document_type
-					AND (d_tmpl.tmpl->'document'->>'id')::int = adf.document_id 
+						'code',doc_elems.elem->'fields'->>'dt_code',
+						'descr', doc_elems.elem->'fields'->>'dt_descr'
+					)				  
+				FROM (
+				SELECT					
+						jsonb_array_elements(d_tmpl.tmpl->'document') AS elem
+					FROM document_templates AS d_tmpl
+					WHERE (d_tmpl.tmpl->>'document_type')::document_types = adf.document_type
+				) doc_elems
+				WHERE (doc_elems.elem->'fields'->>'id')::int = adf.document_id
 				LIMIT 1
 				) AS conclusion_dictionary_details_ref
 				
@@ -676,10 +762,26 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			LEFT JOIN file_verifications AS f_ver ON f_ver.file_id=adf.file_id
 			WHERE adf.application_id=%d
 				AND coalesce(adf.deleted,FALSE)=FALSE
-			ORDER BY adf.date_time,adf.file_name"
+			ORDER BY adf.document_type,adf.document_id,adf.date_time"
 			,$arApp['application_id']
 			,$arApp['application_id']
 		));
+		
+		//issuer Заказчик->>Застройщик
+		// было так:
+		//'&lt;DocIssueAuthor&gt;'. $arApp['doc_issuer_name'] .'&lt;/DocIssueAuthor&gt;'
+		if(isset($arApp['customer'])){
+			$doc_issuer_tag =
+				'&lt;FullDocIssueAuthor&gt;'. 
+					$this->concl_get_contragent('ProjectDocumentsTechnicalCustomer', json_decode($arApp['customer']));
+				'&lt;/FullDocIssueAuthor&gt;';
+			
+		}else if(isset($arApp['developer'])){
+			$doc_issuer_tag =
+				'&lt;FullDocIssueAuthor&gt;'. 
+					$this->concl_get_contragent('ProjectDocumentsTechnicalCustomer', json_decode($arApp['developer']));
+				'&lt;/FullDocIssueAuthor&gt;';
+		}
 		
 		//head tag
 		$xml .= '&lt;Documents&gt;';
@@ -706,11 +808,14 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				$dict_ref_code = '';
 				$dict_ref_descr = '';
 				if(isset($file['conclusion_dictionary_details_ref'])){				
+					//!!!Берем ТОЛЬКО документы с заполненными соответствиями!!!
 					$dict_ref = json_decode($file['conclusion_dictionary_details_ref']);
 					$dict_ref_code = (isset($dict_ref)&amp;&amp;isset($dict_ref->code))? $dict_ref->code:'';
 					$dict_ref_descr = (isset($dict_ref)&amp;&amp;isset($dict_ref->descr))? $dict_ref->descr:'';
-				}
-				$this->concl_xml_add_File($file['file_name'], $dict_ref_code, $dict_ref_descr, $file['file_d'], $arApp['doc_issuer_name'],  $file_doc, $sig_exists, $sig_doc, $docNum, $xml);
+					if($dict_ref_code!=''){
+						self::concl_xml_add_File($file['file_name'], $dict_ref_code, $dict_ref_descr, $file['file_d'], $doc_issuer_tag,  $file_doc, $sig_exists, $sig_doc, $docNum, $xml);
+					}
+				}				
 			}
 		
 		}
@@ -719,27 +824,25 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		$application_document_types_match = json_decode($arApp['application_document_types_match']);
 		//Заявления
 		if (isset($arApp['expertise_type'])){
-			self::concl_xml_add_app_File('app_print_expertise',$arApp['app_print'], $arApp['app_date'], $application_document_types_match->app_print->code, $application_document_types_match->app_print->descr, $arApp['doc_issuer_name'], $rel_dir_zip, $docNum);
+			self::concl_xml_add_app_File('app_print_expertise',$arApp['app_print'], $arApp['app_date'], $application_document_types_match->app_print->code, $application_document_types_match->app_print->descr, $doc_issuer_tag, $rel_dir_zip, $docNum);
 		}
 		if (isset($arApp['cost_eval_validity']) &amp;&amp; $arApp['cost_eval_validity']=='t'){
-			self::concl_xml_add_app_File('app_print_cost_eval_validity', $arApp['app_print'], $arApp['app_date'], $application_document_types_match->app_print->code, $application_document_types_match->app_print->descr, $arApp['doc_issuer_name'], $rel_dir_zip, $docNum);
+			self::concl_xml_add_app_File('app_print_cost_eval_validity', $arApp['app_print'], $arApp['app_date'], $application_document_types_match->app_print->code, $application_document_types_match->app_print->descr, $doc_issuer_tag, $rel_dir_zip, $docNum);
 		}
 		if (isset($arApp['modification']) &amp;&amp; $arApp['modification']=='t'){
-			self::concl_xml_add_app_File('app_print_modification', $arApp['app_print'], $arApp['app_date'], $application_document_types_match->app_print->code, $application_document_types_match->app_print->descr, $arApp['doc_issuer_name'], $rel_dir_zip, $docNum);
+			self::concl_xml_add_app_File('app_print_modification', $arApp['app_print'], $arApp['app_date'], $application_document_types_match->app_print->code, $application_document_types_match->app_print->descr, $doc_issuer_tag, $rel_dir_zip, $docNum);
 		}
 		if (isset($arApp['audit']) &amp;&amp; $arApp['audit']=='t'){
-			self::concl_xml_add_app_File('app_print_audit', $arApp['app_print'], $arApp['app_date'], $application_document_types_match->app_print->code, $application_document_types_match->app_print->descr, $arApp['doc_issuer_name'], $rel_dir_zip, $docNum);
+			self::concl_xml_add_app_File('app_print_audit', $arApp['app_print'], $arApp['app_date'], $application_document_types_match->app_print->code, $application_document_types_match->app_print->descr, $doc_issuer_tag, $rel_dir_zip, $docNum);
 		}
 		//Доверенность
 		if (isset($arApp['auth_letter_file']) &amp;&amp; $arApp['auth_letter_file']=='t'){
-			self::concl_xml_add_app_File('auth_letter_file', $arApp['auth_letter_file'], $arApp['app_date'], $application_document_types_match->auth_letter->code, $application_document_types_match->auth_letter->descr, $arApp['doc_issuer_name'], $rel_dir_zip, $docNum);
+			self::concl_xml_add_app_File('auth_letter_file', $arApp['auth_letter_file'], $arApp['app_date'], $application_document_types_match->auth_letter->code, $application_document_types_match->auth_letter->descr, $doc_issuer_tag, $rel_dir_zip, $docNum);
 		}
 		//Доверенность техн.заказчика
 		if (isset($arApp['customer_auth_letter_file']) &amp;&amp; $arApp['customer_auth_letter_file']=='t'){
-			self::concl_xml_add_app_File('customer_auth_letter_file', $arApp['customer_auth_letter_file'], $application_document_types_match->auth_letter->code, $application_document_types_match->auth_letter->descr, $arApp['doc_issuer_name'], $arApp['app_date'], $rel_dir_zip, $docNum);
+			self::concl_xml_add_app_File('customer_auth_letter_file', $arApp['customer_auth_letter_file'], $application_document_types_match->auth_letter->code, $application_document_types_match->auth_letter->descr, $doc_issuer_tag, $arApp['app_date'], $rel_dir_zip, $docNum);
 		}
-		
-		//+Вся переписка, все договорные документы и т.д.
 		
 		//foot
 		$xml .= '&lt;/Documents&gt;';
@@ -751,16 +854,18 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				contr.empl->'fields'->'employees_ref'->'keys'->>'id' AS id,
 				contr.empl->'fields'->'employees_ref'->>'descr' AS name,
 				(SELECT
-				 	json_build_object(
-							'expert_types_ref',conclusion_dictionary_detail_ref(expert_tp)
-							,'cert_id', certs.cert_id
-							,'date_from', certs.date_from
-							,'date_to', certs.date_to
+					json_agg(
+					 	json_build_object(
+								'expert_types_ref',conclusion_dictionary_detail_ref(expert_tp)
+								,'cert_id', certs.cert_id
+								,'date_from', certs.date_from
+								,'date_to', certs.date_to
+						)
 					)
 				FROM employee_expert_certificates AS certs
 				LEFT JOIN conclusion_dictionary_detail AS expert_tp ON expert_tp.conclusion_dictionary_name='tExpertType' AND expert_tp.code=certs.expert_type
 				WHERE certs.employee_id=(contr.empl->'fields'->'employees_ref'->'keys'->>'id')::int
-				) AS cert
+				) AS certs
 			FROM (
 				SELECT jsonb_array_elements(result_sign_expert_list->'rows') AS empl
 				FROM contracts
@@ -778,25 +883,52 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			$secondName = '';
 			$this->split_person_name($expert['name'],$familyName,$firstName,$secondName);
 			
-			$cert = NULL;
-			if(isset($expert['cert'])){
-				$cert = json_decode($expert['cert']);
-			}
-		
-			if(isset($cert->expert_types_ref)){
+			if(isset($expert['certs'])){
+				$certs = json_decode($expert['certs']);
+				foreach($certs as $cert){
+					$cert_id = $cert->cert_id;
+					$date_from = $cert->date_from;
+					$date_to = $cert->date_to;
+					$expert_type_code = $cert->expert_types_ref->keys->code;
+					$expert_type_descr = $cert->expert_types_ref->descr;
+					
+					$experts.= '&lt;Expert&gt;'.
+							'&lt;FamilyName&gt;'. $familyName. '&lt;/FamilyName&gt;'.
+							'&lt;FirstName&gt;'. $firstName. '&lt;/FirstName&gt;'.
+							( strlen($secondName)? '&lt;SecondName&gt;'. $secondName. '&lt;/SecondName&gt;' : '' ).
+							
+							self::concl_xml_sys_node_dict('ExpertType', 'tExpertType', $expert_type_code, $expert_type_descr).
+							
+							'&lt;ExpertCertificate&gt;'. $cert_id. '&lt;/ExpertCertificate&gt;'.
+							'&lt;ExpertCertificateBeginDate&gt;'. $date_from. '&lt;/ExpertCertificateBeginDate&gt;'.
+							'&lt;ExpertCertificateEndDate&gt;'. $date_to. '&lt;/ExpertCertificateEndDate&gt;'.
+							
+						'&lt;/Expert&gt;';
+					
+				}
+				
+			}else{
+				//no certs - once person without sert
+				$cert_id = '';
+				$date_from = '';
+				$date_to = '';
+				$expert_type_code = '';
+				$expert_type_descr = '';
+				
 				$experts.= '&lt;Expert&gt;'.
 						'&lt;FamilyName&gt;'. $familyName. '&lt;/FamilyName&gt;'.
 						'&lt;FirstName&gt;'. $firstName. '&lt;/FirstName&gt;'.
 						( strlen($secondName)? '&lt;SecondName&gt;'. $secondName. '&lt;/SecondName&gt;' : '' ).
 						
-						self::concl_xml_sys_node_dict('ExpertType', 'tExpertType', $cert->expert_types_ref->keys->code, $cert->expert_types_ref->descr).
+						self::concl_xml_sys_node_dict('ExpertType', 'tExpertType', $expert_type_code, $expert_type_descr).
 						
-						'&lt;ExpertCertificate&gt;'. $expert['cert_id']. '&lt;/ExpertCertificate&gt;'.
-						'&lt;ExpertCertificateBeginDate&gt;'. $expert['date_from']. '&lt;/ExpertCertificateBeginDate&gt;'.
-						'&lt;ExpertCertificateEndDate&gt;'. $expert['date_to']. '&lt;/ExpertCertificateEndDate&gt;'.
+						'&lt;ExpertCertificate&gt;'. $cert_id. '&lt;/ExpertCertificate&gt;'.
+						'&lt;ExpertCertificateBeginDate&gt;'. $date_from. '&lt;/ExpertCertificateBeginDate&gt;'.
+						'&lt;ExpertCertificateEndDate&gt;'. $date_to. '&lt;/ExpertCertificateEndDate&gt;'.
 						
 					'&lt;/Expert&gt;';
-			}
+				
+			}			
 		}
 		
 		if(strlen($experts)){
@@ -836,6 +968,12 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 				
 				,app.constr_address
 				
+				,fnd.finance_type_code AS finance_type
+				,fn_tp.descr AS finance_type_descr
+				,fnd.budget_type_code AS budget_type
+				,bd_tp.descr AS budget_type_descr
+				,app.fund_percent
+				
 				,constr_tp.dt_code AS constr_type
 				,constr_tp_dict.descr AS constr_type_descr
 				,obj_tp.object_type_code AS object_type
@@ -871,8 +1009,11 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			LEFT JOIN clients AS cl_expert ON cl_expert.id = of.client_id
 			LEFT JOIN build_types AS constr_tp ON constr_tp.id = app.build_type_id
 			LEFT JOIN construction_types AS obj_tp ON obj_tp.id = app.build_type_id
+			LEFT JOIN fund_sources AS fnd ON fnd.id = app.fund_source_id
 			LEFT JOIN conclusion_dictionary_detail AS constr_tp_dict ON constr_tp_dict.conclusion_dictionary_name='tConstractionType' AND constr_tp_dict.code=constr_tp.dt_code
-			LEFT JOIN conclusion_dictionary_detail AS obj_tp_dict ON obj_tp_dict.conclusion_dictionary_name='tObjectType' AND obj_tp_dict.code=obj_tp.object_type_code
+			LEFT JOIN conclusion_dictionary_detail AS obj_tp_dict ON obj_tp_dict.conclusion_dictionary_name='tObjectType' AND obj_tp_dict.code=obj_tp.object_type_code			
+			LEFT JOIN conclusion_dictionary_detail AS fn_tp ON fn_tp.conclusion_dictionary_name='tFinanceType' AND fn_tp.code=fnd.finance_type_code
+			LEFT JOIN conclusion_dictionary_detail AS bd_tp ON bd_tp.conclusion_dictionary_name='tBudgetType' AND bd_tp.code=fnd.budget_type_code
 			WHERE ct.id=%d"
 			,$contract_id
 		));
@@ -915,19 +1056,31 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		//Заявитель
 		$this->concl_xml_add_contragent('Declarant', json_decode($ar['applicant']), $xml);
 
+		//источник финансирования, бюджет
+		$this->concl_xml_add_finance($ar, $xml);
+
 		//Исполнители, кто подготовил
 		$contractors = json_decode($ar['contractors']);
 		foreach($contractors as $contractor){
-			$this->concl_xml_add_contragent('Designer', $contractor, $xml);
+			$xml.= $this->concl_get_contragent('Designer',$contractor,TRUE);
 		}
 		
 		//Застройщик
 		if(isset($ar['developer'])){
-			$this->concl_xml_add_contragent('ProjectDocumentsDeveloper', json_decode($ar['developer']), $xml);
+			$this->concl_xml_add_contragent('ProjectDocumentsDeveloper', json_decode($ar['developer']), $xml);			
 		}
 
 		//Технич.заказчик
 		if(isset($ar['customer'])){
+			$customer = json_decode($ar['customer']);
+			if(isset($customer)  &amp;&amp; isset($customer->customer_is_developer)  &amp;&amp; isset($ar['developer'])){
+				$this->concl_xml_add_contragent('ProjectDocumentsTechnicalCustomer', json_decode($ar['developer']), $xml);
+				
+			}else{
+				$this->concl_xml_add_contragent('ProjectDocumentsTechnicalCustomer', json_decode($ar['customer']), $xml);
+			}			
+			
+		}else if(isset($ar['customer'])){
 			$this->concl_xml_add_contragent('ProjectDocumentsTechnicalCustomer', json_decode($ar['customer']), $xml);
 		}
 		
@@ -937,6 +1090,72 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 
 		$xml.= '&lt;/Conclusion&gt;';		
 		
+		ViewXML::addHTTPHeaders();
+		echo $xml;
+		
+		return TRUE;
+	}
+	
+	/**
+	 * returns pure XML
+	 */
+	public function fill_expert_conclusions($pm){
+		$ln = strlen('&lt;conclusion&gt;');		
+	
+		$xml = '&lt;conclusions&gt;';
+	
+		//*** PD
+		$q_id = $this->getDbLink()->query(sprintf(
+			"SELECT conclusion
+			FROM expert_conclusions
+			WHERE contract_id = %d AND conclusion_type='pd'"
+			,$this->getExtDbVal($pm,'doc_id')
+		));
+				
+		$xml.= '&lt;pd&gt;';		
+		while($exp_concl = $this->getDbLink()->fetch_array($q_id)){
+			//$conclusion = trim($exp_concl['conclusion']);
+			//$xml.= substr($conclusion, $ln, strlen($conclusion) - $ln - $ln - 1);					
+			$xml.= $exp_concl['conclusion'];
+		}
+		$xml.= '&lt;/pd&gt;';
+		//***********
+
+		//*** Eng
+		$q_id = $this->getDbLink()->query(sprintf(
+			"SELECT conclusion
+			FROM expert_conclusions
+			WHERE contract_id = %d AND conclusion_type='eng'"
+			,$this->getExtDbVal($pm,'doc_id')
+		));
+				
+		$xml.= '&lt;eng&gt;';		
+		while($exp_concl = $this->getDbLink()->fetch_array($q_id)){
+			//$conclusion = trim($exp_concl['conclusion']);
+			//$xml.= substr($conclusion, $ln, strlen($conclusion) - $ln - $ln - 1);					
+			$xml.= $exp_concl['conclusion'];
+		}
+		$xml.= '&lt;/eng&gt;';
+		//***********
+
+		//*** Estim
+		$q_id = $this->getDbLink()->query(sprintf(
+			"SELECT conclusion
+			FROM expert_conclusions
+			WHERE contract_id = %d AND conclusion_type='val_estim'"
+			,$this->getExtDbVal($pm,'doc_id')
+		));
+				
+		$xml.= '&lt;val_estim&gt;';		
+		while($exp_concl = $this->getDbLink()->fetch_array($q_id)){
+			//$conclusion = trim($exp_concl['conclusion']);
+			//$xml.= substr($conclusion, $ln, strlen($conclusion) - $ln - $ln - 1);					
+			$xml.= $exp_concl['conclusion'];
+		}
+		$xml.= '&lt;/val_estim&gt;';
+		//***********
+		
+		$xml.= '&lt;/conclusions&gt;';		
 		ViewXML::addHTTPHeaders();
 		echo $xml;
 		

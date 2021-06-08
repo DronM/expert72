@@ -16,30 +16,46 @@ function Conclusion_tPreviousConclusion(id,options){
 	
 	options.addElement = function(){
 	
+		var lb_col = window.getBsCol(4);
+	
 		this.addElement(new EditDate(id+":Date",{
-			"attrs":{"concl_req":true}
+			"required":true
+			,"labelClassName":"control-label contentRequired "+lb_col
 			,"labelCaption":"Дата заключения экспертизы:"
 			,"title":"Обязательный элемент."
 			,"focus":true
 		}));								
 		
-		this.addElement(new EditString(id+":Number",{
-			"attrs":{"concl_req":true}
-			,"maxLength":"20"
+		/**
+		 * Теперь структура!
+		 */
+		this.addElement(new Conclusion_tConclusionNumber(id+":Number",{
+			"required":true
+			,"labelClassName":"control-label contentRequired "+lb_col
 			,"labelCaption":"Номер заключения экспертизы:"
-			,"title":"Обязательный элемент.Указывается в строгом формате xx-x-x-x-xxxxxx-xxxx или xx-x-x-x-xxxx-xx"
-			,"placeholder":"xx-x-x-x-xxxxxx-xxxx или xx-x-x-x-xxxx-xx"
-			,"regExpression":/^([0-9]{2}-[1-2]{1}-[1-2]{1}-[1-3]{1}-[0-9]{6}-[0-9]{4})|([0-9]{2}-[1-2]{1}-[1-2]{1}-[1-3]{1}-[0-9]{4}-[0-9]{2})$/
+			,"title":"Обязательный элемент."
+		}));								
+
+		/* Добавлено
+		*/
+		this.addElement(new ConclusionDictionaryDetailSelect(id+":ExaminationObjectType",{
+			"required":true
+			,"labelClassName":"control-label contentRequired "+lb_col
+			,"labelCaption":"Вид объекта экспертизы:"
+			,"title":"Обязательный элемент.Значение из таблицы 4."
+			,"conclusion_dictionary_name":"tExaminationObjectType"
 		}));								
 
 		this.addElement(new EditText(id+":Name",{
-			"attrs":{"concl_req":true}
+			"required":true
+			,"labelClassName":"control-label contentRequired "+lb_col
 			,"labelCaption":"Наименование материалов в отношении, которых подготовлено заключение:"
 			,"title":"Обязательный элемент."
 		}));								
 
 		this.addElement(new ConclusionDictionaryDetailSelect(id+":Result",{
-			"attrs":{"concl_req":true}
+			"required":true
+			,"labelClassName":"control-label contentRequired "+lb_col
 			,"labelCaption":"Результат экспертизы:"
 			,"title":"Обязательный элемент. Указывается код из классификатора – Таблица 2."
 			,"conclusion_dictionary_name":"tExaminationResult"

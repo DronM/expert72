@@ -17,7 +17,6 @@ function Conclusion_EditCompound(id,options){
 	
 	this.m_sysNode = options.sysNode;
 	this.m_controlNameToConclusionTagName = options.controlNameToConclusionTagName;
-	this.m_controlNameToConclusionTagName = options.controlNameToConclusionTagName;
 	
 	Conclusion_EditCompound.superclass.constructor.call(this,id,options);
 }

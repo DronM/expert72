@@ -62,7 +62,12 @@ function ConclusionDialog_View(id,options){
 		this.addElement(new ConclusionDialogCmdFill(id+":cmdFill",{
 			"docView":this
 		}));								
-							
+		
+		//заполнение по заключениям экспертов		
+		this.addElement(new ConclusionDialogCmdFillExpertConclusions(id+":cmdFillExpertConclusions",{
+			"docView":this
+		}));								
+		
 	}
 	
 	ConclusionDialog_View.superclass.constructor.call(this,id,options);

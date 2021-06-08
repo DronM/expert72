@@ -72,7 +72,7 @@
 					
 					<div class="panel panel-flat">
 						<div class="panel-heading">
-							<h4 class="panel-title">Предмет экспертизы</h4>
+							<h4 class="panel-title contentRequired">Предмет экспертизы</h4>
 						</div>
 						<div id="{{id}}:Conclusion:ExaminationObject:ExaminationType" class="panel-body">
 						</div>
@@ -93,7 +93,7 @@
 		<div class="tab-pane fade" id="prevConcl">
 			<div class="panel panel-flat">
 				<div class="panel-heading">
-					<h4 class="panel-title">Заключения экспертизы</h4>
+					<h4 class="panel-title contentRequired">Заключения экспертизы</h4>
 				</div>
 				<div id="{{id}}:Conclusion:PreviousConclusions" class="panel-body">
 				</div>
@@ -101,7 +101,7 @@
 
 			<div class="panel panel-flat">
 				<div class="panel-heading">
-					<h4 class="panel-title">Заключения экспертизы (экспертное сопровождение)</h4>
+					<h4 class="panel-title contentRequired">Заключения экспертизы (экспертное сопровождение)</h4>
 				</div>
 				<div id="{{id}}:Conclusion:PreviousSimpleConclusions" class="panel-body">
 				</div>
@@ -112,7 +112,7 @@
 			
 			<div class="panel panel-flat">
 				<div class="panel-heading">
-					<h4 class="panel-title">Сведения о заявителе</h4>
+					<h4 class="panel-title contentRequired">Сведения о заявителе</h4>
 				</div>
 				<div class="panel-body">
 					<div id="{{id}}:Conclusion:Declarant"/>
@@ -121,21 +121,21 @@
 
 			<div class="panel panel-flat">
 				<div class="panel-heading">
-					<h4 class="panel-title">Сведения о застройщиках</h4>
+					<h4 class="panel-title contentRequired">Сведения о застройщиках</h4>
 				</div>
 				<div id="{{id}}:Conclusion:ProjectDocumentsDeveloper" class="panel-body"/>
 			</div>	
 
 			<div class="panel panel-flat">
 				<div class="panel-heading">
-					<h4 class="panel-title">Сведения о технических заказчиках</h4>
+					<h4 class="panel-title contentRequired">Сведения о технических заказчиках</h4>
 				</div>
 				<div id="{{id}}:Conclusion:ProjectDocumentsTechnicalCustomer" class="panel-body"/>
 			</div>	
 
 			<div class="panel panel-flat">
 				<div class="panel-heading">
-					<h4 class="panel-title">Сведения о лицах, подготовивших проктную документацию</h4>
+					<h4 class="panel-title contentRequired">Сведения о лицах, подготовивших проктную документацию</h4>
 				</div>
 				<div id="{{id}}:Conclusion:Designer" class="panel-body"/>
 			</div>	
@@ -146,7 +146,7 @@
 			
 			<div class="panel panel-flat">
 				<div class="panel-heading">
-					<h4 class="panel-title">Адрес (точки линейного объекта)</h4>
+					<h4 class="panel-title contentRequired">Адрес (точки линейного объекта)</h4>
 				</div>
 				<div id="{{id}}:Conclusion:Object:addressContainer" class="panel-body"/>
 			</div>	
@@ -177,9 +177,10 @@
 			
 			<div class="panel panel-flat">
 				<div class="panel-heading">
-					<h4 class="panel-title">Сведения об источниках финансирования</h4>
+					<h4 class="panel-title contentRequired">Сведения об источниках финансирования</h4>
 				</div>
 				<div id="{{id}}:Conclusion:Finance" class="panel-body"/>
+				<div id="{{id}}:Conclusion:FinanceComment" class="panel-body"/>
 			</div>	
 			
 			<div id="{{id}}:Conclusion:EstimatedCost"/>
@@ -212,15 +213,78 @@
 		<div class="tab-pane fade" id="expertConclusion">
 			<div class="panel panel-flat">
 				<div class="panel-heading">
-					<h4 class="panel-title">Сведения о рассмотрении документации по направлению</h4>
+					<h2 class="panel-title">Сведения о рассмотрении документации по направлениям</h2>
+					<div id="{{id}}:cmdFillExpertConclusions"/>
 				</div>
-				<div id="{{id}}:Conclusion:ExpertConclusion" class="panel-body"/>
+				<div class="panel-body">
+				
+					<div class="panel panel-flat">
+						<div class="panel-heading">
+							<h4 class="panel-title">Сведения о рассмотрении документации по РИИ</h4>
+						</div>
+						<div class="panel-body">
+							<div id="{{id}}:Conclusion:ExpertEngineeringSurveys"/>
+						</div>		
+					</div>	
+				
+					<div class="panel panel-flat">
+						<div class="panel-heading">
+							<h4 class="panel-title">Сведения о рассмотрении документации по ПД</h4>
+						</div>
+						<div class="panel-body">
+							<div id="{{id}}:Conclusion:ExpertProjectDocuments"/>
+						</div>		
+					</div>	
+
+					<div class="panel panel-flat">
+						<div class="panel-heading">
+							<h4 class="panel-title">Сведения о рассмотрении документации по достоверности</h4>
+						</div>
+						<div class="panel-body">
+							<div id="{{id}}:Conclusion:ExpertEstimate"/>
+						</div>		
+					</div>	
+				</div>		
 			</div>	
 			
 		</div>	
 		
 		<div class="tab-pane fade" id="summary">
-			<div id="{{id}}:Conclusion:Summary"/>
+			<div class="row">
+				<div id="{{id}}:Conclusion:Summary:EngineeringSurveySummary"/>
+			</div>	
+			<div class="row">
+				<div id="{{id}}:Conclusion:Summary:EngineeringSurveySummaryDate"/>
+			</div>
+				
+			<div class="panel panel-flat">
+				<div class="panel-heading">
+					<h4 class="panel-title">Виды инженерных изысканий, на соответствие которым проводилась экспертиза проектной документации</h4>
+				</div>
+				<div class="panel-body">
+					<div id="{{id}}:Conclusion:Summary:EngineeringSurveyType"/>
+				</div>	
+			</div>	
+			
+			<div class="row">
+				<div id="{{id}}:Conclusion:Summary:ProjectDocumentsSummary"/>
+			</div>
+			
+			<div class="row">
+				<div id="{{id}}:Conclusion:Summary:ProjectDocumentsSummaryDate"/>
+			</div>
+				
+			<div class="row">
+				<div id="{{id}}:Conclusion:Summary:EstimateNormsAndWorksSummary"/>
+			</div>
+				
+			<div class="row">
+				<div id="{{id}}:Conclusion:Summary:EstimateSummary"/>
+			</div>
+				
+			<div class="row">	
+				<div id="{{id}}:Conclusion:Summary:ExaminationSummary"/>
+			</div>	
 		</div>	
 
 		<div class="tab-pane fade" id="experts">			

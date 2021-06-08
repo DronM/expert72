@@ -1086,6 +1086,8 @@ $permissions = array();
 				
 					$permissions['Conclusion_Controller_fill_on_contract']=TRUE;
 				
+					$permissions['Conclusion_Controller_fill_expert_conclusions']=TRUE;
+				
 					$permissions['EmployeeExpertCertificate_Controller_insert']=TRUE;
 				
 					$permissions['EmployeeExpertCertificate_Controller_update']=TRUE;
@@ -1097,6 +1099,16 @@ $permissions = array();
 					$permissions['EmployeeExpertCertificate_Controller_get_list']=TRUE;
 				
 					$permissions['EmployeeExpertCertificate_Controller_complete_on_cert_id']=TRUE;
+				
+					$permissions['ExpertConclusion_Controller_insert']=TRUE;
+				
+					$permissions['ExpertConclusion_Controller_update']=TRUE;
+				
+					$permissions['ExpertConclusion_Controller_delete']=TRUE;
+				
+					$permissions['ExpertConclusion_Controller_get_object']=TRUE;
+				
+					$permissions['ExpertConclusion_Controller_get_list']=TRUE;
 				
 return array_key_exists($contrId.'_'.$methId,$permissions);
 }

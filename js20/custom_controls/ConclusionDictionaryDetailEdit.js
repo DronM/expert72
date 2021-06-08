@@ -12,7 +12,8 @@ function ConclusionDictionaryDetailEdit(id,options){
 	
 	//форма выбора из списка
 	options.selectWinClass = ConclusionDictionaryDetailList_Form;
-	options.selectWinParams = "cond_vals="+options.conclusion_dictionary_name+"&cond_sgns=e&cond_fields=conclusion_dictionary_name"
+	options.selectWinParams = "cond_vals="+options.conclusion_dictionary_name+"&cond_sgns=e&cond_fields=conclusion_dictionary_name";
+	options.selectWinEditViewOptions = {"conclusion_dictionary_name":options.conclusion_dictionary_name};
 	options.selectDescrIds = options.selectDescrIds || ["code","descr"];
 	
 	//форма редактирования элемента

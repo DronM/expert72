@@ -19,7 +19,7 @@ function Conclusion_tExpertProjectDocuments(id,options){
 	options.addElement = function(){
 	
 		var lb_col = window.getBsCol(4);
-
+		/*
 		this.addElement(new Conclusion_Container(id+":engineeringSurveyTypeContainer",{
 			"name":"EngineeringSurveyType"
 			,"xmlNodeName":"EngineeringSurveyType"
@@ -33,7 +33,17 @@ function Conclusion_tExpertProjectDocuments(id,options){
 			,"addTitle":"Добавить вид инженерных изысканий"
 			,"addCaption":"Добавить вид инженерных изысканий, на соответствие которым проводилась экспертиза проектной документации"
 		}));
-	
+		*/
+		this.addElement(new ConclusionDictionaryDetailSelect(id+":ExpertType",{
+			"required":true
+			,"attrs":{"xmlAttr":true}
+			,"labelClassName":"control-label contentRequired "+lb_col
+			,"labelCaption":"Направление деятельности в области экспертизы ПД:"
+			,"name":"ExpertType"
+			,"title":"Обязательный элемент. Указывается код из классификатора – Таблица 11."
+			,"conclusion_dictionary_name":"tExpertType"				
+		}));
+		
 		this.addElement(new EditText(id+":ProjectDocumentsReview",{
 			"required":true
 			,"labelClassName":"control-label contentRequired "+lb_col
@@ -86,14 +96,12 @@ function Conclusion_tExpertProjectDocuments_View(id,options){
 extend(Conclusion_tExpertProjectDocuments_View,EditModalDialogXML);
 
 Conclusion_tExpertProjectDocuments_View.prototype.formatValue = function(val){
-	return	"Заключение эксперта по ПД";
-	/*+this.formatValueOnTags(
+	return	"Заключение эксперта по ПД, "+this.formatValueOnTags(
 			val
-			,[{"tagName":"EngineeringSurveyType","ref":true}
+			,[{"tagName":"ExpertType","ref":true}
 			]
 		)
 	;
-	*/
 }
 
 

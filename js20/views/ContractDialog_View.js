@@ -417,6 +417,19 @@ function ContractDialog_View(id,options){
 		
 		}
 		
+		//таблица экспертных заключений - для всех!
+		this.addElement(new ExpertConclusionList_View(id+":expert_conclusion_list",{
+			"detail":true
+			,"gridInsertViewOptions":function(){
+				var m = self.getModel();
+				
+				return {
+					"contracts_ref":new RefType({"keys":{"id":m.getFieldValue("id")},"descr":m.getFieldValue("select_descr"),"dataType":"contracts"})
+				};
+			}
+		}));			
+
+		
 		if (options.templateOptions.documVisib){
 			//Вкладка с документами
 			this.addElement(new DocFolder_View(id+":doc_folders",{
@@ -997,6 +1010,12 @@ function ContractDialog_View(id,options){
 			"value":options.model.getFieldValue("application_id")
 		});
 	}	
+	
+	this.addDetailDataSet({
+		"control":this.getElement("expert_conclusion_list").getElement("grid"),
+		"controlFieldId":"contract_id",
+		"value":options.model.getFieldValue("id")
+	});
 }
 extend(ContractDialog_View,DocumentDialog_View);//ViewObjectAjx
 

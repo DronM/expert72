@@ -33,6 +33,7 @@ function Conclusion_Controller(options){
 	this.add_get_print();
 	this.add_get_check();
 	this.add_fill_on_contract();
+	this.add_fill_expert_conclusions();
 		
 }
 extend(Conclusion_Controller,ControllerObjServer);
@@ -261,6 +262,42 @@ extend(Conclusion_Controller,ControllerObjServer);
 		options.required = true;
 	
 		pm.addField(new FieldInt("doc_id",options));
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		options.maxlength = "50";
+	
+		pm.addField(new FieldString("tm",options));
+	
+			
+	this.addPublicMethod(pm);
+}
+	
+			Conclusion_Controller.prototype.add_fill_expert_conclusions = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('fill_expert_conclusions',opts);
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		pm.addField(new FieldInt("doc_id",options));
+	
+				
+	
+	var options = {};
+	
+		options.required = true;
+	
+		options.maxlength = "50";
+	
+		pm.addField(new FieldString("tm",options));
 	
 			
 	this.addPublicMethod(pm);

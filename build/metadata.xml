@@ -2,7 +2,7 @@
 <metadata owner="expert72">
 	<versions>
 		<version dateOpen="2017-09-27 12:09:48" dateClose="2017-12-08 10:12:08">1.001 
-		<lastBuild>2021-04-19 09:51:24</lastBuild></version>
+		<lastBuild>2021-06-08 11:51:38</lastBuild></version>
 		<version dateOpen="2017-12-08 11:12:01" dateClose="2017-12-08 11:12:04">1.002</version>
 		<version dateOpen="2017-12-08 11:12:20" dateClose="2017-12-08 11:12:20">1.0.3</version>
 		<version dateOpen="2017-12-12 11:12:07" dateClose="2017-12-12 11:12:07">1.0.4</version>
@@ -149,12 +149,13 @@
 		<version dateOpen="2020-11-30 14:11:41" dateClose="2020-11-30 14:11:50">1.0.146</version>
 		<version dateOpen="2020-11-30 15:11:47" dateClose="2020-11-30 16:11:08">1.0.147</version>
 		<version dateOpen="2020-12-22 09:12:20" dateClose="2021-01-11 15:01:48">1.0.148</version>
-	<version dateOpen="2021-02-17 08:02:41" dateClose="2021-02-26 13:02:09">1.0.149</version><version dateOpen="2021-02-26 13:02:09" dateClose="2021-04-19 08:04:59">1.0.150</version><version dateOpen="2021-04-19 09:04:43" dateClose="2021-04-19 09:04:51">1.0.151</version></versions>
+	<version dateOpen="2021-02-17 08:02:41" dateClose="2021-02-26 13:02:09">1.0.149</version><version dateOpen="2021-02-26 13:02:09" dateClose="2021-04-19 08:04:59">1.0.150</version><version dateOpen="2021-04-19 09:04:43" dateClose="2021-04-19 09:04:51">1.0.151</version><version dateOpen="2021-05-10 08:05:29" dateClose="2021-05-10 08:05:45">1.0.152</version><version dateOpen="2021-05-11 09:05:58" dateClose="2021-05-11 09:05:59">1.0.152</version><version dateOpen="2021-05-11 11:05:28" dateClose="2021-05-12 08:05:10">1.0.153</version><version dateOpen="2021-05-12 09:05:34" dateClose="2021-06-08 11:06:51">1.0.154</version></versions>
 	<globalFilters>
 		<field id="user_id"/>
 		<field id="employee_id"/>
+		<field id="expert_id"/>
 	</globalFilters>
-	<enums alt="alt">
+	<enums>
 		<enum id="locales" descr="&#x42F;&#x437;&#x44B;&#x43A;&#x438;">
 			<value id="ru">
 				<ru descr="&#x420;&#x443;&#x441;&#x441;&#x43A;&#x438;&#x439;"/>
@@ -1081,7 +1082,21 @@
 			</defaultOrder>
 			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE" required="FALSE"/>
 			<field id="name" dataType="String" length="200"/>
+			<field id="finance_type_code" dataType="String" length="30"/>
+			<field id="finance_type_dictionary_name" dataType="String" length="50"/>
+			<field id="budget_type_code" dataType="String" length="30"/>
+			<field id="budget_type_dictionary_name" dataType="String" length="50"/>
 		</model>
+		<model id="FundSourceList" parent="ModelSQL" dataTable="fund_sources_list" virtual="FALSE">
+			<defaultOrder>
+				<field id="name"/>
+			</defaultOrder>
+			<field id="id" dataType="Int" primaryKey="TRUE"/>
+			<field id="name" dataType="String"/>
+			<field id="finance_types_ref" dataType="JSON"/>
+			<field id="budget_types_ref" dataType="JSON"/>
+		</model>
+		
 		<model id="ConstructionType" parent="ModelSQL" dataTable="construction_types" virtual="FALSE">
 			<defaultOrder>
 				<field id="name"/>
@@ -3468,6 +3483,52 @@
 			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE"/>
 			<field id="conclusion_dictionary_details_ref" dataType="JSON"/>
 		</model>
+		<model id="ExpertConclusion" parent="ModelSQL" dataTable="expert_conclusions" virtual="FALSE">
+			<defaultOrder>
+				<field id="date_time"/>
+			</defaultOrder>
+			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE"/>
+			<field id="contract_id" dataType="Int" refTable="contracts" refField="id" required="TRUE"/>
+			<field id="expert_id" dataType="Int" refTable="employees" refField="id" required="TRUE"/>
+			<field id="date_time" dataType="DateTimeTZ" dbRequired="TRUE" defaultValue="CURRENT_TIMESTAMP"/>
+			<field id="last_modified" dataType="DateTimeTZ" dbRequired="TRUE" defaultValue="CURRENT_TIMESTAMP"/>
+			<field id="conclusion" dataType="XML" required="TRUE"/>
+			<field id="conclusion_type" dataType="String" length="10"/>
+			<field id="conclusion_type_descr" dataType="Text"/>
+			<index id="expert_conclusions_contact_idx">
+				<field id="contract_id"/>
+			</index>
+			<index id="expert_conclusions_expert_idx">
+				<field id="expert_id"/>
+			</index>			
+			<index id="expert_conclusions_date_time_idx">
+				<field id="date_time"/>
+			</index>			
+		</model>
+		<model id="ExpertConclusionList" parent="ModelSQL" virtual="TRUE" dataTable="expert_conclusions_list">
+			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE"/>
+			<field id="contracts_ref" dataType="JSON"/>
+			<field id="experts_ref" dataType="JSON"/>
+			<field id="date_time" dataType="DateTimeTZ"/>
+			<field id="last_modified" dataType="DateTimeTZ"/>
+			<field id="expert_id" dataType="Int"/>
+			<field id="contract_id" dataType="Int"/>
+			<field id="conclusion_type" dataType="String" length="10"/>
+			<field id="conclusion_type_descr" dataType="Text"/>
+			<globalFilter id="expert_id" fieldId="expert_id"/>
+		</model>
+		<model id="ExpertConclusionDialog" parent="ModelSQL" virtual="TRUE" dataTable="expert_conclusions_dialog">
+			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE"/>
+			<field id="contracts_ref" dataType="JSON"/>
+			<field id="experts_ref" dataType="JSON"/>
+			<field id="date_time" dataType="DateTimeTZ"/>
+			<field id="last_modified" dataType="DateTimeTZ"/>
+			<field id="conclusion" dataType="XML"/>
+			<field id="expert_id" dataType="Int"/>
+			<field id="conclusion_type" dataType="String" length="10"/>
+			<field id="conclusion_type_descr" dataType="Text"/>
+			<globalFilter id="expert_id" fieldId="expert_id"/>
+		</model>
 		
 	</models>
 	<constants>
@@ -4173,8 +4234,8 @@
 			<publicMethod id="insert" modelId="FundSource"/>
 			<publicMethod id="update" modelId="FundSource"/>
 			<publicMethod id="delete" modelId="FundSource"/>
-			<publicMethod id="get_object" modelId="FundSource"/>
-			<publicMethod id="get_list" modelId="FundSource"/>
+			<publicMethod id="get_object" modelId="FundSourceList"/>
+			<publicMethod id="get_list" modelId="FundSourceList"/>
 		</controller>
 		<controller id="ReportTemplate" parentId="ControllerSQL">
 			<publicMethod id="insert" modelId="ReportTemplate"/>
@@ -4710,6 +4771,11 @@
 			</publicMethod>	
 			<publicMethod id="fill_on_contract">
 				<field id="doc_id" dataType="Int" required="TRUE"/>
+				<field id="tm" dataType="String" length="50" required="TRUE"/>
+			</publicMethod>	
+			<publicMethod id="fill_expert_conclusions">
+				<field id="doc_id" dataType="Int" required="TRUE"/>
+				<field id="tm" dataType="String" length="50" required="TRUE"/>
 			</publicMethod>	
 			
 		</controller>		
@@ -4727,6 +4793,13 @@
 			</publicMethod>
 			
 		</controller>		
+		<controller id="ExpertConclusion" parentId="ControllerSQL">
+			<publicMethod id="insert" modelId="ExpertConclusion"/>
+			<publicMethod id="update" modelId="ExpertConclusion"/>
+			<publicMethod id="delete" modelId="ExpertConclusion"/>
+			<publicMethod id="get_object" modelId="ExpertConclusionDialog"/>
+			<publicMethod id="get_list" modelId="ExpertConclusionList"/>
+		</controller>
 		
 	</controllers>
 	<permissions>
@@ -4882,6 +4955,7 @@
 		<view id="50006" c="ProjectManager_Controller" t="ProjectManager" section="&#x424;&#x43E;&#x440;&#x43C;&#x44B;" descr="&#x423;&#x43F;&#x440;&#x430;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x435; &#x43F;&#x440;&#x43E;&#x435;&#x43A;&#x442;&#x43E;&#x43C;"/>
 		<view id="50007" c="ApplicationProcess_Controller" f="get_list" t="ApplicationProcessList" section="&#x424;&#x43E;&#x440;&#x43C;&#x44B;" descr="&#x421;&#x442;&#x430;&#x442;&#x443;&#x441;&#x44B; &#x43A;&#x43E;&#x43D;&#x442;&#x440;&#x430;&#x43A;&#x442;&#x43E;&#x432;"/>
 		<view id="50008" c="Manual_Controller" f="get_list_for_user" t="ManualForUser" section="&#x424;&#x43E;&#x440;&#x43C;&#x44B;" descr="&#x421;&#x43F;&#x440;&#x430;&#x432;&#x43A;&#x430; &#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x435;&#x43B;&#x44F;"/>
+		<view id="50009" c="ExpertConclusion_Controller" t="ExpertConclusionList" f="get_list" section="&#x424;&#x43E;&#x440;&#x43C;&#x44B;" descr="&#x417;&#x430;&#x43A;&#x43B;&#x44E;&#x447;&#x435;&#x43D;&#x438;&#x44F; &#x44D;&#x43A;&#x441;&#x43F;&#x435;&#x440;&#x442;&#x43E;&#x432;"/>
 		<view id="40000" c="Constant_Controller" t="ConstantList" f="get_list" section="&#x41A;&#x43E;&#x43D;&#x441;&#x442;&#x430;&#x43D;&#x442;&#x44B;" descr="&#x412;&#x441;&#x435; &#x43A;&#x43E;&#x43D;&#x441;&#x442;&#x430;&#x43D;&#x442;&#x44B;"/>
 	</views>
 	<serverTemplates>
@@ -4962,6 +5036,7 @@
 		<serverTemplate id="ConclusionDictionaryDetailList"/>
 		<serverTemplate id="ConclusionList"/>
 		<serverTemplate id="EmployeeExpertCertificateList"/>
+		<serverTemplate id="ExpertConclusionList"/>
 		
 	</serverTemplates>
 	<jsTemplates>
@@ -5463,6 +5538,8 @@
 		<jsScript file="forms/ConclusionDialog_Form.js"/>
 		<jsScript file="forms/ConclusionDictionaryDetailList_Form.js"/>		
 		<jsScript file="forms/EmployeeExpertCertificateList_Form.js"/>
+		<jsScript file="forms/ExpertConclusionDialog_Form.js"/>
+		
 		
 		<!-- **** Views *** -->
 		<jsScript file="forms/UserDialog_Form.js"/>
@@ -5614,6 +5691,9 @@
 		<jsScript file="views/ConclusionList_View.js"/>
 		<jsScript file="views/ConclusionDialog_View.js"/>
 		<jsScript file="views/EmployeeExpertCertificateList_View.js"/>
+		<jsScript file="views/ExpertConclusionList_View.js"/>
+		<jsScript file="views/ExpertConclusionDialog_View.js"/>
+		
 		<jsScript file="tmpl/App.templates.js" compressed="FALSE" standalone="FALSE"/>
 		<jsScript file="custom_controls/App.enums.js"/>
 		<jsScript file="custom_controls/App.predefinedItems.js"/>
@@ -5746,6 +5826,7 @@
 		<jsScript file="custom_controls/Conclusion_tEngineeringSurveyMismatches.js"/>
 		<jsScript file="custom_controls/Conclusion_tProjectDocumentsMismatches.js"/>		
 		<jsScript file="custom_controls/Conclusion_tMismatch.js"/>
+		<jsScript file="custom_controls/Conclusion_tMismatchExtended.js"/>
 		
 		<!--
 		<jsScript file="custom_controls/Conclusion_tDeclarant_Container.js"/>
@@ -5803,12 +5884,17 @@
 		<jsScript file="custom_controls/Conclusion_tEstimateMismatches.js"/>
 		<jsScript file="custom_controls/Conclusion_tSummary.js"/>
 		<jsScript file="custom_controls/Conclusion_tExperts.js"/>
-		<jsScript file="custom_controls/Conclusion_tExpert.js"/>		
+		<jsScript file="custom_controls/Conclusion_tExpert.js"/>
+		<jsScript file="custom_controls/Conclusion_tConclusionNumber.js"/>
+		<jsScript file="custom_controls/Conclusion_tEstimatedSum.js"/>								
 
 		<jsScript file="custom_controls/ConclusionDialogCmdGetFile.js"/>
 		<jsScript file="custom_controls/ConclusionDialogCmdPrint.js"/>
 		<jsScript file="custom_controls/ConclusionDialogCmdCheck.js"/>
 		<jsScript file="custom_controls/ConclusionDialogCmdFill.js"/>
+		<jsScript file="custom_controls/ConclusionDialogCmdFillExpertConclusions.js"/>
+		<jsScript file="custom_controls/ExpertConclusion.js"/>
+		
 		
 		<jsScript file="enum_controls/Enum_role_types.js"/>
 		<jsScript file="views/rs_ru.js"/>
@@ -6137,7 +6223,7 @@
 		<jsScript file="models/ContractExtList_Model.js"/>
 		<jsScript file="models/DocFlowExaminationExtList_Model.js"/>
 		<jsScript file="models/DocFlowApprovementExtList_Model.js"/>
-	<jsScript file="controllers/ConclusionDictionary_Controller.js"/><jsScript file="models/ConclusionDictionary_Model.js"/><jsScript file="models/ConclusionDictionaryList_Model.js"/><jsScript file="controllers/ConclusionDictionaryDetail_Controller.js"/><jsScript file="models/ConclusionDictionaryDetail_Model.js"/><jsScript file="models/Conclusion_Model.js"/><jsScript file="controllers/Conclusion_Controller.js"/><jsScript file="models/ConclusionList_Model.js"/><jsScript file="models/ConclusionDialog_Model.js"/><jsScript file="controllers/ConclusionDictionaryDetailLocalList_Controller.js"/><jsScript file="models/ConclusionDictionaryDetailLocalList_Model.js"/><jsScript file="controllers/EmployeeExpertCertificate_Controller.js"/><jsScript file="models/EmployeeExpertCertificate_Model.js"/><jsScript file="models/EmployeeExpertCertificateList_Model.js"/><jsScript file="models/EmployeeWithExpertCertificateList_Model.js"/><jsScript file="models/BuildTypeList_Model.js"/><jsScript file="models/ConstructionTypeDialog_Model.js"/></jsScripts>
+	<jsScript file="controllers/ConclusionDictionary_Controller.js"/><jsScript file="models/ConclusionDictionary_Model.js"/><jsScript file="models/ConclusionDictionaryList_Model.js"/><jsScript file="controllers/ConclusionDictionaryDetail_Controller.js"/><jsScript file="models/ConclusionDictionaryDetail_Model.js"/><jsScript file="models/Conclusion_Model.js"/><jsScript file="controllers/Conclusion_Controller.js"/><jsScript file="models/ConclusionList_Model.js"/><jsScript file="models/ConclusionDialog_Model.js"/><jsScript file="controllers/ConclusionDictionaryDetailLocalList_Controller.js"/><jsScript file="models/ConclusionDictionaryDetailLocalList_Model.js"/><jsScript file="controllers/EmployeeExpertCertificate_Controller.js"/><jsScript file="models/EmployeeExpertCertificate_Model.js"/><jsScript file="models/EmployeeExpertCertificateList_Model.js"/><jsScript file="models/EmployeeWithExpertCertificateList_Model.js"/><jsScript file="models/BuildTypeList_Model.js"/><jsScript file="models/ConstructionTypeDialog_Model.js"/><jsScript file="models/FundSourceList_Model.js"/><jsScript file="controllers/ExpertConclusion_Controller.js"/><jsScript file="models/ExpertConclusion_Model.js"/><jsScript file="models/ExpertConclusionList_Model.js"/><jsScript file="models/ExpertConclusionDialog_Model.js"/></jsScripts>
 	<cssScripts>
 		<cssScript file="assets/css/icons/icomoon/styles.css" compressed="TRUE" standalone="TRUE"/>
 		<cssScript file="assets/css/bootstrap.min.css" compressed="TRUE" standalone="TRUE"/>
