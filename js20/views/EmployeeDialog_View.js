@@ -94,11 +94,12 @@ function EmployeeDialog_View(id,options){
 		,new CommandBinding({"control":this.getElement("snils")})
 	]);
 	
-	if(options.templateOptions.expert){
+	if(options.templateOptions.expertCetrif){
 		this.addDetailDataSet({
 			"control":this.getElement("expert_certificate_list").getElement("grid"),
 			"controlFieldId":"employee_id",
-			"value":options.model.getFieldValue("id")
+			//"value":options.model.getFieldValue("id")
+			"field":this.m_model.getField("id")
 		});
 	}
 }
