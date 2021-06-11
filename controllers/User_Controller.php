@@ -737,14 +737,14 @@ class User_Controller extends ControllerSQL{
 				$model = new ExpertConclusionList_Model($this->getDbLink());
 				$filter = new ModelWhereSQL();
 				$field = clone $model->getFieldById('expert_id');
-				$field->setValue($ar['id']);
+				$field->setValue($_SESSION['global_expert_id']);
 				$filter->addField($field,'=');
 				GlobalFilter::set('ExpertConclusionList_Model',$filter);
 							
 				$model = new ExpertConclusionDialog_Model($this->getDbLink());
 				$filter = new ModelWhereSQL();
 				$field = clone $model->getFieldById('expert_id');
-				$field->setValue($ar['id']);
+				$field->setValue($_SESSION['global_expert_id']);
 				$filter->addField($field,'=');
 				GlobalFilter::set('ExpertConclusionDialog_Model',$filter);
 								

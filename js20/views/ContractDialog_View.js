@@ -53,8 +53,13 @@ function ContractDialog_View(id,options){
 						|| expertise_type=="cost_eval_validity_pd_eng_survey"
 						;
 	options.templateOptions.pd = (options.model.getFieldValue("document_type")=="pd");	
+
+	var employee_main_expert = (options.model.getFieldValue("main_experts_ref").getKey("id")==CommonHelper.unserialize(window.getApp().getServVar("employees_ref")).getKey("id"));
+	var employee_dep_boss = (options.model.getFieldValue("main_departments_ref").getKey("id")==CommonHelper.unserialize(window.getApp().getServVar("departments_ref")).getKey("id")
+			&& window.getApp().getServVar("department_boss")=="1"
+		);
 	
-	options.templateOptions.notExpert = (role!="expert" && role!="expert_ext");
+	options.templateOptions.notExpert = (!employee_main_expert && role!="expert" && role!="expert_ext");
 	options.templateOptions.notExpertExt = (role!="expert_ext");
 	options.templateOptions.expert = !options.templateOptions.notExpert;
 	
@@ -64,10 +69,6 @@ function ContractDialog_View(id,options){
 	//console.log(options.templateOptions.expertMaintenance)
 	//console.log(options.templateOptions.notExpertMaintenance)
 	
-	var employee_main_expert = (options.model.getFieldValue("main_experts_ref").getKey("id")==CommonHelper.unserialize(window.getApp().getServVar("employees_ref")).getKey("id"));
-	var employee_dep_boss = (options.model.getFieldValue("main_departments_ref").getKey("id")==CommonHelper.unserialize(window.getApp().getServVar("departments_ref")).getKey("id")
-			&& window.getApp().getServVar("department_boss")=="1"
-		);
 	options.templateOptions.setAccess = (
 		options.templateOptions.notExpert
 		//Это главный эксперт
@@ -365,6 +366,12 @@ function ContractDialog_View(id,options){
 							}
 							(new ConclusionDialog_Form(f_params)).open();
 							
+							//close current doc
+							if (self.getModified(self.CMD_OK)){
+								self.onOK();
+							}else{
+								self.close(self.m_editResult);
+							}
 						}
 					})(conclusion_id)
 				}

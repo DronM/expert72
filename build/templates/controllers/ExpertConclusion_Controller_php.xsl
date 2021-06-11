@@ -33,9 +33,11 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		if(!$pm->getParamValue('date_time')){
 			$pm->setParamValue('date_time',date('Y-m-d H:i:s'));
 		}
-		if($_SESSION['role_id']=='expert' ||$_SESSION['role_id']=='expert_ext'){
-			$pm->setParamValue('expert_id',$_SESSION['expert_id']);
+		
+		if(!isset($_SESSION['global_employee_id'])){
+			throw new Exception('Expert ID not defined!');
 		}
+		$pm->setParamValue('expert_id', $_SESSION['global_employee_id']);
 		
 		return parent::insert($pm);		
 	}

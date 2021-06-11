@@ -919,6 +919,13 @@ ApplicationClientEdit
 1.0.154 09/06/21
 1) Косяк с заполнением заключений в Chrome (EditXML.js EditModalDialogXML.js)
 
+1.0.155 09/06/21
+1) Косяк в сохранении сертификата эксперта EmployeeDialog_View.js
+2) employees_dialog is_expert for lawyer role
+3) conclusions уникальность по контракту
+4)Закрывать контракт после создания заключения
+-5)Доступ к кнопке создания закл. из контракта для вед.экспертов
+
 
 Файлы на доступ админу
 

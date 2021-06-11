@@ -198,7 +198,7 @@ class <xsl:value-of select="@id"/>_Controller extends ControllerSQL{
 				$model = new <xsl:value-of select="$model_id"/>($this->getDbLink());
 				$filter = new ModelWhereSQL();
 				$field = clone $model->getFieldById(<xsl:value-of select="$field_id"/>);
-				$field->setValue($ar['id']);
+				$field->setValue($_SESSION['global_expert_id']);
 				$filter->addField($field,'=');
 				GlobalFilter::set('<xsl:value-of select="$model_id"/>',$filter);
 				</xsl:for-each>				
