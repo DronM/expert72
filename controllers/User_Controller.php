@@ -734,18 +734,34 @@ class User_Controller extends ControllerSQL{
 				$_SESSION['global_expert_id'] = json_decode($ar['employees_ref'])->keys->id;
 				
 							
+
 				$model = new ExpertConclusionList_Model($this->getDbLink());
 				$filter = new ModelWhereSQL();
-				$field = clone $model->getFieldById('expert_id');
-				$field->setValue($_SESSION['global_expert_id']);
-				$filter->addField($field,'=');
+				
+					//expert_id + contract_main_expert_id
+					$filter->addExpression(
+						'expert_main_expert',
+						sprintf('(expert_id=%d OR contract_main_expert_id=%d)'
+						,$_SESSION['global_expert_id']
+						,$_SESSION['global_expert_id']
+						)
+					);
+					
 				GlobalFilter::set('ExpertConclusionList_Model',$filter);
 							
+
 				$model = new ExpertConclusionDialog_Model($this->getDbLink());
 				$filter = new ModelWhereSQL();
-				$field = clone $model->getFieldById('expert_id');
-				$field->setValue($_SESSION['global_expert_id']);
-				$filter->addField($field,'=');
+				
+					//expert_id + contract_main_expert_id
+					$filter->addExpression(
+						'expert_main_expert',
+						sprintf('(expert_id=%d OR contract_main_expert_id=%d)'
+						,$_SESSION['global_expert_id']
+						,$_SESSION['global_expert_id']
+						)
+					);
+					
 				GlobalFilter::set('ExpertConclusionDialog_Model',$filter);
 								
 			}

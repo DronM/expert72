@@ -104,6 +104,15 @@ function ExpertConclusionList_Model(options){
 	
 	options.fields.conclusion_type_descr = new FieldText("conclusion_type_descr",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.contract_main_expert_id = new FieldInt("contract_main_expert_id",filed_options);
+	
 			
 		ExpertConclusionList_Model.superclass.constructor.call(this,id,options);
 }

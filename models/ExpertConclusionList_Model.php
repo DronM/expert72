@@ -97,6 +97,14 @@ class ExpertConclusionList_Model extends ModelSQL{
 		$f_conclusion_type_descr=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"conclusion_type_descr",$f_opts);
 		$this->addField($f_conclusion_type_descr);
 		//********************
+		
+		//*** Field contract_main_expert_id ***
+		$f_opts = array();
+		$f_opts['id']="contract_main_expert_id";
+						
+		$f_contract_main_expert_id=new FieldSQLInt($this->getDbLink(),$this->getDbName(),$this->getTableName(),"contract_main_expert_id",$f_opts);
+		$this->addField($f_contract_main_expert_id);
+		//********************
 	$this->setLimitConstant('doc_per_page_count');
 	}
 

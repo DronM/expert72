@@ -120,7 +120,7 @@ Edit template instead.
 				<li id="{{{{id}}}}:tab-pd" class=""><a href="#documents_pd" data-toggle="tab" aria-expanded="false">ПД</a></li>
 				<li id="{{{{id}}}}:tab-eng_survey" class=""><a href="#documents_eng_survey" data-toggle="tab" aria-expanded="false">РИИ</a></li>
 				<li id="{{{{id}}}}:tab-cost_eval_validity" class=""><a href="#documents_cost_eval_validity" data-toggle="tab" aria-expanded="false">Достоверность</a></li>
-				<li id="{{{{id}}}}:tab-modification" class=""><a href="#documents_modification" data-toggle="tab" aria-expanded="false">Модификация</a></li>
+				<li id="{{{{id}}}}:tab-modification" class=""><a href="#documents_modification" data-toggle="tab" aria-expanded="false">Согласование задания на проектирование</a></li>
 				<li id="{{{{id}}}}:tab-audit" class=""><a href="#documents_audit" data-toggle="tab" aria-expanded="false">Аудит</a></li>
 				<li id="{{{{id}}}}:tab-doc_folders" class="hidden"><a href="#doc_folders" data-toggle="tab" aria-expanded="false">Документы</a></li>
 				<li id="{{{{id}}}}:tab-doc_flow_in" class="hidden"><a href="#doc_flow_in" data-toggle="tab" aria-expanded="false">Входящие письма</a></li>

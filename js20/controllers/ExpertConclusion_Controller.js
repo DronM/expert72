@@ -212,6 +212,9 @@ extend(ExpertConclusion_Controller,ControllerObjServer);
 	var f_opts = {};
 	
 	pm.addField(new FieldText("conclusion_type_descr",f_opts));
+	var f_opts = {};
+	
+	pm.addField(new FieldInt("contract_main_expert_id",f_opts));
 }
 
 		

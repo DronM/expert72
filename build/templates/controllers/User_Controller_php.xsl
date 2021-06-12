@@ -188,18 +188,34 @@ class <xsl:value-of select="@id"/>_Controller extends ControllerSQL{
 				$_SESSION['global_expert_id'] = json_decode($ar['employees_ref'])->keys->id;
 				
 				<xsl:for-each select="/metadata/models/model/globalFilter[@id='expert_id']">
-				<xsl:variable name="model_id" select="concat(../@id,'_Model')"/>
+				<xsl:variable name="model_id_md" select="../@id"/>
+				<xsl:variable name="model_id" select="concat($model_id_md,'_Model')"/>
 				<xsl:variable name="field_id">
 					<xsl:choose>
 						<xsl:when test="@fieldId">'<xsl:value-of select="@fieldId"/>'</xsl:when>
-						<xsl:otherwise>'user_id'</xsl:otherwise>
+						<xsl:otherwise>'expert_id'</xsl:otherwise>
 					</xsl:choose>
 				</xsl:variable>			
+
 				$model = new <xsl:value-of select="$model_id"/>($this->getDbLink());
 				$filter = new ModelWhereSQL();
-				$field = clone $model->getFieldById(<xsl:value-of select="$field_id"/>);
-				$field->setValue($_SESSION['global_expert_id']);
-				$filter->addField($field,'=');
+				<xsl:choose>
+					<xsl:when test="//metadata/models/model[@id=$model_id_md]/field[@id='contract_main_expert_id']">
+					//expert_id + contract_main_expert_id
+					$filter->addExpression(
+						'expert_main_expert',
+						sprintf('(expert_id=%d OR contract_main_expert_id=%d)'
+						,$_SESSION['global_expert_id']
+						,$_SESSION['global_expert_id']
+						)
+					);
+					</xsl:when>
+					<xsl:otherwise>
+					$field = clone $model->getFieldById(<xsl:value-of select="$field_id"/>);
+					$field->setValue($_SESSION['global_expert_id']);
+					$filter->addField($field,'=');
+					</xsl:otherwise>
+				</xsl:choose>
 				GlobalFilter::set('<xsl:value-of select="$model_id"/>',$filter);
 				</xsl:for-each>				
 			}

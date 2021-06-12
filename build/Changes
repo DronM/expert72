@@ -924,7 +924,13 @@ ApplicationClientEdit
 2) employees_dialog is_expert for lawyer role
 3) conclusions уникальность по контракту
 4)Закрывать контракт после создания заключения
--5)Доступ к кнопке создания закл. из контракта для вед.экспертов
+5)Доступ к кнопке создания закл. из контракта для вед.экспертов
+
+1.0.156
+1) справление instanceof XMLDocument:EditXML, EditModalDialogXML, BaseContainerXML
+
+1.0.157 12/06/21
+1) Согласование задания на проектирование ApplicationServiceCont.js,ApplicationServiceCont010119.html,
 
 
 Файлы на доступ админу

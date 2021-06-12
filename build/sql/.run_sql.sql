@@ -1,27 +1,26 @@
--- VIEW: employees_dialog
+-- VIEW: expert_conclusions_dialog
 
---DROP VIEW public.employees_dialog;
+--DROP VIEW expert_conclusions_dialog;
 
-CREATE OR REPLACE VIEW public.employees_dialog AS
+CREATE OR REPLACE VIEW expert_conclusions_dialog AS
 	SELECT
 		t.id
-		,t.name
-		,t.picture_info
-		,public.users_ref(users_join) AS users_ref
-		,public.posts_ref(posts_join) AS posts_ref
-		,public.departments_ref(departments_join) AS departments_ref
-		,t.snils
-		,(users_join.role_id='expert' OR users_join.role_id='expert_ext' OR users_join.role_id='boss' OR users_join.role_id='admin' OR users_join.role_id='lawyer') AS is_expert
-	FROM public.employees AS t
-	LEFT JOIN public.users AS users_join ON
-		t.user_id=users_join.id
-	LEFT JOIN public.departments AS departments_join ON
-		t.department_id=departments_join.id
-	LEFT JOIN public.posts AS posts_join ON
-		t.post_id=posts_join.id
+		,contracts_ref(ct) AS contracts_ref
+		,employees_ref(emp) AS experts_ref
+		,t.date_time
+		,t.last_modified
 		
-	ORDER BY
-		t.id
+		,t.conclusion
+		,t.expert_id
+		,t.conclusion_type
+		,t.conclusion_type_descr
+		
+		--global for filter
+		,ct.main_expert_id AS contract_main_expert_id
+		
+	FROM expert_conclusions AS t
+	LEFT JOIN contracts AS ct ON ct.id = t.contract_id
+	LEFT JOIN employees AS emp ON emp.id = t.expert_id
 	;
 	
-ALTER VIEW employees_dialog OWNER TO expert72;
+ALTER VIEW expert_conclusions_dialog OWNER TO expert72;

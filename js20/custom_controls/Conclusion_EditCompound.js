@@ -47,7 +47,7 @@ Conclusion_EditCompound.prototype.getValue = function(){
 		//can be XML!
 	}
 
-	if (ctrl_val && ctrl_val instanceof Element){
+	if (ctrl_val && (ctrl_val.constructor.name||CommonHelper.functionName(ctrl_val.constructor)) == "Element"){
 		ctrl_val = ctrl_val.innerHTML;
 		
 	}else if (ctrl_val && ctrl_val.childNodes && ctrl_val.childNodes.length){

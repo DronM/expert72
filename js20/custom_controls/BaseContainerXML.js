@@ -33,7 +33,8 @@ extend(BaseContainerXML,BaseContainer);
 //appends XML node to container
 BaseContainerXML.prototype.appendValueXML = function(v,isInit){
 	var xml;
-	if(v instanceof XMLDocument && v.childNodes){
+	//if(v instanceof XMLDocument && v.childNodes){
+	if(v && (v.constructor.name||CommonHelper.functionName(v.constructor)) == "XMLDocument" && v.childNodes){
 		xml = v.childNodes[0];
 	}
 	else{
@@ -184,11 +185,13 @@ BaseContainerXML.prototype.appendChildren = function(xmlDoc,xmlNode){
 				el_v = elements[elem_id].getValue();
 			}
 						
-			if (el_v instanceof  XMLDocument && el_v.childNodes && el_v.childNodes.length){
+			//if (el_v instanceof  XMLDocument && el_v.childNodes && el_v.childNodes.length){
+			var constr_n = el_v.constructor.name||CommonHelper.functionName(el_v.constructor);
+			if (constr_n == "XMLDocument" && el_v.childNodes.length){
 				//structure
 				xmlNode.appendChild(el_v.childNodes[0].cloneNode(true));
 
-			}else if (el_v instanceof  Element){
+			}else if (constr_n  == "Element"){
 				//structure
 				xmlNode.appendChild(el_v.cloneNode(true));
 				

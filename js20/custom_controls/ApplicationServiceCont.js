@@ -643,6 +643,58 @@ function ApplicationServiceCont(id,options){
 				//29/04/20 При отсутствии заявления заполняется вручную услуга!!
 				this.addElement(new ExpertMaintenanceService(id+":expert_maintenance_service",this));
 				
+				//Added 12/06/21
+				this.addElement(new ServiceCheckBox(id+":modification",{
+					"labelCaption":"Согласование задания на проектирование",
+					"events":{
+						"change":function(){
+							var cur_val = this.getValue();
+							self.getElement("primary_application").setEnabled(cur_val);
+							if (!cur_val && !self.getElement("primary_application").isNull()){
+								self.getElement("primary_application").reset();
+							}
+							//Если флаг сняли - вкладка не нужна!					
+							var doc_types_for_remove = [];
+							var tab_name = "modification";
+							if (!cur_val && self.m_mainView.m_documentTabs[tab_name].control && self.m_mainView.m_documentTabs[tab_name].control.getTotalFileCount()){
+								doc_types_for_remove.push(tab_name);
+							}
+							var this_cont = this;
+							self.m_mainView.removeDocumentTypeWithWarn(doc_types_for_remove,
+								function(){
+									var ctrl = self.getElement("primary_application");
+									if (cur_val){
+										ctrl.setEnabled(true);
+									}
+									else{
+										if(!ctrl.isNull())ctrl.reset();
+										ctrl.setEnabled(false);
+									}
+							
+									//other services
+									self.getElement("expertise").setEnabled(!cur_val);
+									self.getElement("audit").setEnabled( !cur_val);
+							
+									self.toggleService("modification",cur_val);
+									self.m_mainView.toggleDocTypeVis();
+								},
+								function(){
+									//set back old value
+									this_cont.setValue(!cur_val);
+								}
+							);
+						}
+					}
+				})
+				);
+				this.addElement(new ApplicationPrimaryCont(id+":primary_application",{
+					"isModification":true,
+					"editClass":ApplicationEditRef,
+					"editLabelCaption":"Первичное заявление:",
+					"primaryFieldId":"primary_application_reg_number",
+					"mainView":options.mainView
+				}));
+				
 			}		
 		}
 	}
