@@ -196,7 +196,7 @@ console.log(
 		)
 	);
 	
-	if(this.m_order010119!=undefined&&!this.m_order010119){
+	/*if(this.m_order010119!=undefined&&!this.m_order010119){
 		//this.toggleDocTab("cost_eval_validity",service_ctrl.getElement("cost_eval_validity").getValue());
 		this.toggleDocTab("modification",(service_type=="modification"));
 	}
@@ -204,7 +204,8 @@ console.log(
 		//new order 01/01/20
 		//this.toggleDocTab("cost_eval_validity",service_ctrl.getElement("exp_cost_eval_validity").getValue());
 		this.toggleDocTab("modification",false);
-	}
+	}*/
+	this.toggleDocTab("modification",(service_type=="modification"));
 	this.toggleDocTab("audit",(service_type=="audit"));
 	
 }

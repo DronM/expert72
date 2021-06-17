@@ -28,7 +28,7 @@ CREATE OR REPLACE VIEW applications_list AS
 			WHEN l.service_type='expert_maintenance' THEN 'Экспертное сопровождение'
 			WHEN l.service_type='modified_documents' THEN 'Измененная документация'
 			WHEN l.service_type='audit' THEN 'Аудит'
-			WHEN l.service_type='modification' THEN 'Модификация'
+			WHEN l.service_type='modification' THEN 'Согласование задания на проектирование' --'Модификация'
 			WHEN l.expertise_type='pd' AND coalesce(l.cost_eval_validity,FALSE)=FALSE THEN 'ПД'
 			WHEN l.expertise_type='cost_eval_validity' OR coalesce(l.cost_eval_validity,FALSE) THEN 'Достоверность'
 			WHEN l.expertise_type='cost_eval_validity_pd' THEN 'ПД, Достоверность'

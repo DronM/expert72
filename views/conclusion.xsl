@@ -1401,7 +1401,6 @@
                             <p>Документы не представлены.</p>
                         </xsl:if>
                         <br/>
-
                         <!-- Вывод описания основных решений (мероприятий), принятых в проектной документации, если это не только ПДОСС-->
                         <xsl:if test="not($ExType = 'ПДОСС')">
                             <p class="title">
@@ -1413,7 +1412,7 @@
                                     <xsl:when test="ExaminationObject/ExaminationStage = 1 and ($ExType = 'РИИ+ПД' or $ExType = 'РИИ+ПД+ПДОСС')">4.2.2. Описание основных решений (мероприятий), принятых в проектной документации</xsl:when>
                                     <xsl:when test="ExaminationObject/ExaminationStage = 2 and ($ExType = 'РИИ+ПД' or $ExType = 'РИИ+ПД+ПДОСС')">4.2.2. Описание изменений, внесенных в проектную документацию после проведения предыдущей экспертизы</xsl:when>
                                 </xsl:choose>
-                            </p>
+                            </p>                            
                             <xsl:for-each select="ExpertProjectDocuments[ProjectDocumentsReview != '']">
                                 <xsl:sort select="@ExpertType"/>
                                 <br/>

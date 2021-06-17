@@ -1120,8 +1120,8 @@ ApplicationDialog_View.prototype.fillDefTechnicalFeatures = function(callBack){
 			contr.getPublicMethod("get_object").setFieldValue("id",constr_type);		
 			contr.run("get_object",{
 				"ok":function(resp){
-					var o = new ConstructionType_Model({
-						"data":resp.getModelData("ConstructionType_Model")
+					var o = new ConstructionTypeDialog_Model({
+						"data":resp.getModelData("ConstructionTypeDialog_Model")
 					});
 					if (o.getNextRow()){
 						self.m_technicalFeatures[constr_type] = new TechnicalFeature_Model({
