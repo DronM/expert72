@@ -76,7 +76,7 @@ class ConclusionDictionaryDetail_Model extends ModelSQL{
 		$order->addField($f_conclusion_dictionary_name,$direct);
 $direct = 'ASC';
 		$order->addField($f_ord,$direct);
-$this->setLimitConstant('doc_per_page_count');
+$this->setRowsPerPage(1000);
 	}
 
 }

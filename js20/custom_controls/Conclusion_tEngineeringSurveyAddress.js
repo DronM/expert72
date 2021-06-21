@@ -21,8 +21,8 @@ function Conclusion_tEngineeringSurveyAddress(id,options){
 		this.addElement(new ConclusionDictionaryDetailSelect(id+":EngineeringSurveyRegion",{
 			"labelClassName":"control-label contentRequired "+lb_col
 			,"required":"true"
-			,"labelCaption":"Вид объекта капитального строительства:"
-			,"title":"Обязательный элемент."
+			,"labelCaption":"Код субъекта РФ:"
+			,"title":"Обязательный элемент.Указывается код из классификатора – Таблица 8"
 			,"conclusion_dictionary_name":"tRegionsRF"
 		}));								
 
@@ -30,8 +30,8 @@ function Conclusion_tEngineeringSurveyAddress(id,options){
 		this.addElement(new EditText(id+":EngineeringSurveyDistrict",{
 			"labelClassName":"control-label contentRequired "+lb_col
 			,"required":"true"
-			,"labelCaption":"Муниципальный район:"
-			,"title":"Обязательный элемент."
+			,"labelCaption":"Описание района изысканий:"
+			,"title":"Обязательный элемент. Наименование муниципального района, в случае проведения изысканий на территории РФ"
 		}));								
 		
 	}

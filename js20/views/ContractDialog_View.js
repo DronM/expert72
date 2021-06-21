@@ -69,6 +69,8 @@ function ContractDialog_View(id,options){
 	//console.log(options.templateOptions.expertMaintenance)
 	//console.log(options.templateOptions.notExpertMaintenance)
 	
+	options.templateOptions.conclusion = options.templateOptions.notExpert || employee_main_expert;
+	
 	options.templateOptions.setAccess = (
 		options.templateOptions.notExpert
 		//Это главный эксперт
@@ -314,6 +316,27 @@ function ContractDialog_View(id,options){
 			}		
 			
 		
+			this.addElement(new EditString(id+":argument_document",{
+				"maxLength":"150",
+				"labelCaption":"Акт оспаривания:",
+				"editContClassName":"input-group "+bs+"8",
+				"labelClassName":"control-label "+bs+"4"
+			}));	
+			this.addElement(new EditString(id+":auth_letter",{
+				"maxLength":"150",
+				"labelCaption":"Доверенность:",
+				"editContClassName":"input-group "+bs+"8",
+				"labelClassName":"control-label "+bs+"4",
+				"enabled":false
+			}));	
+		
+			//********* contractors list grid ***********************
+			this.addElement(new ContractorListGrid(id+":contractors_list"));		
+		
+		}
+		
+		//Право на вкладку заключение
+		if (options.templateOptions.conclusion){
 			this.addElement(new Enum_expertise_results(id+":expertise_result",{
 				"editContClassName":editContClassName,
 				"labelClassName":labelClassName,
@@ -343,7 +366,7 @@ function ContractDialog_View(id,options){
 			}));	
 
 			this.addElement(new EmployeeListGrid(id+":result_sign_expert_list",{
-				"notExpert":options.templateOptions.notExpert
+				"notExpert":options.templateOptions.conclusion
 			}));		
 
 			var conclusion_id = options.model.getFieldValue("conclusion_id");
@@ -377,7 +400,7 @@ function ContractDialog_View(id,options){
 				}
 			}));		
 		
-			if (options.templateOptions.costEvalValidity && options.templateOptions.notExpert){
+			if (options.templateOptions.costEvalValidity){
 				this.addElement(new EditMoney(id+":in_estim_cost",{			
 					"labelCaption":"Входящая сметная стоимость (тыс.руб.):",
 					"editContClassName":editContClassName,
@@ -405,25 +428,9 @@ function ContractDialog_View(id,options){
 				
 			}
 					
-			this.addElement(new EditString(id+":argument_document",{
-				"maxLength":"150",
-				"labelCaption":"Акт оспаривания:",
-				"editContClassName":"input-group "+bs+"8",
-				"labelClassName":"control-label "+bs+"4"
-			}));	
-			this.addElement(new EditString(id+":auth_letter",{
-				"maxLength":"150",
-				"labelCaption":"Доверенность:",
-				"editContClassName":"input-group "+bs+"8",
-				"labelClassName":"control-label "+bs+"4",
-				"enabled":false
-			}));	
-		
-			//********* contractors list grid ***********************
-			this.addElement(new ContractorListGrid(id+":contractors_list"));		
 		
 		}
-		
+				
 		//таблица экспертных заключений - для всех!
 		this.addElement(new ExpertConclusionList_View(id+":expert_conclusion_list",{
 			"detail":true

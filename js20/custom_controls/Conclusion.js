@@ -239,11 +239,26 @@ function Conclusion(id,options){
 			,"title":"Необязательный элемент.Произвольное текстовое поле содержит дополнительную информацию о технических условиях подключения к инженерным сетям."
 		}));
 
-		
+		/*
 		this.addElement(new Conclusion_tEngineeringSurveyAddress_View(id+":EngineeringSurveyAddress",{
 			"name":"EngineeringSurveyAddress"
 			,"labelCaption":"Местоположение района (площадки, трассы) проведения инженерных изысканий:"
 			,"title":"Необязательный элемент."
+		}));
+		*/
+		this.addElement(new Conclusion_Container(id+":EngineeringSurveyAddress",{
+			"name":"EngineeringSurveyAddress"
+			,"xmlNodeName":"EngineeringSurveyAddress"
+			,"elementControlClass":Conclusion_tEngineeringSurveyAddress
+			,"elementControlOptions":{
+				"labelCaption":"Местоположение района (площадки, трассы) проведения инженерных изысканий:"
+				,"name":"EngineeringSurveyAddress"
+			}
+			,"deleteTitle":"Удалить район"
+			,"deleteConf":"Удалить район?"
+			,"addTitle":"Добавить район"
+			,"addCaption":"Добавить район"
+			,"title":"Местоположение района (площадки, трассы) проведения инженерных изысканий"
 		}));
 		
 		this.addElement(new Conclusion_Container(id+":EngineeringSurveyDeveloper",{

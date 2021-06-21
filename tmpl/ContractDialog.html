@@ -24,10 +24,12 @@
 					Общая</a>
 			</li>
 			<li id="{{id}}:tab-construction" class=""><a href="#construction" data-toggle="tab" aria-expanded="false">Объект строительства</a></li>
-			<li id="{{id}}:tab-contract-data" class=""><a href="#contract-data" data-toggle="tab" aria-expanded="false">Контракт</a></li>				
-			
-			<li id="{{id}}:tab-result" class=""><a href="#result" data-toggle="tab" aria-expanded="false">Заключение</a></li>				
+			<li id="{{id}}:tab-contract-data" class=""><a href="#contract-data" data-toggle="tab" aria-expanded="false">Контракт</a></li>										
 			{{/notExpert}}
+			
+			{{#conclusion}}
+			<li id="{{id}}:tab-result" class=""><a href="#result" data-toggle="tab" aria-expanded="false">Заключение</a></li>				
+			{{/conclusion}}
 			
 			{{#setAccess}}
 			<li id="{{id}}:tab-access" class=""><a href="#access" data-toggle="tab" aria-expanded="false">Права доступа</a></li>
@@ -230,8 +232,10 @@
 			
 			<h4>Технико-экономические показатели</h4>
 			<div id="{{id}}:constr_technical_features"/>
-		</div>
+		</div>		
+		{{/notExpert}}		
 		
+		{{#conclusion}}
 		<div class="tab-pane fade" id="result">
 			<div id="{{id}}:reg_number"/>
 			<div id="{{id}}:expertise_result"/>
@@ -263,7 +267,7 @@
 			<a id="{{id}}:conclusions_ref" href="#" />
 			
 		</div>
-		{{/notExpert}}		
+		{{/conclusion}}
 		
 		{{#setAccess}}
 		<div class="tab-pane fade" id="access">

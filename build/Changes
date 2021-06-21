@@ -936,6 +936,10 @@ applications_list, applications_ext_list, applications_for_expert_maintenance_li
 1.0.158 17/06/21
 1) DocumentDialog_View.js замена ConstructionType_Model на  ConstructionTypeDialog_Model
 
+1.0.159 21/06/21
+1) Доступ главному эксперту на редактирование списка подписавших и заключение ExpertDialog
+
+
 Файлы на доступ админу
 
 - Выбрали недействительный серт, он отметился красным, потом сменили на нормальный - все равно остался красным
