@@ -65,9 +65,10 @@ ConclusionDialogCmdFillExpertConclusions.prototype.fillExpertConclusionsCont = f
 		"ok":function(resp){
 			//XML result!			
 			if(resp.childNodes && resp.childNodes.length){
-				var nm,ctrl,nd;
-				for (i=0;i<resp.childNodes[0].childNodes.length;i++){
-					nm = resp.childNodes[0].childNodes[i].nodeName;
+				for (var i=0;i<resp.childNodes[0].childNodes.length;i++){					
+					var nm = resp.childNodes[0].childNodes[i].nodeName;
+					var ctrl;
+					
 					if(nm == "pd"){
 						ctrl = docView.getElement("Conclusion").getElement("ExpertProjectDocuments");
 					}
@@ -78,15 +79,7 @@ ConclusionDialogCmdFillExpertConclusions.prototype.fillExpertConclusionsCont = f
 						ctrl = docView.getElement("Conclusion").getElement("ExpertEstimate");
 					}
 					ctrl.getElement("container").clear();
-					/*
-					var ctrl_el = ctrl.container.getElements();			
-					for (var id in ctrl_el){
-						if(ctrl_el[id] && ctrl_el[id].getAttr("notForValue")!="true"){
-							ctrl.delElement(id);
-						}
-					}
-					*/
-					nd = resp.childNodes[0].childNodes[i];
+					var nd = resp.childNodes[0].childNodes[i];
 					for (k=0;k<nd.childNodes.length;k++){
 						var new_elem = ctrl.createNewElement();
 						new_elem.setValue(nd.childNodes[k]);

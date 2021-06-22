@@ -939,6 +939,10 @@ applications_list, applications_ext_list, applications_for_expert_maintenance_li
 1.0.159 21/06/21
 1) Доступ главному эксперту на редактирование списка подписавших и заключение ExpertDialog
 
+1.0.160 22/06/21
+1) ConclusionDialogCmdFillExpertConclusions.prototype.fillExpertConclusionsCont
+Не заполнялись РИИ (eng) из-за for(i=0;... вместо for(var i=0;...
+
 
 Файлы на доступ админу
 
