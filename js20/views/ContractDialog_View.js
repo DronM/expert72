@@ -947,14 +947,10 @@ function ContractDialog_View(id,options){
 			,new CommandBinding({"control":this.getElement("kadastr_number")})
 			,new CommandBinding({"control":this.getElement("grad_plan_number")})
 			,new CommandBinding({"control":this.getElement("area_document")})
-			,new CommandBinding({"control":this.getElement("expertise_result"),"fieldId":"expertise_result"})
-			,new CommandBinding({"control":this.getElement("expertise_result_date")})
-			,new CommandBinding({"control":this.getElement("expertise_reject_types_ref"),"fieldId":"expertise_reject_type_id"})
-			,new CommandBinding({"control":this.getElement("result_sign_expert_list"),"fieldId":"result_sign_expert_list"})
 			,new CommandBinding({"control":this.getElement("expertise_day_count")})
 			,new CommandBinding({"control":this.getElement("argument_document")})
 			,new CommandBinding({"control":this.getElement("date_type")})
-			,new CommandBinding({"control":this.getElement("reg_number")})
+			
 			,new CommandBinding({"control":this.getElement("contract_date")})
 			,new CommandBinding({"control":this.getElement("contract_return_date")})
 			,new CommandBinding({"control":this.getElement("akt_number")})
@@ -983,7 +979,16 @@ function ContractDialog_View(id,options){
 		write_b = [];
 	}
 	
-	if (options.templateOptions.costEvalValidity && options.templateOptions.notExpert){
+	if (options.templateOptions.conclusion){
+		write_b.push(new CommandBinding({"control":this.getElement("expertise_result"),"fieldId":"expertise_result"}));
+		write_b.push(new CommandBinding({"control":this.getElement("expertise_result_date")}));
+		write_b.push(new CommandBinding({"control":this.getElement("expertise_reject_types_ref"),"fieldId":"expertise_reject_type_id"}));
+		write_b.push(new CommandBinding({"control":this.getElement("result_sign_expert_list"),"fieldId":"result_sign_expert_list"}));
+		write_b.push(new CommandBinding({"control":this.getElement("reg_number")}));
+	
+	}
+	
+	if (options.templateOptions.costEvalValidity && options.templateOptions.conclusion){
 		write_b.push(new CommandBinding({"control":this.getElement("in_estim_cost")}));
 		write_b.push(new CommandBinding({"control":this.getElement("in_estim_cost_recommend")}));
 		write_b.push(new CommandBinding({"control":this.getElement("cur_estim_cost")}));

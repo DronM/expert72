@@ -10,7 +10,7 @@ CREATE OR REPLACE VIEW conclusions_dialog AS
 		,t.contract_id
 		,contracts_ref(ct) AS contracts_ref
 		,t.employee_id
-		,employees_ref(emp) AS vemployees_ref
+		,employees_ref(emp) AS employees_ref
 		,t.content
 		
 	FROM conclusions AS t

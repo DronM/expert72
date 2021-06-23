@@ -285,7 +285,7 @@ class Conclusion_Controller extends ControllerSQL{
 
 	private function set_def_params(&$pm){
 		//admin can do everything
-		if ($_SESSION['role_id']!='admin' || !$pm->getParamValue('employee_id')){			
+		if ($_SESSION['role_id']!='admin' || $pm->getParamValue('employee_id')!=''){			
 			$emp_id = json_decode($_SESSION['employees_ref'])->keys->id;			
 			$pm->setParamValue('employee_id',$emp_id);
 		}	
