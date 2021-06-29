@@ -34,6 +34,7 @@ function Conclusion_Controller(options){
 	this.add_get_check();
 	this.add_fill_on_contract();
 	this.add_fill_expert_conclusions();
+	this.add_create_guid();
 		
 }
 extend(Conclusion_Controller,ControllerObjServer);
@@ -303,5 +304,12 @@ extend(Conclusion_Controller,ControllerObjServer);
 	this.addPublicMethod(pm);
 }
 	
+			Conclusion_Controller.prototype.add_create_guid = function(){
+	var opts = {"controller":this};	
+	var pm = new PublicMethodServer('create_guid',opts);
+	
+	this.addPublicMethod(pm);
+}
+
 			
 		

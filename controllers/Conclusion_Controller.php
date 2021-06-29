@@ -23,6 +23,8 @@ require_once(FRAME_WORK_PATH.'basic_classes/FieldExtXML.php');
 
 
 
+require_once(FRAME_WORK_PATH.'basic_classes/ModelVars.php');
+
 require_once(USER_CONTROLLERS_PATH.'Application_Controller.php');
 
 require_once('common/XSD11Validator/XSD11Validator.php');
@@ -274,6 +276,11 @@ class Conclusion_Controller extends ControllerSQL{
 		$this->addPublicMethod($pm);
 	
 			
+		$pm = new PublicMethod('create_guid');
+		
+		$this->addPublicMethod($pm);
+
+			
 		
 	}	
 	
@@ -285,7 +292,7 @@ class Conclusion_Controller extends ControllerSQL{
 
 	private function set_def_params(&$pm){
 		//admin can do everything
-		if ($_SESSION['role_id']!='admin' || $pm->getParamValue('employee_id')!=''){			
+		if ($_SESSION['role_id']!='admin' || !$pm->getParamValue('employee_id')){			
 			$emp_id = json_decode($_SESSION['employees_ref'])->keys->id;			
 			$pm->setParamValue('employee_id',$emp_id);
 		}	
@@ -1382,6 +1389,32 @@ class Conclusion_Controller extends ControllerSQL{
 		echo $xml;
 		
 		return TRUE;
+	}
+
+	private static function GUID() { 
+		if (function_exists('com_create_guid') === true) { 
+			return trim(com_create_guid(), '{}'); 
+		} 
+
+		return sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535), 
+			mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535)); 
+	} 
+
+	public function create_guid(){
+		$guid = self::GUID();
+		if ($guid === FALSE) {
+			throw new Exception('Ошибка формирование guid.');
+		}
+		
+		$this->addModel(new ModelVars(
+			array('name'=>'Vars',
+				'id'=>'Guid_Model',
+				'values'=>array(
+						new Field('guid',DT_STRING,array('value'=>$guid))
+					)
+				)
+			)
+		);		
 	}
 
 

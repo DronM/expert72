@@ -1088,6 +1088,8 @@ $permissions = array();
 				
 					$permissions['Conclusion_Controller_fill_expert_conclusions']=TRUE;
 				
+					$permissions['Conclusion_Controller_create_guid']=TRUE;
+				
 					$permissions['EmployeeExpertCertificate_Controller_insert']=TRUE;
 				
 					$permissions['EmployeeExpertCertificate_Controller_update']=TRUE;

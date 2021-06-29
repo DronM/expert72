@@ -948,6 +948,9 @@ applications_list, applications_ext_list, applications_for_expert_maintenance_li
 ContractDialog_View.js не записывался список экспертов под главным
 
 
+1.0.162 29/06/21
+Conclusion.js, Conclusion_Controller.php кнопка формирования ГУИД
+
 Файлы на доступ админу
 
 - Выбрали недействительный серт, он отметился красным, потом сменили на нормальный - все равно остался красным

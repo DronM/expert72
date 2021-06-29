@@ -19,6 +19,8 @@
 
 <xsl:call-template name="add_requirements"/>
 
+require_once(FRAME_WORK_PATH.'basic_classes/ModelVars.php');
+
 require_once(USER_CONTROLLERS_PATH.'Application_Controller.php');
 
 require_once('common/XSD11Validator/XSD11Validator.php');
@@ -1160,6 +1162,32 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		echo $xml;
 		
 		return TRUE;
+	}
+
+	private static function GUID() { 
+		if (function_exists('com_create_guid') === true) { 
+			return trim(com_create_guid(), '{}'); 
+		} 
+
+		return sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535), 
+			mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535)); 
+	} 
+
+	public function create_guid(){
+		$guid = self::GUID();
+		if ($guid === FALSE) {
+			throw new Exception('Ошибка формирование guid.');
+		}
+		
+		$this->addModel(new ModelVars(
+			array('name'=>'Vars',
+				'id'=>'Guid_Model',
+				'values'=>array(
+						new Field('guid',DT_STRING,array('value'=>$guid))
+					)
+				)
+			)
+		);		
 	}
 
 </xsl:template>

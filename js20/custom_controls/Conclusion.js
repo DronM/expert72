@@ -14,6 +14,8 @@
 function Conclusion(id,options){
 	options = options || {};	
 	
+	var self = this;
+	
 	options.addElement = function(){
 		var lb_col = window.getBsCol(4);
 		
@@ -29,6 +31,20 @@ function Conclusion(id,options){
 				"delimiter": "-",
 				"blocks": [8,4,4,4,12]
 			}
+			,"buttonClear":new Button(id+":guid",{
+				"glyph":"glyphicon-tag"
+				,"title":"Сформировать уникальный идентификатор"
+				,"onClick":function(){
+					(new Conclusion_Controller()).getPublicMethod("create_guid").run({
+						"ok":function(resp){
+							var m = resp.getModel("Guid_Model");
+							if(m.getNextRow()){
+								self.getElement("ConclusionGUID").setValue(m.getFieldValue("guid"));
+							}
+						}
+					});
+				}
+			})
 		}));								
 	
 		this.addElement(new EditString(id+":SchemaVersion",{
