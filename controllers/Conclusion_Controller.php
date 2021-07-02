@@ -856,6 +856,7 @@ class Conclusion_Controller extends ControllerSQL{
 		//str_replace($doc_ext,'',$doc_name) = Наименование раздела!!!
 		//$docIssuerTag = Проектная организация
 		//брал совсем так как не обязателен $docIssuerTag.
+		//Если раздел 6 - нужна проектная организация!!!
 		$xml.=	'<Document>'.
 				self::concl_xml_sys_node_dict('DocType', 'tDocumentType', $docTypeCode, $docTypeDescr).
 				'<DocName>'. $docTypeDescr .'</DocName>'.

@@ -629,6 +629,7 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		//str_replace($doc_ext,'',$doc_name) = Наименование раздела!!!
 		//$docIssuerTag = Проектная организация
 		//брал совсем так как не обязателен $docIssuerTag.
+		//Если раздел 6 - нужна проектная организация!!!
 		$xml.=	'&lt;Document&gt;'.
 				self::concl_xml_sys_node_dict('DocType', 'tDocumentType', $docTypeCode, $docTypeDescr).
 				'&lt;DocName&gt;'. $docTypeDescr .'&lt;/DocName&gt;'.

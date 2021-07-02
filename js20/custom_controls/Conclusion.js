@@ -95,6 +95,7 @@ function Conclusion(id,options){
 		
 		this.addElement(new Conclusion_tDocuments(id+":Documents",{
 			"name":"Documents"
+			,"parentContainer":this
 			,"required":true
 			,"labelCaption":"Документы, представленные на экспертизу:"
 			,"title":"Обязательный элемент."

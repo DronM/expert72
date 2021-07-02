@@ -371,7 +371,8 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		$this->get_list_on_type($pm,'cost_eval_validity');
 	}
 	public function get_modification_list($pm){
-		$this->get_list_on_type($pm,'modification');
+		//$this->get_list_on_type($pm,'modification');
+		$this->get_list_on_service_type($pm,'modification');
 	}
 	public function get_audit_list($pm){
 		$this->get_list_on_type($pm,'audit');

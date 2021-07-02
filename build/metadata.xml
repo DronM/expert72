@@ -2,7 +2,7 @@
 <metadata owner="expert72">
 	<versions>
 		<version dateOpen="2017-09-27 12:09:48" dateClose="2017-12-08 10:12:08">1.001 
-		<lastBuild>2021-06-29 07:11:47</lastBuild></version>
+		<lastBuild>2021-07-02 14:38:11</lastBuild></version>
 		<version dateOpen="2017-12-08 11:12:01" dateClose="2017-12-08 11:12:04">1.002</version>
 		<version dateOpen="2017-12-08 11:12:20" dateClose="2017-12-08 11:12:20">1.0.3</version>
 		<version dateOpen="2017-12-12 11:12:07" dateClose="2017-12-12 11:12:07">1.0.4</version>
@@ -149,7 +149,7 @@
 		<version dateOpen="2020-11-30 14:11:41" dateClose="2020-11-30 14:11:50">1.0.146</version>
 		<version dateOpen="2020-11-30 15:11:47" dateClose="2020-11-30 16:11:08">1.0.147</version>
 		<version dateOpen="2020-12-22 09:12:20" dateClose="2021-01-11 15:01:48">1.0.148</version>
-	<version dateOpen="2021-02-17 08:02:41" dateClose="2021-02-26 13:02:09">1.0.149</version><version dateOpen="2021-02-26 13:02:09" dateClose="2021-04-19 08:04:59">1.0.150</version><version dateOpen="2021-04-19 09:04:43" dateClose="2021-04-19 09:04:51">1.0.151</version><version dateOpen="2021-05-10 08:05:29" dateClose="2021-05-10 08:05:45">1.0.152</version><version dateOpen="2021-05-11 09:05:58" dateClose="2021-05-11 09:05:59">1.0.152</version><version dateOpen="2021-05-11 11:05:28" dateClose="2021-05-12 08:05:10">1.0.153</version><version dateOpen="2021-05-12 09:05:34" dateClose="2021-06-08 11:06:51">1.0.154</version><version dateOpen="2021-06-08 11:06:52" dateClose="2021-06-09 11:06:35">1.0.155</version><version dateOpen="2021-06-09 12:06:07" dateClose="2021-06-11 06:06:46">1.0.156</version><version dateOpen="2021-06-12 08:06:56" dateClose="2021-06-12 09:06:00">1.0.157</version><version dateOpen="2021-06-17 06:06:52" dateClose="2021-06-17 06:06:55">1.0.158</version><version dateOpen="2021-06-18 15:06:25" dateClose="2021-06-21 07:06:20">1.0.159</version><version dateOpen="2021-06-22 06:06:45" dateClose="2021-06-22 06:06:46">1.0.160</version><version dateOpen="2021-06-23 06:06:02" dateClose="2021-06-23 06:06:06">1.0.161</version><version dateOpen="2021-06-28 09:06:59" dateClose="2021-06-29 07:06:12">1.0.162</version></versions>
+	<version dateOpen="2021-02-17 08:02:41" dateClose="2021-02-26 13:02:09">1.0.149</version><version dateOpen="2021-02-26 13:02:09" dateClose="2021-04-19 08:04:59">1.0.150</version><version dateOpen="2021-04-19 09:04:43" dateClose="2021-04-19 09:04:51">1.0.151</version><version dateOpen="2021-05-10 08:05:29" dateClose="2021-05-10 08:05:45">1.0.152</version><version dateOpen="2021-05-11 09:05:58" dateClose="2021-05-11 09:05:59">1.0.152</version><version dateOpen="2021-05-11 11:05:28" dateClose="2021-05-12 08:05:10">1.0.153</version><version dateOpen="2021-05-12 09:05:34" dateClose="2021-06-08 11:06:51">1.0.154</version><version dateOpen="2021-06-08 11:06:52" dateClose="2021-06-09 11:06:35">1.0.155</version><version dateOpen="2021-06-09 12:06:07" dateClose="2021-06-11 06:06:46">1.0.156</version><version dateOpen="2021-06-12 08:06:56" dateClose="2021-06-12 09:06:00">1.0.157</version><version dateOpen="2021-06-17 06:06:52" dateClose="2021-06-17 06:06:55">1.0.158</version><version dateOpen="2021-06-18 15:06:25" dateClose="2021-06-21 07:06:20">1.0.159</version><version dateOpen="2021-06-22 06:06:45" dateClose="2021-06-22 06:06:46">1.0.160</version><version dateOpen="2021-06-23 06:06:02" dateClose="2021-06-23 06:06:06">1.0.161</version><version dateOpen="2021-06-28 09:06:59" dateClose="2021-06-29 07:06:12">1.0.162</version><version dateOpen="2021-07-02 14:07:37" dateClose="2021-07-02 14:07:38">1.0.163</version></versions>
 	<globalFilters>
 		<field id="user_id"/>
 		<field id="employee_id"/>
@@ -5105,7 +5105,7 @@
 		<jsTemplate id="Conclusion_tEstimateMismatches" file="tmpl/Conclusion_tEstimateMismatches.html"/>
 		<jsTemplate id="Conclusion_tClimateConditions" file="tmpl/Conclusion_tClimateConditions.html"/>
 		<jsTemplate id="Conclusion_tObjectPart" file="tmpl/Conclusion_tObjectPart.html"/>
-		
+		<jsTemplate id="Conclusion_tDocuments" file="tmpl/Conclusion_tDocuments.html"/>
 		
 		
 	</jsTemplates>
