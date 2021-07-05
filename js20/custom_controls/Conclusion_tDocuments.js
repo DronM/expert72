@@ -26,7 +26,8 @@ function Conclusion_tDocuments(id,options){
 			"title":"Выбрать исполнителя для заполнения автора докумнтов РИИ",
 			"onClick":function(e){
 				self.fillOnDesigner(e);
-			}
+			},
+			"attrs":{"notForValue":"true"}
 		}));
 	
 		this.addElement(new Conclusion_Container(id+":Document",{
@@ -80,8 +81,11 @@ Conclusion_tDocuments.prototype.fillOnDesignerCont = function(orgConclVal){
 						"<sysValue skeepNode='TRUE'>Organization</sysValue>"+
 						"</FullDocIssueAuthor>"
 					);
-					xml.insertBefore(new_org_doc.childNodes[0],xml.childNodes[xml.childNodes.length-1]);
-					doc.setValue(xml);
+					var file_node = xml.getElementsByTagName("File");
+					if(file_node&&file_node.length){
+						xml.insertBefore(new_org_doc.childNodes[0],file_node[0]);
+						doc.setValue(xml);
+					}
 					//console.log(xml)
 				}
 			}

@@ -410,16 +410,20 @@ class Conclusion_Controller extends ControllerSQL{
 			$xsl->importStyleSheet($doc);
 			
 			$xmlDoc = new DOMDocument();
-			$xmlDoc->loadXML($ar['content']);
+			$xmlDoc->loadXML($ar['content']);			
+			//file_put_contents($outFile, $xsl->transformToXML($xmlDoc));
 			
-			/*if(!$xmlDoc->schemaValidate($xsd_file)){
-				throw new Exception('Заключение не соответствует схеме!');
+			$xmlAsString = $xsl->transformToXML($xmlDoc);	
+			$doc = new DOMDocument();
+			$doc->loadXML($xmlAsString);
+			$xpath = new DOMXPath($doc);
+			foreach ($xpath->query('//text()') as $text) {
+				$text->data = trim($text->data);
 			}
-			*/
+			$doc->normalizeDocument();
+			$doc->formatOutput = TRUE;
+			$doc->save($outFile);	
 			
-			//$xmlDoc->formatOutput=TRUE;
-			//$xmlDoc->save('page.xml');
-			file_put_contents($outFile, $xsl->transformToXML($xmlDoc));
 		
 		}
 		return $ar['conclusion_num'];

@@ -47,13 +47,14 @@ function Conclusion_tDesigner(id,options){
 		}));
 		
 		this.addElement(new EditSelect(id+":General",{
-			"labelCaption":"Генеральный проектировщик:"
+			"attrs":{"xmlAttr":true}
+			,"labelCaption":"Генеральный проектировщик:"
 			,"elements":[
 				new EditSelectOption(id+":General:no",{
 					"descr":"Нет","value":"нет"
 				})
 				,new EditSelectOption(id+":General:yes",{
-					"descr":"Дет","value":"Да"
+					"descr":"Да","value":"да"
 				})
 			]
 		}));

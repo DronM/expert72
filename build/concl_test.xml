@@ -1,0 +1,1861 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Conclusion ConclusionGUID="86D37278-B113-4074-863C-B335CF2C158A" SchemaVersion="01.00">
+  <ExpertOrganization>
+		<OrgFullName>Государственное автономное учреждение Тюменской области "Управление государственной экспертизы проектной документации"</OrgFullName>
+		<OrgOGRN>1067203328950</OrgOGRN>
+		<OrgINN>7202150869</OrgINN>
+		<OrgKPP>720301001</OrgKPP>
+		<Address>
+			<Region>
+				72
+				
+			</Region>
+			<City>Тюмень</City>
+			<Street>Максима Горького</Street>
+			<Building>76</Building>
+		</Address>
+	</ExpertOrganization>
+  <Approver>
+		<FamilyName>Кучерявый</FamilyName>
+		<FirstName>Алексей</FirstName>
+		<SecondName>Александрович</SecondName>
+		<Position>Директор</Position>
+	</Approver>
+  <ExaminationObject>
+    <ExaminationForm>1</ExaminationForm>
+    <ExaminationResult>1</ExaminationResult>
+    <ExaminationObjectType>3</ExaminationObjectType>
+    <ExaminationType>1</ExaminationType>
+    <ExaminationType>2</ExaminationType>
+    <ExaminationType>3</ExaminationType>
+    <ConstructionType>2</ConstructionType>
+    <ExaminationStage>1</ExaminationStage>
+    <Name>«Реконструкция моста через ручей на автомобильной дороге "Подъезд к д. Малая Тихвина", км 0+820 (Ялуторовский район)»</Name>
+  </ExaminationObject>
+  <Documents>
+    <Document>
+			<DocType>
+				08.01
+				
+			</DocType>
+			<DocName>08.01 Раздел 1. «Пояснительная записка»</DocName>
+			<DocNumber>1</DocNumber>
+			<DocDate>2021-05-06</DocDate>
+			<File>
+				<FileName>Раздел ПД №1 Часть 1-ПЗ1 изм1</FileName>
+				<FileFormat>pdf</FileFormat>
+				<FileChecksum>cb4f4d3d</FileChecksum>
+				<SignFile>
+					<FileName>Раздел ПД №1 Часть 1-ПЗ1 изм1.pdf</FileName>
+					<FileFormat>sig</FileFormat>
+					<FileChecksum>a7c38a75</FileChecksum>
+				</SignFile>
+			</File>
+		</Document>
+    <Document>
+			<DocType>
+				08.01
+				
+			</DocType>
+			<DocName>08.01 Раздел 1. «Пояснительная записка»</DocName>
+			<DocNumber>2</DocNumber>
+			<DocDate>2021-05-06</DocDate>
+			<File>
+				<FileName>Раздел ПД №1 Часть 1-ПЗ1 изм1-УЛ</FileName>
+				<FileFormat>pdf</FileFormat>
+				<FileChecksum>cf0db8e9</FileChecksum>
+				<SignFile>
+					<FileName>Раздел ПД №1 Часть 1-ПЗ1 изм1-УЛ.pdf</FileName>
+					<FileFormat>sig</FileFormat>
+					<FileChecksum>db8d004b</FileChecksum>
+				</SignFile>
+			</File>
+		</Document>
+    <Document>
+			<DocType>
+				08.01
+				
+			</DocType>
+			<DocName>08.01 Раздел 1. «Пояснительная записка»</DocName>
+			<DocNumber>3</DocNumber>
+			<DocDate>2021-05-27</DocDate>
+			<File>
+				<FileName>Раздел ПД №1 Часть 2-ПЗ2 изм2</FileName>
+				<FileFormat>pdf</FileFormat>
+				<FileChecksum>87b8023a</FileChecksum>
+				<SignFile>
+					<FileName>Раздел ПД №1 Часть 2-ПЗ2 изм2.pdf</FileName>
+					<FileFormat>sig</FileFormat>
+					<FileChecksum>dc363506</FileChecksum>
+				</SignFile>
+			</File>
+		</Document>
+    <Document>
+			<DocType>
+				08.01
+				
+			</DocType>
+			<DocName>08.01 Раздел 1. «Пояснительная записка»</DocName>
+			<DocNumber>4</DocNumber>
+			<DocDate>2021-05-27</DocDate>
+			<File>
+				<FileName>Раздел ПД №1 Часть 2-ПЗ2 изм2-УЛ</FileName>
+				<FileFormat>pdf</FileFormat>
+				<FileChecksum>5d028c6c</FileChecksum>
+				<SignFile>
+					<FileName>Раздел ПД №1 Часть 2-ПЗ2 изм2-УЛ.pdf</FileName>
+					<FileFormat>sig</FileFormat>
+					<FileChecksum>436fb903</FileChecksum>
+				</SignFile>
+			</File>
+		</Document>
+    <Document>
+			<DocType>
+				08.02
+				
+			</DocType>
+			<DocName>08.02 Раздел 2. «Проект полосы отвода»</DocName>
+			<DocNumber>5</DocNumber>
+			<DocDate>2021-05-18</DocDate>
+			<File>
+				<FileName>Раздел ПД №2 Часть 2-ППО2 изм2</FileName>
+				<FileFormat>pdf</FileFormat>
+				<FileChecksum>fec7d442</FileChecksum>
+				<SignFile>
+					<FileName>Раздел ПД №2 Часть 2-ППО2 изм2.pdf</FileName>
+					<FileFormat>sig</FileFormat>
+					<FileChecksum>8e1dfabb</FileChecksum>
+				</SignFile>
+			</File>
+		</Document>
+    <Document>
+			<DocType>
+				08.02
+				
+			</DocType>
+			<DocName>08.02 Раздел 2. «Проект полосы отвода»</DocName>
+			<DocNumber>6</DocNumber>
+			<DocDate>2021-05-18</DocDate>
+			<File>
+				<FileName>Раздел ПД №2 Часть2-ППО2 изм2-УЛ</FileName>
+				<FileFormat>pdf</FileFormat>
+				<FileChecksum>7ec497be</FileChecksum>
+				<SignFile>
+					<FileName>Раздел ПД №2 Часть2-ППО2 изм2-УЛ.pdf</FileName>
+					<FileFormat>sig</FileFormat>
+					<FileChecksum>0685f6a7</FileChecksum>
+				</SignFile>
+			</File>
+		</Document>
+    <Document>
+			<DocType>
+				08.02
+				
+			</DocType>
+			<DocName>08.02 Раздел 2. «Проект полосы отвода»</DocName>
+			<DocNumber>7</DocNumber>
+			<DocDate>2021-05-20</DocDate>
+			<File>
+				<FileName>Раздел ПД №2 Часть 1-ППО1 изм1</FileName>
+				<FileFormat>pdf</FileFormat>
+				<FileChecksum>57e0c476</FileChecksum>
+				<SignFile>
+					<FileName>Раздел ПД №2 Часть 1-ППО1 изм1.pdf</FileName>
+					<FileFormat>sig</FileFormat>
+					<FileChecksum>15e2a632</FileChecksum>
+				</SignFile>
+			</File>
+		</Document>
+    <Document>
+			<DocType>
+				08.02
+				
+			</DocType>
+			<DocName>08.02 Раздел 2. «Проект полосы отвода»</DocName>
+			<DocNumber>8</DocNumber>
+			<DocDate>2021-05-20</DocDate>
+			<File>
+				<FileName>Раздел ПД №2 Часть 1-ППО1 изм1-УЛ</FileName>
+				<FileFormat>pdf</FileFormat>
+				<FileChecksum>6a00d79b</FileChecksum>
+				<SignFile>
+					<FileName>Раздел ПД №2 Часть 1-ППО1 изм1-УЛ.pdf</FileName>
+					<FileFormat>sig</FileFormat>
+					<FileChecksum>c6c2760b</FileChecksum>
+				</SignFile>
+			</File>
+		</Document>
+    <Document>
+			<DocType>
+				08.03
+				
+			</DocType>
+			<DocName>Раздел 3. «Технологические и конструктивные решения линейного объекта. Искусственные сооружения»</DocName>
+			<DocNumber>9</DocNumber>
+			<DocDate>2021-05-06</DocDate>
+			<File>
+				<FileName>Раздел ПД №3 Часть 3-ТКР3 изм1</FileName>
+				<FileFormat>pdf</FileFormat>
+				<FileChecksum>472d02d8</FileChecksum>
+				<SignFile>
+					<FileName>Раздел ПД №3 Часть 3-ТКР3 изм1.pdf</FileName>
+					<FileFormat>sig</FileFormat>
+					<FileChecksum>653cccf0</FileChecksum>
+				</SignFile>
+			</File>
+		</Document>
+    <Document>
+			<DocType>
+				08.03
+				
+			</DocType>
+			<DocName>Раздел 3. «Технологические и конструктивные решения линейного объекта. Искусственные сооружения»</DocName>
+			<DocNumber>10</DocNumber>
+			<DocDate>2021-05-06</DocDate>
+			<File>
+				<FileName>Раздел ПД №3 Часть 3-ТКР3 изм1-УЛ</FileName>
+				<FileFormat>pdf</FileFormat>
+				<FileChecksum>9beab853</FileChecksum>
+				<SignFile>
+					<FileName>Раздел ПД №3 Часть 3-ТКР3 изм1-УЛ.pdf</FileName>
+					<FileFormat>sig</FileFormat>
+					<FileChecksum>8d9d5e62</FileChecksum>
+				</SignFile>
+			</File>
+		</Document>
+    <Document>
+			<DocType>
+				08.03
+				
+			</DocType>
+			<DocName>Раздел 3. «Технологические и конструктивные решения линейного объекта. Искусственные сооружения»</DocName>
+			<DocNumber>11</DocNumber>
+			<DocDate>2021-05-20</DocDate>
+			<File>
+				<FileName>Раздел ПД №3 Часть 2-ТКР2 изм1</FileName>
+				<FileFormat>pdf</FileFormat>
+				<FileChecksum>1b03ac94</FileChecksum>
+				<SignFile>
+					<FileName>Раздел ПД №3 Часть 2-ТКР2 изм1.pdf</FileName>
+					<FileFormat>sig</FileFormat>
+					<FileChecksum>404d5c18</FileChecksum>
+				</SignFile>
+			</File>
+		</Document>
+    <Document>
+			<DocType>
+				08.03
+				
+			</DocType>
+			<DocName>Раздел 3. «Технологические и конструктивные решения линейного объекта. Искусственные сооружения»</DocName>
+			<DocNumber>12</DocNumber>
+			<DocDate>2021-05-20</DocDate>
+			<File>
+				<FileName>Раздел ПД №3 Часть 2-ТКР2 изм1-УЛ</FileName>
+				<FileFormat>pdf</FileFormat>
+				<FileChecksum>8790a0a3</FileChecksum>
+				<SignFile>
+					<FileName>Раздел ПД №3 Часть 2-ТКР2 изм1-УЛ.pdf</FileName>
+					<FileFormat>sig</FileFormat>
+					<FileChecksum>e91d79e5</FileChecksum>
+				</SignFile>
+			</File>
+		</Document>
+    <Document>
+			<DocType>
+				08.03
+				
+			</DocType>
+			<DocName>Раздел 3. «Технологические и конструктивные решения линейного объекта. Искусственные сооружения»</DocName>
+			<DocNumber>13</DocNumber>
+			<DocDate>2021-05-27</DocDate>
+			<File>
+				<FileName>Раздел ПД №3 Часть1-ТКР1 изм1</FileName>
+				<FileFormat>pdf</FileFormat>
+				<FileChecksum>31f740ca</FileChecksum>
+				<SignFile>
+					<FileName>Раздел ПД №3 Часть1-ТКР1 изм1.pdf</FileName>
+					<FileFormat>sig</FileFormat>
+					<FileChecksum>79b27be4</FileChecksum>
+				</SignFile>
+			</File>
+		</Document>
+    <Document>
+			<DocType>
+				08.03
+				
+			</DocType>
+			<DocName>Раздел 3. «Технологические и конструктивные решения линейного объекта. Искусственные сооружения»</DocName>
+			<DocNumber>14</DocNumber>
+			<DocDate>2021-05-27</DocDate>
+			<File>
+				<FileName>Раздел ПД №3 Часть1-ТКР1 изм1-УЛ</FileName>
+				<FileFormat>pdf</FileFormat>
+				<FileChecksum>29bd6c50</FileChecksum>
+				<SignFile>
+					<FileName>Раздел ПД №3 Часть1-ТКР1 изм1-УЛ.pdf</FileName>
+					<FileFormat>sig</FileFormat>
+					<FileChecksum>979df801</FileChecksum>
+				</SignFile>
+			</File>
+		</Document>
+    <Document>
+			<DocType>
+				08.05
+				
+			</DocType>
+			<DocName>08.05 Раздел 5. «Проект организации строительства»</DocName>
+			<DocNumber>15</DocNumber>
+			<DocDate>2021-04-08</DocDate>
+			<File>
+				<FileName>Раздел ПД №6 Часть 2-ПОД2</FileName>
+				<FileFormat>pdf</FileFormat>
+				<FileChecksum>a15c0a33</FileChecksum>
+				<SignFile>
+					<FileName>Раздел ПД №6 Часть 2-ПОД2.pdf</FileName>
+					<FileFormat>sig</FileFormat>
+					<FileChecksum>b37a72ee</FileChecksum>
+				</SignFile>
+			</File>
+		</Document>
+    <Document>
+			<DocType>
+				08.05
+				
+			</DocType>
+			<DocName>08.05 Раздел 5. «Проект организации строительства»</DocName>
+			<DocNumber>16</DocNumber>
+			<DocDate>2021-05-20</DocDate>
+			<File>
+				<FileName>Раздел ПД №6 Часть 1-ПОД1 изм1</FileName>
+				<FileFormat>pdf</FileFormat>
+				<FileChecksum>bfbb64f6</FileChecksum>
+				<SignFile>
+					<FileName>Раздел ПД №6 Часть 1-ПОД1 изм1.pdf</FileName>
+					<FileFormat>sig</FileFormat>
+					<FileChecksum>7d25b2aa</FileChecksum>
+				</SignFile>
+			</File>
+		</Document>
+    <Document>
+			<DocType>
+				08.05
+				
+			</DocType>
+			<DocName>08.05 Раздел 5. «Проект организации строительства»</DocName>
+			<DocNumber>17</DocNumber>
+			<DocDate>2021-05-20</DocDate>
+			<File>
+				<FileName>Раздел ПД №6 Часть 1-ПОД1 изм1-УЛ</FileName>
+				<FileFormat>pdf</FileFormat>
+				<FileChecksum>6569f6bf</FileChecksum>
+				<SignFile>
+					<FileName>Раздел ПД №6 Часть 1-ПОД1 изм1-УЛ.pdf</FileName>
+					<FileFormat>sig</FileFormat>
+					<FileChecksum>e9db5d2a</FileChecksum>
+				</SignFile>
+			</File>
+		</Document>
+    <Document>
+			<DocType>
+				08.06
+				
+			</DocType>
+			<DocName>08.06 Раздел 6. «Проект организации работ по сносу (демонтажу) линейного объекта»</DocName>
+			<DocNumber>18</DocNumber>
+			<DocDate>2021-04-08</DocDate>
+			<File>
+				<FileName>Раздел ПД №7 Часть 2-ООС2</FileName>
+				<FileFormat>pdf</FileFormat>
+				<FileChecksum>404076ff</FileChecksum>
+				<SignFile>
+					<FileName>Раздел ПД №7 Часть 2-ООС2.pdf</FileName>
+					<FileFormat>sig</FileFormat>
+					<FileChecksum>d8135de8</FileChecksum>
+				</SignFile>
+			</File>
+		</Document>
+    <Document>
+			<DocType>
+				08.06
+				
+			</DocType>
+			<DocName>08.06 Раздел 6. «Проект организации работ по сносу (демонтажу) линейного объекта»</DocName>
+			<DocNumber>19</DocNumber>
+			<DocDate>2021-04-08</DocDate>
+			<File>
+				<FileName>Раздел ПД №7 Часть 2-ООС2-УЛ</FileName>
+				<FileFormat>pdf</FileFormat>
+				<FileChecksum>716f6b24</FileChecksum>
+				<SignFile>
+					<FileName>Раздел ПД №7 Часть 2-ООС2-УЛ.pdf</FileName>
+					<FileFormat>sig</FileFormat>
+					<FileChecksum>b3cba8cd</FileChecksum>
+				</SignFile>
+			</File>
+		</Document>
+    <Document>
+			<DocType>
+				08.06
+				
+			</DocType>
+			<DocName>08.06 Раздел 6. «Проект организации работ по сносу (демонтажу) линейного объекта»</DocName>
+			<DocNumber>20</DocNumber>
+			<DocDate>2021-05-06</DocDate>
+			<File>
+				<FileName>Раздел ПД №10 Часть 1-РХР изм1</FileName>
+				<FileFormat>pdf</FileFormat>
+				<FileChecksum>2e9a624c</FileChecksum>
+				<SignFile>
+					<FileName>Раздел ПД №10 Часть 1-РХР изм1.pdf</FileName>
+					<FileFormat>sig</FileFormat>
+					<FileChecksum>67483f21</FileChecksum>
+				</SignFile>
+			</File>
+		</Document>
+    <Document>
+			<DocType>
+				08.06
+				
+			</DocType>
+			<DocName>08.06 Раздел 6. «Проект организации работ по сносу (демонтажу) линейного объекта»</DocName>
+			<DocNumber>21</DocNumber>
+			<DocDate>2021-05-06</DocDate>
+			<File>
+				<FileName>Раздел ПД №10 Часть 1-РХР изм1-УЛ</FileName>
+				<FileFormat>pdf</FileFormat>
+				<FileChecksum>b5409e61</FileChecksum>
+				<SignFile>
+					<FileName>Раздел ПД №10 Часть 1-РХР изм1-УЛ.pdf</FileName>
+					<FileFormat>sig</FileFormat>
+					<FileChecksum>2d7d75b9</FileChecksum>
+				</SignFile>
+			</File>
+		</Document>
+    <Document>
+			<DocType>
+				08.06
+				
+			</DocType>
+			<DocName>08.06 Раздел 6. «Проект организации работ по сносу (демонтажу) линейного объекта»</DocName>
+			<DocNumber>22</DocNumber>
+			<DocDate>2021-05-06</DocDate>
+			<File>
+				<FileName>Раздел ПД №7 Часть 1-ООС1 изм.1</FileName>
+				<FileFormat>pdf</FileFormat>
+				<FileChecksum>c742cc11</FileChecksum>
+				<SignFile>
+					<FileName>Раздел ПД №7 Часть 1-ООС1 изм.1.pdf</FileName>
+					<FileFormat>sig</FileFormat>
+					<FileChecksum>a6e73c42</FileChecksum>
+				</SignFile>
+			</File>
+		</Document>
+    <Document>
+			<DocType>
+				08.06
+				
+			</DocType>
+			<DocName>08.06 Раздел 6. «Проект организации работ по сносу (демонтажу) линейного объекта»</DocName>
+			<DocNumber>23</DocNumber>
+			<DocDate>2021-05-06</DocDate>
+			<File>
+				<FileName>Раздел ПД №7. Часть 1-ООС1 изм.1-УЛ</FileName>
+				<FileFormat>pdf</FileFormat>
+				<FileChecksum>e416f054</FileChecksum>
+				<SignFile>
+					<FileName>Раздел ПД №7. Часть 1-ООС1 изм.1-УЛ.pdf</FileName>
+					<FileFormat>sig</FileFormat>
+					<FileChecksum>ebe4c97c</FileChecksum>
+				</SignFile>
+			</File>
+		</Document>
+    <Document>
+			<DocType>
+				08.07
+				
+			</DocType>
+			<DocName>08.07 Раздел 7. «Мероприятия по охране окружающей среды»</DocName>
+			<DocNumber>24</DocNumber>
+			<DocDate>2021-04-08</DocDate>
+			<File>
+				<FileName>Раздел ПД №8-ПБ</FileName>
+				<FileFormat>pdf</FileFormat>
+				<FileChecksum>c3c866a6</FileChecksum>
+				<SignFile>
+					<FileName>Раздел ПД №8-ПБ.pdf</FileName>
+					<FileFormat>sig</FileFormat>
+					<FileChecksum>f548de1c</FileChecksum>
+				</SignFile>
+			</File>
+		</Document>
+    <Document>
+			<DocType>
+				08.07
+				
+			</DocType>
+			<DocName>08.07 Раздел 7. «Мероприятия по охране окружающей среды»</DocName>
+			<DocNumber>25</DocNumber>
+			<DocDate>2021-04-08</DocDate>
+			<File>
+				<FileName>Раздел ПД №8-ПБ-УЛ</FileName>
+				<FileFormat>pdf</FileFormat>
+				<FileChecksum>e00a5df6</FileChecksum>
+				<SignFile>
+					<FileName>Раздел ПД №8-ПБ-УЛ.pdf</FileName>
+					<FileFormat>sig</FileFormat>
+					<FileChecksum>7ea44667</FileChecksum>
+				</SignFile>
+			</File>
+		</Document>
+    <Document>
+			<DocType>
+				08.08
+				
+			</DocType>
+			<DocName>08.08 Раздел 8. «Мероприятия по обеспечению пожарной безопасности»</DocName>
+			<DocNumber>26</DocNumber>
+			<DocDate>2021-04-08</DocDate>
+			<File>
+				<FileName>Раздел ПД №9 Часть 1-СМ1</FileName>
+				<FileFormat>pdf</FileFormat>
+				<FileChecksum>a78f61b1</FileChecksum>
+				<SignFile>
+					<FileName>Раздел ПД №9 Часть 1-СМ1.pdf</FileName>
+					<FileFormat>sig</FileFormat>
+					<FileChecksum>903af083</FileChecksum>
+				</SignFile>
+			</File>
+		</Document>
+    <Document>
+			<DocType>
+				08.08
+				
+			</DocType>
+			<DocName>08.08 Раздел 8. «Мероприятия по обеспечению пожарной безопасности»</DocName>
+			<DocNumber>27</DocNumber>
+			<DocDate>2021-04-08</DocDate>
+			<File>
+				<FileName>Раздел ПД №9 Часть 1-СМ1-УЛ</FileName>
+				<FileFormat>pdf</FileFormat>
+				<FileChecksum>6f8cfb79</FileChecksum>
+				<SignFile>
+					<FileName>Раздел ПД №9 Часть 1-СМ1-УЛ.pdf</FileName>
+					<FileFormat>sig</FileFormat>
+					<FileChecksum>ae6a1680</FileChecksum>
+				</SignFile>
+			</File>
+		</Document>
+    <Document>
+			<DocType>
+				08.08
+				
+			</DocType>
+			<DocName>08.08 Раздел 8. «Мероприятия по обеспечению пожарной безопасности»</DocName>
+			<DocNumber>28</DocNumber>
+			<DocDate>2021-04-08</DocDate>
+			<File>
+				<FileName>Раздел ПД №9 Часть 2-СМ2-УЛ</FileName>
+				<FileFormat>pdf</FileFormat>
+				<FileChecksum>6071a1a5</FileChecksum>
+				<SignFile>
+					<FileName>Раздел ПД №9 Часть 2-СМ2-УЛ.pdf</FileName>
+					<FileFormat>sig</FileFormat>
+					<FileChecksum>665412ec</FileChecksum>
+				</SignFile>
+			</File>
+		</Document>
+    <Document>
+			<DocType>
+				08.08
+				
+			</DocType>
+			<DocName>08.08 Раздел 8. «Мероприятия по обеспечению пожарной безопасности»</DocName>
+			<DocNumber>29</DocNumber>
+			<DocDate>2021-04-08</DocDate>
+			<File>
+				<FileName>Раздел ПД №9 Часть 2-СМ2</FileName>
+				<FileFormat>pdf</FileFormat>
+				<FileChecksum>14276f1e</FileChecksum>
+				<SignFile>
+					<FileName>Раздел ПД №9 Часть 2-СМ2.pdf</FileName>
+					<FileFormat>sig</FileFormat>
+					<FileChecksum>dd7a30c4</FileChecksum>
+				</SignFile>
+			</File>
+		</Document>
+    <Document>
+			<DocType>
+				08.08
+				
+			</DocType>
+			<DocName>08.08 Раздел 8. «Мероприятия по обеспечению пожарной безопасности»</DocName>
+			<DocNumber>30</DocNumber>
+			<DocDate>2021-04-08</DocDate>
+			<File>
+				<FileName>Раздел ПД №9 Часть 3-СМ3</FileName>
+				<FileFormat>pdf</FileFormat>
+				<FileChecksum>d79e47a1</FileChecksum>
+				<SignFile>
+					<FileName>Раздел ПД №9 Часть 3-СМ3.pdf</FileName>
+					<FileFormat>sig</FileFormat>
+					<FileChecksum>e700a313</FileChecksum>
+				</SignFile>
+			</File>
+		</Document>
+    <Document>
+			<DocType>
+				08.08
+				
+			</DocType>
+			<DocName>08.08 Раздел 8. «Мероприятия по обеспечению пожарной безопасности»</DocName>
+			<DocNumber>31</DocNumber>
+			<DocDate>2021-04-08</DocDate>
+			<File>
+				<FileName>Раздел ПД №9 Часть 3-СМ3-УЛ</FileName>
+				<FileFormat>pdf</FileFormat>
+				<FileChecksum>dd14c787</FileChecksum>
+				<SignFile>
+					<FileName>Раздел ПД №9 Часть 3-СМ3-УЛ.pdf</FileName>
+					<FileFormat>sig</FileFormat>
+					<FileChecksum>387594db</FileChecksum>
+				</SignFile>
+			</File>
+		</Document>
+    <Document>
+			<DocType>
+				08.08
+				
+			</DocType>
+			<DocName>08.08 Раздел 8. «Мероприятия по обеспечению пожарной безопасности»</DocName>
+			<DocNumber>32</DocNumber>
+			<DocDate>2021-04-08</DocDate>
+			<File>
+				<FileName>Раздел ПД №9 Часть 4-СМ4</FileName>
+				<FileFormat>pdf</FileFormat>
+				<FileChecksum>a8d4939b</FileChecksum>
+				<SignFile>
+					<FileName>Раздел ПД №9 Часть 4-СМ4.pdf</FileName>
+					<FileFormat>sig</FileFormat>
+					<FileChecksum>92b788dd</FileChecksum>
+				</SignFile>
+			</File>
+		</Document>
+    <Document>
+			<DocType>
+				08.08
+				
+			</DocType>
+			<DocName>08.08 Раздел 8. «Мероприятия по обеспечению пожарной безопасности»</DocName>
+			<DocNumber>33</DocNumber>
+			<DocDate>2021-04-08</DocDate>
+			<File>
+				<FileName>Раздел ПД №9 Часть 4-СМ4-УЛ</FileName>
+				<FileFormat>pdf</FileFormat>
+				<FileChecksum>676d29d8</FileChecksum>
+				<SignFile>
+					<FileName>Раздел ПД №9 Часть 4-СМ4-УЛ.pdf</FileName>
+					<FileFormat>sig</FileFormat>
+					<FileChecksum>a8123e7f</FileChecksum>
+				</SignFile>
+			</File>
+		</Document>
+    <Document>
+			<DocType>
+				08.08
+				
+			</DocType>
+			<DocName>08.08 Раздел 8. «Мероприятия по обеспечению пожарной безопасности»</DocName>
+			<DocNumber>34</DocNumber>
+			<DocDate>2021-04-08</DocDate>
+			<File>
+				<FileName>Раздел ПД №9 Часть 5-СМ5</FileName>
+				<FileFormat>pdf</FileFormat>
+				<FileChecksum>f7ceb7b1</FileChecksum>
+				<SignFile>
+					<FileName>Раздел ПД №9 Часть 5-СМ5.pdf</FileName>
+					<FileFormat>sig</FileFormat>
+					<FileChecksum>b3a8b3c3</FileChecksum>
+				</SignFile>
+			</File>
+		</Document>
+    <Document>
+			<DocType>
+				08.08
+				
+			</DocType>
+			<DocName>08.08 Раздел 8. «Мероприятия по обеспечению пожарной безопасности»</DocName>
+			<DocNumber>35</DocNumber>
+			<DocDate>2021-04-08</DocDate>
+			<File>
+				<FileName>Раздел ПД №9 Часть 5-СМ5-УЛ</FileName>
+				<FileFormat>pdf</FileFormat>
+				<FileChecksum>9e9daa75</FileChecksum>
+				<SignFile>
+					<FileName>Раздел ПД №9 Часть 5-СМ5-УЛ.pdf</FileName>
+					<FileFormat>sig</FileFormat>
+					<FileChecksum>25809d1a</FileChecksum>
+				</SignFile>
+			</File>
+		</Document>
+    <Document>
+      <DocType>06.01</DocType>
+      <DocName>06.01 Инженерно-геодезические изыскания</DocName>
+      <DocNumber>36</DocNumber>
+      <DocDate>2021-04-08</DocDate>
+      <FullDocIssueAuthor>
+        <Organization>
+				<OrgFullName>Общество с ограниченной ответственностью  "Тюменьмостпроект</OrgFullName>
+				<OrgOGRN>1037200570076</OrgOGRN>
+				<OrgINN>7203100846</OrgINN>
+				<OrgKPP>720301001</OrgKPP>
+				<Address>
+					<Region>
+						72
+						
+					</Region>
+				</Address>
+			</Organization>
+      </FullDocIssueAuthor>
+      <File>
+				<FileName>Программа работ</FileName>
+				<FileFormat>pdf</FileFormat>
+				<FileChecksum>88c7c6fb</FileChecksum>
+				<SignFile>
+					<FileName>Программа работ.pdf</FileName>
+					<FileFormat>sig</FileFormat>
+					<FileChecksum>12d620ff</FileChecksum>
+				</SignFile>
+			</File>
+    </Document>
+    <Document>
+			<DocType>
+				06.01
+				
+			</DocType>
+			<DocName>06.01 Инженерно-геодезические изыскания</DocName>
+			<DocNumber>37</DocNumber>
+			<DocDate>2021-04-08</DocDate>
+			
+			<File>
+				<FileName>Программа работ-УЛ</FileName>
+				<FileFormat>pdf</FileFormat>
+				<FileChecksum>7056ec4e</FileChecksum>
+				<SignFile>
+					<FileName>Программа работ-УЛ.pdf</FileName>
+					<FileFormat>sig</FileFormat>
+					<FileChecksum>da224c3e</FileChecksum>
+				</SignFile>
+			</File><FullDocIssueAuthor><Organization>
+				<OrgFullName>Общество с ограниченной ответственностью  "Тюменьмостпроект</OrgFullName>
+				<OrgOGRN>1037200570076</OrgOGRN>
+				<OrgINN>7203100846</OrgINN>
+				<OrgKPP>720301001</OrgKPP>
+				<Address>
+					<Region>
+						72
+						
+					</Region>
+				</Address>
+			</Organization></FullDocIssueAuthor>
+		</Document>
+    <Document>
+			<DocType>
+				06.01
+				
+			</DocType>
+			<DocName>06.01 Инженерно-геодезические изыскания</DocName>
+			<DocNumber>38</DocNumber>
+			<DocDate>2021-05-13</DocDate>
+			
+			<File>
+				<FileName>Раздел ИИ1-ИГДИ изм1</FileName>
+				<FileFormat>pdf</FileFormat>
+				<FileChecksum>92e23ddd</FileChecksum>
+				<SignFile>
+					<FileName>Раздел ИИ1-ИГДИ изм1.pdf</FileName>
+					<FileFormat>sig</FileFormat>
+					<FileChecksum>67c47a86</FileChecksum>
+				</SignFile>
+			</File><FullDocIssueAuthor><Organization>
+				<OrgFullName>Общество с ограниченной ответственностью  "Тюменьмостпроект</OrgFullName>
+				<OrgOGRN>1037200570076</OrgOGRN>
+				<OrgINN>7203100846</OrgINN>
+				<OrgKPP>720301001</OrgKPP>
+				<Address>
+					<Region>
+						72
+						
+					</Region>
+				</Address>
+			</Organization></FullDocIssueAuthor>
+		</Document>
+    <Document>
+			<DocType>
+				06.01
+				
+			</DocType>
+			<DocName>06.01 Инженерно-геодезические изыскания</DocName>
+			<DocNumber>39</DocNumber>
+			<DocDate>2021-05-13</DocDate>
+			
+			<File>
+				<FileName>Раздел ИИ1-ИГДИ изм1-УЛ</FileName>
+				<FileFormat>pdf</FileFormat>
+				<FileChecksum>35d1af2a</FileChecksum>
+				<SignFile>
+					<FileName>Раздел ИИ1-ИГДИ изм1-УЛ.pdf</FileName>
+					<FileFormat>sig</FileFormat>
+					<FileChecksum>3365b5de</FileChecksum>
+				</SignFile>
+			</File><FullDocIssueAuthor><Organization>
+				<OrgFullName>Общество с ограниченной ответственностью  "Тюменьмостпроект</OrgFullName>
+				<OrgOGRN>1037200570076</OrgOGRN>
+				<OrgINN>7203100846</OrgINN>
+				<OrgKPP>720301001</OrgKPP>
+				<Address>
+					<Region>
+						72
+						
+					</Region>
+				</Address>
+			</Organization></FullDocIssueAuthor>
+		</Document>
+    <Document>
+			<DocType>
+				06.02
+				
+			</DocType>
+			<DocName>06.02 Инженерно-геологические изыскания</DocName>
+			<DocNumber>40</DocNumber>
+			<DocDate>2021-06-02</DocDate>
+			
+			<File>
+				<FileName>Раздел ИИ2 ИГИ изм.2</FileName>
+				<FileFormat>pdf</FileFormat>
+				<FileChecksum>da0aa40f</FileChecksum>
+				<SignFile>
+					<FileName>Раздел ИИ2 ИГИ изм.2.pdf</FileName>
+					<FileFormat>sig</FileFormat>
+					<FileChecksum>686c57a1</FileChecksum>
+				</SignFile>
+			</File><FullDocIssueAuthor><Organization>
+				<OrgFullName>Общество с ограниченной ответственностью  "Тюменьмостпроект</OrgFullName>
+				<OrgOGRN>1037200570076</OrgOGRN>
+				<OrgINN>7203100846</OrgINN>
+				<OrgKPP>720301001</OrgKPP>
+				<Address>
+					<Region>
+						72
+						
+					</Region>
+				</Address>
+			</Organization></FullDocIssueAuthor>
+		</Document>
+    <Document>
+			<DocType>
+				06.02
+				
+			</DocType>
+			<DocName>06.02 Инженерно-геологические изыскания</DocName>
+			<DocNumber>41</DocNumber>
+			<DocDate>2021-06-02</DocDate>
+			
+			<File>
+				<FileName>Раздел ИИ2-ИГИ изм.2-УЛ</FileName>
+				<FileFormat>pdf</FileFormat>
+				<FileChecksum>1b07c8ef</FileChecksum>
+				<SignFile>
+					<FileName>Раздел ИИ2-ИГИ изм.2-УЛ.pdf</FileName>
+					<FileFormat>sig</FileFormat>
+					<FileChecksum>a46e5d4a</FileChecksum>
+				</SignFile>
+			</File><FullDocIssueAuthor><Organization>
+				<OrgFullName>Общество с ограниченной ответственностью  "Тюменьмостпроект</OrgFullName>
+				<OrgOGRN>1037200570076</OrgOGRN>
+				<OrgINN>7203100846</OrgINN>
+				<OrgKPP>720301001</OrgKPP>
+				<Address>
+					<Region>
+						72
+						
+					</Region>
+				</Address>
+			</Organization></FullDocIssueAuthor>
+		</Document>
+    <Document>
+			<DocType>
+				06.03
+				
+			</DocType>
+			<DocName>06.03 Инженерно-гидрометеоролические изыскания</DocName>
+			<DocNumber>42</DocNumber>
+			<DocDate>2021-05-13</DocDate>
+			
+			<File>
+				<FileName>Раздел ИИ3-ИГМИ изм1</FileName>
+				<FileFormat>pdf</FileFormat>
+				<FileChecksum>b372cebb</FileChecksum>
+				<SignFile>
+					<FileName>Раздел ИИ3-ИГМИ изм1.pdf</FileName>
+					<FileFormat>sig</FileFormat>
+					<FileChecksum>3fdba729</FileChecksum>
+				</SignFile>
+			</File><FullDocIssueAuthor><Organization>
+				<OrgFullName>Общество с ограниченной ответственностью  "Тюменьмостпроект</OrgFullName>
+				<OrgOGRN>1037200570076</OrgOGRN>
+				<OrgINN>7203100846</OrgINN>
+				<OrgKPP>720301001</OrgKPP>
+				<Address>
+					<Region>
+						72
+						
+					</Region>
+				</Address>
+			</Organization></FullDocIssueAuthor>
+		</Document>
+    <Document>
+			<DocType>
+				06.03
+				
+			</DocType>
+			<DocName>06.03 Инженерно-гидрометеоролические изыскания</DocName>
+			<DocNumber>43</DocNumber>
+			<DocDate>2021-05-13</DocDate>
+			
+			<File>
+				<FileName>Раздел ИИ3-ИГМИ изм1-УЛ</FileName>
+				<FileFormat>pdf</FileFormat>
+				<FileChecksum>b0b84cfb</FileChecksum>
+				<SignFile>
+					<FileName>Раздел ИИ3-ИГМИ изм1-УЛ.pdf</FileName>
+					<FileFormat>sig</FileFormat>
+					<FileChecksum>1db9eea7</FileChecksum>
+				</SignFile>
+			</File><FullDocIssueAuthor><Organization>
+				<OrgFullName>Общество с ограниченной ответственностью  "Тюменьмостпроект</OrgFullName>
+				<OrgOGRN>1037200570076</OrgOGRN>
+				<OrgINN>7203100846</OrgINN>
+				<OrgKPP>720301001</OrgKPP>
+				<Address>
+					<Region>
+						72
+						
+					</Region>
+				</Address>
+			</Organization></FullDocIssueAuthor>
+		</Document>
+    <Document>
+			<DocType>
+				06.04
+				
+			</DocType>
+			<DocName>06.04 Инженерно-экологические изыскания</DocName>
+			<DocNumber>44</DocNumber>
+			<DocDate>2021-05-13</DocDate>
+			
+			<File>
+				<FileName>Раздел ИИ4-ИЭИ-Книга1 изм1</FileName>
+				<FileFormat>pdf</FileFormat>
+				<FileChecksum>6d4ab859</FileChecksum>
+				<SignFile>
+					<FileName>Раздел ИИ4-ИЭИ-Книга1 изм1.pdf</FileName>
+					<FileFormat>sig</FileFormat>
+					<FileChecksum>ee838ef0</FileChecksum>
+				</SignFile>
+			</File><FullDocIssueAuthor><Organization>
+				<OrgFullName>Общество с ограниченной ответственностью  "Тюменьмостпроект</OrgFullName>
+				<OrgOGRN>1037200570076</OrgOGRN>
+				<OrgINN>7203100846</OrgINN>
+				<OrgKPP>720301001</OrgKPP>
+				<Address>
+					<Region>
+						72
+						
+					</Region>
+				</Address>
+			</Organization></FullDocIssueAuthor>
+		</Document>
+    <Document>
+			<DocType>
+				06.04
+				
+			</DocType>
+			<DocName>06.04 Инженерно-экологические изыскания</DocName>
+			<DocNumber>45</DocNumber>
+			<DocDate>2021-05-13</DocDate>
+			
+			<File>
+				<FileName>Раздел ИИ4-ИЭИ-Книга2 изм1</FileName>
+				<FileFormat>pdf</FileFormat>
+				<FileChecksum>35d569fd</FileChecksum>
+				<SignFile>
+					<FileName>Раздел ИИ4-ИЭИ-Книга2 изм1.pdf</FileName>
+					<FileFormat>sig</FileFormat>
+					<FileChecksum>d5862a23</FileChecksum>
+				</SignFile>
+			</File><FullDocIssueAuthor><Organization>
+				<OrgFullName>Общество с ограниченной ответственностью  "Тюменьмостпроект</OrgFullName>
+				<OrgOGRN>1037200570076</OrgOGRN>
+				<OrgINN>7203100846</OrgINN>
+				<OrgKPP>720301001</OrgKPP>
+				<Address>
+					<Region>
+						72
+						
+					</Region>
+				</Address>
+			</Organization></FullDocIssueAuthor>
+		</Document>
+    <Document>
+			<DocType>
+				06.04
+				
+			</DocType>
+			<DocName>06.04 Инженерно-экологические изыскания</DocName>
+			<DocNumber>46</DocNumber>
+			<DocDate>2021-05-13</DocDate>
+			
+			<File>
+				<FileName>Раздел ИИ4-ИЭИ-Книга1 изм1-УЛ</FileName>
+				<FileFormat>pdf</FileFormat>
+				<FileChecksum>3db44fa7</FileChecksum>
+				<SignFile>
+					<FileName>Раздел ИИ4-ИЭИ-Книга1 изм1-УЛ.pdf</FileName>
+					<FileFormat>sig</FileFormat>
+					<FileChecksum>2680151d</FileChecksum>
+				</SignFile>
+			</File><FullDocIssueAuthor><Organization>
+				<OrgFullName>Общество с ограниченной ответственностью  "Тюменьмостпроект</OrgFullName>
+				<OrgOGRN>1037200570076</OrgOGRN>
+				<OrgINN>7203100846</OrgINN>
+				<OrgKPP>720301001</OrgKPP>
+				<Address>
+					<Region>
+						72
+						
+					</Region>
+				</Address>
+			</Organization></FullDocIssueAuthor>
+		</Document>
+    <Document>
+			<DocType>
+				06.04
+				
+			</DocType>
+			<DocName>06.04 Инженерно-экологические изыскания</DocName>
+			<DocNumber>47</DocNumber>
+			<DocDate>2021-05-13</DocDate>
+			
+			<File>
+				<FileName>Раздел ИИ4-ИЭИ-Книга2 изм1-УЛ</FileName>
+				<FileFormat>pdf</FileFormat>
+				<FileChecksum>ebae4d09</FileChecksum>
+				<SignFile>
+					<FileName>Раздел ИИ4-ИЭИ-Книга2 изм1-УЛ.pdf</FileName>
+					<FileFormat>sig</FileFormat>
+					<FileChecksum>13e50b50</FileChecksum>
+				</SignFile>
+			</File><FullDocIssueAuthor><Organization>
+				<OrgFullName>Общество с ограниченной ответственностью  "Тюменьмостпроект</OrgFullName>
+				<OrgOGRN>1037200570076</OrgOGRN>
+				<OrgINN>7203100846</OrgINN>
+				<OrgKPP>720301001</OrgKPP>
+				<Address>
+					<Region>
+						72
+						
+					</Region>
+				</Address>
+			</Organization></FullDocIssueAuthor>
+		</Document>
+    <Document>
+			<DocType>
+				06.11
+				
+			</DocType>
+			<DocName>06.11 "Обследования состояния грунтов оснований зданий и сооружений, их строительных конструкций"</DocName>
+			<DocNumber>48</DocNumber>
+			<DocDate>2021-04-08</DocDate>
+			
+			<File>
+				<FileName>Отчет по обследованию моста-УЛ</FileName>
+				<FileFormat>pdf</FileFormat>
+				<FileChecksum>43259bfd</FileChecksum>
+				<SignFile>
+					<FileName>Отчет по обследованию моста-УЛ.pdf</FileName>
+					<FileFormat>sig</FileFormat>
+					<FileChecksum>64ac6b94</FileChecksum>
+				</SignFile>
+			</File><FullDocIssueAuthor><Organization>
+				<OrgFullName>Общество с ограниченной ответственностью  "Тюменьмостпроект</OrgFullName>
+				<OrgOGRN>1037200570076</OrgOGRN>
+				<OrgINN>7203100846</OrgINN>
+				<OrgKPP>720301001</OrgKPP>
+				<Address>
+					<Region>
+						72
+						
+					</Region>
+				</Address>
+			</Organization></FullDocIssueAuthor>
+		</Document>
+    <Document>
+			<DocType>
+				06.11
+				
+			</DocType>
+			<DocName>06.11 "Обследования состояния грунтов оснований зданий и сооружений, их строительных конструкций"</DocName>
+			<DocNumber>49</DocNumber>
+			<DocDate>2021-04-08</DocDate>
+			
+			<File>
+				<FileName>Отчет по обследованию моста</FileName>
+				<FileFormat>pdf</FileFormat>
+				<FileChecksum>73811859</FileChecksum>
+				<SignFile>
+					<FileName>Отчет по обследованию моста.pdf</FileName>
+					<FileFormat>sig</FileFormat>
+					<FileChecksum>77148950</FileChecksum>
+				</SignFile>
+			</File><FullDocIssueAuthor><Organization>
+				<OrgFullName>Общество с ограниченной ответственностью  "Тюменьмостпроект</OrgFullName>
+				<OrgOGRN>1037200570076</OrgOGRN>
+				<OrgINN>7203100846</OrgINN>
+				<OrgKPP>720301001</OrgKPP>
+				<Address>
+					<Region>
+						72
+						
+					</Region>
+				</Address>
+			</Organization></FullDocIssueAuthor>
+		</Document>
+    <Document>
+			<DocType>
+				07.01
+				
+			</DocType>
+			<DocName>07.01 Раздел 1. «Пояснительная записка»</DocName>
+			<DocNumber>50</DocNumber>
+			<DocDate>2021-06-04</DocDate>
+			<File>
+				<FileName>Пояснительная записка к сметной документации</FileName>
+				<FileFormat>doc</FileFormat>
+				<FileChecksum>1be5199b</FileChecksum>
+				<SignFile>
+					<FileName>Пояснительная записка к сметной документации.doc</FileName>
+					<FileFormat>sig</FileFormat>
+					<FileChecksum>37043aaa</FileChecksum>
+				</SignFile>
+			</File>
+		</Document>
+    <Document>
+			<DocType>
+				01.01
+				
+			</DocType>
+			<DocName>Заявление ГКУ ТО «Управление автомобильных дорог»</DocName>
+			<DocNumber>2847/14</DocNumber>
+			<DocDate>2021-04-08</DocDate>
+			<DocIssueAuthor>Дмитрий Александрович Магера</DocIssueAuthor>
+			<FullDocIssueAuthor>
+				<Organization>
+					<OrgFullName>qeweqw</OrgFullName>
+					<OrgOGRN>1111111111111</OrgOGRN>
+					<OrgINN>1111111111</OrgINN>
+					<OrgKPP>111111111</OrgKPP>
+					<Address>
+						<Region>
+							72
+							
+						</Region>
+					</Address>
+				</Organization>
+				
+			</FullDocIssueAuthor>
+		</Document>
+    <Document>
+			<DocType>
+				01.02
+				
+			</DocType>
+			<DocName>Договор на проведение экспертизы.</DocName>
+			<DocNumber>122</DocNumber>
+			<DocDate>2021-04-15</DocDate>
+			<DocIssueAuthor>Дмитрий Александрович Магера</DocIssueAuthor>
+			<FullDocIssueAuthor>
+				<Organization>
+					<OrgFullName>11111111</OrgFullName>
+					<OrgOGRN>1111111111111</OrgOGRN>
+					<OrgINN>1111111111</OrgINN>
+					<OrgKPP>111111111</OrgKPP>
+					<Address>
+						<Region>
+							72
+							
+						</Region>
+					</Address>
+				</Organization>
+				
+			</FullDocIssueAuthor>
+			<File>
+				<FileName>Договор</FileName>
+				<FileFormat>pdf</FileFormat>
+				<FileChecksum>12345746</FileChecksum>
+				<SignFile>
+					<FileName>Договор</FileName>
+					<FileFormat>sig</FileFormat>
+					<FileChecksum>13245634</FileChecksum>
+				</SignFile>
+			</File>
+		</Document>
+  </Documents>
+  <Object>
+    <Name>«Реконструкция моста через ручей на автомобильной дороге "Подъезд к д. Малая Тихвина", км 0+820 (Ялуторовский район)»</Name>
+    <Address>
+				<Region>
+					72
+					
+				</Region>
+				<District>Ялуторовский р-н</District>
+				<Street>Подъезд к д.Малая Тихвина, км 0+820</Street>
+			</Address>
+    <Type>3</Type>
+    <Functions>Линейный обьект</Functions>
+    <TEI>
+			<Name>вид строительства</Name>
+			<Value>реконструкция</Value>
+		</TEI>
+    <TEI>
+			<Name>категория автомобильной дороги</Name>
+			<Value>IV, основная улица сельского поселения</Value>
+		</TEI>
+    <TEI>
+			<Name>строительная длина переходный участок</Name>
+			<Measure>м</Measure>
+			<Value>160</Value>
+		</TEI>
+    <TEI>
+			<Name>строительная длина подходов</Name>
+			<Measure>м</Measure>
+			<Value>282</Value>
+		</TEI>
+    <TEI>
+			<Name>габарит моста</Name>
+			<Value>Г-8,0+2х0,75</Value>
+		</TEI>
+    <TEI>
+			<Name>ширина полос проезжей части переходный участок</Name>
+			<Measure>м</Measure>
+			<Value>3,0</Value>
+		</TEI>
+    <TEI>
+			<Name>ширина полос проезжей части на подходах к мосту</Name>
+			<Measure>м</Measure>
+			<Value>3,0</Value>
+		</TEI>
+    <TEI>
+			<Name>ширина полос проезжей части на подходах к мосту (населенный пункт)</Name>
+			<Measure>м</Measure>
+			<Value>3,50</Value>
+		</TEI>
+    <TEI>
+			<Name>количество полос движения</Name>
+			<Measure>шт</Measure>
+			<Value>2</Value>
+		</TEI>
+    <TEI>
+			<Name>вид покрытия </Name>
+			<Value>асфальтобетон</Value>
+		</TEI>
+    <TEI>
+			<Name>длина мостового сооружения</Name>
+			<Measure>м</Measure>
+			<Value>42,15</Value>
+		</TEI>
+    <TEI>
+			<Name>схема мостового сооружения</Name>
+			<Value>18+18</Value>
+		</TEI>
+    <TEI>
+			<Name>материал пролетных строений</Name>
+			<Value>железобетон</Value>
+		</TEI>
+    <TEI>
+			<Name>ширина мостового сооружения</Name>
+			<Measure>м</Measure>
+			<Value>10,82</Value>
+		</TEI>
+  </Object>
+  <Declarant>
+    <Organization>
+			<OrgFullName>Государственное казенное учреждение Тюменской области «УПРАВЛЕНИЕ АВТОМОБИЛЬНЫХ ДОРОГ»</OrgFullName>
+			<OrgOGRN>1027200824353</OrgOGRN>
+			<OrgINN>7203001860</OrgINN>
+			<OrgKPP>720301001</OrgKPP>
+			<Address>
+				<Region>
+					72
+					
+				</Region>
+			</Address>
+		</Organization>
+  </Declarant>
+  <ProjectDocumentsDeveloper>
+    <Organization>
+			<OrgFullName>Государственное казенное учреждение Тюменской области «УПРАВЛЕНИЕ АВТОМОБИЛЬНЫХ ДОРОГ»</OrgFullName>
+			<OrgOGRN>1027200824353</OrgOGRN>
+			<OrgINN>7203001860</OrgINN>
+			<OrgKPP>720301001</OrgKPP>
+			<Address>
+				<Region>
+					72
+					
+				</Region>
+			</Address>
+		</Organization>
+  </ProjectDocumentsDeveloper>
+  <ProjectDocumentsTechnicalCustomer>
+    <Organization>
+			<OrgFullName>Государственное казенное учреждение Тюменской области «УПРАВЛЕНИЕ АВТОМОБИЛЬНЫХ ДОРОГ»</OrgFullName>
+			<OrgOGRN>1027200824353</OrgOGRN>
+			<OrgINN>7203001860</OrgINN>
+			<OrgKPP>720301001</OrgKPP>
+			<Address>
+				<Region>
+					72
+					
+				</Region>
+			</Address>
+		</Organization>
+  </ProjectDocumentsTechnicalCustomer>
+  <Finance>
+    <FinanceType>1</FinanceType>
+    <BudgetType>2</BudgetType>
+    <FinanceSize>100.00</FinanceSize>
+  </Finance>
+  <EstimatedCost>
+			<EstimatedCompleteCostBefore>11.11</EstimatedCompleteCostBefore>
+			<EstimatedCompleteCostPost>11233123214</EstimatedCompleteCostPost>
+		</EstimatedCost>
+  <ClimateConditions>
+		<ClimateDistrict>
+			IВ
+			
+		</ClimateDistrict>
+		<GeologicalConditions>
+			II
+			
+		</GeologicalConditions>
+		<WindDistrict>
+			I
+			
+		</WindDistrict>
+		<SnowDistrict>
+			III
+			
+		</SnowDistrict>
+		<SeismicActivity>
+			5
+			
+		</SeismicActivity>
+	</ClimateConditions>
+  <Designer>
+    <Organization>
+				<OrgFullName>Открытое Акционерное Общество «Проектно-изыскательский институт «Тюменьдорпроект»</OrgFullName>
+				<OrgOGRN>1067203173916</OrgOGRN>
+				<OrgINN>7202146887</OrgINN>
+				<OrgKPP>720301001</OrgKPP>
+				<Address>
+					<Region>
+						72
+						
+					</Region>
+				</Address>
+			</Organization>
+    <General>Да</General>
+  </Designer>
+  <Designer>
+    <Organization>
+				<OrgFullName>Общество с ограниченной ответственностью  "Тюменьмостпроект</OrgFullName>
+				<OrgOGRN>1037200570076</OrgOGRN>
+				<OrgINN>7203100846</OrgINN>
+				<OrgKPP>720301001</OrgKPP>
+				<Address>
+					<Region>
+						72
+						
+					</Region>
+				</Address>
+			</Organization>
+    <General>нет</General>
+  </Designer>
+  <ProjectTaskNote>Задание на разработку проектной документации, утвержденное ГКУ ТО «Управление автомобильных дорог» от 24.09.2019г</ProjectTaskNote>
+  <TerritoryPlanNote>Распоряжение Главного управления строительства Тюменской области об утверждении документации по планировке территории (проект планировки территории, проект межевания территории), предназначенной для размещения линейного объекта транспортной инфраструктуры от 10.02.2021г №8-р</TerritoryPlanNote>
+  <NetworkNote>- ГКУ ТО «Управление автомобильных дорог»:
+- о согласовании поперечного профиля от 15.05.2020г №3411/14;
+- о согласовании направления оси трассы моста с подходами от 07.02.2020г №862/84;
+- о согласовании варианта фундамента опор от 08.07.2020г №5231/14;
+- о согласовании вариантов от 03.07.2020г №5042/14;
+- о согласовании границ проектирования от 20.02.2020г №1250/14;
+- о согласовании продольного профиля от 20.04.2020г №2761/14;
+- о согласовании дорожной одежды от 20.04.2020г №2756/14;
+- о согласовании конструкции дорожной одежды от 20.04.2020г №2756/14;
+- о наружном освещении от 23.04.2021г №3367/14;
+- Комитет по охране и использованию объектов историко-культурного наследия Тюменской области об отсутствии объектов культурного наследия от 11.10.2019 г № 2330/02;
+- Администрация Ялуторовского района об организации схемы организации дорожного движения на период производства работ от 30.10.2020г №2-08/3813; 
+- ПАО «Ростелеком» макрорегиональный филиал «Урал» филиал в Тюменской и Курганской областях:
+- на защиту и сохранность коммуникаций связи от 06.05.2020г №0508/17/355/20;
+- о согласовании проектной документации от 26.03.2021г №0508/05/1877/21.</NetworkNote>
+  <EngineeringSurveyAddress>
+    <EngineeringSurveyRegion>72</EngineeringSurveyRegion>
+    <EngineeringSurveyDistrict>Тюменская область, Ялуторовский район</EngineeringSurveyDistrict>
+  </EngineeringSurveyAddress>
+  <EngineeringSurveyDeveloper>
+    <Organization>
+			<OrgFullName>ГКУ ТО "Управление автомобильных дорог"</OrgFullName>
+			<OrgOGRN>1027200824353</OrgOGRN>
+			<OrgINN>7203001860</OrgINN>
+			<OrgKPP>720301001</OrgKPP>
+			<Address>
+				<Region>
+					72
+					
+				</Region>
+				<City>Тюмень</City>
+				<Street>Республики</Street>
+				<Building>142 корпус 2</Building>
+			</Address>
+			<Email>tmnroads@yandex.ru</Email>
+		</Organization>
+  </EngineeringSurveyDeveloper>
+  <ExpertEngineeringSurveys>
+		<EngineeringSurveyConditions>Участок инженерных изысканий располагается на территории Тюменской области, в Ялуторовском районев 2,5 км на юг от пересечения автодороги 71 ОП МЗ 71Н-2124 «Подъезд к д. Малая Тихвина» с автодорогой 71 ОП РЗ 71А-2107 Ялуторовск – Ярково. Реконструируемый объект (мост) пересекает ручей, который является притоком р. Куличек, длина ручья составляет около 5,5 км.
+Долина ручья на участке пересечения мостом неясно выраженная, шириной порядка 120 м. Склоны пологие, по мере удаления от русла постепенно сливаются с прилегающей равнинной местностью.
+Согласно физико-географическому районированию Тюменской области, территория исследований располагается в Тюменском районе Туринской подпровинции Тавдинской физико-географической провинции подтаёжной подзоны (подзоны мелколиственных осиново-березовых лесов).
+На территории изысканий имеются водоохранные зоны и прибрежно-защитные полосы водных объектов - ручья без названия (ручей Кулик). Размер водоохранной зоны ручья равен – 50 м, размер ПЗП равен 50 м.
+Ихтиофауна ручья б/н представлена частиковыми видами рыб, такими как: щука, ротан, елец, карась, гольян, окунь, ерш. Нижне-Обской филиал ФГБУ «Главрыбвод» рекомендует для ручья б/н установить вторую рыбохозяйственную категорию (рыбохозяйственная характеристика № 392 от 29.10.2019 г.).
+Структуру растительного покрова территории исследования образуют долинные осиново-березовые с ивой злаково-разнотравные сообщества, на долю которых приходится около 13,7% общей площади. Значительная часть – по 0,159 га (6,0%) – приходится на постпирогенные ивняки разнотравно-злаковые с редкой сосной и автомобильные дороги и проезды, лишенные растительного покрова, в сочетании с злаково-разнотравными сооб-ществами укрепленных обочин 0,682 га (26%); 5,1% занимают долинные ивняки разно-травно-злаково-осоковые сообщества, небольшие площади – 1,5 и 3,0% - приходятся на разнотравно-злаковые луга с редким подростом березы и осины и древесно-кустарниковые и садово-огородные насаждения селитебных территорий.
+В пределах территории исследования наибольшее распространение аллювиальные серогумусовые почвы, часто встречаются дерново-подзолы глеевые. Довольно обширно представлены техногенные поверхностные образования (литостраты). Гумусовые горизонты гумусово- гидрометаморфической типичной почвы, аллювиально серогумусовой оподзоленной почвы, дерново-подзола глеевого и дерново-подзолистых типичных почвах обладают благоприятными агропоказателями и высоким потенциальным плодородием. В таблице 4.5 отчета (Раздел ИИ4-ИЭИ Том 4 Книга 1) представлены рекомендации по потенциальной мощности снимаемого слоя почв для целей землевания малопродуктивных угодий.
+Почвы участка изысканий не пригодны для снятия в целях землевания малопродуктивных угодий, т.к. не удовлетворяют требованиям ГОСТ 17.4.3.02-85 и ГОСТ 17.5.3.06-85. Во всех пробах почв отмечено превышение нормативных значений по мышьяку и никелю.
+Согласно письму Департамента недропользования и экологии Тюменской области  № 12471-19 от 31.10.2019 г. на территории проведения инженерно-экологических изысканий отсутствуют:
+- особо охраняемые природные территории федерального, регионального, местного значения, их охранные зоны, участки, зарезервированные для создания ООПТ;
+- участки недр, предоставленные в пользование на основании лицензий для добычи подземных вод с целью питьевого и хозяйственно-бытового водоснабжения, зоны санитарной охраны подземных источников водоснабжения и поверхностных водозаборов;
+- свалки, полигоны ТБО, места захоронения отходов производства.
+На изыскиваемом участке объекты культурного наследия федерального регионального и местного (муниципального) значения, включённые в единый государственный реестр объектов культурного наследия (памятников истории и культуры) народов РФ, выявленные объекты культурного наследия, а также объекты, обладающие признаками объекта культурного наследия, в т.ч. объекта археологического наследия, отсутствуют. Эти земли не располагаются в границах зон охраны объектов культурного наследия или их защитных зон (заключение Комитета по охране и использованию объектов культурного населения Тюменской области № 2330/02 от 11.10.2019 г.).
+В Управлении Роспотребнадзора по Тюменской области отсутствуют сведения об установлении санитарно-защитных зон в районе проведения инженерно-экологических изысканий (письмо № 04-18406 от 16.10.2019 г.).
+В районе выполнения инженерно-экологических изысканий и в радиусе 1000 м отсутствуют зарегистрированные действующие и законсервированные скотомогильники (биотермические ямы), их санитарно-защитные зоны, места захоронения сибиреязвенных животных (письмо Управления ветеринарии Тюменской области № 3308/19 от 11.10.2019 г.). 
+Согласно письмам Администрации Ялуторовского района № 2-12/3607 от 23.10.2019 г. и № 13/3588 от 22.10.2019 г., в зоне инженерно-экологических изысканий отсутствуют:
+- особо охраняемые природные территории местного значения;
+- территории традиционного природопользования местного значения;
+- несанкционированные свалки, полигоны ТБО и места захоронения вредных отходов производства;
+- курорты и лечебно-оздоровительные местности;
+- защитные леса и особо защитные участки лесов;
+- заброшенные кладбища, мемориальные комплексы;
+- источники водоснабжения.
+По данным Департамента лесного комплекса Тюменской области (письмо № 7165-19 от 28.10.19 г.), территория исследований не имеет общих границ и наложений на земли лесного фонда. 
+По сведениям ФГБУ «Управление «Тюменьмелиоводхоз» Департамента мелиорации Минсельхоза России (письмо № 304 от 09.10.2019 г.), на указанной территории мелиорируемые земли, государственные и прочие мелиоративные системы, учтённые в Росреестре по Тюменской области отсутствуют.
+На участке изысканий пути миграции не выявлены (письмо Госохотуправления Тюменской области № 01-07/19-2613 от 24.10.2019 г.).
+В процессе полевых работ (октябрь 2019 г.) проведено опробование почвы, поверхностных вод и донных отложений, грунтовой воды, проведено радиационное обследование территории, выполнены замеры шума. Определение значений контролируемых параметров состояния окружающей среды проведены в лабораториях, прошедших государственную аттестацию в соответствующих областях измерений. 
+В соответствии с Программой отобрано 4 пробы почв на химический анализ. По результатам представленных протоколов санитарно-гигиенических исследований почвы, выполненных испытательной лабораторией ФГБУ «ЦЛАТИ по УФО» по Тюменской области, фон превышен по мышьяку и кадмию во всех пробах по мышьяку и кадмию. По суммарному уровню загрязнения (Zc) все пробы почвы характеризуются «допустимой» категорией. По результатам анализа на микробиологическое и паразитологическое загрязнение почвы исследуемой территории относятся к категории загрязнения «чистая».
+Поверхностных радиационных аномалий на территории не обнаружено. Мощность эквивалентной дозы гамма-излучения на площадке изысканий установлена в пределах 0,10 мкЗв/ч, что соответствует требованиям СанПиН 2.6.1.2800-10. 
+В зоне влияния исследуемого объекта была отобрана проба грунтовой воды. Превышение нормативных показателей отмечено по сухому остатку, железу и хлорид-иону. Экологическая обстановка по степени загрязнения грунтовых вод характеризуется как «чрезвычайная экологическая ситуация», что обусловлено природными факторами.
+Проанализирована проба природных поверхностных вод, отобранная из одного водного объекта – ручья б/н, оценка качества воды выполнена относительно ПДК хозяйственно-питьевого и культурно-бытового водопользования. Отмечено превышение хозяйственно-бытовых нормативов по ХПК и отсутствие превышения рыбохозяйственных нормативов. По результатам анализа на микробиологическое и паразитологическое загрязнение проба поверхностной воды соответствует требованиям СанПиН 2.1.5.980-00.
+Донные отложения характеризуются превышением значений ОДК по никелю и мышьяку, фоновых значений по мышьяку и кадмию, концентрации медь, свинец, цинк, ртуть соответствуют нормативам. В соответствии с СанПиН 2.1.7.1287-03 оценка степени химического загрязнения по мышьяку позволяет отнести донные отложения к «опасной» категории загрязнения.
+Уровни звука на участке изысканий не превышают допустимых значений СН 2.2.4/2.1.8.562-96 для дневного и ночного времени суток.
+Согласно справки Тюменского филиала ФГБУ «Обь-Иртышское УГМС» № 51-12-16/847 от 22.11.2019 г. фоновые концентрации загрязняющих веществ в атмосферном воздухе в районе проектируемого объекта не превышают ПДК. 
+В ходе проведения полевых работ редкие и охраняемые виды растений и животных, включённых в красные книги РФ и Тюменской области, на территории проведения работ не выявлены. 
+В отчёте выполнен прогноз неблагоприятных изменений окружающей среды в период строительства и эксплуатации изыскиваемых объектов, разработаны предложения и рекомендаций по организации природоохранных мероприятий и экологического мониторинга на этапе строительства и эксплуатации.</EngineeringSurveyConditions>
+		<EngineeringSurveyProgramNote>Программа работ по инженерным изысканиям от 24.09.2019 г. разработана ООО ГП «Промнефтегазэкология».</EngineeringSurveyProgramNote>
+		<EngineeringSurveyMethods>На подготовительном этапе был выполнен сбор и анализ имеющихся материалов и исходных данных о природных условиях района размещения проектируемого объекта. Выполнено опробование и лабораторный химико-аналитический анализ химического состава почвы, поверхностных вод и донных отложений из ручья б/н, грунтовой воды, проведено радиационное обследование территории, выполнены исследования вредных физических воздействий, составлена карта фактического материала.</EngineeringSurveyMethods>
+		<EngineeringSurveyChanges>Указаны даты составления отчета ИЭИ, выдачи технического задания на производство инженерных изысканий, стр. 12 Раздел ИИ4-ИЭИ-Книга1 изм1, стр.8 Раздел ИИ4-ИЭИ-Книга 2 изм1.</EngineeringSurveyChanges>
+	</ExpertEngineeringSurveys>
+  <ExpertEngineeringSurveys EngineeringSurveyType="1">
+		
+		<EngineeringSurveyConditions>Климатический район и подрайон: 1В
+Ветровой район: I
+Снеговой район: III
+Интенсивность сейсмических воздействий: 5 баллов
+Категория сложности инженерно-геологических условий: II
+Геологические и инженерно-геологические процессы: нет.
+В административном отношении участок изысканий, проектируемого мостового перехода через ручей, располагается на территории Ялуторовского района Тюменской области. Техногенная обстановка территории осложнена. Участок изысканий располагается на застроенной территории, на землях сельского поселения.</EngineeringSurveyConditions>
+		<EngineeringSurveyProgramNote>Программа производства инженерно-геодезических изысканий от 24.09.2019 г. разработана ОАО «ПИИ «Тюменьдорпроект».</EngineeringSurveyProgramNote>
+		<EngineeringSurveyMethods>Инженерно-геодезические изыскания проведены в ноябре 2019 г. Выполнена топографическая съемка в масштабе 1:500 на площади 4,0 га. Система координат МСК ТО зона №1, система высот Балтийская. Камеральное трассирование было выполнено для трассы основной оси.</EngineeringSurveyMethods>
+		<EngineeringSurveyChanges>1. Добавлен лист согласований с ПАО «СУЭНКО» . Раздел ИИ1-ИГДИ, стр. 77.
+
+</EngineeringSurveyChanges>
+	</ExpertEngineeringSurveys>
+  <ExpertEngineeringSurveys EngineeringSurveyType="2">
+		
+		<EngineeringSurveyConditions>Климатический район и подрайон: 1В
+Ветровой район: I
+Снеговой район: III
+Интенсивность сейсмических воздействий: 5 баллов
+Категория сложности инженерно-геологических условий: II
+Геологические и инженерно-геологические процессы: нет
+
+В геоморфологическом отношении территория расположена на правобережной пойме р. Тобол. Площадка изысканий представляет собой равнинную поверхность со стоком поверхностных вод в сторону Тобола. Абсолютные отметки составляют – 49.5 – 55.0 м (БС).
+В геологическом строении участка принимают участие олигоценовые образования и озерно-аллювиальные отложения верхнечетвертичного возраста, представленные песчано-глинистыми грунтами, выдержанными по мощности и простиранию, и техногенные отложения, представленные насыпным грунтом. Насыпной грунт  представлен суглинком легким песчанистым твердым, с прослойками песка мелкого, мощностью от 0,75 до 1,80 м. Насыпные грунты относятся к слежавшимся. Процесс самоуплотнения подстилающих грунтов от веса насыпи завершён.
+В скважинах, пробуренных на участке мостового перехода через ручей, на обочине, с поверхности залегает почвенно-растительный слой, мощностью 0,14 - 0,20 м.
+На участке мостового перехода было выделено 4 инженерно-геологических элемента (ИГЭ):
+ИГЭ–123: Глина легкая пылеватая тугопластичная, с примесью органического вещества;
+ИГЭ–212: Суглинок легкий песчанистый полутвердый, с примесью органического вещества;
+ИГЭ–213: Суглинок легкий песчанистый тугопластичный;
+ИГЭ–4423: Песок мелкий средней плотности, водонасыщенный.
+Установившийся уровень грунтовых вод на моменты проведения изысканий (сентябрь 2019 г, апрель 2021 г) зафиксирован на глубине 0.60 – 3.50 м (отметки 49.95 – 51.96 м). Степень агрессивного воздействия жидких неорганических сред на бетон марки W4 – от слабо до среднеагрессивной. Степень агрессивного воздействия сульфатов на бетон по водонепроницаемости – неагрессивная. Степень агрессивного воздействия жидких сред на арматуру железобетонных конструкций по содержанию хлоридов при постоянном погружении и периодическом смачивании — неагрессивная. По степени агрессивного воздействия подземных вод на металлические конструкции - среднеагрессивные. 
+По характеру подтопления участок изысканий относится к техногенно подтопленной территории.
+Коррозионная агрессивность грунтов по отношению к углеродистой и низколегированной стали, по величине УЭС для суглинка - от средней до высокой, по средней плотности катодного тока – средняя и высокая.
+Степень агрессивного воздействия по водонепроницаемости сульфатов в грунтах на бетоны – неагрессивная; степень агрессивного воздействия хлоридов в грунтах на стальную арматуру железобетонных конструкций – неагрессивная. Степень агрессивного воздействия грунтов ниже уровня подземных вод и выше уровня подземных вод на металлические конструкции из углеродистой стали – слабоагрессивная. 
+Нормативная глубина сезонного промерзания для суглинистых грунтов –  1.89 м, песков мелких – 2.30 м. 
+По степени морозной пучинистости, грунты попадающие в зону сезонного промерзания (насыпной слой, ИГЭ-212, ИГЭ-213) относятся к слабопучинистым.</EngineeringSurveyConditions>
+		<EngineeringSurveyProgramNote>Программа производства инженерно-геологических изысканий от 24.09.2019 г. разработана ОАО «ПИИ «Тюменьдорпроект».</EngineeringSurveyProgramNote>
+		<EngineeringSurveyMethods>Инженерно-геологические изыскания проведены в сентябре-октябре 2019 г. и апреле-мае 2021 г. Выполнено бурение 9 скважин глубиной от 5,0 м до 30,0 м. Проведено 5 опытов по испытанию грунтов методом статического зондирования, глубиной от 11,4 м до 19,0 м.</EngineeringSurveyMethods>
+		<EngineeringSurveyChanges>1. Выполнены дополнительные полевые и лабораторные работы. Внесены изменения в. раздел ИИ2-ИГИ изм.1, раздел 1, стр.7-9; раздел 5 стр. 14; раздел 9 стр. 20-21; текстовое приложение Б стр. 33-34; приложение Ж стр. 45; приложение И стр.46; приложение К стр. 49; приложение М стр.75, 78-80; приложение Р стр. 88-89; приложение С стр.99, приложение Т стр. 100. Графические приложения Г.1 стр. 105; Г.3 стр. 107; Г.4 стр. 108.
+2. Откорректирован продольный профиль. Внесены изменения. 10/19-ИГИ-Г.3, лист 1, стр. 107.</EngineeringSurveyChanges>
+	</ExpertEngineeringSurveys>
+  <ExpertEngineeringSurveys EngineeringSurveyType="3">
+		
+		<EngineeringSurveyConditions>Климатический район и подрайон: 1В
+Ветровой район: I
+Снеговой район: III
+Интенсивность сейсмических воздействий: 5 баллов
+Категория сложности инженерно-геологических условий: II
+Геологические и инженерно-геологические процессы: нет
+
+Главной рекой, водный режим которой ежегодно оказывает существенное влияние на участок пересечения изыскиваемого ручья с мостовым переходом, является р. Тобол. Наибольшие годовые значения расходов воды на реках данной территории, включая исследуемый руч ей Кулик, отмечаются в период прохождения волны весеннего половодья, которая по величине стока и подъему уровня превышает дождевые паводки. Обследованием на местности установлено, что в годы высоких весенних подъемов уровня воды со стороны Тобола происходит затопление прилегающей к нему поверхности поймы, а также устьевых участков впадающего в него р. Куличек и пересекаемого мостом ручья Кулик.</EngineeringSurveyConditions>
+		<EngineeringSurveyProgramNote>Программа производства инженерно-гидрометеорологических изысканий от 24.09.2019 г. разработана ОАО «ПИИ «Тюменьдорпроект».</EngineeringSurveyProgramNote>
+		<EngineeringSurveyMethods>Инженерно-гидрометеорологические изыскания проведены в сентябре-ноябре 2019 г. Выполнено полевое обследование участка изысканий, составлены климатическая, гидрологическая и гидрографическая характеристики участка.</EngineeringSurveyMethods>
+		<EngineeringSurveyChanges>1. Выполнен расчет минимальной отметки размыва дна ручья для створа моста. Раздел ИИ3-ИГМИ изм.1 раздел 5 п. 5.6, стр. 22. Продольный профиль и паспорт мостового перехода откорректированы. Раздел ИИ2-ИГИ изм.1 графические приложения Г.3 стр. 107, Г.4 стр.108.</EngineeringSurveyChanges>
+	</ExpertEngineeringSurveys>
+  <ExpertProjectDocuments ExpertType="4.2.">
+		
+		<ProjectDocumentsReview>В административном отношении участок проектирования находится в Ялуторовском районе Тюменской области. 
+Начало участка реконструкции принято на ПК 0+00,00. Конец участка реконструкции принят на ПК 4+42,00. Участок реконструкции автомобильной дороги в проектной документации разделен на три участка:
+- переходный участок ПК 0+00,00 – ПК 1+60,00;
+- подходы к мосту ПК 1+60,00 – ПК 3+35,00;
+- подходы к мосту (населенный пункт) ПК 3+35,00 – ПК 4+42,00.
+Участок автомобильной дороги с ПК 0+00 по ПК 3+35,00 принят по параметрам автомобильной дороги IV категории, с ПК3+35,00 по ПК 4+42,00 как основная улица сельского поселения. На пересечении проектируемого участка с ручьем предусмотрено устройство моста.
+Общая площадь земель, предназначенных для размещения линейного объекта, составляет 2,16га.
+Мост
+На участке расположения моста трасса проектируемой автодороги расположена в плане на прямой. В продольном профиле трасса расположена выпуклой вертикальной кривой.
+Габарит моста Г-8 с двумя служебными проходами по 0,75 м. Габарит включает две полосы движения шириной по 3,0 м и полосы безопасности шириной по 1 м. Движение автотранспорта по мосту предусмотрено в двух направлениях. В поперечном направлении проезжая часть путепровода имеет двускатного поперечный уклон 20 ‰ в сторону проезжей части. Путепровод состоит из 2 пролетов и запроектирован по схеме: 18+18 м. Полная длина путепровода составляет 42,15 м.
+Опоры моста
+Крайние опоры №1 и №3 моста безростверковые однорядные свайные, на сваях из металлических труб диаметром 720мм., заполненных железобетоном. В опоре расположено 6 свай с расстояниями по осям 2.16м.
+Проектом предусмотрено устройство свай длиной 16м.
+Поверху сваи объединяются монолитным железобетонным ригелем размерами 1.55х0.8х12.02м. Сливы предусмотрены за счет наклонной поверхности верха ригелей от шкафной стенки.
+Шкафные стенки монолитные железобетонные, разработаны применительно т. п. 3.503.1-100 СДП.
+Подферменники железобетонные монолитные, разной высоты, для обеспечения поперечного уклона проезжей части. Подферменники объединяются с ригелями за счет арматурных выпусков из ригелей.
+Промежуточная опора №2 моста запроектирована на свайном основании, на сваях из металлических труб диаметром 720мм., заполненных железобетоном. В опоре расположено 6 свай с расстояниями по осям 2.16м.
+Согласно расчетам несущей способности свай по грунту предусмотрено устройство свай длиной 22.65м.
+Поверху сваи объеденены монолитным железобетонным ригелем размерами 1.55х0.8х12.02м.
+Подферменники железобетонные монолитные, разной высоты, для обеспечения поперечного уклона проезжей части. Подферменники объединяются с ригелями за счет арматурных выпусков из ригелей.
+На поверхности опор, засыпаемые грунтом, наносится грунтовочный слой и покрывные слои обмазочной гидроизоляции.
+Пролётное строение моста
+Пролетное строение моста запроектировано в виде температурно-неразрезной плети из сборных железобетонных балок - тавровые балки без предварительного напряжения длиной 18 м высотой 1.10 м (рабочие чертежи инв. № 54133-М или аналог) под нагрузку А14, Н14.
+Пролетные строения объединены в температурно-неразрезную плеть по продольным бетонируемым швам.
+В поперечном направлении пролетные строения состоят из семи главных балок с расстоянием между балками 1.45 м. Пролетные строения имеют двускатный поперечный профиль с уклоном 20‰ от оси трассы, придаваемый за счёт высоты подферменников и выравнивающего слоя мостового полотна. С правой стороны по ходу пикетажа расположен тротуар шириной 1.5м. Монолитный железобетонный тротуар бетонируется по верху сборных балок, объединяется с балками в совместную работу с помощью вертикальных арматурных выпусков из плиты крайней балки. Тротуар в повышенном уровне, поперечный уклон 15‰ в сторону проезжей части. Перильное ограждение устанавливается на закладные детали в приливе монолитного тротуара.
+Опирание пролетных строений принято на опорные части РОЧ С 15х35х4 см. РОЧ должны соответствовать ОДМ 218.2.002-2008 «Рекомендации по проектированию и установке полимерных опорных частей мостов». Деформационные швы пролетного строения: закрытого типа.
+Мостовое полотно
+Дорожная одежда на мосту состоит из выравнивающего бетонного слоя, гидроизоляции и двухслойного асфальтобетонного покрытия.
+Выравнивающий слой устраивается из мелкозернистого бетона B25 F300 W8 по ГОСТ 26633-2015 минимальной толщиной 30 мм.
+Гидроизоляция плиты проезжей части устраивается по выравнивающему слою из рулонного наплавляемого битумно-полимерного материала. Дорожная одежда на мосту состоит из выравнивающего бетонного слоя, гидроизоляции и двухслойного асфальтобетонного покрытия.
+Покрытие проезжей части - асфальтобетонное двухслойное общей толщиной 110мм. Нижний слой толщиной 60 мм, верхний слой 50мм. из асфальтобетонной смеси II марки тип Б по ГОСТ 9128-2013. Покрытие на служебных проходах - асфальтобетон плотный из горячих мелкозернистых смесей типа Г марки II по ГОСТ 9128-2013 толщиной 40 мм.
+Водоотвод с проезжей части обеспечивается за счет поперечного и продольных уклонов к началу и концу моста. Поперечные уклоны проезжей части и служебных проходов на мосту встречные, к понижению на проезжей части в пределах полосы безопасности, на сопряжении к понижению у барьерного ограждения. Далее вода стекает по продольным уклонам вдоль бордюра на проезжей части автодороги в фильтрующие колодцы на ПК2+09 и ПК3+98. В нижнем слое асфальтобетона в створе водоотводных лотков устраиваются дренажные каналы и дренажные трубки.
+Барьерное ограждение проезжей части запроектировано в соответствии с требованиями:
+- группа дорожных условий – В (радиус кривой в плане на подходе к мосту менее 500м).
+- уровень удерживающей способности – не менее 250кДж (У3)
+- высота ограждения – не менее 0.75м
+- допустимый прогиб – не более 0.75 м
+Перильное ограждение металлическое высотой 1.1м.
+Крепление перильного ограждения осуществляется сваркой к закладным деталям в железобетонном цоколе пролетного строения.
+Конструкция сопряжения моста с насыпями подходов
+Сопряжение путепровода с насыпями подходов осуществляется с помощью переходных плит длиной 8м с опиранием плит на лежень. Конструкция сопряжения запроектирована применительно к ТП 3.503.1-96 «Сопряжение автодорожных мостов и путепроводов с насыпью». Плиты запроектированы применительно ТП 3.503.1-96 «Сопряжение автодорожных мостов и путепроводов с насыпью» с изменением марки бетона и армирования. Опирание переходной плиты на шкафную стенку выполняется через прокладки из 3-х слоёв рубероида и слой цементного раствора 1см, при этом анкерные стержни шкафной стенки заводятся в отверстия переходной плиты.
+Засыпаемые поверхности переходных плит и лежня покрываются обмазочной гидроизоляцией.
+Укрепление конусов
+Укрепления конусов моста устраиваются из сборных бетонных элементов 1.0х1.0х0.16м., по слою щебня 10см., применительно типовой проектной документации АО «Трансмост», шифр 2337.
+На подходах к мосту откосы существующей насыпи в пойменной части укрепляются объемной георешеткой ОРП30/15 по слою тканного геотекстильного материала. До границы РГВВ-2% +0,50 м георешетка заполняется щебнем фракции 40-70, выше указанной границы - заполнение растительным грунтом толщиной 0,15 м с засевом трав. На отметке выше уровня подтопления откосы насыпи укрепляются засевом трав.
+Подходы к мосту
+Переходный участок ПК 0+00,00 – ПК 1+60,00 запроектирован по параметрам
+автомобильная дорога IV категории. Проектируемый участок ПК 1+60,00 – ПК 3+35,00
+запроектирован по параметрам автомобильной дороги IV категории и участок с ПК3+35,00 –ПК 4+42,00 как основная улица сельского поселения.
+Параметры автомобильной дороги IV категории:
+- число полос движения – 2 шт.;
+- ширина полосы движения – 3,00 м;
+- краевых предохранительных полос – 0,50 м
+Параметры основная улица сельского поселения:
+- число полос движения – 2 шт.;
+- ширина полосы движения – 3,50 м.
+Всего проектной документацией предусмотрено 4 типа поперечных профилей:
+Тип 1 – ПК 02+09,00 – 03+88,00 (насыпь более 6 м);
+Тип 2 – ПК 00+00,00 – 01+60,00, ПК 01+60,00 – 02+09,00 (насыпь до 6 м);
+Тип 3 – ПК 03+88,00 – 04+20,00 (в выемке);
+Тип 4 – ПК 04+20,00 – 04+42,00 (в выемке, без укрепления георешеткой).
+Поперечный профиль проектируемого участка дороги двускатный, с уклоном 20‰.
+Уклон прибровочной части обочины при укреплении засевом трав – 50 ‰, при укреплении щебнем — 40‰.
+На мосту через ручей и на подходах к нему приняты следующие параметры поперечного профиля:
+- количество полос движения – 2 шт.;
+- ширина полосы движения – 3,00 м;
+- ширина полосы безопасности – 1,00 м.
+Укрепление обочин щебнем фракции 20-40мм 
+Грунт (песок мелкий) для отсыпки земляного полотна предусмотрен из резерва грунта «Ялтинский» в Ялуторовском МО Тюменской области, расположенного на расстоянии 82,37 км.
+Конструкция дорожной одежды приняты следующие:
+Тип А – (ПК1+24,90-ПК2+41,72; ПК2+90,27-ПК3+87,98).
+Двухслойное покрытие:
+- верхний слой – горячая плотная мелкозернистая асфальтобетонная смесь, тип Б, марка II, ГОСТ 9128-2013 на битуме БНД 90/130, ГОСТ 22245-90, толщиной 0,05 м.
+- нижний слой – горячая пористая крупнозернистая асфальтобетонная смесь, марка II, ГОСТ 9128-2013 на битуме БНД 90/130, ГОСТ 22245-90, толщиной 0,07 м.
+Двухслойное основание:
+- верхний слой - щебень трудноуплотняемый, фракционированный 40-70 мм, уложенный по способу заклинки, расклинивающая фр. 5-10, 10-20 мм, I класса, марка 1000, ГОСТ 8267-93, толщиной 0,14 м.
+- нижний слой – щебень трудноуплотняемый, фракционированный 40-70 мм, I класса, марка 1000, ГОСТ 8267-93, толщиной 0,15 м.
+- прослойка из нетканого геотекстильного материала с прочностью при растяжении не менее 10 кН/м.
+- грунт земляного полотна — песок мелкий.
+Тип Б – (ПК0+00-ПК1+24,90; ПК3+87,98- ПК4+42).
+Двухслойное покрытие:
+- верхний слой – горячая плотная мелкозернистая асфальтобетонная смесь, тип Б, марка II, ГОСТ 9128-2013 на битуме БНД 90/130, ГОСТ 22245-90, толщиной 0,05 м.
+- нижний слой – горячая пористая крупнозернистая асфальтобетонная, марка II, ГОСТ 9128-2013 смесь на битуме БНД 90/130, ГОСТ 22245-90, толщиной 0,07 м.
+Двухслойное основание:
+- верхний слой - щебень трудноуплотняемый, фракционированный 40-70 мм, уложенный по способу заклинки, расклинивающая фр. 5-10, 10-20 мм, I класса, марка 1000, ГОСТ 8267-93, толщиной 0,20 м.
+- нижний слой – щебень трудноуплотняемый, фракционированный 40-70 мм, I класса, марка 1000, ГОСТ 8267-93, толщиной 0,21 м.
+- прослойка из нетканого геотекстильного материала с прочностью при растяжении не менее 10 кН/м;
+- подстилающий слой из песка мелкого по ГОСТ 8736-2014 толщиной 0,48 м.
+-грунт земляного полотна - суглинок легкий песчанистый твердый.
+Тип В – на примыкания ПК0+31,50.
+Однослойное покрытие:
+- щебень трудноуплотняемый, фракционированный 40-70 мм, уложенный по способу заклинки, расклинивающая фр. 5-10, 10-20 мм, I класса, марка 1000, ГОСТ 8267-93, толщиной 0,18 м.
+Однослойное основание:
+- щебень трудноуплотняемый, фракционированный 40-70 мм, уложенный по способу заклинки, расклинивающая фр. 5-10, 10-20 мм, I класса, марка 1000, ГОСТ 8267-93, толщиной 0,21 м.
+- прослойка из нетканого геотекстильного материала с прочностью при растяжении не менее 10 кН/м;
+- подстилающий слой из песка мелкого по ГОСТ 8736-2014 толщиной 0,41 м.
+Грунт земляного полотна — суглинок легкий песчанистый твердый.
+На примыканиях к домам ПК 4+21,69, ПК 4+22,50, в пределах закруглений, дорожная одежда устраивается по типу Б. Вдоль внешней кромки покрытия проезжей части укладывается бортовой камень БР 100.30.18 по ГОСТ 6665-91 и бетонный блок Б-5.
+Откос насыпи автомобильной дороги укрепляется геосотовым материалом с заполнением щебнем фр. 40-70 мм, марки 800, ГОСТ 8267-93, по слою из нетканого геотекстильного материала, с прочностью при растяжении не менее 10 кН/м. Граница укрепления каменным материалом рассчитана до отметки РГВВ 2 % + 0,50 м. Выше расчетного уровня подтопляемости геосотовый материал заполняется растительным грунтом с засевом трав. В основании насыпи не более 6 м проектной документацией предусмотрено устройство рисбермы с заполнением щебнем фр. 70-120 мм., марки 800, по ГОСТ 8267-93, а у подошвы насыпи высотой более 6 м предусмотрено укрепление в виде рисбермы из каменных материалов (щебень фр. 70-120 мм) с устройство блока упора У-1.
+На участке дороги в пределах водоохранной зоны проектной документацией предусмотрен организованный сбор воды с поверхности проезжей части с последующей ее очисткой или отводом в места, исключающие загрязнение водных объектов. Качество сбрасываемых очищенных сточных вод в водные объекты должно удовлетворять установленным требованиям. Сбор воды организован за счет установки по кромкам проезжей части бетонного блока Б-5 и в населенном пункте железобетонного бортового камня БР100.30.18. Поверхностный сток с проезжей части идет по продольному уклону, в местах сброса воды предусмотрена установка бортового камня БР 100.30.18 и дождеприемного колодца с отстойником, где происходит удержание взвесей и песка.
+Далее через полиэтиленовую трубу ПЭ DN315 вода попадает в фильтрующий колодец. В фильтрующем колодце предусмотрена установка металлической кассеты с фильтрующим материалом обладающего гидрофобностью 100%, способностью к регенерации. Далее очищенная вода по полиэтиленовой трубе выводится на откос насыпи в телескопические лотки Б-6 с последующим сбросом на отводящие и гасящие устройства у подошвы насыпи, предохраняющие земляное полотно от размыва. Для сброса очищенной воды от подошвы насыпи в водный объект предусмотрено устройство кюветов, укрепленных монолитным бетоном.
+В населенном пункте для отвода воды предусмотрено устройство водоотводных лотков ЛВ 30.38.38. На примыкании к домам предусмотрена установка водоотводных лотков ЛВ 30.38.41 с решеткой. В месте сброса воды из водоотводного лотка ЛВ 30.38.38 в фильтрующий колодец предусмотрено устройство пескоуловителя.
+В целях обеспечения безопасности движения в проекте предусмотрены следующие мероприятия установка дорожных знаков; устройство барьерного ограждения; нанесение разметки проезжей части; установка сигнальных столбиков.
+При изготовлении знаков применяется световозвращающая пленка типа Б с высокой интенсивностью световозвращения, имеющая оптическую систему из сферических линз (микростеклошариков), сгруппированных в ячейках.
+Типоразмер знаков принят II для участка дороги с расчетной скоростью до 60 км/ч и типоразмер I для основной улицы сельского поселения д. Малая Тихвина.
+Знаки устанавливаются, справа от проезжей части на присыпной берме и обочине, на металлических стойках ОМ с заглублением на 0,60 м.
+Расстояние от нижнего края знака до поверхности дорожного покрытия принято 2,5 метра. Расстояние от бровки земляного полотна до ближайшего к ней края знака, установленного сбоку от проезжей части, принято не менее 0,50 м.
+Для организации движения автотранспорта по дороге предусмотрено устройство разметки проезжей части. Для обеспечения безопасности дорожного движения предусмотрена установка барьерного ограждения при высоте насыпи от 4,0 м для участка автомобильной дороги IV категории, в населенном пункте 2,5 м.
+Автомобильная дорога относится к IV категории. Группа дорожных условий – Б. На участках трассы устанавливается барьерное ограждение с удерживающей способностью не менее У2 (190 кДж).
+В населенном пункте автомобильная дорога категории основная улица сельского поселения. Группа дорожных условий – Ж при высоте насыпи от 2,5 до 5,0 м. Группа дорожных условий – Е при высоте насыпи свыше 5,0 м. На участках трассы устанавливается барьерное ограждение с удерживающей способностью не менее У2 (190 кДж) для группы Ж и не менее У3 (250 кДж) для группы Е.
+Высота ограждения с уровнем удерживающей способности У2(У3) – не менее 0,75 м. В проекте приняты следующие характеристики дорожного удерживающего ограждения барьерного типа для автомобилей: одностороннее, с удерживающей способностью не менее У2 (190 кДж), высотой не менее 0,75 м с величиной динамического прогиба не более 1,15 м, одностороннее, с удерживающей способностью не менее У3 (250 кДж), высотой не менее 0,75 м с величиной динамического прогиба не более 1,15 м.
+Для обеспечения безопасности дорожного движения вне населенного пункта предусмотрена установка направляющих сигнальных столбиков. Конструкция сигнальных столбиков должна соответствовать требованиям ГОСТ Р 50970. Сигнальные столбики устанавливаются в пределах кривых в плане и на подходах к ним на расстоянии через 50 м и на кривых сопряжения примыкания через 3 м. Обустройство автодороги представлено также наличием металлического ограждения барьерного типа, дорожной разметки.
+Проектируемому объекту транспортной инфраструктуры присвоена четвертая категория.
+Проектной документацией предусмотрены схемы перемещения на объекте транспортной инфраструктуры пассажиров, грузов, багажа и иных материальных объектов, схемы ОТИ с указанием предполагаемых границ зоны транспортной безопасности.
+В соответствии с п.п. 16,17 постановления Правительства РФ от 14.09.2016 года № 924, для объектов транспортной инфраструктуры четвертой категории, в полномочия субъекта транспортной инфраструктуры входит:
+1. Проведение внешнего визуального осмотра зоны транспортной безопасности объекта;
+2. В случае объявления уровня безопасности №2 дополнительно к требованиям пункта 1 - не допускать посетителей на критические элементы объекта транспортной инфраструктуры; проведение внешнего визуального осмотра зоны транспортной безопасности объекта транспортной инфраструктуры и критического элемента объекта транспортной инфраструктуры и (или) его границ обслуживающим персоналом (не реже одного раза в 12 часов), выявлять нарушителей, совершение или подготовку к совершению актов незаконного вмешательства;
+3. В случае объявления уровня безопасности №3 дополнительно к требованиям пунктов 1, 2, проведение подразделениями транспортной безопасности досмотра, дополнительного досмотра, повторного досмотра, наблюдения и (или) собеседования в целях обеспечения транспортной безопасности всех проходящих, приезжающих (перемещаемых) в зону транспортной безопасности объекта транспортной инфраструктуры, в том числе в сектор свободного доступа, объектов досмотра либо осуществлять эвакуацию со всей территории объекта транспортной инфраструктуры физических лиц и транспортных средств, а также работников объекта транспортной инфраструктуры, не связанных с обеспечением транспортной безопасности, прекращать допуск на объект транспортной инфраструктуры физических лиц и транспортных средств.
+На период строительства на строящемся объекте транспортной инфраструктуры предусмотрены следующие мероприятия:
+1. Досмотр в целях обеспечения транспортной безопасности;
+2. Пропускной и внутриобъектовый режимы, обеспечивающие контроль за входом (выходом) физических лиц, въездом (выездом) транспортных средств, вносом (выносом), ввозом (вывозом) грузов и иных материальных объектов, в том числе в целях предотвращения возможности размещения или попытки размещения взрывчатых устройств (взрывчатых веществ), угрожающих жизни или здоровью персонала и других лиц.
+Генеральная подрядная строительная организация определяется на основании подрядных торгов. Проведение строительно-монтажных работ предусматривается выполнять комплексным дорожно-строительным участком. Участок комплектуется механизмами, оборудованием и машинами в количестве, обеспечивающем своевременное выполнение заданных объемов работ. 
+Продолжительность строительства составляет 153 календарных дня. 
+Строительство моста предусмотрено по новому направлению трассы. На период строительства нового моста движение транзитного транспорта предусмотрено по существующему направлению. Для сооружения опор моста предусмотрено устройство трех технологических площадок и временного подъезда к ним. На подъезде к площадкам устраивается покрытие из ж/б плит шириной 6,0 м, его протяженность составляет 270 м. 
+Дислокация строительной техники и основных строительных материалов к месту проведения работ осуществляется с промышленной базы подрядной организации. 
+Предусмотрены мероприятия, обеспечивающие нормативные требования  охраны труда и техники безопасности в соответствии с СП 49.13330.2010; Приказом Минтруда России от 01.06.2015 №336н.
+Транспортировка материалов осуществляется собственным и привлеченным транспортом. Перечень привозных материалов для строительных работ, источники их получения, дальность и способы их доставки показаны в «Ведомости источников получения и способов транспортировки основных строительных материалов, изделий и полуфабрикатов» и в перечне исходных данных, выданных и утвержденных заказчиком.
+Проектной документацией предусмотрен демонтаж существующего моста, существующих сетей связи.
+К демонтажу и разборке существующих конструкций приступают после необходимых подготовительных мероприятий и ограждения места производства работ. 
+Демонтаж предусмотрен с использованием ручного и механизированного способа, специальной техники и оборудования. Погрузка строительного мусора и материалов производится экскаватором на автотранспорт и транспортируется на полигон ТБО. Демонтаж предусмотрен в определенной технологической последовательности, методами, обеспечивающими безопасность ведения работ.</ProjectDocumentsReview>
+	</ExpertProjectDocuments>
+  <ExpertProjectDocuments ExpertType="2.4.2.">
+		
+		<ProjectDocumentsReview>
+Санитарно-эпидемиологическая оценка принятых проектных решений.
+Проект полосы отвода.
+В административном отношении участок строительства располагается на территории Ялуторовского района Тюменской области, в 40-45 км к северо-востоку от г. Ялуторовска. 
+Проектируемый объект по большей части расположен в полосе отвода существующей автомобильной дороги, за пределами санитарно-защитных зон, поясов ЗСО источников водоснабжения, в границах водоохранной зоны и прибрежной полосы ручья Кулик.
+В проектной документации выполнена оценка воздействия (расчеты рассеивания загрязнения атмосферного воздуха и акустические расчеты) проектируемого объекта на жилую застройку в период строительства. Результаты расчетов рассеивания загрязнения атмосферного воздуха и акустические расчеты подтверждают не превышение гигиенических нормативов загрязнений атмосферного воздуха (ПДК) и предельно-допустимых уровней (ПДУ) звука в расчетных точках.
+В границах водоохранной зоны предусмотрено устройство открытой системы поверхностного водоотвода с мостового сооружения и дорожного полотна на подходах к мосту, с применением водоотводных лотков и выпуском воды через колодцы с фильтрующей загрузкой. 
+Технологические и конструктивные решения линейного объекта. Искусственные сооружения.
+Проектирование постов дорожно - патрульной службы, пунктов весового контроля, постов учета движения, постов метеорологического наблюдения, автостоянок, остановок общественного транспорта и мест размещения объектов дорожного сервиса проектом не предусматривается.
+Организация строительства.
+Организация строительных площадок и санитарно-бытового обеспечения занятых на строительно-монтажных работах соответствуют требованиям санитарных правил к проведению строительных работ.</ProjectDocumentsReview>
+	</ExpertProjectDocuments>
+  <ExpertProjectDocuments>
+		<ProjectDocumentsReview>Охрана атмосферного воздуха.
+Источниками загрязнения атмосферы выбросами вредных веществ в период реконструкции моста являются: автотранспорт, спецтехника, сварочные, покрасочные, погрузочно-разгрузочные, битумные работы, ДЭС, в период эксплуатации объекта – автотранспорт при движении по дороге и мосту. 
+Валовые выбросы загрязняющих веществ, выбрасываемых в атмосферу в период работ по реконструкции моста и демонтажных работ составляют 2,737807 т/период (таблица 2.14), при эксплуатации объекта — 0,264716 т/год (таблица 2.18).
+Расчет рассеивания вредных веществ в приземном слое атмосферы в период строительных работ проведен в УПРЗА «Эколог», реализующей методику МРР - 2017, с учетом фоновых концентраций загрязняющих веществ в расчетных точках на границе жилой зоны. Анализ результатов проведённых расчётов рассеивания загрязняющих веществ в атмосферном воздухе показал, что максимальные приземные концентрации вредных веществ в расчетных точках не превышают установленные значения ПДКм.р. по всем веществам в период строительства дороги и мостового перехода. Максимальная разовая расчетная концентрация в жилой зоне составляет 0,81 ПДК по веществу азота диоксид.
+Оценка химического загрязнения в период эксплуатации объекта проведена  в УПРЗА «Эколог» по методике МРР-2017. Анализ проведённого расчета рассеивания вредных веществ в атмосфере показал, что приземные концентрации всех веществ не превышают 0,36 ПДКм.р. с учетом фоновых концентраций веществ в расчётных точках на границе проектных работ и жилой застройки. 
+Акустическое воздействие в период строительных работ при одновременной работе нескольких единиц машин и механизмов на границе жилой зоны. На основании выполненного расчета шума эквивалентные уровни звукового давления в расчетных точках не превышают 54,4 дБА для дневного времени суток. 
+Шумовое воздействие в период эксплуатации объекта определено от автотранспорта на территории, прилегающей к жилой застройке. Уровень звука не превышает 54,7 дБА для дневного времени суток, 44,7 дБА для ночного времени суток. Шумовое воздействие во всех расчетных точках оценено как допустимое.
+Мероприятия по охране земельных и водных ресурсов.
+Работы по реконструкции моста через ручей Кулик проводятся в Ялуторовском районе на автомобильной дороге "Подъезд к д. Малая Тихвина". 
+Потребности в воде в период строительных работ удовлетворяются привозной водой. На строительный площадке предусмотрено размещение биотуалета, установки мойки колес с системой оборотного водоснабжения.
+Проектной документацией предусмотрены следующие природоохранные мероприятия:
+    • выполнение мероприятий при проведении строительных работ в водоохранной зоне и прибрежной защитной полосе ручья Кулик согласно ст.65 Водного Кодекса РФ;
+    • организация системы сбора, хранения и последующего размещения образующихся отходов;
+    • размещение строительной площадки за границей ВОЗ руч.Кулик;
+    • проведение работ по технической и биологической рекультивации земель по окончанию строительства. Технический этап рекультивации предусматривает снятие растительного грунта с существующих откосов, участка полосы отвода, примыкания и пересечения с перемещением в бурты для последующего использования при рекультивации, демонтаж существующего моста, планировочные работы, очистку территории от строительного мусора, нанесение растительного грунта. При биологической рекультивации производится посев семян трав;
+    • отвод поверхностных сточных вод с поверхности проезжей части  и их очистка в фильтрующих колодцах.
+Охрана растительного и животного мира.
+Основные формы воздействия на растительный мир в период строительных работ связаны с загрязнением растительности в результате выбросов загрязняющих веществ, с вырубкой деревьев (886 шт.) и кустарников (220 м2), на животный мир — воздействием на водные биоресурсы. 
+Для уменьшения ущерба, причиняемого растительному и животному миру, проектом предусматривается:
+    • исключение скопления автотранспорта и строительной техники на площадке строительства;
+    • использование технически исправной техники, исключение ремонта на участке строительства;
+    • размещение строительных отходов в специально отведенных местах с покрытием
+    • восстановление нарушенных земель.
+Рыбоохранные мероприятия.
+На осуществление деятельности в рамках проектной документации «Реконструкция моста через ручей на автомобильной дороге "Подъезд к д. Малая Тихвина", км 0+820 (Ялуторовский район)» представлено заключение о согласовании Нижнеобским территориальным управлением Федерального агентства по рыболовству №1605-с от 21.12.2020 г. Реализация проектных решений окажет негативное воздействие на состояние водных биологических ресурсов, приводящее к гибели кормовых организмов (зообентоса и зоопланктона) на участке повреждения русла ручья Кулик, на площади оседания взвеси, в объеме взмученной воды, повреждения и изъятия нерестовых участков на пойменной территории ручья Кулик,  что приведет к потере ихтиомассы, составляющее в натуральном выражении 162,67 кг. 
+С целью уменьшения отрицательного воздействия на водные биоресурсы и среду их обитания при производстве работ предусмотрены следующие мероприятия:
+    • обязательное соблюдение границ участка строительства;
+    • выполнение запланированных мер по сохранению водных биологических ресурсов и среды их обитания;
+    • исключение работ в водном объекте в период нереста, развития икры и личинок рыб (май-первая декада июня);
+    • уточнение вида выпускаемой молоди водного биоресурса в рамках запланированных мероприятий по искусственному воспроизводству водных биоресурсов;
+    • устранение последствий негативного воздействия на водные биоресурсы и среду их обитания путем выпуска молоди рыбоводной продукции в водные объекты рыбохозяйственного значения Обь-Иртышского района.
+Охрана окружающей среды при обращении с отходами производства и потребления.
+При проведении намечаемых работ по реконструкции моста и демонтажных работ образуются производственные и бытовые отходы IV-V класса опасности в количестве 1149,715 т/период (таблица 2.24). В период эксплуатации образуются отходы III-IV класса опасности в количестве 2,584 т/год (таблица 2.25). Отходы собираются в контейнеры, вывозятся в момент образования отходов без накопления. Отходы по мере образования передаются лицензированным организациям, отходы, в которых отсутствуют полезные компоненты, вывозятся на полигон ТКО. 
+Стоимость природоохранных мероприятий и компенсационных выплат.
+Размер компенсационных выплат определён в виде платежей за выбросы в атмосферный воздух, размещение отходов, вырубку древесных насаждений (таблица 4.1). </ProjectDocumentsReview>
+		<ProjectDocumentsChanges>Внесение удобрений в границах водоохранной зоны ручья исключено (Том 7.1 изм.1, 10/19-ООС1).</ProjectDocumentsChanges>
+	</ExpertProjectDocuments>
+  <Summary>
+    <EngineeringSurveySummary>Результаты инженерных изысканий «Реконструкция моста через ручей на автомобильной дороге «Подъезд к д.Малая Тихвина», км 0+820 (Ялуторовский район)» соответствуют требованиям технических регламентов.</EngineeringSurveySummary>
+    <EngineeringSurveySummaryDate>10.02.2021г</EngineeringSurveySummaryDate>
+    <EngineeringSurveyType>1</EngineeringSurveyType>
+    <ProjectDocumentsSummary>Проектная документация «Реконструкция моста через ручей на автомобильной дороге «Подъезд к д.Малая Тихвина», км 0+820 (Ялуторовский район)» соответствует результатам инженерных изысканий.
+</ProjectDocumentsSummary>
+    <ProjectDocumentsSummaryDate>10.02.2021г</ProjectDocumentsSummaryDate>
+    <EstimateNormsAndWorksSummary>соответствуют</EstimateNormsAndWorksSummary>
+    <EstimateSummary>соответствуют</EstimateSummary>
+    <ExaminationSummary>Проектная документация «Реконструкция моста через ручей на автомобильной дороге «Подъезд к д.Малая Тихвина», км 0+820 (Ялуторовский район)» соответствует требованиям нормативных технических документов.</ExaminationSummary>
+  </Summary>
+  <Experts>
+    <Expert>
+			<FamilyName>Петров</FamilyName>
+			<FirstName>Сергей</FirstName>
+			<SecondName>Александрович</SecondName>
+			<ExpertType>
+				2.5.
+				
+			</ExpertType>
+			<ExpertCertificate>МС-Э-20-2-8597</ExpertCertificate>
+			<ExpertCertificateBeginDate>2017-04-24</ExpertCertificateBeginDate>
+			<ExpertCertificateEndDate>2027-04-24</ExpertCertificateEndDate>
+		</Expert>
+    <Expert>
+			<FamilyName>Водянов</FamilyName>
+			<FirstName>Антон</FirstName>
+			<SecondName>Владимирович</SecondName>
+			<ExpertType>
+				2.4.2.
+				
+			</ExpertType>
+			<ExpertCertificate>МС-Э-21-2-8626</ExpertCertificate>
+			<ExpertCertificateBeginDate>2017-05-04</ExpertCertificateBeginDate>
+			<ExpertCertificateEndDate>2027-05-04</ExpertCertificateEndDate>
+		</Expert>
+    <Expert>
+			<FamilyName>Субботин</FamilyName>
+			<FirstName>Александр</FirstName>
+			<SecondName>Николаевич</SecondName>
+			<ExpertType>
+				2.3.
+				
+			</ExpertType>
+			<ExpertCertificate>МС-Э-32-2-7827</ExpertCertificate>
+			<ExpertCertificateBeginDate>2016-12-20</ExpertCertificateBeginDate>
+			<ExpertCertificateEndDate>2022-12-20</ExpertCertificateEndDate>
+		</Expert>
+    <Expert>
+			<FamilyName>Илларионова</FamilyName>
+			<FirstName>Елена</FirstName>
+			<SecondName>Геннадьевна</SecondName>
+			<ExpertType>
+				1.4.
+				
+			</ExpertType>
+			<ExpertCertificate>МС-Э-42-1-9318</ExpertCertificate>
+			<ExpertCertificateBeginDate>2017-07-26</ExpertCertificateBeginDate>
+			<ExpertCertificateEndDate>2027-07-26</ExpertCertificateEndDate>
+		</Expert>
+    <Expert>
+			<FamilyName>Илларионова</FamilyName>
+			<FirstName>Елена</FirstName>
+			<SecondName>Геннадьевна</SecondName>
+			<ExpertType>
+				2.4.1.
+				
+			</ExpertType>
+			<ExpertCertificate>МС-Э-19-2-8555</ExpertCertificate>
+			<ExpertCertificateBeginDate>2017-04-24</ExpertCertificateBeginDate>
+			<ExpertCertificateEndDate>2027-04-24</ExpertCertificateEndDate>
+		</Expert>
+    <Expert>
+			<FamilyName>Рычкова</FamilyName>
+			<FirstName>Анастасия</FirstName>
+			<SecondName>Владимировна</SecondName>
+			<ExpertType>
+				1.4.
+				
+			</ExpertType>
+			<ExpertCertificate>МС-Э-47-1-9510</ExpertCertificate>
+			<ExpertCertificateBeginDate>2017-08-28</ExpertCertificateBeginDate>
+			<ExpertCertificateEndDate>2027-08-28</ExpertCertificateEndDate>
+		</Expert>
+    <Expert>
+			<FamilyName>Рычкова</FamilyName>
+			<FirstName>Анастасия</FirstName>
+			<SecondName>Владимировна</SecondName>
+			<ExpertType>
+				2.4.1.
+				
+			</ExpertType>
+			<ExpertCertificate>МС-Э-19-2-8568</ExpertCertificate>
+			<ExpertCertificateBeginDate>2017-04-24</ExpertCertificateBeginDate>
+			<ExpertCertificateEndDate>2027-04-24</ExpertCertificateEndDate>
+		</Expert>
+    <Expert>
+			<FamilyName>Колчина</FamilyName>
+			<FirstName>Марина</FirstName>
+			<SecondName>Львовна</SecondName>
+			<ExpertType>
+				1.1.
+				
+			</ExpertType>
+			<ExpertCertificate>ГС-Э-57-1-1946</ExpertCertificate>
+			<ExpertCertificateBeginDate>2013-11-27</ExpertCertificateBeginDate>
+			<ExpertCertificateEndDate>2028-11-27</ExpertCertificateEndDate>
+		</Expert>
+    <Expert>
+			<FamilyName>Колчина</FamilyName>
+			<FirstName>Марина</FirstName>
+			<SecondName>Львовна</SecondName>
+			<ExpertType>
+				23.
+				
+			</ExpertType>
+			<ExpertCertificate>МС-Э-41-17-12643</ExpertCertificate>
+			<ExpertCertificateBeginDate>2019-10-10</ExpertCertificateBeginDate>
+			<ExpertCertificateEndDate>2024-10-10</ExpertCertificateEndDate>
+		</Expert>
+    <Expert>
+			<FamilyName>Степаненко</FamilyName>
+			<FirstName>Алина</FirstName>
+			<SecondName>Константиновна</SecondName>
+			<ExpertType>
+				2.2.1.
+				
+			</ExpertType>
+			<ExpertCertificate>МС-Э-33-2-9018</ExpertCertificate>
+			<ExpertCertificateBeginDate>2017-06-16</ExpertCertificateBeginDate>
+			<ExpertCertificateEndDate>2022-06-16</ExpertCertificateEndDate>
+		</Expert>
+    <Expert>
+			<FamilyName>Магера</FamilyName>
+			<FirstName>Дмитрий</FirstName>
+			<SecondName>Александрович</SecondName>
+			<ExpertType>
+				4.2.
+				
+			</ExpertType>
+			<ExpertCertificate>МС-Э-21-4-8634</ExpertCertificate>
+			<ExpertCertificateBeginDate>2017-05-04</ExpertCertificateBeginDate>
+			<ExpertCertificateEndDate>2027-05-04</ExpertCertificateEndDate>
+		</Expert>
+  </Experts>
+</Conclusion>

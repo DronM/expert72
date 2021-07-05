@@ -951,8 +951,14 @@ ContractDialog_View.js не записывался список эксперто
 1.0.162 29/06/21
 Conclusion.js, Conclusion_Controller.php кнопка формирования ГУИД
 
-1.0.163
+1.0.163 05/07/21
 Заполнение автора документации РИИ по исполнителям
+
+1.0.164
+1) Исключены некоторые тэги из Conclusion.js: ProjectTaskNote,TerritoryPlanNote,NetworkNote
+2) Conclusion_tDesigner.js General - исправлен на атрибут
+3) Исправлено сохранение исходного XML: убраны пробелы внутри NodeValue текстового нода
+
 
 
 Файлы на доступ админу
