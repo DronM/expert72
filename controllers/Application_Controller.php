@@ -2135,7 +2135,14 @@ class Application_Controller extends ControllerSQL{
 			throw new Exception(self::ER_OTHER_USER_APP);
 		}
 		
-		if ($ar['state']=='sent' || $ar['state']=='checking'){
+		if ($ar['state']=='sent' || $ar['state']=='checking'
+		 || $ar['state']=='closed_no_expertise'
+		 || $ar['state']=='waiting_for_contract'
+		 || $ar['state']=='waiting_for_pay'
+		 || $ar['state']=='expertise'
+		 || $ar['state']=='closed'
+		 || $ar['state']=='archive'
+		){
 			throw new Exception(self::ER_DOC_SENT);
 		}
 		if ($checkPrimApp && $ar['primary_check_passed']!='t'){
@@ -3622,6 +3629,10 @@ class Application_Controller extends ControllerSQL{
 		);
 	}
 
+	/**
+	 * Опасная фукнция грохает все, проверим есть ли доступ на удаление: статус заявления должен быть редактирование анкеты/исправление
+	 * удаляет либо хозяин либо админ!
+	 */
 	public function remove_document_types($pm){
 	
 		self::checkSentState($this->getDbLink(),$this->getExtDbVal($pm,'application_id'),TRUE);

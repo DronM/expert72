@@ -1049,6 +1049,10 @@ ApplicationDialog_View.prototype.setCmdEnabled = function(){
 
 
 ApplicationDialog_View.prototype.removeDocumentTypeWithWarn = function(docTypesForRemove,onYes,onNo){
+	/*if(this.m_readOnly && onNo){
+		onNo();
+		return;
+	}*/
 	if (docTypesForRemove.length){
 		var self = this;
 		var doc_types_str = "";

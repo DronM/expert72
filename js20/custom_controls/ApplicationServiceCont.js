@@ -196,6 +196,7 @@ function ApplicationServiceCont(id,options){
 						}
 						else{
 							self.getElement("audit").setEnabled(!cur_val);
+							self.getElement("modification").setEnabled(!cur_val);
 							self.getElement("expert_maintenance").setEnabled(!cur_val);
 							
 							//недоступно только если выключено 29/04/20
@@ -738,6 +739,10 @@ ApplicationServiceCont.prototype.m_mainView;
 /* public methods */
 
 ApplicationServiceCont.prototype.onChangeExpertiseType = function(){
+
+	if(this.m_mainView.m_readOnly){
+		return;
+	}
 	var cur_val = this.getElement("expertise_type").getValue();
 	//содержимое всех вкладок МЕНЯЕТСЯ!!!										
 	//18/05/20 кроме случая старой Достоверности,Модификации,Аудита, они могут остаться
