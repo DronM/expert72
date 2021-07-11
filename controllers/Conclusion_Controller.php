@@ -291,8 +291,8 @@ class Conclusion_Controller extends ControllerSQL{
 	const CHECK_RES_TMPL = 'ConclusionValidation.html.mst';
 
 	private function set_def_params(&$pm){
-		//admin can do everything
-		if ($_SESSION['role_id']!='admin' || !$pm->getParamValue('employee_id')){			
+		//Если не админ, и есть сотрудник, всегда ставим текущего!
+		if ($_SESSION['role_id']!='admin' || $pm->getParamValue('employee_id')){			
 			$emp_id = json_decode($_SESSION['employees_ref'])->keys->id;			
 			$pm->setParamValue('employee_id',$emp_id);
 		}	
@@ -420,11 +420,31 @@ class Conclusion_Controller extends ControllerSQL{
 			foreach ($xpath->query('//text()') as $text) {
 				$text->data = trim($text->data);
 			}
-			$doc->normalizeDocument();
-			$doc->formatOutput = TRUE;
-			$doc->save($outFile);	
-			
-		
+			if (PHP_VERSION_ID < 70000 && class_exists('tidy')){
+				$tidy = new tidy();
+				/*
+				array(
+					'input-xml' => true,
+					'indent' => true,
+					'wrap' => 0,
+					'indent-spaces' => 8,
+					'char-encoding' => 'utf8',
+					'output-encoding' => 'utf8'
+				))			
+				*/
+				$str = $tidy->repairString($doc->saveXML(),USER_VIEWS_PATH.'tidy.md.ini');
+				$str = str_replace("        ","\t",$str); 
+				file_put_contents(
+					$outFile,
+					$str
+				);
+			}
+			else{			
+				$doc->normalizeDocument();
+				$doc->preserveWhiteSpace = FALSE;
+				$doc->formatOutput = TRUE;
+				$doc->save($outFile);	
+			}		
 		}
 		return $ar['conclusion_num'];
 	}
@@ -1256,8 +1276,8 @@ class Conclusion_Controller extends ControllerSQL{
 		}
 		
 		$xml = ViewXML::getXMLHeader().
-			sprintf('<Conclusion ConclusionGUID="%s" SchemaVersion="01.00" SchemaLink="https://" >'
-				,isset($ar['reg_number'])? $ar['reg_number']:""
+			sprintf('<Conclusion ConclusionGUID="%s" SchemaVersion="01.00" SchemaLink="" >'
+				,self::GUID()
 			);
 			
 		//ExpertOrganization

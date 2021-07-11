@@ -60,8 +60,8 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 	const CHECK_RES_TMPL = 'ConclusionValidation.html.mst';
 
 	private function set_def_params(&amp;$pm){
-		//admin can do everything
-		if ($_SESSION['role_id']!='admin' || !$pm->getParamValue('employee_id')){			
+		//Если не админ, и есть сотрудник, всегда ставим текущего!
+		if ($_SESSION['role_id']!='admin' || $pm->getParamValue('employee_id')){			
 			$emp_id = json_decode($_SESSION['employees_ref'])->keys->id;			
 			$pm->setParamValue('employee_id',$emp_id);
 		}	
@@ -189,11 +189,31 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 			foreach ($xpath->query('//text()') as $text) {
 				$text->data = trim($text->data);
 			}
-			$doc->normalizeDocument();
-			$doc->formatOutput = TRUE;
-			$doc->save($outFile);	
-			
-		
+			if (PHP_VERSION_ID &lt; 70000 &amp;&amp; class_exists('tidy')){
+				$tidy = new tidy();
+				/*
+				array(
+					'input-xml' => true,
+					'indent' => true,
+					'wrap' => 0,
+					'indent-spaces' => 8,
+					'char-encoding' => 'utf8',
+					'output-encoding' => 'utf8'
+				))			
+				*/
+				$str = $tidy->repairString($doc->saveXML(),USER_VIEWS_PATH.'tidy.md.ini');
+				$str = str_replace("        ","\t",$str); 
+				file_put_contents(
+					$outFile,
+					$str
+				);
+			}
+			else{			
+				$doc->normalizeDocument();
+				$doc->preserveWhiteSpace = FALSE;
+				$doc->formatOutput = TRUE;
+				$doc->save($outFile);	
+			}		
 		}
 		return $ar['conclusion_num'];
 	}
@@ -1029,8 +1049,8 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		}
 		
 		$xml = ViewXML::getXMLHeader().
-			sprintf('&lt;Conclusion ConclusionGUID="%s" SchemaVersion="01.00" SchemaLink="https://" &gt;'
-				,isset($ar['reg_number'])? $ar['reg_number']:""
+			sprintf('&lt;Conclusion ConclusionGUID="%s" SchemaVersion="01.00" SchemaLink="" &gt;'
+				,self::GUID()
 			);
 			
 		//ExpertOrganization

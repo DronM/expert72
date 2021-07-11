@@ -961,12 +961,13 @@ class <xsl:value-of select="@id"/>_Controller extends <xsl:value-of select="@par
 		}
 		
 		if ($ar['state']=='sent' || $ar['state']=='checking'
-		 || $ar['state']=='closed_no_expertise'
-		 || $ar['state']=='waiting_for_contract'
-		 || $ar['state']=='waiting_for_pay'
-		 || $ar['state']=='expertise'
-		 || $ar['state']=='closed'
-		 || $ar['state']=='archive'
+		//Так НЕ РАБОТАЕТ из за писем!!!
+		 //|| $ar['state']=='closed_no_expertise'
+		 //|| $ar['state']=='waiting_for_contract'
+		 //|| $ar['state']=='waiting_for_pay'
+		 //|| $ar['state']=='expertise'
+		 //|| $ar['state']=='closed'
+		 //|| $ar['state']=='archive'
 		){
 			throw new Exception(self::ER_DOC_SENT);
 		}

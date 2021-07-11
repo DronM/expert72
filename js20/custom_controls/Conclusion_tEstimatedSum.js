@@ -16,11 +16,14 @@ function Conclusion_tEstimatedSum(id,options){
 	
 	options.placeholder = "Не требуется/Отсутствует/тыс.руб.";
 	options.title = "Обязательный элемент.Возможные значения: Не требуется,Отсутствует,сумма";
+	options.regExpression = /^(Не требуется)$|^(Отсутствует)$|^([+-]?\d+(\.\d+)?)$/;
+	options.m_validator = new ValidatorString();
 	
 	Conclusion_tEstimatedSum.superclass.constructor.call(this,id,options);
 	
 	//complete
-	actb(this.m_node,options.winObj);
+	//this.m_compl = actb(this.m_node,options.winObj);
+	//this.m_compl.actb_keywords = ["Не требуется","Отсутствует"];
 }
 //ViewObjectAjx,ViewAjxList
 extend(Conclusion_tEstimatedSum,EditString);

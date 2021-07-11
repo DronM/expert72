@@ -50,6 +50,7 @@ function Conclusion_tEstimatedComplexCost_View(id,options){
 	//options.viewTemplate = "Conclusion_tEstimatedComplexCost_View";
 	options.headTitle = "Редактирование составной стоимости";
 	options.dialogWidth = "50%";
+	options.strictValidation = true;
 	
 	Conclusion_tEstimatedComplexCost_View.superclass.constructor.call(this,id,options);
 
@@ -59,5 +60,17 @@ extend(Conclusion_tEstimatedComplexCost_View,EditModalDialogXML);
 Conclusion_tEstimatedComplexCost_View.prototype.formatValue = function(val){
 	return	"Составная стоимость";
 }
-
-
+/*
+Conclusion_tEstimatedComplexCost_View.prototype.validate = function(){
+	var res = true;
+	var l = this.getElements();
+	for(var id in l){
+		if(l[id]&&l[id].validate){
+			if(!l[id].validate() && res){
+				res = false;
+			}
+		}
+	}
+	return res;
+}
+*/
